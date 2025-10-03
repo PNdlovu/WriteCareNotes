@@ -107,7 +107,7 @@ export class PilotFeedbackAgentService {
         tenantId: event.tenantId,
         action: 'EVENT_PROCESSING_FAILED',
         eventId: event.eventId,
-        error: error.message
+        error: (error as Error).message
       });
     }
   }
@@ -186,14 +186,14 @@ export class PilotFeedbackAgentService {
       logger.error('Failed to process tenant batch', {
         correlationId,
         tenantId,
-        error: error.message
+        error: (error as Error).message
       });
 
       await this.audit.logAgentEvent({
         correlationId,
         tenantId,
         action: 'BATCH_PROCESSING_FAILED',
-        error: error.message
+        error: (error as Error).message
       });
     }
   }
@@ -340,14 +340,14 @@ export class PilotFeedbackAgentService {
         correlationId,
         tenantId,
         recommendationId,
-        error: error.message
+        error: (error as Error).message
       });
 
       await this.audit.logAgentEvent({
         correlationId,
         tenantId,
         action: 'RECOMMENDATION_APPROVAL_FAILED',
-        error: error.message
+        error: (error as Error).message
       });
     }
   }

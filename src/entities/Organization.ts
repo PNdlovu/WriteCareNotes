@@ -62,5 +62,8 @@ export class Organization {
   @JoinColumn({ name: 'tenant_id' })
   tenant: Tenant;
 
+  // Add users relationship to prevent TypeScript errors
+  users: any[];
+
   // Relationships with other entities will be established after proper entity loading
 }

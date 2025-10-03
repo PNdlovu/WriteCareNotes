@@ -52,7 +52,7 @@ export class AgentAuditService {
     try {
       await this.storeAuditBatch(batch);
     } catch (error) {
-      logger.error('Failed to process audit queue', { error: error.message });
+      logger.error('Failed to process audit queue', { error: (error as Error).message });
       // Re-add failed records to queue
       this.auditQueue.unshift(...batch);
     } finally {

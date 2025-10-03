@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity('tenants')
 export class Tenant {
@@ -26,5 +26,10 @@ export class Tenant {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // Relationships will be established after all entities are properly defined
+  // Relationships - defined to prevent TypeScript errors
+  @OneToMany('Organization', 'tenant')
+  organizations: any[];
+
+  @OneToMany('User', 'tenant')
+  users: any[];
 }
