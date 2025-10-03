@@ -1,0 +1,275 @@
+# Istio Service Mesh Configuration for WriteCareNotes
+# Provides secure service-to-service communication with mTLS and traffic management
+
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: writecarenotes-istio
+  namespace: istio-system
+spec:
+  values:
+    global:
+      meshID: writecarenotes-mesh
+      multiCluster:
+        clusterName: writecarenotes-cluster
+      network: writecarenotes-network
+  components:
+    pilot:
+      k8s:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        hpaSpec:
+          minReplicas: 2
+          maxReplicas: 5
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: true
+      k8s:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        hpaSpec:
+          minReplicas: 2
+          maxReplicas: 5
+        service:
+          type: LoadBalancer
+          annotations:
+            service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+            service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:region:account:certificate/cert-id"
+    egressGateways:
+    - name: istio-egressgateway
+      enabled: true
+      k8s:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+
+---
+# Peer Authentication - Enable mTLS for all services
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: STRICT
+
+---
+# Destination Rule - Configure TLS for healthcare services
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: healthcare-services-tls
+  namespace: core-healthcare
+spec:
+  host: "*.core-healthcare.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 50
+        http2MaxRequests: 100
+        maxRequestsPerConnection: 10
+        maxRetries: 3
+        consecutiveGatewayErrors: 5
+        interval: 30s
+        baseEjectionTime: 30s
+    outlierDetection:
+      consecutiveGatewayErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+
+---
+# Virtual Service for API Gateway
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api-gateway
+  namespace: core-healthcare
+spec:
+  hosts:
+  - api.writecarenotes.com
+  gateways:
+  - writecarenotes-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/v1/residents
+    route:
+    - destination:
+        host: resident-service
+        port:
+          number: 3001
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+  - match:
+    - uri:
+        prefix: /api/v1/medications
+    route:
+    - destination:
+        host: medication-service
+        port:
+          number: 3002
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+  - match:
+    - uri:
+        prefix: /api/v1/care-plans
+    route:
+    - destination:
+        host: care-planning-service
+        port:
+          number: 3003
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+  - match:
+    - uri:
+        prefix: /api/v1/assessments
+    route:
+    - destination:
+        host: assessment-service
+        port:
+          number: 3004
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+  - match:
+    - uri:
+        prefix: /api/v1/health-records
+    route:
+    - destination:
+        host: health-records-service
+        port:
+          number: 3005
+    timeout: 30s
+    retries:
+      attempts: 3
+      perTryTimeout: 10s
+
+---
+# Gateway for external traffic
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: writecarenotes-gateway
+  namespace: core-healthcare
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: writecarenotes-tls
+    hosts:
+    - api.writecarenotes.com
+    - app.writecarenotes.com
+    - admin.writecarenotes.com
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - api.writecarenotes.com
+    - app.writecarenotes.com
+    - admin.writecarenotes.com
+    redirect:
+      httpsRedirect: true
+
+---
+# Service Entry for NHS Digital APIs
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: nhs-digital-apis
+  namespace: integration
+spec:
+  hosts:
+  - api.service.nhs.uk
+  - sandbox.api.service.nhs.uk
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+  location: MESH_EXTERNAL
+  resolution: DNS
+
+---
+# Authorization Policy for healthcare services
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: healthcare-services-authz
+  namespace: core-healthcare
+spec:
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/core-healthcare/sa/api-gateway"]
+    to:
+    - operation:
+        methods: ["GET", "POST", "PUT", "DELETE"]
+  - from:
+    - source:
+        principals: ["cluster.local/ns/monitoring/sa/prometheus"]
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/metrics", "/health"]
+
+---
+# Telemetry configuration for healthcare compliance
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: healthcare-telemetry
+  namespace: core-healthcare
+spec:
+  metrics:
+  - providers:
+    - name: prometheus
+  - overrides:
+    - match:
+        metric: ALL_METRICS
+      tagOverrides:
+        compliance_level:
+          value: "healthcare"
+        audit_required:
+          value: "true"
+  accessLogging:
+  - providers:
+    - name: otel
+  - format:
+      labels:
+        user_id: "%REQ(x-user-id)%"
+        tenant_id: "%REQ(x-tenant-id)%"
+        correlation_id: "%REQ(x-correlation-id)%"
+        compliance_flags: "%REQ(x-compliance-flags)%"

@@ -1,0 +1,183 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "WriteCareNotes Security & Compliance",
+    "tags": ["writecarenotes", "security", "compliance"],
+    "style": "dark",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Compliance Score by Organization",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "compliance_score_percent",
+            "legendFormat": "{{organization_id}} - {{compliance_type}}",
+            "refId": "A"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Compliance Score %",
+            "min": 0,
+            "max": 100
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Security Incidents",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(security_incidents_total[1h])",
+            "legendFormat": "{{severity}} - {{type}}",
+            "refId": "A"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Incidents/hour",
+            "min": 0
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "Audit Events",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(audit_events_total[1h])",
+            "legendFormat": "{{event_type}} - {{severity}}",
+            "refId": "A"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Events/hour",
+            "min": 0
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "Data Breaches",
+        "type": "singlestat",
+        "targets": [
+          {
+            "expr": "sum(data_breaches_total)",
+            "refId": "A"
+          }
+        ],
+        "valueName": "current",
+        "format": "short",
+        "colorBackground": true,
+        "colorValue": false,
+        "thresholds": "0,1",
+        "colors": ["green", "red"],
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "GDPR Compliance Status",
+        "type": "singlestat",
+        "targets": [
+          {
+            "expr": "compliance_score_percent{compliance_type=\"gdpr\"}",
+            "refId": "A"
+          }
+        ],
+        "valueName": "current",
+        "format": "percent",
+        "colorBackground": true,
+        "colorValue": false,
+        "thresholds": "80,95",
+        "colors": ["red", "yellow", "green"],
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 8
+        }
+      },
+      {
+        "id": 6,
+        "title": "NHS Compliance Status",
+        "type": "singlestat",
+        "targets": [
+          {
+            "expr": "compliance_score_percent{compliance_type=\"nhs\"}",
+            "refId": "A"
+          }
+        ],
+        "valueName": "current",
+        "format": "percent",
+        "colorBackground": true,
+        "colorValue": false,
+        "thresholds": "80,95",
+        "colors": ["red", "yellow", "green"],
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 12
+        }
+      },
+      {
+        "id": 7,
+        "title": "CQC Compliance Status",
+        "type": "singlestat",
+        "targets": [
+          {
+            "expr": "compliance_score_percent{compliance_type=\"cqc\"}",
+            "refId": "A"
+          }
+        ],
+        "valueName": "current",
+        "format": "percent",
+        "colorBackground": true,
+        "colorValue": false,
+        "thresholds": "80,95",
+        "colors": ["red", "yellow", "green"],
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 12
+        }
+      }
+    ],
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "refresh": "5m",
+    "schemaVersion": 27,
+    "version": 1
+  }
+}

@@ -1,0 +1,783 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { Alert, AlertDescription } from '../ui/Alert';
+import { LoadingSpinner } from '../ui/LoadingSpinner';
+import { 
+  Building, Plus, Search, Filter, Download, CheckCircle, 
+  Eye, Edit, Trash2, Clock, AlertTriangle, DollarSign, 
+  Calendar, User, FileText, TrendingUp, Shield
+} from 'lucide-react';
+
+interface TaxRecordManagementProps {
+  organizationId: string;
+  userRole: string;
+}
+
+interface TaxRecord {
+  id: string;
+  taxYear: string;
+  taxPeriodStart?: string;
+  taxPeriodEnd?: string;
+  taxType: 'corporation_tax' | 'vat' | 'payroll_tax' | 'income_tax' | 'national_insurance' | 'pension_contributions' | 'other';
+  amountDue: number;
+  amountPaid: number;
+  dueDate: string;
+  paymentDate?: string;
+  status: 'pending' | 'paid' | 'overdue' | 'partially_paid' | 'waived' | 'under_review';
+  submissionReference?: string;
+  notes?: string;
+  relatedPayrollRunId?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface TaxComplianceSummary {
+  totalRecords: number;
+  totalAmountDue: number;
+  totalAmountPaid: number;
+  pendingRecords: number;
+  overdueRecords: number;
+  paidRecords: number;
+  complianceRate: number;
+  taxTypeBreakdown: Array<{
+    taxType: string;
+    count: number;
+    amountDue: number;
+    amountPaid: number;
+  }>;
+  upcomingDeadlines: Array<{
+    taxType: string;
+    dueDate: string;
+    amount: number;
+    daysUntilDue: number;
+  }>;
+}
+
+export const TaxRecordManagement: React.FC<TaxRecordManagementProps> = ({
+  organizationId,
+  userRole
+}) => {
+  const [taxRecords, setTaxRecords] = useState<TaxRecord[]>([]);
+  const [summary, setSummary] = useState<TaxComplianceSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<TaxRecord | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [filters, setFilters] = useState({
+    status: '',
+    taxType: '',
+    taxYear: '',
+    dateFrom: '',
+    dateTo: '',
+    search: ''
+  });
+
+  useEffect(() => {
+    fetchTaxRecords();
+    fetchSummary();
+  }, [organizationId, filters]);
+
+  const fetchTaxRecords = async () => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams();
+      if (filters.status) queryParams.append('status', filters.status);
+      if (filters.taxType) queryParams.append('taxType', filters.taxType);
+      if (filters.taxYear) queryParams.append('taxYear', filters.taxYear);
+      if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom);
+      if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);
+      if (filters.search) queryParams.append('search', filters.search);
+
+      const response = await fetch(`/api/v1/financial/tax-records?${queryParams}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch tax records');
+      }
+
+      const data = await response.json();
+      setTaxRecords(data.data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSummary = async () => {
+    try {
+      const response = await fetch('/api/v1/financial/tax-records/compliance-summary', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch summary');
+      }
+
+      const data = await response.json();
+      setSummary(data.data);
+    } catch (err) {
+      console.error('Failed to fetch summary:', err);
+    }
+  };
+
+  const handleCreateTaxRecord = async (recordData: Partial<TaxRecord>) => {
+    try {
+      const response = await fetch('/api/v1/financial/tax-records', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(recordData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create tax record');
+      }
+
+      const data = await response.json();
+      setTaxRecords(prev => [data.data, ...prev]);
+      setShowCreateModal(false);
+      await fetchSummary();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create tax record');
+    }
+  };
+
+  const handleUpdateTaxRecord = async (id: string, updates: Partial<TaxRecord>) => {
+    try {
+      const response = await fetch(`/api/v1/financial/tax-records/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updates)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update tax record');
+      }
+
+      const data = await response.json();
+      setTaxRecords(prev => prev.map(record => record.id === id ? data.data : record));
+      setSelectedRecord(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update tax record');
+    }
+  };
+
+  const handleDeleteTaxRecord = async (id: string) => {
+    try {
+      const response = await fetch(`/api/v1/financial/tax-records/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete tax record');
+      }
+
+      setTaxRecords(prev => prev.filter(record => record.id !== id));
+      setSelectedRecord(null);
+      await fetchSummary();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete tax record');
+    }
+  };
+
+  const handleRecordPayment = async (id: string, paymentData: any) => {
+    try {
+      const response = await fetch(`/api/v1/financial/tax-records/${id}/record-payment`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(paymentData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to record payment');
+      }
+
+      const data = await response.json();
+      setTaxRecords(prev => prev.map(record => record.id === id ? data.data : record));
+      setSelectedRecord(null);
+      await fetchSummary();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to record payment');
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'paid': return 'bg-green-100 text-green-800 border-green-200';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'overdue': return 'bg-red-100 text-red-800 border-red-200';
+      case 'partially_paid': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'waived': return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'under_review': return 'bg-purple-100 text-purple-800 border-purple-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'paid': return <CheckCircle className="w-4 h-4" />;
+      case 'pending': return <Clock className="w-4 h-4" />;
+      case 'overdue': return <AlertTriangle className="w-4 h-4" />;
+      case 'partially_paid': return <TrendingUp className="w-4 h-4" />;
+      case 'waived': return <Shield className="w-4 h-4" />;
+      case 'under_review': return <FileText className="w-4 h-4" />;
+      default: return <Clock className="w-4 h-4" />;
+    }
+  };
+
+  const getTaxTypeIcon = (taxType: string) => {
+    switch (taxType) {
+      case 'corporation_tax': return <Building className="w-4 h-4" />;
+      case 'vat': return <DollarSign className="w-4 h-4" />;
+      case 'payroll_tax': return <User className="w-4 h-4" />;
+      case 'income_tax': return <User className="w-4 h-4" />;
+      case 'national_insurance': return <Shield className="w-4 h-4" />;
+      case 'pension_contributions': return <TrendingUp className="w-4 h-4" />;
+      default: return <FileText className="w-4 h-4" />;
+    }
+  };
+
+  if (loading && !taxRecords.length) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <LoadingSpinner size="lg" />
+        <span className="ml-2">Loading tax records...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <Building className="w-8 h-8 text-purple-500" />
+            Tax Record Management
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Manage tax compliance and HMRC submissions
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button onClick={() => setShowCreateModal(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Tax Record
+          </Button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      {summary && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Records</p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {summary.totalRecords}
+                  </p>
+                </div>
+                <FileText className="w-8 h-8 text-blue-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Amount Due</p>
+                  <p className="text-2xl font-bold text-orange-600">
+                    £{summary.totalAmountDue.toLocaleString()}
+                  </p>
+                </div>
+                <DollarSign className="w-8 h-8 text-orange-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Amount Paid</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    £{summary.totalAmountPaid.toLocaleString()}
+                  </p>
+                </div>
+                <CheckCircle className="w-8 h-8 text-green-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Compliance Rate</p>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {summary.complianceRate.toFixed(1)}%
+                  </p>
+                </div>
+                <Shield className="w-8 h-8 text-purple-500" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Upcoming Deadlines */}
+      {summary && summary.upcomingDeadlines && summary.upcomingDeadlines.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-orange-500" />
+              Upcoming Tax Deadlines
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {summary.upcomingDeadlines.map((deadline, index) => (
+                <div key={index} className={`p-4 border rounded-lg ${
+                  deadline.daysUntilDue <= 7 ? 'border-red-200 bg-red-50' : 
+                  deadline.daysUntilDue <= 30 ? 'border-yellow-200 bg-yellow-50' : 
+                  'border-green-200 bg-green-50'
+                }`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      {getTaxTypeIcon(deadline.taxType)}
+                      <span className="font-medium text-sm">
+                        {deadline.taxType.replace('_', ' ').toUpperCase()}
+                      </span>
+                    </div>
+                    <Badge className={
+                      deadline.daysUntilDue <= 7 ? 'bg-red-100 text-red-800' :
+                      deadline.daysUntilDue <= 30 ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'
+                    }>
+                      {deadline.daysUntilDue} days
+                    </Badge>
+                  </div>
+                  <div className="text-sm text-gray-600 mb-1">
+                    Due: {new Date(deadline.dueDate).toLocaleDateString()}
+                  </div>
+                  <div className="text-lg font-bold">
+                    £{deadline.amount.toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tax Type Breakdown */}
+      {summary && summary.taxTypeBreakdown && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Tax Type Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {summary.taxTypeBreakdown.map((type, index) => (
+                <div key={index} className="p-4 border rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    {getTaxTypeIcon(type.taxType)}
+                    <span className="font-medium text-sm">
+                      {type.taxType.replace('_', ' ').toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    £{type.amountDue.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {type.count} records
+                  </div>
+                  <div className="text-sm text-green-600">
+                    Paid: £{type.amountPaid.toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Search
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search tax records..."
+                  value={filters.search}
+                  onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="overdue">Overdue</option>
+                <option value="partially_paid">Partially Paid</option>
+                <option value="waived">Waived</option>
+                <option value="under_review">Under Review</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tax Type
+              </label>
+              <select
+                value={filters.taxType}
+                onChange={(e) => setFilters(prev => ({ ...prev, taxType: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Types</option>
+                <option value="corporation_tax">Corporation Tax</option>
+                <option value="vat">VAT</option>
+                <option value="payroll_tax">Payroll Tax</option>
+                <option value="income_tax">Income Tax</option>
+                <option value="national_insurance">National Insurance</option>
+                <option value="pension_contributions">Pension Contributions</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tax Year
+              </label>
+              <input
+                type="text"
+                placeholder="2024-2025"
+                value={filters.taxYear}
+                onChange={(e) => setFilters(prev => ({ ...prev, taxYear: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date From
+              </label>
+              <input
+                type="date"
+                value={filters.dateFrom}
+                onChange={(e) => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex items-end">
+              <Button
+                variant="outline"
+                onClick={() => setFilters({ status: '', taxType: '', taxYear: '', dateFrom: '', dateTo: '', search: '' })}
+                className="w-full"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Clear Filters
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Tax Records Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Tax Records ({taxRecords.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left p-3 font-medium">Tax Year</th>
+                  <th className="text-left p-3 font-medium">Tax Type</th>
+                  <th className="text-left p-3 font-medium">Amount Due</th>
+                  <th className="text-left p-3 font-medium">Amount Paid</th>
+                  <th className="text-left p-3 font-medium">Status</th>
+                  <th className="text-left p-3 font-medium">Due Date</th>
+                  <th className="text-left p-3 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {taxRecords.map((record) => (
+                  <tr key={record.id} className="border-b hover:bg-gray-50">
+                    <td className="p-3">
+                      <div className="font-medium">{record.taxYear}</div>
+                      {record.taxPeriodStart && record.taxPeriodEnd && (
+                        <div className="text-sm text-gray-500">
+                          {new Date(record.taxPeriodStart).toLocaleDateString()} - {new Date(record.taxPeriodEnd).toLocaleDateString()}
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        {getTaxTypeIcon(record.taxType)}
+                        <span className="text-sm">
+                          {record.taxType.replace('_', ' ').toUpperCase()}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-3">
+                      <div className="font-medium">
+                        £{record.amountDue.toLocaleString()}
+                      </div>
+                    </td>
+                    <td className="p-3">
+                      <div className="font-medium">
+                        £{record.amountPaid.toLocaleString()}
+                      </div>
+                      {record.amountDue > record.amountPaid && (
+                        <div className="text-sm text-red-600">
+                          Outstanding: £{(record.amountDue - record.amountPaid).toLocaleString()}
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      <Badge className={getStatusColor(record.status)}>
+                        <div className="flex items-center gap-1">
+                          {getStatusIcon(record.status)}
+                          {record.status.replace('_', ' ').toUpperCase()}
+                        </div>
+                      </Badge>
+                    </td>
+                    <td className="p-3">
+                      <div className="text-sm">
+                        {new Date(record.dueDate).toLocaleDateString()}
+                      </div>
+                      {record.paymentDate && (
+                        <div className="text-sm text-green-600">
+                          Paid: {new Date(record.paymentDate).toLocaleDateString()}
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedRecord(record)}
+                        >
+                          <Eye className="w-3 h-3" />
+                        </Button>
+                        {record.status !== 'paid' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRecordPayment(record.id, { paymentAmount: record.amountDue - record.amountPaid, paymentDate: new Date().toISOString() })}
+                          >
+                            <DollarSign className="w-3 h-3" />
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteTaxRecord(record.id)}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tax Record Detail Modal */}
+      {selectedRecord && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <Card className="max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Tax Record Details - {selectedRecord.id}</CardTitle>
+                <Button variant="ghost" onClick={() => setSelectedRecord(null)}>
+                  ×
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Tax Record Information */}
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-3">Tax Information</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tax Year:</span>
+                      <span className="font-medium">{selectedRecord.taxYear}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tax Type:</span>
+                      <span className="font-medium">
+                        {selectedRecord.taxType.replace('_', ' ').toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Amount Due:</span>
+                      <span className="font-medium">
+                        £{selectedRecord.amountDue.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Amount Paid:</span>
+                      <span className="font-medium">
+                        £{selectedRecord.amountPaid.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Outstanding:</span>
+                      <span className="font-medium text-red-600">
+                        £{(selectedRecord.amountDue - selectedRecord.amountPaid).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Status:</span>
+                      <Badge className={getStatusColor(selectedRecord.status)}>
+                        {selectedRecord.status.replace('_', ' ').toUpperCase()}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-3">Dates & References</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Due Date:</span>
+                      <span className="font-medium">
+                        {new Date(selectedRecord.dueDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {selectedRecord.paymentDate && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Payment Date:</span>
+                        <span className="font-medium">
+                          {new Date(selectedRecord.paymentDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                    {selectedRecord.submissionReference && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Submission Ref:</span>
+                        <span className="font-medium">{selectedRecord.submissionReference}</span>
+                      </div>
+                    )}
+                    {selectedRecord.relatedPayrollRunId && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Payroll Run:</span>
+                        <span className="font-medium">{selectedRecord.relatedPayrollRunId}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Created By:</span>
+                      <span className="font-medium">{selectedRecord.createdBy}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Created At:</span>
+                      <span className="font-medium">
+                        {new Date(selectedRecord.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notes */}
+              {selectedRecord.notes && (
+                <div>
+                  <h4 className="font-semibold mb-3">Notes</h4>
+                  <div className="p-3 bg-gray-50 rounded-lg text-sm">
+                    {selectedRecord.notes}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-2 pt-4 border-t">
+                <Button className="flex-1">
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Details
+                </Button>
+                {selectedRecord.status !== 'paid' && (
+                  <Button className="flex-1" variant="outline">
+                    <DollarSign className="w-4 h-4 mr-2" />
+                    Record Payment
+                  </Button>
+                )}
+                <Button className="flex-1" variant="outline">
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit Record
+                </Button>
+                <Button className="flex-1" variant="outline">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Record
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TaxRecordManagement;

@@ -1,0 +1,126 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "WriteCareNotes Business Metrics",
+    "tags": ["writecarenotes", "business", "healthcare"],
+    "style": "dark",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Residents by Status",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (status) (residents_total)",
+            "legendFormat": "{{status}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Medication Administrations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(medication_administrations_total[1h])",
+            "legendFormat": "{{medication_type}} - {{status}}",
+            "refId": "A"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Administrations/hour",
+            "min": 0
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "Care Plans Created",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(care_plans_total[1h])",
+            "legendFormat": "{{type}} - {{status}}",
+            "refId": "A"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Care plans/hour",
+            "min": 0
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "Incidents by Severity",
+        "type": "bargauge",
+        "targets": [
+          {
+            "expr": "sum by (severity) (incidents_total)",
+            "legendFormat": "{{severity}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "User Activity by Module",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(user_activity_total[1h])",
+            "legendFormat": "{{module}} - {{action}}",
+            "refId": "A"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Activities/hour",
+            "min": 0
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        }
+      }
+    ],
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "refresh": "1m",
+    "schemaVersion": 27,
+    "version": 1
+  }
+}

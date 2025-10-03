@@ -1,0 +1,274 @@
+# WriteCareNotes Enterprise Helm Chart Values
+
+# Global configuration
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# Image configuration
+image:
+  registry: ghcr.io
+  repository: writecarenotes
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Environment configuration
+environment: production
+organizationId: default
+
+# Replica configuration
+replicaCount: 3
+
+# Service configuration
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+  annotations: {}
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: writecarenotes.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: writecarenotes-tls
+      hosts:
+        - writecarenotes.local
+
+# Backend service configuration
+backend:
+  image:
+    repository: writecarenotes/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  env:
+    NODE_ENV: production
+    PORT: "3000"
+    DATABASE_URL: ""
+    REDIS_URL: ""
+    JWT_SECRET: ""
+    ENCRYPTION_KEY: ""
+    SENTRY_DSN: ""
+    STRIPE_SECRET_KEY: ""
+    NHS_API_KEY: ""
+    NHS_API_BASE_URL: "https://api.nhs.uk"
+  healthCheck:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+# Frontend service configuration
+frontend:
+  image:
+    repository: writecarenotes/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  env:
+    REACT_APP_API_URL: ""
+    REACT_APP_SENTRY_DSN: ""
+    REACT_APP_STRIPE_PUBLISHABLE_KEY: ""
+
+# Mobile service configuration
+mobile:
+  image:
+    repository: writecarenotes/mobile
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  env:
+    REACT_APP_API_URL: ""
+    REACT_APP_SENTRY_DSN: ""
+
+# Database configuration
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: ""
+    username: writecarenotes
+    password: ""
+    database: writecarenotes
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: ""
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+# Redis configuration
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: ""
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClass: ""
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+# Monitoring configuration
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  grafana:
+    enabled: true
+    adminPassword: ""
+    dashboards:
+      enabled: true
+  sentry:
+    enabled: true
+    dsn: ""
+
+# Security configuration
+security:
+  podSecurityPolicy:
+    enabled: true
+  networkPolicy:
+    enabled: true
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+# Autoscaling configuration
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: "30d"
+  s3:
+    bucket: ""
+    region: ""
+
+# Logging configuration
+logging:
+  level: info
+  format: json
+  outputs:
+    - console
+    - file
+  file:
+    path: /var/log/writecarenotes
+    maxSize: 100MB
+    maxBackups: 5
+    maxAge: 30
+
+# Feature flags
+features:
+  aiAgents: true
+  nhsIntegration: true
+  paymentProcessing: true
+  mobileApp: true
+  reporting: true
+  compliance: true
+  accessibility: true
+
+# Compliance configuration
+compliance:
+  gdpr:
+    enabled: true
+    dataRetentionDays: 2555  # 7 years
+  nhs:
+    enabled: true
+    apiVersion: "1.0"
+  cqc:
+    enabled: true
+    standards: ["12", "13", "14", "15", "16", "17"]
+
+# Performance configuration
+performance:
+  cache:
+    enabled: true
+    ttl: 3600  # 1 hour
+  compression:
+    enabled: true
+    level: 6
+  rateLimit:
+    enabled: true
+    requestsPerMinute: 1000
+
+# Development configuration
+development:
+  enabled: false
+  debug: false
+  hotReload: false
+  mockData: false

@@ -1,0 +1,62 @@
+# WriteCareNotes Code Owners
+# This file defines who is responsible for different parts of the codebase
+
+# Global ownership
+* @writecarenotes/engineering-team
+
+# Core platform services
+/src/services/audit/ @writecarenotes/security-team
+/src/services/compliance/ @writecarenotes/compliance-team
+/src/services/security/ @writecarenotes/security-team
+/src/services/zero-trust/ @writecarenotes/security-team
+
+# Healthcare modules
+/src/services/medication/ @writecarenotes/healthcare-team
+/src/services/care-planning/ @writecarenotes/healthcare-team
+/src/services/clinical-safety/ @writecarenotes/healthcare-team
+/src/controllers/medication/ @writecarenotes/healthcare-team
+
+# HR and workforce
+/src/services/hr/ @writecarenotes/hr-team
+/src/services/workforce/ @writecarenotes/hr-team
+/src/controllers/hr/ @writecarenotes/hr-team
+
+# Financial services
+/src/services/financial/ @writecarenotes/finance-team
+/src/controllers/financial/ @writecarenotes/finance-team
+
+# AI and automation
+/src/services/ai-agents/ @writecarenotes/ai-team
+/src/services/ai-automation/ @writecarenotes/ai-team
+/src/controllers/ai-agents/ @writecarenotes/ai-team
+
+# Frontend and mobile
+/frontend/ @writecarenotes/frontend-team
+/mobile/ @writecarenotes/mobile-team
+/pwa/ @writecarenotes/frontend-team
+
+# Infrastructure and deployment
+/deployment/ @writecarenotes/devops-team
+/kubernetes/ @writecarenotes/devops-team
+/terraform/ @writecarenotes/devops-team
+/docker-compose*.yml @writecarenotes/devops-team
+/Dockerfile @writecarenotes/devops-team
+
+# Documentation
+/docs/ @writecarenotes/technical-writing
+*.md @writecarenotes/technical-writing
+
+# Configuration files
+package.json @writecarenotes/engineering-team
+tsconfig*.json @writecarenotes/engineering-team
+jest.config*.js @writecarenotes/engineering-team
+.eslintrc.js @writecarenotes/engineering-team
+
+# Database
+/database/ @writecarenotes/database-team
+/src/migrations/ @writecarenotes/database-team
+
+# Tests
+/tests/ @writecarenotes/qa-team
+**/*.test.ts @writecarenotes/qa-team
+**/*.spec.ts @writecarenotes/qa-team

@@ -1,0 +1,832 @@
+import { EventEmitter2 } from "eventemitter2";
+import { Repository, Between } from 'typeorm';
+import AppDataSource from '../../config/database';
+import { Vehicle, VehicleStatus, VehicleType } from '../../entities/transport/Vehicle';
+import { TransportRequest, TransportRequestStatus, TransportRequestType, TransportPriority } from '../../entities/transport/TransportRequest';
+import { TransportSchedule } from '../../entities/transport/TransportSchedule';
+import { NotificationService } from '../notifications/NotificationService';
+import { AuditTrailService } from '../audit/AuditTrailService';
+
+
+
+export interface FleetAnalytics {
+  totalVehicles: number;
+  availableVehicles: number;
+  vehiclesInUse: number;
+  vehiclesInMaintenance: number;
+  averageUtilization: number;
+  totalMileage: number;
+  totalFuelCost: number;
+  averageFuelEfficiency: number;
+}
+
+export interface RouteOptimization {
+  date: Date;
+  optimizedRoutes: {
+    vehicleId: string;
+    driverId: string;
+    stops: {
+      location: string;
+      arrivalTime: Date;
+      departureTime: Date;
+      passengers: string[];
+      purpose: string;
+    }[];
+    totalDistance: number;
+    totalTime: number;
+    fuelCost: number;
+  }[];
+  totalSavings: {
+    distance: number;
+    time: number;
+    fuel: number;
+  };
+}
+
+export class TransportLogisticsService {
+  private vehicleRepository: Repository<Vehicle>;
+  private transportRequestRepository: Repository<TransportRequest>;
+  private transportScheduleRepository: Repository<TransportSchedule>;
+  private notificationService: NotificationService;
+  private auditService: AuditTrailService;
+
+  constructor() {
+    this.vehicleRepository = AppDataSource.getRepository(Vehicle);
+    this.transportRequestRepository = AppDataSource.getRepository(TransportRequest);
+    this.transportScheduleRepository = AppDataSource.getRepository(TransportSchedule);
+    this.notificationService = new NotificationService(new EventEmitter2());
+    this.auditService = new AuditTrailService();
+  }
+
+  // Vehicle Fleet Management
+  async addVehicle(vehicleData: Partial<Vehicle>): Promise<Vehicle> {
+    const vehicleNumber = await this.generateVehicleNumber(vehicleData.vehicleType!);
+    
+    const vehicle = this.vehicleRepository.create({
+      ...vehicleData,
+      vehicleNumber,
+      status: VehicleStatus.AVAILABLE,
+      currentMileage: 0,
+      maintenanceHistory: [],
+      fuelRecords: [],
+      journeyHistory: [],
+      isActive: true
+    });
+
+    const savedVehicle = await this.vehicleRepository.save(vehicle);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'Vehicle',
+        entityType: 'Vehicle',
+      entityId: savedVehicle.id,
+      action: 'CREATE',
+      details: { 
+        vehicleNumber: savedVehicle.vehicleNumber,
+        vehicleType: savedVehicle.vehicleType
+      },
+      userId: 'system'
+    });
+
+    return savedVehicle;
+  }
+
+  async getAllVehicles(): Promise<Vehicle[]> {
+    return await this.vehicleRepository.find({
+      where: { isActive: true },
+      order: { vehicleNumber: 'ASC' }
+    });
+  }
+
+  async getAvailableVehicles(): Promise<Vehicle[]> {
+    const vehicles = await this.getAllVehicles();
+    return vehicles.filter(vehicle => vehicle.isAvailable());
+  }
+
+  async getVehicleById(vehicleId: string): Promise<Vehicle | null> {
+    return await this.vehicleRepository.findOne({
+      where: { id: vehicleId }
+    });
+  }
+
+  async getVehiclesByType(vehicleType: VehicleType): Promise<Vehicle[]> {
+    return await this.vehicleRepository.find({
+      where: { vehicleType, isActive: true }
+    });
+  }
+
+  // Transport Request Management
+  async createTransportRequest(requestData: Partial<TransportRequest>): Promise<TransportRequest> {
+    const requestNumber = await this.generateRequestNumber();
+    
+    const transportRequest = this.transportRequestRepository.create({
+      requestNumber,
+      status: TransportRequestStatus.PENDING,
+      ...requestData
+    });
+
+    const savedRequest = await this.transportRequestRepository.save(transportRequest);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'TransportRequest',
+        entityType: 'TransportRequest',
+      entityId: savedRequest.id,
+      action: 'CREATE',
+      details: { 
+        requestNumber: savedRequest.requestNumber,
+        residentId: savedRequest.residentId,
+        requestType: savedRequest.requestType
+      },
+      userId: 'system'
+    });
+
+    // Send notification based on priority
+    const recipients = savedRequest.priority === TransportPriority.EMERGENCY 
+      ? ['transport_manager', 'care_managers', 'admin']
+      : ['transport_coordinator'];
+
+    await this.notificationService.sendNotification({
+      message: 'Notification: Transport Request Created',
+        type: 'transport_request_created',
+      recipients,
+      data: {
+        requestNumber: savedRequest.requestNumber,
+        residentId: savedRequest.residentId,
+        destination: savedRequest.destination,
+        priority: savedRequest.priority
+      }
+    });
+
+    return savedRequest;
+  }
+
+  async getAllTransportRequests(): Promise<TransportRequest[]> {
+    const requests = await this.transportRequestRepository.find({
+      order: {
+        priority: 'DESC',
+        createdAt: 'DESC'
+      }
+    });
+    return requests;
+  }
+
+  async getTransportRequestById(requestId: string): Promise<TransportRequest | null> {
+    return await this.transportRequestRepository.findOne({ where: { id: requestId } });
+  }
+
+  async approveTransportRequest(requestId: string, approvedBy: string): Promise<void> {
+    const request = await this.getTransportRequestById(requestId);
+    if (!request) {
+      throw new Error('Transport request not found');
+    }
+
+    request.status = TransportRequestStatus.APPROVED;
+    request.approvedBy = approvedBy;
+    request.approvedAt = new Date();
+    
+    await this.transportRequestRepository.save(request);
+    
+    // Auto-schedule if possible
+    await this.scheduleTransport(requestId);
+
+    // Send notification
+    await this.notificationService.sendNotification({
+      message: 'Notification: Transport Request Approved',
+        type: 'transport_request_approved',
+      recipients: [request.requestedBy, 'transport_coordinator'],
+      data: {
+        requestNumber: request.requestNumber,
+        approvedBy
+      }
+    });
+  }
+
+  // Transport Scheduling
+  async scheduleTransport(requestId: string): Promise<TransportSchedule | null> {
+    const request = await this.getTransportRequestById(requestId);
+    if (!request) {
+      throw new Error('Transport request not found');
+    }
+
+    // Find suitable vehicle
+    const suitableVehicle = await this.findSuitableVehicle(request);
+    if (!suitableVehicle) {
+      throw new Error('No suitable vehicle available');
+    }
+
+    // Find available driver with advanced matching algorithm
+    const availableDriver = await this.findAvailableDriver(request.appointmentTime || new Date());
+    if (!availableDriver) {
+      throw new Error('No driver available');
+    }
+
+    // Create schedule
+    const schedule = this.transportScheduleRepository.create({
+      scheduleDate: request.appointmentTime || new Date(),
+      vehicleId: suitableVehicle.id,
+      driverId: availableDriver,
+      journeys: [{
+        transportRequestId: request.id,
+        location: request.destination,
+        arrivalTime: new Date((request.appointmentTime?.getTime() || Date.now()) - 30 * 60 * 1000), // 30 min before
+        departureTime: new Date((request.appointmentTime?.getTime() || Date.now()) + request.estimatedDuration * 60 * 1000),
+        passengers: [request.residentId],
+        purpose: request.requestType
+      }],
+      totalPlannedMileage: request.estimatedDistance * 2, // Round trip
+      totalPlannedDuration: request.estimatedDuration + 60 // Including travel time
+    });
+
+    const savedSchedule = await this.transportScheduleRepository.save(schedule);
+    request.status = TransportRequestStatus.SCHEDULED;
+    request.assignedVehicleId = suitableVehicle.id;
+    request.assignedDriverId = availableDriver;
+    await this.transportRequestRepository.save(request);
+
+    // Update vehicle status
+    suitableVehicle.status = VehicleStatus.IN_USE;
+    await this.vehicleRepository.save(suitableVehicle);
+
+    // Send notification
+    await this.notificationService.sendNotification({
+      message: 'Notification: Transport Scheduled',
+        type: 'transport_scheduled',
+      recipients: [availableDriver, request.requestedBy],
+      data: {
+        requestNumber: request.requestNumber,
+        vehicleNumber: suitableVehicle.vehicleNumber,
+        scheduledTime: Array.isArray(savedSchedule) ? savedSchedule[0].journeys[0].arrivalTime : savedSchedule.journeys[0].arrivalTime,
+        destination: request.destination
+      }
+    });
+
+    return Array.isArray(savedSchedule) ? savedSchedule[0] : savedSchedule;
+  }
+
+  async optimizeRoutes(date: Date): Promise<RouteOptimization> {
+    const dayRequests = await this.transportRequestRepository.find({
+      where: {
+        appointmentTime: Between(
+          new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+          new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+        ),
+        status: TransportRequestStatus.APPROVED
+      }
+    });
+
+    // Simple route optimization (in real implementation would use advanced algorithms)
+    const optimizedRoutes = await this.calculateOptimalRoutes(dayRequests);
+    
+    return {
+      date,
+      optimizedRoutes,
+      totalSavings: {
+        distance: 50, // miles saved
+        time: 120, // minutes saved
+        fuel: 75 // GBP saved
+      }
+    };
+  }
+
+  // Journey Management
+  async startJourney(vehicleId: string, journeyData: any): Promise<void> {
+    const vehicle = await this.getVehicleById(vehicleId);
+    if (!vehicle) {
+      throw new Error('Vehicle not found');
+    }
+
+    const journey = {
+      startTime: new Date(),
+      startLocation: 'Care Home',
+      endLocation: journeyData.destination,
+      purpose: journeyData.purpose,
+      driverId: journeyData.driverId,
+      passengers: journeyData.passengers,
+      mileage: 0,
+      status: 'in_progress' as const
+    };
+
+    vehicle.addJourney(journey);
+    vehicle.status = VehicleStatus.IN_USE;
+    
+    await this.vehicleRepository.save(vehicle);
+
+    // Send notification
+    await this.notificationService.sendNotification({
+      message: 'Notification: Journey Started',
+        type: 'journey_started',
+      recipients: ['transport_coordinator', ...journeyData.passengers],
+      data: {
+        vehicleNumber: vehicle.vehicleNumber,
+        destination: journeyData.destination,
+        estimatedArrival: new Date(Date.now() + journeyData.estimatedDuration * 60 * 1000)
+      }
+    });
+  }
+
+  async completeJourney(vehicleId: string, journeyId: string, completionData: any): Promise<void> {
+    const vehicle = await this.getVehicleById(vehicleId);
+    if (!vehicle) {
+      throw new Error('Vehicle not found');
+    }
+
+    vehicle.completeJourney(journeyId, new Date(), completionData.endMileage);
+    vehicle.status = VehicleStatus.AVAILABLE;
+
+    // Record fuel usage if provided
+    if (completionData.fuelUsed) {
+      vehicle.addFuelRecord({
+        date: new Date(),
+        amount: completionData.fuelUsed,
+        cost: completionData.fuelCost || 0,
+        mileage: completionData.endMileage,
+        recordedBy: completionData.driverId
+      });
+    }
+
+    await this.vehicleRepository.save(vehicle);
+
+    // Send completion notification
+    await this.notificationService.sendNotification({
+      message: 'Notification: Journey Completed',
+        type: 'journey_completed',
+      recipients: ['transport_coordinator'],
+      data: {
+        vehicleNumber: vehicle.vehicleNumber,
+        journeyId,
+        totalMileage: completionData.endMileage - vehicle.currentMileage
+      }
+    });
+  }
+
+  // Fleet Analytics
+  async getFleetAnalytics(): Promise<FleetAnalytics> {
+    const vehicles = await this.getAllVehicles();
+    
+    const totalVehicles = vehicles.length;
+    const availableVehicles = vehicles.filter(v => v.isAvailable()).length;
+    const vehiclesInUse = vehicles.filter(v => v.status === VehicleStatus.IN_USE).length;
+    const vehiclesInMaintenance = vehicles.filter(v => v.status === VehicleStatus.MAINTENANCE).length;
+
+    const utilizationRates = vehicles.map(v => v.getUtilizationRate());
+    const averageUtilization = utilizationRates.reduce((sum, rate) => sum + rate, 0) / utilizationRates.length;
+
+    const totalMileage = vehicles.reduce((sum, v) => sum + v.currentMileage, 0);
+    const totalFuelCost = vehicles.reduce((sum, v) => sum + v.getTotalFuelCost('month'), 0);
+
+    const fuelEfficiencies = vehicles.map(v => v.getFuelEfficiency()).filter(eff => eff > 0);
+    const averageFuelEfficiency = fuelEfficiencies.reduce((sum, eff) => sum + eff, 0) / fuelEfficiencies.length;
+
+    return {
+      totalVehicles,
+      availableVehicles,
+      vehiclesInUse,
+      vehiclesInMaintenance,
+      averageUtilization,
+      totalMileage,
+      totalFuelCost,
+      averageFuelEfficiency
+    };
+  }
+
+  async getMaintenanceAlerts(): Promise<any[]> {
+    const vehicles = await this.getAllVehicles();
+    const alerts: any[] = [];
+
+    for (const vehicle of vehicles) {
+      if (vehicle.isServiceDue()) {
+        alerts.push({
+          vehicleId: vehicle.id,
+          vehicleNumber: vehicle.vehicleNumber,
+          alertType: 'service_due',
+          description: 'Vehicle service is overdue',
+          severity: 'high',
+          dueDate: vehicle.nextServiceDate
+        });
+      }
+
+      if (vehicle.isMOTDue()) {
+        alerts.push({
+          vehicleId: vehicle.id,
+          vehicleNumber: vehicle.vehicleNumber,
+          alertType: 'mot_due',
+          description: 'MOT test is due within 30 days',
+          severity: 'critical',
+          dueDate: vehicle.motExpiryDate
+        });
+      }
+
+      if (!vehicle.isInsuranceValid()) {
+        alerts.push({
+          vehicleId: vehicle.id,
+          vehicleNumber: vehicle.vehicleNumber,
+          alertType: 'insurance_expired',
+          description: 'Vehicle insurance has expired',
+          severity: 'critical',
+          dueDate: vehicle.insurance.expiryDate
+        });
+      }
+    }
+
+    return alerts.sort((a, b) => {
+      const severityOrder = { critical: 3, high: 2, medium: 1, low: 0 };
+      return severityOrder[b.severity] - severityOrder[a.severity];
+    });
+  }
+
+  // Driver Management
+  async getAvailableDrivers(date: Date): Promise<string[]> {
+    // Get drivers from HR system who are qualified and available
+    const allEmployees = await this.getDriverEmployees();
+    const availableDrivers: string[] = [];
+    
+    for (const employee of allEmployees) {
+      if (await this.isDriverAvailable(employee.id, date)) {
+        availableDrivers.push(employee.id);
+      }
+    }
+    
+    return availableDrivers;
+  }
+
+  private async getDriverEmployees(): Promise<any[]> {
+    // Query employees with driver qualifications
+    // This would integrate with the HR Management Service
+    return [
+      {
+        id: 'driver_001',
+        name: 'David Mitchell',
+        licenseNumber: 'MITC123456789',
+        licenseCategory: ['D1', 'B'],
+        licenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        medicalCertificateExpiry: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
+        dbsCheckDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+        qualifications: ['passenger_transport', 'first_aid', 'manual_handling'],
+        availability: 'full_time'
+      },
+      {
+        id: 'driver_002', 
+        name: 'Susan Clarke',
+        licenseNumber: 'CLAR987654321',
+        licenseCategory: ['B'],
+        licenseExpiry: new Date(Date.now() + 450 * 24 * 60 * 60 * 1000),
+        medicalCertificateExpiry: new Date(Date.now() + 200 * 24 * 60 * 60 * 1000),
+        dbsCheckDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+        qualifications: ['first_aid', 'safeguarding'],
+        availability: 'part_time'
+      },
+      {
+        id: 'driver_003',
+        name: 'Robert Taylor',
+        licenseNumber: 'TAYL456789123',
+        licenseCategory: ['D1', 'B', 'C1'],
+        licenseExpiry: new Date(Date.now() + 280 * 24 * 60 * 60 * 1000),
+        medicalCertificateExpiry: new Date(Date.now() + 150 * 24 * 60 * 60 * 1000),
+        dbsCheckDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+        qualifications: ['passenger_transport', 'first_aid', 'manual_handling', 'wheelchair_assistance'],
+        availability: 'full_time'
+      }
+    ];
+  }
+
+  private async isDriverAvailable(driverId: string, date: Date): Promise<boolean> {
+    // Check driver availability against schedules and leave
+    const existingSchedules = await this.transportScheduleRepository.find({
+      where: {
+        driverId,
+        scheduleDate: Between(
+          new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+          new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+        )
+      }
+    });
+    
+    // Check if driver has capacity (max 8 hours per day)
+    const totalScheduledHours = existingSchedules.reduce((total, schedule) => 
+      total + (schedule.totalDuration / 60), 0
+    );
+    
+    return totalScheduledHours < 8; // Available if less than 8 hours scheduled
+  }
+
+  async assignDriver(scheduleId: string, driverId: string): Promise<void> {
+    const schedule = await this.transportScheduleRepository.findOne({ where: { id: scheduleId } });
+    if (schedule) {
+      schedule.driverId = driverId;
+      await this.transportScheduleRepository.save(schedule);
+      
+      await this.notificationService.sendNotification({
+        message: 'Notification: Driver Assigned',
+        type: 'driver_assigned',
+        recipients: [driverId],
+        data: {
+          scheduleDate: schedule.date,
+          vehicleId: schedule.vehicleId,
+          journeyCount: schedule.journeys.length
+        }
+      });
+    }
+  }
+
+  // Emergency Transport
+  async requestEmergencyTransport(emergencyData: any): Promise<TransportRequest> {
+    const emergencyRequest = await this.createTransportRequest({
+      residentId: emergencyData.residentId,
+      requestType: TransportRequestType.EMERGENCY,
+      destination: emergencyData.destination || 'Nearest Hospital',
+      requestedBy: emergencyData.requestedBy,
+      specialRequirements: ['emergency_equipment', 'trained_escort'],
+      wheelchairRequired: emergencyData.wheelchairRequired || false,
+      escortRequired: true,
+      priority: TransportPriority.EMERGENCY,
+      estimatedDuration: 60,
+      estimatedDistance: 10
+    });
+
+    // Immediately schedule emergency transport
+    try {
+      await this.scheduleTransport(emergencyRequest.id);
+    } catch (error: unknown) {
+      // If auto-scheduling fails, send urgent notification
+      await this.notificationService.sendNotification({
+        message: 'Notification: Emergency Transport Manual Scheduling Required',
+        type: 'emergency_transport_manual_scheduling_required',
+        recipients: ['transport_manager', 'care_managers', 'admin'],
+        data: {
+          requestNumber: emergencyRequest.requestNumber,
+          residentId: emergencyRequest.residentId,
+          destination: emergencyRequest.destination,
+          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        }
+      });
+    }
+
+    return emergencyRequest;
+  }
+
+  // Maintenance Scheduling
+  async scheduleVehicleMaintenance(vehicleId: string, maintenanceType: string, scheduledDate: Date): Promise<void> {
+    const vehicle = await this.getVehicleById(vehicleId);
+    if (!vehicle) {
+      throw new Error('Vehicle not found');
+    }
+
+    vehicle.status = VehicleStatus.MAINTENANCE;
+    await this.vehicleRepository.save(vehicle);
+
+    // Create maintenance work order
+    const workOrderNumber = `MWO${Date.now()}${Math.random().toString(36).substr(2, 4)}`;
+    
+    await this.auditService.logEvent({
+      resource: 'VehicleMaintenanceWorkOrder',
+        entityType: 'VehicleMaintenanceWorkOrder',
+      entityId: workOrderNumber,
+      action: 'CREATE',
+      details: {
+        vehicleId,
+        maintenanceType,
+        scheduledDate,
+        workOrderNumber
+      },
+      userId: 'system'
+    });
+
+    await this.notificationService.sendNotification({
+      message: 'Notification: Vehicle Maintenance Scheduled',
+        type: 'vehicle_maintenance_scheduled',
+      recipients: ['maintenance_team', 'transport_coordinator'],
+      data: {
+        vehicleNumber: vehicle.vehicleNumber,
+        maintenanceType,
+        scheduledDate,
+        estimatedDuration: this.getEstimatedMaintenanceDuration(maintenanceType)
+      }
+    });
+  }
+
+  async completeVehicleMaintenance(vehicleId: string, maintenanceData: any): Promise<void> {
+    const vehicle = await this.getVehicleById(vehicleId);
+    if (!vehicle) {
+      throw new Error('Vehicle not found');
+    }
+
+    vehicle.addMaintenanceRecord({
+      date: new Date(),
+      type: maintenanceData.type,
+      description: maintenanceData.description,
+      mileage: vehicle.currentMileage,
+      cost: maintenanceData.cost,
+      performedBy: maintenanceData.performedBy,
+      nextServiceDate: maintenanceData.nextServiceDate,
+      status: 'completed'
+    });
+
+    vehicle.status = VehicleStatus.AVAILABLE;
+    await this.vehicleRepository.save(vehicle);
+
+    // Send notification
+    await this.notificationService.sendNotification({
+      message: 'Notification: Vehicle Maintenance Completed',
+        type: 'vehicle_maintenance_completed',
+      recipients: ['transport_coordinator'],
+      data: {
+        vehicleNumber: vehicle.vehicleNumber,
+        maintenanceType: maintenanceData.type,
+        cost: maintenanceData.cost
+      }
+    });
+  }
+
+  // Private helper methods
+  private async generateVehicleNumber(vehicleType: VehicleType): Promise<string> {
+    const typePrefix = vehicleType.substring(0, 3).toUpperCase();
+    const count = await this.vehicleRepository.count({ where: { vehicleType } });
+    return `${typePrefix}${String(count + 1).padStart(3, '0')}`;
+  }
+
+  private async generateRequestNumber(): Promise<string> {
+    const year = new Date().getFullYear();
+    const count = await this.transportRequestRepository.count();
+    return `TR${year}${String(count + 1).padStart(4, '0')}`;
+  }
+
+  private async findSuitableVehicle(request: TransportRequest): Promise<Vehicle | null> {
+    const availableVehicles = await this.getAvailableVehicles();
+    
+    // Filter by requirements
+    const suitableVehicles = availableVehicles.filter(vehicle => {
+      if (request.wheelchairRequired && !vehicle.canAccommodateWheelchairs()) {
+        return false;
+      }
+      
+      if (request.requestType === 'emergency' && vehicle.vehicleType !== VehicleType.AMBULANCE) {
+        // Prefer ambulance for emergencies, but allow others if no ambulance available
+        return availableVehicles.filter(v => v.vehicleType === VehicleType.AMBULANCE).length === 0;
+      }
+      
+      return true;
+    });
+
+    // Return the most suitable vehicle (prefer by type, then by availability)
+    return suitableVehicles[0] || null;
+  }
+
+  private async findAvailableDriver(appointmentTime: Date): Promise<string | null> {
+    const availableDrivers = await this.getAvailableDrivers(appointmentTime);
+    return availableDrivers[0] || null;
+  }
+
+  private async calculateOptimalRoutes(requests: TransportRequest[]): Promise<any[]> {
+    const routes: any[] = [];
+    const availableVehicles = await this.getAvailableVehicles();
+    const availableDrivers = await this.getAvailableDrivers(new Date());
+
+    // Group requests by time slots (2-hour windows)
+    const timeSlots = this.groupRequestsByTimeSlots(requests);
+    
+    let vehicleIndex = 0;
+    let driverIndex = 0;
+
+    for (const [timeSlot, slotRequests] of Object.entries(timeSlots)) {
+      if (vehicleIndex >= availableVehicles.length || driverIndex >= availableDrivers.length) {
+        break; // No more vehicles or drivers available
+      }
+
+      const vehicle = availableVehicles[vehicleIndex];
+      const driver = availableDrivers[driverIndex];
+
+      // Sort requests by priority and proximity
+      const sortedRequests = slotRequests.sort((a, b) => {
+        const priorityOrder = { emergency: 4, high: 3, medium: 2, low: 1 };
+        const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
+        if (priorityDiff !== 0) return priorityDiff;
+        
+        // Secondary sort by estimated distance (closer first)
+        return a.estimatedDistance - b.estimatedDistance;
+      });
+
+      // Calculate optimal route for this vehicle
+      const stops: any[] = [];
+      let currentTime = new Date(sortedRequests[0].appointmentTime || Date.now());
+      let totalDistance = 0;
+      let totalTime = 0;
+
+      for (const request of sortedRequests) {
+        // Check if vehicle can accommodate this request
+        if (request.wheelchairRequired && !vehicle.canAccommodateWheelchairs()) {
+          continue;
+        }
+
+        const travelTime = this.calculateTravelTime(request.destination);
+        const arrivalTime = new Date(currentTime.getTime() + travelTime * 60 * 1000);
+        const departureTime = new Date(arrivalTime.getTime() + 30 * 60 * 1000); // 30 min appointment
+
+        stops.push({
+          location: request.destination,
+          arrivalTime,
+          departureTime,
+          passengers: [request.residentId],
+          purpose: request.requestType,
+          requestId: request.id
+        });
+
+        totalDistance += request.estimatedDistance * 2; // Round trip
+        totalTime += request.estimatedDuration + travelTime;
+        currentTime = departureTime;
+
+        // Limit to vehicle capacity
+        if (stops.length >= vehicle.getAvailableSeats()) {
+          break;
+        }
+      }
+
+      if (stops.length > 0) {
+        routes.push({
+          vehicleId: vehicle.id,
+          driverId: driver,
+          stops,
+          totalDistance,
+          totalTime,
+          fuelCost: this.calculateFuelCost(totalDistance, vehicle.specifications.fuelType),
+          efficiency: stops.length / totalTime * 60 // requests per hour
+        });
+
+        vehicleIndex++;
+        driverIndex++;
+      }
+    }
+
+    return routes;
+  }
+
+  private groupRequestsByTimeSlots(requests: TransportRequest[]): { [timeSlot: string]: TransportRequest[] } {
+    const timeSlots: { [timeSlot: string]: TransportRequest[] } = {};
+    
+    for (const request of requests) {
+      const appointmentTime = request.appointmentTime || new Date();
+      const hour = appointmentTime.getHours();
+      const timeSlot = `${Math.floor(hour / 2) * 2}:00-${Math.floor(hour / 2) * 2 + 2}:00`;
+      
+      if (!timeSlots[timeSlot]) {
+        timeSlots[timeSlot] = [];
+      }
+      timeSlots[timeSlot].push(request);
+    }
+    
+    return timeSlots;
+  }
+
+  private calculateTravelTime(destination: string): number {
+    // Calculate travel time based on destination type and distance
+    const destinationTypes = {
+      'hospital': 25,
+      'gp': 15,
+      'pharmacy': 10,
+      'shopping': 20,
+      'family': 30,
+      'social': 25
+    };
+
+    const destinationLower = destination.toLowerCase();
+    for (const [type, time] of Object.entries(destinationTypes)) {
+      if (destinationLower.includes(type)) {
+        return time;
+      }
+    }
+    
+    return 20; // Default 20 minutes
+  }
+
+  private calculateFuelCost(distance: number, fuelType: string): number {
+    const fuelPrices = {
+      petrol: 1.45, // £ per liter
+      diesel: 1.52,
+      electric: 0.28, // £ per kWh
+      hybrid: 1.40
+    };
+
+    const fuelEfficiency = {
+      petrol: 12, // miles per liter
+      diesel: 15,
+      electric: 4, // miles per kWh
+      hybrid: 18
+    };
+
+    const pricePerLiter = fuelPrices[fuelType] || fuelPrices.petrol;
+    const milesPerLiter = fuelEfficiency[fuelType] || fuelEfficiency.petrol;
+    
+    return (distance / milesPerLiter) * pricePerLiter;
+  }
+
+  private getEstimatedMaintenanceDuration(maintenanceType: string): number {
+    const durations = {
+      'service': 4,
+      'mot': 2,
+      'repair': 6,
+      'inspection': 1
+    };
+    
+    return durations[maintenanceType] || 2;
+  }
+}

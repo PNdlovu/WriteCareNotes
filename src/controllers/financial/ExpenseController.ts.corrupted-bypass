@@ -1,0 +1,685 @@
+import { EventEmitter2 } from "eventemitter2";
+
+/**
+ * @fileoverview Expense Controller for WriteCareNotes
+ * @module ExpenseController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Comprehensive expense management controller with healthcare expense features,
+ * approval workflows, and compliance reporting for care home operations.
+ * 
+ * @compliance
+ * - SOX (Sarbanes-Oxley Act) compliance
+ * - GDPR Article 6 & 9 (Financial data processing)
+ * - HMRC (Her Majesty's Revenue and Customs) regulations
+ * - NHS Digital standards for healthcare expense management
+ */
+
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, Req, Res, HttpStatus, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Request, Response } from 'express';
+import { ExpenseService, CreateExpenseRequest, UpdateExpenseRequest, ExpenseFilters, ExpenseListResponse, SubmitExpenseRequest, ApproveExpenseRequest, RejectExpenseRequest, ProcessReimbursementRequest } from '@/services/financial/ExpenseService';
+import { Expense, ExpenseStatus, ExpenseCategory, ExpenseType } from '@/entities/financial/Expense';
+import { JwtAuthGuard } from '@/guards/JwtAuthGuard';
+import { RoleGuard } from '@/guards/RoleGuard';
+import { Roles } from '@/decorators/Roles';
+import { User } from '@/decorators/User';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { CreateExpenseDto, UpdateExpenseDto, SubmitExpenseDto, ApproveExpenseDto, RejectExpenseDto, ProcessReimbursementDto, ExpenseFiltersDto } from '@/dto/financial/ExpenseDto';
+import { logger } from '@/utils/logger';
+
+@ApiTags('Financial - Expenses')
+@ApiBearerAuth()
+@Controller('financial/expenses')
+@UseGuards(JwtAuthGuard, RoleGuard)
+export class ExpenseController {
+  constructor(private readonly expenseService: ExpenseService) {}
+
+  /**
+   * Create a new expense
+   */
+  @Post()
+  @Roles('admin', 'finance_manager', 'staff', 'manager')
+  @ApiOperation({ summary: 'Create a new expense' })
+  @ApiResponse({ status: 201, description: 'Expense created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request data' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async createExpense(
+    @Body(ValidationPipe) createExpenseDto: CreateExpenseDto,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Creating expense for ${createExpenseDto.category}`, {
+        userId: user.id,
+        category: createExpenseDto.category,
+        amount: createExpenseDto.amount,
+        auditTrail: true
+      });
+
+      const request: CreateExpenseRequest = {
+        ...createExpenseDto,
+        createdBy: user.id,
+      };
+
+      const expense = await this.expenseService.createExpense(request);
+
+      res.status(HttpStatus.CREATED).json({
+        success: true,
+        message: 'Expense created successfully',
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to create expense: ${error.message}`, {
+        userId: user.id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to create expense',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Get expense by ID
+   */
+  @Get(':id')
+  @Roles('admin', 'finance_manager', 'staff', 'manager', 'viewer')
+  @ApiOperation({ summary: 'Get expense by ID' })
+  @ApiParam({ name: 'id', description: 'Expense ID' })
+  @ApiResponse({ status: 200, description: 'Expense retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Expense not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async getExpense(
+    @Param('id') id: string,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Retrieving expense: ${id}`, {
+        userId: user.id,
+        expenseId: id,
+        auditTrail: true
+      });
+
+      const expense = await this.expenseService.getExpenseById(id);
+
+      if (!expense) {
+        res.status(HttpStatus.NOT_FOUND).json({
+          success: false,
+          message: 'Expense not found',
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to retrieve expense: ${error.message}`, {
+        userId: user.id,
+        expenseId: id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to retrieve expense',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * List expenses with filters
+   */
+  @Get()
+  @Roles('admin', 'finance_manager', 'staff', 'manager', 'viewer')
+  @ApiOperation({ summary: 'List expenses with filters' })
+  @ApiQuery({ name: 'status', required: false, description: 'Expense status filter' })
+  @ApiQuery({ name: 'category', required: false, description: 'Expense category filter' })
+  @ApiQuery({ name: 'expenseType', required: false, description: 'Expense type filter' })
+  @ApiQuery({ name: 'reimbursementStatus', required: false, description: 'Reimbursement status filter' })
+  @ApiQuery({ name: 'departmentId', required: false, description: 'Department ID filter' })
+  @ApiQuery({ name: 'projectCode', required: false, description: 'Project code filter' })
+  @ApiQuery({ name: 'costCenter', required: false, description: 'Cost center filter' })
+  @ApiQuery({ name: 'budgetId', required: false, description: 'Budget ID filter' })
+  @ApiQuery({ name: 'submittedBy', required: false, description: 'Submitted by filter' })
+  @ApiQuery({ name: 'approvedBy', required: false, description: 'Approved by filter' })
+  @ApiQuery({ name: 'dateFrom', required: false, description: 'Start date filter' })
+  @ApiQuery({ name: 'dateTo', required: false, description: 'End date filter' })
+  @ApiQuery({ name: 'amountFrom', required: false, description: 'Minimum amount filter' })
+  @ApiQuery({ name: 'amountTo', required: false, description: 'Maximum amount filter' })
+  @ApiQuery({ name: 'isVATApplicable', required: false, description: 'VAT applicable filter' })
+  @ApiQuery({ name: 'isReimbursable', required: false, description: 'Reimbursable expenses filter' })
+  @ApiQuery({ name: 'search', required: false, description: 'Search term' })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Items per page' })
+  @ApiQuery({ name: 'sortBy', required: false, description: 'Sort field' })
+  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sort order' })
+  @ApiResponse({ status: 200, description: 'Expenses retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async listExpenses(
+    @Query() query: any,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info('Listing expenses with filters', {
+        userId: user.id,
+        filters: query,
+        auditTrail: true
+      });
+
+      const filters: ExpenseFilters = {
+        status: query.status ? (Array.isArray(query.status) ? query.status : [query.status]) : undefined,
+        category: query.category ? (Array.isArray(query.category) ? query.category : [query.category]) : undefined,
+        expenseType: query.expenseType ? (Array.isArray(query.expenseType) ? query.expenseType : [query.expenseType]) : undefined,
+        reimbursementStatus: query.reimbursementStatus ? (Array.isArray(query.reimbursementStatus) ? query.reimbursementStatus : [query.reimbursementStatus]) : undefined,
+        departmentId: query.departmentId,
+        projectCode: query.projectCode,
+        costCenter: query.costCenter,
+        budgetId: query.budgetId,
+        submittedBy: query.submittedBy,
+        approvedBy: query.approvedBy,
+        dateFrom: query.dateFrom ? new Date(query.dateFrom) : undefined,
+        dateTo: query.dateTo ? new Date(query.dateTo) : undefined,
+        amountFrom: query.amountFrom ? parseFloat(query.amountFrom) : undefined,
+        amountTo: query.amountTo ? parseFloat(query.amountTo) : undefined,
+        isVATApplicable: query.isVATApplicable === 'true',
+        isReimbursable: query.isReimbursable === 'true',
+        search: query.search,
+        page: query.page ? parseInt(query.page) : undefined,
+        limit: query.limit ? parseInt(query.limit) : undefined,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+      };
+
+      const result: ExpenseListResponse = await this.expenseService.listExpenses(filters);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        data: result,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to list expenses: ${error.message}`, {
+        userId: user.id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to list expenses',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Update an existing expense
+   */
+  @Put(':id')
+  @Roles('admin', 'finance_manager', 'staff', 'manager')
+  @ApiOperation({ summary: 'Update an existing expense' })
+  @ApiParam({ name: 'id', description: 'Expense ID' })
+  @ApiResponse({ status: 200, description: 'Expense updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request data' })
+  @ApiResponse({ status: 404, description: 'Expense not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async updateExpense(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateExpenseDto: UpdateExpenseDto,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Updating expense: ${id}`, {
+        userId: user.id,
+        expenseId: id,
+        auditTrail: true
+      });
+
+      const request: UpdateExpenseRequest = {
+        ...updateExpenseDto,
+        updatedBy: user.id,
+      };
+
+      const expense = await this.expenseService.updateExpense(id, request);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Expense updated successfully',
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to update expense: ${error.message}`, {
+        userId: user.id,
+        expenseId: id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to update expense',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Submit expense for approval
+   */
+  @Post(':id/submit')
+  @Roles('admin', 'finance_manager', 'staff', 'manager')
+  @ApiOperation({ summary: 'Submit expense for approval' })
+  @ApiParam({ name: 'id', description: 'Expense ID' })
+  @ApiResponse({ status: 200, description: 'Expense submitted successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request data' })
+  @ApiResponse({ status: 404, description: 'Expense not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async submitExpense(
+    @Param('id') id: string,
+    @Body(ValidationPipe) submitExpenseDto: SubmitExpenseDto,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Submitting expense for approval: ${id}`, {
+        userId: user.id,
+        expenseId: id,
+        auditTrail: true
+      });
+
+      const request: SubmitExpenseRequest = {
+        expenseId: id,
+        ...submitExpenseDto,
+        submittedBy: user.id,
+      };
+
+      const expense = await this.expenseService.submitExpense(request);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Expense submitted successfully',
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to submit expense: ${error.message}`, {
+        userId: user.id,
+        expenseId: id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to submit expense',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Approve expense
+   */
+  @Post(':id/approve')
+  @Roles('admin', 'finance_manager', 'manager')
+  @ApiOperation({ summary: 'Approve expense' })
+  @ApiParam({ name: 'id', description: 'Expense ID' })
+  @ApiResponse({ status: 200, description: 'Expense approved successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request data' })
+  @ApiResponse({ status: 404, description: 'Expense not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async approveExpense(
+    @Param('id') id: string,
+    @Body(ValidationPipe) approveExpenseDto: ApproveExpenseDto,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Approving expense: ${id}`, {
+        userId: user.id,
+        expenseId: id,
+        auditTrail: true
+      });
+
+      const request: ApproveExpenseRequest = {
+        expenseId: id,
+        ...approveExpenseDto,
+        approvedBy: user.id,
+      };
+
+      const expense = await this.expenseService.approveExpense(request);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Expense approved successfully',
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to approve expense: ${error.message}`, {
+        userId: user.id,
+        expenseId: id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to approve expense',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Reject expense
+   */
+  @Post(':id/reject')
+  @Roles('admin', 'finance_manager', 'manager')
+  @ApiOperation({ summary: 'Reject expense' })
+  @ApiParam({ name: 'id', description: 'Expense ID' })
+  @ApiResponse({ status: 200, description: 'Expense rejected successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request data' })
+  @ApiResponse({ status: 404, description: 'Expense not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async rejectExpense(
+    @Param('id') id: string,
+    @Body(ValidationPipe) rejectExpenseDto: RejectExpenseDto,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Rejecting expense: ${id}`, {
+        userId: user.id,
+        expenseId: id,
+        reason: rejectExpenseDto.reason,
+        auditTrail: true
+      });
+
+      const request: RejectExpenseRequest = {
+        expenseId: id,
+        ...rejectExpenseDto,
+        rejectedBy: user.id,
+      };
+
+      const expense = await this.expenseService.rejectExpense(request);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Expense rejected successfully',
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to reject expense: ${error.message}`, {
+        userId: user.id,
+        expenseId: id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to reject expense',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Process reimbursement for expense
+   */
+  @Post(':id/reimburse')
+  @Roles('admin', 'finance_manager')
+  @ApiOperation({ summary: 'Process reimbursement for expense' })
+  @ApiParam({ name: 'id', description: 'Expense ID' })
+  @ApiResponse({ status: 200, description: 'Reimbursement processed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request data' })
+  @ApiResponse({ status: 404, description: 'Expense not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async processReimbursement(
+    @Param('id') id: string,
+    @Body(ValidationPipe) processReimbursementDto: ProcessReimbursementDto,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Processing reimbursement for expense: ${id}`, {
+        userId: user.id,
+        expenseId: id,
+        amount: processReimbursementDto.amount,
+        auditTrail: true
+      });
+
+      const request: ProcessReimbursementRequest = {
+        expenseId: id,
+        ...processReimbursementDto,
+        reimbursedBy: user.id,
+      };
+
+      const expense = await this.expenseService.processReimbursement(request);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        message: 'Reimbursement processed successfully',
+        data: expense,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to process reimbursement: ${error.message}`, {
+        userId: user.id,
+        expenseId: id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to process reimbursement',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Get expense statistics
+   */
+  @Get('statistics/summary')
+  @Roles('admin', 'finance_manager', 'staff', 'manager', 'viewer')
+  @ApiOperation({ summary: 'Get expense statistics' })
+  @ApiQuery({ name: 'period', required: false, description: 'Statistics period (month, quarter, year)' })
+  @ApiResponse({ status: 200, description: 'Statistics retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async getExpenseStatistics(
+    @Query('period') period: 'month' | 'quarter' | 'year' = 'month',
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info('Retrieving expense statistics', {
+        userId: user.id,
+        period,
+        auditTrail: true
+      });
+
+      const statistics = await this.expenseService.getExpenseStatistics(period);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        data: statistics,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to retrieve expense statistics: ${error.message}`, {
+        userId: user.id,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to retrieve expense statistics',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Get expenses by category
+   */
+  @Get('category/:category')
+  @Roles('admin', 'finance_manager', 'staff', 'manager', 'viewer')
+  @ApiOperation({ summary: 'Get expenses by category' })
+  @ApiParam({ name: 'category', description: 'Expense category' })
+  @ApiResponse({ status: 200, description: 'Expenses retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async getExpensesByCategory(
+    @Param('category') category: ExpenseCategory,
+    @Query() query: any,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Retrieving expenses by category: ${category}`, {
+        userId: user.id,
+        category,
+        auditTrail: true
+      });
+
+      const filters: ExpenseFilters = {
+        category: [category],
+        page: query.page ? parseInt(query.page) : undefined,
+        limit: query.limit ? parseInt(query.limit) : undefined,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+      };
+
+      const result: ExpenseListResponse = await this.expenseService.listExpenses(filters);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        data: result,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to retrieve expenses by category: ${error.message}`, {
+        userId: user.id,
+        category,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to retrieve expenses by category',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Get expenses by department
+   */
+  @Get('department/:departmentId')
+  @Roles('admin', 'finance_manager', 'staff', 'manager', 'viewer')
+  @ApiOperation({ summary: 'Get expenses by department' })
+  @ApiParam({ name: 'departmentId', description: 'Department ID' })
+  @ApiResponse({ status: 200, description: 'Expenses retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async getExpensesByDepartment(
+    @Param('departmentId') departmentId: string,
+    @Query() query: any,
+    @User() user: any,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      logger.info(`Retrieving expenses by department: ${departmentId}`, {
+        userId: user.id,
+        departmentId,
+        auditTrail: true
+      });
+
+      const filters: ExpenseFilters = {
+        departmentId,
+        page: query.page ? parseInt(query.page) : undefined,
+        limit: query.limit ? parseInt(query.limit) : undefined,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+      };
+
+      const result: ExpenseListResponse = await this.expenseService.listExpenses(filters);
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        data: result,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      logger.error(`Failed to retrieve expenses by department: ${error.message}`, {
+        userId: user.id,
+        departmentId,
+        error: error.stack,
+        auditTrail: true
+      });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Failed to retrieve expenses by department',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+}
+
+export default ExpenseController;

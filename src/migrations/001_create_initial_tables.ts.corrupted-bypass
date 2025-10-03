@@ -1,0 +1,1615 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import { MigrationInterface, QueryRunner, Table, Index, ForeignKey } from 'typeorm';
+
+export class CreateInitialTables1703001000000 implements MigrationInterface {
+  name = 'CreateInitialTables1703001000000';
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create employees table
+    await queryRunner.createTable(
+      new Table({
+        name: 'employees',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'employeeNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'personalDetails',
+            type: 'jsonb',
+          },
+          {
+            name: 'contactInformation',
+            type: 'jsonb',
+          },
+          {
+            name: 'employmentInformation',
+            type: 'jsonb',
+          },
+          {
+            name: 'jobDetails',
+            type: 'jsonb',
+          },
+          {
+            name: 'contractInformation',
+            type: 'jsonb',
+          },
+          {
+            name: 'rightToWorkDocuments',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'rightToWorkStatus',
+            type: 'enum',
+            enum: ['verified', 'pending', 'expired', 'invalid'],
+            default: "'pending'",
+          },
+          {
+            name: 'rightToWorkExpiryDate',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'qualifications',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'certifications',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'professionalRegistrations',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'skills',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'competencies',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'performanceHistory',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'trainingRecords',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'disciplinaryRecords',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create service_users table
+    await queryRunner.createTable(
+      new Table({
+        name: 'service_users',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'serviceUserNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'personalDetails',
+            type: 'jsonb',
+          },
+          {
+            name: 'contactInformation',
+            type: 'jsonb',
+          },
+          {
+            name: 'medicalInformation',
+            type: 'jsonb',
+          },
+          {
+            name: 'careRequirements',
+            type: 'jsonb',
+          },
+          {
+            name: 'preferences',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['active', 'inactive', 'suspended', 'discharged', 'deceased'],
+            default: "'active'",
+          },
+          {
+            name: 'careStartDate',
+            type: 'date',
+          },
+          {
+            name: 'careEndDate',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'fundingSource',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'hourlyRate',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'weeklyBudget',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'localAuthorityRef',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
+            name: 'socialWorker',
+            type: 'varchar',
+            length: '200',
+            isNullable: true,
+          },
+          {
+            name: 'careManager',
+            type: 'varchar',
+            length: '200',
+            isNullable: true,
+          },
+          {
+            name: 'specialNotes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'requiresKeyHolder',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'hasSecuritySystem',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'hasPets',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'petInformation',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'visitHistory',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create universal_users table
+    await queryRunner.createTable(
+      new Table({
+        name: 'universal_users',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'userNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'userType',
+            type: 'enum',
+            enum: [
+              'care_worker', 'manager', 'deputy_manager', 'executive', 'operations', 
+              'hr_admin', 'system_admin', 'family_member', 'service_user', 'guardian', 
+              'advocate', 'gp_liaison', 'social_worker', 'cqc_inspector', 'local_authority', 'nhs_liaison'
+            ],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['active', 'inactive', 'pending_verification', 'suspended', 'archived'],
+            default: "'pending_verification'",
+          },
+          {
+            name: 'personalDetails',
+            type: 'jsonb',
+          },
+          {
+            name: 'familyMemberDetails',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'staffDetails',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'accessPermissions',
+            type: 'jsonb',
+          },
+          {
+            name: 'notificationPreferences',
+            type: 'jsonb',
+          },
+          {
+            name: 'appPreferences',
+            type: 'jsonb',
+          },
+          {
+            name: 'profilePhotoUrl',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'lastLoginAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'lastLoginDevice',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'emailVerifiedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'phoneVerifiedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'registrationToken',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'registrationTokenExpiry',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'invitedBy',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'invitedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'termsAccepted',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'termsAcceptedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'privacyPolicyAccepted',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'privacyPolicyAcceptedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create time_entries table
+    await queryRunner.createTable(
+      new Table({
+        name: 'time_entries',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'employeeId',
+            type: 'uuid',
+          },
+          {
+            name: 'type',
+            type: 'enum',
+            enum: ['clock_in', 'clock_out', 'break_start', 'break_end'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['active', 'completed', 'disputed', 'approved', 'rejected'],
+            default: "'active'",
+          },
+          {
+            name: 'timestamp',
+            type: 'timestamp',
+          },
+          {
+            name: 'location',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'deviceInfo',
+            type: 'jsonb',
+          },
+          {
+            name: 'shiftId',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'photoUrl',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'hoursWorked',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'overtimeHours',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'breakDuration',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'approvedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'approvedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'approvalNotes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'isManualEntry',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'manualEntryReason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create care_visits table
+    await queryRunner.createTable(
+      new Table({
+        name: 'care_visits',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'visitNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'serviceUserId',
+            type: 'uuid',
+          },
+          {
+            name: 'careWorkerId',
+            type: 'uuid',
+          },
+          {
+            name: 'type',
+            type: 'enum',
+            enum: ['personal_care', 'medication', 'domestic', 'social', 'healthcare', 'assessment', 'emergency', 'welfare_check'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['scheduled', 'en_route', 'arrived', 'in_progress', 'completed', 'missed', 'cancelled', 'emergency'],
+            default: "'scheduled'",
+          },
+          {
+            name: 'scheduledStartTime',
+            type: 'timestamp',
+          },
+          {
+            name: 'scheduledEndTime',
+            type: 'timestamp',
+          },
+          {
+            name: 'actualStartTime',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actualEndTime',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'plannedDuration',
+            type: 'int',
+          },
+          {
+            name: 'actualDuration',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'scheduledTasks',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'completedTasks',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'medications',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'observations',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'arrivalVerification',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'departureVerification',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'location',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'visitNotes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'handoverNotes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'serviceUserFeedback',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'travelInfo',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'requiresFollowUp',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'followUpReason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'followUpAssignedTo',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'hasIncident',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'incidentDescription',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'incidentReportedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'isEmergency',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'emergencyDetails',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'emergencyContacted',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'supervisorNotified',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'supervisorNotifiedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'photoUrls',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'documentUrls',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'requiresManagerReview',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'reviewedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'reviewedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'reviewNotes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'invoiced',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'invoiceAmount',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create payroll_records table
+    await queryRunner.createTable(
+      new Table({
+        name: 'payroll_records',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'employeeId',
+            type: 'uuid',
+          },
+          {
+            name: 'payrollNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'frequency',
+            type: 'enum',
+            enum: ['weekly', 'fortnightly', 'monthly'],
+          },
+          {
+            name: 'payPeriodStart',
+            type: 'date',
+          },
+          {
+            name: 'payPeriodEnd',
+            type: 'date',
+          },
+          {
+            name: 'payDate',
+            type: 'date',
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['draft', 'calculated', 'approved', 'paid', 'disputed'],
+            default: "'draft'",
+          },
+          {
+            name: 'hours',
+            type: 'jsonb',
+          },
+          {
+            name: 'earnings',
+            type: 'jsonb',
+          },
+          {
+            name: 'deductions',
+            type: 'jsonb',
+          },
+          {
+            name: 'netPay',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'taxCodes',
+            type: 'jsonb',
+          },
+          {
+            name: 'adjustments',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'calculatedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'calculatedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'approvedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'approvedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'paidBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'paidAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'paymentMethod',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'paymentReference',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'isDisputed',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'disputeReason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'disputeDate',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create additional tables for holidays, shifts, overtime_requests, and rotas
+    await this.createHolidaysTable(queryRunner);
+    await this.createShiftsTable(queryRunner);
+    await this.createOvertimeRequestsTable(queryRunner);
+    await this.createRotasTable(queryRunner);
+
+    // Create indexes
+    await this.createIndexes(queryRunner);
+
+    // Create foreign keys
+    await this.createForeignKeys(queryRunner);
+  }
+
+  private async createHolidaysTable(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'holidays',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'requestNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'employeeId',
+            type: 'uuid',
+          },
+          {
+            name: 'type',
+            type: 'enum',
+            enum: [
+              'annual_leave', 'sick_leave', 'maternity_leave', 'paternity_leave', 
+              'compassionate_leave', 'study_leave', 'unpaid_leave', 'emergency_leave', 
+              'jury_duty', 'medical_appointment'
+            ],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['pending', 'approved', 'rejected', 'cancelled', 'taken'],
+            default: "'pending'",
+          },
+          {
+            name: 'duration',
+            type: 'enum',
+            enum: ['full_day', 'half_day_am', 'half_day_pm', 'hours'],
+            default: "'full_day'",
+          },
+          {
+            name: 'startDate',
+            type: 'date',
+          },
+          {
+            name: 'endDate',
+            type: 'date',
+          },
+          {
+            name: 'daysRequested',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+          },
+          {
+            name: 'hoursRequested',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'reason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'requestedAt',
+            type: 'date',
+          },
+          {
+            name: 'requestedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'approval',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'rejection',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'attachments',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'requiresDocumentation',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'isEmergencyRequest',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'affectsPayroll',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'payImpact',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'coveringEmployeeId',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'handoverNotes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+  }
+
+  private async createShiftsTable(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'shifts',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'shiftCode',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'employeeId',
+            type: 'uuid',
+          },
+          {
+            name: 'type',
+            type: 'enum',
+            enum: ['regular', 'overtime', 'on_call', 'night_shift', 'weekend', 'holiday', 'split_shift'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['scheduled', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show'],
+            default: "'scheduled'",
+          },
+          {
+            name: 'scheduledStart',
+            type: 'timestamp',
+          },
+          {
+            name: 'scheduledEnd',
+            type: 'timestamp',
+          },
+          {
+            name: 'actualStart',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actualEnd',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'location',
+            type: 'jsonb',
+          },
+          {
+            name: 'requirements',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'breaks',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'scheduledHours',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+          },
+          {
+            name: 'actualHours',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'hourlyRate',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'overtimeRate',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'description',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'specialInstructions',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'createdBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'assignedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'assignedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'supervisorId',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+  }
+
+  private async createOvertimeRequestsTable(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'overtime_requests',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'requestNumber',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'employeeId',
+            type: 'uuid',
+          },
+          {
+            name: 'shiftId',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'type',
+            type: 'enum',
+            enum: ['planned', 'unplanned', 'emergency', 'voluntary', 'mandatory'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['pending', 'approved', 'rejected', 'completed', 'cancelled'],
+            default: "'pending'",
+          },
+          {
+            name: 'startTime',
+            type: 'timestamp',
+          },
+          {
+            name: 'endTime',
+            type: 'timestamp',
+          },
+          {
+            name: 'hoursRequested',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+          },
+          {
+            name: 'hoursWorked',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'reason',
+            type: 'text',
+          },
+          {
+            name: 'businessJustification',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'rates',
+            type: 'jsonb',
+          },
+          {
+            name: 'estimatedCost',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'actualCost',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'requiresManagerApproval',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'requiresHRApproval',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'requiresBudgetApproval',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'approval',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'rejection',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'requestedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'requestedAt',
+            type: 'date',
+          },
+          {
+            name: 'supervisorId',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+  }
+
+  private async createRotasTable(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'rotas',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'rotaCode',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'name',
+            type: 'varchar',
+            length: '200',
+          },
+          {
+            name: 'type',
+            type: 'enum',
+            enum: ['weekly', 'fortnightly', 'monthly', 'custom'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['draft', 'published', 'active', 'completed', 'cancelled'],
+            default: "'draft'",
+          },
+          {
+            name: 'startDate',
+            type: 'date',
+          },
+          {
+            name: 'endDate',
+            type: 'date',
+          },
+          {
+            name: 'locationId',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'department',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'description',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'requirements',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'constraints',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'metrics',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'createdBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'publishedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'publishedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'approvedBy',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'approvedAt',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'isTemplate',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'templateId',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+  }
+
+  private async createIndexes(queryRunner: QueryRunner): Promise<void> {
+    // Employee indexes
+    await queryRunner.createIndex('employees', new Index('idx_employees_employee_number', ['employeeNumber']));
+    await queryRunner.createIndex('employees', new Index('idx_employees_created_at', ['createdAt']));
+
+    // Service user indexes
+    await queryRunner.createIndex('service_users', new Index('idx_service_users_service_user_number', ['serviceUserNumber']));
+    await queryRunner.createIndex('service_users', new Index('idx_service_users_status', ['status']));
+
+    // Universal user indexes
+    await queryRunner.createIndex('universal_users', new Index('idx_universal_users_user_number', ['userNumber']));
+    await queryRunner.createIndex('universal_users', new Index('idx_universal_users_user_type', ['userType']));
+    await queryRunner.createIndex('universal_users', new Index('idx_universal_users_status', ['status']));
+
+    // Time entry indexes
+    await queryRunner.createIndex('time_entries', new Index('idx_time_entries_employee_id', ['employeeId']));
+    await queryRunner.createIndex('time_entries', new Index('idx_time_entries_timestamp', ['timestamp']));
+    await queryRunner.createIndex('time_entries', new Index('idx_time_entries_type_status', ['type', 'status']));
+
+    // Care visit indexes
+    await queryRunner.createIndex('care_visits', new Index('idx_care_visits_service_user_id', ['serviceUserId']));
+    await queryRunner.createIndex('care_visits', new Index('idx_care_visits_care_worker_id', ['careWorkerId']));
+    await queryRunner.createIndex('care_visits', new Index('idx_care_visits_scheduled_start', ['scheduledStartTime']));
+    await queryRunner.createIndex('care_visits', new Index('idx_care_visits_status', ['status']));
+
+    // Payroll record indexes
+    await queryRunner.createIndex('payroll_records', new Index('idx_payroll_records_employee_id', ['employeeId']));
+    await queryRunner.createIndex('payroll_records', new Index('idx_payroll_records_pay_date', ['payDate']));
+    await queryRunner.createIndex('payroll_records', new Index('idx_payroll_records_status', ['status']));
+
+    // Holiday indexes
+    await queryRunner.createIndex('holidays', new Index('idx_holidays_employee_id', ['employeeId']));
+    await queryRunner.createIndex('holidays', new Index('idx_holidays_status', ['status']));
+    await queryRunner.createIndex('holidays', new Index('idx_holidays_start_date', ['startDate']));
+
+    // Shift indexes
+    await queryRunner.createIndex('shifts', new Index('idx_shifts_employee_id', ['employeeId']));
+    await queryRunner.createIndex('shifts', new Index('idx_shifts_scheduled_start', ['scheduledStart']));
+    await queryRunner.createIndex('shifts', new Index('idx_shifts_status', ['status']));
+
+    // Overtime request indexes
+    await queryRunner.createIndex('overtime_requests', new Index('idx_overtime_requests_employee_id', ['employeeId']));
+    await queryRunner.createIndex('overtime_requests', new Index('idx_overtime_requests_status', ['status']));
+
+    // Rota indexes
+    await queryRunner.createIndex('rotas', new Index('idx_rotas_start_date', ['startDate']));
+    await queryRunner.createIndex('rotas', new Index('idx_rotas_status', ['status']));
+  }
+
+  private async createForeignKeys(queryRunner: QueryRunner): Promise<void> {
+    // Time entries foreign keys
+    await queryRunner.createForeignKey('time_entries', new ForeignKey({
+      columnNames: ['employeeId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'employees',
+      onDelete: 'CASCADE',
+    }));
+
+    // Care visits foreign keys
+    await queryRunner.createForeignKey('care_visits', new ForeignKey({
+      columnNames: ['serviceUserId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'service_users',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('care_visits', new ForeignKey({
+      columnNames: ['careWorkerId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'employees',
+      onDelete: 'CASCADE',
+    }));
+
+    // Payroll records foreign keys
+    await queryRunner.createForeignKey('payroll_records', new ForeignKey({
+      columnNames: ['employeeId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'employees',
+      onDelete: 'CASCADE',
+    }));
+
+    // Holiday foreign keys
+    await queryRunner.createForeignKey('holidays', new ForeignKey({
+      columnNames: ['employeeId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'employees',
+      onDelete: 'CASCADE',
+    }));
+
+    // Shift foreign keys
+    await queryRunner.createForeignKey('shifts', new ForeignKey({
+      columnNames: ['employeeId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'employees',
+      onDelete: 'CASCADE',
+    }));
+
+    // Overtime request foreign keys
+    await queryRunner.createForeignKey('overtime_requests', new ForeignKey({
+      columnNames: ['employeeId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'employees',
+      onDelete: 'CASCADE',
+    }));
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Drop tables in reverse order to handle dependencies
+    await queryRunner.dropTable('rotas');
+    await queryRunner.dropTable('overtime_requests');
+    await queryRunner.dropTable('shifts');
+    await queryRunner.dropTable('holidays');
+    await queryRunner.dropTable('payroll_records');
+    await queryRunner.dropTable('care_visits');
+    await queryRunner.dropTable('time_entries');
+    await queryRunner.dropTable('universal_users');
+    await queryRunner.dropTable('service_users');
+    await queryRunner.dropTable('employees');
+  }
+}

@@ -1,0 +1,212 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import { Repository } from 'typeorm';
+import AppDataSource from '../../config/database';
+import { RiskAssessment, RiskLevel, RiskCategory, LikelihoodLevel, ConsequenceLevel } from '../../entities/risk-assessment/RiskAssessment';
+
+export class RiskAssessmentService {
+  private riskRepository: Repository<RiskAssessment>;
+
+  constructor() {
+    this.riskRepository = AppDataSource.getRepository(RiskAssessment);
+  }
+
+  async createRiskAssessment(riskData: Partial<RiskAssessment>): Promise<RiskAssessment> {
+    try {
+      const riskId = `RSK${Date.now()}`;
+      
+      const risk = this.riskRepository.create({
+        ...riskData,
+        riskId,
+        assessmentDate: new Date(),
+        nextReviewDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
+        // Ensure backward compatibility
+        probability: riskData.likelihood || riskData.probability || 1,
+        impact: riskData.consequence || riskData.impact || 1
+      });
+
+      // Update risk level based on NHS/ICO 5x5 matrix
+      risk.updateRiskLevel();
+
+      return await this.riskRepository.save(risk);
+    } catch (error: unknown) {
+      console.error('Error creating risk assessment:', error);
+      throw error;
+    }
+  }
+
+  async getRiskAnalytics(): Promise<any> {
+    try {
+      const risks = await this.riskRepository.find();
+      
+      return {
+        totalRisks: risks.length,
+        highRisks: risks.filter(r => r.isHighRisk()).length,
+        criticalRisks: risks.filter(r => r.isCriticalRisk()).length,
+        averageRiskScore: risks.reduce((sum, r) => sum + r.calculateRiskScore(), 0) / risks.length,
+        risksByCategory: risks.reduce((acc, risk) => {
+          acc[risk.category] = (acc[risk.category] || 0) + 1;
+          return acc;
+        }, {}),
+        risksByLevel: risks.reduce((acc, risk) => {
+          acc[risk.riskLevel] = (acc[risk.riskLevel] || 0) + 1;
+          return acc;
+        }, {}),
+        riskMatrixDistribution: this.generateRiskMatrixDistribution(risks),
+        trends: await this.analyzeRiskTrends(risks)
+      };
+    } catch (error: unknown) {
+      console.error('Error getting risk analytics:', error);
+      throw error;
+    }
+  }
+
+  async updateRiskAssessment(riskId: string, updateData: Partial<RiskAssessment>): Promise<RiskAssessment> {
+    try {
+      const risk = await this.riskRepository.findOne({ where: { riskId } });
+      
+      if (!risk) {
+        throw new Error('Risk assessment not found');
+      }
+
+      // Update fields
+      Object.assign(risk, updateData);
+      
+      // Update risk level based on new likelihood/consequence
+      risk.updateRiskLevel();
+      
+      // Update review date if likelihood or consequence changed
+      if (updateData.likelihood || updateData.consequence) {
+        risk.nextReviewDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days for high-risk updates
+      }
+
+      return await this.riskRepository.save(risk);
+    } catch (error: unknown) {
+      console.error('Error updating risk assessment:', error);
+      throw error;
+    }
+  }
+
+  async getRiskMatrix(): Promise<any> {
+    try {
+      const risks = await this.riskRepository.find();
+      
+      // Create 5x5 matrix visualization data
+      const matrix = [];
+      for (let likelihood = 1; likelihood <= 5; likelihood++) {
+        const row = [];
+        for (let consequence = 1; consequence <= 5; consequence++) {
+          const score = likelihood * consequence;
+          const risksInCell = risks.filter(r => 
+            r.likelihood === likelihood && r.consequence === consequence
+          );
+          
+          row.push({
+            likelihood,
+            consequence,
+            score,
+            riskLevel: this.getRiskLevelFromScore(score),
+            count: risksInCell.length,
+            risks: risksInCell.map(r => ({
+              id: r.id,
+              riskId: r.riskId,
+              riskName: r.riskName,
+              category: r.category
+            }))
+          });
+        }
+        matrix.push(row);
+      }
+      
+      return {
+        matrix,
+        legend: {
+          likelihood: {
+            1: 'Very Unlikely (0-20%)',
+            2: 'Unlikely (21-40%)',
+            3: 'Possible (41-60%)',
+            4: 'Likely (61-80%)',
+            5: 'Very Likely (81-100%)'
+          },
+          consequence: {
+            1: 'Negligible',
+            2: 'Minor',
+            3: 'Moderate',
+            4: 'Major',
+            5: 'Catastrophic'
+          },
+          riskLevels: {
+            [RiskLevel.VERY_LOW]: 'Very Low (1-2)',
+            [RiskLevel.LOW]: 'Low (3-4)',
+            [RiskLevel.MEDIUM]: 'Medium (5-9)',
+            [RiskLevel.HIGH]: 'High (10-15)',
+            [RiskLevel.VERY_HIGH]: 'Very High (16-20)',
+            [RiskLevel.CRITICAL]: 'Critical (21-25)'
+          }
+        }
+      };
+    } catch (error: unknown) {
+      console.error('Error getting risk matrix:', error);
+      throw error;
+    }
+  }
+
+  private generateRiskMatrixDistribution(risks: RiskAssessment[]): any {
+    const distribution = {};
+    for (let l = 1; l <= 5; l++) {
+      for (let c = 1; c <= 5; c++) {
+        const key = `${l}x${c}`;
+        distribution[key] = risks.filter(r => 
+          r.likelihood === l && r.consequence === c
+        ).length;
+      }
+    }
+    return distribution;
+  }
+
+  private async analyzeRiskTrends(risks: RiskAssessment[]): Promise<any> {
+    // Analyze trends over time
+    const now = new Date();
+    const lastMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const lastQuarter = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    
+    const recentRisks = risks.filter(r => r.assessmentDate >= lastMonth);
+    const quarterlyRisks = risks.filter(r => r.assessmentDate >= lastQuarter);
+    
+    return {
+      monthlyTrend: {
+        total: recentRisks.length,
+        highRisk: recentRisks.filter(r => r.isHighRisk()).length,
+        criticalRisk: recentRisks.filter(r => r.isCriticalRisk()).length
+      },
+      quarterlyTrend: {
+        total: quarterlyRisks.length,
+        highRisk: quarterlyRisks.filter(r => r.isHighRisk()).length,
+        criticalRisk: quarterlyRisks.filter(r => r.isCriticalRisk()).length
+      },
+      categoryTrends: this.analyzeCategoryTrends(risks)
+    };
+  }
+
+  private analyzeCategoryTrends(risks: RiskAssessment[]): any {
+    const categoryTrends = {};
+    Object.values(RiskCategory).forEach(category => {
+      const categoryRisks = risks.filter(r => r.category === category);
+      categoryTrends[category] = {
+        total: categoryRisks.length,
+        highRisk: categoryRisks.filter(r => r.isHighRisk()).length,
+        averageScore: categoryRisks.reduce((sum, r) => sum + r.calculateRiskScore(), 0) / categoryRisks.length || 0
+      };
+    });
+    return categoryTrends;
+  }
+
+  private getRiskLevelFromScore(score: number): RiskLevel {
+    if (score >= 21) return RiskLevel.CRITICAL;
+    if (score >= 16) return RiskLevel.VERY_HIGH;
+    if (score >= 10) return RiskLevel.HIGH;
+    if (score >= 5) return RiskLevel.MEDIUM;
+    if (score >= 3) return RiskLevel.LOW;
+    return RiskLevel.VERY_LOW;
+  }
+}

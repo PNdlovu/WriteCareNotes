@@ -1,0 +1,2842 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import { MigrationInterface, QueryRunner, Table, Index, ForeignKey } from 'typeorm';
+
+export class CreateHealthcareTables1703002000000 implements MigrationInterface {
+  name = 'CreateHealthcareTables1703002000000';
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create medications table
+    await queryRunner.createTable(
+      new Table({
+        name: 'medications',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'generic_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'brand_name',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'alternative_names',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'active_ingredients',
+            type: 'text',
+            array: true,
+          },
+          {
+            name: 'strength',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'strength_unit',
+            type: 'varchar',
+            length: '50',
+          },
+          {
+            name: 'form',
+            type: 'enum',
+            enum: [
+              'tablet', 'capsule', 'liquid', 'injection', 'cream', 'ointment', 
+              'gel', 'patch', 'inhaler', 'drops', 'spray', 'suppository', 
+              'pessary', 'powder', 'granules'
+            ],
+          },
+          {
+            name: 'route',
+            type: 'enum',
+            enum: [
+              'oral', 'sublingual', 'buccal', 'topical', 'transdermal', 
+              'intravenous', 'intramuscular', 'subcutaneous', 'intradermal', 
+              'inhalation', 'nasal', 'ophthalmic', 'otic', 'rectal', 
+              'vaginal', 'urethral'
+            ],
+          },
+          {
+            name: 'therapeutic_class',
+            type: 'enum',
+            enum: [
+              'analgesic', 'antibiotic', 'anticoagulant', 'antidepressant', 
+              'antidiabetic', 'antiepileptic', 'antihypertensive', 'antiinflammatory', 
+              'antipsychotic', 'bronchodilator', 'cardiac', 'diuretic', 'hormone', 
+              'immunosuppressant', 'laxative', 'sedative', 'vitamin', 'mineral', 'other'
+            ],
+          },
+          {
+            name: 'controlled_drug_schedule',
+            type: 'enum',
+            enum: [
+              'schedule_1', 'schedule_2', 'schedule_3', 'schedule_4_part_1', 
+              'schedule_4_part_2', 'schedule_5', 'not_controlled'
+            ],
+            default: "'not_controlled'",
+          },
+          {
+            name: 'snomed_code',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'dmd_code',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'bnf_code',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'atc_code',
+            type: 'varchar',
+            length: '10',
+            isNullable: true,
+          },
+          {
+            name: 'manufacturer',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'marketing_authorization_holder',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'license_number',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
+            name: 'indications',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'contraindications',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'side_effects',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'drug_interactions',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'monitoring_requirements',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'standard_dose_adult',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'standard_dose_elderly',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'maximum_daily_dose',
+            type: 'decimal',
+            precision: 10,
+            scale: 3,
+            isNullable: true,
+          },
+          {
+            name: 'minimum_interval_hours',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'storage_requirements',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'shelf_life_months',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'special_precautions',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'is_active',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'is_prescription_only',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'is_black_triangle',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'discontinuation_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'nhs_indicative_price',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'drug_tariff_category',
+            type: 'varchar',
+            length: '50',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'deleted_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'created_by',
+            type: 'uuid',
+          },
+          {
+            name: 'updated_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create residents table
+    await queryRunner.createTable(
+      new Table({
+        name: 'residents',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'first_name',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'middle_name',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
+            name: 'last_name',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'preferred_name',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
+            name: 'date_of_birth',
+            type: 'date',
+          },
+          {
+            name: 'gender',
+            type: 'enum',
+            enum: ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'],
+          },
+          {
+            name: 'marital_status',
+            type: 'enum',
+            enum: ['SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED', 'SEPARATED'],
+            isNullable: true,
+          },
+          {
+            name: 'nhs_number',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'phone_number',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'email',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'address',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'care_level',
+            type: 'enum',
+            enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
+          },
+          {
+            name: 'admission_date',
+            type: 'date',
+          },
+          {
+            name: 'discharge_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['ACTIVE', 'DISCHARGED', 'DECEASED'],
+            default: "'ACTIVE'",
+          },
+          {
+            name: 'organization_id',
+            type: 'uuid',
+          },
+          {
+            name: 'tenant_id',
+            type: 'uuid',
+          },
+          {
+            name: 'emergency_contact',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'medical_conditions',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'allergies',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'medications',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'care_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'deleted_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'created_by',
+            type: 'uuid',
+          },
+          {
+            name: 'updated_by',
+            type: 'uuid',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create prescriptions table
+    await queryRunner.createTable(
+      new Table({
+        name: 'prescriptions',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'resident_id',
+            type: 'uuid',
+          },
+          {
+            name: 'medication_id',
+            type: 'uuid',
+          },
+          {
+            name: 'prescriber_info',
+            type: 'jsonb',
+          },
+          {
+            name: 'prescription_type',
+            type: 'enum',
+            enum: ['regular', 'prn', 'stat', 'variable', 'titration'],
+            default: "'regular'",
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['active', 'completed', 'discontinued', 'expired', 'suspended', 'cancelled'],
+            default: "'active'",
+          },
+          {
+            name: 'dosage',
+            type: 'jsonb',
+          },
+          {
+            name: 'route',
+            type: 'enum',
+            enum: [
+              'oral', 'sublingual', 'buccal', 'topical', 'transdermal', 
+              'intravenous', 'intramuscular', 'subcutaneous', 'intradermal', 
+              'inhalation', 'nasal', 'ophthalmic', 'otic', 'rectal', 
+              'vaginal', 'urethral'
+            ],
+          },
+          {
+            name: 'indication',
+            type: 'varchar',
+            length: '500',
+          },
+          {
+            name: 'clinical_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'start_date',
+            type: 'date',
+          },
+          {
+            name: 'end_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'duration_days',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'review_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'review_schedule',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'last_reviewed_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'last_reviewed_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'max_dose_per_day',
+            type: 'decimal',
+            precision: 10,
+            scale: 3,
+            isNullable: true,
+          },
+          {
+            name: 'min_interval_hours',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'requires_monitoring',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'monitoring_instructions',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'discontinuation_reason',
+            type: 'varchar',
+            length: '500',
+            isNullable: true,
+          },
+          {
+            name: 'discontinued_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'discontinuation_date',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'organization_id',
+            type: 'uuid',
+          },
+          {
+            name: 'tenant_id',
+            type: 'uuid',
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'deleted_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'created_by',
+            type: 'uuid',
+          },
+          {
+            name: 'updated_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create administration_records table
+    await queryRunner.createTable(
+      new Table({
+        name: 'administration_records',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'prescription_id',
+            type: 'uuid',
+          },
+          {
+            name: 'resident_id',
+            type: 'uuid',
+          },
+          {
+            name: 'medication_id',
+            type: 'uuid',
+          },
+          {
+            name: 'scheduled_time',
+            type: 'timestamp',
+          },
+          {
+            name: 'administration_time',
+            type: 'timestamp',
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['given', 'refused', 'omitted', 'delayed', 'withheld', 'not_available'],
+          },
+          {
+            name: 'dosage_given',
+            type: 'jsonb',
+          },
+          {
+            name: 'route_used',
+            type: 'enum',
+            enum: [
+              'oral', 'sublingual', 'buccal', 'topical', 'transdermal', 
+              'intravenous', 'intramuscular', 'subcutaneous', 'intradermal', 
+              'inhalation', 'nasal', 'ophthalmic', 'otic', 'rectal', 
+              'vaginal', 'urethral'
+            ],
+          },
+          {
+            name: 'administered_by',
+            type: 'uuid',
+          },
+          {
+            name: 'administrator_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'administrator_role',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'electronic_signature',
+            type: 'jsonb',
+          },
+          {
+            name: 'witness_required',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'witness_info',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'second_witness_info',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'clinical_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'administration_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'refusal_reason',
+            type: 'enum',
+            enum: [
+              'patient_refused', 'nausea_vomiting', 'swallowing_difficulty', 
+              'asleep', 'absent_from_unit', 'clinical_decision', 
+              'allergic_reaction', 'other'
+            ],
+            isNullable: true,
+          },
+          {
+            name: 'refusal_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'prescriber_notified',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'prescriber_notification_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'side_effects_observed',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'vital_signs_before',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'vital_signs_after',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'is_late_administration',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'late_administration_reason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'delay_minutes',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'double_checked',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'double_checked_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'barcode_scanned',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'patient_identified',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'identification_method',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
+            name: 'organization_id',
+            type: 'uuid',
+          },
+          {
+            name: 'tenant_id',
+            type: 'uuid',
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create beds table
+    await queryRunner.createTable(
+      new Table({
+        name: 'beds',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'bed_number',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'room_id',
+            type: 'uuid',
+          },
+          {
+            name: 'bed_type',
+            type: 'enum',
+            enum: ['standard', 'profiling', 'bariatric', 'low_low', 'pressure_relief', 'electric', 'manual'],
+          },
+          {
+            name: 'care_level',
+            type: 'text',
+            array: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['available', 'occupied', 'maintenance', 'cleaning', 'reserved'],
+            default: "'available'",
+          },
+          {
+            name: 'current_resident_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'current_rate',
+            type: 'jsonb',
+          },
+          {
+            name: 'rate_history',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'occupancy_history',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'next_maintenance_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'last_maintenance_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'accessibility_features',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'special_equipment',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create rooms table
+    await queryRunner.createTable(
+      new Table({
+        name: 'rooms',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'room_number',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'room_type',
+            type: 'enum',
+            enum: ['single', 'double', 'twin', 'suite', 'family'],
+          },
+          {
+            name: 'floor',
+            type: 'int',
+          },
+          {
+            name: 'wing',
+            type: 'varchar',
+            length: '50',
+          },
+          {
+            name: 'capacity',
+            type: 'int',
+            default: 1,
+          },
+          {
+            name: 'current_occupancy',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'accessibility_features',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'amenities',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'maintenance_history',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'last_cleaning_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'next_cleaning_due',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create waiting_list_entries table
+    await queryRunner.createTable(
+      new Table({
+        name: 'waiting_list_entries',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'application_number',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'prospective_resident_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'date_of_birth',
+            type: 'date',
+          },
+          {
+            name: 'nhs_number',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'contact_details',
+            type: 'jsonb',
+          },
+          {
+            name: 'funding_source',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'care_level_required',
+            type: 'enum',
+            enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
+          },
+          {
+            name: 'preferred_room_type',
+            type: 'enum',
+            enum: ['single', 'double', 'twin', 'suite', 'family'],
+            isNullable: true,
+          },
+          {
+            name: 'special_requirements',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'medical_conditions',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'allergies',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'mobility_requirements',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'dietary_requirements',
+            type: 'text',
+            array: true,
+            isNullable: true,
+          },
+          {
+            name: 'preferred_admission_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'urgency_level',
+            type: 'enum',
+            enum: ['low', 'medium', 'high', 'urgent'],
+            default: "'medium'",
+          },
+          {
+            name: 'priority_score',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['active', 'offered', 'accepted', 'declined', 'cancelled'],
+            default: "'active'",
+          },
+          {
+            name: 'application_date',
+            type: 'date',
+          },
+          {
+            name: 'assessed_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'assessment_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'assessment_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'offered_bed_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'offer_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'offer_expiry_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'response_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'response_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create indexes
+    await this.createIndexes(queryRunner);
+
+    // Create foreign keys
+    await this.createForeignKeys(queryRunner);
+  }
+
+  private async createIndexes(queryRunner: QueryRunner): Promise<void> {
+    // Medication indexes
+    await queryRunner.createIndex('medications', new Index('idx_medications_generic_name', ['generic_name']));
+    await queryRunner.createIndex('medications', new Index('idx_medications_brand_name', ['brand_name']));
+    await queryRunner.createIndex('medications', new Index('idx_medications_therapeutic_class', ['therapeutic_class']));
+    await queryRunner.createIndex('medications', new Index('idx_medications_controlled_drug_schedule', ['controlled_drug_schedule']));
+    await queryRunner.createIndex('medications', new Index('idx_medications_bnf_code', ['bnf_code']));
+    await queryRunner.createIndex('medications', new Index('idx_medications_snomed_code', ['snomed_code']));
+
+    // Resident indexes
+    await queryRunner.createIndex('residents', new Index('idx_residents_organization_id', ['organization_id']));
+    await queryRunner.createIndex('residents', new Index('idx_residents_tenant_id', ['tenant_id']));
+    await queryRunner.createIndex('residents', new Index('idx_residents_status', ['status']));
+    await queryRunner.createIndex('residents', new Index('idx_residents_care_level', ['care_level']));
+    await queryRunner.createIndex('residents', new Index('idx_residents_nhs_number', ['nhs_number']));
+
+    // Prescription indexes
+    await queryRunner.createIndex('prescriptions', new Index('idx_prescriptions_resident_id', ['resident_id']));
+    await queryRunner.createIndex('prescriptions', new Index('idx_prescriptions_medication_id', ['medication_id']));
+    await queryRunner.createIndex('prescriptions', new Index('idx_prescriptions_status', ['status']));
+    await queryRunner.createIndex('prescriptions', new Index('idx_prescriptions_start_date_end_date', ['start_date', 'end_date']));
+    await queryRunner.createIndex('prescriptions', new Index('idx_prescriptions_review_date', ['review_date']));
+
+    // Administration record indexes
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_prescription_id', ['prescription_id']));
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_resident_id', ['resident_id']));
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_medication_id', ['medication_id']));
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_scheduled_time', ['scheduled_time']));
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_administration_time', ['administration_time']));
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_administered_by', ['administered_by']));
+    await queryRunner.createIndex('administration_records', new Index('idx_admin_records_status', ['status']));
+
+    // Bed indexes
+    await queryRunner.createIndex('beds', new Index('idx_beds_bed_number', ['bed_number']));
+    await queryRunner.createIndex('beds', new Index('idx_beds_room_id', ['room_id']));
+    await queryRunner.createIndex('beds', new Index('idx_beds_status', ['status']));
+    await queryRunner.createIndex('beds', new Index('idx_beds_current_resident_id', ['current_resident_id']));
+
+    // Room indexes
+    await queryRunner.createIndex('rooms', new Index('idx_rooms_room_number', ['room_number']));
+    await queryRunner.createIndex('rooms', new Index('idx_rooms_floor_wing', ['floor', 'wing']));
+
+    // Waiting list indexes
+    await queryRunner.createIndex('waiting_list_entries', new Index('idx_waiting_list_application_number', ['application_number']));
+    await queryRunner.createIndex('waiting_list_entries', new Index('idx_waiting_list_status', ['status']));
+    await queryRunner.createIndex('waiting_list_entries', new Index('idx_waiting_list_application_date', ['application_date']));
+    await queryRunner.createIndex('waiting_list_entries', new Index('idx_waiting_list_priority_score', ['priority_score']));
+
+    // Create activities table
+    await queryRunner.createTable(
+      new Table({
+        name: 'activities',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'activity_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'description',
+            type: 'text',
+          },
+          {
+            name: 'activity_type',
+            type: 'enum',
+            enum: ['physical', 'cognitive', 'social', 'creative', 'therapeutic', 'recreational', 'spiritual', 'educational'],
+          },
+          {
+            name: 'category',
+            type: 'enum',
+            enum: ['physiotherapy', 'occupational_therapy', 'speech_therapy', 'music_therapy', 'art_therapy', 'reminiscence', 'cognitive_stimulation', 'exercise_class', 'social_interaction', 'religious_service', 'entertainment', 'education', 'gardening', 'cooking', 'games', 'outings'],
+          },
+          {
+            name: 'difficulty',
+            type: 'enum',
+            enum: ['low', 'medium', 'high', 'adaptive'],
+            default: "'medium'",
+          },
+          {
+            name: 'participation_level',
+            type: 'enum',
+            enum: ['individual', 'small_group', 'large_group', 'one_on_one'],
+            default: "'small_group'",
+          },
+          {
+            name: 'requirements',
+            type: 'jsonb',
+          },
+          {
+            name: 'therapeutic_goals',
+            type: 'jsonb',
+          },
+          {
+            name: 'resources',
+            type: 'jsonb',
+          },
+          {
+            name: 'facilitator',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'location',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'scheduled_start_time',
+            type: 'timestamp',
+          },
+          {
+            name: 'scheduled_end_time',
+            type: 'timestamp',
+          },
+          {
+            name: 'actual_start_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actual_end_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'max_participants',
+            type: 'integer',
+          },
+          {
+            name: 'current_participants',
+            type: 'integer',
+            default: 0,
+          },
+          {
+            name: 'target_residents',
+            type: 'text',
+            array: true,
+          },
+          {
+            name: 'outcomes',
+            type: 'jsonb',
+          },
+          {
+            name: 'preparation_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'session_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['scheduled', 'in_progress', 'completed', 'cancelled'],
+            default: "'scheduled'",
+          },
+          {
+            name: 'is_recurring',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'recurrence_pattern',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'integer',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create indexes for activities table
+    await queryRunner.createIndex('activities', new Index('IDX_ACTIVITIES_SCHEDULED_TIME', ['scheduled_start_time']));
+    await queryRunner.createIndex('activities', new Index('IDX_ACTIVITIES_STATUS', ['status']));
+    await queryRunner.createIndex('activities', new Index('IDX_ACTIVITIES_TYPE', ['activity_type']));
+    await queryRunner.createIndex('activities', new Index('IDX_ACTIVITIES_FACILITATOR', ['facilitator']));
+    await queryRunner.createIndex('activities', new Index('IDX_ACTIVITIES_LOCATION', ['location']));
+
+    // Create therapy_sessions table
+    await queryRunner.createTable(
+      new Table({
+        name: 'therapy_sessions',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'session_number',
+            type: 'integer',
+          },
+          {
+            name: 'therapy_type',
+            type: 'enum',
+            enum: ['physiotherapy', 'occupational_therapy', 'speech_therapy', 'music_therapy', 'art_therapy', 'cognitive_behavioral_therapy', 'reminiscence_therapy', 'pet_therapy', 'garden_therapy', 'drama_therapy', 'dance_therapy'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['scheduled', 'in_progress', 'completed', 'cancelled', 'no_show'],
+            default: "'scheduled'",
+          },
+          {
+            name: 'resident_id',
+            type: 'uuid',
+          },
+          {
+            name: 'activity_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'therapist_id',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'therapist_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'therapist_qualification',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'scheduled_start_time',
+            type: 'timestamp',
+          },
+          {
+            name: 'scheduled_end_time',
+            type: 'timestamp',
+          },
+          {
+            name: 'actual_start_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actual_end_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'planned_duration',
+            type: 'integer',
+          },
+          {
+            name: 'actual_duration',
+            type: 'integer',
+            isNullable: true,
+          },
+          {
+            name: 'location',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'therapy_goals',
+            type: 'jsonb',
+          },
+          {
+            name: 'pre_session_assessment',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'post_session_assessment',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'interventions',
+            type: 'jsonb',
+          },
+          {
+            name: 'session_outcome',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'session_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'therapist_reflections',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'resident_feedback',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'family_feedback',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'cancellation_reason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'requires_follow_up',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'follow_up_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'next_session_date',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'equipment_used',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'safety_incidents',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'consent_obtained',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'consent_obtained_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'consent_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'vital_signs',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'medication_changes',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'integer',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create indexes for therapy_sessions table
+    await queryRunner.createIndex('therapy_sessions', new Index('IDX_THERAPY_SESSIONS_RESIDENT', ['resident_id']));
+    await queryRunner.createIndex('therapy_sessions', new Index('IDX_THERAPY_SESSIONS_THERAPIST', ['therapist_id']));
+    await queryRunner.createIndex('therapy_sessions', new Index('IDX_THERAPY_SESSIONS_SCHEDULED_TIME', ['scheduled_start_time']));
+    await queryRunner.createIndex('therapy_sessions', new Index('IDX_THERAPY_SESSIONS_STATUS', ['status']));
+    await queryRunner.createIndex('therapy_sessions', new Index('IDX_THERAPY_SESSIONS_TYPE', ['therapy_type']));
+
+    // Create work_orders table
+    await queryRunner.createTable(
+      new Table({
+        name: 'work_orders',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'work_order_number',
+            type: 'varchar',
+            length: '255',
+            isUnique: true,
+          },
+          {
+            name: 'asset_id',
+            type: 'uuid',
+          },
+          {
+            name: 'title',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'description',
+            type: 'text',
+          },
+          {
+            name: 'maintenance_type',
+            type: 'enum',
+            enum: ['preventive', 'corrective', 'predictive', 'emergency', 'inspection'],
+          },
+          {
+            name: 'priority',
+            type: 'enum',
+            enum: ['low', 'medium', 'high', 'critical', 'emergency'],
+          },
+          {
+            name: 'assigned_to',
+            type: 'uuid',
+          },
+          {
+            name: 'assigned_to_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'requested_by',
+            type: 'uuid',
+          },
+          {
+            name: 'requested_by_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'scheduled_date',
+            type: 'timestamp',
+          },
+          {
+            name: 'estimated_duration',
+            type: 'integer',
+          },
+          {
+            name: 'estimated_cost',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'actual_start_date',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actual_end_date',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actual_duration',
+            type: 'integer',
+            isNullable: true,
+          },
+          {
+            name: 'actual_cost',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['created', 'assigned', 'in_progress', 'completed', 'cancelled', 'on_hold'],
+            default: "'created'",
+          },
+          {
+            name: 'parts_required',
+            type: 'jsonb',
+          },
+          {
+            name: 'labor_records',
+            type: 'jsonb',
+          },
+          {
+            name: 'skills_required',
+            type: 'text',
+            array: true,
+          },
+          {
+            name: 'safety_requirements',
+            type: 'text',
+            array: true,
+          },
+          {
+            name: 'completion_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'cancellation_reason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'documents',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'requires_approval',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'approved_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'approved_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'approval_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'is_emergency',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'emergency_contact',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'quality_checks',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'safety_incidents',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'customer_satisfaction_rating',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'customer_feedback',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'requires_follow_up',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'follow_up_date',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'follow_up_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'integer',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create indexes for work_orders table
+    await queryRunner.createIndex('work_orders', new Index('IDX_WORK_ORDERS_ASSET', ['asset_id']));
+    await queryRunner.createIndex('work_orders', new Index('IDX_WORK_ORDERS_ASSIGNED_TO', ['assigned_to']));
+    await queryRunner.createIndex('work_orders', new Index('IDX_WORK_ORDERS_STATUS', ['status']));
+    await queryRunner.createIndex('work_orders', new Index('IDX_WORK_ORDERS_PRIORITY', ['priority']));
+    await queryRunner.createIndex('work_orders', new Index('IDX_WORK_ORDERS_SCHEDULED_DATE', ['scheduled_date']));
+    await queryRunner.createIndex('work_orders', new Index('IDX_WORK_ORDERS_EMERGENCY', ['is_emergency']));
+
+    // Create assets table
+    await queryRunner.createTable(
+      new Table({
+        name: 'assets',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'asset_number',
+            type: 'varchar',
+            length: '255',
+            isUnique: true,
+          },
+          {
+            name: 'asset_name',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'description',
+            type: 'text',
+          },
+          {
+            name: 'asset_type',
+            type: 'enum',
+            enum: ['hvac', 'electrical', 'plumbing', 'fire_safety', 'security', 'medical_equipment', 'kitchen_equipment', 'furniture', 'building_structure', 'grounds', 'vehicle', 'it_equipment'],
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['operational', 'maintenance', 'out_of_service', 'retired', 'pending_inspection'],
+            default: "'operational'",
+          },
+          {
+            name: 'location',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'department',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'specifications',
+            type: 'jsonb',
+          },
+          {
+            name: 'purchase_price',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'purchase_date',
+            type: 'date',
+          },
+          {
+            name: 'installation_date',
+            type: 'date',
+          },
+          {
+            name: 'retirement_date',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'depreciation_rate',
+            type: 'decimal',
+            precision: 5,
+            scale: 2,
+          },
+          {
+            name: 'maintenance_history',
+            type: 'jsonb',
+          },
+          {
+            name: 'last_maintenance_date',
+            type: 'date',
+          },
+          {
+            name: 'next_maintenance_date',
+            type: 'date',
+          },
+          {
+            name: 'warranty_info',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'monitoring_data',
+            type: 'jsonb',
+          },
+          {
+            name: 'compliance_certifications',
+            type: 'jsonb',
+          },
+          {
+            name: 'responsible_person',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'is_active',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'integer',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Create indexes for assets table
+    await queryRunner.createIndex('assets', new Index('IDX_ASSETS_TYPE', ['asset_type']));
+    await queryRunner.createIndex('assets', new Index('IDX_ASSETS_STATUS', ['status']));
+    await queryRunner.createIndex('assets', new Index('IDX_ASSETS_LOCATION', ['location']));
+    await queryRunner.createIndex('assets', new Index('IDX_ASSETS_DEPARTMENT', ['department']));
+    await queryRunner.createIndex('assets', new Index('IDX_ASSETS_ACTIVE', ['is_active']));
+
+    // Transport & Logistics Tables
+    await queryRunner.createTable(
+      new Table({
+        name: 'vehicles',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'vehicle_number',
+            type: 'varchar',
+            length: '20',
+            isUnique: true,
+          },
+          {
+            name: 'vehicle_type',
+            type: 'enum',
+            enum: ['minibus', 'ambulance', 'car', 'van', 'wheelchair_accessible'],
+          },
+          {
+            name: 'make',
+            type: 'varchar',
+            length: '50',
+          },
+          {
+            name: 'model',
+            type: 'varchar',
+            length: '50',
+          },
+          {
+            name: 'year',
+            type: 'int',
+          },
+          {
+            name: 'license_plate',
+            type: 'varchar',
+            length: '20',
+            isUnique: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['available', 'in_use', 'maintenance', 'out_of_service'],
+            default: "'available'",
+          },
+          {
+            name: 'capacity',
+            type: 'int',
+          },
+          {
+            name: 'wheelchair_accessible',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'fuel_type',
+            type: 'enum',
+            enum: ['petrol', 'diesel', 'electric', 'hybrid'],
+          },
+          {
+            name: 'current_mileage',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'last_service_date',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'next_service_due',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'insurance_expiry',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'mot_expiry',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'specifications',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'insurance_info',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'maintenance_records',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'fuel_records',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'journey_history',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'is_active',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'transport_requests',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'request_number',
+            type: 'varchar',
+            length: '20',
+            isUnique: true,
+          },
+          {
+            name: 'resident_id',
+            type: 'uuid',
+          },
+          {
+            name: 'request_type',
+            type: 'enum',
+            enum: ['medical_appointment', 'social_outing', 'family_visit', 'emergency', 'routine'],
+          },
+          {
+            name: 'destination',
+            type: 'varchar',
+            length: '255',
+          },
+          {
+            name: 'pickup_location',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
+            name: 'appointment_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'requested_by',
+            type: 'uuid',
+          },
+          {
+            name: 'requested_by_name',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'special_requirements',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'wheelchair_required',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'escort_required',
+            type: 'boolean',
+            default: false,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['pending', 'approved', 'scheduled', 'in_progress', 'completed', 'cancelled', 'rejected'],
+            default: "'pending'",
+          },
+          {
+            name: 'priority',
+            type: 'enum',
+            enum: ['low', 'medium', 'high', 'emergency'],
+            default: "'medium'",
+          },
+          {
+            name: 'estimated_duration',
+            type: 'int',
+          },
+          {
+            name: 'estimated_distance',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'approved_by',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'approved_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'approval_notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'assigned_vehicle_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'assigned_driver_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'actual_pickup_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actual_dropoff_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'actual_distance',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'actual_duration',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'cancellation_reason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'transport_schedules',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'schedule_date',
+            type: 'date',
+          },
+          {
+            name: 'vehicle_id',
+            type: 'uuid',
+          },
+          {
+            name: 'driver_id',
+            type: 'uuid',
+          },
+          {
+            name: 'journeys',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'total_planned_mileage',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+          },
+          {
+            name: 'total_planned_duration',
+            type: 'int',
+          },
+          {
+            name: 'actual_mileage',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'actual_duration',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['planned', 'in_progress', 'completed', 'cancelled', 'delayed'],
+            default: "'planned'",
+          },
+          {
+            name: 'notes',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'cancellation_reason',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Transport & Logistics Indexes
+    await queryRunner.createIndex('vehicles', new Index('IDX_VEHICLES_TYPE', ['vehicle_type']));
+    await queryRunner.createIndex('vehicles', new Index('IDX_VEHICLES_STATUS', ['status']));
+    await queryRunner.createIndex('vehicles', new Index('IDX_VEHICLES_ACTIVE', ['is_active']));
+    await queryRunner.createIndex('vehicles', new Index('IDX_VEHICLES_NUMBER', ['vehicle_number']));
+
+    await queryRunner.createIndex('transport_requests', new Index('IDX_TRANSPORT_REQUESTS_RESIDENT', ['resident_id']));
+    await queryRunner.createIndex('transport_requests', new Index('IDX_TRANSPORT_REQUESTS_STATUS', ['status']));
+    await queryRunner.createIndex('transport_requests', new Index('IDX_TRANSPORT_REQUESTS_PRIORITY', ['priority']));
+    await queryRunner.createIndex('transport_requests', new Index('IDX_TRANSPORT_REQUESTS_APPOINTMENT', ['appointment_time']));
+    await queryRunner.createIndex('transport_requests', new Index('IDX_TRANSPORT_REQUESTS_VEHICLE', ['assigned_vehicle_id']));
+
+    await queryRunner.createIndex('transport_schedules', new Index('IDX_TRANSPORT_SCHEDULES_DATE', ['schedule_date']));
+    await queryRunner.createIndex('transport_schedules', new Index('IDX_TRANSPORT_SCHEDULES_VEHICLE', ['vehicle_id']));
+    await queryRunner.createIndex('transport_schedules', new Index('IDX_TRANSPORT_SCHEDULES_DRIVER', ['driver_id']));
+    await queryRunner.createIndex('transport_schedules', new Index('IDX_TRANSPORT_SCHEDULES_STATUS', ['status']));
+
+    // Security & Audit Tables
+    await queryRunner.createTable(
+      new Table({
+        name: 'access_control_users',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'user_id',
+            type: 'varchar',
+            length: '100',
+            isUnique: true,
+          },
+          {
+            name: 'employee_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'resident_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'visitor_id',
+            type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'access_level',
+            type: 'enum',
+            enum: ['visitor', 'basic', 'standard', 'elevated', 'administrative', 'emergency', 'system_admin'],
+            default: "'basic'",
+          },
+          {
+            name: 'permissions',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'access_cards',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'biometric_data',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'access_schedule',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'security_clearance',
+            type: 'jsonb',
+          },
+          {
+            name: 'access_history',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'threat_intelligence',
+            type: 'jsonb',
+          },
+          {
+            name: 'authorized_zones',
+            type: 'simple-array',
+            default: "'general'",
+          },
+          {
+            name: 'restricted_zones',
+            type: 'simple-array',
+            default: "'[]'",
+          },
+          {
+            name: 'is_active',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'last_access_time',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'password_last_changed',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'failed_access_attempts',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'account_locked_until',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'security_settings',
+            type: 'jsonb',
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'audit_events',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'event_id',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'event_type',
+            type: 'enum',
+            enum: ['user_login', 'user_logout', 'data_access', 'data_modification', 'data_deletion', 'system_configuration', 'security_event', 'compliance_check', 'medication_administration', 'care_plan_update', 'incident_report', 'emergency_response'],
+          },
+          {
+            name: 'entity_type',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'entity_id',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'action',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'user_id',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'details',
+            type: 'jsonb',
+          },
+          {
+            name: 'audit_context',
+            type: 'jsonb',
+          },
+          {
+            name: 'data_classification',
+            type: 'jsonb',
+          },
+          {
+            name: 'compliance_validation',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'risk_level',
+            type: 'enum',
+            enum: ['low', 'medium', 'high', 'critical'],
+            default: "'low'",
+          },
+          {
+            name: 'advanced_features',
+            type: 'jsonb',
+          },
+          {
+            name: 'business_justification',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'before_state',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'after_state',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
+            name: 'processing_time',
+            type: 'decimal',
+            precision: 10,
+            scale: 3,
+          },
+          {
+            name: 'error_message',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'is_successful',
+            type: 'boolean',
+            default: true,
+          },
+          {
+            name: 'related_events',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'retention_date',
+            type: 'timestamp',
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'security_incidents',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'incident_id',
+            type: 'varchar',
+            length: '50',
+            isUnique: true,
+          },
+          {
+            name: 'incident_type',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'severity',
+            type: 'enum',
+            enum: ['low', 'medium', 'high', 'critical'],
+          },
+          {
+            name: 'description',
+            type: 'text',
+          },
+          {
+            name: 'reported_by',
+            type: 'varchar',
+            length: '100',
+          },
+          {
+            name: 'reported_at',
+            type: 'timestamp',
+          },
+          {
+            name: 'affected_systems',
+            type: 'simple-array',
+          },
+          {
+            name: 'evidence',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: ['reported', 'investigating', 'contained', 'resolved', 'closed'],
+            default: "'reported'",
+          },
+          {
+            name: 'assigned_to',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
+            name: 'resolution',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'lessons_learned',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'version',
+            type: 'int',
+            default: 1,
+          },
+        ],
+      }),
+      true
+    );
+
+    // Security & Audit Indexes
+    await queryRunner.createIndex('access_control_users', new Index('IDX_ACCESS_CONTROL_USER_ID', ['user_id']));
+    await queryRunner.createIndex('access_control_users', new Index('IDX_ACCESS_CONTROL_ACCESS_LEVEL', ['access_level']));
+    await queryRunner.createIndex('access_control_users', new Index('IDX_ACCESS_CONTROL_ACTIVE', ['is_active']));
+    await queryRunner.createIndex('access_control_users', new Index('IDX_ACCESS_CONTROL_EMPLOYEE', ['employee_id']));
+
+    await queryRunner.createIndex('audit_events', new Index('IDX_AUDIT_EVENTS_USER', ['user_id']));
+    await queryRunner.createIndex('audit_events', new Index('IDX_AUDIT_EVENTS_TYPE', ['event_type']));
+    await queryRunner.createIndex('audit_events', new Index('IDX_AUDIT_EVENTS_ENTITY', ['entity_type', 'entity_id']));
+    await queryRunner.createIndex('audit_events', new Index('IDX_AUDIT_EVENTS_RISK', ['risk_level']));
+    await queryRunner.createIndex('audit_events', new Index('IDX_AUDIT_EVENTS_CREATED', ['created_at']));
+    await queryRunner.createIndex('audit_events', new Index('IDX_AUDIT_EVENTS_SUCCESS', ['is_successful']));
+
+    await queryRunner.createIndex('security_incidents', new Index('IDX_SECURITY_INCIDENTS_TYPE', ['incident_type']));
+    await queryRunner.createIndex('security_incidents', new Index('IDX_SECURITY_INCIDENTS_SEVERITY', ['severity']));
+    await queryRunner.createIndex('security_incidents', new Index('IDX_SECURITY_INCIDENTS_STATUS', ['status']));
+    await queryRunner.createIndex('security_incidents', new Index('IDX_SECURITY_INCIDENTS_REPORTED', ['reported_at']));
+  }
+
+  private async createForeignKeys(queryRunner: QueryRunner): Promise<void> {
+    // Prescription foreign keys
+    await queryRunner.createForeignKey('prescriptions', new ForeignKey({
+      columnNames: ['resident_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'residents',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('prescriptions', new ForeignKey({
+      columnNames: ['medication_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'medications',
+      onDelete: 'CASCADE',
+    }));
+
+    // Administration record foreign keys
+    await queryRunner.createForeignKey('administration_records', new ForeignKey({
+      columnNames: ['prescription_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'prescriptions',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('administration_records', new ForeignKey({
+      columnNames: ['resident_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'residents',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('administration_records', new ForeignKey({
+      columnNames: ['medication_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'medications',
+      onDelete: 'CASCADE',
+    }));
+
+    // Bed foreign keys
+    await queryRunner.createForeignKey('beds', new ForeignKey({
+      columnNames: ['room_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'rooms',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('beds', new ForeignKey({
+      columnNames: ['current_resident_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'residents',
+      onDelete: 'SET NULL',
+    }));
+
+    // Waiting list foreign keys
+    await queryRunner.createForeignKey('waiting_list_entries', new ForeignKey({
+      columnNames: ['offered_bed_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'beds',
+      onDelete: 'SET NULL',
+    }));
+
+    // Therapy sessions foreign keys
+    await queryRunner.createForeignKey('therapy_sessions', new ForeignKey({
+      columnNames: ['resident_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'residents',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('therapy_sessions', new ForeignKey({
+      columnNames: ['activity_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'activities',
+      onDelete: 'SET NULL',
+    }));
+
+    // Work orders foreign keys
+    await queryRunner.createForeignKey('work_orders', new ForeignKey({
+      columnNames: ['asset_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'assets',
+      onDelete: 'CASCADE',
+    }));
+
+    // Transport foreign keys
+    await queryRunner.createForeignKey('transport_requests', new ForeignKey({
+      columnNames: ['resident_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'residents',
+      onDelete: 'CASCADE',
+    }));
+
+    await queryRunner.createForeignKey('transport_requests', new ForeignKey({
+      columnNames: ['assigned_vehicle_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'vehicles',
+      onDelete: 'SET NULL',
+    }));
+
+    await queryRunner.createForeignKey('transport_schedules', new ForeignKey({
+      columnNames: ['vehicle_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'vehicles',
+      onDelete: 'CASCADE',
+    }));
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Drop tables in reverse order to handle dependencies
+    await queryRunner.dropTable('waiting_list_entries');
+    await queryRunner.dropTable('security_incidents');
+    await queryRunner.dropTable('audit_events');
+    await queryRunner.dropTable('access_control_users');
+    await queryRunner.dropTable('transport_schedules');
+    await queryRunner.dropTable('transport_requests');
+    await queryRunner.dropTable('vehicles');
+    await queryRunner.dropTable('work_orders');
+    await queryRunner.dropTable('assets');
+    await queryRunner.dropTable('therapy_sessions');
+    await queryRunner.dropTable('activities');
+    await queryRunner.dropTable('beds');
+    await queryRunner.dropTable('rooms');
+    await queryRunner.dropTable('administration_records');
+    await queryRunner.dropTable('prescriptions');
+    await queryRunner.dropTable('residents');
+    await queryRunner.dropTable('medications');
+  }
+}

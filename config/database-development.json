@@ -1,0 +1,158 @@
+{
+  "source": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "writecarenotes_monolith",
+    "username": "postgres",
+    "password": "postgres"
+  },
+  "targets": {
+    "resident-service": {
+      "host": "localhost",
+      "port": 5433,
+      "database": "resident_service",
+      "username": "resident_user",
+      "password": "resident_password"
+    },
+    "medication-service": {
+      "host": "localhost",
+      "port": 5434,
+      "database": "medication_service",
+      "username": "medication_user",
+      "password": "medication_password"
+    },
+    "care-planning-service": {
+      "host": "localhost",
+      "port": 5435,
+      "database": "care_planning_service",
+      "username": "care_planning_user",
+      "password": "care_planning_password"
+    },
+    "assessment-service": {
+      "host": "localhost",
+      "port": 5436,
+      "database": "assessment_service",
+      "username": "assessment_user",
+      "password": "assessment_password"
+    },
+    "health-records-service": {
+      "host": "localhost",
+      "port": 5437,
+      "database": "health_records_service",
+      "username": "health_records_user",
+      "password": "health_records_password"
+    },
+    "financial-service": {
+      "host": "localhost",
+      "port": 5438,
+      "database": "financial_service",
+      "username": "financial_user",
+      "password": "financial_password"
+    },
+    "hr-service": {
+      "host": "localhost",
+      "port": 5439,
+      "database": "hr_service",
+      "username": "hr_user",
+      "password": "hr_password"
+    },
+    "inventory-service": {
+      "host": "localhost",
+      "port": 5440,
+      "database": "inventory_service",
+      "username": "inventory_user",
+      "password": "inventory_password"
+    },
+    "compliance-service": {
+      "host": "localhost",
+      "port": 5441,
+      "database": "compliance_service",
+      "username": "compliance_user",
+      "password": "compliance_password"
+    },
+    "audit-service": {
+      "host": "localhost",
+      "port": 5442,
+      "database": "audit_service",
+      "username": "audit_user",
+      "password": "audit_password"
+    },
+    "gdpr-service": {
+      "host": "localhost",
+      "port": 5443,
+      "database": "gdpr_service",
+      "username": "gdpr_user",
+      "password": "gdpr_password"
+    },
+    "nhs-integration-service": {
+      "host": "localhost",
+      "port": 5444,
+      "database": "nhs_integration_service",
+      "username": "nhs_integration_user",
+      "password": "nhs_integration_password"
+    },
+    "fhir-integration-service": {
+      "host": "localhost",
+      "port": 5445,
+      "database": "fhir_integration_service",
+      "username": "fhir_integration_user",
+      "password": "fhir_integration_password"
+    },
+    "external-integration-service": {
+      "host": "localhost",
+      "port": 5446,
+      "database": "external_integration_service",
+      "username": "external_integration_user",
+      "password": "external_integration_password"
+    },
+    "reporting-service": {
+      "host": "localhost",
+      "port": 5447,
+      "database": "reporting_service",
+      "username": "reporting_user",
+      "password": "reporting_password"
+    },
+    "notification-service": {
+      "host": "localhost",
+      "port": 5448,
+      "database": "notification_service",
+      "username": "notification_user",
+      "password": "notification_password"
+    },
+    "family-portal-service": {
+      "host": "localhost",
+      "port": 5449,
+      "database": "family_portal_service",
+      "username": "family_portal_user",
+      "password": "family_portal_password"
+    },
+    "identity-service": {
+      "host": "localhost",
+      "port": 5450,
+      "database": "identity_service",
+      "username": "identity_user",
+      "password": "identity_password"
+    },
+    "security-service": {
+      "host": "localhost",
+      "port": 5451,
+      "database": "security_service",
+      "username": "security_user",
+      "password": "security_password"
+    },
+    "multi-tenancy-service": {
+      "host": "localhost",
+      "port": 5452,
+      "database": "multi_tenancy_service",
+      "username": "multi_tenancy_user",
+      "password": "multi_tenancy_password"
+    },
+    "configuration-service": {
+      "host": "localhost",
+      "port": 5453,
+      "database": "configuration_service",
+      "username": "configuration_user",
+      "password": "configuration_password"
+    }
+  }
+}

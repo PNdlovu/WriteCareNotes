@@ -1,0 +1,193 @@
+# Healthcare Database Creation Job for WriteCareNotes Microservices
+# Creates separate databases for each healthcare service with proper schemas
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: healthcare-databases-setup
+  namespace: databases
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: database-setup
+        image: postgres:15
+        env:
+        - name: PGHOST
+          value: postgresql-primary
+        - name: PGPORT
+          value: "5432"
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: postgres-password
+        command:
+        - /bin/bash
+        - -c
+        - |
+          # Wait for PostgreSQL to be ready
+          until pg_isready -h $PGHOST -p $PGPORT -U $PGUSER; do
+            echo "Waiting for PostgreSQL..."
+            sleep 5
+          done
+          
+          echo "Creating healthcare databases and users..."
+          
+          # Core Healthcare Service Databases
+          psql -c "CREATE DATABASE resident_service_db;"
+          psql -c "CREATE USER resident_service WITH ENCRYPTED PASSWORD 'ResidentService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE resident_service_db TO resident_service;"
+          
+          psql -c "CREATE DATABASE medication_service_db;"
+          psql -c "CREATE USER medication_service WITH ENCRYPTED PASSWORD 'MedicationService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE medication_service_db TO medication_service;"
+          
+          psql -c "CREATE DATABASE care_planning_service_db;"
+          psql -c "CREATE USER care_planning_service WITH ENCRYPTED PASSWORD 'CarePlanningService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE care_planning_service_db TO care_planning_service;"
+          
+          psql -c "CREATE DATABASE assessment_service_db;"
+          psql -c "CREATE USER assessment_service WITH ENCRYPTED PASSWORD 'AssessmentService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE assessment_service_db TO assessment_service;"
+          
+          psql -c "CREATE DATABASE health_records_service_db;"
+          psql -c "CREATE USER health_records_service WITH ENCRYPTED PASSWORD 'HealthRecordsService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE health_records_service_db TO health_records_service;"
+          
+          # Operational Service Databases
+          psql -c "CREATE DATABASE financial_service_db;"
+          psql -c "CREATE USER financial_service WITH ENCRYPTED PASSWORD 'FinancialService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE financial_service_db TO financial_service;"
+          
+          psql -c "CREATE DATABASE hr_payroll_service_db;"
+          psql -c "CREATE USER hr_payroll_service WITH ENCRYPTED PASSWORD 'HRPayrollService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE hr_payroll_service_db TO hr_payroll_service;"
+          
+          psql -c "CREATE DATABASE inventory_service_db;"
+          psql -c "CREATE USER inventory_service WITH ENCRYPTED PASSWORD 'InventoryService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE inventory_service_db TO inventory_service;"
+          
+          # Compliance Service Databases
+          psql -c "CREATE DATABASE compliance_service_db;"
+          psql -c "CREATE USER compliance_service WITH ENCRYPTED PASSWORD 'ComplianceService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE compliance_service_db TO compliance_service;"
+          
+          psql -c "CREATE DATABASE audit_service_db;"
+          psql -c "CREATE USER audit_service WITH ENCRYPTED PASSWORD 'AuditService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE audit_service_db TO audit_service;"
+          
+          psql -c "CREATE DATABASE gdpr_service_db;"
+          psql -c "CREATE USER gdpr_service WITH ENCRYPTED PASSWORD 'GDPRService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE gdpr_service_db TO gdpr_service;"
+          
+          # Integration Service Databases
+          psql -c "CREATE DATABASE nhs_integration_service_db;"
+          psql -c "CREATE USER nhs_integration_service WITH ENCRYPTED PASSWORD 'NHSIntegrationService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE nhs_integration_service_db TO nhs_integration_service;"
+          
+          psql -c "CREATE DATABASE fhir_integration_service_db;"
+          psql -c "CREATE USER fhir_integration_service WITH ENCRYPTED PASSWORD 'FHIRIntegrationService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE fhir_integration_service_db TO fhir_integration_service;"
+          
+          psql -c "CREATE DATABASE external_integration_service_db;"
+          psql -c "CREATE USER external_integration_service WITH ENCRYPTED PASSWORD 'ExternalIntegrationService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE external_integration_service_db TO external_integration_service;"
+          
+          # Infrastructure Service Databases
+          psql -c "CREATE DATABASE notification_service_db;"
+          psql -c "CREATE USER notification_service WITH ENCRYPTED PASSWORD 'NotificationService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE notification_service_db TO notification_service;"
+          
+          psql -c "CREATE DATABASE family_portal_service_db;"
+          psql -c "CREATE USER family_portal_service WITH ENCRYPTED PASSWORD 'FamilyPortalService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE family_portal_service_db TO family_portal_service;"
+          
+          psql -c "CREATE DATABASE identity_service_db;"
+          psql -c "CREATE USER identity_service WITH ENCRYPTED PASSWORD 'IdentityService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE identity_service_db TO identity_service;"
+          
+          psql -c "CREATE DATABASE configuration_service_db;"
+          psql -c "CREATE USER configuration_service WITH ENCRYPTED PASSWORD 'ConfigurationService2025';"
+          psql -c "GRANT ALL PRIVILEGES ON DATABASE configuration_service_db TO configuration_service;"
+          
+          # Create extensions for healthcare services
+          echo "Creating database extensions..."
+          
+          # UUID extension for all databases
+          for db in resident_service_db medication_service_db care_planning_service_db assessment_service_db health_records_service_db financial_service_db hr_payroll_service_db inventory_service_db compliance_service_db audit_service_db gdpr_service_db nhs_integration_service_db fhir_integration_service_db external_integration_service_db notification_service_db family_portal_service_db identity_service_db configuration_service_db; do
+            psql -d $db -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+            psql -d $db -c "CREATE EXTENSION IF NOT EXISTS \"pgcrypto\";"
+            psql -d $db -c "CREATE EXTENSION IF NOT EXISTS \"pg_trgm\";"
+          done
+          
+          echo "All healthcare databases and users created successfully!"
+
+---
+# Database Connection Secrets for Services
+apiVersion: v1
+kind: Secret
+metadata:
+  name: resident-service-db-secret
+  namespace: databases
+type: Opaque
+stringData:
+  database-url: "postgresql://resident_service:ResidentService2025@postgresql-primary:5432/resident_service_db"
+  username: "resident_service"
+  password: "ResidentService2025"
+  database: "resident_service_db"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: medication-service-db-secret
+  namespace: databases
+type: Opaque
+stringData:
+  database-url: "postgresql://medication_service:MedicationService2025@postgresql-primary:5432/medication_service_db"
+  username: "medication_service"
+  password: "MedicationService2025"
+  database: "medication_service_db"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: care-planning-service-db-secret
+  namespace: databases
+type: Opaque
+stringData:
+  database-url: "postgresql://care_planning_service:CarePlanningService2025@postgresql-primary:5432/care_planning_service_db"
+  username: "care_planning_service"
+  password: "CarePlanningService2025"
+  database: "care_planning_service_db"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: assessment-service-db-secret
+  namespace: databases
+type: Opaque
+stringData:
+  database-url: "postgresql://assessment_service:AssessmentService2025@postgresql-primary:5432/assessment_service_db"
+  username: "assessment_service"
+  password: "AssessmentService2025"
+  database: "assessment_service_db"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: health-records-service-db-secret
+  namespace: databases
+type: Opaque
+stringData:
+  database-url: "postgresql://health_records_service:HealthRecordsService2025@postgresql-primary:5432/health_records_service_db"
+  username: "health_records_service"
+  password: "HealthRecordsService2025"
+  database: "health_records_service_db"

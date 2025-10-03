@@ -1,0 +1,501 @@
+# Logstash Configuration for WriteCareNotes Healthcare Log Processing
+# Provides healthcare-specific log parsing, enrichment, and compliance features
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: logging
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    path.config: /usr/share/logstash/pipeline
+    pipeline.workers: 4
+    pipeline.batch.size: 1000
+    pipeline.batch.delay: 50
+    
+    # Healthcare monitoring
+    monitoring.enabled: true
+    monitoring.elasticsearch.hosts: ["https://elasticsearch:9200"]
+    monitoring.elasticsearch.username: "elastic"
+    monitoring.elasticsearch.password: "${ELASTIC_PASSWORD}"
+    monitoring.elasticsearch.ssl.verification_mode: none
+    
+    # Dead letter queue for failed events
+    dead_letter_queue.enable: true
+    dead_letter_queue.max_bytes: 1gb
+    
+    # Healthcare-specific settings
+    log.level: info
+    path.logs: /usr/share/logstash/logs
+    
+  pipelines.yml: |
+    - pipeline.id: healthcare-logs
+      path.config: "/usr/share/logstash/pipeline/healthcare-logs.conf"
+      pipeline.workers: 2
+    - pipeline.id: audit-logs
+      path.config: "/usr/share/logstash/pipeline/audit-logs.conf"
+      pipeline.workers: 2
+    - pipeline.id: security-logs
+      path.config: "/usr/share/logstash/pipeline/security-logs.conf"
+      pipeline.workers: 1
+    - pipeline.id: performance-logs
+      path.config: "/usr/share/logstash/pipeline/performance-logs.conf"
+      pipeline.workers: 1
+
+  healthcare-logs.conf: |
+    input {
+      beats {
+        port => 5044
+        type => "healthcare"
+      }
+      
+      kafka {
+        bootstrap_servers => "kafka:9092"
+        topics => ["healthcare-events", "resident-events", "medication-events", "care-plan-events"]
+        group_id => "logstash-healthcare"
+        consumer_threads => 2
+        decorate_events => true
+      }
+    }
+    
+    filter {
+      # Parse JSON logs
+      if [message] =~ /^\{.*\}$/ {
+        json {
+          source => "message"
+        }
+      }
+      
+      # Add healthcare context
+      if [service] {
+        mutate {
+          add_field => { "healthcare_context" => "%{service}" }
+        }
+      }
+      
+      # Parse healthcare service logs
+      if [service] =~ /resident|medication|care-plan|assessment|health-records/ {
+        mutate {
+          add_field => { "service_tier" => "core-healthcare" }
+          add_field => { "compliance_level" => "high" }
+          add_field => { "audit_required" => "true" }
+        }
+      }
+      
+      # Parse operational service logs
+      if [service] =~ /financial|hr|inventory/ {
+        mutate {
+          add_field => { "service_tier" => "operational" }
+          add_field => { "compliance_level" => "standard" }
+        }
+      }
+      
+      # Parse compliance service logs
+      if [service] =~ /compliance|audit|gdpr/ {
+        mutate {
+          add_field => { "service_tier" => "compliance" }
+          add_field => { "compliance_level" => "critical" }
+          add_field => { "audit_required" => "true" }
+        }
+      }
+      
+      # Detect PII in logs
+      if [message] =~ /NHS.*\d{10}|nhs.*number.*\d{10}|patient.*id.*\d+/ {
+        mutate {
+          add_field => { "contains_pii" => "true" }
+          add_field => { "data_classification" => "sensitive" }
+        }
+        
+        # Mask NHS numbers in logs
+        mutate {
+          gsub => [
+            "message", "\d{10}", "NHS-REDACTED"
+          ]
+        }
+      }
+      
+      # Parse correlation IDs
+      if [correlation_id] {
+        mutate {
+          add_field => { "trace_id" => "%{correlation_id}" }
+        }
+      }
+      
+      # Parse error logs
+      if [level] == "error" or [level] == "ERROR" {
+        mutate {
+          add_field => { "alert_required" => "true" }
+          add_field => { "severity" => "high" }
+        }
+      }
+      
+      # Parse warning logs
+      if [level] == "warn" or [level] == "WARN" {
+        mutate {
+          add_field => { "severity" => "medium" }
+        }
+      }
+      
+      # Add timestamp if missing
+      if ![timestamp] {
+        mutate {
+          add_field => { "timestamp" => "%{@timestamp}" }
+        }
+      }
+      
+      # Parse user actions
+      if [action] {
+        if [action] =~ /CREATE|UPDATE|DELETE/ {
+          mutate {
+            add_field => { "action_type" => "data_modification" }
+            add_field => { "audit_required" => "true" }
+          }
+        }
+        
+        if [action] =~ /LOGIN|LOGOUT|ACCESS/ {
+          mutate {
+            add_field => { "action_type" => "authentication" }
+          }
+        }
+        
+        if [action] =~ /MEDICATION|PRESCRIPTION/ {
+          mutate {
+            add_field => { "action_type" => "medication_management" }
+            add_field => { "compliance_level" => "critical" }
+          }
+        }
+      }
+      
+      # Enrich with geolocation for IP addresses
+      if [ip_address] {
+        geoip {
+          source => "ip_address"
+          target => "geoip"
+        }
+      }
+      
+      # Add healthcare facility context
+      mutate {
+        add_field => { "facility_type" => "care_home" }
+        add_field => { "regulatory_jurisdiction" => "uk" }
+        add_field => { "data_retention_years" => "7" }
+      }
+      
+      # Remove sensitive fields from logs
+      mutate {
+        remove_field => [ "password", "token", "secret", "key" ]
+      }
+    }
+    
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "healthcare-logs-%{+YYYY.MM.dd}"
+        template_name => "healthcare-logs"
+        template_pattern => "healthcare-logs-*"
+      }
+      
+      # Send critical events to dead letter queue for investigation
+      if [severity] == "high" or [compliance_level] == "critical" {
+        file {
+          path => "/usr/share/logstash/logs/critical-events-%{+YYYY-MM-dd}.log"
+          codec => json_lines
+        }
+      }
+    }
+
+  audit-logs.conf: |
+    input {
+      kafka {
+        bootstrap_servers => "kafka:9092"
+        topics => ["audit-events"]
+        group_id => "logstash-audit"
+        consumer_threads => 1
+        decorate_events => true
+      }
+    }
+    
+    filter {
+      json {
+        source => "message"
+      }
+      
+      # Ensure all audit logs are marked appropriately
+      mutate {
+        add_field => { "log_type" => "audit" }
+        add_field => { "compliance_level" => "critical" }
+        add_field => { "retention_required" => "true" }
+        add_field => { "immutable" => "true" }
+      }
+      
+      # Add regulatory context
+      if [action] =~ /RESIDENT|MEDICATION|CARE_PLAN/ {
+        mutate {
+          add_field => { "regulatory_requirement" => "cqc_fundamental_standards" }
+        }
+      }
+      
+      if [contains_pii] == "true" {
+        mutate {
+          add_field => { "gdpr_applicable" => "true" }
+          add_field => { "data_protection_required" => "true" }
+        }
+      }
+    }
+    
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "audit-logs-%{+YYYY.MM.dd}"
+        template_name => "audit-logs"
+        template_pattern => "audit-logs-*"
+      }
+    }
+
+  security-logs.conf: |
+    input {
+      kafka {
+        bootstrap_servers => "kafka:9092"
+        topics => ["security-events"]
+        group_id => "logstash-security"
+        consumer_threads => 1
+      }
+    }
+    
+    filter {
+      json {
+        source => "message"
+      }
+      
+      mutate {
+        add_field => { "log_type" => "security" }
+        add_field => { "alert_priority" => "high" }
+      }
+      
+      # Detect security incidents
+      if [action] =~ /FAILED_LOGIN|UNAUTHORIZED_ACCESS|SECURITY_VIOLATION/ {
+        mutate {
+          add_field => { "security_incident" => "true" }
+          add_field => { "immediate_alert" => "true" }
+        }
+      }
+      
+      # Track authentication events
+      if [action] =~ /LOGIN|LOGOUT/ {
+        mutate {
+          add_field => { "event_category" => "authentication" }
+        }
+      }
+      
+      # Track authorization events
+      if [action] =~ /ACCESS_GRANTED|ACCESS_DENIED/ {
+        mutate {
+          add_field => { "event_category" => "authorization" }
+        }
+      }
+    }
+    
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "security-logs-%{+YYYY.MM.dd}"
+      }
+      
+      # Send security incidents to immediate alerting
+      if [security_incident] == "true" {
+        http {
+          url => "http://alertmanager:9093/api/v1/alerts"
+          http_method => "post"
+          format => "json"
+          mapping => {
+            "alerts" => [{
+              "labels" => {
+                "alertname" => "SecurityIncident"
+                "severity" => "critical"
+                "service" => "%{service}"
+                "action" => "%{action}"
+              }
+              "annotations" => {
+                "summary" => "Security incident detected in %{service}"
+                "description" => "%{message}"
+              }
+            }]
+          }
+        }
+      }
+    }
+
+  performance-logs.conf: |
+    input {
+      kafka {
+        bootstrap_servers => "kafka:9092"
+        topics => ["performance-metrics"]
+        group_id => "logstash-performance"
+        consumer_threads => 1
+      }
+    }
+    
+    filter {
+      json {
+        source => "message"
+      }
+      
+      mutate {
+        add_field => { "log_type" => "performance" }
+      }
+      
+      # Convert duration to numeric for analysis
+      if [duration] {
+        mutate {
+          convert => { "duration" => "integer" }
+        }
+      }
+      
+      # Flag slow operations
+      if [duration] and [duration] > 5000 {
+        mutate {
+          add_field => { "slow_operation" => "true" }
+          add_field => { "performance_alert" => "true" }
+        }
+      }
+      
+      # Track API response times
+      if [status_code] {
+        mutate {
+          convert => { "status_code" => "integer" }
+        }
+        
+        if [status_code] >= 400 {
+          mutate {
+            add_field => { "error_response" => "true" }
+          }
+        }
+        
+        if [status_code] >= 500 {
+          mutate {
+            add_field => { "server_error" => "true" }
+            add_field => { "alert_required" => "true" }
+          }
+        }
+      }
+    }
+    
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "performance-logs-%{+YYYY.MM.dd}"
+      }
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:8.11.0
+        ports:
+        - containerPort: 5044
+          name: beats
+        - containerPort: 9600
+          name: http
+        env:
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secret
+              key: password
+        - name: LS_JAVA_OPTS
+          value: "-Xmx2g -Xms2g"
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 3Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        volumeMounts:
+        - name: logstash-config
+          mountPath: /usr/share/logstash/config/logstash.yml
+          subPath: logstash.yml
+        - name: logstash-config
+          mountPath: /usr/share/logstash/config/pipelines.yml
+          subPath: pipelines.yml
+        - name: logstash-config
+          mountPath: /usr/share/logstash/pipeline/healthcare-logs.conf
+          subPath: healthcare-logs.conf
+        - name: logstash-config
+          mountPath: /usr/share/logstash/pipeline/audit-logs.conf
+          subPath: audit-logs.conf
+        - name: logstash-config
+          mountPath: /usr/share/logstash/pipeline/security-logs.conf
+          subPath: security-logs.conf
+        - name: logstash-config
+          mountPath: /usr/share/logstash/pipeline/performance-logs.conf
+          subPath: performance-logs.conf
+        - name: logstash-logs
+          mountPath: /usr/share/logstash/logs
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9600
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9600
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+      - name: logstash-config
+        configMap:
+          name: logstash-config
+      - name: logstash-logs
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  ports:
+  - name: beats
+    port: 5044
+    targetPort: 5044
+  - name: http
+    port: 9600
+    targetPort: 9600
+  selector:
+    app: logstash

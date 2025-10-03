@@ -1,0 +1,461 @@
+# RabbitMQ Cluster Configuration for WriteCareNotes Healthcare Messaging
+# Provides reliable message delivery with healthcare-specific queues and compliance
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: messaging
+data:
+  enabled_plugins: |
+    [rabbitmq_management,rabbitmq_peer_discovery_k8s,rabbitmq_prometheus,rabbitmq_shovel,rabbitmq_shovel_management].
+  
+  rabbitmq.conf: |
+    # Cluster configuration
+    cluster_formation.peer_discovery_backend = rabbit_peer_discovery_k8s
+    cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+    cluster_formation.k8s.address_type = hostname
+    cluster_formation.k8s.service_name = rabbitmq-headless
+    cluster_formation.k8s.hostname_suffix = .rabbitmq-headless.messaging.svc.cluster.local
+    cluster_formation.node_cleanup.interval = 30
+    cluster_formation.node_cleanup.only_log_warning = true
+    cluster_partition_handling = autoheal
+    
+    # Healthcare-specific settings
+    queue_master_locator = min-masters
+    
+    # Memory and disk settings
+    vm_memory_high_watermark.relative = 0.6
+    disk_free_limit.relative = 2.0
+    
+    # Healthcare message persistence
+    default_vhost = /
+    default_user = healthcare_admin
+    default_pass = WriteCareNotesRabbitMQ2025
+    default_permissions.configure = .*
+    default_permissions.read = .*
+    default_permissions.write = .*
+    
+    # Management plugin
+    management.tcp.port = 15672
+    management.tcp.ip = 0.0.0.0
+    
+    # Prometheus metrics
+    prometheus.tcp.port = 15692
+    prometheus.tcp.ip = 0.0.0.0
+    
+    # Healthcare audit logging
+    log.console = true
+    log.console.level = info
+    log.file = /var/log/rabbitmq/rabbit.log
+    log.file.level = info
+    log.file.rotation.date = $D0
+    log.file.rotation.size = 10485760
+    
+    # Connection and channel limits
+    connection_max = 1000
+    channel_max = 2000
+    
+    # Healthcare message TTL defaults
+    message_ttl = 86400000
+    
+    # Dead letter exchange configuration
+    dead_letter_exchange = healthcare.dlx
+    dead_letter_routing_key = failed
+
+  definitions.json: |
+    {
+      "users": [
+        {
+          "name": "healthcare_admin",
+          "password": "WriteCareNotesRabbitMQ2025",
+          "tags": "administrator"
+        },
+        {
+          "name": "healthcare_service",
+          "password": "HealthcareService2025",
+          "tags": "management"
+        }
+      ],
+      "vhosts": [
+        {
+          "name": "/"
+        }
+      ],
+      "permissions": [
+        {
+          "user": "healthcare_admin",
+          "vhost": "/",
+          "configure": ".*",
+          "write": ".*",
+          "read": ".*"
+        },
+        {
+          "user": "healthcare_service",
+          "vhost": "/",
+          "configure": "healthcare\\..*",
+          "write": "healthcare\\..*",
+          "read": "healthcare\\..*"
+        }
+      ],
+      "exchanges": [
+        {
+          "name": "healthcare.events",
+          "vhost": "/",
+          "type": "topic",
+          "durable": true,
+          "auto_delete": false,
+          "internal": false,
+          "arguments": {}
+        },
+        {
+          "name": "healthcare.dlx",
+          "vhost": "/",
+          "type": "direct",
+          "durable": true,
+          "auto_delete": false,
+          "internal": false,
+          "arguments": {}
+        },
+        {
+          "name": "healthcare.notifications",
+          "vhost": "/",
+          "type": "fanout",
+          "durable": true,
+          "auto_delete": false,
+          "internal": false,
+          "arguments": {}
+        }
+      ],
+      "queues": [
+        {
+          "name": "healthcare.resident.events",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 86400000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "resident.failed"
+          }
+        },
+        {
+          "name": "healthcare.medication.events",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 86400000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "medication.failed",
+            "x-max-priority": 10
+          }
+        },
+        {
+          "name": "healthcare.care-plan.events",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 86400000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "care-plan.failed"
+          }
+        },
+        {
+          "name": "healthcare.audit.events",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 2592000000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "audit.failed",
+            "x-max-priority": 10
+          }
+        },
+        {
+          "name": "healthcare.compliance.events",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 2592000000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "compliance.failed",
+            "x-max-priority": 10
+          }
+        },
+        {
+          "name": "healthcare.notifications.critical",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 3600000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "notification.failed",
+            "x-max-priority": 10
+          }
+        },
+        {
+          "name": "healthcare.notifications.standard",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {
+            "x-message-ttl": 86400000,
+            "x-dead-letter-exchange": "healthcare.dlx",
+            "x-dead-letter-routing-key": "notification.failed"
+          }
+        },
+        {
+          "name": "healthcare.dlq",
+          "vhost": "/",
+          "durable": true,
+          "auto_delete": false,
+          "arguments": {}
+        }
+      ],
+      "bindings": [
+        {
+          "source": "healthcare.events",
+          "vhost": "/",
+          "destination": "healthcare.resident.events",
+          "destination_type": "queue",
+          "routing_key": "resident.*",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.events",
+          "vhost": "/",
+          "destination": "healthcare.medication.events",
+          "destination_type": "queue",
+          "routing_key": "medication.*",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.events",
+          "vhost": "/",
+          "destination": "healthcare.care-plan.events",
+          "destination_type": "queue",
+          "routing_key": "care-plan.*",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.events",
+          "vhost": "/",
+          "destination": "healthcare.audit.events",
+          "destination_type": "queue",
+          "routing_key": "audit.*",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.events",
+          "vhost": "/",
+          "destination": "healthcare.compliance.events",
+          "destination_type": "queue",
+          "routing_key": "compliance.*",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.notifications",
+          "vhost": "/",
+          "destination": "healthcare.notifications.critical",
+          "destination_type": "queue",
+          "routing_key": "",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.notifications",
+          "vhost": "/",
+          "destination": "healthcare.notifications.standard",
+          "destination_type": "queue",
+          "routing_key": "",
+          "arguments": {}
+        },
+        {
+          "source": "healthcare.dlx",
+          "vhost": "/",
+          "destination": "healthcare.dlq",
+          "destination_type": "queue",
+          "routing_key": "*",
+          "arguments": {}
+        }
+      ]
+    }
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: messaging
+spec:
+  serviceName: rabbitmq-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "15692"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: rabbitmq
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.12-management
+        ports:
+        - containerPort: 5672
+          name: amqp
+        - containerPort: 15672
+          name: management
+        - containerPort: 15692
+          name: prometheus
+        - containerPort: 25672
+          name: clustering
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: healthcare_admin
+        - name: RABBITMQ_DEFAULT_PASS
+          value: WriteCareNotesRabbitMQ2025
+        - name: RABBITMQ_ERLANG_COOKIE
+          value: WriteCareCookie2025
+        - name: RABBITMQ_USE_LONGNAME
+          value: "true"
+        - name: RABBITMQ_NODENAME
+          value: rabbit@$(hostname).rabbitmq-headless.messaging.svc.cluster.local
+        - name: K8S_SERVICE_NAME
+          value: rabbitmq-headless
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: rabbitmq-config
+          mountPath: /etc/rabbitmq
+        - name: rabbitmq-data
+          mountPath: /var/lib/rabbitmq
+        - name: rabbitmq-logs
+          mountPath: /var/log/rabbitmq
+        livenessProbe:
+          exec:
+            command:
+            - rabbitmq-diagnostics
+            - status
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 15
+        readinessProbe:
+          exec:
+            command:
+            - rabbitmq-diagnostics
+            - ping
+          initialDelaySeconds: 20
+          periodSeconds: 60
+          timeoutSeconds: 10
+      volumes:
+      - name: rabbitmq-config
+        configMap:
+          name: rabbitmq-config
+      - name: rabbitmq-logs
+        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+  namespace: messaging
+spec:
+  clusterIP: None
+  ports:
+  - name: amqp
+    port: 5672
+    targetPort: 5672
+  - name: management
+    port: 15672
+    targetPort: 15672
+  - name: prometheus
+    port: 15692
+    targetPort: 15692
+  - name: clustering
+    port: 25672
+    targetPort: 25672
+  selector:
+    app: rabbitmq
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: messaging
+spec:
+  ports:
+  - name: amqp
+    port: 5672
+    targetPort: 5672
+  - name: management
+    port: 15672
+    targetPort: 15672
+  - name: prometheus
+    port: 15692
+    targetPort: 15692
+  selector:
+    app: rabbitmq
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rabbitmq
+  namespace: messaging
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: rabbitmq
+  namespace: messaging
+rules:
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rabbitmq
+  namespace: messaging
+subjects:
+- kind: ServiceAccount
+  name: rabbitmq
+  namespace: messaging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rabbitmq

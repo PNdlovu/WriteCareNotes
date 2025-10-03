@@ -1,0 +1,347 @@
+# Grafana Configuration for WriteCareNotes Healthcare Dashboards
+# Provides comprehensive visualization for healthcare operations and compliance
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  prometheus.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus:9090
+      access: proxy
+      isDefault: true
+      editable: true
+    - name: Loki
+      type: loki
+      url: http://loki:3100
+      access: proxy
+      editable: true
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards-config
+  namespace: monitoring
+data:
+  dashboards.yaml: |-
+    apiVersion: 1
+    providers:
+    - name: 'healthcare-dashboards'
+      orgId: 1
+      folder: 'Healthcare Operations'
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 10
+      allowUiUpdates: true
+      options:
+        path: /var/lib/grafana/dashboards/healthcare
+    - name: 'compliance-dashboards'
+      orgId: 1
+      folder: 'Compliance & Regulatory'
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 10
+      allowUiUpdates: true
+      options:
+        path: /var/lib/grafana/dashboards/compliance
+    - name: 'infrastructure-dashboards'
+      orgId: 1
+      folder: 'Infrastructure'
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 10
+      allowUiUpdates: true
+      options:
+        path: /var/lib/grafana/dashboards/infrastructure
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthcare-operations-dashboard
+  namespace: monitoring
+data:
+  healthcare-operations.json: |-
+    {
+      "dashboard": {
+        "id": null,
+        "title": "WriteCareNotes - Healthcare Operations",
+        "tags": ["healthcare", "operations"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Active Residents",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "sum(resident_total{status=\"active\"})",
+                "legendFormat": "Active Residents"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 80},
+                    {"color": "red", "value": 100}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Medication Administration Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(medication_administered_total[1h]) * 3600",
+                "legendFormat": "Medications/Hour"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": null},
+                    {"color": "yellow", "value": 10},
+                    {"color": "green", "value": 20}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Care Plan Compliance",
+            "type": "gauge",
+            "targets": [
+              {
+                "expr": "(sum(care_plan_completed_total) / sum(care_plan_scheduled_total)) * 100",
+                "legendFormat": "Compliance %"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "min": 0,
+                "max": 100,
+                "unit": "percent",
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 80},
+                    {"color": "green", "value": 95}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+          },
+          {
+            "id": 4,
+            "title": "System Health Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "up{job=~\".*-service\"}",
+                "legendFormat": "{{job}}"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "mappings": [
+                  {"options": {"0": {"text": "DOWN", "color": "red"}}, "type": "value"},
+                  {"options": {"1": {"text": "UP", "color": "green"}}, "type": "value"}
+                ]
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+          },
+          {
+            "id": 5,
+            "title": "API Response Times",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=~\".*-service\"}[5m]))",
+                "legendFormat": "95th percentile - {{job}}"
+              },
+              {
+                "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{job=~\".*-service\"}[5m]))",
+                "legendFormat": "50th percentile - {{job}}"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Response Time (seconds)",
+                "max": 1,
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+          },
+          {
+            "id": 6,
+            "title": "Error Rates by Service",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(http_requests_total{status=~\"5..\"}[5m])",
+                "legendFormat": "{{job}} - 5xx errors"
+              },
+              {
+                "expr": "rate(http_requests_total{status=~\"4..\"}[5m])",
+                "legendFormat": "{{job}} - 4xx errors"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Errors per second",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:9.3.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-secrets
+              key: admin-password
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-piechart-panel,grafana-worldmap-panel"
+        - name: GF_SERVER_ROOT_URL
+          value: "https://monitoring.writecarenotes.com/grafana"
+        - name: GF_SECURITY_COOKIE_SECURE
+          value: "true"
+        - name: GF_SECURITY_COOKIE_SAMESITE
+          value: "strict"
+        - name: GF_LOG_LEVEL
+          value: "info"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        - name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
+        - name: grafana-dashboards-config
+          mountPath: /etc/grafana/provisioning/dashboards
+        - name: healthcare-dashboards
+          mountPath: /var/lib/grafana/dashboards/healthcare
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          timeoutSeconds: 30
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-storage
+      - name: grafana-datasources
+        configMap:
+          name: grafana-datasources
+      - name: grafana-dashboards-config
+        configMap:
+          name: grafana-dashboards-config
+      - name: healthcare-dashboards
+        configMap:
+          name: healthcare-operations-dashboard
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: grafana
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-storage
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-secrets
+  namespace: monitoring
+type: Opaque
+data:
+  # admin-password: base64 encoded secure password
+  admin-password: V3JpdGVDYXJlTm90ZXNHcmFmYW5hMjAyNQ==

@@ -1,0 +1,305 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Users, 
+  DollarSign, 
+  Shield, 
+  FileText, 
+  Car, 
+  Globe, 
+  Calculator,
+  PieChart,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  BarChart3,
+  Settings,
+  Bell,
+  Search
+} from 'lucide-react';
+import HRDashboard from '../hr/HRDashboard';
+import FinancialDashboard from '../financial/FinancialDashboard';
+import DBSVerificationManagement from '../hr/DBSVerificationManagement';
+
+interface MainDashboardProps {
+  careHomeId?: string;
+  userRole?: string;
+}
+
+export const MainDashboard: React.FC<MainDashboardProps> = ({ careHomeId, userRole = 'admin' }) => {
+  const [activeModule, setActiveModule] = useState('overview');
+  const [activeSubModule, setActiveSubModule] = useState('hr');
+
+  // Mock data for overview cards
+  const overviewStats = {
+    totalEmployees: 45,
+    activeVerifications: 12,
+    pendingVerifications: 3,
+    expiredVerifications: 1,
+    totalRevenue: 125000,
+    monthlyExpenses: 85000,
+    netProfit: 40000,
+    complianceRate: 94.2,
+    budgetVariance: -5.2,
+    cashFlow: 15000
+  };
+
+  const getComplianceColor = (rate: number) => {
+    if (rate >= 95) return 'text-green-600';
+    if (rate >= 85) return 'text-yellow-600';
+    return 'text-red-600';
+  };
+
+  const getVarianceColor = (variance: number) => {
+    if (variance >= 0) return 'text-green-600';
+    return 'text-red-600';
+  };
+
+  const renderOverview = () => (
+    <div className="space-y-6">
+      {/* Key Metrics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Employees</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{overviewStats.totalEmployees}</div>
+            <p className="text-xs text-muted-foreground">
+              +2 from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Compliance Rate</CardTitle>
+            <Shield className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl font-bold ${getComplianceColor(overviewStats.complianceRate)}`}>
+              {overviewStats.complianceRate}%
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {overviewStats.activeVerifications} active verifications
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              £{overviewStats.totalRevenue.toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +12.5% from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Net Profit</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              £{overviewStats.netProfit.toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {getVarianceColor(overviewStats.budgetVariance)} {overviewStats.budgetVariance}% vs budget
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* HR Status Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              HR Verification Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Active Verifications</span>
+                </div>
+                <span className="font-medium">{overviewStats.activeVerifications}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-yellow-600" />
+                  <span className="text-sm">Pending Verifications</span>
+                </div>
+                <span className="font-medium">{overviewStats.pendingVerifications}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-600" />
+                  <span className="text-sm">Expired Verifications</span>
+                </div>
+                <span className="font-medium">{overviewStats.expiredVerifications}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="h-5 w-5" />
+              Financial Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Monthly Revenue</span>
+                <span className="font-medium">£{overviewStats.totalRevenue.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Monthly Expenses</span>
+                <span className="font-medium">£{overviewStats.monthlyExpenses.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Net Profit</span>
+                <span className="font-medium text-green-600">£{overviewStats.netProfit.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Cash Flow</span>
+                <span className="font-medium">£{overviewStats.cashFlow.toLocaleString()}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col items-center justify-center gap-2"
+              onClick={() => setActiveSubModule('hr')}
+            >
+              <Users className="h-6 w-6" />
+              <span className="text-sm">HR Management</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col items-center justify-center gap-2"
+              onClick={() => setActiveSubModule('finance')}
+            >
+              <DollarSign className="h-6 w-6" />
+              <span className="text-sm">Finance</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col items-center justify-center gap-2"
+              onClick={() => setActiveSubModule('dbs')}
+            >
+              <FileText className="h-6 w-6" />
+              <span className="text-sm">DBS Checks</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col items-center justify-center gap-2"
+            >
+              <Settings className="h-6 w-6" />
+              <span className="text-sm">Settings</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderModuleContent = () => {
+    switch (activeSubModule) {
+      case 'hr':
+        return <HRDashboard careHomeId={careHomeId} />;
+      case 'finance':
+        return <FinancialDashboard careHomeId={careHomeId} />;
+      case 'dbs':
+        return <DBSVerificationManagement careHomeId={careHomeId} />;
+      default:
+        return renderOverview();
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Care Home Management Dashboard</h1>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            <Search className="w-4 h-4 mr-2" />
+            Search
+          </Button>
+          <Button variant="outline" size="sm">
+            <Bell className="w-4 h-4 mr-2" />
+            Notifications
+          </Button>
+        </div>
+      </div>
+
+      <Tabs value={activeModule} onValueChange={setActiveModule} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="hr">HR Management</TabsTrigger>
+          <TabsTrigger value="finance">Finance</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          {renderOverview()}
+        </TabsContent>
+
+        <TabsContent value="hr" className="space-y-6">
+          <Tabs value={activeSubModule} onValueChange={setActiveSubModule} className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="hr">HR Dashboard</TabsTrigger>
+              <TabsTrigger value="dbs">DBS Verifications</TabsTrigger>
+              <TabsTrigger value="right-to-work">Right to Work</TabsTrigger>
+            </TabsList>
+            <TabsContent value="hr">
+              <HRDashboard careHomeId={careHomeId} />
+            </TabsContent>
+            <TabsContent value="dbs">
+              <DBSVerificationManagement careHomeId={careHomeId} />
+            </TabsContent>
+            <TabsContent value="right-to-work">
+              <div className="text-center py-8">
+                <Globe className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Right to Work Management</h3>
+                <p className="text-gray-500">Right to Work verification management will be implemented here.</p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="finance" className="space-y-6">
+          <FinancialDashboard careHomeId={careHomeId} />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default MainDashboard;

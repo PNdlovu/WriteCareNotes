@@ -1,0 +1,935 @@
+openapi: 3.0.3
+info:
+  title: Financial Management API
+  description: API for managing financial operations including journal entries, cash transactions, budgets, and ledger accounts
+  version: 1.0.0
+  contact:
+    name: WriteCareNotes Team
+    email: support@writecarenotes.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.writecarenotes.com/v1
+    description: Production server
+  - url: https://staging-api.writecarenotes.com/v1
+    description: Staging server
+  - url: http://localhost:3000/api
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+paths:
+  /financial/journal-entries:
+    post:
+      summary: Create Journal Entry
+      description: Create a new journal entry for double-entry bookkeeping
+      tags:
+        - Journal Entries
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JournalEntryRequest'
+            example:
+              entryNumber: "JE-2024-001"
+              entryType: "manual"
+              description: "Monthly rent payment"
+              reference: "RENT-001"
+              careHomeId: "care-home-001"
+              department: "nursing"
+              costCenter: "nursing-001"
+              notes: "Monthly rent for January 2024"
+              entries:
+                - accountId: "acc-001"
+                  debitAmount: 5000.00
+                  creditAmount: 0.00
+                  description: "Rent Expense"
+                  reference: "RENT-001"
+                - accountId: "acc-002"
+                  debitAmount: 0.00
+                  creditAmount: 5000.00
+                  description: "Cash Payment"
+                  reference: "RENT-001"
+      responses:
+        '201':
+          description: Journal entry created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntryResponse'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+    get:
+      summary: Search Journal Entries
+      description: Search journal entries with optional filters
+      tags:
+        - Journal Entries
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: entryType
+          in: query
+          description: Filter by entry type
+          schema:
+            type: string
+            enum: [manual, payroll, adjustment, reversal, system]
+        - name: status
+          in: query
+          description: Filter by entry status
+          schema:
+            type: string
+            enum: [draft, posted, reversed]
+        - name: careHomeId
+          in: query
+          description: Filter by care home ID
+          schema:
+            type: string
+        - name: department
+          in: query
+          description: Filter by department
+          schema:
+            type: string
+        - name: costCenter
+          in: query
+          description: Filter by cost center
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          description: Filter by start date (ISO 8601)
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          description: Filter by end date (ISO 8601)
+          schema:
+            type: string
+            format: date-time
+        - name: limit
+          in: query
+          description: Maximum number of results to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          description: Number of results to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: Journal entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntryListResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+  /financial/journal-entries/{entryId}:
+    get:
+      summary: Get Journal Entry by ID
+      description: Retrieve a specific journal entry by its ID
+      tags:
+        - Journal Entries
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          description: Unique identifier for the journal entry
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9-]+$'
+      responses:
+        '200':
+          description: Journal entry retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntryResponse'
+        '404':
+          description: Journal entry not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update Journal Entry
+      description: Update an existing journal entry
+      tags:
+        - Journal Entries
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          description: Unique identifier for the journal entry
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9-]+$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JournalEntryUpdateRequest'
+      responses:
+        '200':
+          description: Journal entry updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntryResponse'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Journal entry not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+    delete:
+      summary: Delete Journal Entry
+      description: Delete a journal entry (soft delete)
+      tags:
+        - Journal Entries
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          description: Unique identifier for the journal entry
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9-]+$'
+      responses:
+        '200':
+          description: Journal entry deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request - Cannot delete journal entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Journal entry not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+  /financial/journal-entries/{entryId}/reverse:
+    post:
+      summary: Reverse Journal Entry
+      description: Reverse a posted journal entry
+      tags:
+        - Journal Entries
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          description: Unique identifier for the journal entry
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9-]+$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason
+              properties:
+                reason:
+                  type: string
+                  description: Reason for reversal
+                  example: "Error in original entry"
+      responses:
+        '200':
+          description: Journal entry reversed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntryResponse'
+        '400':
+          description: Bad request - Invalid status or missing data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Journal entry not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+  /financial/cash-transactions:
+    post:
+      summary: Create Cash Transaction
+      description: Create a new cash transaction
+      tags:
+        - Cash Transactions
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashTransactionRequest'
+            example:
+              accountId: "acc-001"
+              transactionType: "debit"
+              amount: 500.00
+              description: "Office supplies purchase"
+              transactionDate: "2024-01-15T14:30:00Z"
+              referenceNumber: "PS-001"
+              careHomeId: "care-home-001"
+              department: "nursing"
+              costCenter: "nursing-001"
+      responses:
+        '201':
+          description: Cash transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashTransactionResponse'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+  /financial/budgets:
+    post:
+      summary: Create Budget
+      description: Create a new budget
+      tags:
+        - Budgets
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetRequest'
+            example:
+              budgetName: "2024 Annual Budget"
+              budgetType: "annual"
+              budgetYear: 2024
+              budgetPeriod: "2024"
+              startDate: "2024-01-01T00:00:00Z"
+              endDate: "2024-12-31T23:59:59Z"
+              careHomeId: "care-home-001"
+              department: "nursing"
+              costCenter: "nursing-001"
+              totalBudgetedRevenue: 500000.00
+              totalBudgetedExpenses: 400000.00
+              totalBudgetedProfit: 100000.00
+              categories:
+                - categoryId: "cat-001"
+                  budgetedAmount: 200000.00
+                  description: "Staff salaries"
+                - categoryId: "cat-002"
+                  budgetedAmount: 100000.00
+                  description: "Operating expenses"
+      responses:
+        '201':
+          description: Budget created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResponse'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+  /financial/ledger-accounts:
+    post:
+      summary: Create Ledger Account
+      description: Create a new ledger account
+      tags:
+        - Ledger Accounts
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LedgerAccountRequest'
+            example:
+              accountCode: "1000"
+              accountName: "Cash"
+              accountType: "asset"
+              accountCategory: "current_asset"
+              description: "Petty cash and bank accounts"
+              isActive: true
+              requiresReconciliation: true
+              openingBalance: 10000.00
+              careHomeId: "care-home-001"
+              department: "finance"
+              costCenter: "finance-001"
+      responses:
+        '201':
+          description: Ledger account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LedgerAccountResponse'
+        '400':
+          description: Bad request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing token
+        '403':
+          description: Forbidden - Insufficient permissions
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    JournalEntryRequest:
+      type: object
+      required:
+        - entryNumber
+        - entryType
+        - description
+        - entries
+      properties:
+        entryNumber:
+          type: string
+          description: Unique journal entry number
+          example: "JE-2024-001"
+        entryType:
+          type: string
+          enum: [manual, payroll, adjustment, reversal, system]
+          description: Type of journal entry
+          example: "manual"
+        description:
+          type: string
+          description: Description of the journal entry
+          example: "Monthly rent payment"
+        reference:
+          type: string
+          description: Reference number or code
+          example: "RENT-001"
+        careHomeId:
+          type: string
+          description: Care home identifier
+          example: "care-home-001"
+        department:
+          type: string
+          description: Department code
+          example: "nursing"
+        costCenter:
+          type: string
+          description: Cost center code
+          example: "nursing-001"
+        notes:
+          type: string
+          description: Additional notes
+          example: "Monthly rent for January 2024"
+        entries:
+          type: array
+          minItems: 2
+          description: Journal entry lines (must be balanced)
+          items:
+            $ref: '#/components/schemas/JournalEntryLine'
+
+    JournalEntryLine:
+      type: object
+      required:
+        - accountId
+        - debitAmount
+        - creditAmount
+        - description
+      properties:
+        accountId:
+          type: string
+          description: Ledger account ID
+          example: "acc-001"
+        debitAmount:
+          type: number
+          format: decimal
+          minimum: 0
+          description: Debit amount
+          example: 5000.00
+        creditAmount:
+          type: number
+          format: decimal
+          minimum: 0
+          description: Credit amount
+          example: 0.00
+        description:
+          type: string
+          description: Line description
+          example: "Rent Expense"
+        reference:
+          type: string
+          description: Line reference
+          example: "RENT-001"
+        costCenter:
+          type: string
+          description: Cost center code
+          example: "nursing-001"
+        department:
+          type: string
+          description: Department code
+          example: "nursing"
+
+    JournalEntryUpdateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the journal entry
+        reference:
+          type: string
+          description: Reference number or code
+        notes:
+          type: string
+          description: Additional notes
+        status:
+          type: string
+          enum: [draft, posted, reversed]
+          description: Entry status
+
+    JournalEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the journal entry
+          example: "je-001"
+        entryNumber:
+          type: string
+          description: Unique journal entry number
+          example: "JE-2024-001"
+        entryType:
+          type: string
+          enum: [manual, payroll, adjustment, reversal, system]
+          description: Type of journal entry
+          example: "manual"
+        description:
+          type: string
+          description: Description of the journal entry
+          example: "Monthly rent payment"
+        reference:
+          type: string
+          description: Reference number or code
+          example: "RENT-001"
+        status:
+          type: string
+          enum: [draft, posted, reversed]
+          description: Entry status
+          example: "posted"
+        totalAmount:
+          type: number
+          format: decimal
+          description: Total amount of the journal entry
+          example: 5000.00
+        careHomeId:
+          type: string
+          description: Care home identifier
+          example: "care-home-001"
+        department:
+          type: string
+          description: Department code
+          example: "nursing"
+        costCenter:
+          type: string
+          description: Cost center code
+          example: "nursing-001"
+        notes:
+          type: string
+          description: Additional notes
+          example: "Monthly rent for January 2024"
+        entries:
+          type: array
+          description: Journal entry lines
+          items:
+            $ref: '#/components/schemas/JournalEntryLine'
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2024-01-15T10:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2024-01-15T10:00:00Z"
+
+    JournalEntryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Journal entry created successfully"
+        data:
+          $ref: '#/components/schemas/JournalEntry'
+
+    JournalEntryListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/JournalEntry'
+        count:
+          type: integer
+          description: Total number of journal entries returned
+          example: 25
+
+    CashTransactionRequest:
+      type: object
+      required:
+        - accountId
+        - transactionType
+        - amount
+        - description
+        - transactionDate
+      properties:
+        accountId:
+          type: string
+          description: Ledger account ID
+          example: "acc-001"
+        transactionType:
+          type: string
+          enum: [debit, credit]
+          description: Type of transaction
+          example: "debit"
+        amount:
+          type: number
+          format: decimal
+          minimum: 0
+          description: Transaction amount
+          example: 500.00
+        description:
+          type: string
+          description: Transaction description
+          example: "Office supplies purchase"
+        transactionDate:
+          type: string
+          format: date-time
+          description: Transaction date
+          example: "2024-01-15T14:30:00Z"
+        referenceNumber:
+          type: string
+          description: Reference number
+          example: "PS-001"
+        careHomeId:
+          type: string
+          description: Care home identifier
+          example: "care-home-001"
+        department:
+          type: string
+          description: Department code
+          example: "nursing"
+        costCenter:
+          type: string
+          description: Cost center code
+          example: "nursing-001"
+        relatedJournalEntryId:
+          type: string
+          description: Related journal entry ID
+          example: "je-001"
+
+    BudgetRequest:
+      type: object
+      required:
+        - budgetName
+        - budgetType
+        - budgetYear
+        - startDate
+        - endDate
+        - totalBudgetedRevenue
+        - totalBudgetedExpenses
+        - totalBudgetedProfit
+      properties:
+        budgetName:
+          type: string
+          description: Name of the budget
+          example: "2024 Annual Budget"
+        budgetType:
+          type: string
+          enum: [annual, quarterly, monthly, project]
+          description: Type of budget
+          example: "annual"
+        budgetYear:
+          type: integer
+          description: Budget year
+          example: 2024
+        budgetPeriod:
+          type: string
+          description: Budget period
+          example: "2024"
+        startDate:
+          type: string
+          format: date-time
+          description: Budget start date
+          example: "2024-01-01T00:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          description: Budget end date
+          example: "2024-12-31T23:59:59Z"
+        careHomeId:
+          type: string
+          description: Care home identifier
+          example: "care-home-001"
+        department:
+          type: string
+          description: Department code
+          example: "nursing"
+        costCenter:
+          type: string
+          description: Cost center code
+          example: "nursing-001"
+        totalBudgetedRevenue:
+          type: number
+          format: decimal
+          description: Total budgeted revenue
+          example: 500000.00
+        totalBudgetedExpenses:
+          type: number
+          format: decimal
+          description: Total budgeted expenses
+          example: 400000.00
+        totalBudgetedProfit:
+          type: number
+          format: decimal
+          description: Total budgeted profit
+          example: 100000.00
+        categories:
+          type: array
+          description: Budget categories
+          items:
+            $ref: '#/components/schemas/BudgetCategoryRequest'
+        notes:
+          type: string
+          description: Additional notes
+          example: "Annual budget for 2024"
+
+    BudgetCategoryRequest:
+      type: object
+      required:
+        - categoryId
+        - budgetedAmount
+      properties:
+        categoryId:
+          type: string
+          description: Budget category ID
+          example: "cat-001"
+        budgetedAmount:
+          type: number
+          format: decimal
+          description: Budgeted amount for this category
+          example: 200000.00
+        description:
+          type: string
+          description: Category description
+          example: "Staff salaries"
+        notes:
+          type: string
+          description: Additional notes
+          example: "Includes all staff salaries and benefits"
+
+    LedgerAccountRequest:
+      type: object
+      required:
+        - accountCode
+        - accountName
+        - accountType
+        - accountCategory
+      properties:
+        accountCode:
+          type: string
+          description: Unique account code
+          example: "1000"
+        accountName:
+          type: string
+          description: Account name
+          example: "Cash"
+        accountType:
+          type: string
+          enum: [asset, liability, equity, revenue, expense, cost_of_sales, other_income, other_expense]
+          description: Account type
+          example: "asset"
+        accountCategory:
+          type: string
+          enum: [current_asset, fixed_asset, current_liability, long_term_liability, equity, revenue, expense, cost_of_sales, other_income, other_expense]
+          description: Account category
+          example: "current_asset"
+        description:
+          type: string
+          description: Account description
+          example: "Petty cash and bank accounts"
+        parentAccountId:
+          type: string
+          description: Parent account ID for hierarchical structure
+          example: "acc-parent-001"
+        isActive:
+          type: boolean
+          description: Whether the account is active
+          example: true
+        isSystemAccount:
+          type: boolean
+          description: Whether this is a system account
+          example: false
+        isContraAccount:
+          type: boolean
+          description: Whether this is a contra account
+          example: false
+        isControlAccount:
+          type: boolean
+          description: Whether this is a control account
+          example: false
+        requiresReconciliation:
+          type: boolean
+          description: Whether the account requires reconciliation
+          example: true
+        openingBalance:
+          type: number
+          format: decimal
+          description: Opening balance
+          example: 10000.00
+        careHomeId:
+          type: string
+          description: Care home identifier
+          example: "care-home-001"
+        department:
+          type: string
+          description: Department code
+          example: "finance"
+        costCenter:
+          type: string
+          description: Cost center code
+          example: "finance-001"
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          description: Error message
+          example: "Journal entry not found"
+        error:
+          type: string
+          description: Error code
+          example: "NOT_FOUND"
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          description: Success message
+          example: "Journal entry deleted successfully"

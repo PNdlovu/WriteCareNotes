@@ -1,0 +1,224 @@
+# Load Balancer Configuration for WriteCareNotes Microservices
+# Provides high availability and traffic distribution across service instances
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: writecarenotes-load-balancer
+  namespace: core-healthcare
+  annotations:
+    # AWS Load Balancer Controller annotations
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:region:account:certificate/cert-id"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/health"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "10"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: "5"
+    service.beta.kubernetes.io/aws-load-balancer-healthy-threshold: "2"
+    service.beta.kubernetes.io/aws-load-balancer-unhealthy-threshold: "3"
+    # Healthcare compliance annotations
+    compliance.writecarenotes.com/gdpr: "enabled"
+    compliance.writecarenotes.com/audit: "required"
+    compliance.writecarenotes.com/encryption: "tls-1.3"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: https
+    port: 443
+    targetPort: 80
+    protocol: TCP
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: api-gateway
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: writecarenotes-ingress
+  namespace: core-healthcare
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    # Rate limiting for healthcare API protection
+    nginx.ingress.kubernetes.io/rate-limit: "1000"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    # Healthcare-specific security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Frame-Options "DENY" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'" always;
+    # CORS for healthcare applications
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.writecarenotes.com,https://admin.writecarenotes.com"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,X-Tenant-ID,X-Correlation-ID"
+    # Request size limits for file uploads
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    # Timeout configurations for healthcare operations
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+spec:
+  tls:
+  - hosts:
+    - api.writecarenotes.com
+    - app.writecarenotes.com
+    - admin.writecarenotes.com
+    secretName: writecarenotes-tls
+  rules:
+  # Main API Gateway
+  - host: api.writecarenotes.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 80
+  
+  # Healthcare Application Frontend
+  - host: app.writecarenotes.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-app
+            port:
+              number: 80
+  
+  # Administrative Interface
+  - host: admin.writecarenotes.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: admin-interface
+            port:
+              number: 80
+
+---
+# Network Policy for Healthcare Compliance
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: healthcare-network-policy
+  namespace: core-healthcare
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow ingress from ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 80
+  # Allow ingress from monitoring namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          tier: monitoring
+    ports:
+    - protocol: TCP
+      port: 9090
+  # Allow inter-service communication within namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          tier: core-healthcare
+  egress:
+  # Allow egress to DNS
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+  # Allow egress to other healthcare services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          tier: core-healthcare
+  # Allow egress to operational services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          tier: operational
+  # Allow egress to compliance services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          tier: compliance
+  # Allow egress to integration services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          tier: integration
+  # Allow egress to external NHS APIs (port 443)
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443
+
+---
+# Horizontal Pod Autoscaler for API Gateway
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-gateway-hpa
+  namespace: core-healthcare
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+      - type: Pods
+        value: 2
+        periodSeconds: 60

@@ -1,0 +1,380 @@
+# Kibana Configuration for WriteCareNotes Healthcare Analytics and Visualization
+# Provides healthcare-specific dashboards, compliance reporting, and audit visualization
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-config
+  namespace: logging
+data:
+  kibana.yml: |
+    server.name: "writecarenotes-kibana"
+    server.host: "0.0.0.0"
+    server.port: 5601
+    
+    # Elasticsearch connection
+    elasticsearch.hosts: ["https://elasticsearch:9200"]
+    elasticsearch.username: "elastic"
+    elasticsearch.password: "${ELASTIC_PASSWORD}"
+    elasticsearch.ssl.verificationMode: none
+    
+    # Healthcare-specific settings
+    server.basePath: ""
+    server.rewriteBasePath: false
+    
+    # Security settings
+    xpack.security.enabled: true
+    xpack.security.encryptionKey: "writecarenotes-kibana-encryption-key-32-chars"
+    xpack.security.sessionTimeout: 3600000
+    
+    # Monitoring
+    monitoring.enabled: true
+    monitoring.kibana.collection.enabled: true
+    
+    # Healthcare compliance logging
+    logging.appenders.file.type: file
+    logging.appenders.file.fileName: /usr/share/kibana/logs/kibana.log
+    logging.appenders.file.layout.type: json
+    logging.root.level: info
+    
+    # Healthcare-specific features
+    xpack.canvas.enabled: true
+    xpack.maps.enabled: true
+    xpack.ml.enabled: true
+    xpack.apm.enabled: true
+    
+    # Dashboard and visualization settings
+    kibana.index: ".kibana-writecarenotes"
+    kibana.defaultAppId: "dashboard"
+    
+    # Healthcare data retention
+    xpack.spaces.enabled: true
+    xpack.spaces.maxSpaces: 10
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:8.11.0
+        ports:
+        - containerPort: 5601
+          name: http
+        env:
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secret
+              key: password
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=2048"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 1000m
+            memory: 4Gi
+        volumeMounts:
+        - name: kibana-config
+          mountPath: /usr/share/kibana/config/kibana.yml
+          subPath: kibana.yml
+        - name: kibana-logs
+          mountPath: /usr/share/kibana/logs
+        livenessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: kibana-config
+        configMap:
+          name: kibana-config
+      - name: kibana-logs
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: logging
+spec:
+  ports:
+  - name: http
+    port: 5601
+    targetPort: 5601
+  selector:
+    app: kibana
+
+---
+# Healthcare Dashboard Configurations
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-healthcare-dashboards
+  namespace: logging
+data:
+  healthcare-overview-dashboard.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "healthcare-overview",
+          "type": "dashboard",
+          "attributes": {
+            "title": "WriteCareNotes Healthcare Overview",
+            "description": "Comprehensive healthcare system monitoring dashboard",
+            "panelsJSON": "[{\"version\":\"8.11.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":24,\"h\":15,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"}]",
+            "timeRestore": true,
+            "timeTo": "now",
+            "timeFrom": "now-24h",
+            "refreshInterval": {
+              "pause": false,
+              "value": 30000
+            },
+            "kibanaSavedObjectMeta": {
+              "searchSourceJSON": "{\"query\":{\"match_all\":{}},\"filter\":[]}"
+            }
+          }
+        }
+      ]
+    }
+
+  compliance-audit-dashboard.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "compliance-audit",
+          "type": "dashboard",
+          "attributes": {
+            "title": "Healthcare Compliance & Audit Dashboard",
+            "description": "CQC, GDPR, and regulatory compliance monitoring",
+            "panelsJSON": "[{\"version\":\"8.11.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":20,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"}]",
+            "timeRestore": true,
+            "timeTo": "now",
+            "timeFrom": "now-7d",
+            "refreshInterval": {
+              "pause": false,
+              "value": 60000
+            }
+          }
+        }
+      ]
+    }
+
+  medication-safety-dashboard.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "medication-safety",
+          "type": "dashboard",
+          "attributes": {
+            "title": "Medication Safety & Administration Dashboard",
+            "description": "Critical medication management and safety monitoring",
+            "panelsJSON": "[{\"version\":\"8.11.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":25,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"}]",
+            "timeRestore": true,
+            "timeTo": "now",
+            "timeFrom": "now-24h",
+            "refreshInterval": {
+              "pause": false,
+              "value": 15000
+            }
+          }
+        }
+      ]
+    }
+
+  security-monitoring-dashboard.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "security-monitoring",
+          "type": "dashboard",
+          "attributes": {
+            "title": "Security & Access Monitoring Dashboard",
+            "description": "Security incidents, authentication, and access control monitoring",
+            "panelsJSON": "[{\"version\":\"8.11.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":30,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"}]",
+            "timeRestore": true,
+            "timeTo": "now",
+            "timeFrom": "now-24h",
+            "refreshInterval": {
+              "pause": false,
+              "value": 10000
+            }
+          }
+        }
+      ]
+    }
+
+  performance-analytics-dashboard.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "performance-analytics",
+          "type": "dashboard",
+          "attributes": {
+            "title": "System Performance & Analytics Dashboard",
+            "description": "Application performance, response times, and system health",
+            "panelsJSON": "[{\"version\":\"8.11.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":25,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"}]",
+            "timeRestore": true,
+            "timeTo": "now",
+            "timeFrom": "now-4h",
+            "refreshInterval": {
+              "pause": false,
+              "value": 30000
+            }
+          }
+        }
+      ]
+    }
+
+---
+# Kibana Saved Searches for Healthcare
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-healthcare-searches
+  namespace: logging
+data:
+  critical-medication-events.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "critical-medication-events",
+          "type": "search",
+          "attributes": {
+            "title": "Critical Medication Events",
+            "description": "High-priority medication administration and safety events",
+            "columns": ["@timestamp", "service", "action", "resident_id", "message", "severity"],
+            "sort": [["@timestamp", "desc"]],
+            "kibanaSavedObjectMeta": {
+              "searchSourceJSON": "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"healthcare_context\":\"medication-management\"}},{\"match\":{\"compliance_level\":\"critical\"}}]}},\"filter\":[],\"index\":\"healthcare-logs-*\"}"
+            }
+          }
+        }
+      ]
+    }
+
+  gdpr-data-access-requests.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "gdpr-data-access",
+          "type": "search",
+          "attributes": {
+            "title": "GDPR Data Access Requests",
+            "description": "Data subject access requests and GDPR compliance events",
+            "columns": ["@timestamp", "action", "user_id", "resource_type", "contains_pii", "message"],
+            "sort": [["@timestamp", "desc"]],
+            "kibanaSavedObjectMeta": {
+              "searchSourceJSON": "{\"query\":{\"bool\":{\"should\":[{\"match\":{\"action\":\"GDPR_REQUEST\"}},{\"match\":{\"action\":\"DATA_ACCESS\"}},{\"match\":{\"action\":\"DATA_EXPORT\"}}]}},\"filter\":[],\"index\":\"audit-logs-*\"}"
+            }
+          }
+        }
+      ]
+    }
+
+  security-incidents.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "security-incidents",
+          "type": "search",
+          "attributes": {
+            "title": "Security Incidents",
+            "description": "Security violations, failed logins, and unauthorized access attempts",
+            "columns": ["@timestamp", "action", "user_id", "ip_address", "service", "message", "severity"],
+            "sort": [["@timestamp", "desc"]],
+            "kibanaSavedObjectMeta": {
+              "searchSourceJSON": "{\"query\":{\"bool\":{\"should\":[{\"match\":{\"security_incident\":\"true\"}},{\"match\":{\"action\":\"FAILED_LOGIN\"}},{\"match\":{\"action\":\"UNAUTHORIZED_ACCESS\"}}]}},\"filter\":[],\"index\":\"security-logs-*\"}"
+            }
+          }
+        }
+      ]
+    }
+
+---
+# Kibana Index Patterns
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-index-patterns
+  namespace: logging
+data:
+  healthcare-logs-pattern.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "healthcare-logs-*",
+          "type": "index-pattern",
+          "attributes": {
+            "title": "healthcare-logs-*",
+            "timeFieldName": "@timestamp",
+            "fields": "[{\"name\":\"@timestamp\",\"type\":\"date\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"service\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"healthcare_context\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"compliance_level\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"contains_pii\",\"type\":\"boolean\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"audit_required\",\"type\":\"boolean\",\"searchable\":true,\"aggregatable\":true}]"
+          }
+        }
+      ]
+    }
+
+  audit-logs-pattern.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "audit-logs-*",
+          "type": "index-pattern",
+          "attributes": {
+            "title": "audit-logs-*",
+            "timeFieldName": "@timestamp",
+            "fields": "[{\"name\":\"@timestamp\",\"type\":\"date\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"action\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"user_id\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"resource_type\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"compliance_level\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true}]"
+          }
+        }
+      ]
+    }
+
+  security-logs-pattern.json: |
+    {
+      "version": "8.11.0",
+      "objects": [
+        {
+          "id": "security-logs-*",
+          "type": "index-pattern",
+          "attributes": {
+            "title": "security-logs-*",
+            "timeFieldName": "@timestamp",
+            "fields": "[{\"name\":\"@timestamp\",\"type\":\"date\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"action\",\"type\":\"string\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"security_incident\",\"type\":\"boolean\",\"searchable\":true,\"aggregatable\":true},{\"name\":\"ip_address\",\"type\":\"ip\",\"searchable\":true,\"aggregatable\":true}]"
+          }
+        }
+      ]
+    }

@@ -1,0 +1,84 @@
+[
+  {
+    "path": "src/components/medication/MedicationDashboard.tsx",
+    "title": "Medication Dashboard",
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/medication-management.ts",
+      "src/routes/medication-inventory.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/medication/ClinicalSafetyDashboard.tsx", 
+    "title": "Clinical Safety Dashboard",
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/medication-compliance.ts",
+      "src/routes/medication-interaction.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/medication/ControlledSubstancesRegister.tsx",
+    "title": "Controlled Substances Register", 
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/controlled-substances.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/medication/HealthcareIntegration.tsx",
+    "title": "Healthcare Integration",
+    "data_source": "real_api", 
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/healthcare-integration.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/consent/ConsentManagementDashboard.tsx",
+    "title": "Consent Management Dashboard",
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/consent.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/analytics/ComprehensiveAnalyticsDashboard.tsx",
+    "title": "Analytics Dashboard",
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/financial/financialAnalyticsRoutes.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/family/FamilyEngagementPortal.tsx",
+    "title": "Family Engagement Portal",
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/family-engagement.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  },
+  {
+    "path": "src/components/document/DocumentManagementDashboard.tsx",
+    "title": "Document Management Dashboard", 
+    "data_source": "real_api",
+    "blocking_todos": [],
+    "dependent_backend_endpoints": [
+      "src/routes/document-management.ts"
+    ],
+    "classification": "IMPLEMENTATION"
+  }
+]

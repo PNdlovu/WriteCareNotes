@@ -1,0 +1,558 @@
+# Prometheus Configuration for WriteCareNotes Healthcare Monitoring
+# Provides comprehensive metrics collection with healthcare-specific alerting
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'writecarenotes-healthcare'
+        environment: 'production'
+        facility_type: 'care_home'
+        regulatory_jurisdiction: 'uk'
+    
+    rule_files:
+      - "/etc/prometheus/rules/*.yml"
+    
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+              - alertmanager:9093
+    
+    scrape_configs:
+      # Prometheus self-monitoring
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+        scrape_interval: 30s
+        metrics_path: /metrics
+    
+      # Kubernetes API server
+      - job_name: 'kubernetes-apiservers'
+        kubernetes_sd_configs:
+          - role: endpoints
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: default;kubernetes;https
+    
+      # Kubernetes nodes
+      - job_name: 'kubernetes-nodes'
+        kubernetes_sd_configs:
+          - role: node
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/${1}/proxy/metrics
+    
+      # Kubernetes pods
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
+          - source_labels: [__meta_kubernetes_pod_label_healthcare_context]
+            action: replace
+            target_label: healthcare_context
+          - source_labels: [__meta_kubernetes_pod_label_compliance_level]
+            action: replace
+            target_label: compliance_level
+    
+      # Healthcare Core Services
+      - job_name: 'resident-service'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ['core-healthcare']
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: resident-service
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: (.+)
+            replacement: ${1}:3000
+        scrape_interval: 10s
+        metrics_path: /metrics
+        static_configs:
+          - labels:
+              service_tier: 'core-healthcare'
+              compliance_level: 'high'
+              healthcare_context: 'resident-management'
+    
+      - job_name: 'medication-service'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ['core-healthcare']
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: medication-service
+        scrape_interval: 10s
+        static_configs:
+          - labels:
+              service_tier: 'core-healthcare'
+              compliance_level: 'critical'
+              healthcare_context: 'medication-management'
+    
+      - job_name: 'care-planning-service'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ['core-healthcare']
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: care-planning-service
+        scrape_interval: 15s
+        static_configs:
+          - labels:
+              service_tier: 'core-healthcare'
+              compliance_level: 'high'
+              healthcare_context: 'care-planning'
+    
+      # Infrastructure Services
+      - job_name: 'redis-cluster'
+        static_configs:
+          - targets: ['redis-cluster-monitor.caching.svc.cluster.local:9121']
+        scrape_interval: 30s
+        static_configs:
+          - labels:
+              service_type: 'infrastructure'
+              component: 'caching'
+    
+      - job_name: 'postgresql-exporter'
+        static_configs:
+          - targets: ['postgresql-exporter.databases.svc.cluster.local:9187']
+        scrape_interval: 30s
+        static_configs:
+          - labels:
+              service_type: 'infrastructure'
+              component: 'database'
+    
+      - job_name: 'elasticsearch-exporter'
+        static_configs:
+          - targets: ['elasticsearch-exporter.logging.svc.cluster.local:9114']
+        scrape_interval: 30s
+        static_configs:
+          - labels:
+              service_type: 'infrastructure'
+              component: 'logging'
+    
+      # Message Queue Monitoring
+      - job_name: 'rabbitmq-exporter'
+        static_configs:
+          - targets: ['rabbitmq-exporter.messaging.svc.cluster.local:9419']
+        scrape_interval: 30s
+        static_configs:
+          - labels:
+              service_type: 'infrastructure'
+              component: 'messaging'
+    
+      - job_name: 'kafka-exporter'
+        static_configs:
+          - targets: ['kafka-exporter.messaging.svc.cluster.local:9308']
+        scrape_interval: 30s
+        static_configs:
+          - labels:
+              service_type: 'infrastructure'
+              component: 'messaging'
+    
+      # API Gateway Monitoring
+      - job_name: 'kong-exporter'
+        static_configs:
+          - targets: ['kong-exporter.api-gateway.svc.cluster.local:8001']
+        scrape_interval: 15s
+        static_configs:
+          - labels:
+              service_type: 'infrastructure'
+              component: 'api-gateway'
+    
+      # Service Mesh Monitoring
+      - job_name: 'istio-mesh'
+        kubernetes_sd_configs:
+          - role: endpoints
+            namespaces:
+              names: ['istio-system']
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: istio-telemetry;prometheus
+    
+      # Healthcare Business Metrics
+      - job_name: 'healthcare-business-metrics'
+        static_configs:
+          - targets: ['business-metrics-exporter.monitoring.svc.cluster.local:8080']
+        scrape_interval: 60s
+        static_configs:
+          - labels:
+              metric_type: 'business'
+              healthcare_domain: 'care_operations'
+
+  healthcare-alerts.yml: |
+    groups:
+      - name: healthcare-critical-alerts
+        rules:
+          # Medication Safety Alerts
+          - alert: MedicationAdministrationFailure
+            expr: increase(medication_administration_errors_total[5m]) > 0
+            for: 0m
+            labels:
+              severity: critical
+              healthcare_context: medication-management
+              compliance_level: critical
+              alert_type: patient_safety
+            annotations:
+              summary: "Medication administration error detected"
+              description: "{{ $labels.service }} reported medication administration error for resident {{ $labels.resident_id }}"
+              runbook_url: "https://docs.writecarenotes.com/runbooks/medication-errors"
+              regulatory_requirement: "CQC Fundamental Standards - Safe Care"
+    
+          - alert: MedicationInteractionDetected
+            expr: medication_interaction_warnings_total > 0
+            for: 0m
+            labels:
+              severity: critical
+              healthcare_context: medication-management
+              alert_type: drug_interaction
+            annotations:
+              summary: "Potential medication interaction detected"
+              description: "Drug interaction warning for resident {{ $labels.resident_id }}: {{ $labels.interaction_type }}"
+    
+          - alert: MissedMedicationDose
+            expr: increase(missed_medication_doses_total[15m]) > 0
+            for: 5m
+            labels:
+              severity: high
+              healthcare_context: medication-management
+            annotations:
+              summary: "Missed medication dose alert"
+              description: "Medication dose missed for resident {{ $labels.resident_id }} - {{ $labels.medication_name }}"
+    
+          # Resident Safety Alerts
+          - alert: ResidentFallIncident
+            expr: increase(resident_fall_incidents_total[1m]) > 0
+            for: 0m
+            labels:
+              severity: critical
+              healthcare_context: resident-safety
+              alert_type: incident
+            annotations:
+              summary: "Resident fall incident reported"
+              description: "Fall incident reported for resident {{ $labels.resident_id }} in {{ $labels.location }}"
+    
+          - alert: ResidentMissingAlert
+            expr: resident_location_unknown > 0
+            for: 2m
+            labels:
+              severity: critical
+              healthcare_context: resident-safety
+              alert_type: missing_person
+            annotations:
+              summary: "Resident location unknown"
+              description: "Unable to locate resident {{ $labels.resident_id }} - immediate response required"
+    
+          # System Health Alerts
+          - alert: HealthcareServiceDown
+            expr: up{service_tier="core-healthcare"} == 0
+            for: 1m
+            labels:
+              severity: critical
+              alert_type: service_outage
+            annotations:
+              summary: "Critical healthcare service is down"
+              description: "{{ $labels.job }} service is down - patient care may be impacted"
+    
+          - alert: DatabaseConnectionFailure
+            expr: postgresql_up{healthcare_context=~".*"} == 0
+            for: 30s
+            labels:
+              severity: critical
+              alert_type: infrastructure
+            annotations:
+              summary: "Healthcare database connection failure"
+              description: "Database connection failed for {{ $labels.healthcare_context }} - data access impacted"
+    
+          # Compliance and Audit Alerts
+          - alert: AuditLogFailure
+            expr: increase(audit_log_failures_total[5m]) > 0
+            for: 0m
+            labels:
+              severity: high
+              compliance_level: critical
+              alert_type: compliance
+            annotations:
+              summary: "Audit logging failure detected"
+              description: "Audit log failure in {{ $labels.service }} - compliance requirements may not be met"
+    
+          - alert: GDPRViolationDetected
+            expr: increase(gdpr_violation_events_total[1m]) > 0
+            for: 0m
+            labels:
+              severity: critical
+              compliance_level: critical
+              alert_type: data_protection
+            annotations:
+              summary: "Potential GDPR violation detected"
+              description: "GDPR violation detected: {{ $labels.violation_type }} in {{ $labels.service }}"
+    
+          # Performance Alerts
+          - alert: HighResponseTime
+            expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service_tier="core-healthcare"}[5m])) > 2
+            for: 5m
+            labels:
+              severity: warning
+              alert_type: performance
+            annotations:
+              summary: "High response time in healthcare service"
+              description: "95th percentile response time is {{ $value }}s for {{ $labels.service }}"
+    
+          - alert: HighErrorRate
+            expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+            for: 5m
+            labels:
+              severity: high
+              alert_type: error_rate
+            annotations:
+              summary: "High error rate detected"
+              description: "Error rate is {{ $value | humanizePercentage }} for {{ $labels.service }}"
+    
+      - name: healthcare-warning-alerts
+        rules:
+          # Resource Usage Alerts
+          - alert: HighMemoryUsage
+            expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.85
+            for: 10m
+            labels:
+              severity: warning
+              alert_type: resource
+            annotations:
+              summary: "High memory usage on node"
+              description: "Memory usage is above 85% on node {{ $labels.instance }}"
+    
+          - alert: HighCPUUsage
+            expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+            for: 10m
+            labels:
+              severity: warning
+              alert_type: resource
+            annotations:
+              summary: "High CPU usage on node"
+              description: "CPU usage is above 80% on node {{ $labels.instance }}"
+    
+          - alert: DiskSpaceLow
+            expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+            for: 5m
+            labels:
+              severity: warning
+              alert_type: resource
+            annotations:
+              summary: "Low disk space"
+              description: "Disk space is below 15% on node {{ $labels.instance }}"
+    
+          # Healthcare Business Alerts
+          - alert: LowStaffingLevel
+            expr: current_staff_count / required_staff_count < 0.8
+            for: 15m
+            labels:
+              severity: warning
+              healthcare_context: staffing
+              alert_type: operational
+            annotations:
+              summary: "Low staffing level detected"
+              description: "Current staffing is {{ $value | humanizePercentage }} of required level"
+    
+          - alert: HighResidentToStaffRatio
+            expr: resident_count / staff_count > 8
+            for: 10m
+            labels:
+              severity: warning
+              healthcare_context: staffing
+              alert_type: operational
+            annotations:
+              summary: "High resident to staff ratio"
+              description: "Current ratio is {{ $value }} residents per staff member"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.45.0
+        ports:
+        - containerPort: 9090
+          name: http
+        args:
+          - '--config.file=/etc/prometheus/prometheus.yml'
+          - '--storage.tsdb.path=/prometheus'
+          - '--storage.tsdb.retention.time=30d'
+          - '--storage.tsdb.retention.size=50GB'
+          - '--web.console.libraries=/etc/prometheus/console_libraries'
+          - '--web.console.templates=/etc/prometheus/consoles'
+          - '--web.enable-lifecycle'
+          - '--web.enable-admin-api'
+          - '--log.level=info'
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 4Gi
+          limits:
+            cpu: 2000m
+            memory: 8Gi
+        volumeMounts:
+        - name: prometheus-config
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+        - name: prometheus-config
+          mountPath: /etc/prometheus/rules/healthcare-alerts.yml
+          subPath: healthcare-alerts.yml
+        - name: prometheus-storage
+          mountPath: /prometheus
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-config
+      - name: prometheus-storage
+        persistentVolumeClaim:
+          claimName: prometheus-storage
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-storage
+  namespace: monitoring
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  ports:
+  - name: http
+    port: 9090
+    targetPort: 9090
+  selector:
+    app: prometheus
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: monitoring

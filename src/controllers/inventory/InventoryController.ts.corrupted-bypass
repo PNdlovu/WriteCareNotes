@@ -1,0 +1,524 @@
+/**
+ * @fileoverview Inventory & Supply Chain Controller for WriteCareNotes
+ * @module InventoryController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description REST API controller for inventory and supply chain management operations
+ * providing endpoints for stock management, automated reordering, supplier management,
+ * asset tracking, and compliance monitoring with comprehensive validation and security.
+ * 
+ * @compliance
+ * - MHRA (Medicines and Healthcare products Regulatory Agency) regulations
+ * - CQC (Care Quality Commission) requirements for medical supplies
+ * - NHS Supply Chain standards and procedures
+ * - GDPR data protection requirements
+ * - Role-based access control for healthcare operations
+ * 
+ * @security
+ * - Implements JWT authentication and role-based authorization
+ * - Validates all input data with comprehensive schemas
+ * - Includes rate limiting and request throttling
+ * - Implements comprehensive audit logging for all operations
+ */
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  HttpStatus,
+  HttpException,
+  ValidationPipe,
+  ParseUUIDPipe
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBearerAuth,
+  ApiSecurity
+} from '@nestjs/swagger';
+import { v4 as uuidv4 } from 'uuid';
+import { InventoryService } from '@/services/inventory/InventoryService';
+import { JwtAuthGuard } from '@/guards/JwtAuthGuard';
+import { RolesGuard } from '@/guards/RolesGuard';
+import { AuditInterceptor } from '@/interceptors/AuditInterceptor';
+import { RateLimitGuard } from '@/guards/RateLimitGuard';
+import { Roles } from '@/decorators/Roles';
+import { CurrentUser } from '@/decorators/CurrentUser';
+import { CorrelationId } from '@/decorators/CorrelationId';
+import { logger } from '@/utils/logger';
+import {
+  CreateInventoryItemRequest,
+  UpdateInventoryItemRequest,
+  CreatePurchaseOrderRequest,
+  CreateSupplierRequest,
+  StockMovementRequest,
+  InventorySearchFilters,
+  InventoryReportRequest,
+  InventoryMetricsRequest,
+  AssetTrackingRequest
+} from '@/services/inventory/interfaces/InventoryInterfaces';
+import {
+  InventoryItem,
+  PurchaseOrder,
+  Supplier,
+  StockMovement,
+  Asset,
+  InventoryMetrics
+} from '@/entities/inventory/InventoryEntities';
+import {
+  CreateInventoryItemDto,
+  UpdateInventoryItemDto,
+  CreatePurchaseOrderDto,
+  CreateSupplierDto,
+  StockMovementDto,
+  InventorySearchDto,
+  InventoryReportDto,
+  InventoryMetricsDto,
+  AssetTrackingDto
+} from '@/dto/inventory/InventoryDto';
+
+@ApiTags('Inventory & Supply Chain Management')
+@ApiBearerAuth()
+@ApiSecurity('roles', ['inventory_manager', 'care_home_admin', 'system_admin'])
+@Controller('api/v1/inventory')
+@UseGuards(JwtAuthGuard, RolesGuard, RateLimitGuard)
+@UseInterceptors(AuditInterceptor)
+export class InventoryController {
+  constructor(private readonly inventoryService: InventoryService) {}
+
+  /**
+   * Creates a new inventory item with comprehensive validation
+   */
+  @Post('items')
+  @Roles('inventory_manager', 'care_home_admin', 'system_admin')
+  @ApiOperation({
+    summary: 'Create new inventory item',
+    description: 'Creates a new inventory item with stock management, compliance tracking, and automated reordering capabilities'
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Inventory item created successfully',
+    type: InventoryItem
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid inventory item data provided'
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Inventory item with this code already exists'
+  })
+  async createInventoryItem(
+    @Body(ValidationPipe) createInventoryItemDto: CreateInventoryItemDto,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<InventoryItem> {
+    logger.info('Creating inventory item via API', {
+      itemCode: createInventoryItemDto.itemCode,
+      userId: user.id,
+      correlationId
+    });
+
+    try {
+      const request: CreateInventoryItemRequest = {
+        ...createInventoryItemDto,
+        createdBy: user.id
+      };
+
+      const inventoryItem = await this.inventoryService.createInventoryItem(request, correlationId);
+
+      logger.info('Inventory item created successfully via API', {
+        inventoryItemId: inventoryItem.id,
+        itemCode: inventoryItem.itemCode,
+        correlationId
+      });
+
+      return inventoryItem;
+
+    } catch (error) {
+      logger.error('Failed to create inventory item via API', {
+        error: error.message,
+        itemCode: createInventoryItemDto.itemCode,
+        correlationId
+      });
+
+      if (error.code === 'DUPLICATE_ITEM_CODE') {
+        throw new HttpException(
+          'Inventory item with this code already exists',
+          HttpStatus.CONFLICT
+        );
+      }
+
+      if (error.code?.startsWith('INVALID_')) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException(
+        'Failed to create inventory item',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }  /*
+*
+   * Retrieves inventory item by ID
+   */
+  @Get('items/:id')
+  @Roles('inventory_manager', 'care_home_admin', 'care_worker', 'system_admin')
+  @ApiOperation({
+    summary: 'Get inventory item by ID',
+    description: 'Retrieves detailed information about a specific inventory item including stock levels and compliance data'
+  })
+  @ApiParam({ name: 'id', description: 'Inventory item ID', type: 'string' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Inventory item retrieved successfully',
+    type: InventoryItem
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Inventory item not found'
+  })
+  async getInventoryItem(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<InventoryItem> {
+    logger.info('Getting inventory item via API', { inventoryItemId: id, userId: user.id, correlationId });
+
+    try {
+      const inventoryItem = await this.inventoryService.getInventoryItem(id, correlationId);
+
+      if (!inventoryItem) {
+        throw new HttpException('Inventory item not found', HttpStatus.NOT_FOUND);
+      }
+
+      return inventoryItem;
+
+    } catch (error) {
+      logger.error('Failed to get inventory item via API', {
+        error: error.message,
+        inventoryItemId: id,
+        correlationId
+      });
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Failed to retrieve inventory item',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  /**
+   * Creates a purchase order with supplier validation and approval workflow
+   */
+  @Post('purchase-orders')
+  @Roles('inventory_manager', 'care_home_admin', 'system_admin')
+  @ApiOperation({
+    summary: 'Create purchase order',
+    description: 'Creates a new purchase order with automatic approval workflow and supplier validation'
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Purchase order created successfully',
+    type: PurchaseOrder
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid purchase order data provided'
+  })
+  async createPurchaseOrder(
+    @Body(ValidationPipe) createPurchaseOrderDto: CreatePurchaseOrderDto,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<PurchaseOrder> {
+    logger.info('Creating purchase order via API', {
+      supplierId: createPurchaseOrderDto.supplierId,
+      itemCount: createPurchaseOrderDto.orderItems.length,
+      userId: user.id,
+      correlationId
+    });
+
+    try {
+      const request: CreatePurchaseOrderRequest = {
+        ...createPurchaseOrderDto,
+        createdBy: user.id
+      };
+
+      const purchaseOrder = await this.inventoryService.createPurchaseOrder(request, correlationId);
+
+      logger.info('Purchase order created successfully via API', {
+        purchaseOrderId: purchaseOrder.id,
+        orderNumber: purchaseOrder.orderNumber,
+        correlationId
+      });
+
+      return purchaseOrder;
+
+    } catch (error) {
+      logger.error('Failed to create purchase order via API', {
+        error: error.message,
+        supplierId: createPurchaseOrderDto.supplierId,
+        correlationId
+      });
+
+      if (error.code === 'SUPPLIER_NOT_FOUND' || error.code === 'INVENTORY_ITEM_NOT_FOUND') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException(
+        'Failed to create purchase order',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  /**
+   * Records stock movement with validation and automatic reorder checking
+   */
+  @Post('stock-movements')
+  @Roles('inventory_manager', 'care_home_admin', 'care_worker', 'system_admin')
+  @ApiOperation({
+    summary: 'Record stock movement',
+    description: 'Records stock movement with automatic reorder checking and compliance validation'
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Stock movement recorded successfully',
+    type: StockMovement
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid stock movement data or insufficient stock'
+  })
+  async recordStockMovement(
+    @Body(ValidationPipe) stockMovementDto: StockMovementDto,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<StockMovement> {
+    logger.info('Recording stock movement via API', {
+      inventoryItemId: stockMovementDto.inventoryItemId,
+      movementType: stockMovementDto.movementType,
+      quantity: stockMovementDto.quantity,
+      userId: user.id,
+      correlationId
+    });
+
+    try {
+      const request: StockMovementRequest = {
+        ...stockMovementDto,
+        performedBy: user.id
+      };
+
+      const stockMovement = await this.inventoryService.recordStockMovement(request, correlationId);
+
+      logger.info('Stock movement recorded successfully via API', {
+        stockMovementId: stockMovement.id,
+        correlationId
+      });
+
+      return stockMovement;
+
+    } catch (error) {
+      logger.error('Failed to record stock movement via API', {
+        error: error.message,
+        inventoryItemId: stockMovementDto.inventoryItemId,
+        correlationId
+      });
+
+      if (error.code === 'INSUFFICIENT_STOCK' || error.code === 'INVENTORY_ITEM_NOT_FOUND') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException(
+        'Failed to record stock movement',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  /**
+   * Creates a new supplier with validation and compliance checks
+   */
+  @Post('suppliers')
+  @Roles('inventory_manager', 'care_home_admin', 'system_admin')
+  @ApiOperation({
+    summary: 'Create new supplier',
+    description: 'Creates a new supplier with compliance validation and performance tracking setup'
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Supplier created successfully',
+    type: Supplier
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid supplier data provided'
+  })
+  async createSupplier(
+    @Body(ValidationPipe) createSupplierDto: CreateSupplierDto,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<Supplier> {
+    logger.info('Creating supplier via API', {
+      supplierName: createSupplierDto.supplierName,
+      userId: user.id,
+      correlationId
+    });
+
+    try {
+      const request: CreateSupplierRequest = {
+        ...createSupplierDto,
+        createdBy: user.id
+      };
+
+      const supplier = await this.inventoryService.createSupplier(request, correlationId);
+
+      logger.info('Supplier created successfully via API', {
+        supplierId: supplier.id,
+        supplierName: supplier.supplierName,
+        correlationId
+      });
+
+      return supplier;
+
+    } catch (error) {
+      logger.error('Failed to create supplier via API', {
+        error: error.message,
+        supplierName: createSupplierDto.supplierName,
+        correlationId
+      });
+
+      if (error.code?.startsWith('INVALID_') || error.code === 'DUPLICATE_SUPPLIER') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException(
+        'Failed to create supplier',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  /**
+   * Gets inventory metrics and analytics for reporting and decision making
+   */
+  @Get('metrics')
+  @Roles('inventory_manager', 'care_home_admin', 'system_admin')
+  @ApiOperation({
+    summary: 'Get inventory metrics',
+    description: 'Retrieves comprehensive inventory metrics including stock levels, order performance, and compliance data'
+  })
+  @ApiQuery({ name: 'careHomeId', description: 'Care home ID', type: 'string' })
+  @ApiQuery({ name: 'period', description: 'Reporting period', enum: ['current_month', 'last_month', 'current_quarter', 'last_quarter', 'current_year', 'last_year', 'custom'] })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Inventory metrics retrieved successfully',
+    type: InventoryMetrics
+  })
+  async getInventoryMetrics(
+    @Query(ValidationPipe) metricsQuery: InventoryMetricsDto,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<InventoryMetrics> {
+    logger.info('Getting inventory metrics via API', {
+      careHomeId: metricsQuery.careHomeId,
+      period: metricsQuery.period,
+      userId: user.id,
+      correlationId
+    });
+
+    try {
+      const request: InventoryMetricsRequest = {
+        ...metricsQuery
+      };
+
+      const metrics = await this.inventoryService.getInventoryMetrics(request, correlationId);
+
+      logger.info('Inventory metrics retrieved successfully via API', {
+        careHomeId: metricsQuery.careHomeId,
+        correlationId
+      });
+
+      return metrics;
+
+    } catch (error) {
+      logger.error('Failed to get inventory metrics via API', {
+        error: error.message,
+        careHomeId: metricsQuery.careHomeId,
+        correlationId
+      });
+
+      throw new HttpException(
+        'Failed to retrieve inventory metrics',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  /**
+   * Searches inventory items with advanced filtering
+   */
+  @Get('items')
+  @Roles('inventory_manager', 'care_home_admin', 'care_worker', 'system_admin')
+  @ApiOperation({
+    summary: 'Search inventory items',
+    description: 'Searches inventory items with advanced filtering, sorting, and pagination'
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Inventory items retrieved successfully'
+  })
+  async searchInventoryItems(
+    @Query(ValidationPipe) searchQuery: InventorySearchDto,
+    @CurrentUser() user: any,
+    @CorrelationId() correlationId: string
+  ): Promise<any> {
+    logger.info('Searching inventory items via API', {
+      filters: searchQuery,
+      userId: user.id,
+      correlationId
+    });
+
+    try {
+      const filters: InventorySearchFilters = {
+        ...searchQuery
+      };
+
+      const results = await this.inventoryService.searchInventoryItems(filters, correlationId);
+
+      logger.info('Inventory items search completed via API', {
+        resultCount: results.items.length,
+        correlationId
+      });
+
+      return results;
+
+    } catch (error) {
+      logger.error('Failed to search inventory items via API', {
+        error: error.message,
+        correlationId
+      });
+
+      throw new HttpException(
+        'Failed to search inventory items',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+}

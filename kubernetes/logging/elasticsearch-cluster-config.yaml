@@ -1,0 +1,383 @@
+# Elasticsearch Cluster Configuration for WriteCareNotes Healthcare Logging
+# Provides scalable, secure logging infrastructure with healthcare compliance features
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+  namespace: logging
+data:
+  elasticsearch.yml: |
+    cluster.name: writecarenotes-logging
+    node.name: ${HOSTNAME}
+    network.host: 0.0.0.0
+    http.port: 9200
+    transport.port: 9300
+    
+    # Discovery and cluster formation
+    discovery.seed_hosts: ["elasticsearch-0.elasticsearch-headless.logging.svc.cluster.local:9300", "elasticsearch-1.elasticsearch-headless.logging.svc.cluster.local:9300", "elasticsearch-2.elasticsearch-headless.logging.svc.cluster.local:9300"]
+    cluster.initial_master_nodes: ["elasticsearch-0", "elasticsearch-1", "elasticsearch-2"]
+    
+    # Healthcare-specific settings
+    node.roles: [master, data, ingest]
+    
+    # Memory and performance
+    bootstrap.memory_lock: true
+    indices.memory.index_buffer_size: 20%
+    indices.queries.cache.size: 20%
+    indices.fielddata.cache.size: 30%
+    
+    # Healthcare data retention
+    indices.lifecycle.poll_interval: 1m
+    
+    # Security settings
+    xpack.security.enabled: true
+    xpack.security.transport.ssl.enabled: true
+    xpack.security.transport.ssl.verification_mode: certificate
+    xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12
+    xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
+    xpack.security.http.ssl.enabled: true
+    xpack.security.http.ssl.keystore.path: certs/elastic-certificates.p12
+    
+    # Audit logging for healthcare compliance
+    xpack.security.audit.enabled: true
+    xpack.security.audit.logfile.events.include: [access_denied, access_granted, anonymous_access_denied, authentication_failed, authentication_success, realm_authentication_failed, run_as_denied, run_as_granted, tampered_request, connection_denied, connection_granted]
+    
+    # Healthcare monitoring
+    xpack.monitoring.enabled: true
+    xpack.monitoring.collection.enabled: true
+    
+    # Index lifecycle management for healthcare data retention
+    xpack.ilm.enabled: true
+    
+    # Machine learning for anomaly detection
+    xpack.ml.enabled: true
+    
+  jvm.options: |
+    -Xms2g
+    -Xmx2g
+    -XX:+UseG1GC
+    -XX:G1HeapRegionSize=32m
+    -XX:+UseG1OldGCMixedGCCount=16
+    -XX:+UseG1MixedGCLiveThresholdPercent=90
+    -Djava.io.tmpdir=${ES_TMPDIR}
+    -XX:+HeapDumpOnOutOfMemoryError
+    -XX:HeapDumpPath=data
+    -XX:ErrorFile=logs/hs_err_pid%p.log
+    -Xlog:gc*,gc+age=trace,safepoint:gc.log:time,level,tags
+    -Djava.locale.providers=SPI,COMPAT
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  namespace: logging
+spec:
+  serviceName: elasticsearch-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+      - name: configure-sysctl
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+        command: ["sh", "-c", "sysctl -w vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      - name: create-certs
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+        command:
+        - sh
+        - -c
+        - |
+          if [ ! -f /usr/share/elasticsearch/config/certs/elastic-certificates.p12 ]; then
+            bin/elasticsearch-certutil ca --silent --pem -out /tmp/ca.zip
+            unzip /tmp/ca.zip -d /tmp
+            bin/elasticsearch-certutil cert --silent --pem --ca-cert /tmp/ca/ca.crt --ca-key /tmp/ca/ca.key --dns elasticsearch-0.elasticsearch-headless.logging.svc.cluster.local,elasticsearch-1.elasticsearch-headless.logging.svc.cluster.local,elasticsearch-2.elasticsearch-headless.logging.svc.cluster.local,elasticsearch.logging.svc.cluster.local --ip 127.0.0.1 --out /tmp/certs.zip
+            unzip /tmp/certs.zip -d /tmp
+            bin/elasticsearch-certutil cert --silent --pem --ca-cert /tmp/ca/ca.crt --ca-key /tmp/ca/ca.key --dns elasticsearch-0.elasticsearch-headless.logging.svc.cluster.local,elasticsearch-1.elasticsearch-headless.logging.svc.cluster.local,elasticsearch-2.elasticsearch-headless.logging.svc.cluster.local,elasticsearch.logging.svc.cluster.local --ip 127.0.0.1 --out /usr/share/elasticsearch/config/certs/elastic-certificates.p12
+          fi
+        volumeMounts:
+        - name: certs
+          mountPath: /usr/share/elasticsearch/config/certs
+      containers:
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: transport
+        env:
+        - name: node.name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: cluster.name
+          value: "writecarenotes-logging"
+        - name: discovery.seed_hosts
+          value: "elasticsearch-0.elasticsearch-headless.logging.svc.cluster.local,elasticsearch-1.elasticsearch-headless.logging.svc.cluster.local,elasticsearch-2.elasticsearch-headless.logging.svc.cluster.local"
+        - name: cluster.initial_master_nodes
+          value: "elasticsearch-0,elasticsearch-1,elasticsearch-2"
+        - name: ES_JAVA_OPTS
+          value: "-Xms2g -Xmx2g"
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secret
+              key: password
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 4Gi
+          limits:
+            cpu: 2000m
+            memory: 8Gi
+        volumeMounts:
+        - name: elasticsearch-data
+          mountPath: /usr/share/elasticsearch/data
+        - name: elasticsearch-config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          subPath: elasticsearch.yml
+        - name: elasticsearch-config
+          mountPath: /usr/share/elasticsearch/config/jvm.options
+          subPath: jvm.options
+        - name: certs
+          mountPath: /usr/share/elasticsearch/config/certs
+        livenessProbe:
+          httpGet:
+            path: /_cluster/health
+            port: 9200
+            scheme: HTTPS
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health?wait_for_status=yellow&timeout=5s
+            port: 9200
+            scheme: HTTPS
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: elasticsearch-config
+        configMap:
+          name: elasticsearch-config
+      - name: certs
+        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: elasticsearch-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+      storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-headless
+  namespace: logging
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 9200
+    targetPort: 9200
+  - name: transport
+    port: 9300
+    targetPort: 9300
+  selector:
+    app: elasticsearch
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: logging
+spec:
+  ports:
+  - name: http
+    port: 9200
+    targetPort: 9200
+  selector:
+    app: elasticsearch
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: elasticsearch-secret
+  namespace: logging
+type: Opaque
+data:
+  password: V3JpdGVDYXJlTm90ZXNFbGFzdGljMjAyNQ==
+  username: ZWxhc3RpYw==
+
+---
+# Index Lifecycle Management Policy for Healthcare Data
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-ilm-policy
+  namespace: logging
+data:
+  healthcare-logs-policy.json: |
+    {
+      "policy": {
+        "phases": {
+          "hot": {
+            "actions": {
+              "rollover": {
+                "max_size": "10GB",
+                "max_age": "7d"
+              },
+              "set_priority": {
+                "priority": 100
+              }
+            }
+          },
+          "warm": {
+            "min_age": "7d",
+            "actions": {
+              "allocate": {
+                "number_of_replicas": 1
+              },
+              "forcemerge": {
+                "max_num_segments": 1
+              },
+              "set_priority": {
+                "priority": 50
+              }
+            }
+          },
+          "cold": {
+            "min_age": "30d",
+            "actions": {
+              "allocate": {
+                "number_of_replicas": 0
+              },
+              "set_priority": {
+                "priority": 0
+              }
+            }
+          },
+          "delete": {
+            "min_age": "2555d"
+          }
+        }
+      }
+    }
+
+---
+# Index Templates for Healthcare Logs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-index-templates
+  namespace: logging
+data:
+  healthcare-logs-template.json: |
+    {
+      "index_patterns": ["healthcare-logs-*"],
+      "template": {
+        "settings": {
+          "number_of_shards": 2,
+          "number_of_replicas": 1,
+          "index.lifecycle.name": "healthcare-logs-policy",
+          "index.lifecycle.rollover_alias": "healthcare-logs"
+        },
+        "mappings": {
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "level": {
+              "type": "keyword"
+            },
+            "message": {
+              "type": "text",
+              "analyzer": "standard"
+            },
+            "service": {
+              "type": "keyword"
+            },
+            "healthcare_context": {
+              "type": "keyword"
+            },
+            "resident_id": {
+              "type": "keyword"
+            },
+            "nhs_number": {
+              "type": "keyword",
+              "index": false
+            },
+            "correlation_id": {
+              "type": "keyword"
+            },
+            "user_id": {
+              "type": "keyword"
+            },
+            "action": {
+              "type": "keyword"
+            },
+            "resource_type": {
+              "type": "keyword"
+            },
+            "resource_id": {
+              "type": "keyword"
+            },
+            "compliance_level": {
+              "type": "keyword"
+            },
+            "contains_pii": {
+              "type": "boolean"
+            },
+            "audit_required": {
+              "type": "boolean"
+            },
+            "ip_address": {
+              "type": "ip"
+            },
+            "user_agent": {
+              "type": "text",
+              "index": false
+            },
+            "duration": {
+              "type": "long"
+            },
+            "status_code": {
+              "type": "integer"
+            },
+            "error": {
+              "properties": {
+                "message": {
+                  "type": "text"
+                },
+                "stack": {
+                  "type": "text",
+                  "index": false
+                },
+                "code": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        }
+      }
+    }

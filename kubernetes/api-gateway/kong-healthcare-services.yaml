@@ -1,0 +1,499 @@
+# Kong Services Configuration for WriteCareNotes Healthcare Microservices
+# Defines routing and load balancing for all healthcare services
+
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: resident-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: resident-service.core-healthcare.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: resident-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: resident-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/residents
+  - /api/v1/residents/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 100
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: medication-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare,request-size-limit
+spec:
+  protocol: http
+  host: medication-service.core-healthcare.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: medication-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: medication-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/medications
+  - /api/v1/medications/.*
+  - /api/v1/prescriptions
+  - /api/v1/prescriptions/.*
+  - /api/v1/mar
+  - /api/v1/mar/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 200
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: care-planning-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: care-planning-service.core-healthcare.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: care-planning-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: care-planning-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/care-plans
+  - /api/v1/care-plans/.*
+  - /api/v1/assessments
+  - /api/v1/assessments/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 150
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: assessment-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: assessment-service.core-healthcare.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: assessment-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: assessment-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/assessments
+  - /api/v1/assessments/.*
+  - /api/v1/risk-assessments
+  - /api/v1/risk-assessments/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 140
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: health-records-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: health-records-service.core-healthcare.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: health-records-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: health-records-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/health-records
+  - /api/v1/health-records/.*
+  - /api/v1/vital-signs
+  - /api/v1/vital-signs/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 130
+
+---
+# Operational Services
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: financial-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: financial-service.operational.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: financial-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: financial-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/billing
+  - /api/v1/billing/.*
+  - /api/v1/payments
+  - /api/v1/payments/.*
+  - /api/v1/invoices
+  - /api/v1/invoices/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 120
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: hr-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: hr-service.operational.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: hr-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: hr-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/staff
+  - /api/v1/staff/.*
+  - /api/v1/schedules
+  - /api/v1/schedules/.*
+  - /api/v1/payroll
+  - /api/v1/payroll/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 110
+
+---
+# Compliance Services
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: compliance-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: compliance-service.compliance.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: compliance-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: compliance-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/compliance
+  - /api/v1/compliance/.*
+  - /api/v1/cqc
+  - /api/v1/cqc/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 300
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: audit-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: audit-service.compliance.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: audit-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: audit-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/audit
+  - /api/v1/audit/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 310
+
+---
+# Reporting Service
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: reporting-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-auth,healthcare-rate-limit,healthcare-audit,jwt-auth,cors-healthcare
+spec:
+  protocol: http
+  host: reporting-service.operational.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: reporting-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: reporting-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  paths:
+  - /api/v1/reports
+  - /api/v1/reports/.*
+  - /api/v1/analytics
+  - /api/v1/analytics/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 100
+
+---
+# Identity and Security Services
+apiVersion: configuration.konghq.com/v1
+kind: KongService
+metadata:
+  name: identity-service
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-rate-limit,healthcare-audit,cors-healthcare
+spec:
+  protocol: http
+  host: identity-service.security.svc.cluster.local
+  port: 3000
+  path: /
+  retries: 3
+  connect_timeout: 60000
+  write_timeout: 60000
+  read_timeout: 60000
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongRoute
+metadata:
+  name: identity-service-routes
+  namespace: api-gateway
+spec:
+  service:
+    name: identity-service
+  protocols:
+  - http
+  - https
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  paths:
+  - /api/v1/auth
+  - /api/v1/auth/.*
+  - /api/v1/users
+  - /api/v1/users/.*
+  strip_path: false
+  preserve_host: false
+  regex_priority: 400

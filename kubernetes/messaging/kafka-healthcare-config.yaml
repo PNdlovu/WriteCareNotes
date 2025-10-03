@@ -1,0 +1,336 @@
+# Apache Kafka Configuration for WriteCareNotes Healthcare Event Streaming
+# Provides high-throughput event streaming with healthcare-specific topics and compliance
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config
+  namespace: messaging
+data:
+  server.properties: |
+    # Kafka broker configuration for healthcare event streaming
+    broker.id=-1
+    listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+    advertised.listeners=PLAINTEXT://$(POD_NAME).kafka-headless.messaging.svc.cluster.local:9092
+    
+    # Controller configuration
+    process.roles=broker,controller
+    node.id=-1
+    controller.quorum.voters=0@kafka-0.kafka-headless.messaging.svc.cluster.local:9093,1@kafka-1.kafka-headless.messaging.svc.cluster.local:9093,2@kafka-2.kafka-headless.messaging.svc.cluster.local:9093
+    controller.listener.names=CONTROLLER
+    inter.broker.listener.name=PLAINTEXT
+    
+    # Healthcare-specific settings
+    num.network.threads=8
+    num.io.threads=16
+    socket.send.buffer.bytes=102400
+    socket.receive.buffer.bytes=102400
+    socket.request.max.bytes=104857600
+    
+    # Log configuration for healthcare events
+    log.dirs=/var/lib/kafka/data
+    num.partitions=6
+    num.recovery.threads.per.data.dir=2
+    offsets.topic.replication.factor=3
+    transaction.state.log.replication.factor=3
+    transaction.state.log.min.isr=2
+    
+    # Healthcare data retention
+    log.retention.hours=168
+    log.retention.bytes=1073741824
+    log.segment.bytes=1073741824
+    log.retention.check.interval.ms=300000
+    
+    # Healthcare compliance settings
+    min.insync.replicas=2
+    default.replication.factor=3
+    unclean.leader.election.enable=false
+    
+    # Compression for healthcare data
+    compression.type=snappy
+    
+    # Healthcare monitoring
+    jmx.port=9999
+    
+    # Security settings
+    security.inter.broker.protocol=PLAINTEXT
+    
+    # Healthcare audit logging
+    log4j.logger.kafka.controller=INFO
+    log4j.logger.kafka.log.LogCleaner=INFO
+    log4j.logger.state.change.logger=INFO
+    
+    # Performance tuning for healthcare workloads
+    replica.fetch.max.bytes=1048576
+    message.max.bytes=1000000
+    replica.fetch.wait.max.ms=500
+    fetch.purgatory.purge.interval.requests=1000
+    producer.purgatory.purge.interval.requests=1000
+    
+    # Healthcare topic auto-creation
+    auto.create.topics.enable=false
+    delete.topic.enable=true
+
+  log4j.properties: |
+    log4j.rootLogger=INFO, stdout, kafkaAppender
+    
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n
+    
+    log4j.appender.kafkaAppender=org.apache.log4j.DailyRollingFileAppender
+    log4j.appender.kafkaAppender.DatePattern='.'yyyy-MM-dd-HH
+    log4j.appender.kafkaAppender.File=/var/log/kafka/server.log
+    log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout
+    log4j.appender.kafkaAppender.layout.ConversionPattern=[%d] %p %m (%c)%n
+    
+    # Healthcare audit logging
+    log4j.logger.kafka.request.logger=WARN, requestAppender
+    log4j.appender.requestAppender=org.apache.log4j.DailyRollingFileAppender
+    log4j.appender.requestAppender.DatePattern='.'yyyy-MM-dd-HH
+    log4j.appender.requestAppender.File=/var/log/kafka/kafka-request.log
+    log4j.appender.requestAppender.layout=org.apache.log4j.PatternLayout
+    log4j.appender.requestAppender.layout.ConversionPattern=[%d] %p %m (%c)%n
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: messaging
+spec:
+  serviceName: kafka-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9308"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:7.4.0
+        ports:
+        - containerPort: 9092
+          name: kafka
+        - containerPort: 9093
+          name: controller
+        - containerPort: 9999
+          name: jmx
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KAFKA_CLUSTER_ID
+          value: "WriteCareCareNotesKafkaCluster"
+        - name: KAFKA_PROCESS_ROLES
+          value: "broker,controller"
+        - name: KAFKA_NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['kafka.apache.org/node-id']
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: "0@kafka-0.kafka-headless.messaging.svc.cluster.local:9093,1@kafka-1.kafka-headless.messaging.svc.cluster.local:9093,2@kafka-2.kafka-headless.messaging.svc.cluster.local:9093"
+        - name: KAFKA_LISTENERS
+          value: "PLAINTEXT://:9092,CONTROLLER://:9093"
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: "PLAINTEXT://$(POD_NAME).kafka-headless.messaging.svc.cluster.local:9092"
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: "CONTROLLER"
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: "PLAINTEXT"
+        - name: KAFKA_LOG_DIRS
+          value: "/var/lib/kafka/data"
+        - name: KAFKA_NUM_PARTITIONS
+          value: "6"
+        - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+          value: "3"
+        - name: KAFKA_MIN_INSYNC_REPLICAS
+          value: "2"
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "3"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "3"
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "2"
+        - name: KAFKA_LOG_RETENTION_HOURS
+          value: "168"
+        - name: KAFKA_LOG_SEGMENT_BYTES
+          value: "1073741824"
+        - name: KAFKA_LOG_RETENTION_BYTES
+          value: "1073741824"
+        - name: KAFKA_COMPRESSION_TYPE
+          value: "snappy"
+        - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+          value: "false"
+        - name: KAFKA_JMX_PORT
+          value: "9999"
+        - name: KAFKA_JMX_HOSTNAME
+          value: "localhost"
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        volumeMounts:
+        - name: kafka-config
+          mountPath: /etc/kafka/server.properties
+          subPath: server.properties
+        - name: kafka-config
+          mountPath: /etc/kafka/log4j.properties
+          subPath: log4j.properties
+        - name: kafka-data
+          mountPath: /var/lib/kafka/data
+        - name: kafka-logs
+          mountPath: /var/log/kafka
+        livenessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      - name: kafka-exporter
+        image: danielqsj/kafka-exporter:latest
+        ports:
+        - containerPort: 9308
+          name: metrics
+        args:
+        - --kafka.server=$(POD_NAME).kafka-headless.messaging.svc.cluster.local:9092
+        - --web.listen-address=:9308
+        - --log.level=info
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+      volumes:
+      - name: kafka-config
+        configMap:
+          name: kafka-config
+      - name: kafka-logs
+        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: kafka-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+      storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-headless
+  namespace: messaging
+spec:
+  clusterIP: None
+  ports:
+  - name: kafka
+    port: 9092
+    targetPort: 9092
+  - name: controller
+    port: 9093
+    targetPort: 9093
+  - name: jmx
+    port: 9999
+    targetPort: 9999
+  - name: metrics
+    port: 9308
+    targetPort: 9308
+  selector:
+    app: kafka
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: messaging
+spec:
+  ports:
+  - name: kafka
+    port: 9092
+    targetPort: 9092
+  - name: metrics
+    port: 9308
+    targetPort: 9308
+  selector:
+    app: kafka
+
+---
+# Kafka Topic Creation Job
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-topics-setup
+  namespace: messaging
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: kafka-topics
+        image: confluentinc/cp-kafka:7.4.0
+        command:
+        - /bin/bash
+        - -c
+        - |
+          # Wait for Kafka to be ready
+          sleep 60
+          
+          # Healthcare event topics
+          kafka-topics --create --topic healthcare-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic resident-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic medication-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy --config min.insync.replicas=2
+          kafka-topics --create --topic care-plan-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic assessment-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic health-records-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          
+          # Audit and compliance topics
+          kafka-topics --create --topic audit-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=2592000000 --config compression.type=snappy --config min.insync.replicas=2
+          kafka-topics --create --topic compliance-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=2592000000 --config compression.type=snappy --config min.insync.replicas=2
+          kafka-topics --create --topic security-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=2592000000 --config compression.type=snappy --config min.insync.replicas=2
+          
+          # Operational topics
+          kafka-topics --create --topic financial-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=2592000000 --config compression.type=snappy
+          kafka-topics --create --topic hr-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic inventory-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          
+          # Notification topics
+          kafka-topics --create --topic notification-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=86400000 --config compression.type=snappy
+          kafka-topics --create --topic critical-alerts --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=86400000 --config compression.type=snappy --config min.insync.replicas=2
+          
+          # Integration topics
+          kafka-topics --create --topic nhs-integration-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic fhir-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic external-integration-events --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          
+          # Performance and monitoring topics
+          kafka-topics --create --topic performance-metrics --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          kafka-topics --create --topic system-metrics --bootstrap-server kafka:9092 --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config compression.type=snappy
+          
+          echo "Healthcare Kafka topics created successfully"

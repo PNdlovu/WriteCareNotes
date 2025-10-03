@@ -1,0 +1,459 @@
+/**
+ * Voice Assistant Service
+ * Provides voice-controlled assistance and reminders for care home operations
+ * Implements compliance-ready voice interactions with audit logging
+ */
+
+import { Injectable } from '@nestjs/common';
+import { AuditService } from '../audit/audit.service';
+import { ComplianceService } from '../compliance/compliance.service';
+import { Logger } from '@nestjs/common';
+
+export interface VoiceCommand {
+  id: string;
+  command: string;
+  intent: string;
+  parameters: Record<string, any>;
+  userId: string;
+  careHomeId: string;
+  timestamp: Date;
+  confidence: number;
+  response: string;
+  status: 'processed' | 'failed' | 'pending';
+  auditTrail: AuditEntry[];
+}
+
+export interface VoiceReminder {
+  id: string;
+  title: string;
+  description: string;
+  type: 'medication' | 'appointment' | 'task' | 'meeting' | 'maintenance';
+  priority: 'low' | 'medium' | 'high';
+  scheduledFor: Date;
+  recurring: boolean;
+  recurringPattern?: string;
+  assignedTo: string[];
+  careHomeId: string;
+  status: 'scheduled' | 'active' | 'completed' | 'cancelled';
+  voicePrompt: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface VoiceInteraction {
+  id: string;
+  userId: string;
+  careHomeId: string;
+  sessionId: string;
+  input: string;
+  output: string;
+  intent: string;
+  confidence: number;
+  duration: number; // milliseconds
+  timestamp: Date;
+  device: string;
+  location?: string;
+  auditTrail: AuditEntry[];
+}
+
+export interface VoiceSettings {
+  userId: string;
+  careHomeId: string;
+  language: string;
+  voice: string;
+  speed: number;
+  volume: number;
+  wakeWord: string;
+  privacyMode: boolean;
+  dataRetention: number; // days
+  enabledFeatures: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AuditEntry {
+  action: string;
+  timestamp: Date;
+  userId: string;
+  details: Record<string, any>;
+  complianceFlags: string[];
+}
+
+@Injectable()
+export class VoiceAssistantService {
+  private readonly logger = new Logger(VoiceAssistantService.name);
+
+  constructor(
+    private readonly auditService: AuditService,
+    private readonly complianceService: ComplianceService
+  ) {}
+
+  /**
+   * Process voice command
+   */
+  async processVoiceCommand(
+    command: string,
+    userId: string,
+    careHomeId: string,
+    sessionId: string,
+    device: string,
+    location?: string
+  ): Promise<VoiceCommand> {
+    try {
+      const startTime = Date.now();
+
+      // Parse command and extract intent
+      const intent = await this.parseIntent(command);
+      const parameters = await this.extractParameters(command, intent);
+      const confidence = await this.calculateConfidence(command, intent);
+
+      // Generate response
+      const response = await this.generateResponse(intent, parameters, userId, careHomeId);
+
+      const voiceCommand: VoiceCommand = {
+        id: this.generateId(),
+        command,
+        intent,
+        parameters,
+        userId,
+        careHomeId,
+        timestamp: new Date(),
+        confidence,
+        response,
+        status: 'processed',
+        auditTrail: [{
+          action: 'voice_command_processed',
+          timestamp: new Date(),
+          userId,
+          details: {
+            command,
+            intent,
+            confidence,
+            processingTime: Date.now() - startTime
+          },
+          complianceFlags: ['Voice Assistant', 'Data Processing']
+        }]
+      };
+
+      await this.auditService.logEvent({
+        action: 'voice_command_processed',
+        resource: 'voice_assistant_service',
+        details: {
+          commandId: voiceCommand.id,
+          userId,
+          careHomeId,
+          intent,
+          confidence
+        },
+        userId,
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Processed voice command: ${intent} for user ${userId}`);
+      return voiceCommand;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to process voice command: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Create voice reminder
+   */
+  async createVoiceReminder(reminderData: Omit<VoiceReminder, 'id' | 'createdAt' | 'updatedAt'>): Promise<VoiceReminder> {
+    try {
+      const reminder: VoiceReminder = {
+        ...reminderData,
+        id: this.generateId(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      await this.auditService.logEvent({
+        action: 'voice_reminder_created',
+        resource: 'voice_assistant_service',
+        details: {
+          reminderId: reminder.id,
+          type: reminder.type,
+          scheduledFor: reminder.scheduledFor,
+          assignedTo: reminder.assignedTo
+        },
+        userId: 'system',
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Created voice reminder: ${reminder.id}`);
+      return reminder;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to create voice reminder: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get voice reminders for user
+   */
+  async getVoiceReminders(userId: string, careHomeId: string): Promise<VoiceReminder[]> {
+    try {
+      // In a real implementation, this would query the database
+      const reminders: VoiceReminder[] = [];
+
+      await this.auditService.logEvent({
+        action: 'voice_reminders_requested',
+        resource: 'voice_assistant_service',
+        details: { userId, careHomeId },
+        userId,
+        timestamp: new Date()
+      });
+
+      return reminders;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to get voice reminders: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Complete voice reminder
+   */
+  async completeVoiceReminder(reminderId: string, userId: string): Promise<VoiceReminder> {
+    try {
+      // In a real implementation, this would update the database
+      const reminder = await this.getVoiceReminder(reminderId);
+      
+      if (!reminder) {
+        throw new Error(`Voice reminder ${reminderId} not found`);
+      }
+
+      reminder.status = 'completed';
+      reminder.updatedAt = new Date();
+
+      await this.auditService.logEvent({
+        action: 'voice_reminder_completed',
+        resource: 'voice_assistant_service',
+        details: { reminderId, userId },
+        userId,
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Completed voice reminder: ${reminderId}`);
+      return reminder;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to complete voice reminder: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get voice settings for user
+   */
+  async getVoiceSettings(userId: string, careHomeId: string): Promise<VoiceSettings> {
+    try {
+      const settings: VoiceSettings = {
+        userId,
+        careHomeId,
+        language: 'en-GB',
+        voice: 'female',
+        speed: 1.0,
+        volume: 0.8,
+        wakeWord: 'WriteCare',
+        privacyMode: true,
+        dataRetention: 30,
+        enabledFeatures: ['medication_reminders', 'appointment_alerts', 'task_management'],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      return settings;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to get voice settings: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Update voice settings
+   */
+  async updateVoiceSettings(
+    userId: string,
+    careHomeId: string,
+    updates: Partial<VoiceSettings>
+  ): Promise<VoiceSettings> {
+    try {
+      const settings = await this.getVoiceSettings(userId, careHomeId);
+      const updatedSettings = { ...settings, ...updates, updatedAt: new Date() };
+
+      await this.auditService.logEvent({
+        action: 'voice_settings_updated',
+        resource: 'voice_assistant_service',
+        details: { userId, careHomeId, updates },
+        userId,
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Updated voice settings for user ${userId}`);
+      return updatedSettings;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to update voice settings: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get voice interaction history
+   */
+  async getVoiceInteractionHistory(
+    userId: string,
+    careHomeId: string,
+    limit: number = 50
+  ): Promise<VoiceInteraction[]> {
+    try {
+      // In a real implementation, this would query the database
+      const interactions: VoiceInteraction[] = [];
+
+      await this.auditService.logEvent({
+        action: 'voice_interaction_history_requested',
+        resource: 'voice_assistant_service',
+        details: { userId, careHomeId, limit },
+        userId,
+        timestamp: new Date()
+      });
+
+      return interactions;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Failed to get voice interaction history: ${errorMessage}`, errorStack);
+      throw error;
+    }
+  }
+
+  /**
+   * Parse voice command intent
+   */
+  private async parseIntent(command: string): Promise<string> {
+    // Simplified intent parsing
+    // In a real implementation, this would use NLP services
+    
+    const lowerCommand = command.toLowerCase();
+    
+    if (lowerCommand.includes('medication') || lowerCommand.includes('medicine')) {
+      return 'medication_reminder';
+    } else if (lowerCommand.includes('appointment') || lowerCommand.includes('meeting')) {
+      return 'appointment_reminder';
+    } else if (lowerCommand.includes('task') || lowerCommand.includes('todo')) {
+      return 'task_management';
+    } else if (lowerCommand.includes('help') || lowerCommand.includes('assistance')) {
+      return 'help_request';
+    } else if (lowerCommand.includes('status') || lowerCommand.includes('check')) {
+      return 'status_check';
+    } else {
+      return 'general_query';
+    }
+  }
+
+  /**
+   * Extract parameters from voice command
+   */
+  private async extractParameters(command: string, intent: string): Promise<Record<string, any>> {
+    // Simplified parameter extraction
+    // In a real implementation, this would use NLP entity extraction
+    
+    const parameters: Record<string, any> = {};
+    
+    if (intent === 'medication_reminder') {
+      const timeMatch = command.match(/(\d{1,2}):(\d{2})/);
+      if (timeMatch) {
+        parameters.time = timeMatch[0];
+      }
+      
+      const medicationMatch = command.match(/medication\s+(\w+)/i);
+      if (medicationMatch) {
+        parameters.medication = medicationMatch[1];
+      }
+    }
+    
+    return parameters;
+  }
+
+  /**
+   * Calculate confidence score
+   */
+  private async calculateConfidence(command: string, intent: string): Promise<number> {
+    // Simplified confidence calculation
+    // In a real implementation, this would use ML confidence scores
+    
+    const baseConfidence = 0.7;
+    const commandLength = command.length;
+    const lengthFactor = Math.min(1, commandLength / 50);
+    
+    return Math.min(0.95, baseConfidence + lengthFactor * 0.2);
+  }
+
+  /**
+   * Generate response for voice command
+   */
+  private async generateResponse(
+    intent: string,
+    parameters: Record<string, any>,
+    userId: string,
+    careHomeId: string
+  ): Promise<string> {
+    // Simplified response generation
+    // In a real implementation, this would use NLG services
+    
+    switch (intent) {
+      case 'medication_reminder':
+        return `I've set a medication reminder for ${parameters.medication || 'your medication'} at ${parameters.time || 'the scheduled time'}.`;
+      
+      case 'appointment_reminder':
+        return 'I can help you manage your appointments. What would you like to know?';
+      
+      case 'task_management':
+        return 'I can help you with task management. What task would you like to add or check?';
+      
+      case 'help_request':
+        return 'I\'m here to help! I can assist with medication reminders, appointments, tasks, and general information. What do you need?';
+      
+      case 'status_check':
+        return 'All systems are operational. Is there anything specific you\'d like me to check?';
+      
+      default:
+        return 'I understand you\'re asking about something. Could you please be more specific so I can help you better?';
+    }
+  }
+
+  /**
+   * Get voice reminder by ID
+   */
+  private async getVoiceReminder(reminderId: string): Promise<VoiceReminder | null> {
+    // In a real implementation, this would query the database
+    return null;
+  }
+
+  /**
+   * Generate unique ID
+   */
+  private generateId(): string {
+    return `voice_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+}

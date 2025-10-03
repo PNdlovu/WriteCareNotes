@@ -1,0 +1,347 @@
+# Prometheus Configuration for WriteCareNotes Microservices Monitoring
+# Provides comprehensive metrics collection and alerting
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'writecarenotes-production'
+        environment: 'production'
+
+    rule_files:
+      - "/etc/prometheus/rules/*.yml"
+
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+              - alertmanager:9093
+
+    scrape_configs:
+      # Kubernetes API Server
+      - job_name: 'kubernetes-apiservers'
+        kubernetes_sd_configs:
+        - role: endpoints
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: default;kubernetes;https
+
+      # Kubernetes Nodes
+      - job_name: 'kubernetes-nodes'
+        kubernetes_sd_configs:
+        - role: node
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+
+      # Core Healthcare Services
+      - job_name: 'resident-service'
+        kubernetes_sd_configs:
+        - role: endpoints
+          namespaces:
+            names:
+            - core-healthcare
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_name]
+          action: keep
+          regex: resident-service
+        - source_labels: [__meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: metrics
+
+      - job_name: 'care-planning-service'
+        kubernetes_sd_configs:
+        - role: endpoints
+          namespaces:
+            names:
+            - core-healthcare
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_name]
+          action: keep
+          regex: care-planning-service
+        - source_labels: [__meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: metrics
+
+      - job_name: 'medication-service'
+        kubernetes_sd_configs:
+        - role: endpoints
+          namespaces:
+            names:
+            - core-healthcare
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_name]
+          action: keep
+          regex: medication-service
+        - source_labels: [__meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: metrics
+
+      # Operational Services
+      - job_name: 'financial-service'
+        kubernetes_sd_configs:
+        - role: endpoints
+          namespaces:
+            names:
+            - operational
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_name]
+          action: keep
+          regex: financial-service
+        - source_labels: [__meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: metrics
+
+      # Compliance Services
+      - job_name: 'compliance-service'
+        kubernetes_sd_configs:
+        - role: endpoints
+          namespaces:
+            names:
+            - compliance
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_name]
+          action: keep
+          regex: compliance-service
+        - source_labels: [__meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: metrics
+
+      # Infrastructure Services
+      - job_name: 'postgres-exporter'
+        static_configs:
+        - targets: ['postgres-exporter:9187']
+        scrape_interval: 30s
+
+      - job_name: 'redis-exporter'
+        static_configs:
+        - targets: ['redis-exporter:9121']
+        scrape_interval: 30s
+
+      - job_name: 'rabbitmq-exporter'
+        static_configs:
+        - targets: ['rabbitmq-exporter:9419']
+        scrape_interval: 30s
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+data:
+  healthcare-alerts.yml: |
+    groups:
+    - name: healthcare-services
+      rules:
+      # High error rate alert for healthcare services
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+          compliance: healthcare
+        annotations:
+          summary: "High error rate detected in {{ $labels.service }}"
+          description: "Service {{ $labels.service }} has error rate above 10% for more than 2 minutes"
+
+      # Database connection issues
+      - alert: DatabaseConnectionFailure
+        expr: up{job=~".*-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          compliance: healthcare
+        annotations:
+          summary: "Database connection failure for {{ $labels.job }}"
+          description: "Service {{ $labels.job }} cannot connect to database"
+
+      # Medication service specific alerts
+      - alert: MedicationServiceDown
+        expr: up{job="medication-service"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          compliance: medication-safety
+        annotations:
+          summary: "Medication service is down"
+          description: "Critical medication service is unavailable - immediate attention required"
+
+      # Resident service alerts
+      - alert: ResidentServiceHighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="resident-service"}[5m])) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          compliance: healthcare
+        annotations:
+          summary: "High latency in resident service"
+          description: "95th percentile latency is above 500ms for resident service"
+
+      # Compliance service alerts
+      - alert: ComplianceServiceDown
+        expr: up{job="compliance-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          compliance: regulatory
+        annotations:
+          summary: "Compliance service is down"
+          description: "Regulatory compliance monitoring is unavailable"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.40.0
+        args:
+          - '--config.file=/etc/prometheus/prometheus.yml'
+          - '--storage.tsdb.path=/prometheus/'
+          - '--web.console.libraries=/etc/prometheus/console_libraries'
+          - '--web.console.templates=/etc/prometheus/consoles'
+          - '--storage.tsdb.retention.time=30d'
+          - '--web.enable-lifecycle'
+          - '--web.enable-admin-api'
+        ports:
+        - containerPort: 9090
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        volumeMounts:
+        - name: prometheus-config-volume
+          mountPath: /etc/prometheus/
+        - name: prometheus-rules-volume
+          mountPath: /etc/prometheus/rules/
+        - name: prometheus-storage-volume
+          mountPath: /prometheus/
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: 9090
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+      volumes:
+      - name: prometheus-config-volume
+        configMap:
+          defaultMode: 420
+          name: prometheus-config
+      - name: prometheus-rules-volume
+        configMap:
+          defaultMode: 420
+          name: prometheus-rules
+      - name: prometheus-storage-volume
+        persistentVolumeClaim:
+          claimName: prometheus-storage
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: prometheus
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: monitoring
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-storage
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: gp2

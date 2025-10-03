@@ -1,0 +1,329 @@
+# Kong Plugins Configuration for WriteCareNotes Healthcare APIs
+# Provides healthcare-specific authentication, rate limiting, and compliance policies
+
+# Healthcare Rate Limiting Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-rate-limiting
+  namespace: api-gateway
+config:
+  minute: 1000
+  hour: 10000
+  day: 100000
+  policy: redis
+  redis_host: redis-cluster
+  redis_port: 6379
+  redis_timeout: 2000
+  fault_tolerant: true
+  hide_client_headers: false
+  # Healthcare-specific rate limits by endpoint
+  limits:
+    medication-administration: 
+      minute: 500
+      hour: 5000
+    resident-admission:
+      minute: 100
+      hour: 1000
+    compliance-reporting:
+      minute: 200
+      hour: 2000
+    audit-access:
+      minute: 50
+      hour: 500
+plugin: rate-limiting-advanced
+
+---
+# Healthcare CORS Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-cors
+  namespace: api-gateway
+config:
+  origins:
+  - "https://app.writecarenotes.com"
+  - "https://admin.writecarenotes.com"
+  - "https://family.writecarenotes.com"
+  - "https://mobile.writecarenotes.com"
+  methods:
+  - GET
+  - POST
+  - PUT
+  - DELETE
+  - PATCH
+  - OPTIONS
+  headers:
+  - Accept
+  - Accept-Version
+  - Content-Length
+  - Content-MD5
+  - Content-Type
+  - Date
+  - Authorization
+  - X-Auth-Token
+  - X-Tenant-ID
+  - X-User-ID
+  - X-Correlation-ID
+  - X-Healthcare-Context
+  - X-Compliance-Level
+  exposed_headers:
+  - X-Auth-Token
+  - X-Correlation-ID
+  - X-Rate-Limit-Remaining
+  - X-Rate-Limit-Limit
+  credentials: true
+  max_age: 3600
+  preflight_continue: false
+plugin: cors
+
+---
+# Healthcare JWT Authentication Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-auth
+  namespace: api-gateway
+config:
+  uri_param_names:
+  - jwt
+  cookie_names:
+  - jwt
+  - auth_token
+  header_names:
+  - authorization
+  claims_to_verify:
+  - exp
+  - iat
+  - sub
+  - aud
+  - iss
+  key_claim_name: iss
+  secret_is_base64: false
+  run_on_preflight: true
+  maximum_expiration: 86400  # 24 hours
+  # Healthcare-specific claims
+  claims_to_headers:
+    user_id: X-User-ID
+    tenant_id: X-Tenant-ID
+    roles: X-User-Roles
+    permissions: X-User-Permissions
+    care_home_id: X-Care-Home-ID
+    healthcare_role: X-Healthcare-Role
+plugin: jwt
+
+---
+# Healthcare Request Logging Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-logging
+  namespace: api-gateway
+config:
+  http_endpoint: "http://logstash.logging.svc.cluster.local:5044"
+  method: POST
+  timeout: 10000
+  keepalive: 60000
+  retry_count: 3
+  queue_size: 1000
+  flush_timeout: 2
+  # Healthcare-specific log format
+  custom_fields_by_lua:
+    healthcare_context: "return kong.request.get_header('X-Healthcare-Context')"
+    compliance_level: "return kong.request.get_header('X-Compliance-Level')"
+    audit_required: "return kong.request.get_header('X-Audit-Required')"
+    resident_id: "return kong.request.get_header('X-Resident-ID')"
+    medication_id: "return kong.request.get_header('X-Medication-ID')"
+    care_plan_id: "return kong.request.get_header('X-Care-Plan-ID')"
+    nhs_number: "return kong.request.get_header('X-NHS-Number')"
+plugin: http-log
+
+---
+# Healthcare Request Transformer Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-request-transformer
+  namespace: api-gateway
+config:
+  add:
+    headers:
+    - "X-API-Gateway:kong"
+    - "X-Request-ID:$(uuid)"
+    - "X-Forwarded-Proto:https"
+    - "X-Healthcare-System:writecarenotes"
+    - "X-Compliance-Framework:uk-healthcare"
+  append:
+    headers:
+    - "X-Forwarded-For:$(remote_addr)"
+  replace:
+    headers:
+    - "User-Agent:WriteCareNotes-API-Gateway/1.0"
+  remove:
+    headers:
+    - "X-Internal-Token"
+    - "X-Debug-Info"
+plugin: request-transformer
+
+---
+# Healthcare Response Transformer Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-response-transformer
+  namespace: api-gateway
+config:
+  add:
+    headers:
+    - "X-Content-Type-Options:nosniff"
+    - "X-Frame-Options:DENY"
+    - "X-XSS-Protection:1; mode=block"
+    - "Strict-Transport-Security:max-age=31536000; includeSubDomains"
+    - "Content-Security-Policy:default-src 'self'"
+    - "Referrer-Policy:strict-origin-when-cross-origin"
+    - "X-Healthcare-API:WriteCarenotes/1.0"
+    - "X-Compliance-Level:healthcare"
+  append:
+    headers:
+    - "X-Response-Time:$(upstream_response_time)"
+    - "X-Kong-Upstream-Latency:$(kong_latency)"
+  remove:
+    headers:
+    - "Server"
+    - "X-Powered-By"
+    - "X-Internal-Debug"
+plugin: response-transformer
+
+---
+# Healthcare IP Restriction Plugin (for admin endpoints)
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-admin-ip-restriction
+  namespace: api-gateway
+config:
+  allow:
+  - "10.0.0.0/8"      # Internal network
+  - "172.16.0.0/12"   # Private network
+  - "192.168.0.0/16"  # Local network
+  - "127.0.0.1/32"    # Localhost
+  deny: []
+  message: "Access denied: Administrative endpoints restricted to internal networks"
+plugin: ip-restriction
+
+---
+# Healthcare Bot Detection Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-bot-detection
+  namespace: api-gateway
+config:
+  allow:
+  - "GoogleBot"
+  - "BingBot"
+  deny:
+  - "BadBot"
+  - "MaliciousBot"
+  - "ScrapingBot"
+  message: "Access denied: Automated access not permitted for healthcare APIs"
+plugin: bot-detection
+
+---
+# Healthcare Request Size Limiting Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-request-size-limiting
+  namespace: api-gateway
+config:
+  allowed_payload_size: 50  # 50MB for file uploads (medical images, documents)
+  size_unit: megabytes
+  require_content_length: true
+plugin: request-size-limiting
+
+---
+# Healthcare ACL Plugin for Role-Based Access
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-acl
+  namespace: api-gateway
+config:
+  allow:
+  - "healthcare-staff"
+  - "care-managers"
+  - "administrators"
+  - "compliance-officers"
+  - "family-members"
+  deny: []
+  hide_groups_header: true
+plugin: acl
+
+---
+# Medication Service Specific Rate Limiting (Stricter)
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: medication-service-rate-limiting
+  namespace: api-gateway
+config:
+  minute: 500
+  hour: 5000
+  day: 50000
+  policy: redis
+  redis_host: redis-cluster
+  redis_port: 6379
+  fault_tolerant: true
+  hide_client_headers: false
+plugin: rate-limiting-advanced
+
+---
+# Compliance Service Specific Authentication (Enhanced)
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: compliance-service-auth
+  namespace: api-gateway
+config:
+  uri_param_names:
+  - jwt
+  header_names:
+  - authorization
+  claims_to_verify:
+  - exp
+  - iat
+  - sub
+  - aud
+  - iss
+  - compliance_role
+  - audit_permissions
+  key_claim_name: iss
+  maximum_expiration: 3600  # 1 hour for compliance access
+  claims_to_headers:
+    user_id: X-User-ID
+    tenant_id: X-Tenant-ID
+    compliance_role: X-Compliance-Role
+    audit_permissions: X-Audit-Permissions
+plugin: jwt
+
+---
+# NHS Integration Service Specific Configuration
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: nhs-integration-config
+  namespace: api-gateway
+config:
+  add:
+    headers:
+    - "X-NHS-Integration:enabled"
+    - "X-FHIR-Version:R4"
+    - "X-NHS-Digital-Compliant:true"
+  append:
+    headers:
+    - "X-Healthcare-Standard:NHS-Digital"
+  remove:
+    headers:
+    - "X-Internal-NHS-Token"
+plugin: request-transformer

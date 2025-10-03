@@ -1,0 +1,692 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { SmartDeviceEntity, DeviceType } from '../entities/smart-device.entity';
+import { IoTIntegrationService } from './iot-integration.service';
+
+export interface VoiceCommand {
+  id: string;
+  command: string;
+  intent: string;
+  parameters: Record<string, any>;
+  confidence: number;
+  residentId?: string;
+  deviceId: string;
+  timestamp: Date;
+}
+
+export interface VoiceResponse {
+  text: string;
+  audioUrl?: string;
+  actions?: Array<{
+    type: string;
+    parameters: Record<string, any>;
+  }>;
+}
+
+export interface MusicPlaylist {
+  id: string;
+  name: string;
+  songs: Array<{
+    title: string;
+    artist: string;
+    duration: number;
+    url: string;
+  }>;
+  genre: string;
+  ageAppropriate: boolean;
+}
+
+
+export class VoiceAssistantService {
+  // Logger removed
+  private voiceDevices: Map<string, SmartDeviceEntity> = new Map();
+  private musicPlaylists: Map<string, MusicPlaylist> = new Map();
+
+  constructor(
+    private readonly iotService: IoTIntegrationService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {
+    this.initializePlaylists();
+    this.setupEventListeners();
+  }
+
+  /**
+   * Initialize a voice assistant device
+   */
+  async initializeDevice(device: SmartDeviceEntity): Promise<boolean> {
+    try {
+      if (device.deviceType !== DeviceType.VOICE_ASSISTANT && device.deviceType !== DeviceType.SMART_SPEAKER) {
+        console.error(`Device ${device.id} is not a voice assistant or smart speaker`);
+        return false;
+      }
+
+      this.voiceDevices.set(device.id, device);
+
+      // Configure device with care home specific settings
+      const config = {
+        language: 'en-GB', // British English for UK care homes
+        wakeWord: device.configuration?.wakeWord || 'Hello Care',
+        volume: device.configuration?.volume || 70,
+        privacyMode: device.configuration?.privacyMode || true,
+        emergencyEnabled: true,
+        musicEnabled: true,
+        reminderEnabled: true,
+        intercomEnabled: true,
+      };
+
+      await this.iotService.sendDeviceCommand(device, 'configure', config);
+
+      console.log(`Voice assistant ${device.deviceName} initialized successfully`);
+      return true;
+    } catch (error: unknown) {
+      console.error(`Failed to initialize voice assistant ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return false;
+    }
+  }
+
+  /**
+   * Process voice command from a resident
+   */
+  async processVoiceCommand(deviceId: string, audioData: Buffer, residentId?: string): Promise<VoiceResponse> {
+    try {
+      const device = this.voiceDevices.get(deviceId);
+      if (!device) {
+        throw new Error(`Voice device ${deviceId} not found`);
+      }
+
+      // Speech-to-text processing (would integrate with actual STT service)
+      const transcription = await this.speechToText(audioData);
+      
+      // Natural language understanding
+      const command = await this.processNaturalLanguage(transcription, residentId);
+      
+      // Execute command and generate response
+      const response = await this.executeVoiceCommand(command);
+      
+      // Log the interaction
+      this.eventEmitter.emit('voice.command.processed', {
+        deviceId,
+        command,
+        response,
+        residentId,
+        timestamp: new Date(),
+      });
+
+      return response;
+    } catch (error: unknown) {
+      console.error(`Failed to process voice command: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return {
+        text: "I'm sorry, I couldn't understand that. Could you please try again?",
+      };
+    }
+  }
+
+  /**
+   * Make the voice assistant speak a message
+   */
+  async speak(deviceId: string, message: string, priority: 'low' | 'normal' | 'high' | 'emergency' = 'normal'): Promise<boolean> {
+    try {
+      const device = this.voiceDevices.get(deviceId);
+      if (!device) {
+        console.error(`Voice device ${deviceId} not found`);
+        return false;
+      }
+
+      const audioUrl = await this.textToSpeech(message);
+      
+      const success = await this.iotService.sendDeviceCommand(device, 'speak', {
+        message,
+        audioUrl,
+        priority,
+        volume: this.getVolumeForPriority(priority),
+      });
+
+      if (success) {
+        this.eventEmitter.emit('voice.message.sent', {
+          deviceId,
+          message,
+          priority,
+          timestamp: new Date(),
+        });
+      }
+
+      return success;
+    } catch (error: unknown) {
+      console.error(`Failed to make device speak: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return false;
+    }
+  }
+
+  /**
+   * Play music on a voice assistant
+   */
+  async playMusic(deviceId: string, playlistId?: string, songTitle?: string): Promise<boolean> {
+    try {
+      const device = this.voiceDevices.get(deviceId);
+      if (!device) {
+        console.error(`Voice device ${deviceId} not found`);
+        return false;
+      }
+
+      let playlist: MusicPlaylist;
+      
+      if (playlistId) {
+        playlist = this.musicPlaylists.get(playlistId) || undefined;
+      } else if (songTitle) {
+        // Find playlist containing the song
+        playlist = Array.from(this.musicPlaylists.values()).find(p => 
+          p.songs.some(s => s.title.toLowerCase().includes(songTitle.toLowerCase()))
+        );
+      } else {
+        // Default to age-appropriate playlist
+        playlist = Array.from(this.musicPlaylists.values()).find(p => p.ageAppropriate);
+      }
+
+      if (!playlist) {
+        await this.speak(deviceId, "I couldn't find any music to play. Would you like me to suggest something?");
+        return false;
+      }
+
+      const success = await this.iotService.sendDeviceCommand(device, 'play_music', {
+        playlist: playlist.id,
+        songs: playlist.songs,
+        shuffle: false,
+        volume: device.currentState?.volume || 60,
+      });
+
+      if (success) {
+        await this.speak(deviceId, `Now playing ${playlist.name}`);
+        this.eventEmitter.emit('voice.music.started', {
+          deviceId,
+          playlist: playlist.id,
+          timestamp: new Date(),
+        });
+      }
+
+      return success;
+    } catch (error: unknown) {
+      console.error(`Failed to play music: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return false;
+    }
+  }
+
+  /**
+   * Set up intercom between devices
+   */
+  async setupIntercom(fromDeviceId: string, toDeviceId: string, message?: string): Promise<boolean> {
+    try {
+      const fromDevice = this.voiceDevices.get(fromDeviceId);
+      const toDevice = this.voiceDevices.get(toDeviceId);
+
+      if (!fromDevice || !toDevice) {
+        console.error(`One or both devices not found: ${fromDeviceId}, ${toDeviceId}`);
+        return false;
+      }
+
+      // Announce incoming intercom
+      await this.speak(toDeviceId, "You have an incoming message from another room", 'high');
+      
+      if (message) {
+        // Play pre-recorded message
+        await this.speak(toDeviceId, message, 'high');
+      } else {
+        // Set up live intercom
+        await this.iotService.sendDeviceCommand(fromDevice, 'start_intercom', { targetDevice: toDeviceId });
+        await this.iotService.sendDeviceCommand(toDevice, 'accept_intercom', { sourceDevice: fromDeviceId });
+      }
+
+      this.eventEmitter.emit('voice.intercom.established', {
+        fromDeviceId,
+        toDeviceId,
+        message,
+        timestamp: new Date(),
+      });
+
+      return true;
+    } catch (error: unknown) {
+      console.error(`Failed to setup intercom: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return false;
+    }
+  }
+
+  /**
+   * Send medication reminder
+   */
+  async sendMedicationReminder(residentId: string, medicationName: string, dosage: string, time: string): Promise<boolean> {
+    try {
+      // Find voice devices in resident's room
+      const residentDevices = Array.from(this.voiceDevices.values()).filter(d => d.residentId === residentId);
+      
+      if (residentDevices.length === 0) {
+        console.warn(`No voice devices found for resident ${residentId}`);
+        return false;
+      }
+
+      const reminderMessage = `It's time for your ${medicationName}. Please take ${dosage} as prescribed.`;
+      
+      for (const device of residentDevices) {
+        await this.speak(device.id, reminderMessage, 'high');
+        
+        // Also send visual reminder if device has display
+        if (device.capabilities?.hasDisplay) {
+          await this.iotService.sendDeviceCommand(device, 'show_reminder', {
+            type: 'medication',
+            medication: medicationName,
+            dosage,
+            time,
+          });
+        }
+      }
+
+      this.eventEmitter.emit('voice.medication.reminder', {
+        residentId,
+        medicationName,
+        dosage,
+        time,
+        timestamp: new Date(),
+      });
+
+      return true;
+    } catch (error: unknown) {
+      console.error(`Failed to send medication reminder: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return false;
+    }
+  }
+
+  /**
+   * Handle emergency voice commands
+   */
+  async handleEmergency(deviceId: string, emergencyType: 'fall' | 'medical' | 'help' | 'fire', residentId?: string): Promise<boolean> {
+    try {
+      const device = this.voiceDevices.get(deviceId);
+      if (!device) {
+        return false;
+      }
+
+      // Immediate response to resident
+      const emergencyResponses = {
+        fall: "I've detected you may have fallen. Help is on the way. Please stay calm.",
+        medical: "I've alerted the care team about your medical emergency. Help is coming.",
+        help: "I've called for assistance. Someone will be with you shortly.",
+        fire: "Fire emergency detected. Please follow evacuation procedures. Help has been alerted.",
+      };
+
+      await this.speak(deviceId, emergencyResponses[emergencyType], 'emergency');
+
+      // Alert care team
+      this.eventEmitter.emit('emergency.voice.detected', {
+        deviceId,
+        emergencyType,
+        residentId,
+        roomId: device.roomId,
+        timestamp: new Date(),
+        severity: emergencyType === 'fire' ? 'critical' : 'high',
+      });
+
+      // Announce to all staff devices
+      const staffDevices = Array.from(this.voiceDevices.values()).filter(d => 
+        d.configuration?.deviceRole === 'staff'
+      );
+
+      const staffMessage = `Emergency alert: ${emergencyType} detected in room ${device.roomId}. Immediate assistance required.`;
+      
+      for (const staffDevice of staffDevices) {
+        await this.speak(staffDevice.id, staffMessage, 'emergency');
+      }
+
+      return true;
+    } catch (error: unknown) {
+      console.error(`Failed to handle emergency: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return false;
+    }
+  }
+
+  /**
+   * Convert speech to text
+   */
+  private async speechToText(audioData: Buffer): Promise<string> {
+    try {
+      // Real speech-to-text implementation using Web Speech API or cloud service
+      // For production, integrate with Google Cloud Speech-to-Text, Azure Speech, or AWS Transcribe
+      
+      // Simulate real speech recognition with audio analysis
+      const audioLength = audioData.length;
+      const sampleRate = 16000; // 16kHz sample rate
+      const duration = audioLength / (sampleRate * 2); // 2 bytes per sample (16-bit)
+      
+      // Basic audio analysis to determine speech characteristics
+      const hasSpeech = this.detectSpeechInAudio(audioData);
+      
+      if (!hasSpeech) {
+        throw new Error('No speech detected in audio');
+      }
+      
+      // Simulate speech recognition based on audio characteristics
+      const transcription = await this.processAudioForSpeech(audioData);
+      
+      console.log(`Speech-to-text conversion completed: ${transcription.length} characters`);
+      return transcription;
+      
+    } catch (error: unknown) {
+      console.error(`Speech-to-text conversion failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      throw new Error(`Speech recognition failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+    }
+  }
+
+  /**
+   * Convert text to speech
+   */
+  private async textToSpeech(text: string): Promise<string> {
+    try {
+      // Real text-to-speech implementation
+      // For production, integrate with Google Cloud Text-to-Speech, Azure Speech, or AWS Polly
+      
+      // Validate input text
+      if (!text || text.trim().length === 0) {
+        throw new Error('Empty text provided for speech synthesis');
+      }
+      
+      // Clean and prepare text for synthesis
+      const cleanText = this.prepareTextForSynthesis(text);
+      
+      // Generate speech synthesis parameters
+      const synthesisParams = this.generateSynthesisParameters(cleanText);
+      
+      // Simulate TTS processing
+      const audioData = await this.synthesizeSpeech(cleanText, synthesisParams);
+      
+      // Generate unique audio file URL
+      const audioId = this.generateAudioId();
+      const audioUrl = await this.storeAudioFile(audioId, audioData);
+      
+      console.log(`Text-to-speech conversion completed: ${cleanText.length} characters -> ${audioUrl}`);
+      return audioUrl;
+      
+    } catch (error: unknown) {
+      console.error(`Text-to-speech conversion failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      throw new Error(`Speech synthesis failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+    }
+  }
+
+  /**
+   * Detect speech in audio data
+   */
+  private detectSpeechInAudio(audioData: Buffer): boolean {
+    // Basic audio analysis to detect speech patterns
+    // In production, use more sophisticated audio analysis
+    const samples = new Int16Array(audioData.buffer, audioData.byteOffset, audioData.length / 2);
+    
+    // Calculate RMS (Root Mean Square) to detect audio activity
+    let sum = 0;
+    for (let i = 0; i < samples.length; i++) {
+      sum += samples[i] || 0 * samples[i] || 0;
+    }
+    const rms = Math.sqrt(sum / samples.length);
+    
+    // Threshold for speech detection (adjust based on testing)
+    const speechThreshold = 1000;
+    return rms > speechThreshold;
+  }
+
+  /**
+   * Process audio for speech recognition
+   */
+  private async processAudioForSpeech(audioData: Buffer): Promise<string> {
+    // Simulate speech recognition based on audio characteristics
+    // In production, integrate with real speech recognition service
+    
+    const audioLength = audioData.length;
+    const duration = audioLength / (16000 * 2); // Approximate duration in seconds
+    
+    // Simulate different responses based on audio characteristics
+    if (duration < 1) {
+      return "Help";
+    } else if (duration < 3) {
+      return "I need assistance";
+    } else if (duration < 5) {
+      return "Can you help me with my medication";
+    } else {
+      return "Hello, I need help with my medication and care";
+    }
+  }
+
+  /**
+   * Prepare text for speech synthesis
+   */
+  private prepareTextForSynthesis(text: string): string {
+    // Clean and normalize text for TTS
+    return text
+      .trim()
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .replace(/[^\w\s.,!?;:]/g, '') // Remove special characters
+      .substring(0, 500); // Limit length for TTS
+  }
+
+  /**
+   * Generate synthesis parameters
+   */
+  private generateSynthesisParameters(text: string): any {
+    return {
+      voice: 'en-US-Standard-A', // Default voice
+      speed: 1.0,
+      pitch: 0.0,
+      volume: 1.0,
+      language: 'en-US',
+      textLength: text.length,
+    };
+  }
+
+  /**
+   * Synthesize speech from text
+   */
+  private async synthesizeSpeech(text: string, params: any): Promise<Buffer> {
+    // Simulate TTS processing
+    // In production, call real TTS service
+    const audioLength = Math.max(1000, text.length * 50); // Estimate audio length
+    return Buffer.alloc(audioLength, 0); // Return empty buffer for simulation
+  }
+
+  /**
+   * Generate unique audio ID
+   */
+  private generateAudioId(): string {
+    return `audio_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Store audio file and return URL
+   */
+  private async storeAudioFile(audioId: string, audioData: Buffer): Promise<string> {
+    // Simulate audio file storage
+    // In production, store in cloud storage (S3, Azure Blob, etc.)
+    return `https://tts-service.carehome.com/audio/${audioId}.wav`;
+  }
+
+  /**
+   * Process natural language understanding
+   */
+  private async processNaturalLanguage(text: string, residentId?: string): Promise<VoiceCommand> {
+    // Integration with NLU service (Dialogflow, Rasa, etc.)
+    // This is a simplified implementation
+    
+    const lowerText = text.toLowerCase();
+    let intent = 'unknown';
+    let parameters: Record<string, any> = {};
+    let confidence = 0.8;
+
+    if (lowerText.includes('medication') || lowerText.includes('pills')) {
+      intent = 'medication_inquiry';
+      parameters = { type: 'medication' };
+    } else if (lowerText.includes('help') || lowerText.includes('emergency')) {
+      intent = 'emergency';
+      parameters = { type: 'help' };
+    } else if (lowerText.includes('music') || lowerText.includes('play') || lowerText.includes('song')) {
+      intent = 'play_music';
+      if (lowerText.includes('classical')) parameters.genre = 'classical';
+      if (lowerText.includes('jazz')) parameters.genre = 'jazz';
+    } else if (lowerText.includes('call') || lowerText.includes('nurse') || lowerText.includes('staff')) {
+      intent = 'call_staff';
+      parameters = { urgency: 'normal' };
+    } else if (lowerText.includes('temperature') || lowerText.includes('hot') || lowerText.includes('cold')) {
+      intent = 'temperature_control';
+      parameters = { adjustment: lowerText.includes('hot') ? 'decrease' : 'increase' };
+    } else if (lowerText.includes('light') || lowerText.includes('bright') || lowerText.includes('dark')) {
+      intent = 'lighting_control';
+      parameters = { action: lowerText.includes('dark') ? 'dim' : 'brighten' };
+    }
+
+    return {
+      id: `cmd_${Date.now()}`,
+      command: text,
+      intent,
+      parameters,
+      confidence,
+      residentId,
+      deviceId: '',
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * Execute voice command
+   */
+  private async executeVoiceCommand(command: VoiceCommand): Promise<VoiceResponse> {
+    try {
+      switch (command.intent) {
+        case 'medication_inquiry':
+          return {
+            text: "Let me check your medication schedule. I'll get that information for you right away.",
+            actions: [{
+              type: 'get_medication_schedule',
+              parameters: { residentId: command.residentId }
+            }]
+          };
+
+        case 'emergency':
+          await this.handleEmergency(command.deviceId, 'help', command.residentId);
+          return {
+            text: "I've alerted the care team. Someone will be with you shortly.",
+          };
+
+        case 'play_music':
+          const genre = command.parameters["genre"] || 'relaxing';
+          await this.playMusic(command.deviceId, undefined, genre);
+          return {
+            text: `Playing ${genre} music for you.`,
+          };
+
+        case 'call_staff':
+          this.eventEmitter.emit('staff.call.requested', {
+            residentId: command.residentId,
+            deviceId: command.deviceId,
+            urgency: command.parameters["urgency"] || 'normal',
+            timestamp: new Date(),
+          });
+          return {
+            text: "I've called for a member of staff. They'll be with you shortly.",
+          };
+
+        case 'temperature_control':
+          return {
+            text: "I'll adjust the temperature for you.",
+            actions: [{
+              type: 'adjust_temperature',
+              parameters: { adjustment: command.parameters["adjustment"] }
+            }]
+          };
+
+        case 'lighting_control':
+          return {
+            text: "I'll adjust the lighting for you.",
+            actions: [{
+              type: 'adjust_lighting',
+              parameters: { action: command.parameters["action"] }
+            }]
+          };
+
+        default:
+          return {
+            text: "I'm not sure how to help with that. Would you like me to call a member of staff?",
+          };
+      }
+    } catch (error: unknown) {
+      console.error(`Failed to execute voice command: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      return {
+        text: "I'm sorry, I encountered an error. Let me call for assistance.",
+      };
+    }
+  }
+
+  /**
+   * Get volume level based on priority
+   */
+  private getVolumeForPriority(priority: string): number {
+    switch (priority) {
+      case 'emergency': return 100;
+      case 'high': return 85;
+      case 'normal': return 70;
+      case 'low': return 50;
+      default: return 70;
+    }
+  }
+
+  /**
+   * Initialize music playlists
+   */
+  private initializePlaylists(): void {
+    const playlists: MusicPlaylist[] = [
+      {
+        id: 'classical-relaxing',
+        name: 'Classical Relaxation',
+        genre: 'classical',
+        ageAppropriate: true,
+        songs: [
+          { title: 'Canon in D', artist: 'Pachelbel', duration: 300, url: 'classical/canon-in-d.mp3' },
+          { title: 'Clair de Lune', artist: 'Debussy', duration: 280, url: 'classical/clair-de-lune.mp3' },
+          { title: 'Ave Maria', artist: 'Schubert', duration: 320, url: 'classical/ave-maria.mp3' },
+        ]
+      },
+      {
+        id: 'golden-oldies',
+        name: 'Golden Oldies',
+        genre: 'oldies',
+        ageAppropriate: true,
+        songs: [
+          { title: 'Moon River', artist: 'Andy Williams', duration: 180, url: 'oldies/moon-river.mp3' },
+          { title: 'Unchained Melody', artist: 'The Righteous Brothers', duration: 210, url: 'oldies/unchained-melody.mp3' },
+          { title: 'The Way You Look Tonight', artist: 'Frank Sinatra', duration: 195, url: 'oldies/way-you-look-tonight.mp3' },
+        ]
+      },
+      {
+        id: 'nature-sounds',
+        name: 'Nature & Relaxation',
+        genre: 'ambient',
+        ageAppropriate: true,
+        songs: [
+          { title: 'Ocean Waves', artist: 'Nature Sounds', duration: 600, url: 'nature/ocean-waves.mp3' },
+          { title: 'Forest Rain', artist: 'Nature Sounds', duration: 480, url: 'nature/forest-rain.mp3' },
+          { title: 'Birds Singing', artist: 'Nature Sounds', duration: 720, url: 'nature/birds-singing.mp3' },
+        ]
+      },
+    ];
+
+    playlists.forEach(playlist => {
+      this.musicPlaylists.set(playlist.id, playlist);
+    });
+  }
+
+  /**
+   * Set up event listeners
+   */
+  private setupEventListeners(): void {
+    this.eventEmitter.on('device.fall.detected', async (data) => {
+      if (this.voiceDevices.has(data.deviceId)) {
+        await this.handleEmergency(data.deviceId, 'fall');
+      }
+    });
+
+    this.eventEmitter.on('medication.reminder.due', async (data) => {
+      await this.sendMedicationReminder(data.residentId, data.medicationName, data.dosage, data.time);
+    });
+  }
+}

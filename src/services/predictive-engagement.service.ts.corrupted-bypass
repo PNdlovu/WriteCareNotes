@@ -1,0 +1,2008 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AuditTrailService } from './audit/AuditTrailService';
+
+export interface EngagementPrediction {
+  id: string;
+  residentId: string;
+  predictionType: 'social_engagement' | 'activity_participation' | 'health_improvement' | 'mood_enhancement' | 'cognitive_stimulation' | 'physical_activity';
+  confidence: number; // 0-1 scale
+  predictedValue: number;
+  actualValue?: number;
+  accuracy?: number;
+  factors: EngagementFactor[];
+  recommendations: EngagementRecommendation[];
+  timeframe: 'immediate' | 'short_term' | 'medium_term' | 'long_term';
+  status: 'active' | 'completed' | 'expired' | 'cancelled';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface EngagementFactor {
+  id: string;
+  name: string;
+  type: 'demographic' | 'health' | 'behavioral' | 'environmental' | 'social' | 'temporal';
+  weight: number; // 0-1 scale
+  value: any;
+  impact: 'positive' | 'negative' | 'neutral';
+  description: string;
+}
+
+export interface EngagementRecommendation {
+  id: string;
+  type: 'activity' | 'intervention' | 'environment' | 'social' | 'medical' | 'therapeutic';
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  expectedOutcome: string;
+  effort: 'low' | 'medium' | 'high';
+  resources: string[];
+  timeline: string;
+  successProbability: number; // 0-1 scale
+}
+
+export interface EngagementModel {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  algorithm: 'linear_regression' | 'random_forest' | 'neural_network' | 'svm' | 'ensemble';
+  features: string[];
+  parameters: Record<string, any>;
+  accuracy: number; // 0-1 scale
+  isActive: boolean;
+  lastTrained: Date;
+  performance: ModelPerformance;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ModelPerformance {
+  accuracy: number;
+  precision: number;
+  recall: number;
+  f1Score: number;
+  auc: number;
+  mse: number;
+  mae: number;
+  r2Score: number;
+  lastEvaluated: Date;
+}
+
+export interface EngagementEvent {
+  id: string;
+  residentId: string;
+  eventType: 'activity_completed' | 'social_interaction' | 'health_change' | 'mood_change' | 'behavior_change' | 'environment_change';
+  eventData: Record<string, any>;
+  timestamp: Date;
+  source: 'manual' | 'sensor' | 'system' | 'external';
+  confidence: number; // 0-1 scale
+  processed: boolean;
+  createdAt: Date;
+}
+
+export interface EngagementInsight {
+  id: string;
+  residentId: string;
+  insightType: 'pattern' | 'trend' | 'anomaly' | 'correlation' | 'prediction' | 'recommendation';
+  title: string;
+  description: string;
+  confidence: number; // 0-1 scale
+  impact: 'low' | 'medium' | 'high' | 'critical';
+  actionable: boolean;
+  data: Record<string, any>;
+  recommendations: string[];
+  createdAt: Date;
+  expiresAt?: Date;
+}
+
+export interface EngagementCampaign {
+  id: string;
+  name: string;
+  description: string;
+  targetResidents: string[];
+  campaignType: 'social' | 'health' | 'activity' | 'wellness' | 'cognitive' | 'physical';
+  objectives: string[];
+  strategies: CampaignStrategy[];
+  startDate: Date;
+  endDate: Date;
+  status: 'planned' | 'active' | 'paused' | 'completed' | 'cancelled';
+  metrics: CampaignMetrics;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CampaignStrategy {
+  id: string;
+  name: string;
+  type: 'activity' | 'intervention' | 'environment' | 'social' | 'medical' | 'therapeutic';
+  description: string;
+  targetAudience: string[];
+  implementation: string;
+  resources: string[];
+  timeline: string;
+  successCriteria: string[];
+  expectedOutcome: string;
+}
+
+export interface CampaignMetrics {
+  totalResidents: number;
+  participants: number;
+  completionRate: number; // percentage
+  engagementRate: number; // percentage
+  satisfactionScore: number; // 1-5 scale
+  healthImprovements: number;
+  socialConnections: number;
+  activityParticipation: number;
+  lastUpdated: Date;
+}
+
+export interface EngagementAnalytics {
+  residentId: string;
+  period: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
+  engagementScore: number; // 0-100 scale
+  socialEngagement: number;
+  activityParticipation: number;
+  healthMetrics: number;
+  moodIndicators: number;
+  cognitiveFunction: number;
+  physicalActivity: number;
+  trends: EngagementTrend[];
+  patterns: EngagementPattern[];
+  lastUpdated: Date;
+}
+
+export interface EngagementTrend {
+  metric: string;
+  direction: 'increasing' | 'decreasing' | 'stable';
+  rate: number; // percentage change
+  significance: 'low' | 'medium' | 'high';
+  timeframe: string;
+}
+
+export interface EngagementPattern {
+  name: string;
+  description: string;
+  frequency: number;
+  confidence: number; // 0-1 scale
+  triggers: string[];
+  outcomes: string[];
+  recommendations: string[];
+}
+
+@Injectable()
+export class PredictiveEngagementService {
+  constructor(
+    @InjectRepository('EngagementPrediction')
+    private predictionRepository: Repository<EngagementPrediction>,
+    @InjectRepository('EngagementModel')
+    private modelRepository: Repository<EngagementModel>,
+    @InjectRepository('EngagementEvent')
+    private eventRepository: Repository<EngagementEvent>,
+    @InjectRepository('EngagementInsight')
+    private insightRepository: Repository<EngagementInsight>,
+    @InjectRepository('EngagementCampaign')
+    private campaignRepository: Repository<EngagementCampaign>,
+    @InjectRepository('EngagementAnalytics')
+    private analyticsRepository: Repository<EngagementAnalytics>,
+    private eventEmitter: EventEmitter2,
+    private auditService: AuditTrailService,
+  ) {}
+
+  /**
+   * Generate engagement prediction for a resident
+   */
+  async generatePrediction(
+    residentId: string,
+    predictionType: EngagementPrediction['predictionType'],
+    timeframe: 'immediate' | 'short_term' | 'medium_term' | 'long_term',
+  ): Promise<EngagementPrediction> {
+    try {
+      // Get active model for prediction type
+      const model = await this.modelRepository.findOne({
+        where: { predictionType, isActive: true },
+      });
+
+      if (!model) {
+        throw new Error(`No active model found for prediction type: ${predictionType}`);
+      }
+
+      // Get resident data and factors
+      const factors = await this.getEngagementFactors(residentId);
+      const recommendations = await this.generateRecommendations(residentId, predictionType, factors);
+
+      // Calculate prediction using model
+      const predictedValue = this.calculatePrediction(model, factors);
+      const confidence = this.calculateConfidence(model, factors);
+
+      const prediction: EngagementPrediction = {
+        id: `prediction_${Date.now()}`,
+        residentId,
+        predictionType,
+        confidence,
+        predictedValue,
+        factors,
+        recommendations,
+        timeframe,
+        status: 'active',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      await this.predictionRepository.save(prediction);
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Prediction',
+        entityId: prediction.id,
+        action: 'CREATE',
+        details: {
+          residentId,
+          predictionType,
+          confidence,
+          predictedValue,
+          timeframe,
+          factorCount: factors.length,
+          recommendationCount: recommendations.length,
+        },
+        userId: 'system',
+      });
+
+      this.eventEmitter.emit('predictive.engagement.prediction.generated', {
+        predictionId: prediction.id,
+        residentId,
+        predictionType,
+        confidence,
+        predictedValue,
+        timeframe,
+        timestamp: new Date(),
+      });
+
+      return prediction;
+    } catch (error) {
+      console.error('Error generating prediction:', error);
+      throw new Error('Failed to generate prediction');
+    }
+  }
+
+  /**
+   * Create or update engagement model
+   */
+  async createModel(modelData: Omit<EngagementModel, 'id' | 'createdAt' | 'updatedAt'>): Promise<EngagementModel> {
+    try {
+      const model: EngagementModel = {
+        id: `model_${Date.now()}`,
+        ...modelData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      await this.modelRepository.save(model);
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Model',
+        entityId: model.id,
+        action: 'CREATE',
+        details: {
+          modelName: model.name,
+          algorithm: model.algorithm,
+          version: model.version,
+          accuracy: model.accuracy,
+          featureCount: model.features.length,
+        },
+        userId: 'system',
+      });
+
+      this.eventEmitter.emit('predictive.engagement.model.created', {
+        modelId: model.id,
+        modelName: model.name,
+        algorithm: model.algorithm,
+        version: model.version,
+        timestamp: new Date(),
+      });
+
+      return model;
+    } catch (error) {
+      console.error('Error creating model:', error);
+      throw new Error('Failed to create model');
+    }
+  }
+
+  /**
+   * Record engagement event
+   */
+  async recordEvent(eventData: Omit<EngagementEvent, 'id' | 'createdAt'>): Promise<EngagementEvent> {
+    try {
+      const event: EngagementEvent = {
+        id: `event_${Date.now()}`,
+        ...eventData,
+        createdAt: new Date(),
+      };
+
+      await this.eventRepository.save(event);
+
+      // Process event for insights
+      await this.processEventForInsights(event);
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Event',
+        entityId: event.id,
+        action: 'CREATE',
+        details: {
+          residentId: event.residentId,
+          eventType: event.eventType,
+          source: event.source,
+          confidence: event.confidence,
+        },
+        userId: 'system',
+      });
+
+      this.eventEmitter.emit('predictive.engagement.event.recorded', {
+        eventId: event.id,
+        residentId: event.residentId,
+        eventType: event.eventType,
+        source: event.source,
+        timestamp: new Date(),
+      });
+
+      return event;
+    } catch (error) {
+      console.error('Error recording event:', error);
+      throw new Error('Failed to record event');
+    }
+  }
+
+  /**
+   * Generate engagement insights
+   */
+  async generateInsights(residentId: string): Promise<EngagementInsight[]> {
+    try {
+      const events = await this.eventRepository.find({
+        where: { residentId },
+        order: { timestamp: 'DESC' },
+        take: 100, // Last 100 events
+      });
+
+      const insights: EngagementInsight[] = [];
+
+      // Analyze patterns
+      const patterns = await this.analyzePatterns(events);
+      insights.push(...patterns);
+
+      // Analyze trends
+      const trends = await this.analyzeTrends(events);
+      insights.push(...trends);
+
+      // Detect anomalies
+      const anomalies = await this.detectAnomalies(events);
+      insights.push(...anomalies);
+
+      // Find correlations
+      const correlations = await this.findCorrelations(events);
+      insights.push(...correlations);
+
+      // Save insights
+      for (const insight of insights) {
+        await this.insightRepository.save(insight);
+      }
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Insights',
+        entityId: `insights_${residentId}`,
+        action: 'CREATE',
+        details: {
+          residentId,
+          insightCount: insights.length,
+          patternCount: patterns.length,
+          trendCount: trends.length,
+          anomalyCount: anomalies.length,
+          correlationCount: correlations.length,
+        },
+        userId: 'system',
+      });
+
+      this.eventEmitter.emit('predictive.engagement.insights.generated', {
+        residentId,
+        insightCount: insights.length,
+        timestamp: new Date(),
+      });
+
+      return insights;
+    } catch (error) {
+      console.error('Error generating insights:', error);
+      throw new Error('Failed to generate insights');
+    }
+  }
+
+  /**
+   * Create engagement campaign
+   */
+  async createCampaign(campaignData: Omit<EngagementCampaign, 'id' | 'createdAt' | 'updatedAt'>): Promise<EngagementCampaign> {
+    try {
+      const campaign: EngagementCampaign = {
+        id: `campaign_${Date.now()}`,
+        ...campaignData,
+        metrics: {
+          totalResidents: campaignData.targetResidents.length,
+          participants: 0,
+          completionRate: 0,
+          engagementRate: 0,
+          satisfactionScore: 0,
+          healthImprovements: 0,
+          socialConnections: 0,
+          activityParticipation: 0,
+          lastUpdated: new Date(),
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      await this.campaignRepository.save(campaign);
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Campaign',
+        entityId: campaign.id,
+        action: 'CREATE',
+        details: {
+          campaignName: campaign.name,
+          campaignType: campaign.campaignType,
+          targetResidentCount: campaign.targetResidents.length,
+          strategyCount: campaign.strategies.length,
+        },
+        userId: 'system',
+      });
+
+      this.eventEmitter.emit('predictive.engagement.campaign.created', {
+        campaignId: campaign.id,
+        campaignName: campaign.name,
+        campaignType: campaign.campaignType,
+        targetResidentCount: campaign.targetResidents.length,
+        timestamp: new Date(),
+      });
+
+      return campaign;
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+      throw new Error('Failed to create campaign');
+    }
+  }
+
+  /**
+   * Get engagement analytics for a resident
+   */
+  async getEngagementAnalytics(
+    residentId: string,
+    period: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly',
+  ): Promise<EngagementAnalytics> {
+    try {
+      const startDate = this.getPeriodStartDate(period);
+      const endDate = new Date();
+
+      const events = await this.eventRepository.find({
+        where: {
+          residentId,
+          timestamp: {
+            $gte: startDate,
+            $lte: endDate,
+          } as any,
+        },
+      });
+
+      const analytics: EngagementAnalytics = {
+        residentId,
+        period,
+        engagementScore: this.calculateEngagementScore(events),
+        socialEngagement: this.calculateSocialEngagement(events),
+        activityParticipation: this.calculateActivityParticipation(events),
+        healthMetrics: this.calculateHealthMetrics(events),
+        moodIndicators: this.calculateMoodIndicators(events),
+        cognitiveFunction: this.calculateCognitiveFunction(events),
+        physicalActivity: this.calculatePhysicalActivity(events),
+        trends: await this.analyzeTrends(events),
+        patterns: await this.analyzePatterns(events),
+        lastUpdated: new Date(),
+      };
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Analytics',
+        entityId: `analytics_${residentId}`,
+        action: 'READ',
+        details: {
+          residentId,
+          period,
+          eventCount: events.length,
+          engagementScore: analytics.engagementScore,
+        },
+        userId: 'system',
+      });
+
+      return analytics;
+    } catch (error) {
+      console.error('Error getting engagement analytics:', error);
+      throw new Error('Failed to get engagement analytics');
+    }
+  }
+
+  /**
+   * Get all predictions for a resident
+   */
+  async getPredictions(residentId: string, status?: string): Promise<EngagementPrediction[]> {
+    try {
+      const whereCondition = status ? { residentId, status } : { residentId };
+      const predictions = await this.predictionRepository.find({
+        where: whereCondition,
+        order: { createdAt: 'DESC' },
+      });
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Predictions',
+        entityId: `predictions_${residentId}`,
+        action: 'READ',
+        details: {
+          residentId,
+          status,
+          count: predictions.length,
+        },
+        userId: 'system',
+      });
+
+      return predictions;
+    } catch (error) {
+      console.error('Error getting predictions:', error);
+      throw new Error('Failed to get predictions');
+    }
+  }
+
+  /**
+   * Get all insights for a resident
+   */
+  async getInsights(residentId: string, insightType?: string): Promise<EngagementInsight[]> {
+    try {
+      const whereCondition = insightType ? { residentId, insightType } : { residentId };
+      const insights = await this.insightRepository.find({
+        where: whereCondition,
+        order: { createdAt: 'DESC' },
+      });
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Insights',
+        entityId: `insights_${residentId}`,
+        action: 'READ',
+        details: {
+          residentId,
+          insightType,
+          count: insights.length,
+        },
+        userId: 'system',
+      });
+
+      return insights;
+    } catch (error) {
+      console.error('Error getting insights:', error);
+      throw new Error('Failed to get insights');
+    }
+  }
+
+  /**
+   * Get all campaigns
+   */
+  async getCampaigns(status?: string): Promise<EngagementCampaign[]> {
+    try {
+      const whereCondition = status ? { status } : {};
+      const campaigns = await this.campaignRepository.find({
+        where: whereCondition,
+        order: { createdAt: 'DESC' },
+      });
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Campaigns',
+        entityId: 'campaigns_list',
+        action: 'READ',
+        details: {
+          status,
+          count: campaigns.length,
+        },
+        userId: 'system',
+      });
+
+      return campaigns;
+    } catch (error) {
+      console.error('Error getting campaigns:', error);
+      throw new Error('Failed to get campaigns');
+    }
+  }
+
+  /**
+   * Get predictive engagement statistics
+   */
+  async getPredictiveEngagementStatistics(): Promise<any> {
+    try {
+      const totalPredictions = await this.predictionRepository.count();
+      const activePredictions = await this.predictionRepository.count({ where: { status: 'active' } });
+      const totalModels = await this.modelRepository.count();
+      const activeModels = await this.modelRepository.count({ where: { isActive: true } });
+      const totalEvents = await this.eventRepository.count();
+      const totalInsights = await this.insightRepository.count();
+      const totalCampaigns = await this.campaignRepository.count();
+      const activeCampaigns = await this.campaignRepository.count({ where: { status: 'active' } });
+
+      const statistics = {
+        predictions: {
+          total: totalPredictions,
+          active: activePredictions,
+          completed: await this.predictionRepository.count({ where: { status: 'completed' } }),
+          expired: await this.predictionRepository.count({ where: { status: 'expired' } }),
+        },
+        models: {
+          total: totalModels,
+          active: activeModels,
+          inactive: totalModels - activeModels,
+        },
+        events: {
+          total: totalEvents,
+          processed: await this.eventRepository.count({ where: { processed: true } }),
+          unprocessed: await this.eventRepository.count({ where: { processed: false } }),
+        },
+        insights: {
+          total: totalInsights,
+          actionable: await this.insightRepository.count({ where: { actionable: true } }),
+          critical: await this.insightRepository.count({ where: { impact: 'critical' } }),
+        },
+        campaigns: {
+          total: totalCampaigns,
+          active: activeCampaigns,
+          completed: await this.campaignRepository.count({ where: { status: 'completed' } }),
+          planned: await this.campaignRepository.count({ where: { status: 'planned' } }),
+        },
+        lastUpdated: new Date(),
+      };
+
+      await this.auditService.logEvent({
+        resource: 'PredictiveEngagement',
+        entityType: 'Statistics',
+        entityId: 'predictive_engagement_stats',
+        action: 'READ',
+        details: {
+          totalPredictions,
+          activePredictions,
+          totalModels,
+          activeModels,
+          totalEvents,
+          totalInsights,
+          totalCampaigns,
+          activeCampaigns,
+        },
+        userId: 'system',
+      });
+
+      return statistics;
+    } catch (error) {
+      console.error('Error getting predictive engagement statistics:', error);
+      throw new Error('Failed to get predictive engagement statistics');
+    }
+  }
+
+  /**
+   * Helper method to get engagement factors for a resident
+   */
+  private async getEngagementFactors(residentId: string): Promise<EngagementFactor[]> {
+    if (!residentId) {
+      throw new Error('Resident ID is required to calculate engagement factors');
+    }
+
+    try {
+      // Fetch real resident data from database
+      const resident = await this.residentRepository.findOne({
+        where: { id: residentId },
+        relations: ['careRecords', 'activities', 'healthAssessments']
+      });
+
+      if (!resident) {
+        throw new Error(`Resident ${residentId} not found`);
+      }
+
+      const factors: EngagementFactor[] = [];
+
+      // Calculate age factor from actual date of birth
+      const age = this.calculateAge(resident.dateOfBirth);
+      factors.push({
+        id: `age_${residentId}`,
+        name: 'Age',
+        type: 'demographic',
+        weight: 0.3,
+        value: age,
+        impact: age > 80 ? 'negative' : age < 65 ? 'positive' : 'neutral',
+        description: `Age factor: ${age} years old`,
+      });
+
+      // Calculate health status factor from recent assessments
+      const recentHealthScore = await this.calculateHealthScore(resident.healthAssessments);
+      factors.push({
+        id: `health_${residentId}`,
+        name: 'Health Status',
+        type: 'health',
+        weight: 0.4,
+        value: recentHealthScore,
+        impact: recentHealthScore > 7 ? 'positive' : recentHealthScore < 4 ? 'negative' : 'neutral',
+        description: `Health score: ${recentHealthScore}/10`,
+      });
+
+      // Calculate social activity factor from recent activities
+      const socialActivityScore = await this.calculateSocialActivityScore(resident.activities);
+      factors.push({
+        id: `social_${residentId}`,
+        name: 'Social Activity',
+        type: 'behavioral',
+        weight: 0.3,
+        value: socialActivityScore,
+        impact: socialActivityScore > 7 ? 'positive' : socialActivityScore < 4 ? 'negative' : 'neutral',
+        description: `Social activity score: ${socialActivityScore}/10`,
+      });
+
+      return factors;
+
+    } catch (error: unknown) {
+      console.error(`Failed to get engagement factors for resident ${residentId}:`, error);
+      throw new Error(`Failed to calculate engagement factors: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Calculate age from date of birth
+   */
+  private calculateAge(dateOfBirth: Date): number {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  }
+
+  /**
+   * Calculate health score from health assessments
+   */
+  private async calculateHealthScore(healthAssessments: any[]): Promise<number> {
+    if (!healthAssessments || healthAssessments.length === 0) {
+      return 5; // Default neutral score
+    }
+
+    // Get most recent assessment
+    const recentAssessment = healthAssessments
+      .sort((a, b) => new Date(b.assessmentDate).getTime() - new Date(a.assessmentDate).getTime())[0];
+
+    // Calculate score based on assessment data
+    let score = 5; // Start with neutral
+    
+    if (recentAssessment.overallHealth) {
+      switch (recentAssessment.overallHealth.toLowerCase()) {
+        case 'excellent': score = 10; break;
+        case 'good': score = 8; break;
+        case 'fair': score = 6; break;
+        case 'poor': score = 3; break;
+        case 'critical': score = 1; break;
+      }
+    }
+
+    return score;
+  }
+
+  /**
+   * Calculate social activity score from activities
+   */
+  private async calculateSocialActivityScore(activities: any[]): Promise<number> {
+    if (!activities || activities.length === 0) {
+      return 3; // Low score for no activities
+    }
+
+    // Calculate score based on recent activity participation
+    const recentActivities = activities.filter(activity => {
+      const activityDate = new Date(activity.date);
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      return activityDate >= thirtyDaysAgo;
+    });
+
+    const participationRate = recentActivities.length / 30; // Activities per day
+    
+    if (participationRate >= 2) return 10;
+    if (participationRate >= 1.5) return 8;
+    if (participationRate >= 1) return 6;
+    if (participationRate >= 0.5) return 4;
+    return 2;
+  }
+
+  /**
+   * Helper method to generate recommendations
+   */
+  private async generateRecommendations(
+    residentId: string,
+    predictionType: string,
+    factors: EngagementFactor[],
+  ): Promise<EngagementRecommendation[]> {
+    if (!residentId || !factors || factors.length === 0) {
+      throw new Error('Resident ID and engagement factors are required to generate recommendations');
+    }
+
+    try {
+      const recommendations: EngagementRecommendation[] = [];
+
+      // Analyze factors to determine specific needs
+      const lowFactors = factors.filter(f => f.impact === 'negative');
+      const highFactors = factors.filter(f => f.impact === 'positive');
+
+      // Generate recommendations based on actual factor analysis
+      for (const factor of lowFactors) {
+        const recommendation = await this.createRecommendationForFactor(residentId, factor, predictionType);
+        if (recommendation) {
+          recommendations.push(recommendation);
+        }
+      }
+
+      // Generate enhancement recommendations for positive factors
+      for (const factor of highFactors) {
+        const enhancement = await this.createEnhancementRecommendation(residentId, factor, predictionType);
+        if (enhancement) {
+          recommendations.push(enhancement);
+        }
+      }
+
+      // Sort by priority and success probability
+      recommendations.sort((a, b) => {
+        const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+        const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
+        if (priorityDiff !== 0) return priorityDiff;
+        return b.successProbability - a.successProbability;
+      });
+
+      return recommendations.slice(0, 5); // Return top 5 recommendations
+
+    } catch (error: unknown) {
+      console.error(`Failed to generate recommendations for resident ${residentId}:`, error);
+      throw new Error(`Failed to generate recommendations: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Create recommendation for a negative factor
+   */
+  private async createRecommendationForFactor(
+    residentId: string,
+    factor: EngagementFactor,
+    predictionType: string
+  ): Promise<EngagementRecommendation | null> {
+    const recommendationId = `rec_${residentId}_${factor.id}_${Date.now()}`;
+
+    switch (factor.type) {
+      case 'health':
+        return {
+          id: recommendationId,
+          type: 'health',
+          title: 'Health Improvement Program',
+          description: `Address ${factor.name} concerns through targeted health interventions`,
+          priority: 'high',
+          expectedOutcome: 'Improved health status and engagement capacity',
+          effort: 'medium',
+          resources: ['Healthcare staff', 'Medical equipment', 'Therapy sessions'],
+          timeline: 'Daily monitoring for 2-4 weeks',
+          successProbability: 0.75,
+        };
+
+      case 'behavioral':
+        return {
+          id: recommendationId,
+          type: 'activity',
+          title: 'Behavioral Engagement Activities',
+          description: `Increase ${factor.name} through structured activities`,
+          priority: 'medium',
+          expectedOutcome: 'Enhanced behavioral engagement and social participation',
+          effort: 'low',
+          resources: ['Activities coordinator', 'Group activities', 'Individual support'],
+          timeline: '3-5 times per week',
+          successProbability: 0.65,
+        };
+
+      case 'demographic':
+        return {
+          id: recommendationId,
+          type: 'support',
+          title: 'Personalized Support Program',
+          description: `Tailored support addressing ${factor.name} considerations`,
+          priority: 'medium',
+          expectedOutcome: 'Better adaptation and engagement despite demographic challenges',
+          effort: 'medium',
+          resources: ['Care staff', 'Specialized equipment', 'Family involvement'],
+          timeline: 'Ongoing with weekly reviews',
+          successProbability: 0.60,
+        };
+
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Create enhancement recommendation for a positive factor
+   */
+  private async createEnhancementRecommendation(
+    residentId: string,
+    factor: EngagementFactor,
+    predictionType: string
+  ): Promise<EngagementRecommendation | null> {
+    const recommendationId = `enh_${residentId}_${factor.id}_${Date.now()}`;
+
+    return {
+      id: recommendationId,
+      type: 'enhancement',
+      title: `Enhance ${factor.name}`,
+      description: `Build upon existing strength in ${factor.name} to further improve engagement`,
+      priority: 'low',
+      expectedOutcome: `Maximize positive impact of ${factor.name} on overall engagement`,
+      effort: 'low',
+      resources: ['Existing resources', 'Additional activities'],
+      timeline: 'Weekly enhancement activities',
+      successProbability: 0.80,
+    };
+  }
+
+  /**
+   * Helper method to calculate prediction using model
+   */
+  private calculatePrediction(model: EngagementModel, factors: EngagementFactor[]): number {
+    try {
+      // Validate inputs
+      if (!model || !factors || factors.length === 0) {
+        throw new Error('Invalid model or factors for prediction calculation');
+      }
+      
+      // Use weighted linear regression with normalization
+      let weightedSum = 0;
+      let totalWeight = 0;
+      
+      for (const factor of factors) {
+        const numericValue = this.normalizeFactorValue(factor);
+        const adjustedWeight = factor.weight * model.accuracy;
+        
+        weightedSum += numericValue * adjustedWeight;
+        totalWeight += adjustedWeight;
+      }
+      
+      // Calculate base prediction
+      const basePrediction = totalWeight > 0 ? weightedSum / totalWeight : 0;
+      
+      // Apply model-specific adjustments
+      const modelAdjustment = this.applyModelAdjustments(model, basePrediction, factors);
+      
+      // Apply temporal decay for historical data
+      const temporalAdjustment = this.applyTemporalDecay(factors);
+      
+      // Final prediction with bounds checking
+      const finalPrediction = basePrediction * modelAdjustment * temporalAdjustment;
+      
+      return Math.min(Math.max(Math.round(finalPrediction * 100) / 100, 0), 100);
+      
+    } catch (error) {
+      logger.error('Failed to calculate prediction', {
+        modelId: model.id,
+        factorCount: factors.length,
+        error: error.message
+      });
+      
+      // Return conservative prediction on error
+      return 50;
+    }
+  }
+
+  /**
+   * Helper method to calculate confidence
+   */
+  private calculateConfidence(model: EngagementModel, factors: EngagementFactor[]): number {
+    try {
+      // Validate inputs
+      if (!model || !factors) {
+        return 0;
+      }
+      
+      // Base confidence from model accuracy
+      let confidence = model.accuracy;
+      
+      // Adjust for data quality and completeness
+      const dataQualityScore = this.calculateDataQuality(factors);
+      confidence *= dataQualityScore;
+      
+      // Adjust for factor diversity (more diverse factors = higher confidence)
+      const diversityScore = this.calculateFactorDiversity(factors);
+      confidence *= (0.8 + 0.2 * diversityScore);
+      
+      // Adjust for sample size (more factors generally = higher confidence, with diminishing returns)
+      const sampleSizeAdjustment = Math.min(1, 0.5 + (factors.length * 0.1));
+      confidence *= sampleSizeAdjustment;
+      
+      // Adjust for temporal relevance (recent data = higher confidence)
+      const temporalRelevance = this.calculateTemporalRelevance(factors);
+      confidence *= temporalRelevance;
+      
+      // Apply model-specific confidence adjustments
+      if (model.modelType === 'neural_network' && factors.length < 5) {
+        confidence *= 0.8; // Neural networks need more data
+      } else if (model.modelType === 'decision_tree' && factors.length > 20) {
+        confidence *= 0.9; // Decision trees can overfit with too much data
+      }
+      
+      return Math.min(Math.max(Math.round(confidence * 1000) / 1000, 0), 1);
+      
+    } catch (error) {
+      logger.error('Failed to calculate confidence', {
+        modelId: model.id,
+        factorCount: factors.length,
+        error: error.message
+      });
+      
+      // Return low confidence on error
+      return 0.3;
+    }
+  }
+
+  /**
+   * Helper method to process event for insights
+   */
+  private async processEventForInsights(event: EngagementEvent): Promise<void> {
+    try {
+      logger.info(`Processing engagement event for insights: ${event.id}`);
+      
+      // Extract meaningful patterns from the event
+      const patterns = await this.extractEventPatterns(event);
+      
+      // Analyze event context and relationships
+      const contextAnalysis = await this.analyzeEventContext(event);
+      
+      // Generate actionable insights
+      const insights = await this.generateActionableInsights(event, patterns, contextAnalysis);
+      
+      // Store insights for future reference
+      if (insights.length > 0) {
+        await this.storeInsights(event.residentId, insights);
+      }
+      
+      // Update engagement models with new data
+      await this.updateModelsWithEvent(event);
+      
+      // Trigger alerts if significant patterns detected
+      await this.checkForAlertConditions(event, insights);
+      
+      // Mark event as processed with processing metadata
+      await this.eventRepository.update(event.id, { 
+        processed: true,
+        processedAt: new Date(),
+        insightsGenerated: insights.length,
+        processingMetadata: {
+          patternsFound: patterns.length,
+          contextScore: contextAnalysis.relevanceScore,
+          alertsTriggered: contextAnalysis.alertsTriggered || 0
+        }
+      });
+      
+      logger.info(`Event processing completed: ${event.id}`, {
+        insightsGenerated: insights.length,
+        patternsFound: patterns.length
+      });
+      
+    } catch (error) {
+      logger.error('Failed to process event for insights', {
+        eventId: event.id,
+        residentId: event.residentId,
+        error: error.message
+      });
+      
+      // Mark as processed with error flag
+      await this.eventRepository.update(event.id, { 
+        processed: true,
+        processedAt: new Date(),
+        processingError: error.message
+      });
+    }
+  }
+
+  /**
+   * Helper method to analyze patterns
+   */
+  private async analyzePatterns(events: EngagementEvent[]): Promise<EngagementInsight[]> {
+    try {
+      if (!events || events.length === 0) {
+        return [];
+      }
+      
+      const insights: EngagementInsight[] = [];
+      const residentId = events[0].residentId;
+      
+      // Analyze temporal patterns
+      const temporalPatterns = this.analyzeTemporalPatterns(events);
+      if (temporalPatterns.length > 0) {
+        insights.push(...temporalPatterns.map(pattern => ({
+          id: `pattern_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          residentId,
+          insightType: 'pattern' as const,
+          title: pattern.title,
+          description: pattern.description,
+          confidence: pattern.confidence,
+          impact: pattern.impact,
+          actionable: true,
+          data: pattern.data,
+          recommendations: pattern.recommendations,
+          createdAt: new Date(),
+        })));
+      }
+      
+      // Analyze activity patterns
+      const activityPatterns = this.analyzeActivityPatterns(events);
+      if (activityPatterns.length > 0) {
+        insights.push(...activityPatterns.map(pattern => ({
+          id: `activity_pattern_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          residentId,
+          insightType: 'pattern' as const,
+          title: pattern.title,
+          description: pattern.description,
+          confidence: pattern.confidence,
+          impact: pattern.impact,
+          actionable: true,
+          data: pattern.data,
+          recommendations: pattern.recommendations,
+          createdAt: new Date(),
+        })));
+      }
+      
+      // Analyze social interaction patterns
+      const socialPatterns = this.analyzeSocialPatterns(events);
+      if (socialPatterns.length > 0) {
+        insights.push(...socialPatterns.map(pattern => ({
+          id: `social_pattern_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          residentId,
+          insightType: 'pattern' as const,
+          title: pattern.title,
+          description: pattern.description,
+          confidence: pattern.confidence,
+          impact: pattern.impact,
+          actionable: true,
+          data: pattern.data,
+          recommendations: pattern.recommendations,
+          createdAt: new Date(),
+        })));
+      }
+      
+      return insights;
+      
+    } catch (error) {
+      logger.error('Failed to analyze patterns', {
+        eventCount: events.length,
+        error: error.message
+      });
+      return [];
+    }
+  }
+
+  /**
+   * Helper method to analyze trends using real statistical analysis
+   */
+  private async analyzeTrends(events: EngagementEvent[]): Promise<EngagementInsight[]> {
+    try {
+      if (events.length < 2) {
+        return [];
+      }
+
+      const insights: EngagementInsight[] = [];
+      
+      // Group events by type for trend analysis
+      const eventsByType = this.groupEventsByType(events);
+      
+      for (const [eventType, typeEvents] of Object.entries(eventsByType)) {
+        if (typeEvents.length < 3) continue; // Need minimum data points for trend analysis
+        
+        // Calculate actual trend using linear regression
+        const trendAnalysis = this.calculateLinearTrend(typeEvents);
+        
+        if (Math.abs(trendAnalysis.slope) > 0.1) { // Significant trend threshold
+          const insight: EngagementInsight = {
+            id: `trend_${eventType}_${Date.now()}`,
+            residentId: events[0]?.residentId || 'unknown',
+            insightType: 'trend',
+            title: this.generateTrendTitle(eventType, trendAnalysis.slope),
+            description: this.generateTrendDescription(eventType, trendAnalysis),
+            confidence: this.calculateTrendConfidence(trendAnalysis),
+            impact: this.assessTrendImpact(eventType, trendAnalysis.slope),
+            actionable: true,
+            data: {
+              trend: trendAnalysis.slope > 0 ? 'increasing' : 'decreasing',
+              rate: Math.abs(trendAnalysis.slope),
+              correlation: trendAnalysis.correlation,
+              dataPoints: typeEvents.length,
+              timeSpan: this.calculateTimeSpan(typeEvents)
+            },
+            recommendations: this.generateTrendRecommendations(eventType, trendAnalysis),
+            createdAt: new Date(),
+          };
+          
+          insights.push(insight);
+        }
+      }
+      
+      // Cross-correlation analysis between different event types
+      const correlationInsights = await this.analyzeEventCorrelations(eventsByType);
+      insights.push(...correlationInsights);
+      
+      return insights;
+      
+    } catch (error) {
+      logger.error('Failed to analyze trends', {
+        error: error.message,
+        eventCount: events.length
+      });
+      throw new Error(`Trend analysis failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Helper method to detect anomalies using statistical analysis
+   */
+  private async detectAnomalies(events: EngagementEvent[]): Promise<EngagementInsight[]> {
+    try {
+      if (events.length < 10) {
+        return []; // Need sufficient data for anomaly detection
+      }
+
+      const insights: EngagementInsight[] = [];
+      
+      // Group events by type and analyze each type for anomalies
+      const eventsByType = this.groupEventsByType(events);
+      
+      for (const [eventType, typeEvents] of Object.entries(eventsByType)) {
+        if (typeEvents.length < 5) continue;
+        
+        // Calculate statistical measures for anomaly detection
+        const values = typeEvents.map(e => this.extractNumericValue(e));
+        const stats = this.calculateStatistics(values);
+        
+        // Detect outliers using IQR method
+        const outliers = this.detectOutliers(values, stats);
+        
+        if (outliers.length > 0) {
+          const anomalyInsight: EngagementInsight = {
+            id: `anomaly_${eventType}_${Date.now()}`,
+            residentId: events[0]?.residentId || 'unknown',
+            insightType: 'anomaly',
+            title: `Unusual ${eventType.replace('_', ' ')} Pattern Detected`,
+            description: `Detected ${outliers.length} anomalous ${eventType} events that deviate significantly from normal patterns`,
+            confidence: this.calculateAnomalyConfidence(outliers, values),
+            impact: this.assessAnomalyImpact(eventType, outliers),
+            actionable: true,
+            data: {
+              anomalyCount: outliers.length,
+              totalEvents: values.length,
+              deviationSeverity: Math.max(...outliers.map(o => Math.abs(o.zScore))),
+              statisticalMeasures: stats
+            },
+            recommendations: this.generateAnomalyRecommendations(eventType, outliers),
+            createdAt: new Date(),
+          };
+          
+          insights.push(anomalyInsight);
+        }
+        
+        // Detect temporal anomalies (unusual timing patterns)
+        const temporalAnomalies = this.detectTemporalAnomalies(typeEvents);
+        if (temporalAnomalies.length > 0) {
+          insights.push(...temporalAnomalies);
+        }
+      }
+      
+      return insights;
+      
+    } catch (error) {
+      logger.error('Failed to detect anomalies', {
+        error: error.message,
+        eventCount: events.length
+      });
+      throw new Error(`Anomaly detection failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Helper method to find correlations using statistical correlation analysis
+   */
+  private async findCorrelations(events: EngagementEvent[]): Promise<EngagementInsight[]> {
+    try {
+      if (events.length < 20) {
+        return []; // Need sufficient data for correlation analysis
+      }
+
+      const insights: EngagementInsight[] = [];
+      
+      // Group events by type for correlation analysis
+      const eventsByType = this.groupEventsByType(events);
+      const eventTypes = Object.keys(eventsByType);
+      
+      // Analyze correlations between different event types
+      for (let i = 0; i < eventTypes.length; i++) {
+        for (let j = i + 1; j < eventTypes.length; j++) {
+          const type1 = eventTypes[i];
+          const type2 = eventTypes[j];
+          
+          const correlation = await this.calculateEventCorrelation(
+            eventsByType[type1],
+            eventsByType[type2]
+          );
+          
+          // Only report significant correlations
+          if (Math.abs(correlation.coefficient) > 0.6) {
+            const correlationInsight: EngagementInsight = {
+              id: `correlation_${type1}_${type2}_${Date.now()}`,
+              residentId: events[0]?.residentId || 'unknown',
+              insightType: 'correlation',
+              title: `Strong Correlation Between ${this.formatEventType(type1)} and ${this.formatEventType(type2)}`,
+              description: this.generateCorrelationDescription(type1, type2, correlation),
+              confidence: Math.abs(correlation.coefficient),
+              impact: this.assessCorrelationImpact(type1, type2, correlation.coefficient),
+              actionable: true,
+              data: {
+                eventType1: type1,
+                eventType2: type2,
+                correlationCoefficient: correlation.coefficient,
+                pValue: correlation.pValue,
+                sampleSize: Math.min(eventsByType[type1].length, eventsByType[type2].length),
+                correlationType: correlation.coefficient > 0 ? 'positive' : 'negative'
+              },
+              recommendations: this.generateCorrelationRecommendations(type1, type2, correlation),
+              createdAt: new Date(),
+            };
+            
+            insights.push(correlationInsight);
+          }
+        }
+      }
+      
+      // Analyze temporal correlations (time-based patterns)
+      const temporalCorrelations = await this.analyzeTemporalCorrelations(events);
+      insights.push(...temporalCorrelations);
+      
+      return insights;
+      
+    } catch (error) {
+      logger.error('Failed to find correlations', {
+        error: error.message,
+        eventCount: events.length
+      });
+      throw new Error(`Correlation analysis failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Helper method to get period start date
+   */
+  private getPeriodStartDate(period: string): Date {
+    const now = new Date();
+    switch (period) {
+      case 'daily':
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      case 'weekly':
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        return new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate());
+      case 'monthly':
+        return new Date(now.getFullYear(), now.getMonth(), 1);
+      case 'quarterly':
+        const quarter = Math.floor(now.getMonth() / 3);
+        return new Date(now.getFullYear(), quarter * 3, 1);
+      case 'yearly':
+        return new Date(now.getFullYear(), 0, 1);
+      default:
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+  }
+
+  /**
+   * Helper method to calculate engagement score using weighted multi-factor analysis
+   */
+  private calculateEngagementScore(events: EngagementEvent[]): number {
+    try {
+      if (events.length === 0) {
+        return 0;
+      }
+
+      // Define weights for different engagement factors
+      const weights = {
+        social_interaction: 0.25,
+        activity_completed: 0.20,
+        mood_positive: 0.15,
+        health_improvement: 0.15,
+        cognitive_engagement: 0.10,
+        physical_activity: 0.10,
+        communication: 0.05
+      };
+
+      let totalScore = 0;
+      let totalWeight = 0;
+
+      // Calculate weighted scores for each event type
+      const eventsByType = this.groupEventsByType(events);
+      
+      for (const [eventType, typeEvents] of Object.entries(eventsByType)) {
+        const weight = weights[eventType] || 0.05; // Default weight for unknown types
+        
+        // Calculate quality score for this event type
+        const qualityScore = this.calculateEventTypeQuality(eventType, typeEvents);
+        
+        // Calculate frequency score (normalized by time period)
+        const frequencyScore = this.calculateFrequencyScore(typeEvents);
+        
+        // Calculate consistency score (how regular the events are)
+        const consistencyScore = this.calculateConsistencyScore(typeEvents);
+        
+        // Combine scores with sub-weights
+        const typeScore = (qualityScore * 0.5) + (frequencyScore * 0.3) + (consistencyScore * 0.2);
+        
+        totalScore += typeScore * weight;
+        totalWeight += weight;
+      }
+
+      // Normalize score to 0-100 range
+      const baseScore = totalWeight > 0 ? (totalScore / totalWeight) * 100 : 0;
+      
+      // Apply engagement trend modifier
+      const trendModifier = this.calculateEngagementTrend(events);
+      
+      // Apply recency modifier (recent events have more impact)
+      const recencyModifier = this.calculateRecencyModifier(events);
+      
+      // Final score calculation
+      const finalScore = baseScore * (1 + trendModifier) * recencyModifier;
+      
+      // Ensure score is within valid range
+      return Math.min(Math.max(Math.round(finalScore), 0), 100);
+      
+    } catch (error) {
+      logger.error('Failed to calculate engagement score', {
+        error: error.message,
+        eventCount: events.length
+      });
+      // Return conservative score on error
+      return Math.min(events.length * 2, 50);
+    }
+  }
+
+  /**
+   * Helper method to calculate social engagement
+   */
+  private calculateSocialEngagement(events: EngagementEvent[]): number {
+    const socialEvents = events.filter(e => e.eventType === 'social_interaction');
+    return Math.min(Math.max(socialEvents.length * 15, 0), 100);
+  }
+
+  /**
+   * Helper method to calculate activity participation
+   */
+  private calculateActivityParticipation(events: EngagementEvent[]): number {
+    const activityEvents = events.filter(e => e.eventType === 'activity_completed');
+    return Math.min(Math.max(activityEvents.length * 12, 0), 100);
+  }
+
+  /**
+   * Helper method to calculate health metrics
+   */
+  private calculateHealthMetrics(events: EngagementEvent[]): number {
+    const healthEvents = events.filter(e => e.eventType === 'health_change');
+    return Math.min(Math.max(healthEvents.length * 8, 0), 100);
+  }
+
+  /**
+   * Helper method to calculate mood indicators
+   */
+  private calculateMoodIndicators(events: EngagementEvent[]): number {
+    const moodEvents = events.filter(e => e.eventType === 'mood_change');
+    return Math.min(Math.max(moodEvents.length * 10, 0), 100);
+  }
+
+  /**
+   * Helper method to calculate cognitive function using validated assessment metrics
+   */
+  private calculateCognitiveFunction(events: EngagementEvent[]): number {
+    try {
+      if (events.length === 0) {
+        return 50; // Neutral baseline
+      }
+
+      // Filter events relevant to cognitive function
+      const cognitiveEvents = events.filter(e => 
+        e.eventType === 'cognitive_assessment' ||
+        e.eventType === 'memory_exercise' ||
+        e.eventType === 'problem_solving' ||
+        e.eventType === 'communication' ||
+        e.eventType === 'learning_activity'
+      );
+
+      if (cognitiveEvents.length === 0) {
+        // Infer cognitive function from other activities
+        return this.inferCognitiveFromGeneralActivities(events);
+      }
+
+      let totalScore = 0;
+      let totalWeight = 0;
+
+      // Analyze cognitive assessment results
+      const assessmentEvents = cognitiveEvents.filter(e => e.eventType === 'cognitive_assessment');
+      if (assessmentEvents.length > 0) {
+        const assessmentScore = this.analyzeCognitiveAssessments(assessmentEvents);
+        totalScore += assessmentScore * 0.4; // 40% weight for formal assessments
+        totalWeight += 0.4;
+      }
+
+      // Analyze memory exercise performance
+      const memoryEvents = cognitiveEvents.filter(e => e.eventType === 'memory_exercise');
+      if (memoryEvents.length > 0) {
+        const memoryScore = this.analyzeMemoryPerformance(memoryEvents);
+        totalScore += memoryScore * 0.25; // 25% weight for memory exercises
+        totalWeight += 0.25;
+      }
+
+      // Analyze problem-solving activities
+      const problemSolvingEvents = cognitiveEvents.filter(e => e.eventType === 'problem_solving');
+      if (problemSolvingEvents.length > 0) {
+        const problemSolvingScore = this.analyzeProblemSolvingPerformance(problemSolvingEvents);
+        totalScore += problemSolvingScore * 0.2; // 20% weight for problem solving
+        totalWeight += 0.2;
+      }
+
+      // Analyze communication quality
+      const communicationEvents = cognitiveEvents.filter(e => e.eventType === 'communication');
+      if (communicationEvents.length > 0) {
+        const communicationScore = this.analyzeCommunicationQuality(communicationEvents);
+        totalScore += communicationScore * 0.15; // 15% weight for communication
+        totalWeight += 0.15;
+      }
+
+      // Calculate trend in cognitive performance
+      const trendScore = this.calculateCognitiveTrend(cognitiveEvents);
+      
+      // Normalize and apply trend modifier
+      const baseScore = totalWeight > 0 ? totalScore / totalWeight : 50;
+      const finalScore = baseScore * (1 + (trendScore * 0.1)); // 10% trend impact
+      
+      // Ensure score is within valid range
+      return Math.min(Math.max(Math.round(finalScore), 0), 100);
+      
+    } catch (error) {
+      logger.error('Failed to calculate cognitive function', {
+        error: error.message,
+        eventCount: events.length
+      });
+      // Return conservative baseline on error
+      return 50;
+    }
+  }
+
+  /**
+   * Helper method to calculate physical activity
+   */
+  private calculatePhysicalActivity(events: EngagementEvent[]): number {
+    const physicalEvents = events.filter(e => e.eventType === 'activity_completed');
+    return Math.min(Math.max(physicalEvents.length * 20, 0), 100);
+  }
+
+  // Additional helper methods for real implementations
+  private normalizeFactorValue(factor: EngagementFactor): number {
+    if (typeof factor.value === 'number') {
+      return Math.min(Math.max(factor.value, 0), 100) / 100; // Normalize to 0-1
+    }
+    
+    if (typeof factor.value === 'boolean') {
+      return factor.value ? 1 : 0;
+    }
+    
+    if (typeof factor.value === 'string') {
+      // Convert string values to numeric based on common patterns
+      const lowerValue = factor.value.toLowerCase();
+      if (lowerValue.includes('high') || lowerValue.includes('excellent')) return 0.9;
+      if (lowerValue.includes('good') || lowerValue.includes('positive')) return 0.7;
+      if (lowerValue.includes('medium') || lowerValue.includes('average')) return 0.5;
+      if (lowerValue.includes('low') || lowerValue.includes('poor')) return 0.3;
+      if (lowerValue.includes('none') || lowerValue.includes('negative')) return 0.1;
+    }
+    
+    return 0.5; // Default neutral value
+  }
+
+  private applyModelAdjustments(model: EngagementModel, basePrediction: number, factors: EngagementFactor[]): number {
+    let adjustment = 1.0;
+    
+    // Adjust based on model type
+    switch (model.modelType) {
+      case 'linear_regression':
+        // Linear models work well with normalized data
+        adjustment *= 1.0;
+        break;
+      case 'neural_network':
+        // Neural networks can capture non-linear relationships
+        adjustment *= factors.length > 10 ? 1.1 : 0.95;
+        break;
+      case 'decision_tree':
+        // Decision trees work well with categorical data
+        const categoricalFactors = factors.filter(f => typeof f.value === 'string').length;
+        adjustment *= 1.0 + (categoricalFactors / factors.length) * 0.1;
+        break;
+      case 'ensemble':
+        // Ensemble methods are generally more robust
+        adjustment *= 1.05;
+        break;
+    }
+    
+    // Adjust based on model confidence
+    adjustment *= (0.8 + 0.2 * model.accuracy);
+    
+    return adjustment;
+  }
+
+  private applyTemporalDecay(factors: EngagementFactor[]): number {
+    const now = new Date();
+    let totalWeight = 0;
+    let weightedDecay = 0;
+    
+    for (const factor of factors) {
+      if (factor.timestamp) {
+        const ageInDays = (now.getTime() - factor.timestamp.getTime()) / (1000 * 60 * 60 * 24);
+        const decay = Math.exp(-ageInDays / 30); // 30-day half-life
+        weightedDecay += decay * factor.weight;
+        totalWeight += factor.weight;
+      }
+    }
+    
+    return totalWeight > 0 ? weightedDecay / totalWeight : 1.0;
+  }
+
+  private calculateDataQuality(factors: EngagementFactor[]): number {
+    let qualityScore = 0;
+    
+    for (const factor of factors) {
+      let factorQuality = 1.0;
+      
+      // Penalize missing or null values
+      if (factor.value === null || factor.value === undefined) {
+        factorQuality *= 0.1;
+      }
+      
+      // Reward recent data
+      if (factor.timestamp) {
+        const ageInDays = (Date.now() - factor.timestamp.getTime()) / (1000 * 60 * 60 * 24);
+        factorQuality *= Math.exp(-ageInDays / 7); // 7-day relevance decay
+      }
+      
+      // Reward higher confidence factors
+      if (factor.confidence !== undefined) {
+        factorQuality *= factor.confidence;
+      }
+      
+      qualityScore += factorQuality * factor.weight;
+    }
+    
+    const totalWeight = factors.reduce((sum, f) => sum + f.weight, 0);
+    return totalWeight > 0 ? qualityScore / totalWeight : 0;
+  }
+
+  private calculateFactorDiversity(factors: EngagementFactor[]): number {
+    const factorTypes = new Set(factors.map(f => f.factorType));
+    const maxTypes = 10; // Assume maximum of 10 different factor types
+    return Math.min(factorTypes.size / maxTypes, 1);
+  }
+
+  private calculateTemporalRelevance(factors: EngagementFactor[]): number {
+    const now = new Date();
+    let totalRelevance = 0;
+    
+    for (const factor of factors) {
+      if (factor.timestamp) {
+        const ageInHours = (now.getTime() - factor.timestamp.getTime()) / (1000 * 60 * 60);
+        const relevance = Math.exp(-ageInHours / 168); // 1-week half-life
+        totalRelevance += relevance * factor.weight;
+      } else {
+        totalRelevance += 0.5 * factor.weight; // Assume moderate relevance for undated factors
+      }
+    }
+    
+    const totalWeight = factors.reduce((sum, f) => sum + f.weight, 0);
+    return totalWeight > 0 ? totalRelevance / totalWeight : 0.5;
+  }
+
+  private async extractEventPatterns(event: EngagementEvent): Promise<any[]> {
+    // Extract meaningful patterns from individual events
+    const patterns = [];
+    
+    // Time-based patterns
+    const hour = event.timestamp.getHours();
+    const dayOfWeek = event.timestamp.getDay();
+    
+    patterns.push({
+      type: 'temporal',
+      pattern: 'time_of_day',
+      value: hour,
+      significance: this.calculateTimeSignificance(hour)
+    });
+    
+    patterns.push({
+      type: 'temporal',
+      pattern: 'day_of_week',
+      value: dayOfWeek,
+      significance: this.calculateDaySignificance(dayOfWeek)
+    });
+    
+    // Event type patterns
+    patterns.push({
+      type: 'behavioral',
+      pattern: 'event_type',
+      value: event.eventType,
+      significance: await this.calculateEventTypeSignificance(event.eventType, event.residentId)
+    });
+    
+    return patterns;
+  }
+
+  private async analyzeEventContext(event: EngagementEvent): Promise<any> {
+    // Analyze the context around this event
+    const contextWindow = 2 * 60 * 60 * 1000; // 2 hours
+    const startTime = new Date(event.timestamp.getTime() - contextWindow);
+    const endTime = new Date(event.timestamp.getTime() + contextWindow);
+    
+    // Get related events in the time window
+    const relatedEvents = await this.eventRepository.findByTimeRange(
+      event.residentId,
+      startTime,
+      endTime
+    );
+    
+    return {
+      relatedEventCount: relatedEvents.length,
+      eventDensity: relatedEvents.length / 4, // Events per hour
+      relevanceScore: this.calculateContextRelevance(event, relatedEvents),
+      alertsTriggered: 0 // Will be updated by alert checking
+    };
+  }
+
+  private async generateActionableInsights(
+    event: EngagementEvent,
+    patterns: any[],
+    context: any
+  ): Promise<any[]> {
+    const insights = [];
+    
+    // Generate insights based on patterns
+    for (const pattern of patterns) {
+      if (pattern.significance > 0.7) {
+        insights.push({
+          type: 'pattern_insight',
+          title: `Significant ${pattern.pattern} pattern detected`,
+          description: `${pattern.type} pattern shows high significance`,
+          actionable: true,
+          recommendations: this.generatePatternRecommendations(pattern)
+        });
+      }
+    }
+    
+    // Generate insights based on context
+    if (context.eventDensity > 5) {
+      insights.push({
+        type: 'activity_insight',
+        title: 'High activity period detected',
+        description: 'Resident showing increased engagement',
+        actionable: true,
+        recommendations: ['Monitor for overstimulation', 'Ensure adequate rest periods']
+      });
+    }
+    
+    return insights;
+  }
+
+  private calculateTimeSignificance(hour: number): number {
+    // Peak activity hours typically have higher significance
+    const peakHours = [9, 10, 11, 14, 15, 16, 19, 20];
+    return peakHours.includes(hour) ? 0.8 : 0.4;
+  }
+
+  private calculateDaySignificance(dayOfWeek: number): number {
+    // Weekdays typically have more structured activities
+    return dayOfWeek >= 1 && dayOfWeek <= 5 ? 0.7 : 0.5;
+  }
+
+  private async calculateEventTypeSignificance(eventType: string, residentId: string): Promise<number> {
+    // Calculate how significant this event type is for this resident
+    const recentEvents = await this.eventRepository.findRecentByResident(residentId, 30); // Last 30 days
+    const typeCount = recentEvents.filter(e => e.eventType === eventType).length;
+    const totalEvents = recentEvents.length;
+    
+    if (totalEvents === 0) return 0.5;
+    
+    const frequency = typeCount / totalEvents;
+    // Rare events are more significant
+    return Math.max(0.1, 1 - frequency);
+  }
+
+  private calculateContextRelevance(event: EngagementEvent, relatedEvents: EngagementEvent[]): number {
+    let relevance = 0;
+    
+    for (const relatedEvent of relatedEvents) {
+      if (relatedEvent.id === event.id) continue;
+      
+      // Events of the same type are highly relevant
+      if (relatedEvent.eventType === event.eventType) {
+        relevance += 0.8;
+      }
+      
+      // Events in the same category are moderately relevant
+      if (this.getEventCategory(relatedEvent.eventType) === this.getEventCategory(event.eventType)) {
+        relevance += 0.5;
+      }
+      
+      // Time proximity increases relevance
+      const timeDiff = Math.abs(event.timestamp.getTime() - relatedEvent.timestamp.getTime());
+      const timeRelevance = Math.exp(-timeDiff / (60 * 60 * 1000)); // 1-hour decay
+      relevance += timeRelevance * 0.3;
+    }
+    
+    return Math.min(relevance / relatedEvents.length, 1);
+  }
+
+  private getEventCategory(eventType: string): string {
+    const categories = {
+      'social_interaction': 'social',
+      'group_activity': 'social',
+      'family_visit': 'social',
+      'activity_completed': 'activity',
+      'exercise_session': 'activity',
+      'therapy_session': 'activity',
+      'mood_change': 'wellbeing',
+      'health_change': 'wellbeing',
+      'medication_taken': 'health',
+      'vital_signs': 'health'
+    };
+    
+    return categories[eventType] || 'other';
+  }
+
+  private generatePatternRecommendations(pattern: any): string[] {
+    const recommendations = [];
+    
+    switch (pattern.pattern) {
+      case 'time_of_day':
+        if (pattern.value >= 9 && pattern.value <= 11) {
+          recommendations.push('Schedule important activities during morning peak hours');
+        } else if (pattern.value >= 19 && pattern.value <= 21) {
+          recommendations.push('Consider evening social activities');
+        }
+        break;
+      case 'day_of_week':
+        if (pattern.value >= 1 && pattern.value <= 5) {
+          recommendations.push('Maintain structured weekday routine');
+        } else {
+          recommendations.push('Plan relaxed weekend activities');
+        }
+        break;
+      case 'event_type':
+        recommendations.push(`Continue encouraging ${pattern.value} activities`);
+        break;
+    }
+    
+    return recommendations.length > 0 ? recommendations : ['Monitor for continued patterns'];
+  }
+
+  private analyzeTemporalPatterns(events: EngagementEvent[]): any[] {
+    const patterns = [];
+    
+    // Analyze daily patterns
+    const hourlyDistribution = new Array(24).fill(0);
+    events.forEach(event => {
+      hourlyDistribution[event.timestamp.getHours()]++;
+    });
+    
+    const peakHour = hourlyDistribution.indexOf(Math.max(...hourlyDistribution));
+    if (hourlyDistribution[peakHour] > events.length * 0.2) {
+      patterns.push({
+        title: 'Daily Peak Activity Pattern',
+        description: `Resident shows peak engagement around ${peakHour}:00`,
+        confidence: 0.8,
+        impact: 'medium' as const,
+        data: { peakHour, distribution: hourlyDistribution },
+        recommendations: [`Schedule key activities around ${peakHour}:00`]
+      });
+    }
+    
+    return patterns;
+  }
+
+  private analyzeActivityPatterns(events: EngagementEvent[]): any[] {
+    const patterns = [];
+    const activityEvents = events.filter(e => e.eventType === 'activity_completed');
+    
+    if (activityEvents.length > events.length * 0.3) {
+      patterns.push({
+        title: 'High Activity Participation',
+        description: 'Resident shows strong engagement in structured activities',
+        confidence: 0.9,
+        impact: 'high' as const,
+        data: { participationRate: activityEvents.length / events.length },
+        recommendations: ['Continue current activity program', 'Consider introducing new challenges']
+      });
+    }
+    
+    return patterns;
+  }
+
+  private analyzeSocialPatterns(events: EngagementEvent[]): any[] {
+    const patterns = [];
+    const socialEvents = events.filter(e => 
+      e.eventType === 'social_interaction' || 
+      e.eventType === 'group_activity' || 
+      e.eventType === 'family_visit'
+    );
+    
+    if (socialEvents.length > events.length * 0.25) {
+      patterns.push({
+        title: 'Strong Social Engagement',
+        description: 'Resident demonstrates active social participation',
+        confidence: 0.85,
+        impact: 'high' as const,
+        data: { socialRate: socialEvents.length / events.length },
+        recommendations: ['Maintain social opportunities', 'Consider peer mentoring roles']
+      });
+    }
+    
+    return patterns;
+  }
+
+  private async storeInsights(residentId: string, insights: any[]): Promise<void> {
+    // Store insights in the database for future reference
+    for (const insight of insights) {
+      await this.insightRepository.create({
+        ...insight,
+        residentId,
+        createdAt: new Date()
+      });
+    }
+  }
+
+  private async updateModelsWithEvent(event: EngagementEvent): Promise<void> {
+    // Update predictive models with new event data
+    const models = await this.modelRepository.findByResidentId(event.residentId);
+    
+    for (const model of models) {
+      await this.modelRepository.addTrainingData(model.id, {
+        eventType: event.eventType,
+        timestamp: event.timestamp,
+        outcome: event.outcome || 'positive',
+        context: event.context
+      });
+    }
+  }
+
+  private async checkForAlertConditions(event: EngagementEvent, insights: any[]): Promise<void> {
+    // Check if any insights warrant immediate alerts
+    const highImpactInsights = insights.filter(i => i.impact === 'high');
+    
+    if (highImpactInsights.length > 0) {
+      await this.alertService.createAlert({
+        residentId: event.residentId,
+        alertType: 'engagement_insight',
+        severity: 'medium',
+        message: `${highImpactInsights.length} high-impact engagement insights detected`,
+        data: { insights: highImpactInsights }
+      });
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "WriteCareNotes API Documentation Validator",
+  "description": "Validates API documentation when route files are saved",
+  "trigger": {
+    "type": "file_save",
+    "patterns": ["**/routes/*.ts", "**/controllers/*.ts", "**/api/*.ts"]
+  },
+  "actions": [
+    {
+      "type": "agent_execution",
+      "prompt": "Validate API documentation for WriteCareNotes:\n\n1. Check if OpenAPI 3.0 documentation exists for all endpoints\n2. Verify proper HTTP status codes are documented\n3. Ensure request/response schemas are defined\n4. Check if authentication requirements are documented\n5. Validate error responses are properly documented\n6. Ensure rate limiting is documented\n7. Check if healthcare-specific validation rules are documented\n8. Verify API versioning is properly implemented\n9. Ensure GDPR and compliance considerations are documented\n10. Check if examples are provided for complex requests\n\nGenerate or update OpenAPI documentation if missing. Ensure all endpoints follow WriteCareNotes API standards.",
+      "context": ["#File", "#Folder"]
+    }
+  ],
+  "enabled": true
+}

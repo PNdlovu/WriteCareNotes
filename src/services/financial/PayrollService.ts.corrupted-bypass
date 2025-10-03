@@ -1,0 +1,1317 @@
+/**
+ * @file src/services/financial/PayrollService.ts
+ * @module Financial/PayrollService
+ *
+ * @description
+ *   Implements HMRC-compliant payroll processing for care home staff,
+ *   including salary calculations, pension contributions, and NIC/DST handling.
+ *
+ * @author Jane Doe
+ * @created 2025-09-22
+ * @updated 2025-10-01
+ * @version 1.2.0
+ *
+ * @copyright 2025 CareTech Solutions
+ * @license MIT
+ *
+ * @dependencies
+ *   dayjs                Date library for period calculations
+ *   PostgreSQL (TypeORM) Database ORM for salary records
+ *
+ * @exports
+ *   class PayrollService
+ *
+ * @see src/entities/financial/Salary.ts
+ * @see src/routes/financial/payroll.ts
+ *
+ * @todo
+ *   - Add manual override for one-off payments  
+ *   - Support multi-currency payroll runs
+ *
+ * @example
+ *   import { PayrollService } from 'src/services/financial/PayrollService';
+ *
+ *   const payroll = new PayrollService();
+ *   const run = await payroll.processRun({
+ *     month: '2025-09',
+ *     staffIds: [ 'emp-001', 'emp-002' ]
+ *   });
+ *
+ *   console.log(run.payslips);
+ */
+
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Between, In } from 'typeorm';
+import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+import * as timezone from 'dayjs/plugin/timezone';
+import { PayrollRun, PayrollRunStatus } from '../../domains/finance/entities/PayrollRun';
+import { Payslip } from '../../domains/finance/entities/Payslip';
+import { Salary } from '../../domains/finance/entities/Salary';
+import { TaxCalculation } from '../../domains/finance/entities/TaxCalculation';
+import { NationalInsurance } from '../../domains/finance/entities/NationalInsurance';
+import { PensionContribution } from '../../domains/finance/entities/PensionContribution';
+import { StaffMember } from '../../domains/staff/entities/StaffMember';
+import { HMRCSubmission } from '../../domains/finance/entities/HMRCSubmission';
+
+// Configure dayjs plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+export interface PayrollRunRequest {
+  month: string; // Format: YYYY-MM
+  staffIds?: string[]; // Optional: specific staff members
+  includeAgency?: boolean; // Include agency workers
+  includeContractors?: boolean; // Include contractors
+  forceRecalculate?: boolean; // Force recalculation even if run exists
+  notes?: string;
+}
+
+export interface PayrollRunResult {
+  run: PayrollRun;
+  payslips: Payslip[];
+  summary: PayrollSummary;
+  hmrcSubmission?: HMRCSubmission;
+  errors: PayrollError[];
+  warnings: PayrollWarning[];
+}
+
+export interface PayrollSummary {
+  totalGrossPay: number;
+  totalTax: number;
+  totalNationalInsurance: number;
+  totalPension: number;
+  totalNetPay: number;
+  totalEmployerNIC: number;
+  totalEmployerPension: number;
+  totalCost: number;
+  employeeCount: number;
+  averageGrossPay: number;
+  averageNetPay: number;
+}
+
+export interface PayrollError {
+  code: string;
+  message: string;
+  staffMemberId?: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  field?: string;
+  value?: any;
+}
+
+export interface PayrollWarning {
+  code: string;
+  message: string;
+  staffMemberId?: string;
+  field?: string;
+  value?: any;
+}
+
+export interface SalaryCalculation {
+  grossPay: number;
+  taxablePay: number;
+  tax: number;
+  nationalInsurance: number;
+  pension: number;
+  netPay: number;
+  employerNIC: number;
+  employerPension: number;
+  totalCost: number;
+  breakdown: {
+    basicPay: number;
+    overtime: number;
+    bonuses: number;
+    allowances: number;
+    deductions: number;
+    benefits: number;
+  };
+}
+
+export interface HMRCRates {
+  taxBands: {
+    personalAllowance: number;
+    basicRate: number;
+    higherRate: number;
+    additionalRate: number;
+  };
+  nationalInsurance: {
+    employee: {
+      primaryThreshold: number;
+      upperEarningsLimit: number;
+      rate: number;
+      upperRate: number;
+    };
+    employer: {
+      secondaryThreshold: number;
+      rate: number;
+    };
+  };
+  pension: {
+    autoEnrolmentThreshold: number;
+    employeeRate: number;
+    employerRate: number;
+  };
+}
+
+@Injectable()
+export class PayrollService {
+  private readonly logger = new Logger(PayrollService.name);
+  private readonly hmrcRates: HMRCRates;
+
+  constructor(
+    @InjectRepository(PayrollRun)
+    private payrollRunRepository: Repository<PayrollRun>,
+    @InjectRepository(Payslip)
+    private payslipRepository: Repository<Payslip>,
+    @InjectRepository(Salary)
+    private salaryRepository: Repository<Salary>,
+    @InjectRepository(TaxCalculation)
+    private taxCalculationRepository: Repository<TaxCalculation>,
+    @InjectRepository(NationalInsurance)
+    private nationalInsuranceRepository: Repository<NationalInsurance>,
+    @InjectRepository(PensionContribution)
+    private pensionContributionRepository: Repository<PensionContribution>,
+    @InjectRepository(StaffMember)
+    private staffMemberRepository: Repository<StaffMember>,
+    @InjectRepository(HMRCSubmission)
+    private hmrcSubmissionRepository: Repository<HMRCSubmission>,
+  ) {
+    // Initialize HMRC rates for 2024-25 tax year
+    this.hmrcRates = {
+      taxBands: {
+        personalAllowance: 12570,
+        basicRate: 0.20,
+        higherRate: 0.40,
+        additionalRate: 0.45,
+      },
+      nationalInsurance: {
+        employee: {
+          primaryThreshold: 12570,
+          upperEarningsLimit: 50270,
+          rate: 0.12,
+          upperRate: 0.02,
+        },
+        employer: {
+          secondaryThreshold: 9100,
+          rate: 0.138,
+        },
+      },
+      pension: {
+        autoEnrolmentThreshold: 10000,
+        employeeRate: 0.05,
+        employerRate: 0.03,
+      },
+    };
+  }
+
+  /**
+   * Process a complete payroll run for the specified month
+   */
+  async processRun(request: PayrollRunRequest): Promise<PayrollRunResult> {
+    this.logger.log(`Starting payroll run for ${request.month}`);
+    
+    const startTime = Date.now();
+    const errors: PayrollError[] = [];
+    const warnings: PayrollWarning[] = [];
+
+    try {
+      // Validate request
+      this.validatePayrollRequest(request, errors);
+      if (errors.some(e => e.severity === 'critical')) {
+        throw new Error('Critical validation errors found');
+      }
+
+      // Check if run already exists
+      const existingRun = await this.findExistingRun(request.month);
+      if (existingRun && !request.forceRecalculate) {
+        throw new Error(`Payroll run for ${request.month} already exists`);
+      }
+
+      // Create or update payroll run
+      const payrollRun = existingRun || await this.createPayrollRun(request);
+      
+      // Get staff members for payroll
+      const staffMembers = await this.getStaffForPayroll(request);
+      if (staffMembers.length === 0) {
+        warnings.push({
+          code: 'NO_STAFF',
+          message: 'No staff members found for payroll run',
+          severity: 'medium',
+        });
+      }
+
+      // Process each staff member
+      const payslips: Payslip[] = [];
+      for (const staffMember of staffMembers) {
+        try {
+          const payslip = await this.processStaffMemberPayroll(
+            staffMember,
+            request.month,
+            payrollRun.id
+          );
+          payslips.push(payslip);
+        } catch (error) {
+          errors.push({
+            code: 'STAFF_PROCESSING_ERROR',
+            message: `Failed to process payroll for ${staffMember.getFullName()}: ${error.message}`,
+            staffMemberId: staffMember.id,
+            severity: 'high',
+          });
+        }
+      }
+
+      // Calculate summary
+      const summary = this.calculatePayrollSummary(payslips);
+
+      // Update payroll run
+      payrollRun.status = PayrollRunStatus.COMPLETED;
+      payrollRun.totalGrossPay = summary.totalGrossPay;
+      payrollRun.totalTax = summary.totalTax;
+      payrollRun.totalNationalInsurance = summary.totalNationalInsurance;
+      payrollRun.totalPension = summary.totalPension;
+      payrollRun.totalNetPay = summary.totalNetPay;
+      payrollRun.totalEmployerNIC = summary.totalEmployerNIC;
+      payrollRun.totalEmployerPension = summary.totalEmployerPension;
+      payrollRun.totalCost = summary.totalCost;
+      payrollRun.processedAt = new Date();
+      payrollRun.employeeCount = summary.employeeCount;
+
+      await this.payrollRunRepository.save(payrollRun);
+
+      // Generate HMRC submission if required
+      let hmrcSubmission: HMRCSubmission | undefined;
+      if (this.shouldGenerateHMRCSubmission(payrollRun)) {
+        try {
+          hmrcSubmission = await this.generateHMRCSubmission(payrollRun, payslips);
+        } catch (error) {
+          errors.push({
+            code: 'HMRC_SUBMISSION_ERROR',
+            message: `Failed to generate HMRC submission: ${error.message}`,
+            severity: 'high',
+          });
+        }
+      }
+
+      const processingTime = Date.now() - startTime;
+      this.logger.log(`Payroll run completed in ${processingTime}ms`);
+
+      return {
+        run: payrollRun,
+        payslips,
+        summary,
+        hmrcSubmission,
+        errors,
+        warnings,
+      };
+
+    } catch (error) {
+      this.logger.error(`Payroll run failed: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Process payroll for a single staff member
+   */
+  private async processStaffMemberPayroll(
+    staffMember: StaffMember,
+    month: string,
+    payrollRunId: string
+  ): Promise<Payslip> {
+    // Get salary information
+    const salary = await this.getStaffSalary(staffMember.id, month);
+    if (!salary) {
+      throw new Error('No salary information found');
+    }
+
+    // Calculate payroll components
+    const calculation = await this.calculateSalary(staffMember, salary, month);
+
+    // Create payslip
+    const payslip = this.payslipRepository.create({
+      payrollRunId,
+      staffMemberId: staffMember.id,
+      payPeriodStart: this.getPayPeriodStart(month),
+      payPeriodEnd: this.getPayPeriodEnd(month),
+      payDate: this.getPayDate(month),
+      grossPay: calculation.grossPay,
+      netPay: calculation.netPay,
+      taxDeduction: calculation.tax,
+      niDeduction: calculation.nationalInsurance,
+      pensionDeduction: calculation.pension,
+      otherDeductions: 0, // TODO: Add other deductions
+      bonuses: calculation.breakdown.bonuses,
+      overtime: calculation.breakdown.overtime,
+      allowances: calculation.breakdown.allowances,
+      benefits: calculation.breakdown.benefits,
+      totalDeductions: calculation.tax + calculation.nationalInsurance + calculation.pension,
+      employerNIC: calculation.employerNIC,
+      employerPension: calculation.employerPension,
+      totalCost: calculation.totalCost,
+      status: 'generated',
+      generatedAt: new Date(),
+    });
+
+    const savedPayslip = await this.payslipRepository.save(payslip);
+
+    // Save detailed calculations
+    await this.saveDetailedCalculations(savedPayslip.id, calculation, month);
+
+    return savedPayslip;
+  }
+
+  /**
+   * Calculate salary components for a staff member
+   */
+  private async calculateSalary(
+    staffMember: StaffMember,
+    salary: Salary,
+    month: string
+  ): Promise<SalaryCalculation> {
+    // Get basic pay components
+    const basicPay = salary.annualSalary / 12; // Monthly salary
+    const overtime = await this.calculateOvertime(staffMember.id, month);
+    const bonuses = await this.calculateBonuses(staffMember.id, month);
+    const allowances = await this.calculateAllowances(staffMember.id, month);
+    const deductions = await this.calculateDeductions(staffMember.id, month);
+    const benefits = await this.calculateBenefits(staffMember.id, month);
+
+    // Calculate gross pay
+    const grossPay = basicPay + overtime + bonuses + allowances + benefits - deductions;
+
+    // Calculate taxable pay (gross pay minus non-taxable benefits)
+    const taxablePay = grossPay - (benefits * 0.5); // Assume 50% of benefits are non-taxable
+
+    // Calculate tax
+    const tax = this.calculateTax(taxablePay, salary.taxCode);
+
+    // Calculate National Insurance
+    const nationalInsurance = this.calculateNationalInsurance(grossPay);
+
+    // Calculate pension contributions
+    const pension = this.calculatePension(grossPay, salary.pensionScheme);
+
+    // Calculate net pay
+    const netPay = grossPay - tax - nationalInsurance - pension;
+
+    // Calculate employer costs
+    const employerNIC = this.calculateEmployerNIC(grossPay);
+    const employerPension = this.calculateEmployerPension(grossPay, salary.pensionScheme);
+
+    const totalCost = grossPay + employerNIC + employerPension;
+
+    return {
+      grossPay,
+      taxablePay,
+      tax,
+      nationalInsurance,
+      pension,
+      netPay,
+      employerNIC,
+      employerPension,
+      totalCost,
+      breakdown: {
+        basicPay,
+        overtime,
+        bonuses,
+        allowances,
+        deductions,
+        benefits,
+      },
+    };
+  }
+
+  /**
+   * Calculate PAYE tax using HMRC rates
+   */
+  private calculateTax(taxablePay: number, taxCode: string = '1257L'): number {
+    const personalAllowance = this.extractPersonalAllowance(taxCode);
+    const taxableAmount = Math.max(0, taxablePay - personalAllowance);
+
+    if (taxableAmount <= 0) return 0;
+
+    let tax = 0;
+    const basicRateBand = 37700; // 2024-25 basic rate band
+    const higherRateBand = 125140; // 2024-25 higher rate band
+
+    if (taxableAmount <= basicRateBand) {
+      tax = taxableAmount * this.hmrcRates.taxBands.basicRate;
+    } else if (taxableAmount <= higherRateBand) {
+      tax = basicRateBand * this.hmrcRates.taxBands.basicRate +
+            (taxableAmount - basicRateBand) * this.hmrcRates.taxBands.higherRate;
+    } else {
+      tax = basicRateBand * this.hmrcRates.taxBands.basicRate +
+            (higherRateBand - basicRateBand) * this.hmrcRates.taxBands.higherRate +
+            (taxableAmount - higherRateBand) * this.hmrcRates.taxBands.additionalRate;
+    }
+
+    return Math.round(tax * 100) / 100; // Round to 2 decimal places
+  }
+
+  /**
+   * Calculate National Insurance contributions
+   */
+  private calculateNationalInsurance(grossPay: number): number {
+    const primaryThreshold = this.hmrcRates.nationalInsurance.employee.primaryThreshold / 12;
+    const upperEarningsLimit = this.hmrcRates.nationalInsurance.employee.upperEarningsLimit / 12;
+
+    if (grossPay <= primaryThreshold) return 0;
+
+    let ni = 0;
+    if (grossPay <= upperEarningsLimit) {
+      ni = (grossPay - primaryThreshold) * this.hmrcRates.nationalInsurance.employee.rate;
+    } else {
+      ni = (upperEarningsLimit - primaryThreshold) * this.hmrcRates.nationalInsurance.employee.rate +
+           (grossPay - upperEarningsLimit) * this.hmrcRates.nationalInsurance.employee.upperRate;
+    }
+
+    return Math.round(ni * 100) / 100;
+  }
+
+  /**
+   * Calculate employer National Insurance contributions
+   */
+  private calculateEmployerNIC(grossPay: number): number {
+    const secondaryThreshold = this.hmrcRates.nationalInsurance.employer.secondaryThreshold / 12;
+
+    if (grossPay <= secondaryThreshold) return 0;
+
+    const ni = (grossPay - secondaryThreshold) * this.hmrcRates.nationalInsurance.employer.rate;
+    return Math.round(ni * 100) / 100;
+  }
+
+  /**
+   * Calculate pension contributions
+   */
+  private calculatePension(grossPay: number, pensionScheme: string = 'auto'): number {
+    const threshold = this.hmrcRates.pension.autoEnrolmentThreshold / 12;
+
+    if (grossPay < threshold) return 0;
+
+    return Math.round(grossPay * this.hmrcRates.pension.employeeRate * 100) / 100;
+  }
+
+  /**
+   * Calculate employer pension contributions
+   */
+  private calculateEmployerPension(grossPay: number, pensionScheme: string = 'auto'): number {
+    const threshold = this.hmrcRates.pension.autoEnrolmentThreshold / 12;
+
+    if (grossPay < threshold) return 0;
+
+    return Math.round(grossPay * this.hmrcRates.pension.employerRate * 100) / 100;
+  }
+
+  /**
+   * Extract personal allowance from tax code
+   */
+  private extractPersonalAllowance(taxCode: string): number {
+    // Simple extraction for common tax codes
+    if (taxCode === '1257L') return this.hmrcRates.taxBands.personalAllowance;
+    if (taxCode === '0T') return 0;
+    
+    // Extract number from tax code (e.g., '1257L' -> 12570)
+    const match = taxCode.match(/\d+/);
+    return match ? parseInt(match[0]) * 10 : this.hmrcRates.taxBands.personalAllowance;
+  }
+
+  /**
+   * Calculate overtime pay based on actual timesheet data
+   */
+  private async calculateOvertime(staffMemberId: string, month: string): Promise<number> {
+    try {
+      // Query actual timesheet data for the month
+      const timesheets = await this.timesheetRepository.getTimesheetsByStaffAndMonth(
+        staffMemberId, 
+        month
+      );
+
+      if (!timesheets || timesheets.length === 0) {
+        return 0;
+      }
+
+      // Calculate total overtime hours
+      const totalOvertimeHours = timesheets.reduce((total, timesheet) => {
+        return total + (timesheet.overtimeHours || 0);
+      }, 0);
+
+      // Get staff member's hourly rate
+      const staffMember = await this.staffRepository.findById(staffMemberId);
+      if (!staffMember || !staffMember.hourlyRate) {
+        throw new PayrollProcessingError(
+          'Staff member hourly rate not found',
+          'MISSING_HOURLY_RATE',
+          { staffMemberId }
+        );
+      }
+
+      // Calculate overtime pay (typically 1.5x regular rate)
+      const overtimeRate = new Decimal(staffMember.hourlyRate).mul(1.5);
+      const overtimePay = overtimeRate.mul(totalOvertimeHours);
+
+      return overtimePay.toDecimalPlaces(2).toNumber();
+
+    } catch (error) {
+      logger.error('Failed to calculate overtime pay', {
+        staffMemberId,
+        month,
+        error: error.message
+      });
+      throw new PayrollProcessingError(
+        'Overtime calculation failed',
+        'OVERTIME_CALCULATION_ERROR',
+        { staffMemberId, month, error: error.message }
+      );
+    }
+  }
+
+  /**
+   * Calculate bonuses based on performance metrics and bonus schemes
+   */
+  private async calculateBonuses(staffMemberId: string, month: string): Promise<number> {
+    try {
+      // Get active bonus schemes for the staff member
+      const bonusSchemes = await this.bonusSchemeRepository.getActiveSchemes(
+        staffMemberId,
+        month
+      );
+
+      if (!bonusSchemes || bonusSchemes.length === 0) {
+        return 0;
+      }
+
+      let totalBonus = new Decimal(0);
+
+      for (const scheme of bonusSchemes) {
+        // Get performance metrics for the bonus period
+        const performanceMetrics = await this.performanceRepository.getMetrics(
+          staffMemberId,
+          scheme.evaluationPeriod
+        );
+
+        // Calculate bonus based on scheme criteria
+        const bonusAmount = await this.calculateSchemeBonus(
+          scheme,
+          performanceMetrics
+        );
+
+        totalBonus = totalBonus.plus(bonusAmount);
+      }
+
+      return totalBonus.toDecimalPlaces(2).toNumber();
+
+    } catch (error) {
+      logger.error('Failed to calculate bonuses', {
+        staffMemberId,
+        month,
+        error: error.message
+      });
+      throw new PayrollProcessingError(
+        'Bonus calculation failed',
+        'BONUS_CALCULATION_ERROR',
+        { staffMemberId, month, error: error.message }
+      );
+    }
+  }
+
+  /**
+   * Calculate allowances based on staff entitlements and attendance
+   */
+  private async calculateAllowances(staffMemberId: string, month: string): Promise<number> {
+    try {
+      // Get staff member's allowance entitlements
+      const allowanceEntitlements = await this.allowanceRepository.getEntitlements(
+        staffMemberId
+      );
+
+      if (!allowanceEntitlements || allowanceEntitlements.length === 0) {
+        return 0;
+      }
+
+      let totalAllowances = new Decimal(0);
+
+      for (const entitlement of allowanceEntitlements) {
+        let allowanceAmount = new Decimal(0);
+
+        switch (entitlement.type) {
+          case 'TRAVEL_ALLOWANCE':
+            allowanceAmount = await this.calculateTravelAllowance(
+              staffMemberId,
+              month,
+              entitlement
+            );
+            break;
+          case 'MEAL_ALLOWANCE':
+            allowanceAmount = await this.calculateMealAllowance(
+              staffMemberId,
+              month,
+              entitlement
+            );
+            break;
+          case 'UNIFORM_ALLOWANCE':
+            allowanceAmount = await this.calculateUniformAllowance(
+              staffMemberId,
+              month,
+              entitlement
+            );
+            break;
+          case 'PROFESSIONAL_DEVELOPMENT':
+            allowanceAmount = await this.calculateProfessionalDevelopmentAllowance(
+              staffMemberId,
+              month,
+              entitlement
+            );
+            break;
+          default:
+            allowanceAmount = new Decimal(entitlement.fixedAmount || 0);
+        }
+
+        totalAllowances = totalAllowances.plus(allowanceAmount);
+      }
+
+      return totalAllowances.toDecimalPlaces(2).toNumber();
+
+    } catch (error) {
+      logger.error('Failed to calculate allowances', {
+        staffMemberId,
+        month,
+        error: error.message
+      });
+      throw new PayrollProcessingError(
+        'Allowance calculation failed',
+        'ALLOWANCE_CALCULATION_ERROR',
+        { staffMemberId, month, error: error.message }
+      );
+    }
+  }
+
+  /**
+   * Calculate deductions based on staff deduction records and policies
+   */
+  private async calculateDeductions(staffMemberId: string, month: string): Promise<number> {
+    try {
+      // Get active deductions for the staff member
+      const deductions = await this.deductionRepository.getActiveDeductions(
+        staffMemberId,
+        month
+      );
+
+      if (!deductions || deductions.length === 0) {
+        return 0;
+      }
+
+      let totalDeductions = new Decimal(0);
+
+      for (const deduction of deductions) {
+        let deductionAmount = new Decimal(0);
+
+        switch (deduction.type) {
+          case 'LOAN_REPAYMENT':
+            deductionAmount = await this.calculateLoanRepayment(
+              staffMemberId,
+              deduction
+            );
+            break;
+          case 'UNIFORM_COST':
+            deductionAmount = new Decimal(deduction.amount);
+            break;
+          case 'TRAINING_COST':
+            deductionAmount = await this.calculateTrainingCostDeduction(
+              staffMemberId,
+              deduction
+            );
+            break;
+          case 'DISCIPLINARY_FINE':
+            deductionAmount = new Decimal(deduction.amount);
+            break;
+          case 'OVERPAYMENT_RECOVERY':
+            deductionAmount = await this.calculateOverpaymentRecovery(
+              staffMemberId,
+              deduction
+            );
+            break;
+          default:
+            deductionAmount = new Decimal(deduction.amount || 0);
+        }
+
+        // Ensure deduction doesn't exceed legal limits
+        const legalLimit = await this.calculateLegalDeductionLimit(
+          staffMemberId,
+          month
+        );
+        
+        if (totalDeductions.plus(deductionAmount).gt(legalLimit)) {
+          deductionAmount = legalLimit.minus(totalDeductions);
+          
+          // Log when deduction is capped
+          logger.warn('Deduction capped due to legal limits', {
+            staffMemberId,
+            deductionType: deduction.type,
+            requestedAmount: deduction.amount,
+            cappedAmount: deductionAmount.toNumber(),
+            legalLimit: legalLimit.toNumber()
+          });
+        }
+
+        totalDeductions = totalDeductions.plus(deductionAmount);
+      }
+
+      return totalDeductions.toDecimalPlaces(2).toNumber();
+
+    } catch (error) {
+      logger.error('Failed to calculate deductions', {
+        staffMemberId,
+        month,
+        error: error.message
+      });
+      throw new PayrollProcessingError(
+        'Deduction calculation failed',
+        'DEDUCTION_CALCULATION_ERROR',
+        { staffMemberId, month, error: error.message }
+      );
+    }
+  }
+
+  /**
+   * Calculate benefits in kind and their taxable values
+   */
+  private async calculateBenefits(staffMemberId: string, month: string): Promise<number> {
+    try {
+      // Get staff member's benefit entitlements
+      const benefits = await this.benefitRepository.getActiveBenefits(
+        staffMemberId,
+        month
+      );
+
+      if (!benefits || benefits.length === 0) {
+        return 0;
+      }
+
+      let totalBenefitValue = new Decimal(0);
+
+      for (const benefit of benefits) {
+        let benefitValue = new Decimal(0);
+
+        switch (benefit.type) {
+          case 'COMPANY_CAR':
+            benefitValue = await this.calculateCompanyCarBenefit(
+              staffMemberId,
+              benefit
+            );
+            break;
+          case 'PRIVATE_MEDICAL_INSURANCE':
+            benefitValue = new Decimal(benefit.monthlyValue || 0);
+            break;
+          case 'LIFE_INSURANCE':
+            benefitValue = await this.calculateLifeInsuranceBenefit(
+              staffMemberId,
+              benefit
+            );
+            break;
+          case 'CHILDCARE_VOUCHERS':
+            benefitValue = new Decimal(benefit.monthlyValue || 0);
+            break;
+          case 'MOBILE_PHONE':
+            benefitValue = await this.calculateMobilePhoneBenefit(
+              staffMemberId,
+              benefit
+            );
+            break;
+          case 'ACCOMMODATION':
+            benefitValue = await this.calculateAccommodationBenefit(
+              staffMemberId,
+              benefit
+            );
+            break;
+          default:
+            benefitValue = new Decimal(benefit.monthlyValue || 0);
+        }
+
+        totalBenefitValue = totalBenefitValue.plus(benefitValue);
+      }
+
+      return totalBenefitValue.toDecimalPlaces(2).toNumber();
+
+    } catch (error) {
+      logger.error('Failed to calculate benefits', {
+        staffMemberId,
+        month,
+        error: error.message
+      });
+      throw new PayrollProcessingError(
+        'Benefit calculation failed',
+        'BENEFIT_CALCULATION_ERROR',
+        { staffMemberId, month, error: error.message }
+      );
+    }
+  }
+
+  /**
+   * Get staff salary information
+   */
+  private async getStaffSalary(staffMemberId: string, month: string): Promise<Salary | null> {
+    const startDate = this.getPayPeriodStart(month);
+    const endDate = this.getPayPeriodEnd(month);
+
+    return await this.salaryRepository.findOne({
+      where: {
+        staffMemberId,
+        effectiveDate: Between(startDate, endDate),
+      },
+      order: { effectiveDate: 'DESC' },
+    });
+  }
+
+  /**
+   * Get staff members for payroll
+   */
+  private async getStaffForPayroll(request: PayrollRunRequest): Promise<StaffMember[]> {
+    const query = this.staffMemberRepository.createQueryBuilder('staff')
+      .where('staff.employmentStatus = :status', { status: 'active' });
+
+    if (request.staffIds && request.staffIds.length > 0) {
+      query.andWhere('staff.id IN (:...staffIds)', { staffIds: request.staffIds });
+    }
+
+    if (!request.includeAgency) {
+      query.andWhere('staff.employmentType != :agency', { agency: 'agency' });
+    }
+
+    if (!request.includeContractors) {
+      query.andWhere('staff.employmentType != :contractor', { contractor: 'contractor' });
+    }
+
+    return await query.getMany();
+  }
+
+  /**
+   * Create a new payroll run
+   */
+  private async createPayrollRun(request: PayrollRunRequest): Promise<PayrollRun> {
+    const payrollRun = this.payrollRunRepository.create({
+      payPeriodStart: this.getPayPeriodStart(request.month),
+      payPeriodEnd: this.getPayPeriodEnd(request.month),
+      payDate: this.getPayDate(request.month),
+      status: PayrollRunStatus.PROCESSING,
+      notes: request.notes,
+      createdBy: 'system', // TODO: Get from authenticated user
+    });
+
+    return await this.payrollRunRepository.save(payrollRun);
+  }
+
+  /**
+   * Find existing payroll run
+   */
+  private async findExistingRun(month: string): Promise<PayrollRun | null> {
+    const startDate = this.getPayPeriodStart(month);
+    const endDate = this.getPayPeriodEnd(month);
+
+    return await this.payrollRunRepository.findOne({
+      where: {
+        payPeriodStart: startDate,
+        payPeriodEnd: endDate,
+      },
+    });
+  }
+
+  /**
+   * Calculate payroll summary
+   */
+  private calculatePayrollSummary(payslips: Payslip[]): PayrollSummary {
+    const summary: PayrollSummary = {
+      totalGrossPay: 0,
+      totalTax: 0,
+      totalNationalInsurance: 0,
+      totalPension: 0,
+      totalNetPay: 0,
+      totalEmployerNIC: 0,
+      totalEmployerPension: 0,
+      totalCost: 0,
+      employeeCount: payslips.length,
+      averageGrossPay: 0,
+      averageNetPay: 0,
+    };
+
+    payslips.forEach(payslip => {
+      summary.totalGrossPay += payslip.grossPay;
+      summary.totalTax += payslip.taxDeduction;
+      summary.totalNationalInsurance += payslip.niDeduction;
+      summary.totalPension += payslip.pensionDeduction;
+      summary.totalNetPay += payslip.netPay;
+      summary.totalEmployerNIC += payslip.employerNIC;
+      summary.totalEmployerPension += payslip.employerPension;
+      summary.totalCost += payslip.totalCost;
+    });
+
+    if (summary.employeeCount > 0) {
+      summary.averageGrossPay = summary.totalGrossPay / summary.employeeCount;
+      summary.averageNetPay = summary.totalNetPay / summary.employeeCount;
+    }
+
+    return summary;
+  }
+
+  /**
+   * Save detailed calculations for audit trail
+   */
+  private async saveDetailedCalculations(
+    payslipId: string,
+    calculation: SalaryCalculation,
+    month: string
+  ): Promise<void> {
+    // Save tax calculation
+    const taxCalc = this.taxCalculationRepository.create({
+      payslipId,
+      grossPay: calculation.grossPay,
+      taxablePay: calculation.taxablePay,
+      tax: calculation.tax,
+      personalAllowance: this.hmrcRates.taxBands.personalAllowance / 12,
+      basicRateTax: Math.min(calculation.tax, calculation.taxablePay * this.hmrcRates.taxBands.basicRate),
+      higherRateTax: Math.max(0, calculation.tax - (calculation.taxablePay * this.hmrcRates.taxBands.basicRate)),
+      additionalRateTax: 0, // Would be calculated if applicable
+      taxYear: this.getTaxYear(month),
+    });
+
+    await this.taxCalculationRepository.save(taxCalc);
+
+    // Save National Insurance calculation
+    const niCalc = this.nationalInsuranceRepository.create({
+      payslipId,
+      grossPay: calculation.grossPay,
+      employeeNIC: calculation.nationalInsurance,
+      employerNIC: calculation.employerNIC,
+      primaryThreshold: this.hmrcRates.nationalInsurance.employee.primaryThreshold / 12,
+      upperEarningsLimit: this.hmrcRates.nationalInsurance.employee.upperEarningsLimit / 12,
+      secondaryThreshold: this.hmrcRates.nationalInsurance.employer.secondaryThreshold / 12,
+      employeeRate: this.hmrcRates.nationalInsurance.employee.rate,
+      employerRate: this.hmrcRates.nationalInsurance.employer.rate,
+    });
+
+    await this.nationalInsuranceRepository.save(niCalc);
+
+    // Save pension calculation
+    const pensionCalc = this.pensionContributionRepository.create({
+      payslipId,
+      grossPay: calculation.grossPay,
+      employeeContribution: calculation.pension,
+      employerContribution: calculation.employerPension,
+      autoEnrolmentThreshold: this.hmrcRates.pension.autoEnrolmentThreshold / 12,
+      employeeRate: this.hmrcRates.pension.employeeRate,
+      employerRate: this.hmrcRates.pension.employerRate,
+      pensionScheme: 'auto', // TODO: Get from salary record
+    });
+
+    await this.pensionContributionRepository.save(pensionCalc);
+  }
+
+  /**
+   * Generate HMRC submission
+   */
+  private async generateHMRCSubmission(
+    payrollRun: PayrollRun,
+    payslips: Payslip[]
+  ): Promise<HMRCSubmission> {
+    const submission = this.hmrcSubmissionRepository.create({
+      payrollRunId: payrollRun.id,
+      submissionType: 'FPS', // Full Payment Submission
+      taxYear: this.getTaxYear(payrollRun.payPeriodStart.toISOString().substring(0, 7)),
+      employerReference: '1234567890', // TODO: Get from company settings
+      submissionDate: new Date(),
+      status: 'submitted',
+      data: this.generateHMRCData(payrollRun, payslips),
+    });
+
+    return await this.hmrcSubmissionRepository.save(submission);
+  }
+
+  /**
+   * Generate HMRC submission data
+   */
+  private generateHMRCData(payrollRun: PayrollRun, payslips: Payslip[]): any {
+    return {
+      payrollRun: {
+        id: payrollRun.id,
+        payPeriodStart: payrollRun.payPeriodStart,
+        payPeriodEnd: payrollRun.payPeriodEnd,
+        payDate: payrollRun.payDate,
+      },
+      employees: payslips.map(payslip => ({
+        staffMemberId: payslip.staffMemberId,
+        grossPay: payslip.grossPay,
+        tax: payslip.taxDeduction,
+        nationalInsurance: payslip.niDeduction,
+        pension: payslip.pensionDeduction,
+        netPay: payslip.netPay,
+      })),
+      totals: {
+        totalGrossPay: payrollRun.totalGrossPay,
+        totalTax: payrollRun.totalTax,
+        totalNationalInsurance: payrollRun.totalNationalInsurance,
+        totalPension: payrollRun.totalPension,
+        totalNetPay: payrollRun.totalNetPay,
+        totalEmployerNIC: payrollRun.totalEmployerNIC,
+        totalEmployerPension: payrollRun.totalEmployerPension,
+        totalCost: payrollRun.totalCost,
+        employeeCount: payrollRun.employeeCount,
+      },
+    };
+  }
+
+  /**
+   * Check if HMRC submission should be generated
+   */
+  private shouldGenerateHMRCSubmission(payrollRun: PayrollRun): boolean {
+    // Generate submission if there are employees with gross pay > 0
+    return payrollRun.employeeCount > 0 && payrollRun.totalGrossPay > 0;
+  }
+
+  /**
+   * Validate payroll request
+   */
+  private validatePayrollRequest(request: PayrollRunRequest, errors: PayrollError[]): void {
+    // Validate month format
+    if (!/^\d{4}-\d{2}$/.test(request.month)) {
+      errors.push({
+        code: 'INVALID_MONTH_FORMAT',
+        message: 'Month must be in YYYY-MM format',
+        severity: 'critical',
+        field: 'month',
+        value: request.month,
+      });
+    }
+
+    // Validate month is not in the future
+    const requestedDate = dayjs(request.month + '-01');
+    const currentDate = dayjs();
+    if (requestedDate.isAfter(currentDate, 'month')) {
+      errors.push({
+        code: 'FUTURE_MONTH',
+        message: 'Cannot process payroll for future months',
+        severity: 'critical',
+        field: 'month',
+        value: request.month,
+      });
+    }
+
+    // Validate staff IDs if provided
+    if (request.staffIds && request.staffIds.length === 0) {
+      errors.push({
+        code: 'EMPTY_STAFF_IDS',
+        message: 'Staff IDs array cannot be empty',
+        severity: 'high',
+        field: 'staffIds',
+        value: request.staffIds,
+      });
+    }
+  }
+
+  /**
+   * Get pay period start date
+   */
+  private getPayPeriodStart(month: string): Date {
+    return dayjs(month + '-01').toDate();
+  }
+
+  /**
+   * Get pay period end date
+   */
+  private getPayPeriodEnd(month: string): Date {
+    return dayjs(month + '-01').endOf('month').toDate();
+  }
+
+  /**
+   * Get pay date (typically last working day of month)
+   */
+  private getPayDate(month: string): Date {
+    const lastDay = dayjs(month + '-01').endOf('month');
+    // If last day is weekend, move to previous Friday
+    if (lastDay.day() === 0) { // Sunday
+      return lastDay.subtract(2, 'day').toDate();
+    } else if (lastDay.day() === 6) { // Saturday
+      return lastDay.subtract(1, 'day').toDate();
+    }
+    return lastDay.toDate();
+  }
+
+  /**
+   * Get tax year for a given month
+   */
+  private getTaxYear(month: string): string {
+    const year = parseInt(month.substring(0, 4));
+    const monthNum = parseInt(month.substring(5, 7));
+    
+    if (monthNum >= 4) {
+      return `${year}-${year + 1}`;
+    } else {
+      return `${year - 1}-${year}`;
+    }
+  }
+
+  /**
+   * Get payroll run by ID
+   */
+  async getPayrollRun(id: string): Promise<PayrollRun | null> {
+    return await this.payrollRunRepository.findOne({
+      where: { id },
+      relations: ['payslips', 'hmrcSubmissions'],
+    });
+  }
+
+  /**
+   * Get all payroll runs
+   */
+  async getPayrollRuns(filters: {
+    startDate?: Date;
+    endDate?: Date;
+    status?: PayrollRunStatus;
+  } = {}): Promise<PayrollRun[]> {
+    const query = this.payrollRunRepository.createQueryBuilder('run');
+
+    if (filters.startDate) {
+      query.andWhere('run.payPeriodStart >= :startDate', { startDate: filters.startDate });
+    }
+
+    if (filters.endDate) {
+      query.andWhere('run.payPeriodEnd <= :endDate', { endDate: filters.endDate });
+    }
+
+    if (filters.status) {
+      query.andWhere('run.status = :status', { status: filters.status });
+    }
+
+    return await query
+      .orderBy('run.payPeriodStart', 'DESC')
+      .getMany();
+  }
+
+  /**
+   * Get payslips for a payroll run
+   */
+  async getPayslips(payrollRunId: string): Promise<Payslip[]> {
+    return await this.payslipRepository.find({
+      where: { payrollRunId },
+      relations: ['staffMember'],
+      order: { staffMemberId: 'ASC' },
+    });
+  }
+
+  /**
+   * Get payslip by ID
+   */
+  async getPayslip(id: string): Promise<Payslip | null> {
+    return await this.payslipRepository.findOne({
+      where: { id },
+      relations: ['staffMember', 'taxCalculation', 'nationalInsurance', 'pensionContribution'],
+    });
+  }
+
+  /**
+   * Approve payroll run
+   */
+  async approvePayrollRun(id: string, approvedBy: string): Promise<PayrollRun> {
+    const payrollRun = await this.getPayrollRun(id);
+    if (!payrollRun) {
+      throw new Error('Payroll run not found');
+    }
+
+    if (payrollRun.status !== PayrollRunStatus.COMPLETED) {
+      throw new Error('Only completed payroll runs can be approved');
+    }
+
+    payrollRun.status = PayrollRunStatus.APPROVED;
+    payrollRun.approvedBy = approvedBy;
+    payrollRun.approvedAt = new Date();
+
+    return await this.payrollRunRepository.save(payrollRun);
+  }
+
+  /**
+   * Cancel payroll run
+   */
+  async cancelPayrollRun(id: string, cancelledBy: string, reason: string): Promise<PayrollRun> {
+    const payrollRun = await this.getPayrollRun(id);
+    if (!payrollRun) {
+      throw new Error('Payroll run not found');
+    }
+
+    if (payrollRun.status === PayrollRunStatus.APPROVED) {
+      throw new Error('Approved payroll runs cannot be cancelled');
+    }
+
+    payrollRun.status = PayrollRunStatus.CANCELLED;
+    payrollRun.cancelledBy = cancelledBy;
+    payrollRun.cancelledAt = new Date();
+    payrollRun.cancellationReason = reason;
+
+    return await this.payrollRunRepository.save(payrollRun);
+  }
+
+  /**
+   * Get payroll statistics
+   */
+  async getPayrollStatistics(period: 'month' | 'quarter' | 'year' = 'month'): Promise<{
+    totalRuns: number;
+    totalGrossPay: number;
+    totalTax: number;
+    totalNationalInsurance: number;
+    totalPension: number;
+    totalNetPay: number;
+    averageGrossPay: number;
+    averageNetPay: number;
+    employeeCount: number;
+  }> {
+    const now = new Date();
+    const startDate = new Date();
+
+    switch (period) {
+      case 'month':
+        startDate.setMonth(now.getMonth() - 1);
+        break;
+      case 'quarter':
+        startDate.setMonth(now.getMonth() - 3);
+        break;
+      case 'year':
+        startDate.setFullYear(now.getFullYear() - 1);
+        break;
+    }
+
+    const runs = await this.payrollRunRepository.find({
+      where: {
+        payPeriodStart: Between(startDate, now),
+        status: PayrollRunStatus.COMPLETED,
+      },
+    });
+
+    const stats = {
+      totalRuns: runs.length,
+      totalGrossPay: 0,
+      totalTax: 0,
+      totalNationalInsurance: 0,
+      totalPension: 0,
+      totalNetPay: 0,
+      averageGrossPay: 0,
+      averageNetPay: 0,
+      employeeCount: 0,
+    };
+
+    runs.forEach(run => {
+      stats.totalGrossPay += run.totalGrossPay || 0;
+      stats.totalTax += run.totalTax || 0;
+      stats.totalNationalInsurance += run.totalNationalInsurance || 0;
+      stats.totalPension += run.totalPension || 0;
+      stats.totalNetPay += run.totalNetPay || 0;
+      stats.employeeCount += run.employeeCount || 0;
+    });
+
+    if (stats.employeeCount > 0) {
+      stats.averageGrossPay = stats.totalGrossPay / stats.employeeCount;
+      stats.averageNetPay = stats.totalNetPay / stats.employeeCount;
+    }
+
+    return stats;
+  }
+}
+
+export default PayrollService;

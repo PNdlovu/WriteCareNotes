@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: writecarenotes
+  labels:
+    name: writecarenotes
+    app: care-home-management
+    environment: production

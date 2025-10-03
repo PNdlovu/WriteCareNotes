@@ -1,0 +1,288 @@
+# Distributed Tracing Configuration for WriteCareNotes
+# Provides request tracing across microservices for healthcare operations
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tracing
+  labels:
+    name: tracing
+    tier: infrastructure
+
+---
+# Jaeger Operator
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: writecarenotes-jaeger
+  namespace: tracing
+spec:
+  strategy: production
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      nodeCount: 3
+      redundancyPolicy: SingleRedundancy
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1Gi
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+  collector:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  query:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  agent:
+    strategy: DaemonSet
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+---
+# Telemetry v2 configuration for Istio
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: tracing-config
+  namespace: istio-system
+spec:
+  tracing:
+  - providers:
+    - name: jaeger
+  - customTags:
+      user_id:
+        header:
+          name: x-user-id
+      tenant_id:
+        header:
+          name: x-tenant-id
+      correlation_id:
+        header:
+          name: x-correlation-id
+      service_version:
+        literal:
+          value: "v1.0.0"
+      healthcare_context:
+        header:
+          name: x-healthcare-context
+      compliance_level:
+        literal:
+          value: "healthcare"
+
+---
+# Extension Provider for Jaeger
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: tracing-config
+  namespace: istio-system
+spec:
+  meshConfig:
+    extensionProviders:
+    - name: jaeger
+      envoyExtAuthzHttp:
+        service: writecarenotes-jaeger-collector.tracing.svc.cluster.local
+        port: 14268
+        pathPrefix: /api/traces
+    defaultProviders:
+      tracing:
+      - jaeger
+
+---
+# Service Monitor for Jaeger metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: jaeger-metrics
+  namespace: tracing
+  labels:
+    app: jaeger
+spec:
+  selector:
+    matchLabels:
+      app: jaeger
+  endpoints:
+  - port: admin-http
+    interval: 30s
+    path: /metrics
+
+---
+# Healthcare-specific tracing configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthcare-tracing-config
+  namespace: tracing
+data:
+  sampling-strategies.json: |
+    {
+      "default_strategy": {
+        "type": "probabilistic",
+        "param": 0.1
+      },
+      "per_service_strategies": [
+        {
+          "service": "medication-service",
+          "type": "probabilistic",
+          "param": 1.0
+        },
+        {
+          "service": "resident-service",
+          "type": "probabilistic",
+          "param": 0.5
+        },
+        {
+          "service": "care-planning-service",
+          "type": "probabilistic",
+          "param": 0.5
+        },
+        {
+          "service": "assessment-service",
+          "type": "probabilistic",
+          "param": 0.3
+        },
+        {
+          "service": "health-records-service",
+          "type": "probabilistic",
+          "param": 0.5
+        },
+        {
+          "service": "compliance-service",
+          "type": "probabilistic",
+          "param": 1.0
+        },
+        {
+          "service": "audit-service",
+          "type": "probabilistic",
+          "param": 1.0
+        },
+        {
+          "service": "nhs-integration-service",
+          "type": "probabilistic",
+          "param": 0.8
+        }
+      ],
+      "per_operation_strategies": [
+        {
+          "service": "medication-service",
+          "operation": "POST /api/v1/medications/administer",
+          "type": "probabilistic",
+          "param": 1.0
+        },
+        {
+          "service": "resident-service",
+          "operation": "POST /api/v1/residents",
+          "type": "probabilistic",
+          "param": 1.0
+        },
+        {
+          "service": "compliance-service",
+          "operation": "POST /api/v1/compliance/violations",
+          "type": "probabilistic",
+          "param": 1.0
+        }
+      ]
+    }
+
+---
+# Grafana Dashboard for Distributed Tracing
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-dashboard
+  namespace: monitoring
+data:
+  jaeger-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "WriteCareNotes - Distributed Tracing",
+        "tags": ["tracing", "healthcare", "microservices"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Request Traces by Service",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(jaeger_traces_received_total[5m])",
+                "legendFormat": "{{service}}"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Traces per second",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Average Request Duration",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(jaeger_spans_duration_seconds_bucket[5m]))",
+                "legendFormat": "95th percentile"
+              },
+              {
+                "expr": "histogram_quantile(0.50, rate(jaeger_spans_duration_seconds_bucket[5m]))",
+                "legendFormat": "50th percentile"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Duration (seconds)",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Error Rate by Service",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(jaeger_spans_total{status=\"error\"}[5m])",
+                "legendFormat": "{{service}} - errors"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Errors per second",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }

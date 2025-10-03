@@ -1,0 +1,273 @@
+# Apache Kafka Configuration for WriteCareNotes High-Throughput Event Streaming
+# Provides scalable event streaming for healthcare analytics and real-time processing
+
+# Zookeeper StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zookeeper
+  namespace: messaging
+spec:
+  serviceName: zookeeper-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: confluentinc/cp-zookeeper:7.4.0
+        ports:
+        - containerPort: 2181
+          name: client
+        - containerPort: 2888
+          name: server
+        - containerPort: 3888
+          name: leader-election
+        env:
+        - name: ZOOKEEPER_CLIENT_PORT
+          value: "2181"
+        - name: ZOOKEEPER_SERVER_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: ZOOKEEPER_SERVERS
+          value: "zookeeper-0.zookeeper-headless.messaging.svc.cluster.local:2888:3888;zookeeper-1.zookeeper-headless.messaging.svc.cluster.local:2888:3888;zookeeper-2.zookeeper-headless.messaging.svc.cluster.local:2888:3888"
+        - name: ZOOKEEPER_TICK_TIME
+          value: "2000"
+        - name: ZOOKEEPER_INIT_LIMIT
+          value: "5"
+        - name: ZOOKEEPER_SYNC_LIMIT
+          value: "2"
+        - name: ZOOKEEPER_MAX_CLIENT_CNXNS
+          value: "60"
+        - name: ZOOKEEPER_SNAP_RETAIN_COUNT
+          value: "3"
+        - name: ZOOKEEPER_PURGE_INTERVAL
+          value: "12"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - name: zookeeper-data
+          mountPath: /var/lib/zookeeper/data
+        - name: zookeeper-logs
+          mountPath: /var/lib/zookeeper/log
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "echo ruok | nc localhost 2181 | grep imok"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "echo ruok | nc localhost 2181 | grep imok"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: zookeeper-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: gp2
+  - metadata:
+      name: zookeeper-logs
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: gp2
+
+---
+# Zookeeper Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-headless
+  namespace: messaging
+spec:
+  clusterIP: None
+  ports:
+  - name: client
+    port: 2181
+    targetPort: 2181
+  - name: server
+    port: 2888
+    targetPort: 2888
+  - name: leader-election
+    port: 3888
+    targetPort: 3888
+  selector:
+    app: zookeeper
+
+---
+# Zookeeper Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: messaging
+spec:
+  ports:
+  - name: client
+    port: 2181
+    targetPort: 2181
+  selector:
+    app: zookeeper---
+
+# Kafka StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: messaging
+spec:
+  serviceName: kafka-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:7.4.0
+        ports:
+        - containerPort: 9092
+          name: kafka
+        - containerPort: 9093
+          name: kafka-internal
+        env:
+        - name: KAFKA_BROKER_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: "zookeeper:2181"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: "PLAINTEXT://$(POD_NAME).kafka-headless.messaging.svc.cluster.local:9092"
+        - name: KAFKA_LISTENERS
+          value: "PLAINTEXT://0.0.0.0:9092"
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: "PLAINTEXT"
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "3"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "3"
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "2"
+        - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+          value: "3"
+        - name: KAFKA_MIN_IN_SYNC_REPLICAS
+          value: "2"
+        - name: KAFKA_NUM_PARTITIONS
+          value: "6"
+        - name: KAFKA_LOG_RETENTION_HOURS
+          value: "168"
+        - name: KAFKA_LOG_RETENTION_BYTES
+          value: "1073741824"
+        - name: KAFKA_LOG_SEGMENT_BYTES
+          value: "1073741824"
+        - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+          value: "false"
+        - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+          value: "3000"
+        - name: KAFKA_JMX_PORT
+          value: "9999"
+        - name: KAFKA_JMX_HOSTNAME
+          value: "localhost"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: kafka-data
+          mountPath: /var/lib/kafka/data
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "kafka-broker-api-versions --bootstrap-server localhost:9092"
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "kafka-broker-api-versions --bootstrap-server localhost:9092"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: kafka-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      storageClassName: gp2
+
+---
+# Kafka Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-headless
+  namespace: messaging
+spec:
+  clusterIP: None
+  ports:
+  - name: kafka
+    port: 9092
+    targetPort: 9092
+  selector:
+    app: kafka
+
+---
+# Kafka Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: messaging
+spec:
+  ports:
+  - name: kafka
+    port: 9092
+    targetPort: 9092
+  selector:
+    app: kafka

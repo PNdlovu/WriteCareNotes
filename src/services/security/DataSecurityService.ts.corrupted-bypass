@@ -1,0 +1,605 @@
+import { EventEmitter2 } from "eventemitter2";
+
+/**
+ * @fileoverview Data Security Service for WriteCareNotes
+ * @module DataSecurityService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Enterprise data security service with threat detection,
+ * access monitoring, and healthcare compliance.
+ */
+
+import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import * as crypto from 'crypto';
+import { logger } from "@/utils/logger";
+import { logger } from "@/utils/logger";
+import { logger } from "@/utils/logger";
+
+/**
+ * Security incident types
+ */
+export enum SecurityIncidentType {
+  UNAUTHORIZED_ACCESS = 'unauthorized_access',
+  DATA_BREACH_ATTEMPT = 'data_breach_attempt',
+  SUSPICIOUS_ACTIVITY = 'suspicious_activity',
+  PRIVILEGE_ESCALATION = 'privilege_escalation',
+  AUTHENTICATION_FAILURE = 'authentication_failure',
+  RATE_LIMIT_EXCEEDED = 'rate_limit_exceeded',
+  INVALID_TOKEN = 'invalid_token',
+  ENCRYPTION_FAILURE = 'encryption_failure',
+  COMPLIANCE_VIOLATION = 'compliance_violation'
+}
+
+/**
+ * Security incident severity
+ */
+export enum SecuritySeverity {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  CRITICAL = 'critical'
+}
+
+/**
+ * Security incident interface
+ */
+export interface SecurityIncident {
+  incidentId?: string;
+  incidentType: SecurityIncidentType;
+  severity: SecuritySeverity;
+  userId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  resource?: string;
+  action?: string;
+  timestamp: Date;
+  correlationId?: string;
+  details: Record<string, any>;
+  organizationId?: string;
+  tenantId?: string;
+}
+
+/**
+ * Access validation request
+ */
+export interface AccessValidationRequest {
+  userId: string;
+  resource: string;
+  action: string;
+  organizationId?: string;
+  tenantId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  correlationId?: string;
+}
+
+/**
+ * Data Security Service
+ */
+
+export class DataSecurityService {
+  // Logger removed
+  private readonly suspiciousActivityThreshold = 10;
+  private readonly rateLimitWindow = 15 * 60 * 1000; // 15 minutes
+  private readonly maxRequestsPerWindow = 1000;
+
+  // In-memory stores (in production, these would be Redis or similar)
+  private readonly accessAttempts = new Map<string, number[]>();
+  private readonly suspiciousUsers = new Set<string>();
+  private readonly blockedIPs = new Set<string>();
+  private readonly securityIncidents = new Map<string, SecurityIncident>();
+
+  constructor(
+    private readonly eventEmitter: EventEmitter2
+  ) {
+    console.log('Data Security Service initialized');
+  }
+
+  /**
+   * Validate data access request
+   */
+  async validateDataAccess(request: AccessValidationRequest): Promise<void> {
+    try {
+      this.logger.debug('Validating data access', {
+        userId: request.userId,
+        resource: request.resource,
+        action: request.action,
+        correlationId: request.correlationId
+      });
+
+      // Check if IP is blocked
+      if (request.ipAddress && this.blockedIPs.has(request.ipAddress)) {
+        await this.logSecurityIncident({
+          incidentType: SecurityIncidentType.UNAUTHORIZED_ACCESS,
+          severity: SecuritySeverity.HIGH,
+          userId: request.userId,
+          ipAddress: request.ipAddress,
+          resource: request.resource,
+          action: request.action,
+          timestamp: new Date(),
+          correlationId: request.correlationId,
+          details: { reason: 'Blocked IP address' }
+        });
+        throw new Error('Access denied: IP address blocked');
+      }
+
+      // Check if user is flagged as suspicious
+      if (this.suspiciousUsers.has(request.userId)) {
+        await this.logSecurityIncident({
+          incidentType: SecurityIncidentType.SUSPICIOUS_ACTIVITY,
+          severity: SecuritySeverity.MEDIUM,
+          userId: request.userId,
+          ipAddress: request.ipAddress,
+          resource: request.resource,
+          action: request.action,
+          timestamp: new Date(),
+          correlationId: request.correlationId,
+          details: { reason: 'User flagged as suspicious' }
+        });
+      }
+
+      // Check rate limiting
+      await this.checkRateLimit(request.userId, request.ipAddress);
+
+      // Validate tenant isolation
+      await this.validateTenantIsolation(request);
+
+      // Log successful access
+      this.logger.debug('Data access validated successfully', {
+        userId: request.userId,
+        resource: request.resource,
+        correlationId: request.correlationId
+      });
+
+    } catch (error: unknown) {
+      console.error('Data access validation failed', {
+        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        userId: request.userId,
+        resource: request.resource,
+        correlationId: request.correlationId
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Log security incident
+   */
+  async logSecurityIncident(incident: SecurityIncident): Promise<void> {
+    try {
+      // Generate incident ID if not provided
+      if (!incident.incidentId) {
+        incident.incidentId = this.generateIncidentId();
+      }
+
+      console.warn('Security incident detected', {
+        incidentId: incident.incidentId,
+        incidentType: incident.incidentType,
+        severity: incident.severity,
+        userId: incident.userId,
+        ipAddress: incident.ipAddress,
+        correlationId: incident.correlationId
+      });
+
+      // Store incident
+      this.securityIncidents.set(incident.incidentId, incident);
+
+      // Take automated response based on severity
+      await this.handleSecurityIncident(incident);
+
+      // Emit security event
+      this.eventEmitter.emit('security.incident', incident);
+
+      // Send alerts for high/critical incidents
+      if (incident.severity === SecuritySeverity.HIGH || incident.severity === SecuritySeverity.CRITICAL) {
+        await this.sendSecurityAlert(incident);
+      }
+
+    } catch (error: unknown) {
+      console.error('Failed to log security incident', {
+        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        incident: incident.incidentType
+      });
+    }
+  }
+
+  /**
+   * Check if user has suspicious activity patterns
+   */
+  async detectSuspiciousActivity(userId: string, activity: any): Promise<boolean> {
+    // Implement suspicious activity detection logic
+    const recentActivity = await this.getRecentUserActivity(userId);
+    
+    // Check for unusual patterns
+    const isSuspicious = this.analyzeSuspiciousPatterns(recentActivity, activity);
+    
+    if (isSuspicious) {
+      this.suspiciousUsers.add(userId);
+      
+      await this.logSecurityIncident({
+        incidentType: SecurityIncidentType.SUSPICIOUS_ACTIVITY,
+        severity: SecuritySeverity.MEDIUM,
+        userId,
+        timestamp: new Date(),
+        details: { activity, patterns: 'Unusual access patterns detected' }
+      });
+    }
+    
+    return isSuspicious;
+  }
+
+  /**
+   * Validate encryption status
+   */
+  async validateEncryption(data: any, fieldName: string): Promise<void> {
+    if (!this.isEncrypted(data)) {
+      await this.logSecurityIncident({
+        incidentType: SecurityIncidentType.ENCRYPTION_FAILURE,
+        severity: SecuritySeverity.HIGH,
+        timestamp: new Date(),
+        details: {
+          fieldName,
+          reason: 'Sensitive data not properly encrypted'
+        }
+      });
+      throw new Error(`Field ${fieldName} must be encrypted`);
+    }
+  }
+
+  /**
+   * Block IP address
+   */
+  async blockIPAddress(ipAddress: string, reason: string): Promise<void> {
+    this.blockedIPs.add(ipAddress);
+    
+    console.warn('IP address blocked', {
+      ipAddress,
+      reason
+    });
+
+    await this.logSecurityIncident({
+      incidentType: SecurityIncidentType.UNAUTHORIZED_ACCESS,
+      severity: SecuritySeverity.HIGH,
+      ipAddress,
+      timestamp: new Date(),
+      details: { reason, action: 'IP_BLOCKED' }
+    });
+  }
+
+  /**
+   * Flag user as suspicious
+   */
+  async flagUserAsSuspicious(userId: string, reason: string): Promise<void> {
+    this.suspiciousUsers.add(userId);
+    
+    console.warn('User flagged as suspicious', {
+      userId,
+      reason
+    });
+
+    await this.logSecurityIncident({
+      incidentType: SecurityIncidentType.SUSPICIOUS_ACTIVITY,
+      severity: SecuritySeverity.MEDIUM,
+      userId,
+      timestamp: new Date(),
+      details: { reason, action: 'USER_FLAGGED' }
+    });
+  }
+
+  /**
+   * Get security incidents
+   */
+  async getSecurityIncidents(
+    filters?: {
+      incidentType?: SecurityIncidentType;
+      severity?: SecuritySeverity;
+      userId?: string;
+      organizationId?: string;
+      startDate?: Date;
+      endDate?: Date;
+    }
+  ): Promise<SecurityIncident[]> {
+    let incidents = Array.from(this.securityIncidents.values());
+
+    if (filters) {
+      if (filters.incidentType) {
+        incidents = incidents.filter(i => i.incidentType === filters.incidentType);
+      }
+      if (filters.severity) {
+        incidents = incidents.filter(i => i.severity === filters.severity);
+      }
+      if (filters.userId) {
+        incidents = incidents.filter(i => i.userId === filters.userId);
+      }
+      if (filters.organizationId) {
+        incidents = incidents.filter(i => i.organizationId === filters.organizationId);
+      }
+      if (filters.startDate) {
+        incidents = incidents.filter(i => i.timestamp >= filters.startDate!);
+      }
+      if (filters.endDate) {
+        incidents = incidents.filter(i => i.timestamp <= filters.endDate!);
+      }
+    }
+
+    return incidents.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }
+
+  /**
+   * Private helper methods
+   */
+  private async checkRateLimit(userId: string, ipAddress?: string): Promise<void> {
+    const now = Date.now();
+    const key = ipAddress || userId;
+    
+    if (!this.accessAttempts.has(key)) {
+      this.accessAttempts.set(key, []);
+    }
+    
+    const attempts = this.accessAttempts.get(key)!;
+    
+    // Remove old attempts outside the window
+    const recentAttempts = attempts.filter(timestamp => 
+      now - timestamp < this.rateLimitWindow
+    );
+    
+    if (recentAttempts.length >= this.maxRequestsPerWindow) {
+      await this.logSecurityIncident({
+        incidentType: SecurityIncidentType.RATE_LIMIT_EXCEEDED,
+        severity: SecuritySeverity.MEDIUM,
+        userId,
+        ipAddress,
+        timestamp: new Date(),
+        details: {
+          attempts: recentAttempts.length,
+          window: this.rateLimitWindow,
+          limit: this.maxRequestsPerWindow
+        }
+      });
+      throw new Error('Rate limit exceeded');
+    }
+    
+    // Add current attempt
+    recentAttempts.push(now);
+    this.accessAttempts.set(key, recentAttempts);
+  }
+
+  private async validateTenantIsolation(request: AccessValidationRequest): Promise<void> {
+    // Validate that user can only access data within their tenant
+    if (request.tenantId && request.organizationId) {
+      const userTenantId = await this.getUserTenantId(request.userId);
+      
+      if (userTenantId !== request.tenantId) {
+        await this.logSecurityIncident({
+          incidentType: SecurityIncidentType.UNAUTHORIZED_ACCESS,
+          severity: SecuritySeverity.CRITICAL,
+          userId: request.userId,
+          timestamp: new Date(),
+          correlationId: request.correlationId,
+          details: {
+            userTenantId,
+            requestedTenantId: request.tenantId,
+            organizationId: request.organizationId,
+            violation: 'TENANT_ISOLATION_BREACH'
+          }
+        });
+        throw new Error('Tenant isolation violation');
+      }
+    }
+  }
+
+  private async handleSecurityIncident(incident: SecurityIncident): Promise<void> {
+    switch (incident.severity) {
+      case SecuritySeverity.CRITICAL:
+        // Immediate response for critical incidents
+        if (incident.userId) {
+          await this.flagUserAsSuspicious(incident.userId, 'Critical security incident');
+        }
+        if (incident.ipAddress) {
+          await this.blockIPAddress(incident.ipAddress, 'Critical security incident');
+        }
+        break;
+        
+      case SecuritySeverity.HIGH:
+        // Flag for review
+        if (incident.userId) {
+          await this.flagUserAsSuspicious(incident.userId, 'High severity security incident');
+        }
+        break;
+        
+      case SecuritySeverity.MEDIUM:
+        // Monitor for patterns
+        break;
+        
+      case SecuritySeverity.LOW:
+        // Log only
+        break;
+    }
+  }
+
+  private async sendSecurityAlert(incident: SecurityIncident): Promise<void> {
+    // In production, this would integrate with the notification service
+    console.warn('Security alert sent', {
+      incidentId: incident.incidentId,
+      incidentType: incident.incidentType,
+      severity: incident.severity,
+      userId: incident.userId
+    });
+  }
+
+  private async getRecentUserActivity(userId: string): Promise<any[]> {
+    // In production, this would query the audit log
+    return [];
+  }
+
+  private analyzeSuspiciousPatterns(recentActivity: any[], currentActivity: any): boolean {
+    try {
+      // Analyze for suspicious patterns in user activity
+      const suspiciousIndicators = [];
+      
+      // Check for unusual access patterns
+      if (recentActivity.length > 0) {
+        // 1. Unusual time patterns (access outside normal hours)
+        const currentHour = new Date().getHours();
+        const isOutsideBusinessHours = currentHour < 7 || currentHour > 19;
+        const hasRecentOutOfHoursActivity = recentActivity.some(activity => {
+          const activityHour = new Date(activity.timestamp).getHours();
+          return activityHour < 7 || activityHour > 19;
+        });
+        
+        if (isOutsideBusinessHours && !hasRecentOutOfHoursActivity) {
+          suspiciousIndicators.push('unusual_time_access');
+        }
+        
+        // 2. Rapid successive access attempts
+        const recentTimestamps = recentActivity
+          .map(a => new Date(a.timestamp).getTime())
+          .sort((a, b) => b - a);
+          
+        let rapidAccessCount = 0;
+        for (let i = 0; i < recentTimestamps.length - 1; i++) {
+          if (recentTimestamps[i] - recentTimestamps[i + 1] < 1000) { // Less than 1 second apart
+            rapidAccessCount++;
+          }
+        }
+        
+        if (rapidAccessCount > 5) {
+          suspiciousIndicators.push('rapid_access_pattern');
+        }
+        
+        // 3. Unusual resource access patterns
+        const accessedResources = recentActivity.map(a => a.resourceType);
+        const uniqueResourceTypes = new Set(accessedResources);
+        
+        if (uniqueResourceTypes.size > 10) { // Accessing many different resource types
+          suspiciousIndicators.push('broad_resource_access');
+        }
+        
+        // 4. Geographic anomalies (if IP address available)
+        if (currentActivity.ipAddress) {
+          const recentIPs = recentActivity
+            .map(a => a.ipAddress)
+            .filter(ip => ip && ip !== currentActivity.ipAddress);
+            
+          if (recentIPs.length > 0) {
+            // Check for IP address changes (simplified check)
+            const ipPrefixes = recentIPs.map(ip => ip.split('.').slice(0, 2).join('.'));
+            const currentPrefix = currentActivity.ipAddress.split('.').slice(0, 2).join('.');
+            
+            if (!ipPrefixes.includes(currentPrefix)) {
+              suspiciousIndicators.push('geographic_anomaly');
+            }
+          }
+        }
+        
+        // 5. Failed authentication attempts
+        const failedAttempts = recentActivity.filter(a => 
+          a.action && a.action.includes('FAILED') || a.action.includes('DENIED')
+        );
+        
+        if (failedAttempts.length > 3) {
+          suspiciousIndicators.push('multiple_failed_attempts');
+        }
+      }
+      
+      // Log suspicious activity for security monitoring
+      if (suspiciousIndicators.length > 0) {
+        logger.warn('Suspicious activity patterns detected', {
+          userId: currentActivity.userId,
+          indicators: suspiciousIndicators,
+          activityCount: recentActivity.length,
+          currentAction: currentActivity.action
+        });
+        
+        // Create security alert
+        this.createSecurityAlert({
+          type: 'suspicious_activity',
+          severity: suspiciousIndicators.length > 2 ? 'high' : 'medium',
+          userId: currentActivity.userId,
+          indicators: suspiciousIndicators,
+          timestamp: new Date()
+        });
+      }
+      
+      // Return true if multiple suspicious indicators detected
+      return suspiciousIndicators.length >= 2;
+      
+    } catch (error) {
+      logger.error('Failed to analyze suspicious patterns', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        userId: currentActivity?.userId
+      });
+      
+      // Fail secure - consider suspicious on analysis error
+      return true;
+    }
+  }
+
+  private async createSecurityAlert(alert: {
+    type: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    userId: string;
+    indicators: string[];
+    timestamp: Date;
+  }): Promise<void> {
+    try {
+      // Store security alert in database
+      await this.db.query(`
+        INSERT INTO security_alerts (
+          id, type, severity, user_id, indicators, 
+          created_at, resolved_at, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `, [
+        this.generateUUID(),
+        alert.type,
+        alert.severity,
+        alert.userId,
+        JSON.stringify(alert.indicators),
+        alert.timestamp,
+        null,
+        'open'
+      ]);
+      
+      // Send notification to security team for high severity alerts
+      if (alert.severity === 'high' || alert.severity === 'critical') {
+        await this.notificationService.sendSecurityAlert({
+          type: 'suspicious_activity_detected',
+          severity: alert.severity,
+          userId: alert.userId,
+          indicators: alert.indicators,
+          timestamp: alert.timestamp
+        });
+      }
+      
+    } catch (error) {
+      logger.error('Failed to create security alert', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        alertType: alert.type,
+        userId: alert.userId
+      });
+    }
+  }
+
+  private isEncrypted(data: any): boolean {
+    // Simple check - in production, this would be more sophisticated
+    if (typeof data === 'string') {
+      // Check if it looks like base64 encoded encrypted data
+      return /^[A-Za-z0-9+/]+=*$/.test(data) && data.length > 20;
+    }
+    return false;
+  }
+
+  private async getUserTenantId(userId: string): Promise<string> {
+    // In production, this would query the user service
+    return 'default-tenant';
+  }
+
+  private generateIncidentId(): string {
+    return `SEC-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+  }
+}
+
+export default DataSecurityService;

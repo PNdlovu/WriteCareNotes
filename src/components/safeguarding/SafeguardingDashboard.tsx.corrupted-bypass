@@ -1,0 +1,445 @@
+/**
+ * @fileoverview Enterprise Safeguarding Dashboard Component
+ * @module SafeguardingDashboard
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Comprehensive safeguarding management dashboard with real-time
+ * alerts, analytics, and regulatory compliance monitoring.
+ */
+
+import React, { useState, useEffect } from 'react';
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  Alert,
+  AlertDescription,
+  Badge,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '../ui';
+import { 
+  AlertTriangle, 
+  Shield, 
+  Clock, 
+  Users, 
+  FileText, 
+  TrendingUp,
+  Eye,
+  Plus,
+  Filter,
+  Download,
+  Bell
+} from 'lucide-react';
+
+interface SafeguardingAlert {
+  id: string;
+  alertReference: string;
+  residentName: string;
+  alertType: string;
+  severity: 'low' | 'medium' | 'high' | 'critical' | 'emergency';
+  status: string;
+  reportedAt: string;
+  reportedBy: string;
+  requiresImmediateAction: boolean;
+}
+
+interface SafeguardingDashboardData {
+  activeAlerts: number;
+  criticalAlerts: number;
+  overdueInvestigations: number;
+  complianceScore: number;
+  recentAlerts: SafeguardingAlert[];
+  analytics: {
+    totalAlerts: number;
+    alertsByType: Record<string, number>;
+    alertsBySeverity: Record<string, number>;
+    monthlyTrend: number;
+  };
+}
+
+export const SafeguardingDashboard: React.FC = () => {
+  const [dashboardData, setDashboardData] = useState<SafeguardingDashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedTimeframe, setSelectedTimeframe] = useState('30d');
+  const [alertFilter, setAlertFilter] = useState('all');
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [selectedTimeframe, alertFilter]);
+
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      // API call would go here
+      const mockData: SafeguardingDashboardData = {
+        activeAlerts: 12,
+        criticalAlerts: 3,
+        overdueInvestigations: 1,
+        complianceScore: 94,
+        recentAlerts: [
+          {
+            id: '1',
+            alertReference: 'SG-20250103-PHY-C-A1B2',
+            residentName: 'John Smith',
+            alertType: 'physical_abuse',
+            severity: 'critical',
+            status: 'investigating',
+            reportedAt: '2025-01-03T10:30:00Z',
+            reportedBy: 'Sarah Johnson (Senior Carer)',
+            requiresImmediateAction: true
+          },
+          {
+            id: '2',
+            alertReference: 'SG-20250102-NEG-M-C3D4',
+            residentName: 'Mary Williams',
+            alertType: 'neglect',
+            severity: 'medium',
+            status: 'resolved',
+            reportedAt: '2025-01-02T14:15:00Z',
+            reportedBy: 'David Brown (Nurse)',
+            requiresImmediateAction: false
+          }
+        ],
+        analytics: {
+          totalAlerts: 45,
+          alertsByType: {
+            physical_abuse: 8,
+            emotional_abuse: 5,
+            neglect: 12,
+            financial_abuse: 3,
+            discrimination: 2
+          },
+          alertsBySeverity: {
+            low: 15,
+            medium: 18,
+            high: 9,
+            critical: 3
+          },
+          monthlyTrend: -12 // 12% decrease
+        }
+      };
+      setDashboardData(mockData);
+    } catch (error) {
+      console.error('Failed to load safeguarding dashboard:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSeverityBadgeVariant = (severity: string) => {
+    switch (severity) {
+      case 'critical':
+      case 'emergency':
+        return 'destructive';
+      case 'high':
+        return 'destructive';
+      case 'medium':
+        return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+
+  const formatAlertType = (type: string) => {
+    return type.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!dashboardData) {
+    return (
+      <Alert>
+        <AlertTriangle className="h-4 w-4" />
+        <AlertDescription>
+          Failed to load safeguarding dashboard data.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Safeguarding Management</h1>
+          <p className="text-gray-600">Comprehensive safeguarding oversight and compliance monitoring</p>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            New Alert
+          </Button>
+        </div>
+      </div>
+
+      {/* Critical Alerts Banner */}
+      {dashboardData.criticalAlerts > 0 && (
+        <Alert className="border-red-200 bg-red-50">
+          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <AlertDescription className="text-red-800">
+            <strong>{dashboardData.criticalAlerts} critical alert{dashboardData.criticalAlerts > 1 ? 's' : ''}</strong> require immediate attention.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
+            <Bell className="h-4 w-4 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{dashboardData.activeAlerts}</div>
+            <p className="text-xs text-gray-500">Requiring action</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Critical Alerts</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-red-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{dashboardData.criticalAlerts}</div>
+            <p className="text-xs text-gray-500">Immediate attention</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Overdue Investigations</CardTitle>
+            <Clock className="h-4 w-4 text-amber-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-amber-600">{dashboardData.overdueInvestigations}</div>
+            <p className="text-xs text-gray-500">Past deadline</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Compliance Score</CardTitle>
+            <Shield className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{dashboardData.complianceScore}%</div>
+            <p className="text-xs text-gray-500">
+              <TrendingUp className="h-3 w-3 inline mr-1" />
+              +2% this month
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <Tabs defaultValue="alerts" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="alerts">Recent Alerts</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="compliance">Compliance</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="alerts" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle>Recent Safeguarding Alerts</CardTitle>
+                <div className="flex space-x-2">
+                  <Select value={alertFilter} onValueChange={setAlertFilter}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Alerts</SelectItem>
+                      <SelectItem value="critical">Critical Only</SelectItem>
+                      <SelectItem value="active">Active Only</SelectItem>
+                      <SelectItem value="overdue">Overdue Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" size="sm">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filter
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Reference</TableHead>
+                    <TableHead>Resident</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Severity</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Reported</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {dashboardData.recentAlerts.map((alert) => (
+                    <TableRow key={alert.id}>
+                      <TableCell className="font-mono text-sm">
+                        {alert.alertReference}
+                      </TableCell>
+                      <TableCell>{alert.residentName}</TableCell>
+                      <TableCell>{formatAlertType(alert.alertType)}</TableCell>
+                      <TableCell>
+                        <Badge variant={getSeverityBadgeVariant(alert.severity)}>
+                          {alert.severity.toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {alert.status.replace('_', ' ').toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="text-sm">{new Date(alert.reportedAt).toLocaleDateString()}</div>
+                          <div className="text-xs text-gray-500">{alert.reportedBy}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex space-x-1">
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          {alert.requiresImmediateAction && (
+                            <Button variant="destructive" size="sm">
+                              <AlertTriangle className="h-3 w-3" />
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Alerts by Type</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {Object.entries(dashboardData.analytics.alertsByType).map(([type, count]) => (
+                    <div key={type} className="flex justify-between items-center">
+                      <span className="text-sm">{formatAlertType(type)}</span>
+                      <Badge variant="outline">{count}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Alerts by Severity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {Object.entries(dashboardData.analytics.alertsBySeverity).map(([severity, count]) => (
+                    <div key={severity} className="flex justify-between items-center">
+                      <span className="text-sm capitalize">{severity}</span>
+                      <Badge variant={getSeverityBadgeVariant(severity)}>{count}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="compliance" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Regulatory Compliance Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span>Overall Compliance Score</span>
+                  <Badge variant="default" className="bg-green-600">
+                    {dashboardData.complianceScore}%
+                  </Badge>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${dashboardData.complianceScore}%` }}
+                  ></div>
+                </div>
+                <div className="text-sm text-gray-600">
+                  Exceeds CQC requirements for safeguarding protocols
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Generate Reports</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button variant="outline" className="h-20 flex-col">
+                  <FileText className="h-6 w-6 mb-2" />
+                  Monthly Report
+                </Button>
+                <Button variant="outline" className="h-20 flex-col">
+                  <Shield className="h-6 w-6 mb-2" />
+                  CQC Compliance
+                </Button>
+                <Button variant="outline" className="h-20 flex-col">
+                  <TrendingUp className="h-6 w-6 mb-2" />
+                  Trend Analysis
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};

@@ -1,0 +1,618 @@
+import { EventEmitter2 } from "eventemitter2";
+
+/**
+ * @fileoverview Separate Security Service
+ * @module SecurityService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ */
+
+import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from 'eventemitter2';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import AppDataSource from '../../config/database';
+import { SecurityPolicy } from '../../entities/security/SecurityPolicy';
+import { SecurityIncident } from '../../entities/security/SecurityIncident';
+import { AuditTrailService } from '../audit/AuditTrailService';
+import { NotificationService } from '../notifications/NotificationService';
+
+export interface CreatePolicyDto {
+  policyName: string;
+  description: string;
+  policyType: 'access_control' | 'data_protection' | 'incident_response' | 'audit' | 'compliance' | 'network' | 'application';
+  category: 'authentication' | 'authorization' | 'data_access' | 'network_access' | 'device_access' | 'api_access' | 'file_access';
+  conditions: any;
+  actions: any;
+  enforcementLevel: 'advisory' | 'mandatory' | 'critical';
+  priority?: number;
+  effectiveDate?: Date;
+  expiryDate?: Date;
+  requiresApproval?: boolean;
+  notes?: string;
+}
+
+export interface CreateIncidentDto {
+  incidentType: 'unauthorized_access' | 'data_breach' | 'malware' | 'phishing' | 'insider_threat' | 'ddos' | 'sql_injection' | 'xss' | 'privilege_escalation' | 'account_compromise' | 'physical_security' | 'social_engineering';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  details: any;
+  detectedAt: Date;
+  reportedBy?: string;
+  assignedTo?: string;
+  detectionMethod?: 'automated' | 'manual' | 'user_report' | 'external' | 'audit';
+  policyId?: string;
+}
+
+export interface PolicyEvaluationResult {
+  policyId: string;
+  policyName: string;
+  allowed: boolean;
+  actions: string[];
+  reason: string;
+  evaluationTime: number;
+  conditionsMet: boolean;
+}
+
+export interface SecurityAssessment {
+  overallScore: number;
+  policyCompliance: number;
+  incidentResponse: number;
+  accessControl: number;
+  dataProtection: number;
+  networkSecurity: number;
+  recommendations: string[];
+  criticalIssues: number;
+  highIssues: number;
+  mediumIssues: number;
+  lowIssues: number;
+}
+
+
+export class SecurityService {
+  private policyRepository: Repository<SecurityPolicy>;
+  private incidentRepository: Repository<SecurityIncident>;
+  private auditService: AuditTrailService;
+  private notificationService: NotificationService;
+
+  constructor() {
+    this.policyRepository = AppDataSource.getRepository(SecurityPolicy);
+    this.incidentRepository = AppDataSource.getRepository(SecurityIncident);
+    this.auditService = new AuditTrailService();
+    this.notificationService = new NotificationService(new EventEmitter2());
+  }
+
+  async createPolicy(policyData: CreatePolicyDto): Promise<SecurityPolicy> {
+    try {
+      const policy = this.policyRepository.create({
+        ...policyData,
+        isActive: true,
+        priority: policyData.priority || 0,
+        requiresApproval: policyData.requiresApproval || false,
+        metrics: {
+          totalEvaluations: 0,
+          allowedAccess: 0,
+          deniedAccess: 0,
+          mfaRequired: 0,
+          alertsGenerated: 0,
+          lastEvaluated: new Date(),
+          averageEvaluationTime: 0,
+          effectivenessScore: 0
+        }
+      });
+
+      const savedPolicy = await this.policyRepository.save(policy);
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'SecurityPolicy',
+        entityType: 'SecurityPolicy',
+        entityId: savedPolicy.id,
+        action: 'CREATE',
+        details: {
+          policyName: savedPolicy.policyName,
+          policyType: savedPolicy.policyType,
+          enforcementLevel: savedPolicy.enforcementLevel
+        },
+        userId: 'system'
+      });
+
+      return savedPolicy;
+    } catch (error: unknown) {
+      console.error('Error creating security policy:', error);
+      throw error;
+    }
+  }
+
+  async evaluateAccess(context: any): Promise<PolicyEvaluationResult[]> {
+    try {
+      const startTime = Date.now();
+      
+      // Get all active policies ordered by priority
+      const policies = await this.policyRepository.find({
+        where: { isActive: true },
+        order: { priority: 'DESC', createdAt: 'ASC' }
+      });
+
+      const results: PolicyEvaluationResult[] = [];
+
+      for (const policy of policies) {
+        const policyStartTime = Date.now();
+        
+        try {
+          const evaluation = policy.evaluateAccess(context);
+          const evaluationTime = Date.now() - policyStartTime;
+
+          // Update policy metrics
+          policy.updateMetrics(evaluation, evaluationTime);
+          await this.policyRepository.save(policy);
+
+          results.push({
+            policyId: policy.id,
+            policyName: policy.policyName,
+            allowed: evaluation.allowed,
+            actions: evaluation.actions,
+            reason: evaluation.reason || '',
+            evaluationTime: evaluationTime,
+            conditionsMet: evaluation.allowed
+          });
+
+          // If policy denies access, stop evaluation
+          if (!evaluation.allowed && policy.enforcementLevel === 'mandatory') {
+            break;
+          }
+        } catch (error: unknown) {
+          console.error(`Error evaluating policy ${policy.policyName}:`, error);
+          results.push({
+            policyId: policy.id,
+            policyName: policy.policyName,
+            allowed: false,
+            actions: ['deny'],
+            reason: `Policy evaluation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`,
+            evaluationTime: Date.now() - policyStartTime,
+            conditionsMet: false
+          });
+        }
+      }
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'SecurityPolicy',
+        entityType: 'SecurityPolicy',
+        entityId: 'access_evaluation',
+        action: 'EVALUATE_ACCESS',
+        details: {
+          context: context,
+          policiesEvaluated: results.length,
+          totalEvaluationTime: Date.now() - startTime
+        },
+        userId: context.userId      || 'system'
+      });
+
+      return results;
+    } catch (error: unknown) {
+      console.error('Error evaluating access:', error);
+      throw error;
+    }
+  }
+
+  async createIncident(incidentData: CreateIncidentDto): Promise<SecurityIncident> {
+    try {
+      const incident = this.incidentRepository.create({
+        ...incidentData,
+        status: 'reported',
+        reportedAt: new Date(),
+        requiresExternalNotification: incidentData.severity === 'critical' || incidentData.incidentType === 'data_breach',
+        requiresLegalReview: incidentData.severity === 'critical' || incidentData.incidentType === 'data_breach'
+      });
+
+      const savedIncident = await this.incidentRepository.save(incident);
+
+      // Add initial investigation note
+      savedIncident.addInvestigationNote({
+        timestamp: new Date(),
+        investigator: incidentData.reportedBy || 'system',
+        note: `Incident reported: ${incidentData.description}`,
+        tags: ['initial_report']
+      });
+
+      await this.incidentRepository.save(savedIncident);
+
+      // Send notifications based on severity
+      await this.sendIncidentNotifications(savedIncident);
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'SecurityIncident',
+        entityType: 'SecurityIncident',
+        entityId: savedIncident.id,
+        action: 'CREATE',
+        details: {
+          incidentType: savedIncident.incidentType,
+          severity: savedIncident.severity,
+          title: savedIncident.title
+        },
+        userId: incidentData.reportedBy      || 'system'
+      });
+
+      return savedIncident;
+    } catch (error: unknown) {
+      console.error('Error creating security incident:', error);
+      throw error;
+    }
+  }
+
+  async updateIncidentStatus(incidentId: string, status: string, updatedBy: string, notes?: string): Promise<SecurityIncident> {
+    try {
+      const incident = await this.incidentRepository.findOne({
+        where: { id: incidentId }
+      });
+
+      if (!incident) {
+        throw new Error('Security incident not found');
+      }
+
+      const oldStatus = incident.status;
+      incident.status = status as any;
+
+      // Update timestamps based on status
+      switch (status) {
+        case 'contained':
+          incident.containedAt = new Date();
+          break;
+        case 'resolved':
+          incident.resolvedAt = new Date();
+          break;
+        case 'closed':
+          incident.closedAt = new Date();
+          break;
+      }
+
+      // Add investigation note
+      if (notes) {
+        incident.addInvestigationNote({
+          timestamp: new Date(),
+          investigator: updatedBy,
+          note: `Status changed from ${oldStatus} to ${status}. ${notes}`,
+          tags: ['status_change']
+        });
+      }
+
+      await this.incidentRepository.save(incident);
+
+      // Send status update notifications
+      await this.sendIncidentStatusNotifications(incident, oldStatus, updatedBy);
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'SecurityIncident',
+        entityType: 'SecurityIncident',
+        entityId: incidentId,
+        action: 'UPDATE_STATUS',
+        details: {
+          oldStatus: oldStatus,
+          newStatus: status,
+          updatedBy: updatedBy,
+          notes: notes
+        },
+        userId: updatedBy
+      });
+
+      return incident;
+    } catch (error: unknown) {
+      console.error('Error updating incident status:', error);
+      throw error;
+    }
+  }
+
+  async getAllPolicies(): Promise<SecurityPolicy[]> {
+    try {
+      return await this.policyRepository.find({
+        order: { priority: 'DESC', createdAt: 'ASC' }
+      });
+    } catch (error: unknown) {
+      console.error('Error getting all policies:', error);
+      throw error;
+    }
+  }
+
+  async getActivePolicies(): Promise<SecurityPolicy[]> {
+    try {
+      return await this.policyRepository.find({
+        where: { isActive: true },
+        order: { priority: 'DESC', createdAt: 'ASC' }
+      });
+    } catch (error: unknown) {
+      console.error('Error getting active policies:', error);
+      throw error;
+    }
+  }
+
+  async getPolicyById(policyId: string): Promise<SecurityPolicy> {
+    try {
+      const policy = await this.policyRepository.findOne({
+        where: { id: policyId }
+      });
+
+      if (!policy) {
+        throw new Error('Security policy not found');
+      }
+
+      return policy;
+    } catch (error: unknown) {
+      console.error('Error getting policy by ID:', error);
+      throw error;
+    }
+  }
+
+  async getAllIncidents(): Promise<SecurityIncident[]> {
+    try {
+      return await this.incidentRepository.find({
+        order: { detectedAt: 'DESC' }
+      });
+    } catch (error: unknown) {
+      console.error('Error getting all incidents:', error);
+      throw error;
+    }
+  }
+
+  async getOpenIncidents(): Promise<SecurityIncident[]> {
+    try {
+      return await this.incidentRepository.find({
+        where: { status: In(['reported', 'investigating', 'contained']) },
+        order: { detectedAt: 'DESC' }
+      });
+    } catch (error: unknown) {
+      console.error('Error getting open incidents:', error);
+      throw error;
+    }
+  }
+
+  async getIncidentById(incidentId: string): Promise<SecurityIncident> {
+    try {
+      const incident = await this.incidentRepository.findOne({
+        where: { id: incidentId }
+      });
+
+      if (!incident) {
+        throw new Error('Security incident not found');
+      }
+
+      return incident;
+    } catch (error: unknown) {
+      console.error('Error getting incident by ID:', error);
+      throw error;
+    }
+  }
+
+  async getSecurityAssessment(): Promise<SecurityAssessment> {
+    try {
+      const policies = await this.policyRepository.find();
+      const incidents = await this.incidentRepository.find();
+
+      // Calculate policy compliance score
+      const activePolicies = policies.filter(p => p.isActive);
+      const effectivePolicies = activePolicies.filter(p => p.isEffective());
+      const policyCompliance = activePolicies.length > 0 ? (effectivePolicies.length / activePolicies.length) * 100 : 0;
+
+      // Calculate incident response score
+      const resolvedIncidents = incidents.filter(i => i.isResolved());
+      const incidentResponse = incidents.length > 0 ? (resolvedIncidents.length / incidents.length) * 100 : 100;
+
+      // Calculate access control score
+      const accessControlPolicies = policies.filter(p => p.category === 'access_control' && p.isActive);
+      const accessControlScore = accessControlPolicies.length > 0 ? 
+        accessControlPolicies.reduce((sum, p) => sum + (p.metrics?.effectivenessScore || 0), 0) / accessControlPolicies.length : 0;
+
+      // Calculate data protection score
+      const dataProtectionPolicies = policies.filter(p => p.policyType === 'data_protection' && p.isActive);
+      const dataProtectionScore = dataProtectionPolicies.length > 0 ? 
+        dataProtectionPolicies.reduce((sum, p) => sum + (p.metrics?.effectivenessScore || 0), 0) / dataProtectionPolicies.length : 0;
+
+      // Calculate network security score
+      const networkPolicies = policies.filter(p => p.policyType === 'network' && p.isActive);
+      const networkSecurityScore = networkPolicies.length > 0 ? 
+        networkPolicies.reduce((sum, p) => sum + (p.metrics?.effectivenessScore || 0), 0) / networkPolicies.length : 0;
+
+      // Count issues by severity
+      const criticalIssues = incidents.filter(i => i.severity === 'critical' && i.isOpen()).length;
+      const highIssues = incidents.filter(i => i.severity === 'high' && i.isOpen()).length;
+      const mediumIssues = incidents.filter(i => i.severity === 'medium' && i.isOpen()).length;
+      const lowIssues = incidents.filter(i => i.severity === 'low' && i.isOpen()).length;
+
+      // Calculate overall score
+      const overallScore = (policyCompliance + incidentResponse + accessControlScore + dataProtectionScore + networkSecurityScore) / 5;
+
+      // Generate recommendations
+      const recommendations = this.generateSecurityRecommendations(policies, incidents);
+
+      return {
+        overallScore: Math.round(overallScore),
+        policyCompliance: Math.round(policyCompliance),
+        incidentResponse: Math.round(incidentResponse),
+        accessControl: Math.round(accessControlScore),
+        dataProtection: Math.round(dataProtectionScore),
+        networkSecurity: Math.round(networkSecurityScore),
+        recommendations: recommendations,
+        criticalIssues: criticalIssues,
+        highIssues: highIssues,
+        mediumIssues: mediumIssues,
+        lowIssues: lowIssues
+      };
+    } catch (error: unknown) {
+      console.error('Error getting security assessment:', error);
+      throw error;
+    }
+  }
+
+  async updatePolicy(policyId: string, updateData: Partial<CreatePolicyDto>): Promise<SecurityPolicy> {
+    try {
+      const policy = await this.policyRepository.findOne({
+        where: { id: policyId }
+      });
+
+      if (!policy) {
+        throw new Error('Security policy not found');
+      }
+
+      // Update policy data
+      Object.assign(policy, updateData);
+      policy.lastModifiedAt = new Date();
+      policy.lastModifiedBy = 'system';
+
+      const updatedPolicy = await this.policyRepository.save(policy);
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'SecurityPolicy',
+        entityType: 'SecurityPolicy',
+        entityId: policyId,
+        action: 'UPDATE',
+        resource: 'SecurityPolicy',
+        details: updateData,
+        userId: 'system'
+      
+      });
+
+      return updatedPolicy;
+    } catch (error: unknown) {
+      console.error('Error updating policy:', error);
+      throw error;
+    }
+  }
+
+  async deletePolicy(policyId: string): Promise<void> {
+    try {
+      const policy = await this.policyRepository.findOne({
+        where: { id: policyId }
+      });
+
+      if (!policy) {
+        throw new Error('Security policy not found');
+      }
+
+      // Check if policy has associated incidents
+      const incidentCount = await this.incidentRepository.count({
+        where: { policyId: policyId }
+      });
+
+      if (incidentCount > 0) {
+        throw new Error('Cannot delete policy with associated incidents');
+      }
+
+      await this.policyRepository.remove(policy);
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'SecurityPolicy',
+        entityType: 'SecurityPolicy',
+        entityId: policyId,
+        action: 'DELETE',
+        details: {
+          policyName: policy.policyName,
+          policyType: policy.policyType
+        },
+        userId: 'system'
+      });
+    } catch (error: unknown) {
+      console.error('Error deleting policy:', error);
+      throw error;
+    }
+  }
+
+  // Private helper methods
+  private async sendIncidentNotifications(incident: SecurityIncident): Promise<void> {
+    const recipients = ['security_team'];
+
+    // Add recipients based on severity
+    if (incident.isCritical()) {
+      recipients.push('admin', 'management', 'legal_team');
+    } else if (incident.isHighSeverity()) {
+      recipients.push('admin', 'management');
+    }
+
+    // Add recipients based on incident type
+    if (incident.incidentType === 'data_breach') {
+      recipients.push('data_protection_officer', 'legal_team', 'compliance_team');
+    }
+
+    await this.notificationService.sendNotification({
+      message: 'Notification: Security Incident Created',
+        type: 'security_incident_created',
+      recipients: recipients,
+      data: {
+        incidentId: incident.id,
+        incidentType: incident.incidentType,
+        severity: incident.severity,
+        title: incident.title,
+        detectedAt: incident.detectedAt,
+        requiresExternalNotification: incident.requiresExternalNotification,
+        requiresLegalReview: incident.requiresLegalReview
+      }
+    });
+  }
+
+  private async sendIncidentStatusNotifications(incident: SecurityIncident, oldStatus: string, updatedBy: string): Promise<void> {
+    const recipients = ['security_team', incident.assignedTo].filter(Boolean);
+
+    if (incident.isCritical()) {
+      recipients.push('admin', 'management');
+    }
+
+    await this.notificationService.sendNotification({
+      message: 'Notification: Security Incident Status Update',
+        type: 'security_incident_status_update',
+      recipients: recipients,
+      data: {
+        incidentId: incident.id,
+        incidentType: incident.incidentType,
+        severity: incident.severity,
+        title: incident.title,
+        oldStatus: oldStatus,
+        newStatus: incident.status,
+        updatedBy: updatedBy,
+        updatedAt: new Date()
+      }
+    });
+  }
+
+  private generateSecurityRecommendations(policies: SecurityPolicy[], incidents: SecurityIncident[]): string[] {
+    const recommendations: any[] = [];
+
+    // Policy recommendations
+    const expiredPolicies = policies.filter(p => p.isExpired());
+    if (expiredPolicies.length > 0) {
+      recommendations.push(`Review and update ${expiredPolicies.length} expired security policies`);
+    }
+
+    const pendingPolicies = policies.filter(p => p.isPending());
+    if (pendingPolicies.length > 0) {
+      recommendations.push(`Approve ${pendingPolicies.length} pending security policies`);
+    }
+
+    // Incident recommendations
+    const openCriticalIncidents = incidents.filter(i => i.severity === 'critical' && i.isOpen());
+    if (openCriticalIncidents.length > 0) {
+      recommendations.push(`Immediately address ${openCriticalIncidents.length} critical security incidents`);
+    }
+
+    const unresolvedIncidents = incidents.filter(i => i.isOpen());
+    if (unresolvedIncidents.length > 0) {
+      recommendations.push(`Resolve ${unresolvedIncidents.length} open security incidents`);
+    }
+
+    // General recommendations
+    if (policies.length < 10) {
+      recommendations.push('Implement additional security policies to improve coverage');
+    }
+
+    const lowEffectivenessPolicies = policies.filter(p => (p.metrics?.effectivenessScore || 0) < 70);
+    if (lowEffectivenessPolicies.length > 0) {
+      recommendations.push(`Review and improve ${lowEffectivenessPolicies.length} low-effectiveness security policies`);
+    }
+
+    return recommendations;
+  }
+}

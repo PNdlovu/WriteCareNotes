@@ -1,0 +1,1016 @@
+/**
+ * @fileoverview Comprehensive Billing Interface Component
+ * @module ComprehensiveBillingInterface
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Advanced billing and financial management interface with
+ * AI-powered forecasting, automated invoicing, and multi-payer support.
+ * 
+ * @features
+ * - Multi-payer billing (NHS CHC, Local Authority, Private)
+ * - Automated invoice generation
+ * - AI-powered financial forecasting
+ * - Real-time payment tracking
+ * - Compliance reporting
+ */
+
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { Alert, AlertDescription } from '../ui/Alert';
+import { LoadingSpinner } from '../ui/LoadingSpinner';
+import { useBillingManagement } from '../hooks/useBillingManagement';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { 
+  DollarSign, CreditCard, FileText, TrendingUp, AlertTriangle,
+  CheckCircle, Clock, Users, Building, Calculator,
+  Download, Upload, Send, Eye, Edit, Trash2,
+  Calendar, Target, Brain, Zap, Award, Bell
+} from 'lucide-react';
+
+interface BillingInterfaceProps {
+  organizationId: string;
+  userRole: string;
+}
+
+interface BillingOverview {
+  totalRevenue: number;
+  monthlyRevenue: number;
+  outstandingInvoices: number;
+  overduePayments: number;
+  averagePaymentTime: number;
+  cashFlow: number;
+  profitMargin: number;
+  occupancyRevenue: number;
+}
+
+interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  residentName: string;
+  payerType: 'nhs_chc' | 'local_authority' | 'private' | 'insurance';
+  payerName: string;
+  amount: number;
+  issueDate: Date;
+  dueDate: Date;
+  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'disputed';
+  services: Array<{
+    description: string;
+    quantity: number;
+    rate: number;
+    total: number;
+  }>;
+}
+
+interface PaymentForecast {
+  month: string;
+  predictedRevenue: number;
+  confirmedRevenue: number;
+  potentialRevenue: number;
+  cashFlow: number;
+  confidence: number;
+}
+
+export const ComprehensiveBillingInterface: React.FC<BillingInterfaceProps> = ({
+  organizationId,
+  userRole
+}) => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'invoices' | 'payments' | 'forecasting' | 'reports'>('overview');
+  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+
+  const {
+    billingOverview,
+    recentInvoices,
+    paymentForecast,
+    payerAnalysis,
+    revenueStreams,
+    outstandingPayments,
+    loading,
+    error,
+    generateInvoice,
+    sendInvoice,
+    recordPayment,
+    generateForecast,
+    exportFinancialReport
+  } = useBillingManagement(organizationId, selectedPeriod);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'paid': return 'bg-green-100 text-green-800 border-green-200';
+      case 'sent': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'overdue': return 'bg-red-100 text-red-800 border-red-200';
+      case 'disputed': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'draft': return 'bg-gray-100 text-gray-800 border-gray-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getPayerTypeIcon = (payerType: string) => {
+    switch (payerType) {
+      case 'nhs_chc': return <Building className="w-4 h-4 text-blue-500" />;
+      case 'local_authority': return <Building className="w-4 h-4 text-green-500" />;
+      case 'private': return <Users className="w-4 h-4 text-purple-500" />;
+      case 'insurance': return <CreditCard className="w-4 h-4 text-orange-500" />;
+      default: return <DollarSign className="w-4 h-4 text-gray-500" />;
+    }
+  };
+
+  if (loading && !billingOverview) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <LoadingSpinner size="lg" />
+        <span className="ml-2">Loading billing dashboard...</span>
+      </div>
+    );
+  }
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <DollarSign className="w-8 h-8 text-green-500" />
+            Financial Management & Billing
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Comprehensive billing with AI-powered forecasting and multi-payer support
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <select
+            value={selectedPeriod}
+            onChange={(e) => setSelectedPeriod(e.target.value as any)}
+            className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="quarter">This Quarter</option>
+            <option value="year">This Year</option>
+          </select>
+          <Button onClick={exportFinancialReport}>
+            <Download className="w-4 h-4 mr-2" />
+            Export Report
+          </Button>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8">
+          {[
+            { id: 'overview', label: 'Overview', icon: BarChart3 },
+            { id: 'invoices', label: 'Invoices', icon: FileText },
+            { id: 'payments', label: 'Payments', icon: CreditCard },
+            { id: 'forecasting', label: 'AI Forecasting', icon: Brain },
+            { id: 'reports', label: 'Reports', icon: Download }
+          ].map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                  activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Overview Tab */}
+      {activeTab === 'overview' && (
+        <>
+          {/* Financial KPIs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      £{(billingOverview?.totalRevenue || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <DollarSign className="w-8 h-8 text-green-500" />
+                </div>
+                <div className="flex items-center mt-2 text-sm">
+                  <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+                  <span className="text-green-600">+12.5% vs last period</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Outstanding</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      £{(billingOverview?.outstandingInvoices || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <Clock className="w-8 h-8 text-orange-500" />
+                </div>
+                <div className="text-sm text-gray-600 mt-2">
+                  {billingOverview?.overduePayments || 0} overdue payments
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Avg Payment Time</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {billingOverview?.averagePaymentTime || 0} days
+                    </p>
+                  </div>
+                  <Calendar className="w-8 h-8 text-blue-500" />
+                </div>
+                <div className="text-sm text-blue-600 mt-2">
+                  2 days faster than target
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Profit Margin</p>
+                    <p className="text-2xl font-bold text-purple-600">
+                      {(billingOverview?.profitMargin || 0).toFixed(1)}%
+                    </p>
+                  </div>
+                  <Target className="w-8 h-8 text-purple-500" />
+                </div>
+                <div className="text-sm text-purple-600 mt-2">
+                  Above industry average
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Revenue Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-blue-500" />
+                  Revenue Trends
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={revenueStreams}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => [`£${value.toLocaleString()}`, '']} />
+                    <Legend />
+                    <Area 
+                      type="monotone" 
+                      dataKey="nhsChc" 
+                      stackId="1"
+                      stroke="#8884d8" 
+                      fill="#8884d8" 
+                      name="NHS CHC"
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="localAuthority" 
+                      stackId="1"
+                      stroke="#82ca9d" 
+                      fill="#82ca9d" 
+                      name="Local Authority"
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="private" 
+                      stackId="1"
+                      stroke="#ffc658" 
+                      fill="#ffc658" 
+                      name="Private"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <PieChart className="w-5 h-5 text-green-500" />
+                  Payer Mix Analysis
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={payerAnalysis}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {payerAnalysis?.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
+
+      {/* Invoices Tab */}
+      {activeTab === 'invoices' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Invoice List */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-blue-500" />
+                    Recent Invoices
+                  </CardTitle>
+                  <Button>
+                    <FileText className="w-4 h-4 mr-2" />
+                    Create Invoice
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {recentInvoices?.map((invoice) => (
+                    <div key={invoice.id} className="border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          {getPayerTypeIcon(invoice.payerType)}
+                          <div>
+                            <h4 className="font-semibold">{invoice.invoiceNumber}</h4>
+                            <p className="text-sm text-gray-600">
+                              {invoice.residentName} • {invoice.payerName}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold">£{invoice.amount.toLocaleString()}</p>
+                          <Badge className={getStatusColor(invoice.status)}>
+                            {invoice.status.replace('_', ' ')}
+                          </Badge>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+                        <span>Issued: {invoice.issueDate.toLocaleDateString()}</span>
+                        <span>Due: {invoice.dueDate.toLocaleDateString()}</span>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" onClick={() => setSelectedInvoice(invoice)}>
+                          <Eye className="w-3 h-3 mr-1" />
+                          View
+                        </Button>
+                        {invoice.status === 'draft' && (
+                          <Button size="sm" variant="outline">
+                            <Edit className="w-3 h-3 mr-1" />
+                            Edit
+                          </Button>
+                        )}
+                        {(invoice.status === 'draft' || invoice.status === 'sent') && (
+                          <Button size="sm" onClick={() => sendInvoice(invoice.id)}>
+                            <Send className="w-3 h-3 mr-1" />
+                            Send
+                          </Button>
+                        )}
+                        {invoice.status === 'sent' && (
+                          <Button size="sm" variant="outline">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Mark Paid
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Invoice Actions */}
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button className="w-full justify-start">
+                  <FileText className="w-4 h-4 mr-3" />
+                  Create Invoice
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Upload className="w-4 h-4 mr-3" />
+                  Bulk Import
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Send className="w-4 h-4 mr-3" />
+                  Send Reminders
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Calculator className="w-4 h-4 mr-3" />
+                  Payment Calculator
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Invoice Statistics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Total Invoices</span>
+                  <span className="font-semibold">247</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Paid This Month</span>
+                  <span className="font-semibold text-green-600">189</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Overdue</span>
+                  <span className="font-semibold text-red-600">12</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Average Value</span>
+                  <span className="font-semibold">£1,247</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* AI Forecasting Tab */}
+      {activeTab === 'forecasting' && (
+        <div className="space-y-6">
+          {/* Forecasting Header */}
+          <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <Brain className="w-6 h-6 text-purple-500" />
+                    AI Financial Forecasting
+                  </h2>
+                  <p className="text-gray-600">Predictive analytics for revenue optimization</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-purple-600 mb-1">
+                    94.2%
+                  </div>
+                  <p className="text-sm text-gray-600">Forecast Accuracy</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Forecast Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-blue-500" />
+                  Revenue Forecast (Next 12 Months)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={350}>
+                  <AreaChart data={paymentForecast}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => [`£${value.toLocaleString()}`, '']} />
+                    <Legend />
+                    <Area 
+                      type="monotone" 
+                      dataKey="confirmedRevenue" 
+                      stackId="1"
+                      stroke="#82ca9d" 
+                      fill="#82ca9d" 
+                      fillOpacity={0.8}
+                      name="Confirmed Revenue"
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="predictedRevenue" 
+                      stackId="2"
+                      stroke="#8884d8" 
+                      fill="#8884d8" 
+                      fillOpacity={0.6}
+                      name="Predicted Revenue"
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="potentialRevenue" 
+                      stackId="3"
+                      stroke="#ffc658" 
+                      fill="#ffc658" 
+                      fillOpacity={0.4}
+                      name="Potential Revenue"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-purple-500" />
+                  Cash Flow Prediction
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={350}>
+                  <LineChart data={paymentForecast}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => [`£${value.toLocaleString()}`, '']} />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="cashFlow" 
+                      stroke="#8884d8" 
+                      strokeWidth={3}
+                      name="Predicted Cash Flow"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="confidence" 
+                      stroke="#82ca9d" 
+                      strokeWidth={2}
+                      name="Confidence Level"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* AI Insights */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="w-5 h-5 text-purple-500" />
+                AI Financial Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  {
+                    type: 'Revenue Optimization',
+                    title: 'Occupancy Rate Improvement',
+                    description: 'AI identifies potential for 8% occupancy increase through optimized admission timing',
+                    impact: '£47K additional monthly revenue',
+                    confidence: 89,
+                    timeframe: '3 months'
+                  },
+                  {
+                    type: 'Cost Reduction',
+                    title: 'Staffing Efficiency',
+                    description: 'Predictive scheduling could reduce overtime costs by 15% while maintaining care quality',
+                    impact: '£12K monthly savings',
+                    confidence: 92,
+                    timeframe: '2 months'
+                  },
+                  {
+                    type: 'Risk Management',
+                    title: 'Payment Risk Alert',
+                    description: 'Local Authority payment delays predicted for Q2 based on budget cycle analysis',
+                    impact: 'Potential £89K delay',
+                    confidence: 76,
+                    timeframe: '4-6 months'
+                  }
+                ].map((insight, index) => (
+                  <div key={index} className="border rounded-lg p-4 hover:shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="outline" className="text-purple-600">
+                        {insight.type}
+                      </Badge>
+                      <Badge className={getConfidenceColor(insight.confidence)}>
+                        {insight.confidence}%
+                      </Badge>
+                    </div>
+                    <h4 className="font-semibold mb-2">{insight.title}</h4>
+                    <p className="text-sm text-gray-600 mb-2">{insight.description}</p>
+                    <div className="text-sm">
+                      <p className="font-medium text-green-600">{insight.impact}</p>
+                      <p className="text-gray-500">Timeframe: {insight.timeframe}</p>
+                    </div>
+                    <Button size="sm" variant="outline" className="w-full mt-3">
+                      <Target className="w-3 h-3 mr-1" />
+                      Implement Strategy
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Payments Tab */}
+      {activeTab === 'payments' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Payment Tracking */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-green-500" />
+                  Payment Tracking
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {outstandingPayments?.map((payment, index) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          {getPayerTypeIcon(payment.payerType)}
+                          <span className="font-medium">{payment.payerName}</span>
+                        </div>
+                        <Badge className={getStatusColor(payment.status)}>
+                          {payment.status}
+                        </Badge>
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-gray-600">Amount</p>
+                          <p className="font-semibold">£{payment.amount.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-600">Due Date</p>
+                          <p className="font-semibold">{payment.dueDate.toLocaleDateString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-600">Days Overdue</p>
+                          <p className={`font-semibold ${payment.daysOverdue > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                            {payment.daysOverdue > 0 ? payment.daysOverdue : 'On time'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2 mt-3">
+                        <Button size="sm" variant="outline">
+                          <Send className="w-3 h-3 mr-1" />
+                          Send Reminder
+                        </Button>
+                        <Button size="sm" variant="outline">
+                          <Phone className="w-3 h-3 mr-1" />
+                          Call Payer
+                        </Button>
+                        <Button size="sm">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Record Payment
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Payment Analytics */}
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Payment Performance</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <DollarSign className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-green-600">94.2%</div>
+                  <div className="text-sm text-gray-600">On-time Payment Rate</div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Average Payment Time</span>
+                    <span className="font-medium">18 days</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Fastest Payer</span>
+                    <span className="font-medium">Private (12 days)</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Slowest Payer</span>
+                    <span className="font-medium">Local Auth (28 days)</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Payment Alerts</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 border rounded-lg bg-red-50 border-red-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="w-4 h-4 text-red-500" />
+                    <span className="text-sm font-medium">Critical</span>
+                  </div>
+                  <p className="text-sm text-red-700">
+                    3 payments over 60 days overdue
+                  </p>
+                </div>
+                
+                <div className="p-3 border rounded-lg bg-yellow-50 border-yellow-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-4 h-4 text-yellow-500" />
+                    <span className="text-sm font-medium">Warning</span>
+                  </div>
+                  <p className="text-sm text-yellow-700">
+                    8 payments due in next 7 days
+                  </p>
+                </div>
+                
+                <Button className="w-full" variant="outline">
+                  <Bell className="w-4 h-4 mr-2" />
+                  Set Payment Alerts
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* Reports Tab */}
+      {activeTab === 'reports' && (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-blue-500" />
+                  Financial Reports & Analytics
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  {[
+                    'Monthly P&L Report',
+                    'Cash Flow Statement',
+                    'Aged Debtors Report',
+                    'Payer Analysis Report',
+                    'Occupancy Revenue Report',
+                    'Budget vs Actual Report',
+                    'Cost Center Analysis',
+                    'Profitability Analysis'
+                  ].map((report, index) => (
+                    <Button key={index} variant="outline" className="h-auto p-4 text-left">
+                      <div>
+                        <FileText className="w-5 h-5 text-blue-500 mb-2" />
+                        <p className="font-medium text-sm">{report}</p>
+                        <p className="text-xs text-gray-600 mt-1">Generate instantly</p>
+                      </div>
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold mb-3">Custom Report Builder</h4>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Report Type
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option>Revenue Analysis</option>
+                        <option>Cost Analysis</option>
+                        <option>Payer Analysis</option>
+                        <option>Trend Analysis</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Time Period
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option>Last Month</option>
+                        <option>Last Quarter</option>
+                        <option>Last Year</option>
+                        <option>Custom Range</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Format
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option>PDF Report</option>
+                        <option>Excel Spreadsheet</option>
+                        <option>CSV Data</option>
+                        <option>Dashboard View</option>
+                      </select>
+                    </div>
+                  </div>
+                  <Button className="mt-4">
+                    <Download className="w-4 h-4 mr-2" />
+                    Generate Custom Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Automated Reports</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 border rounded-lg">
+                  <h4 className="font-medium text-sm mb-1">Monthly Financial Summary</h4>
+                  <p className="text-xs text-gray-600">Auto-generated on 1st of each month</p>
+                  <Badge variant="outline" className="text-xs mt-1">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    Active
+                  </Badge>
+                </div>
+                
+                <div className="p-3 border rounded-lg">
+                  <h4 className="font-medium text-sm mb-1">Weekly Cash Flow</h4>
+                  <p className="text-xs text-gray-600">Sent every Monday morning</p>
+                  <Badge variant="outline" className="text-xs mt-1">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    Active
+                  </Badge>
+                </div>
+                
+                <Button className="w-full" variant="outline">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Configure Reports
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Export Options</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button className="w-full justify-start" variant="outline">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Export to Excel
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Export to PDF
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Send className="w-4 h-4 mr-2" />
+                  Email Reports
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Cloud className="w-4 h-4 mr-2" />
+                  Cloud Backup
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* Invoice Detail Modal */}
+      {selectedInvoice && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <Card className="max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Invoice Details - {selectedInvoice.invoiceNumber}</CardTitle>
+                <Button variant="ghost" onClick={() => setSelectedInvoice(null)}>
+                  ×
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold mb-2">Invoice Information</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Invoice Number:</span>
+                      <span className="font-medium">{selectedInvoice.invoiceNumber}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Resident:</span>
+                      <span className="font-medium">{selectedInvoice.residentName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Issue Date:</span>
+                      <span className="font-medium">{selectedInvoice.issueDate.toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Due Date:</span>
+                      <span className="font-medium">{selectedInvoice.dueDate.toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Payer Information</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Payer Type:</span>
+                      <Badge variant="outline">
+                        {selectedInvoice.payerType.replace('_', ' ')}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Payer Name:</span>
+                      <span className="font-medium">{selectedInvoice.payerName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Total Amount:</span>
+                      <span className="font-bold text-lg">£{selectedInvoice.amount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-2">Services Provided</h4>
+                <div className="border rounded-lg">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="text-left p-2">Description</th>
+                        <th className="text-right p-2">Qty</th>
+                        <th className="text-right p-2">Rate</th>
+                        <th className="text-right p-2">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedInvoice.services.map((service, index) => (
+                        <tr key={index} className="border-t">
+                          <td className="p-2">{service.description}</td>
+                          <td className="p-2 text-right">{service.quantity}</td>
+                          <td className="p-2 text-right">£{service.rate}</td>
+                          <td className="p-2 text-right font-medium">£{service.total.toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button className="flex-1">
+                  <Download className="w-4 h-4 mr-2" />
+                  Download PDF
+                </Button>
+                <Button className="flex-1" variant="outline">
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Invoice
+                </Button>
+                <Button className="flex-1" variant="outline">
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit Invoice
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};

@@ -1,0 +1,896 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import Joi from 'joi';
+import { ValidationError } from '../../middleware/ErrorHandler';
+import { logger } from "@/utils/logger";
+import { logger } from "@/utils/logger";
+
+export interface ValidationResult {
+  isValid: boolean;
+  errors: any[];
+  sanitizedData?: any;
+}
+
+export class ValidationService {
+  // Common validation schemas
+  private readonly commonSchemas = {
+    uuid: Joi.string().uuid().required(),
+    email: Joi.string().email().required(),
+    phone: Joi.string().pattern(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/).required(),
+    postcode: Joi.string().pattern(/^[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}$/i).required(),
+    date: Joi.date().iso().required(),
+    positiveNumber: Joi.number().positive().required(),
+    nonNegativeNumber: Joi.number().min(0).required(),
+    currency: Joi.number().precision(2).min(0).required(),
+    percentage: Joi.number().min(0).max(100).required(),
+  };
+
+  // Time tracking validation schemas
+  private readonly timeTrackingSchemas = {
+    clockIn: Joi.object({
+      location: Joi.object({
+        latitude: Joi.number().min(-90).max(90).required(),
+        longitude: Joi.number().min(-180).max(180).required(),
+        accuracy: Joi.number().min(0).optional(),
+        address: Joi.string().max(500).optional(),
+        timestamp: this.commonSchemas.date,
+      }).optional(),
+      shiftId: this.commonSchemas.uuid.optional(),
+      notes: Joi.string().max(1000).optional(),
+      photoUrl: Joi.string().uri().optional(),
+    }),
+
+    clockOut: Joi.object({
+      location: Joi.object({
+        latitude: Joi.number().min(-90).max(90).required(),
+        longitude: Joi.number().min(-180).max(180).required(),
+        accuracy: Joi.number().min(0).optional(),
+        address: Joi.string().max(500).optional(),
+        timestamp: this.commonSchemas.date,
+      }).optional(),
+      notes: Joi.string().max(1000).optional(),
+      photoUrl: Joi.string().uri().optional(),
+    }),
+
+    manualTimeEntry: Joi.object({
+      employeeId: this.commonSchemas.uuid,
+      type: Joi.string().valid('clock_in', 'clock_out', 'break_start', 'break_end').required(),
+      timestamp: this.commonSchemas.date,
+      reason: Joi.string().min(10).max(500).required(),
+      shiftId: this.commonSchemas.uuid.optional(),
+      notes: Joi.string().max(1000).optional(),
+    }),
+  };
+
+  // Payroll validation schemas
+  private readonly payrollSchemas = {
+    payrollCalculation: Joi.object({
+      employeeId: this.commonSchemas.uuid,
+      payPeriodStart: this.commonSchemas.date,
+      payPeriodEnd: this.commonSchemas.date,
+      frequency: Joi.string().valid('weekly', 'fortnightly', 'monthly').required(),
+      baseSalary: this.commonSchemas.currency,
+      hourlyRate: this.commonSchemas.currency,
+      overtimeRate: this.commonSchemas.currency,
+      taxCodes: Joi.object({
+        incomeTaxCode: Joi.string().required(),
+        nationalInsuranceCategory: Joi.string().valid('A', 'B', 'C', 'H', 'J', 'M', 'Z').required(),
+        pensionScheme: Joi.string().optional(),
+        studentLoanPlan: Joi.string().valid('1', '2', '4').optional(),
+      }).required(),
+    }),
+
+    payrollApproval: Joi.object({
+      notes: Joi.string().max(1000).optional(),
+    }),
+
+    paymentProcessing: Joi.object({
+      paymentMethod: Joi.string().valid('bank_transfer', 'cheque', 'cash', 'bacs').required(),
+      paymentReference: Joi.string().max(100).required(),
+      notes: Joi.string().max(500).optional(),
+    }),
+  };
+
+  // Holiday validation schemas
+  private readonly holidaySchemas = {
+    holidayRequest: Joi.object({
+      type: Joi.string().valid(
+        'annual_leave', 'sick_leave', 'maternity_leave', 'paternity_leave',
+        'compassionate_leave', 'study_leave', 'unpaid_leave', 'emergency_leave',
+        'jury_duty', 'medical_appointment'
+      ).required(),
+      duration: Joi.string().valid('full_day', 'half_day_am', 'half_day_pm', 'hours').required(),
+      startDate: this.commonSchemas.date,
+      endDate: this.commonSchemas.date,
+      daysRequested: this.commonSchemas.positiveNumber,
+      hoursRequested: this.commonSchemas.positiveNumber.optional(),
+      reason: Joi.string().max(500).optional(),
+      notes: Joi.string().max(1000).optional(),
+      isEmergencyRequest: Joi.boolean().default(false),
+      coveringEmployeeId: this.commonSchemas.uuid.optional(),
+    }).custom((value, helpers) => {
+      // Custom validation for date logic
+      if (new Date(value.startDate) > new Date(value.endDate)) {
+        return helpers.error('any.invalid', { message: 'Start date cannot be after end date' });
+      }
+      return value;
+    }),
+
+    holidayApproval: Joi.object({
+      approved: Joi.boolean().required(),
+      notes: Joi.string().max(1000).optional(),
+      conditions: Joi.array().items(Joi.string()).optional(),
+    }),
+  };
+
+  // Service user validation schemas
+  private readonly serviceUserSchemas = {
+    createServiceUser: Joi.object({
+      personalDetails: Joi.object({
+        firstName: Joi.string().min(1).max(100).required(),
+        lastName: Joi.string().min(1).max(100).required(),
+        middleName: Joi.string().max(100).optional(),
+        dateOfBirth: this.commonSchemas.date,
+        nhsNumber: Joi.string().pattern(/^\d{3}\s?\d{3}\s?\d{4}$/).optional(),
+        address: Joi.object({
+          line1: Joi.string().min(1).max(200).required(),
+          line2: Joi.string().max(200).optional(),
+          city: Joi.string().min(1).max(100).required(),
+          county: Joi.string().min(1).max(100).required(),
+          postcode: this.commonSchemas.postcode,
+          country: Joi.string().valid('England', 'Scotland', 'Wales', 'Northern Ireland').required(),
+          coordinates: Joi.object({
+            latitude: Joi.number().min(-90).max(90).required(),
+            longitude: Joi.number().min(-180).max(180).required(),
+          }).optional(),
+          accessInstructions: Joi.string().max(1000).optional(),
+          keyBoxCode: Joi.string().max(50).optional(),
+          parkingInfo: Joi.string().max(500).optional(),
+        }).required(),
+      }).required(),
+      
+      contactInformation: Joi.object({
+        primaryPhone: Joi.string().pattern(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/).optional(),
+        secondaryPhone: Joi.string().pattern(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/).optional(),
+        email: Joi.string().email().optional(),
+        preferredContactMethod: Joi.string().valid('phone', 'email', 'text', 'family').required(),
+        emergencyContacts: Joi.array().items(
+          Joi.object({
+            name: Joi.string().min(1).max(200).required(),
+            relationship: Joi.string().min(1).max(100).required(),
+            phone: Joi.string().pattern(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/).required(),
+            email: Joi.string().email().optional(),
+            address: Joi.string().max(500).optional(),
+            isPrimary: Joi.boolean().default(false),
+            hasKeyAccess: Joi.boolean().default(false),
+            canMakeDecisions: Joi.boolean().default(false),
+          })
+        ).min(1).required(),
+      }).required(),
+
+      careRequirements: Joi.object({
+        careLevel: Joi.string().valid('low', 'medium', 'high', 'complex').required(),
+        hoursPerWeek: this.commonSchemas.positiveNumber,
+        preferredTimes: Joi.array().items(
+          Joi.object({
+            dayOfWeek: Joi.number().min(0).max(6).required(),
+            startTime: Joi.string().pattern(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
+            endTime: Joi.string().pattern(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
+            priority: Joi.string().valid('essential', 'preferred', 'flexible').required(),
+          })
+        ).required(),
+      }).required(),
+
+      fundingSource: Joi.string().valid('local_authority', 'nhs', 'private', 'direct_payment').required(),
+      hourlyRate: this.commonSchemas.currency.optional(),
+      weeklyBudget: this.commonSchemas.currency.optional(),
+    }),
+
+    updateServiceUser: Joi.object({
+      personalDetails: Joi.object().optional(),
+      contactInformation: Joi.object().optional(),
+      medicalInformation: Joi.object().optional(),
+      careRequirements: Joi.object().optional(),
+      preferences: Joi.object().optional(),
+      notes: Joi.string().max(2000).optional(),
+    }),
+  };
+
+  // Care visit validation schemas
+  private readonly careVisitSchemas = {
+    scheduleVisit: Joi.object({
+      serviceUserId: this.commonSchemas.uuid,
+      careWorkerId: this.commonSchemas.uuid,
+      type: Joi.string().valid(
+        'personal_care', 'medication', 'domestic', 'social', 
+        'healthcare', 'assessment', 'emergency', 'welfare_check'
+      ).required(),
+      scheduledStartTime: this.commonSchemas.date,
+      plannedDuration: Joi.number().min(15).max(480).required(), // 15 minutes to 8 hours
+      scheduledTasks: Joi.array().items(
+        Joi.object({
+          category: Joi.string().valid(
+            'personal_care', 'medication', 'mobility', 'nutrition', 
+            'social', 'domestic', 'healthcare'
+          ).required(),
+          task: Joi.string().min(1).max(200).required(),
+          description: Joi.string().max(1000).optional(),
+          estimatedDuration: Joi.number().min(5).max(120).required(),
+          priority: Joi.string().valid('critical', 'important', 'routine').required(),
+          requiresFollowUp: Joi.boolean().default(false),
+          photosRequired: Joi.boolean().default(false),
+        })
+      ).min(1).required(),
+      specialInstructions: Joi.string().max(1000).optional(),
+    }),
+
+    completeVisit: Joi.object({
+      completedTasks: Joi.array().items(
+        Joi.object({
+          id: Joi.string().required(),
+          completed: Joi.boolean().required(),
+          completedAt: this.commonSchemas.date.optional(),
+          notes: Joi.string().max(1000).optional(),
+          issues: Joi.string().max(1000).optional(),
+          photoUrls: Joi.array().items(Joi.string().uri()).optional(),
+        })
+      ).required(),
+      
+      medications: Joi.array().items(
+        Joi.object({
+          medicationId: Joi.string().required(),
+          medicationName: Joi.string().required(),
+          scheduledTime: this.commonSchemas.date,
+          actualTime: this.commonSchemas.date.optional(),
+          administered: Joi.boolean().required(),
+          reason: Joi.string().max(500).optional(),
+          sideEffectsNoted: Joi.string().max(500).optional(),
+          serviceUserResponse: Joi.string().max(500).optional(),
+          witnessName: Joi.string().max(200).optional(),
+          photos: Joi.array().items(Joi.string().uri()).optional(),
+        })
+      ).optional(),
+
+      observations: Joi.array().items(
+        Joi.object({
+          category: Joi.string().valid('physical', 'mental', 'environmental', 'social', 'safety').required(),
+          observation: Joi.string().min(1).max(1000).required(),
+          severity: Joi.string().valid('normal', 'concern', 'urgent').required(),
+          actionRequired: Joi.boolean().default(false),
+          actionTaken: Joi.string().max(1000).optional(),
+          reportedTo: Joi.array().items(Joi.string()).optional(),
+          photos: Joi.array().items(Joi.string().uri()).optional(),
+        })
+      ).optional(),
+
+      visitNotes: Joi.string().max(2000).optional(),
+      serviceUserFeedback: Joi.object({
+        satisfactionRating: Joi.number().min(1).max(5).required(),
+        comments: Joi.string().max(1000).optional(),
+        concerns: Joi.string().max(1000).optional(),
+        compliments: Joi.string().max(1000).optional(),
+        requestedChanges: Joi.string().max(1000).optional(),
+        providedBy: Joi.string().max(200).required(),
+      }).optional(),
+
+      photos: Joi.array().items(Joi.string().uri()).optional(),
+    }),
+  };
+
+  // Employee validation schemas
+  private readonly employeeSchemas = {
+    createEmployee: Joi.object({
+      personalDetails: Joi.object({
+        firstName: Joi.string().min(1).max(100).required(),
+        lastName: Joi.string().min(1).max(100).required(),
+        middleName: Joi.string().max(100).optional(),
+        dateOfBirth: this.commonSchemas.date,
+        nationalInsuranceNumber: Joi.string().pattern(/^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}$/).required(),
+        address: Joi.object({
+          line1: Joi.string().min(1).max(200).required(),
+          line2: Joi.string().max(200).optional(),
+          city: Joi.string().min(1).max(100).required(),
+          county: Joi.string().min(1).max(100).required(),
+          postcode: this.commonSchemas.postcode,
+          country: Joi.string().valid('England', 'Scotland', 'Wales', 'Northern Ireland').required(),
+        }).required(),
+      }).required(),
+
+      contactInformation: Joi.object({
+        primaryPhone: this.commonSchemas.phone,
+        secondaryPhone: Joi.string().pattern(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/).optional(),
+        email: this.commonSchemas.email,
+        emergencyContact: Joi.object({
+          name: Joi.string().min(1).max(200).required(),
+          relationship: Joi.string().min(1).max(100).required(),
+          phone: this.commonSchemas.phone,
+          email: Joi.string().email().optional(),
+        }).required(),
+      }).required(),
+
+      employmentInformation: Joi.object({
+        startDate: this.commonSchemas.date,
+        endDate: Joi.date().iso().greater(Joi.ref('startDate')).optional(),
+        probationEndDate: Joi.date().iso().greater(Joi.ref('startDate')).optional(),
+        department: Joi.string().min(1).max(100).required(),
+        location: Joi.string().min(1).max(200).required(),
+        reportsTo: Joi.string().min(1).max(200).required(),
+        employmentStatus: Joi.string().valid('active', 'inactive', 'on_leave', 'suspended', 'terminated', 'retired').required(),
+      }).required(),
+
+      jobDetails: Joi.object({
+        jobTitle: Joi.string().min(1).max(200).required(),
+        jobDescription: Joi.string().min(1).max(2000).required(),
+        payGrade: Joi.string().min(1).max(50).required(),
+        salaryBand: Joi.string().min(1).max(50).required(),
+        baseSalary: this.commonSchemas.currency,
+        currency: Joi.string().valid('GBP').default('GBP'),
+        workingHours: Joi.number().min(0).max(60).required(),
+        contractType: Joi.string().valid('permanent', 'temporary', 'casual', 'zero_hours', 'apprentice', 'contractor').required(),
+        payrollFrequency: Joi.string().valid('weekly', 'fortnightly', 'monthly').required(),
+      }).required(),
+    }),
+  };
+
+  // Universal user validation schemas
+  private readonly universalUserSchemas = {
+    createFamilyUser: Joi.object({
+      personalDetails: Joi.object({
+        firstName: Joi.string().min(1).max(100).required(),
+        lastName: Joi.string().min(1).max(100).required(),
+        preferredName: Joi.string().max(100).optional(),
+        phone: this.commonSchemas.phone,
+        email: this.commonSchemas.email,
+        dateOfBirth: this.commonSchemas.date.optional(),
+      }).required(),
+
+      familyMemberDetails: Joi.object({
+        relationshipType: Joi.string().valid(
+          'spouse', 'partner', 'child', 'parent', 'sibling', 'grandchild', 
+          'grandparent', 'niece_nephew', 'aunt_uncle', 'cousin', 'guardian', 
+          'power_of_attorney', 'advocate', 'friend', 'other'
+        ).required(),
+        serviceUserIds: Joi.array().items(this.commonSchemas.uuid).min(1).required(),
+        emergencyContact: Joi.boolean().default(false),
+        hasDecisionMakingAuthority: Joi.boolean().default(false),
+        canViewMedicalInfo: Joi.boolean().default(false),
+        canViewFinancialInfo: Joi.boolean().default(false),
+        receiveEmergencyAlerts: Joi.boolean().default(true),
+        receiveVisitUpdates: Joi.boolean().default(true),
+        receiveCareReports: Joi.boolean().default(true),
+        preferredContactMethod: Joi.string().valid('phone', 'email', 'sms', 'app').required(),
+      }).required(),
+
+      notificationPreferences: Joi.object({
+        enabled: Joi.boolean().default(true),
+        visitReminders: Joi.boolean().default(true),
+        visitUpdates: Joi.boolean().default(true),
+        emergencyAlerts: Joi.boolean().default(true),
+        careReports: Joi.boolean().default(true),
+        medicationAlerts: Joi.boolean().default(true),
+        appointmentReminders: Joi.boolean().default(true),
+        quietHours: Joi.object({
+          enabled: Joi.boolean().default(false),
+          startTime: Joi.string().pattern(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).default('22:00'),
+          endTime: Joi.string().pattern(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).default('08:00'),
+        }).default({}),
+      }).default({}),
+    }),
+
+    updateProfile: Joi.object({
+      personalDetails: Joi.object().optional(),
+      notificationPreferences: Joi.object().optional(),
+      appPreferences: Joi.object().optional(),
+    }),
+  };
+
+  constructor() {}
+
+  // Time tracking validations
+  public async validateClockInData(data: any): Promise<ValidationResult> {
+    return this.validate(this.timeTrackingSchemas.clockIn, data);
+  }
+
+  public async validateClockOutData(data: any): Promise<ValidationResult> {
+    return this.validate(this.timeTrackingSchemas.clockOut, data);
+  }
+
+  public async validateManualTimeEntry(data: any): Promise<ValidationResult> {
+    return this.validate(this.timeTrackingSchemas.manualTimeEntry, data);
+  }
+
+  // Payroll validations
+  public async validatePayrollCalculation(data: any): Promise<ValidationResult> {
+    return this.validate(this.payrollSchemas.payrollCalculation, data);
+  }
+
+  public async validatePayrollApproval(data: any): Promise<ValidationResult> {
+    return this.validate(this.payrollSchemas.payrollApproval, data);
+  }
+
+  public async validatePaymentProcessing(data: any): Promise<ValidationResult> {
+    return this.validate(this.payrollSchemas.paymentProcessing, data);
+  }
+
+  // Holiday validations
+  public async validateHolidayRequest(data: any): Promise<ValidationResult> {
+    return this.validate(this.holidaySchemas.holidayRequest, data);
+  }
+
+  public async validateHolidayApproval(data: any): Promise<ValidationResult> {
+    return this.validate(this.holidaySchemas.holidayApproval, data);
+  }
+
+  // Service user validations
+  public async validateServiceUserCreation(data: any): Promise<ValidationResult> {
+    return this.validate(this.serviceUserSchemas.createServiceUser, data);
+  }
+
+  public async validateServiceUserUpdate(data: any): Promise<ValidationResult> {
+    return this.validate(this.serviceUserSchemas.updateServiceUser, data);
+  }
+
+  // Care visit validations
+  public async validateVisitScheduling(data: any): Promise<ValidationResult> {
+    return this.validate(this.careVisitSchemas.scheduleVisit, data);
+  }
+
+  public async validateVisitCompletion(data: any): Promise<ValidationResult> {
+    return this.validate(this.careVisitSchemas.completeVisit, data);
+  }
+
+  // Universal user validations
+  public async validateFamilyUserCreation(data: any): Promise<ValidationResult> {
+    return this.validate(this.universalUserSchemas.createFamilyUser, data);
+  }
+
+  public async validateProfileUpdate(data: any): Promise<ValidationResult> {
+    return this.validate(this.universalUserSchemas.updateProfile, data);
+  }
+
+  // Core validation method
+  private async validate(schema: Joi.ObjectSchema, data: any): Promise<ValidationResult> {
+    try {
+      const { error, value } = schema.validate(data, {
+        abortEarly: false,
+        stripUnknown: true,
+        convert: true,
+      });
+
+      if (error) {
+        return {
+          isValid: false,
+          errors: error.details.map(detail => ({
+            field: detail.path.join('.'),
+            message: detail.message,
+            value: detail.context?.value,
+            type: detail.type,
+          })),
+        };
+      }
+
+      return {
+        isValid: true,
+        errors: [],
+        sanitizedData: value,
+      };
+
+    } catch (error: unknown) {
+      console.error('Validation error:', error);
+      return {
+        isValid: false,
+        errors: [{ message: 'Validation failed', type: 'unknown' }],
+      };
+    }
+  }
+
+  // Custom validators
+  public validateUKPostcode(postcode: string): boolean {
+    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}$/i;
+    return postcodeRegex.test(postcode);
+  }
+
+  public validateUKPhoneNumber(phone: string): boolean {
+    const ukPhoneRegex = /^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/;
+    return ukPhoneRegex.test(phone.replace(/\s/g, ''));
+  }
+
+  public validateNHSNumber(nhsNumber: string): boolean {
+    const cleaned = nhsNumber.replace(/\s/g, '');
+    if (!/^\d{10}$/.test(cleaned)) return false;
+
+    // NHS number check digit validation
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(cleaned[i] || '0') * (10 - i);
+    }
+    const remainder = sum % 11;
+    const checkDigit = 11 - remainder;
+    
+    if (checkDigit === 11) return cleaned[9] === '0';
+    if (checkDigit === 10) return false;
+    return parseInt(cleaned[9] || '0') === checkDigit;
+  }
+
+  public validateNationalInsuranceNumber(nino: string): boolean {
+    const ninoRegex = /^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}$/;
+    return ninoRegex.test(nino.replace(/\s/g, '').toUpperCase());
+  }
+
+  // Sanitization methods
+  public sanitizeInput(input: string): string {
+    if (typeof input !== 'string') return '';
+    
+    return input
+      .trim()
+      .replace(/[<>]/g, '') // Remove potential HTML tags
+      .replace(/['"]/g, '') // Remove quotes that could cause issues
+      .substring(0, 10000); // Limit length
+  }
+
+  public sanitizeHtml(input: string): string {
+    if (typeof input !== 'string') return '';
+    
+    return input
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+  }
+
+  // Business rule validations
+  public async validateBusinessRules(
+    entityType: string,
+    operation: string,
+    data: any,
+    context?: any
+  ): Promise<ValidationResult> {
+    try {
+      switch (entityType) {
+        case 'holiday':
+          return await this.validateHolidayBusinessRules(operation, data, context);
+        case 'overtime':
+          return await this.validateOvertimeBusinessRules(operation, data, context);
+        case 'shift':
+          return await this.validateShiftBusinessRules(operation, data, context);
+        case 'visit':
+          return await this.validateVisitBusinessRules(operation, data, context);
+        default:
+          return { isValid: true, errors: [] };
+      }
+    } catch (error: unknown) {
+      return {
+        isValid: false,
+        errors: [{ message: 'Business rule validation failed', type: 'business_rule' }],
+      };
+    }
+  }
+
+  private async validateHolidayBusinessRules(
+    operation: string,
+    data: any,
+    context?: any
+  ): Promise<ValidationResult> {
+    const errors: any[] = [];
+
+    if (operation === 'create') {
+      // Check holiday allowance
+      const remainingDays = context?.remainingHolidayDays || 0;
+      if (data.daysRequested > remainingDays) {
+        errors.push({
+          field: 'daysRequested',
+          message: `Insufficient holiday allowance. Only ${remainingDays} days remaining.`,
+          type: 'business_rule',
+        });
+      }
+
+      // Check advance notice requirement
+      const daysUntilStart = Math.ceil(
+        (new Date(data.startDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      if (data.type === 'annual_leave' && daysUntilStart < 14) {
+        errors.push({
+          field: 'startDate',
+          message: 'Annual leave requires at least 14 days advance notice',
+          type: 'business_rule',
+        });
+      }
+
+      // Check for conflicting holidays
+      if (context?.hasConflictingHolidays) {
+        errors.push({
+          field: 'dateRange',
+          message: 'You already have approved holiday during this period',
+          type: 'business_rule',
+        });
+      }
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  private async validateOvertimeBusinessRules(
+    operation: string,
+    data: any,
+    context?: any
+  ): Promise<ValidationResult> {
+    const errors: any[] = [];
+
+    if (operation === 'create') {
+      // Check weekly hour limits (Working Time Regulations)
+      const weeklyHours = context?.currentWeeklyHours || 0;
+      if (weeklyHours + data.hoursRequested > 48) {
+        errors.push({
+          field: 'hoursRequested',
+          message: 'Total weekly hours cannot exceed 48 hours (Working Time Regulations)',
+          type: 'business_rule',
+        });
+      }
+
+      // Check daily rest requirements
+      const hoursUntilStart = (new Date(data.startTime).getTime() - new Date().getTime()) / (1000 * 60 * 60);
+      if (hoursUntilStart < 11) {
+        errors.push({
+          field: 'startTime',
+          message: 'Must have at least 11 hours rest between shifts',
+          type: 'business_rule',
+        });
+      }
+
+      // Check budget constraints
+      if (context?.budgetLimit && data.estimatedCost > context.budgetLimit) {
+        errors.push({
+          field: 'estimatedCost',
+          message: `Overtime cost exceeds budget limit of £${context.budgetLimit}`,
+          type: 'business_rule',
+        });
+      }
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  private async validateShiftBusinessRules(
+    operation: string,
+    data: any,
+    context?: any
+  ): Promise<ValidationResult> {
+    const errors: any[] = [];
+
+    if (operation === 'create' || operation === 'update') {
+      // Check shift duration limits
+      const duration = (new Date(data.scheduledEnd).getTime() - new Date(data.scheduledStart).getTime()) / (1000 * 60 * 60);
+      if (duration > 12) {
+        errors.push({
+          field: 'duration',
+          message: 'Shifts cannot exceed 12 hours',
+          type: 'business_rule',
+        });
+      }
+
+      // Check minimum rest between shifts
+      if (context?.lastShiftEnd) {
+        const restHours = (new Date(data.scheduledStart).getTime() - new Date(context.lastShiftEnd).getTime()) / (1000 * 60 * 60);
+        if (restHours < 11) {
+          errors.push({
+            field: 'scheduledStart',
+            message: 'Minimum 11 hours rest required between shifts',
+            type: 'business_rule',
+          });
+        }
+      }
+
+      // Check employee qualifications
+      if (data.requirements?.requiredCertifications && context?.employeeCertifications) {
+        const missing = data.requirements.requiredCertifications.filter(
+          (cert: string) => !context.employeeCertifications.includes(cert)
+        );
+        
+        if (missing.length > 0) {
+          errors.push({
+            field: 'employeeId',
+            message: `Employee missing required certifications: ${missing.join(', ')}`,
+            type: 'business_rule',
+          });
+        }
+      }
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  private async validateVisitBusinessRules(
+    operation: string,
+    data: any,
+    context?: any
+  ): Promise<ValidationResult> {
+    const errors: any[] = [];
+
+    if (operation === 'schedule') {
+      // Check care worker availability
+      if (context?.careWorkerHasConflict) {
+        errors.push({
+          field: 'careWorkerId',
+          message: 'Care worker has conflicting visit at this time',
+          type: 'business_rule',
+        });
+      }
+
+      // Check service user availability
+      if (context?.serviceUserHasConflict) {
+        errors.push({
+          field: 'serviceUserId',
+          message: 'Service user already has a visit scheduled at this time',
+          type: 'business_rule',
+        });
+      }
+
+      // Validate task duration vs visit duration
+      const totalTaskDuration = data.scheduledTasks.reduce(
+        (sum: number, task: any) => sum + task.estimatedDuration,
+        0
+      );
+
+      if (totalTaskDuration > data.plannedDuration) {
+        errors.push({
+          field: 'plannedDuration',
+          message: `Planned duration (${data.plannedDuration}min) is less than total task duration (${totalTaskDuration}min)`,
+          type: 'business_rule',
+        });
+      }
+
+      // Check care worker qualifications for specialized tasks
+      const specializedTasks = data.scheduledTasks.filter((task: any) => task.requiresTraining);
+      if (specializedTasks.length > 0 && !context?.careWorkerQualified) {
+        errors.push({
+          field: 'careWorkerId',
+          message: 'Care worker not qualified for specialized tasks in this visit',
+          type: 'business_rule',
+        });
+      }
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  // File upload validation
+  public validateFileUpload(file: any, allowedTypes: string[], maxSizeMB: number = 10): ValidationResult {
+    const errors: any[] = [];
+
+    if (!file) {
+      errors.push({ message: 'No file provided', type: 'file_upload' });
+      return { isValid: false, errors };
+    }
+
+    // Check file type
+    if (!allowedTypes.includes(file.mimetype)) {
+      errors.push({
+        message: `File type not allowed. Allowed types: ${allowedTypes.join(', ')}`,
+        type: 'file_upload',
+      });
+    }
+
+    // Check file size
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > maxSizeMB) {
+      errors.push({
+        message: `File size exceeds limit of ${maxSizeMB}MB`,
+        type: 'file_upload',
+      });
+    }
+
+    // Check for malicious content (basic check)
+    if (this.containsMaliciousContent(file.originalname)) {
+      errors.push({
+        message: 'File contains potentially malicious content',
+        type: 'security',
+      });
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  private containsMaliciousContent(filename: string): boolean {
+    const dangerousExtensions = ['.exe', '.bat', '.cmd', '.scr', '.pif', '.js', '.vbs'];
+    const lowerFilename = filename.toLowerCase();
+    return dangerousExtensions.some(ext => lowerFilename.endsWith(ext));
+  }
+
+  // Rate limiting validation with real implementation
+  public validateRateLimit(identifier: string, limit: number, windowMs: number): ValidationResult {
+    try {
+      // Get current timestamp
+      const now = Date.now();
+      const windowStart = now - windowMs;
+      
+      // Initialize rate limit tracking if not exists
+      if (!this.rateLimitStore) {
+        this.rateLimitStore = new Map();
+      }
+      
+      // Get or initialize request history for identifier
+      let requestHistory = this.rateLimitStore.get(identifier) || [];
+      
+      // Remove requests outside the current window
+      requestHistory = requestHistory.filter((timestamp: number) => timestamp > windowStart);
+      
+      // Check if limit exceeded
+      if (requestHistory.length >= limit) {
+        logger.warn('Rate limit exceeded', {
+          identifier,
+          currentRequests: requestHistory.length,
+          limit,
+          windowMs
+        });
+        
+        return {
+          isValid: false,
+          errors: [{
+            field: 'rateLimit',
+            message: `Rate limit exceeded. Maximum ${limit} requests per ${windowMs}ms allowed.`,
+            code: 'RATE_LIMIT_EXCEEDED'
+          }]
+        };
+      }
+      
+      // Add current request timestamp
+      requestHistory.push(now);
+      this.rateLimitStore.set(identifier, requestHistory);
+      
+      // Clean up old entries periodically (every 1000 requests)
+      if (Math.random() < 0.001) {
+        this.cleanupRateLimitStore(windowStart);
+      }
+      
+      return { isValid: true, errors: [] };
+      
+    } catch (error) {
+      logger.error('Rate limit validation failed', {
+        identifier,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      // Fail secure - deny access on error
+      return {
+        isValid: false,
+        errors: [{
+          field: 'rateLimit',
+          message: 'Rate limit validation failed',
+          code: 'RATE_LIMIT_VALIDATION_ERROR'
+        }]
+      };
+    }
+  }
+
+  private rateLimitStore: Map<string, number[]> = new Map();
+
+  private cleanupRateLimitStore(cutoffTime: number): void {
+    for (const [identifier, timestamps] of this.rateLimitStore.entries()) {
+      const validTimestamps = timestamps.filter(ts => ts > cutoffTime);
+      if (validTimestamps.length === 0) {
+        this.rateLimitStore.delete(identifier);
+      } else {
+        this.rateLimitStore.set(identifier, validTimestamps);
+      }
+    }
+  }
+}
+
+export default ValidationService;

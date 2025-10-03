@@ -1,0 +1,780 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import { Request, Response } from 'express';
+import { Container } from 'typedi';
+import { TimeTrackingService } from '../../services/workforce/TimeTrackingService';
+import { RoleBasedAccessService, Permission } from '../../services/auth/RoleBasedAccessService';
+import { ValidationService } from '../../services/validation/ValidationService';
+import { ErrorHandler } from '../../middleware/ErrorHandler';
+import { AuditTrailService } from '../../services/audit/AuditTrailService';
+
+export class TimeTrackingController {
+  private timeTrackingService: TimeTrackingService;
+  private accessService: RoleBasedAccessService;
+  private validationService: ValidationService;
+  private auditService: AuditTrailService;
+
+  constructor() {
+    this.timeTrackingService = Container.get(TimeTrackingService);
+    this.accessService = Container.get(RoleBasedAccessService);
+    this.validationService = Container.get(ValidationService);
+    this.auditService = Container.get(AuditTrailService);
+  }
+
+  /**
+   * Clock in endpoint
+   * POST /api/time-tracking/clock-in
+   */
+  public clockIn = async (req: Request, res: Response): Promise<void> => {
+    try {
+      // Validate input
+      const validationResult = await this.validationService.validateClockInData(req.body);
+      if (!validationResult.isValid) {
+        res.status(400).json({
+          error: 'Validation failed',
+          details: validationResult.errors,
+        });
+        return;
+      }
+
+      // Check permissions
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.CLOCK_IN_OUT,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to clock in',
+        });
+        return;
+      }
+
+      // Validate device and location if required
+      const deviceValidation = await this.validateDeviceAndLocation(req);
+      if (!deviceValidation.valid) {
+        res.status(403).json({
+          error: 'Device or location validation failed',
+          message: deviceValidation.message,
+        });
+        return;
+      }
+
+      // Process clock in
+      const clockInData = {
+        employeeId: req.user.id,
+        location: req.body["location"],
+        deviceInfo: {
+          deviceId: req.headers['device-id'] as string,
+          deviceType: req.headers['device-type'] as any,
+          platform: req.headers['platform'] as string,
+          appVersion: req.headers['app-version'] as string,
+          userAgent: req.headers['user-agent'],
+        },
+        shiftId: req.body['shiftId'],
+        notes: req.body['notes'],
+        photoUrl: req.body['photoUrl'],
+      };
+
+      const timeEntry = await this.timeTrackingService.clockIn(clockInData);
+
+      // Log successful clock in
+      await this.auditService.logEvent({
+        resource: 'TimeEntry',
+        entityType: 'TimeEntry',
+        entityId: timeEntry.id,
+        action: 'CLOCK_IN',
+        details: {
+          employeeId: req.user.id,
+          timestamp: timeEntry.timestamp,
+          deviceInfo: clockInData.deviceInfo,
+        },
+        userId: req.user.id,
+      });
+
+      res.status(201).json({
+        success: true,
+        data: {
+          timeEntry: {
+            id: timeEntry.id,
+            type: timeEntry.type,
+            timestamp: timeEntry.timestamp,
+            status: timeEntry.status,
+            location: timeEntry.location,
+            shiftId: timeEntry.shiftId,
+          },
+        },
+        message: 'Successfully clocked in',
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Clock in failed');
+    }
+  };
+
+  /**
+   * Clock out endpoint
+   * POST /api/time-tracking/clock-out
+   */
+  public clockOut = async (req: Request, res: Response): Promise<void> => {
+    try {
+      // Validate input
+      const validationResult = await this.validationService.validateClockOutData(req.body);
+      if (!validationResult.isValid) {
+        res.status(400).json({
+          error: 'Validation failed',
+          details: validationResult.errors,
+        });
+        return;
+      }
+
+      // Check permissions
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.CLOCK_IN_OUT,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to clock out',
+        });
+        return;
+      }
+
+      // Process clock out
+      const clockOutData = {
+        employeeId: req.user.id,
+        location: req.body["location"],
+        deviceInfo: {
+          deviceId: req.headers['device-id'] as string,
+          deviceType: req.headers['device-type'] as any,
+          platform: req.headers['platform'] as string,
+          appVersion: req.headers['app-version'] as string,
+          userAgent: req.headers['user-agent'],
+        },
+        notes: req.body['notes'],
+        photoUrl: req.body['photoUrl'],
+      };
+
+      const timeEntry = await this.timeTrackingService.clockOut(clockOutData);
+
+      res.status(201).json({
+        success: true,
+        data: {
+          timeEntry: {
+            id: timeEntry.id,
+            type: timeEntry.type,
+            timestamp: timeEntry.timestamp,
+            status: timeEntry.status,
+            hoursWorked: timeEntry.hoursWorked,
+            overtimeHours: timeEntry.overtimeHours,
+          },
+        },
+        message: `Successfully clocked out. Hours worked: ${timeEntry.hoursWorked?.toFixed(2) || 0}`,
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Clock out failed');
+    }
+  };
+
+  /**
+   * Get current time entry
+   * GET /api/time-tracking/current
+   */
+  public getCurrentTimeEntry = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.VIEW_OWN_TIME_ENTRIES,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to view time entries',
+        });
+        return;
+      }
+
+      const currentEntry = await this.timeTrackingService.getCurrentTimeEntry(req.user.id);
+
+      res.status(200).json({
+        success: true,
+        data: {
+          currentTimeEntry: currentEntry ? {
+            id: currentEntry.id,
+            type: currentEntry.type,
+            timestamp: currentEntry.timestamp,
+            status: currentEntry.status,
+            shiftId: currentEntry.shiftId,
+            hoursWorked: currentEntry.hoursWorked,
+          } : null,
+        },
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to get current time entry');
+    }
+  };
+
+  /**
+   * Get time entries for date range
+   * GET /api/time-tracking/entries?startDate=2024-01-01&endDate=2024-01-31&employeeId=uuid
+   */
+  public getTimeEntries = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { startDate, endDate, employeeId } = req.query;
+
+      // Validate date parameters
+      if (!startDate || !endDate) {
+        res.status(400).json({
+          error: 'Missing required parameters',
+          message: 'startDate and endDate are required',
+        });
+        return;
+      }
+
+      const targetEmployeeId = employeeId as string || req.user.id;
+
+      // Check permissions - can view own entries or team entries if manager
+      let hasPermission = false;
+      if (targetEmployeeId === req.user.id) {
+        hasPermission = await this.accessService.hasPermission(
+          req.user.id,
+          Permission.VIEW_OWN_TIME_ENTRIES,
+          req.accessContext
+        );
+      } else {
+        hasPermission = await this.accessService.hasPermission(
+          req.user.id,
+          Permission.VIEW_TEAM_TIME_ENTRIES,
+          req.accessContext
+        );
+      }
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to view these time entries',
+        });
+        return;
+      }
+
+      const start = new Date(startDate as string);
+      const end = new Date(endDate as string);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        res.status(400).json({
+          error: 'Invalid date format',
+          message: 'Please provide valid dates in YYYY-MM-DD format',
+        });
+        return;
+      }
+
+      const timeEntries = await this.timeTrackingService.getEmployeeTimeEntries(
+        targetEmployeeId,
+        start,
+        end
+      );
+
+      res.status(200).json({
+        success: true,
+        data: {
+          timeEntries: timeEntries.map(entry => ({
+            id: entry.id,
+            type: entry.type,
+            timestamp: entry.timestamp,
+            status: entry.status,
+            hoursWorked: entry.hoursWorked,
+            overtimeHours: entry.overtimeHours,
+            shiftId: entry.shiftId,
+            notes: entry.notes,
+            isManualEntry: entry.isManualEntry,
+            approvedBy: entry.approvedBy,
+            approvedAt: entry.approvedAt,
+          })),
+          summary: {
+            totalEntries: timeEntries.length,
+            totalHours: timeEntries.reduce((sum, entry) => sum + (entry.hoursWorked || 0), 0),
+            totalOvertimeHours: timeEntries.reduce((sum, entry) => sum + (entry.overtimeHours || 0), 0),
+            dateRange: { startDate: start, endDate: end },
+          },
+        },
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to get time entries');
+    }
+  };
+
+  /**
+   * Start break
+   * POST /api/time-tracking/break/start
+   */
+  public startBreak = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.CLOCK_IN_OUT,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+        });
+        return;
+      }
+
+      const deviceInfo = {
+        deviceId: req.headers['device-id'] as string,
+        deviceType: req.headers['device-type'] as any,
+        platform: req.headers['platform'] as string,
+        appVersion: req.headers['app-version'] as string,
+        userAgent: req.headers['user-agent'],
+      };
+
+      const breakEntry = await this.timeTrackingService.startBreak(req.user.id, deviceInfo);
+
+      res.status(201).json({
+        success: true,
+        data: { breakEntry },
+        message: 'Break started successfully',
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to start break');
+    }
+  };
+
+  /**
+   * End break
+   * POST /api/time-tracking/break/end
+   */
+  public endBreak = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.CLOCK_IN_OUT,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+        });
+        return;
+      }
+
+      const deviceInfo = {
+        deviceId: req.headers['device-id'] as string,
+        deviceType: req.headers['device-type'] as any,
+        platform: req.headers['platform'] as string,
+        appVersion: req.headers['app-version'] as string,
+        userAgent: req.headers['user-agent'],
+      };
+
+      const breakEntry = await this.timeTrackingService.endBreak(req.user.id, deviceInfo);
+
+      res.status(201).json({
+        success: true,
+        data: { 
+          breakEntry,
+          breakDuration: breakEntry.breakDuration,
+        },
+        message: `Break ended. Duration: ${breakEntry.breakDuration?.toFixed(1) || 0} minutes`,
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to end break');
+    }
+  };
+
+  /**
+   * Get currently clocked in employees (for managers)
+   * GET /api/time-tracking/currently-clocked-in
+   */
+  public getCurrentlyClockedIn = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.VIEW_TEAM_TIME_ENTRIES,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to view team time entries',
+        });
+        return;
+      }
+
+      const currentlyClocked = await this.timeTrackingService.getCurrentlyClockedInEmployees();
+
+      res.status(200).json({
+        success: true,
+        data: {
+          currentlyClockedIn: currentlyClocked.map(entry => ({
+            id: entry.id,
+            employeeId: entry.employeeId,
+            employeeName: entry.employee?.getFullName(),
+            timestamp: entry.timestamp,
+            location: entry.location,
+            shiftId: entry.shiftId,
+            hoursElapsed: this.calculateHoursElapsed(entry.timestamp),
+          })),
+          count: currentlyClocked.length,
+        },
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to get currently clocked in employees');
+    }
+  };
+
+  /**
+   * Create manual time entry (for corrections)
+   * POST /api/time-tracking/manual-entry
+   */
+  public createManualEntry = async (req: Request, res: Response): Promise<void> => {
+    try {
+      // Validate input
+      const validationResult = await this.validationService.validateManualTimeEntry(req.body);
+      if (!validationResult.isValid) {
+        res.status(400).json({
+          error: 'Validation failed',
+          details: validationResult.errors,
+        });
+        return;
+      }
+
+      // Check permissions - requires approval permissions
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.EDIT_TIME_ENTRIES,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to create manual time entries',
+        });
+        return;
+      }
+
+      const manualEntryData = {
+        employeeId: req.body['employeeId'],
+        type: req.body['type'],
+        timestamp: new Date(req.body['timestamp']),
+        reason: req.body['reason'],
+        approvedBy: req.user.id,
+        shiftId: req.body['shiftId'],
+        notes: req.body['notes'],
+      };
+
+      const timeEntry = await this.timeTrackingService.createManualEntry(manualEntryData);
+
+      res.status(201).json({
+        success: true,
+        data: { timeEntry },
+        message: 'Manual time entry created successfully',
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to create manual time entry');
+    }
+  };
+
+  /**
+   * Get time tracking metrics
+   * GET /api/time-tracking/metrics?startDate=2024-01-01&endDate=2024-01-31
+   */
+  public getMetrics = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { startDate, endDate } = req.query;
+
+      if (!startDate || !endDate) {
+        res.status(400).json({
+          error: 'Missing required parameters',
+          message: 'startDate and endDate are required',
+        });
+        return;
+      }
+
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.VIEW_TEAM_REPORTS,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to view metrics',
+        });
+        return;
+      }
+
+      const start = new Date(startDate as string);
+      const end = new Date(endDate as string);
+
+      const metrics = await this.timeTrackingService.getTimeTrackingMetrics(start, end);
+
+      res.status(200).json({
+        success: true,
+        data: { metrics },
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to get time tracking metrics');
+    }
+  };
+
+  /**
+   * Generate attendance report
+   * GET /api/time-tracking/attendance-report/:employeeId?startDate=2024-01-01&endDate=2024-01-31
+   */
+  public generateAttendanceReport = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { employeeId } = req.params;
+      const { startDate, endDate } = req.query;
+
+      if (!startDate || !endDate) {
+        res.status(400).json({
+          error: 'Missing required parameters',
+          message: 'startDate and endDate are required',
+        });
+        return;
+      }
+
+      // Check permissions
+      let hasPermission = false;
+      if (employeeId === req.user.id) {
+        hasPermission = await this.accessService.hasPermission(
+          req.user.id,
+          Permission.VIEW_OWN_TIME_ENTRIES,
+          req.accessContext
+        );
+      } else {
+        hasPermission = await this.accessService.hasPermission(
+          req.user.id,
+          Permission.VIEW_TEAM_TIME_ENTRIES,
+          req.accessContext
+        );
+      }
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+        });
+        return;
+      }
+
+      const start = new Date(startDate as string);
+      const end = new Date(endDate as string);
+
+      const report = await this.timeTrackingService.generateAttendanceReport(
+        employeeId,
+        start,
+        end
+      );
+
+      res.status(200).json({
+        success: true,
+        data: { attendanceReport: report },
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to generate attendance report');
+    }
+  };
+
+  /**
+   * Get pending approvals (for managers)
+   * GET /api/time-tracking/pending-approvals
+   */
+  public getPendingApprovals = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.APPROVE_TIME_ENTRIES,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+          message: 'You do not have permission to view pending approvals',
+        });
+        return;
+      }
+
+      const pendingEntries = await this.timeTrackingService.getPendingApprovals();
+
+      res.status(200).json({
+        success: true,
+        data: {
+          pendingApprovals: pendingEntries.map(entry => ({
+            id: entry.id,
+            employeeId: entry.employeeId,
+            employeeName: entry.employee?.getFullName(),
+            type: entry.type,
+            timestamp: entry.timestamp,
+            reason: entry.manualEntryReason || 'Overtime hours require approval',
+            hoursWorked: entry.hoursWorked,
+            overtimeHours: entry.overtimeHours,
+          })),
+          count: pendingEntries.length,
+        },
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to get pending approvals');
+    }
+  };
+
+  /**
+   * Approve time entry
+   * POST /api/time-tracking/:entryId/approve
+   */
+  public approveTimeEntry = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { entryId } = req.params;
+      const { notes } = req.body;
+
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.APPROVE_TIME_ENTRIES,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+        });
+        return;
+      }
+
+      const approvedEntry = await this.timeTrackingService.approveTimeEntry(
+        entryId,
+        req.user.id,
+        notes
+      );
+
+      res.status(200).json({
+        success: true,
+        data: { timeEntry: approvedEntry },
+        message: 'Time entry approved successfully',
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to approve time entry');
+    }
+  };
+
+  /**
+   * Reject time entry
+   * POST /api/time-tracking/:entryId/reject
+   */
+  public rejectTimeEntry = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { entryId } = req.params;
+      const { reason } = req.body;
+
+      if (!reason) {
+        res.status(400).json({
+          error: 'Missing required parameter',
+          message: 'Rejection reason is required',
+        });
+        return;
+      }
+
+      const hasPermission = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.APPROVE_TIME_ENTRIES,
+        req.accessContext
+      );
+
+      if (!hasPermission) {
+        res.status(403).json({
+          error: 'Insufficient permissions',
+        });
+        return;
+      }
+
+      const rejectedEntry = await this.timeTrackingService.rejectTimeEntry(
+        entryId,
+        req.user.id,
+        reason
+      );
+
+      res.status(200).json({
+        success: true,
+        data: { timeEntry: rejectedEntry },
+        message: 'Time entry rejected',
+      });
+    } catch (error: unknown) {
+      ErrorHandler.handleControllerError(error, req, res, 'Failed to reject time entry');
+    }
+  };
+
+  // Helper methods
+  private async validateDeviceAndLocation(req: Request): Promise<{ valid: boolean; message?: string }> {
+    const deviceType = req.headers['device-type'] as string;
+    const location = req.body["location"];
+
+    // Check if personal device is allowed for this action
+    if (deviceType === 'personal') {
+      const personalDeviceAllowed = await this.accessService.hasPermission(
+        req.user.id,
+        Permission.ACCESS_FROM_PERSONAL_DEVICE,
+        req.accessContext
+      );
+
+      if (!personalDeviceAllowed) {
+        return {
+          valid: false,
+          message: 'Clock in/out from personal devices requires authorization',
+        };
+      }
+    }
+
+    // Validate location if provided
+    if (location && location.latitude && location.longitude) {
+      // Check if location is within acceptable range of work sites
+      const locationValid = await this.validateWorkLocation(location);
+      if (!locationValid) {
+        return {
+          valid: false,
+          message: 'Location is outside authorized work areas',
+        };
+      }
+    }
+
+    return { valid: true };
+  }
+
+  private async validateWorkLocation(location: { latitude: number; longitude: number }): Promise<boolean> {
+    // This would check against a database of authorized work locations
+    // For now, we'll implement a basic validation
+    
+    // Example: Check if location is within UK/Ireland bounds
+    const ukIrelandBounds = {
+      north: 60.9,
+      south: 49.8,
+      east: 2.0,
+      west: -11.0,
+    };
+
+    return (
+      location.latitude >= ukIrelandBounds.south &&
+      location.latitude <= ukIrelandBounds.north &&
+      location.longitude >= ukIrelandBounds.west &&
+      location.longitude <= ukIrelandBounds.east
+    );
+  }
+
+  private calculateHoursElapsed(startTime: Date): number {
+    const now = new Date();
+    const elapsed = now.getTime() - startTime.getTime();
+    return elapsed / (1000 * 60 * 60); // Convert to hours
+  }
+}
+
+export default TimeTrackingController;

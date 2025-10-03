@@ -1,0 +1,486 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  Download, 
+  Eye, 
+  Edit, 
+  Trash2, 
+  CheckCircle, 
+  XCircle, 
+  Clock,
+  AlertTriangle,
+  FileText,
+  User
+} from 'lucide-react';
+
+interface DBSVerification {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  status: string;
+  type: string;
+  priority: string;
+  applicationReference?: string;
+  dbsReferenceNumber?: string;
+  certificateNumber?: string;
+  applicationDate?: string;
+  submissionDate?: string;
+  completionDate?: string;
+  expiryDate?: string;
+  verificationNotes?: string;
+  complianceStatus: string;
+  riskAssessment: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface DBSVerificationManagementProps {
+  careHomeId?: string;
+}
+
+export const DBSVerificationManagement: React.FC<DBSVerificationManagementProps> = ({ careHomeId }) => {
+  const [verifications, setVerifications] = useState<DBSVerification[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedVerification, setSelectedVerification] = useState<DBSVerification | null>(null);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+
+  // Mock data - replace with actual API calls
+  useEffect(() => {
+    const mockVerifications: DBSVerification[] = [
+      {
+        id: '1',
+        employeeId: 'emp-001',
+        employeeName: 'John Smith',
+        status: 'completed',
+        type: 'enhanced',
+        priority: 'high',
+        applicationReference: 'DBS-2024-001',
+        dbsReferenceNumber: 'DBS123456789',
+        certificateNumber: 'CERT-001',
+        applicationDate: '2024-01-15',
+        submissionDate: '2024-01-16',
+        completionDate: '2024-01-25',
+        expiryDate: '2027-01-25',
+        verificationNotes: 'Clear - no issues found',
+        complianceStatus: 'compliant',
+        riskAssessment: 'low',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-25T14:30:00Z'
+      },
+      {
+        id: '2',
+        employeeId: 'emp-002',
+        employeeName: 'Jane Doe',
+        status: 'in_progress',
+        type: 'standard',
+        priority: 'medium',
+        applicationReference: 'DBS-2024-002',
+        dbsReferenceNumber: 'DBS987654321',
+        applicationDate: '2024-01-20',
+        submissionDate: '2024-01-21',
+        complianceStatus: 'pending',
+        riskAssessment: 'medium',
+        createdAt: '2024-01-20T09:00:00Z',
+        updatedAt: '2024-01-21T11:15:00Z'
+      }
+    ];
+    setVerifications(mockVerifications);
+  }, []);
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      not_started: { color: 'bg-gray-100 text-gray-800', icon: Clock },
+      application_submitted: { color: 'bg-blue-100 text-blue-800', icon: FileText },
+      under_review: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
+      in_progress: { color: 'bg-orange-100 text-orange-800', icon: Clock },
+      completed: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
+      cleared: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
+      barred: { color: 'bg-red-100 text-red-800', icon: XCircle },
+      rejected: { color: 'bg-red-100 text-red-800', icon: XCircle },
+      expired: { color: 'bg-red-100 text-red-800', icon: AlertTriangle },
+      cancelled: { color: 'bg-gray-100 text-gray-800', icon: XCircle }
+    };
+
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.not_started;
+    const Icon = config.icon;
+
+    return (
+      <Badge className={config.color}>
+        <Icon className="w-3 h-3 mr-1" />
+        {status.replace('_', ' ').toUpperCase()}
+      </Badge>
+    );
+  };
+
+  const getComplianceBadge = (status: string) => {
+    const complianceConfig = {
+      compliant: { color: 'bg-green-100 text-green-800', text: 'Compliant' },
+      non_compliant: { color: 'bg-red-100 text-red-800', text: 'Non-Compliant' },
+      pending: { color: 'bg-yellow-100 text-yellow-800', text: 'Pending' },
+      expired: { color: 'bg-red-100 text-red-800', text: 'Expired' }
+    };
+
+    const config = complianceConfig[status as keyof typeof complianceConfig] || complianceConfig.pending;
+
+    return (
+      <Badge className={config.color}>
+        {config.text}
+      </Badge>
+    );
+  };
+
+  const filteredVerifications = verifications.filter(verification => {
+    const matchesSearch = verification.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         verification.applicationReference?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         verification.dbsReferenceNumber?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || verification.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleCreateVerification = () => {
+    setIsCreateDialogOpen(true);
+  };
+
+  const handleViewVerification = (verification: DBSVerification) => {
+    setSelectedVerification(verification);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditVerification = (verification: DBSVerification) => {
+    // Implement edit functionality
+    console.log('Edit verification:', verification);
+  };
+
+  const handleDeleteVerification = (verification: DBSVerification) => {
+    // Implement delete functionality
+    console.log('Delete verification:', verification);
+  };
+
+  const handleStatusChange = (verificationId: string, newStatus: string) => {
+    // Implement status change functionality
+    console.log('Change status:', verificationId, newStatus);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">DBS Verification Management</h1>
+        <Button onClick={handleCreateVerification} className="flex items-center gap-2">
+          <Plus className="w-4 h-4" />
+          New DBS Verification
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>DBS Verifications</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-4 mb-6">
+            <div className="flex-1">
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search by employee name, reference number..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="w-48">
+              <Label htmlFor="status-filter">Status Filter</Label>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="not_started">Not Started</SelectItem>
+                  <SelectItem value="application_submitted">Application Submitted</SelectItem>
+                  <SelectItem value="under_review">Under Review</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cleared">Cleared</SelectItem>
+                  <SelectItem value="barred">Barred</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                  <SelectItem value="expired">Expired</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                Export
+              </Button>
+            </div>
+          </div>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Employee</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Compliance</TableHead>
+                <TableHead>Application Ref</TableHead>
+                <TableHead>DBS Ref</TableHead>
+                <TableHead>Expiry Date</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredVerifications.map((verification) => (
+                <TableRow key={verification.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-gray-400" />
+                      <div>
+                        <div className="font-medium">{verification.employeeName}</div>
+                        <div className="text-sm text-gray-500">{verification.employeeId}</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline">
+                      {verification.type.toUpperCase()}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {getStatusBadge(verification.status)}
+                  </TableCell>
+                  <TableCell>
+                    {getComplianceBadge(verification.complianceStatus)}
+                  </TableCell>
+                  <TableCell className="font-mono text-sm">
+                    {verification.applicationReference || '-'}
+                  </TableCell>
+                  <TableCell className="font-mono text-sm">
+                    {verification.dbsReferenceNumber || '-'}
+                  </TableCell>
+                  <TableCell>
+                    {verification.expiryDate ? new Date(verification.expiryDate).toLocaleDateString() : '-'}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewVerification(verification)}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditVerification(verification)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteVerification(verification)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Create DBS Verification Dialog */}
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create New DBS Verification</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="employeeId">Employee ID</Label>
+                <Input id="employeeId" placeholder="Enter employee ID" />
+              </div>
+              <div>
+                <Label htmlFor="verificationType">Verification Type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="basic">Basic</SelectItem>
+                    <SelectItem value="standard">Standard</SelectItem>
+                    <SelectItem value="enhanced">Enhanced</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="priority">Priority</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="careHomeId">Care Home</Label>
+                <Input id="careHomeId" placeholder="Enter care home ID" />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="notes">Notes</Label>
+              <Input id="notes" placeholder="Enter any additional notes" />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={() => setIsCreateDialogOpen(false)}>
+                Create Verification
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* View DBS Verification Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>DBS Verification Details</DialogTitle>
+          </DialogHeader>
+          {selectedVerification && (
+            <Tabs defaultValue="details" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="details">Details</TabsTrigger>
+                <TabsTrigger value="timeline">Timeline</TabsTrigger>
+                <TabsTrigger value="documents">Documents</TabsTrigger>
+              </TabsList>
+              <TabsContent value="details" className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Employee Name</Label>
+                    <p className="text-sm font-medium">{selectedVerification.employeeName}</p>
+                  </div>
+                  <div>
+                    <Label>Employee ID</Label>
+                    <p className="text-sm font-medium">{selectedVerification.employeeId}</p>
+                  </div>
+                  <div>
+                    <Label>Status</Label>
+                    <div className="mt-1">{getStatusBadge(selectedVerification.status)}</div>
+                  </div>
+                  <div>
+                    <Label>Compliance Status</Label>
+                    <div className="mt-1">{getComplianceBadge(selectedVerification.complianceStatus)}</div>
+                  </div>
+                  <div>
+                    <Label>Application Reference</Label>
+                    <p className="text-sm font-mono">{selectedVerification.applicationReference || '-'}</p>
+                  </div>
+                  <div>
+                    <Label>DBS Reference Number</Label>
+                    <p className="text-sm font-mono">{selectedVerification.dbsReferenceNumber || '-'}</p>
+                  </div>
+                  <div>
+                    <Label>Certificate Number</Label>
+                    <p className="text-sm font-mono">{selectedVerification.certificateNumber || '-'}</p>
+                  </div>
+                  <div>
+                    <Label>Expiry Date</Label>
+                    <p className="text-sm">
+                      {selectedVerification.expiryDate ? new Date(selectedVerification.expiryDate).toLocaleDateString() : '-'}
+                    </p>
+                  </div>
+                </div>
+                {selectedVerification.verificationNotes && (
+                  <div>
+                    <Label>Verification Notes</Label>
+                    <p className="text-sm mt-1 p-3 bg-gray-50 rounded-md">
+                      {selectedVerification.verificationNotes}
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+              <TabsContent value="timeline" className="space-y-4">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <div>
+                      <p className="text-sm font-medium">Verification Created</p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(selectedVerification.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  {selectedVerification.applicationDate && (
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      <div>
+                        <p className="text-sm font-medium">Application Submitted</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(selectedVerification.applicationDate).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {selectedVerification.completionDate && (
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div>
+                        <p className="text-sm font-medium">Verification Completed</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(selectedVerification.completionDate).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+              <TabsContent value="documents" className="space-y-4">
+                <Alert>
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    Document management functionality will be implemented in a future update.
+                  </AlertDescription>
+                </Alert>
+              </TabsContent>
+            </Tabs>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default DBSVerificationManagement;

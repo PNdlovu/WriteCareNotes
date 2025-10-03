@@ -1,0 +1,225 @@
+# PostgreSQL Cluster Configuration for WriteCareNotes Microservices
+# Provides separate databases for each healthcare service with high availability
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: databases
+  labels:
+    name: databases
+    tier: data
+
+---
+# PostgreSQL ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-config
+  namespace: databases
+data:
+  postgresql.conf: |
+    # PostgreSQL configuration for healthcare microservices
+    listen_addresses = '*'
+    port = 5432
+    max_connections = 200
+    shared_buffers = 256MB
+    effective_cache_size = 1GB
+    maintenance_work_mem = 64MB
+    checkpoint_completion_target = 0.9
+    wal_buffers = 16MB
+    default_statistics_target = 100
+    random_page_cost = 1.1
+    effective_io_concurrency = 200
+    work_mem = 4MB
+    min_wal_size = 1GB
+    max_wal_size = 4GB
+    max_worker_processes = 8
+    max_parallel_workers_per_gather = 2
+    max_parallel_workers = 8
+    max_parallel_maintenance_workers = 2
+    
+    # Healthcare-specific settings
+    log_destination = 'stderr'
+    logging_collector = on
+    log_directory = 'log'
+    log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
+    log_statement = 'mod'
+    log_min_duration_statement = 1000
+    log_checkpoints = on
+    log_connections = on
+    log_disconnections = on
+    log_lock_waits = on
+    
+    # Security settings
+    ssl = on
+    ssl_cert_file = '/etc/ssl/certs/server.crt'
+    ssl_key_file = '/etc/ssl/private/server.key'
+    
+    # Replication settings
+    wal_level = replica
+    max_wal_senders = 3
+    max_replication_slots = 3
+    hot_standby = on
+    
+  pg_hba.conf: |
+    # PostgreSQL Client Authentication Configuration
+    local   all             all                                     trust
+    host    all             all             127.0.0.1/32            md5
+    host    all             all             ::1/128                 md5
+    host    all             all             10.0.0.0/8              md5
+    host    all             all             172.16.0.0/12           md5
+    host    all             all             192.168.0.0/16          md5
+    host    replication     postgres        10.0.0.0/8              md5
+    host    replication     postgres        172.16.0.0/12           md5
+    host    replication     postgres        192.168.0.0/16          md5
+
+---
+# PostgreSQL Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgresql-secret
+  namespace: databases
+type: Opaque
+data:
+  postgres-password: V3JpdGVDYXJlTm90ZXNQb3N0Z3JlUzIwMjU=
+  replication-password: V3JpdGVDYXJlTm90ZXNSZXBsaWNhdGlvbjIwMjU=
+
+---
+# PostgreSQL Primary StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql-primary
+  namespace: databases
+spec:
+  serviceName: postgresql-primary-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+      role: primary
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        role: primary
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+          name: postgresql
+        env:
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: postgres-password
+        - name: POSTGRES_REPLICATION_USER
+          value: replicator
+        - name: POSTGRES_REPLICATION_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: replication-password
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/postgresql/data
+        - name: postgresql-config
+          mountPath: /etc/postgresql
+        - name: postgresql-ssl
+          mountPath: /etc/ssl/certs
+          readOnly: true
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - pg_isready -U postgres -h localhost
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - pg_isready -U postgres -h localhost
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: postgresql-config
+        configMap:
+          name: postgresql-config
+      - name: postgresql-ssl
+        secret:
+          secretName: postgresql-ssl-secret
+  volumeClaimTemplates:
+  - metadata:
+      name: postgresql-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+      storageClassName: gp2
+
+---
+# PostgreSQL Primary Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-primary-headless
+  namespace: databases
+spec:
+  clusterIP: None
+  ports:
+  - name: postgresql
+    port: 5432
+    targetPort: 5432
+  selector:
+    app: postgresql
+    role: primary
+
+---
+# PostgreSQL Primary Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-primary
+  namespace: databases
+spec:
+  ports:
+  - name: postgresql
+    port: 5432
+    targetPort: 5432
+  selector:
+    app: postgresql
+    role: primary
+
+---
+# PostgreSQL SSL Secret (placeholder - generate real certs in production)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgresql-ssl-secret
+  namespace: databases
+type: Opaque
+data:
+  server.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t
+  server.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0t

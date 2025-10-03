@@ -1,0 +1,286 @@
+version: '3.8'
+
+services:
+  # PWA Application
+  pwa:
+    build:
+      context: ../pwa
+      dockerfile: Dockerfile
+    container_name: writecarenotes-pwa
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=https://api.writecarenotes.com
+      - REACT_APP_ENVIRONMENT=production
+    volumes:
+      - ../ssl:/etc/nginx/ssl:ro
+      - pwa_logs:/var/log/nginx
+    networks:
+      - writecarenotes_network
+    depends_on:
+      - api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pwa.rule=Host(`app.writecarenotes.com`)"
+      - "traefik.http.routers.pwa.tls=true"
+      - "traefik.http.routers.pwa.tls.certresolver=letsencrypt"
+      - "traefik.http.services.pwa.loadbalancer.server.port=80"
+
+  # API Backend (from main codebase)
+  api:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    container_name: writecarenotes-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres:5432/writecarenotes
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - AUDIT_ENCRYPTION_KEY=${AUDIT_ENCRYPTION_KEY}
+    volumes:
+      - api_uploads:/app/uploads
+      - api_logs:/app/logs
+    networks:
+      - writecarenotes_network
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: writecarenotes-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=writecarenotes
+      - POSTGRES_USER=writecarenotes
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../database/init:/docker-entrypoint-initdb.d:ro
+      - postgres_backups:/backups
+    networks:
+      - writecarenotes_network
+    ports:
+      - "5432:5432"
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c log_statement=all
+      -c log_min_duration_statement=1000
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: writecarenotes-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+      --appendonly yes
+      --appendfsync everysec
+    volumes:
+      - redis_data:/data
+    networks:
+      - writecarenotes_network
+    ports:
+      - "6379:6379"
+
+  # Traefik Load Balancer
+  traefik:
+    image: traefik:v2.10
+    container_name: writecarenotes-traefik
+    restart: unless-stopped
+    command:
+      - --api.dashboard=true
+      - --api.debug=true
+      - --log.level=INFO
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.email=admin@writecarenotes.com
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --global.checkNewVersion=false
+      - --global.sendAnonymousUsage=false
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    networks:
+      - writecarenotes_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.writecarenotes.com`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.service=api@internal"
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: writecarenotes-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - writecarenotes_network
+    ports:
+      - "9090:9090"
+
+  # Grafana Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: writecarenotes-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - writecarenotes_network
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+
+  # Log Management with Loki
+  loki:
+    image: grafana/loki:latest
+    container_name: writecarenotes-loki
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - writecarenotes_network
+    ports:
+      - "3100:3100"
+
+  # Log Shipping with Promtail
+  promtail:
+    image: grafana/promtail:latest
+    container_name: writecarenotes-promtail
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+      - api_logs:/var/log/app:ro
+      - pwa_logs:/var/log/nginx:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - writecarenotes_network
+    depends_on:
+      - loki
+
+  # Backup Service
+  backup:
+    image: postgres:15-alpine
+    container_name: writecarenotes-backup
+    restart: "no"
+    environment:
+      - PGPASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_backups:/backups
+      - ./scripts/backup.sh:/backup.sh:ro
+    networks:
+      - writecarenotes_network
+    depends_on:
+      - postgres
+    command: /bin/sh -c "chmod +x /backup.sh && /backup.sh"
+
+  # Security Scanner
+  security-scanner:
+    image: owasp/zap2docker-stable
+    container_name: writecarenotes-security
+    restart: "no"
+    volumes:
+      - security_reports:/zap/wrk
+    networks:
+      - writecarenotes_network
+    depends_on:
+      - pwa
+      - api
+    command: >
+      zap-baseline.py
+      -t https://app.writecarenotes.com
+      -J security-report.json
+      -r security-report.html
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_backups:
+    driver: local
+  redis_data:
+    driver: local
+  api_uploads:
+    driver: local
+  api_logs:
+    driver: local
+  pwa_logs:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  loki_data:
+    driver: local
+  traefik_letsencrypt:
+    driver: local
+  security_reports:
+    driver: local
+
+networks:
+  writecarenotes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

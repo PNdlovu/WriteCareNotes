@@ -1,0 +1,16 @@
+{
+  "name": "WriteCareNotes Module Completion Tracker",
+  "description": "Tracks and verifies complete module implementation",
+  "trigger": {
+    "type": "manual",
+    "button_text": "Verify Module Completion"
+  },
+  "actions": [
+    {
+      "type": "agent_execution",
+      "prompt": "Verify complete module implementation for WriteCareNotes:\n\n**Backend Verification:**\n- [ ] Service class with business logic\n- [ ] Repository/DAO with database operations\n- [ ] API routes with middleware\n- [ ] Input validation schemas\n- [ ] Error handling and logging\n- [ ] Unit tests (90%+ coverage)\n- [ ] Integration tests\n\n**Frontend Verification:**\n- [ ] React components with TypeScript\n- [ ] State management implementation\n- [ ] Form validation and error handling\n- [ ] Responsive design\n- [ ] Accessibility compliance (WCAG 2.1 AA)\n- [ ] Component tests\n- [ ] i18n implementation\n\n**Database Verification:**\n- [ ] Migration files\n- [ ] Seed data\n- [ ] Proper indexes\n- [ ] Foreign key constraints\n- [ ] Audit trail columns\n\n**Documentation Verification:**\n- [ ] OpenAPI documentation\n- [ ] Code comments and JSDoc\n- [ ] README updates\n- [ ] Architecture decisions\n\n**Security & Compliance:**\n- [ ] Input sanitization\n- [ ] Data encryption\n- [ ] Audit logging\n- [ ] GDPR compliance\n- [ ] Healthcare regulations\n\n**Testing Verification:**\n- [ ] Unit tests pass\n- [ ] Integration tests pass\n- [ ] E2E tests pass\n- [ ] Security tests pass\n- [ ] Performance benchmarks met\n\nRun verification commands and provide a completion report with any missing items.",
+      "context": ["#Codebase"]
+    }
+  ],
+  "enabled": true
+}

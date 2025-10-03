@@ -1,0 +1,92 @@
+import { Request, Response, NextFunction } from 'express';
+
+export class SecurityMiddleware {
+  private static requestCounts = new Map<string, { count: number; resetTime: number }>();
+
+  static csrfProtection() {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+        return next();
+      }
+      
+      const token = req.headers['x-csrf-token'] as string;
+      if (!token) {
+        return res.status(403).json({ error: 'CSRF token required' });
+      }
+      
+      next();
+    };
+  }
+
+  static xssProtection() {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (req.body) {
+        req.body = this.sanitizeData(req.body);
+      }
+      next();
+    };
+  }
+
+  static rateLimiting(windowMs: number = 60000, maxRequests: number = 100) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const key = req.ip || 'unknown';
+      const now = Date.now();
+      const current = this.requestCounts.get(key);
+      
+      if (!current || now > current.resetTime) {
+        this.requestCounts.set(key, { count: 1, resetTime: now + windowMs });
+        return next();
+      }
+      
+      if (current.count >= maxRequests) {
+        return res.status(429).json({ error: 'Rate limit exceeded' });
+      }
+      
+      current.count++;
+      next();
+    };
+  }
+
+  static rbacMiddleware(requiredPermissions: string[]) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const user = (req as any).user;
+      if (!user) {
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      
+      // Check if user has required permissions
+      const userPermissions = user.permissions || [];
+      const hasPermission = requiredPermissions.every(permission => 
+        userPermissions.includes(permission)
+      );
+      
+      if (!hasPermission) {
+        return res.status(403).json({ error: 'Insufficient permissions' });
+      }
+      
+      next();
+    };
+  }
+
+  private static sanitizeData(data: any): any {
+    if (typeof data === 'string') {
+      return data.replace(/<[^>]*>/g, '');
+    }
+    
+    if (Array.isArray(data)) {
+      return data.map(item => this.sanitizeData(item));
+    }
+    
+    if (data && typeof data === 'object') {
+      const sanitized: any = {};
+      for (const [key, value] of Object.entries(data)) {
+        sanitized[key] = this.sanitizeData(value);
+      }
+      return sanitized;
+    }
+    
+    return data;
+  }
+}
+
+export default SecurityMiddleware;

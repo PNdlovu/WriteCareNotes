@@ -1,0 +1,288 @@
+# Circuit Breaker Configuration for WriteCareNotes Healthcare Services
+# Provides resilience patterns for critical healthcare operations
+
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: resident-service-circuit-breaker
+  namespace: core-healthcare
+spec:
+  host: resident-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 50
+      http:
+        http1MaxPendingRequests: 20
+        http2MaxRequests: 50
+        maxRequestsPerConnection: 5
+        maxRetries: 3
+        consecutiveGatewayErrors: 3
+        interval: 30s
+        baseEjectionTime: 30s
+    outlierDetection:
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+      minHealthPercent: 50
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: medication-service-circuit-breaker
+  namespace: core-healthcare
+spec:
+  host: medication-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 30
+        http2MaxRequests: 100
+        maxRequestsPerConnection: 10
+        maxRetries: 5
+        consecutiveGatewayErrors: 2
+        interval: 15s
+        baseEjectionTime: 15s
+    outlierDetection:
+      # More strict for medication service due to safety criticality
+      consecutiveGatewayErrors: 2
+      consecutive5xxErrors: 2
+      interval: 15s
+      baseEjectionTime: 15s
+      maxEjectionPercent: 30
+      minHealthPercent: 70
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: care-planning-service-circuit-breaker
+  namespace: core-healthcare
+spec:
+  host: care-planning-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 75
+      http:
+        http1MaxPendingRequests: 25
+        http2MaxRequests: 75
+        maxRequestsPerConnection: 8
+        maxRetries: 3
+        consecutiveGatewayErrors: 3
+        interval: 30s
+        baseEjectionTime: 30s
+    outlierDetection:
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 40
+      minHealthPercent: 60
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: assessment-service-circuit-breaker
+  namespace: core-healthcare
+spec:
+  host: assessment-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 60
+      http:
+        http1MaxPendingRequests: 20
+        http2MaxRequests: 60
+        maxRequestsPerConnection: 6
+        maxRetries: 3
+        consecutiveGatewayErrors: 4
+        interval: 45s
+        baseEjectionTime: 45s
+    outlierDetection:
+      consecutiveGatewayErrors: 4
+      consecutive5xxErrors: 4
+      interval: 45s
+      baseEjectionTime: 45s
+      maxEjectionPercent: 50
+      minHealthPercent: 50
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: health-records-service-circuit-breaker
+  namespace: core-healthcare
+spec:
+  host: health-records-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 80
+      http:
+        http1MaxPendingRequests: 25
+        http2MaxRequests: 80
+        maxRequestsPerConnection: 8
+        maxRetries: 3
+        consecutiveGatewayErrors: 3
+        interval: 30s
+        baseEjectionTime: 30s
+    outlierDetection:
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 40
+      minHealthPercent: 60
+
+---
+# Circuit breaker for operational services
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: financial-service-circuit-breaker
+  namespace: operational
+spec:
+  host: financial-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 40
+      http:
+        http1MaxPendingRequests: 15
+        http2MaxRequests: 40
+        maxRequestsPerConnection: 5
+        maxRetries: 3
+        consecutiveGatewayErrors: 5
+        interval: 60s
+        baseEjectionTime: 60s
+    outlierDetection:
+      consecutiveGatewayErrors: 5
+      consecutive5xxErrors: 5
+      interval: 60s
+      baseEjectionTime: 60s
+      maxEjectionPercent: 50
+      minHealthPercent: 50
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: hr-payroll-service-circuit-breaker
+  namespace: operational
+spec:
+  host: hr-payroll-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 30
+      http:
+        http1MaxPendingRequests: 10
+        http2MaxRequests: 30
+        maxRequestsPerConnection: 4
+        maxRetries: 2
+        consecutiveGatewayErrors: 5
+        interval: 60s
+        baseEjectionTime: 60s
+    outlierDetection:
+      consecutiveGatewayErrors: 5
+      consecutive5xxErrors: 5
+      interval: 60s
+      baseEjectionTime: 60s
+      maxEjectionPercent: 50
+      minHealthPercent: 50
+
+---
+# Circuit breaker for compliance services
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: compliance-service-circuit-breaker
+  namespace: compliance
+spec:
+  host: compliance-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 40
+      http:
+        http1MaxPendingRequests: 15
+        http2MaxRequests: 40
+        maxRequestsPerConnection: 5
+        maxRetries: 3
+        consecutiveGatewayErrors: 3
+        interval: 30s
+        baseEjectionTime: 30s
+    outlierDetection:
+      # Compliance service is critical for regulatory requirements
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 30
+      minHealthPercent: 70
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: audit-service-circuit-breaker
+  namespace: compliance
+spec:
+  host: audit-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 60
+      http:
+        http1MaxPendingRequests: 20
+        http2MaxRequests: 60
+        maxRequestsPerConnection: 6
+        maxRetries: 2
+        consecutiveGatewayErrors: 3
+        interval: 30s
+        baseEjectionTime: 30s
+    outlierDetection:
+      # Audit service must be highly available for compliance
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 20
+      minHealthPercent: 80
+
+---
+# Circuit breaker for integration services
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: nhs-integration-service-circuit-breaker
+  namespace: integration
+spec:
+  host: nhs-integration-service
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 20
+      http:
+        http1MaxPendingRequests: 10
+        http2MaxRequests: 20
+        maxRequestsPerConnection: 3
+        maxRetries: 5
+        consecutiveGatewayErrors: 3
+        interval: 60s
+        baseEjectionTime: 120s
+    outlierDetection:
+      # NHS integration may have external dependencies
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 60s
+      baseEjectionTime: 120s
+      maxEjectionPercent: 50
+      minHealthPercent: 50

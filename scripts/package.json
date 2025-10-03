@@ -1,0 +1,17 @@
+{
+  "name": "british-isles-compliance-scripts",
+  "version": "1.0.0",
+  "description": "Automated compliance checking for British Isles care home regulations",
+  "scripts": {
+    "compliance:check": "ts-node scripts/compliance-checker.ts",
+    "compliance:watch": "ts-node scripts/compliance-checker.ts --watch",
+    "compliance:ci": "ts-node scripts/compliance-checker.ts --ci",
+    "compliance:fix": "ts-node scripts/compliance-fixer.ts",
+    "compliance:report": "ts-node scripts/compliance-checker.ts && start reports/british-isles-compliance-report.md"
+  },
+  "dependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}

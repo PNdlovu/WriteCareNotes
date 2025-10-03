@@ -1,0 +1,611 @@
+import { Repository } from 'typeorm';
+import { EventEmitter2 } from 'eventemitter2';
+import AppDataSource from '../../config/database';
+import { TimeOffRequest, TimeOffStatus, TimeOffType } from '../../entities/hr/TimeOffRequest';
+import { Employee } from '../../entities/hr/Employee';
+import { NotificationService } from '../notifications/NotificationService';
+import { AuditTrailService } from '../audit/AuditTrailService';
+
+export interface TimeOffSearchCriteria {
+  status?: TimeOffStatus;
+  requestType?: TimeOffType;
+  employeeId?: string;
+  department?: string;
+  startDate?: Date;
+  endDate?: Date;
+  approverId?: string;
+  year?: number;
+}
+
+export interface TimeOffSummary {
+  totalRequests: number;
+  pendingRequests: number;
+  approvedRequests: number;
+  rejectedRequests: number;
+  cancelledRequests: number;
+  byType: {
+    type: TimeOffType;
+    count: number;
+    totalDays: number;
+  }[];
+  byDepartment: {
+    department: string;
+    count: number;
+    totalDays: number;
+  }[];
+  byMonth: {
+    month: string;
+    count: number;
+    totalDays: number;
+  }[];
+  averageDaysPerRequest: number;
+  approvalRate: number;
+}
+
+export interface TimeOffRequestData {
+  employeeId: string;
+  requestType: TimeOffType;
+  startDate: Date;
+  endDate: Date;
+  reason: string;
+  notes?: string;
+  attachments?: string[];
+}
+
+export interface TimeOffApprovalData {
+  approverId: string;
+  approved: boolean;
+  rejectionReason?: string;
+  notes?: string;
+}
+
+export interface TimeOffBalance {
+  employeeId: string;
+  totalDays: number;
+  usedDays: number;
+  remainingDays: number;
+  byType: {
+    type: TimeOffType;
+    total: number;
+    used: number;
+    remaining: number;
+  }[];
+}
+
+export class TimeOffService {
+  private timeOffRepository: Repository<TimeOffRequest>;
+  private employeeRepository: Repository<Employee>;
+  private notificationService: NotificationService;
+  private auditService: AuditTrailService;
+
+  constructor() {
+    this.timeOffRepository = AppDataSource.getRepository(TimeOffRequest);
+    this.employeeRepository = AppDataSource.getRepository(Employee);
+    this.notificationService = new NotificationService(new EventEmitter2());
+    this.auditService = new AuditTrailService();
+  }
+
+  // Time Off Request Management
+  async createTimeOffRequest(requestData: TimeOffRequestData): Promise<TimeOffRequest> {
+    // Validate employee exists
+    const employee = await this.employeeRepository.findOne({
+      where: { id: requestData.employeeId }
+    });
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+
+    // Calculate total days
+    const totalDays = this.calculateTotalDays(requestData.startDate, requestData.endDate);
+
+    // Check for overlapping requests
+    const overlappingRequests = await this.getOverlappingRequests(
+      requestData.employeeId,
+      requestData.startDate,
+      requestData.endDate
+    );
+    if (overlappingRequests.length > 0) {
+      throw new Error('Overlapping time off request exists');
+    }
+
+    // Check available balance
+    const balance = await this.getTimeOffBalance(requestData.employeeId);
+    const typeBalance = balance.byType.find(b => b.type === requestData.requestType);
+    if (typeBalance && typeBalance.remaining < totalDays) {
+      throw new Error('Insufficient time off balance');
+    }
+
+    const timeOffRequest = this.timeOffRepository.create({
+      ...requestData,
+      totalDays,
+      status: TimeOffStatus.PENDING
+    });
+
+    const savedRequest = await this.timeOffRepository.save(timeOffRequest);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'TimeOffRequest',
+      entityType: 'TimeOffRequest',
+      entityId: savedRequest.id,
+      action: 'CREATE',
+      details: {
+        employeeId: savedRequest.employeeId,
+        requestType: savedRequest.requestType,
+        startDate: savedRequest.startDate,
+        endDate: savedRequest.endDate,
+        totalDays: savedRequest.totalDays
+      },
+      userId: 'system'
+    });
+
+    // Send notification to approvers
+    await this.notificationService.sendNotification({
+      message: 'New Time Off Request',
+      type: 'time_off_request',
+      recipients: ['hr_team', 'line_managers'],
+      data: {
+        employeeName: employee.getFullName(),
+        requestType: savedRequest.requestType,
+        startDate: savedRequest.startDate,
+        endDate: savedRequest.endDate,
+        totalDays: savedRequest.totalDays,
+        reason: savedRequest.reason
+      }
+    });
+
+    return savedRequest;
+  }
+
+  async getTimeOffRequestById(requestId: string): Promise<TimeOffRequest | null> {
+    return await this.timeOffRepository.findOne({
+      where: { id: requestId },
+      relations: ['employee']
+    });
+  }
+
+  async getAllTimeOffRequests(): Promise<TimeOffRequest[]> {
+    return await this.timeOffRepository.find({
+      relations: ['employee'],
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async getTimeOffRequestsByEmployee(employeeId: string): Promise<TimeOffRequest[]> {
+    return await this.timeOffRepository.find({
+      where: { employeeId },
+      relations: ['employee'],
+      order: { startDate: 'DESC' }
+    });
+  }
+
+  async searchTimeOffRequests(criteria: TimeOffSearchCriteria): Promise<TimeOffRequest[]> {
+    let queryBuilder = this.timeOffRepository.createQueryBuilder('timeOff')
+      .leftJoinAndSelect('timeOff.employee', 'employee');
+
+    if (criteria.status) {
+      queryBuilder = queryBuilder.andWhere('timeOff.status = :status', { status: criteria.status });
+    }
+
+    if (criteria.requestType) {
+      queryBuilder = queryBuilder.andWhere('timeOff.requestType = :requestType', { requestType: criteria.requestType });
+    }
+
+    if (criteria.employeeId) {
+      queryBuilder = queryBuilder.andWhere('timeOff.employeeId = :employeeId', { employeeId: criteria.employeeId });
+    }
+
+    if (criteria.department) {
+      queryBuilder = queryBuilder.andWhere('employee.department = :department', { department: criteria.department });
+    }
+
+    if (criteria.startDate) {
+      queryBuilder = queryBuilder.andWhere('timeOff.startDate >= :startDate', { startDate: criteria.startDate });
+    }
+
+    if (criteria.endDate) {
+      queryBuilder = queryBuilder.andWhere('timeOff.endDate <= :endDate', { endDate: criteria.endDate });
+    }
+
+    if (criteria.approverId) {
+      queryBuilder = queryBuilder.andWhere('timeOff.approverId = :approverId', { approverId: criteria.approverId });
+    }
+
+    if (criteria.year) {
+      queryBuilder = queryBuilder.andWhere('EXTRACT(YEAR FROM timeOff.startDate) = :year', { year: criteria.year });
+    }
+
+    return await queryBuilder.getMany();
+  }
+
+  async updateTimeOffRequest(requestId: string, updateData: Partial<TimeOffRequest>): Promise<TimeOffRequest> {
+    const request = await this.getTimeOffRequestById(requestId);
+    if (!request) {
+      throw new Error('Time off request not found');
+    }
+
+    // Don't allow updates to approved or rejected requests
+    if (request.status === TimeOffStatus.APPROVED || request.status === TimeOffStatus.REJECTED) {
+      throw new Error('Cannot update approved or rejected time off request');
+    }
+
+    Object.assign(request, updateData);
+    const updatedRequest = await this.timeOffRepository.save(request);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'TimeOffRequest',
+      entityType: 'TimeOffRequest',
+      entityId: requestId,
+      action: 'UPDATE',
+      details: updateData,
+      userId: 'system'
+    });
+
+    return updatedRequest;
+  }
+
+  async deleteTimeOffRequest(requestId: string): Promise<void> {
+    const request = await this.getTimeOffRequestById(requestId);
+    if (!request) {
+      throw new Error('Time off request not found');
+    }
+
+    // Don't allow deletion of approved requests
+    if (request.status === TimeOffStatus.APPROVED) {
+      throw new Error('Cannot delete approved time off request');
+    }
+
+    await this.timeOffRepository.remove(request);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'TimeOffRequest',
+      entityType: 'TimeOffRequest',
+      entityId: requestId,
+      action: 'DELETE',
+      details: {
+        employeeId: request.employeeId,
+        requestType: request.requestType
+      },
+      userId: 'system'
+    });
+  }
+
+  // Time Off Approval
+  async approveTimeOff(requestId: string, approvalData: TimeOffApprovalData): Promise<TimeOffRequest> {
+    const request = await this.getTimeOffRequestById(requestId);
+    if (!request) {
+      throw new Error('Time off request not found');
+    }
+
+    if (request.status !== TimeOffStatus.PENDING) {
+      throw new Error('Time off request is not pending approval');
+    }
+
+    request.approverId = approvalData.approverId;
+    request.approvalDate = new Date();
+    request.status = approvalData.approved ? TimeOffStatus.APPROVED : TimeOffStatus.REJECTED;
+    
+    if (!approvalData.approved && approvalData.rejectionReason) {
+      request.rejectionReason = approvalData.rejectionReason;
+    }
+
+    if (approvalData.notes) {
+      request.notes = approvalData.notes;
+    }
+
+    const updatedRequest = await this.timeOffRepository.save(request);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'TimeOffRequest',
+      entityType: 'TimeOffRequest',
+      entityId: requestId,
+      action: approvalData.approved ? 'APPROVE' : 'REJECT',
+      details: {
+        approverId: approvalData.approverId,
+        approved: approvalData.approved,
+        rejectionReason: approvalData.rejectionReason,
+        notes: approvalData.notes
+      },
+      userId: 'system'
+    });
+
+    // Send notification to employee
+    await this.notificationService.sendNotification({
+      message: `Time Off Request ${approvalData.approved ? 'Approved' : 'Rejected'}`,
+      type: approvalData.approved ? 'time_off_approved' : 'time_off_rejected',
+      recipients: [request.employeeId],
+      data: {
+        requestType: request.requestType,
+        startDate: request.startDate,
+        endDate: request.endDate,
+        totalDays: request.totalDays,
+        rejectionReason: request.rejectionReason
+      }
+    });
+
+    return updatedRequest;
+  }
+
+  async cancelTimeOffRequest(requestId: string, reason?: string): Promise<TimeOffRequest> {
+    const request = await this.getTimeOffRequestById(requestId);
+    if (!request) {
+      throw new Error('Time off request not found');
+    }
+
+    if (request.status === TimeOffStatus.APPROVED) {
+      throw new Error('Cannot cancel approved time off request');
+    }
+
+    request.status = TimeOffStatus.CANCELLED;
+    if (reason) {
+      request.notes = reason;
+    }
+
+    const updatedRequest = await this.timeOffRepository.save(request);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'TimeOffRequest',
+      entityType: 'TimeOffRequest',
+      entityId: requestId,
+      action: 'CANCEL',
+      details: { reason },
+      userId: 'system'
+    });
+
+    return updatedRequest;
+  }
+
+  // Time Off Balance Management
+  async getTimeOffBalance(employeeId: string): Promise<TimeOffBalance> {
+    const employee = await this.employeeRepository.findOne({
+      where: { id: employeeId }
+    });
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+
+    // Get all approved time off requests for the current year
+    const currentYear = new Date().getFullYear();
+    const approvedRequests = await this.searchTimeOffRequests({
+      employeeId,
+      status: TimeOffStatus.APPROVED,
+      year: currentYear
+    });
+
+    // Calculate balance by type
+    const byType = Object.values(TimeOffType).map(type => {
+      const typeRequests = approvedRequests.filter(req => req.requestType === type);
+      const usedDays = typeRequests.reduce((sum, req) => sum + req.totalDays, 0);
+      
+      // Default allocation by type (this would typically come from employee contract or policy)
+      const totalDays = this.getDefaultAllocation(type);
+      
+      return {
+        type,
+        total: totalDays,
+        used: usedDays,
+        remaining: Math.max(0, totalDays - usedDays)
+      };
+    });
+
+    const totalDays = byType.reduce((sum, type) => sum + type.total, 0);
+    const usedDays = byType.reduce((sum, type) => sum + type.used, 0);
+    const remainingDays = byType.reduce((sum, type) => sum + type.remaining, 0);
+
+    return {
+      employeeId,
+      totalDays,
+      usedDays,
+      remainingDays,
+      byType
+    };
+  }
+
+  private getDefaultAllocation(type: TimeOffType): number {
+    // This would typically come from employee contract or company policy
+    const allocations = {
+      [TimeOffType.ANNUAL_LEAVE]: 25,
+      [TimeOffType.SICK_LEAVE]: 10,
+      [TimeOffType.PERSONAL_LEAVE]: 5,
+      [TimeOffType.MATERNITY_LEAVE]: 52,
+      [TimeOffType.PATERNITY_LEAVE]: 2,
+      [TimeOffType.BEREAVEMENT_LEAVE]: 5,
+      [TimeOffType.UNPAID_LEAVE]: 0,
+      [TimeOffType.STUDY_LEAVE]: 5,
+      [TimeOffType.COMPASSIONATE_LEAVE]: 3
+    };
+    
+    return allocations[type] || 0;
+  }
+
+  // Utility Methods
+  private calculateTotalDays(startDate: Date, endDate: Date): number {
+    const timeDiff = endDate.getTime() - startDate.getTime();
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1; // +1 to include both start and end dates
+    return daysDiff;
+  }
+
+  private async getOverlappingRequests(employeeId: string, startDate: Date, endDate: Date): Promise<TimeOffRequest[]> {
+    return await this.timeOffRepository
+      .createQueryBuilder('timeOff')
+      .where('timeOff.employeeId = :employeeId', { employeeId })
+      .andWhere('timeOff.status IN (:...statuses)', { statuses: [TimeOffStatus.PENDING, TimeOffStatus.APPROVED] })
+      .andWhere('(timeOff.startDate <= :endDate AND timeOff.endDate >= :startDate)', { startDate, endDate })
+      .getMany();
+  }
+
+  // Time Off Analytics
+  async getTimeOffSummary(): Promise<TimeOffSummary> {
+    const requests = await this.getAllTimeOffRequests();
+    const pendingRequests = requests.filter(r => r.status === TimeOffStatus.PENDING);
+    const approvedRequests = requests.filter(r => r.status === TimeOffStatus.APPROVED);
+    const rejectedRequests = requests.filter(r => r.status === TimeOffStatus.REJECTED);
+    const cancelledRequests = requests.filter(r => r.status === TimeOffStatus.CANCELLED);
+
+    // Group by type
+    const byType = Object.values(TimeOffType).map(type => {
+      const typeRequests = requests.filter(r => r.requestType === type);
+      const totalDays = typeRequests.reduce((sum, r) => sum + r.totalDays, 0);
+      return {
+        type,
+        count: typeRequests.length,
+        totalDays
+      };
+    });
+
+    // Group by department
+    const byDepartment = this.groupByDepartment(requests);
+
+    // Group by month
+    const byMonth = this.groupByMonth(requests);
+
+    // Calculate averages
+    const totalDays = requests.reduce((sum, r) => sum + r.totalDays, 0);
+    const averageDaysPerRequest = requests.length > 0 ? totalDays / requests.length : 0;
+
+    const totalProcessed = approvedRequests.length + rejectedRequests.length;
+    const approvalRate = totalProcessed > 0 ? (approvedRequests.length / totalProcessed) * 100 : 0;
+
+    return {
+      totalRequests: requests.length,
+      pendingRequests: pendingRequests.length,
+      approvedRequests: approvedRequests.length,
+      rejectedRequests: rejectedRequests.length,
+      cancelledRequests: cancelledRequests.length,
+      byType,
+      byDepartment,
+      byMonth,
+      averageDaysPerRequest,
+      approvalRate
+    };
+  }
+
+  private groupByDepartment(requests: TimeOffRequest[]): any[] {
+    const grouped = new Map<string, { count: number; totalDays: number }>();
+
+    requests.forEach(request => {
+      const department = request.employee.department;
+      if (!grouped.has(department)) {
+        grouped.set(department, { count: 0, totalDays: 0 });
+      }
+      
+      const stats = grouped.get(department)!;
+      stats.count++;
+      stats.totalDays += request.totalDays;
+    });
+
+    return Array.from(grouped.entries()).map(([department, stats]) => ({
+      department,
+      ...stats
+    }));
+  }
+
+  private groupByMonth(requests: TimeOffRequest[]): any[] {
+    const grouped = new Map<string, { count: number; totalDays: number }>();
+
+    requests.forEach(request => {
+      const month = request.startDate.toISOString().substring(0, 7); // YYYY-MM format
+      if (!grouped.has(month)) {
+        grouped.set(month, { count: 0, totalDays: 0 });
+      }
+      
+      const stats = grouped.get(month)!;
+      stats.count++;
+      stats.totalDays += request.totalDays;
+    });
+
+    return Array.from(grouped.entries()).map(([month, stats]) => ({
+      month,
+      ...stats
+    }));
+  }
+
+  // Reporting
+  async getTimeOffRequestsByDepartment(department: string): Promise<TimeOffRequest[]> {
+    return await this.searchTimeOffRequests({ department });
+  }
+
+  async getTimeOffRequestsByType(requestType: TimeOffType): Promise<TimeOffRequest[]> {
+    return await this.searchTimeOffRequests({ requestType });
+  }
+
+  async getPendingTimeOffRequests(): Promise<TimeOffRequest[]> {
+    return await this.searchTimeOffRequests({ status: TimeOffStatus.PENDING });
+  }
+
+  async getTimeOffRequestsByYear(year: number): Promise<TimeOffRequest[]> {
+    return await this.searchTimeOffRequests({ year });
+  }
+
+  async exportTimeOffRequests(criteria: TimeOffSearchCriteria): Promise<TimeOffRequest[]> {
+    return await this.searchTimeOffRequests(criteria);
+  }
+
+  // Bulk Operations
+  async bulkApproveTimeOffRequests(requestIds: string[], approvalData: TimeOffApprovalData): Promise<number> {
+    let approvedCount = 0;
+
+    for (const requestId of requestIds) {
+      try {
+        await this.approveTimeOff(requestId, approvalData);
+        approvedCount++;
+      } catch (error) {
+        console.error(`Failed to approve time off request ${requestId}:`, error);
+      }
+    }
+
+    return approvedCount;
+  }
+
+  async bulkCancelTimeOffRequests(requestIds: string[], reason?: string): Promise<number> {
+    let cancelledCount = 0;
+
+    for (const requestId of requestIds) {
+      try {
+        await this.cancelTimeOffRequest(requestId, reason);
+        cancelledCount++;
+      } catch (error) {
+        console.error(`Failed to cancel time off request ${requestId}:`, error);
+      }
+    }
+
+    return cancelledCount;
+  }
+
+  // Calendar Integration
+  async getTimeOffCalendar(startDate: Date, endDate: Date): Promise<TimeOffRequest[]> {
+    return await this.timeOffRepository
+      .createQueryBuilder('timeOff')
+      .leftJoinAndSelect('timeOff.employee', 'employee')
+      .where('timeOff.status = :status', { status: TimeOffStatus.APPROVED })
+      .andWhere('(timeOff.startDate <= :endDate AND timeOff.endDate >= :startDate)', { startDate, endDate })
+      .orderBy('timeOff.startDate', 'ASC')
+      .getMany();
+  }
+
+  // Conflict Detection
+  async detectConflicts(employeeId: string, startDate: Date, endDate: Date): Promise<{
+    hasConflicts: boolean;
+    conflicts: TimeOffRequest[];
+    recommendations: string[];
+  }> {
+    const conflicts = await this.getOverlappingRequests(employeeId, startDate, endDate);
+    const hasConflicts = conflicts.length > 0;
+
+    const recommendations = [];
+    if (hasConflicts) {
+      recommendations.push('Consider adjusting the date range to avoid conflicts');
+      recommendations.push('Check with the employee about alternative dates');
+    }
+
+    return {
+      hasConflicts,
+      conflicts,
+      recommendations
+    };
+  }
+}

@@ -1,0 +1,133 @@
+[
+  {
+    "method": "POST",
+    "path": "/nhs/prescriptions/sync",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 159,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "NHS prescription sync"
+  },
+  {
+    "method": "POST", 
+    "path": "/gp/medications/reconcile",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 262,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "GP medication reconciliation"
+  },
+  {
+    "method": "POST",
+    "path": "/pharmacy/prescriptions/submit", 
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 367,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "Pharmacy prescription submission"
+  },
+  {
+    "method": "POST",
+    "path": "/hospital/medications/transfer",
+    "handler_file": "src/routes/healthcare-integration.ts", 
+    "line": 474,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "Hospital medication transfer"
+  },
+  {
+    "method": "GET",
+    "path": "/drugs/information",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 567,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "Drug information lookup"
+  },
+  {
+    "method": "GET",
+    "path": "/monitoring",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 644,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "System monitoring"
+  },
+  {
+    "method": "POST",
+    "path": "/override/enable",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 713,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "Override enable"
+  },
+  {
+    "method": "GET",
+    "path": "/systems/status",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 782,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "System status check"
+  },
+  {
+    "method": "POST",
+    "path": "/test/connectivity",
+    "handler_file": "src/routes/healthcare-integration.ts",
+    "line": 860,
+    "middlewares": ["correlationMiddleware", "performanceMiddleware", "authenticateToken", "complianceMiddleware", "auditMiddleware"],
+    "auth_required": true,
+    "schema": "Connectivity test"
+  },
+  {
+    "method": "POST",
+    "path": "/assets",
+    "handler_file": "src/routes/facilities.ts",
+    "line": 14,
+    "middlewares": ["authenticate", "auditMiddleware"],
+    "auth_required": true,
+    "authorization": ["facilities_manager", "admin"],
+    "schema": "Asset creation"
+  },
+  {
+    "method": "GET",
+    "path": "/analytics",
+    "handler_file": "src/routes/facilities.ts",
+    "line": 15,
+    "middlewares": ["authenticate", "auditMiddleware"],
+    "auth_required": true,
+    "authorization": ["facilities_manager", "admin"],
+    "schema": "Facilities analytics"
+  },
+  {
+    "method": "POST",
+    "path": "/items",
+    "handler_file": "src/routes/inventory-management.ts",
+    "line": 14,
+    "middlewares": ["authenticate", "auditMiddleware"],
+    "auth_required": true,
+    "authorization": ["inventory_manager", "admin"],
+    "schema": "Inventory item creation"
+  },
+  {
+    "method": "POST",
+    "path": "/rfid/scan",
+    "handler_file": "src/routes/inventory-management.ts",
+    "line": 15,
+    "middlewares": ["authenticate", "auditMiddleware"],
+    "auth_required": true,
+    "authorization": ["inventory_staff", "admin"],
+    "schema": "RFID scan"
+  },
+  {
+    "method": "GET",
+    "path": "/analytics",
+    "handler_file": "src/routes/inventory-management.ts",
+    "line": 16,
+    "middlewares": ["authenticate", "auditMiddleware"],
+    "auth_required": true,
+    "authorization": ["inventory_manager", "admin"],
+    "schema": "Inventory analytics"
+  }
+]

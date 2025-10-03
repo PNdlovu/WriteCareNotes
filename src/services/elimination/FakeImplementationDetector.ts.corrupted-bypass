@@ -1,0 +1,943 @@
+/**
+ * @fileoverview Enhanced Fake Implementation Detection System for WriteCareNotes
+ * @module FakeImplementationDetector
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Comprehensive detection engine for identifying and categorizing fake implementations,
+ * mocks, placeholders, and stubs in healthcare software. Provides healthcare-specific risk assessment
+ * and prioritization for elimination activities with full audit trail and compliance tracking.
+ * 
+ * @compliance
+ * - Clinical Safety DCB 0129 - Risk management for health IT systems
+ * - GDPR Article 25 - Data protection by design and by default
+ * - ISO 27001 - Information security management systems
+ * - CQC Fundamental Standards - Safe, effective, caring, responsive, well-led
+ */
+import { Injectable } from '@nestjs/common';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { glob } from 'glob';
+import { v4 as uuidv4 } from 'uuid';
+import { AuditService } from '@/services/audit/AuditService';
+import { logger } from '@/utils/logger';
+
+export enum ViolationType {
+  MOCK_COMMENT = 'mock_comment',
+  PLACEHOLDER_COMMENT = 'placeholder_comment',
+  FAKE_RETURN = 'fake_return',
+  SIMULATION_PATTERN = 'simulation_pattern',
+  HARDCODED_SUCCESS = 'hardcoded_success',
+  CONSOLE_LOG = 'console_log',
+  EMPTY_FUNCTION = 'empty_function',
+  TODO_FIXME = 'todo_fixme',
+  FAKE_DATABASE = 'fake_database',
+  MOCK_API = 'mock_api',
+  HEALTHCARE_MOCK = 'healthcare_mock',
+  FINANCIAL_MOCK = 'financial_mock'
+}
+
+export enum HealthcareRiskLevel {
+  CRITICAL = 'critical',    // Direct patient safety impact
+  HIGH = 'high',           // Clinical decision impact
+  MEDIUM = 'medium',       // Care quality impact
+  LOW = 'low',            // Administrative impact
+  NONE = 'none'           // No healthcare impact
+}
+
+export interface Violation {
+  id: string;
+  filePath: string;
+  lineNumber: number;
+  columnNumber?: number;
+  violationType: ViolationType;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  description: string;
+  codeSnippet: string;
+  suggestedFix: string;
+  healthcareImpact: boolean;
+  healthcareRiskLevel: HealthcareRiskLevel;
+  clinicalSafetyRisk: boolean;
+  gdprImpact: boolean;
+  financialImpact: boolean;
+  complianceViolation: string[];
+  estimatedFixEffort: number; // hours
+  dependencies: string[];
+  detectedAt: Date;
+}
+
+export interface ViolationReport {
+  reportId: string;
+  scanDate: Date;
+  scanDuration: number;
+  totalFiles: number;
+  scannedFiles: number;
+  totalViolations: number;
+  criticalViolations: number;
+  healthcareCriticalViolations: number;
+  violationsByType: Record<ViolationType, number>;
+  violationsByFile: Record<string, Violation[]>;
+  violationsBySeverity: Record<string, number>;
+  healthcareImpactViolations: Violation[];
+  clinicalSafetyViolations: Violation[];
+  gdprViolations: Violation[];
+  financialViolations: Violation[];
+  eliminationPriority: PriorityLevel[];
+  riskAssessment: RiskAssessment;
+  complianceImpact: ComplianceImpact;
+}
+
+export interface PriorityLevel {
+  priority: number;
+  description: string;
+  violations: Violation[];
+  estimatedEffort: number;
+  riskLevel: HealthcareRiskLevel;
+  mustFixBefore: Date;
+}
+
+export interface RiskAssessment {
+  overallRisk: HealthcareRiskLevel;
+  clinicalSafetyRisk: HealthcareRiskLevel;
+  dataProtectionRisk: HealthcareRiskLevel;
+  financialRisk: HealthcareRiskLevel;
+  complianceRisk: HealthcareRiskLevel;
+  mitigationRequired: boolean;
+  immediateActionRequired: boolean;
+  riskMitigationSteps: string[];
+}
+
+export interface ComplianceImpact {
+  cqcImpact: boolean;
+  mhraImpact: boolean;
+  gdprImpact: boolean;
+  nhsDigitalImpact: boolean;
+  clinicalGovernanceImpact: boolean;
+  affectedStandards: string[];
+  complianceActions: string[];
+}
+
+@Injectable()
+export class FakeImplementationDetector {
+  private readonly HEALTHCARE_PATTERNS = [
+    // Healthcare-specific mock patterns
+    /mock.*patient/i,
+    /mock.*resident/i,
+    /mock.*medication/i,
+    /mock.*clinical/i,
+    /mock.*health/i,
+    /mock.*care.*plan/i,
+    /mock.*assessment/i,
+    /mock.*nhs/i,
+    /simulate.*patient/i,
+    /simulate.*clinical/i,
+    /fake.*medical/i,
+    /placeholder.*health/i
+  ];
+
+  private readonly FINANCIAL_PATTERNS = [
+    /mock.*payment/i,
+    /mock.*financial/i,
+    /mock.*payroll/i,
+    /mock.*invoice/i,
+    /mock.*billing/i,
+    /simulate.*payment/i,
+    /fake.*financial/i,
+    /placeholder.*payment/i
+  ];
+
+  private readonly VIOLATION_PATTERNS = {
+    [ViolationType.MOCK_COMMENT]: [
+      /\/\/.*mock/i,
+      /\/\*.*mock.*\*\//i,
+      /mock.*implementation/i,
+      /mock.*data/i,
+      /mock.*response/i
+    ],
+    [ViolationType.PLACEHOLDER_COMMENT]: [
+      /\/\/.*placeholder/i,
+      /\/\/.*todo/i,
+      /\/\/.*fixme/i,
+      /\/\/.*for now/i,
+      /\/\/.*this would/i,
+      /\/\/.*in production/i,
+      /\/\/.*coming soon/i,
+      /\/\/.*will be implemented/i
+    ],
+    [ViolationType.FAKE_RETURN]: [
+      /return\s+\{\s*success:\s*true\s*\}/,
+      /return\s+\[\]/,
+      /return\s+null/,
+      /return\s+true/,
+      /return\s+false/,
+      /return\s+\d+/,
+      /return\s+['"`]mock/i,
+      /return.*Math\.random/
+    ],
+    [ViolationType.SIMULATION_PATTERN]: [
+      /simulate/i,
+      /simulation/i,
+      /simulated/i,
+      /simulating/i
+    ],
+    [ViolationType.HARDCODED_SUCCESS]: [
+      /success:\s*true/,
+      /isValid:\s*true/,
+      /passed:\s*true/,
+      /approved:\s*true/
+    ],
+    [ViolationType.CONSOLE_LOG]: [
+      /console\.log/,
+      /console\.warn/,
+      /console\.error/,
+      /console\.info/,
+      /console\.debug/
+    ],
+    [ViolationType.EMPTY_FUNCTION]: [
+      /function.*\{\s*\}/,
+      /=>\s*\{\s*\}/,
+      /\{\s*\/\/.*empty.*\}/i
+    ]
+  };
+
+  private readonly HEALTHCARE_FILES = [
+    'resident', 'patient', 'medication', 'clinical', 'health', 'care',
+    'assessment', 'nhs', 'medical', 'therapy', 'treatment'
+  ];
+
+  private readonly FINANCIAL_FILES = [
+    'financial', 'payroll', 'payment', 'billing', 'invoice', 'accounting'
+  ];
+
+  constructor(
+    private readonly auditService: AuditService
+  ) {}
+
+  /**
+   * Scans directory for fake implementations with healthcare-specific analysis
+   */
+  async scanDirectory(scanPath: string, correlationId: string): Promise<ViolationReport> {
+    const startTime = Date.now();
+    const reportId = uuidv4();
+    
+    logger.info('Starting comprehensive fake implementation scan', {
+      scanPath,
+      reportId,
+      correlationId
+    });
+
+    try {
+      // Get all TypeScript and JavaScript files
+      const files = await glob('**/*.{ts,js,tsx,jsx}', {
+        cwd: scanPath,
+        ignore: [
+          'node_modules/**',
+          'dist/**',
+          'build/**',
+          '**/*.test.*',
+          '**/*.spec.*',
+          'coverage/**'
+        ]
+      });
+
+      const violations: Violation[] = [];
+      let scannedFiles = 0;
+
+      for (const file of files) {
+        const filePath = path.join(scanPath, file);
+        try {
+          const fileViolations = await this.scanFile(filePath, correlationId);
+          violations.push(...fileViolations);
+          scannedFiles++;
+        } catch (error) {
+          logger.warn('Failed to scan file', {
+            filePath,
+            error: error.message,
+            correlationId
+          });
+        }
+      }
+
+      // Generate comprehensive report
+      const report = await this.generateViolationReport(
+        reportId,
+        violations,
+        files.length,
+        scannedFiles,
+        Date.now() - startTime,
+        correlationId
+      );
+
+      // Create audit trail
+      await this.auditService.log({
+        action: 'FAKE_IMPLEMENTATION_SCAN_COMPLETED',
+        resourceType: 'ViolationReport',
+        resourceId: reportId,
+        details: {
+          scanPath,
+          totalFiles: files.length,
+          scannedFiles,
+          totalViolations: violations.length,
+          criticalViolations: violations.filter(v => v.severity === 'critical').length,
+          healthcareCriticalViolations: violations.filter(v => 
+            v.healthcareImpact && v.severity === 'critical'
+          ).length
+        },
+        correlationId,
+        complianceFlags: ['CODE_QUALITY', 'HEALTHCARE_SAFETY', 'CLINICAL_GOVERNANCE']
+      });
+
+      logger.info('Fake implementation scan completed', {
+        reportId,
+        totalViolations: violations.length,
+        criticalViolations: report.criticalViolations,
+        healthcareCriticalViolations: report.healthcareCriticalViolations,
+        correlationId
+      });
+
+      return report;
+
+    } catch (error) {
+      logger.error('Failed to complete fake implementation scan', {
+        scanPath,
+        error: error.message,
+        correlationId
+      });
+      throw new Error(`Scan failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Scans individual file for violations
+   */
+  private async scanFile(filePath: string, correlationId: string): Promise<Violation[]> {
+    const content = await fs.readFile(filePath, 'utf-8');
+    const lines = content.split('\n');
+    const violations: Violation[] = [];
+
+    const isHealthcareFile = this.isHealthcareFile(filePath);
+    const isFinancialFile = this.isFinancialFile(filePath);
+
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+      const line = lines[lineIndex];
+      const lineNumber = lineIndex + 1;
+
+      // Check each violation type
+      for (const [violationType, patterns] of Object.entries(this.VIOLATION_PATTERNS)) {
+        for (const pattern of patterns) {
+          const match = line.match(pattern);
+          if (match) {
+            const violation = await this.createViolation(
+              filePath,
+              lineNumber,
+              match.index || 0,
+              violationType as ViolationType,
+              line,
+              match[0],
+              isHealthcareFile,
+              isFinancialFile,
+              correlationId
+            );
+            violations.push(violation);
+          }
+        }
+      }
+
+      // Check healthcare-specific patterns
+      if (isHealthcareFile) {
+        for (const pattern of this.HEALTHCARE_PATTERNS) {
+          const match = line.match(pattern);
+          if (match) {
+            const violation = await this.createViolation(
+              filePath,
+              lineNumber,
+              match.index || 0,
+              ViolationType.HEALTHCARE_MOCK,
+              line,
+              match[0],
+              true,
+              false,
+              correlationId
+            );
+            violations.push(violation);
+          }
+        }
+      }
+
+      // Check financial-specific patterns
+      if (isFinancialFile) {
+        for (const pattern of this.FINANCIAL_PATTERNS) {
+          const match = line.match(pattern);
+          if (match) {
+            const violation = await this.createViolation(
+              filePath,
+              lineNumber,
+              match.index || 0,
+              ViolationType.FINANCIAL_MOCK,
+              line,
+              match[0],
+              false,
+              true,
+              correlationId
+            );
+            violations.push(violation);
+          }
+        }
+      }
+    }
+
+    return violations;
+  }
+
+  /**
+   * Creates detailed violation record with healthcare risk assessment
+   */
+  private async createViolation(
+    filePath: string,
+    lineNumber: number,
+    columnNumber: number,
+    violationType: ViolationType,
+    line: string,
+    matchedText: string,
+    isHealthcareFile: boolean,
+    isFinancialFile: boolean,
+    correlationId: string
+  ): Promise<Violation> {
+    
+    const healthcareRiskLevel = this.assessHealthcareRisk(
+      violationType,
+      matchedText,
+      isHealthcareFile,
+      filePath
+    );
+    
+    const severity = this.determineSeverity(violationType, healthcareRiskLevel, isHealthcareFile);
+    
+    const violation: Violation = {
+      id: uuidv4(),
+      filePath,
+      lineNumber,
+      columnNumber,
+      violationType,
+      severity,
+      description: this.getViolationDescription(violationType, matchedText),
+      codeSnippet: line.trim(),
+      suggestedFix: this.getSuggestedFix(violationType, matchedText, isHealthcareFile),
+      healthcareImpact: isHealthcareFile || this.hasHealthcareKeywords(matchedText),
+      healthcareRiskLevel,
+      clinicalSafetyRisk: this.isClinicalSafetyRisk(violationType, matchedText, isHealthcareFile),
+      gdprImpact: this.hasGdprImpact(matchedText, isHealthcareFile),
+      financialImpact: isFinancialFile || this.hasFinancialKeywords(matchedText),
+      complianceViolation: this.getComplianceViolations(violationType, isHealthcareFile, isFinancialFile),
+      estimatedFixEffort: this.estimateFixEffort(violationType, healthcareRiskLevel),
+      dependencies: this.identifyDependencies(filePath, violationType),
+      detectedAt: new Date()
+    };
+
+    return violation;
+  }
+
+  /**
+   * Assesses healthcare risk level for violation
+   */
+  private assessHealthcareRisk(
+    violationType: ViolationType,
+    matchedText: string,
+    isHealthcareFile: boolean,
+    filePath: string
+  ): HealthcareRiskLevel {
+    
+    // Critical healthcare risks
+    if (this.isCriticalHealthcareFunction(matchedText, filePath)) {
+      return HealthcareRiskLevel.CRITICAL;
+    }
+
+    // High risk patterns
+    if (isHealthcareFile && [
+      ViolationType.HEALTHCARE_MOCK,
+      ViolationType.FAKE_RETURN,
+      ViolationType.SIMULATION_PATTERN
+    ].includes(violationType)) {
+      return HealthcareRiskLevel.HIGH;
+    }
+
+    // Medium risk for healthcare files
+    if (isHealthcareFile) {
+      return HealthcareRiskLevel.MEDIUM;
+    }
+
+    // Low risk for healthcare keywords in non-healthcare files
+    if (this.hasHealthcareKeywords(matchedText)) {
+      return HealthcareRiskLevel.LOW;
+    }
+
+    return HealthcareRiskLevel.NONE;
+  }
+
+  /**
+   * Determines severity based on healthcare risk and violation type
+   */
+  private determineSeverity(
+    violationType: ViolationType,
+    healthcareRiskLevel: HealthcareRiskLevel,
+    isHealthcareFile: boolean
+  ): 'critical' | 'high' | 'medium' | 'low' {
+    
+    // Critical severity for healthcare safety risks
+    if (healthcareRiskLevel === HealthcareRiskLevel.CRITICAL) {
+      return 'critical';
+    }
+
+    // High severity for healthcare functions
+    if (healthcareRiskLevel === HealthcareRiskLevel.HIGH || 
+        (isHealthcareFile && [
+          ViolationType.HEALTHCARE_MOCK,
+          ViolationType.FAKE_RETURN,
+          ViolationType.SIMULATION_PATTERN
+        ].includes(violationType))) {
+      return 'high';
+    }
+
+    // Medium severity for healthcare impact
+    if (healthcareRiskLevel === HealthcareRiskLevel.MEDIUM || isHealthcareFile) {
+      return 'medium';
+    }
+
+    return 'low';
+  }
+
+  /**
+   * Checks if violation affects critical healthcare functions
+   */
+  private isCriticalHealthcareFunction(matchedText: string, filePath: string): boolean {
+    const criticalKeywords = [
+      'medication', 'dosage', 'prescription', 'drug', 'clinical',
+      'patient', 'resident', 'emergency', 'vital', 'assessment',
+      'diagnosis', 'treatment', 'allergy', 'contraindication'
+    ];
+
+    const criticalFiles = [
+      'medication', 'clinical', 'emergency', 'assessment', 'health-records'
+    ];
+
+    return criticalKeywords.some(keyword => 
+      matchedText.toLowerCase().includes(keyword) ||
+      filePath.toLowerCase().includes(keyword)
+    ) || criticalFiles.some(file => filePath.toLowerCase().includes(file));
+  }
+
+  /**
+   * Checks if violation poses clinical safety risk
+   */
+  private isClinicalSafetyRisk(
+    violationType: ViolationType,
+    matchedText: string,
+    isHealthcareFile: boolean
+  ): boolean {
+    
+    if (!isHealthcareFile) return false;
+
+    const safetyRiskTypes = [
+      ViolationType.HEALTHCARE_MOCK,
+      ViolationType.FAKE_RETURN,
+      ViolationType.SIMULATION_PATTERN,
+      ViolationType.HARDCODED_SUCCESS
+    ];
+
+    const safetyKeywords = [
+      'medication', 'dosage', 'allergy', 'contraindication',
+      'emergency', 'vital', 'clinical', 'diagnosis'
+    ];
+
+    return safetyRiskTypes.includes(violationType) ||
+           safetyKeywords.some(keyword => matchedText.toLowerCase().includes(keyword));
+  }
+
+  /**
+   * Generates comprehensive violation report with healthcare analysis
+   */
+  private async generateViolationReport(
+    reportId: string,
+    violations: Violation[],
+    totalFiles: number,
+    scannedFiles: number,
+    scanDuration: number,
+    correlationId: string
+  ): Promise<ViolationReport> {
+    
+    const violationsByType = this.groupViolationsByType(violations);
+    const violationsBySeverity = this.groupViolationsBySeverity(violations);
+    const violationsByFile = this.groupViolationsByFile(violations);
+    
+    const healthcareImpactViolations = violations.filter(v => v.healthcareImpact);
+    const clinicalSafetyViolations = violations.filter(v => v.clinicalSafetyRisk);
+    const gdprViolations = violations.filter(v => v.gdprImpact);
+    const financialViolations = violations.filter(v => v.financialImpact);
+    
+    const eliminationPriority = this.generateEliminationPriority(violations);
+    const riskAssessment = this.generateRiskAssessment(violations);
+    const complianceImpact = this.generateComplianceImpact(violations);
+
+    return {
+      reportId,
+      scanDate: new Date(),
+      scanDuration,
+      totalFiles,
+      scannedFiles,
+      totalViolations: violations.length,
+      criticalViolations: violations.filter(v => v.severity === 'critical').length,
+      healthcareCriticalViolations: violations.filter(v => 
+        v.healthcareImpact && v.severity === 'critical'
+      ).length,
+      violationsByType,
+      violationsByFile,
+      violationsBySeverity,
+      healthcareImpactViolations,
+      clinicalSafetyViolations,
+      gdprViolations,
+      financialViolations,
+      eliminationPriority,
+      riskAssessment,
+      complianceImpact
+    };
+  }
+
+  // Helper methods for analysis and reporting
+  private isHealthcareFile(filePath: string): boolean {
+    return this.HEALTHCARE_FILES.some(keyword => 
+      filePath.toLowerCase().includes(keyword)
+    );
+  }
+
+  private isFinancialFile(filePath: string): boolean {
+    return this.FINANCIAL_FILES.some(keyword => 
+      filePath.toLowerCase().includes(keyword)
+    );
+  }
+
+  private hasHealthcareKeywords(text: string): boolean {
+    const keywords = ['patient', 'resident', 'medication', 'clinical', 'health', 'care', 'nhs'];
+    return keywords.some(keyword => text.toLowerCase().includes(keyword));
+  }
+
+  private hasFinancialKeywords(text: string): boolean {
+    const keywords = ['payment', 'financial', 'payroll', 'billing', 'invoice'];
+    return keywords.some(keyword => text.toLowerCase().includes(keyword));
+  }
+
+  private hasGdprImpact(text: string, isHealthcareFile: boolean): boolean {
+    const gdprKeywords = ['personal', 'data', 'privacy', 'consent', 'processing'];
+    return isHealthcareFile || gdprKeywords.some(keyword => 
+      text.toLowerCase().includes(keyword)
+    );
+  }
+
+  private getViolationDescription(violationType: ViolationType, matchedText: string): string {
+    const descriptions = {
+      [ViolationType.MOCK_COMMENT]: `Mock implementation comment detected: "${matchedText}"`,
+      [ViolationType.PLACEHOLDER_COMMENT]: `Placeholder comment detected: "${matchedText}"`,
+      [ViolationType.FAKE_RETURN]: `Fake return statement detected: "${matchedText}"`,
+      [ViolationType.SIMULATION_PATTERN]: `Simulation pattern detected: "${matchedText}"`,
+      [ViolationType.HARDCODED_SUCCESS]: `Hardcoded success response detected: "${matchedText}"`,
+      [ViolationType.CONSOLE_LOG]: `Console.log statement detected: "${matchedText}"`,
+      [ViolationType.EMPTY_FUNCTION]: `Empty function body detected: "${matchedText}"`,
+      [ViolationType.TODO_FIXME]: `TODO/FIXME comment detected: "${matchedText}"`,
+      [ViolationType.HEALTHCARE_MOCK]: `Healthcare mock implementation detected: "${matchedText}"`,
+      [ViolationType.FINANCIAL_MOCK]: `Financial mock implementation detected: "${matchedText}"`
+    };
+    
+    return descriptions[violationType] || `Violation detected: "${matchedText}"`;
+  }
+
+  private getSuggestedFix(violationType: ViolationType, matchedText: string, isHealthcareFile: boolean): string {
+    if (isHealthcareFile) {
+      return this.getHealthcareSuggestedFix(violationType, matchedText);
+    }
+    
+    const fixes = {
+      [ViolationType.MOCK_COMMENT]: 'Remove mock comment and implement real business logic',
+      [ViolationType.PLACEHOLDER_COMMENT]: 'Remove placeholder and implement actual functionality',
+      [ViolationType.FAKE_RETURN]: 'Replace with real business logic and proper validation',
+      [ViolationType.SIMULATION_PATTERN]: 'Implement actual system integration or real processing',
+      [ViolationType.HARDCODED_SUCCESS]: 'Implement proper validation and conditional logic',
+      [ViolationType.CONSOLE_LOG]: 'Replace with proper logging using Winston framework',
+      [ViolationType.EMPTY_FUNCTION]: 'Implement function body with real business logic',
+      [ViolationType.TODO_FIXME]: 'Complete implementation and remove TODO/FIXME comment'
+    };
+    
+    return fixes[violationType] || 'Implement real functionality';
+  }
+
+  private getHealthcareSuggestedFix(violationType: ViolationType, matchedText: string): string {
+    return `HEALTHCARE CRITICAL: Implement real clinical logic with safety validation, audit trail, and compliance checks. Ensure GDPR compliance and clinical governance approval.`;
+  }
+
+  private getComplianceViolations(violationType: ViolationType, isHealthcareFile: boolean, isFinancialFile: boolean): string[] {
+    const violations: string[] = [];
+    
+    if (isHealthcareFile) {
+      violations.push('CQC Fundamental Standards', 'Clinical Governance', 'GDPR Article 25');
+      
+      if ([ViolationType.HEALTHCARE_MOCK, ViolationType.FAKE_RETURN].includes(violationType)) {
+        violations.push('DCB 0129 Clinical Risk Management', 'MHRA Regulations');
+      }
+    }
+    
+    if (isFinancialFile) {
+      violations.push('Financial Conduct Authority', 'HMRC Compliance', 'Accounting Standards');
+    }
+    
+    return violations;
+  }
+
+  private estimateFixEffort(violationType: ViolationType, healthcareRiskLevel: HealthcareRiskLevel): number {
+    const baseEffort = {
+      [ViolationType.CONSOLE_LOG]: 0.5,
+      [ViolationType.PLACEHOLDER_COMMENT]: 1,
+      [ViolationType.MOCK_COMMENT]: 2,
+      [ViolationType.FAKE_RETURN]: 4,
+      [ViolationType.SIMULATION_PATTERN]: 8,
+      [ViolationType.HEALTHCARE_MOCK]: 16,
+      [ViolationType.FINANCIAL_MOCK]: 12
+    };
+    
+    const riskMultiplier = {
+      [HealthcareRiskLevel.CRITICAL]: 3,
+      [HealthcareRiskLevel.HIGH]: 2,
+      [HealthcareRiskLevel.MEDIUM]: 1.5,
+      [HealthcareRiskLevel.LOW]: 1,
+      [HealthcareRiskLevel.NONE]: 1
+    };
+    
+    return (baseEffort[violationType] || 2) * riskMultiplier[healthcareRiskLevel];
+  }
+
+  private identifyDependencies(filePath: string, violationType: ViolationType): string[] {
+    // Analyze file imports and dependencies
+    const dependencies: string[] = [];
+    
+    if (filePath.includes('service')) {
+      dependencies.push('Repository Layer', 'Database Schema');
+    }
+    
+    if (filePath.includes('controller')) {
+      dependencies.push('Service Layer', 'Validation Schemas');
+    }
+    
+    return dependencies;
+  }
+
+  private groupViolationsByType(violations: Violation[]): Record<ViolationType, number> {
+    const grouped: Record<ViolationType, number> = {} as Record<ViolationType, number>;
+    
+    for (const violation of violations) {
+      grouped[violation.violationType] = (grouped[violation.violationType] || 0) + 1;
+    }
+    
+    return grouped;
+  }
+
+  private groupViolationsBySeverity(violations: Violation[]): Record<string, number> {
+    const grouped: Record<string, number> = {};
+    
+    for (const violation of violations) {
+      grouped[violation.severity] = (grouped[violation.severity] || 0) + 1;
+    }
+    
+    return grouped;
+  }
+
+  private groupViolationsByFile(violations: Violation[]): Record<string, Violation[]> {
+    const grouped: Record<string, Violation[]> = {};
+    
+    for (const violation of violations) {
+      if (!grouped[violation.filePath]) {
+        grouped[violation.filePath] = [];
+      }
+      grouped[violation.filePath].push(violation);
+    }
+    
+    return grouped;
+  }
+
+  private generateEliminationPriority(violations: Violation[]): PriorityLevel[] {
+    const priorities: PriorityLevel[] = [];
+    
+    // Priority 1: Critical healthcare safety violations
+    const criticalHealthcare = violations.filter(v => 
+      v.clinicalSafetyRisk && v.severity === 'critical'
+    );
+    if (criticalHealthcare.length > 0) {
+      priorities.push({
+        priority: 1,
+        description: 'Critical Healthcare Safety Violations - Immediate Action Required',
+        violations: criticalHealthcare,
+        estimatedEffort: criticalHealthcare.reduce((sum, v) => sum + v.estimatedFixEffort, 0),
+        riskLevel: HealthcareRiskLevel.CRITICAL,
+        mustFixBefore: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      });
+    }
+    
+    // Priority 2: High healthcare impact violations
+    const highHealthcare = violations.filter(v => 
+      v.healthcareImpact && v.severity === 'high' && !v.clinicalSafetyRisk
+    );
+    if (highHealthcare.length > 0) {
+      priorities.push({
+        priority: 2,
+        description: 'High Healthcare Impact Violations',
+        violations: highHealthcare,
+        estimatedEffort: highHealthcare.reduce((sum, v) => sum + v.estimatedFixEffort, 0),
+        riskLevel: HealthcareRiskLevel.HIGH,
+        mustFixBefore: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days
+      });
+    }
+    
+    // Priority 3: Financial and compliance violations
+    const financialCompliance = violations.filter(v => 
+      (v.financialImpact || v.gdprImpact) && !v.healthcareImpact
+    );
+    if (financialCompliance.length > 0) {
+      priorities.push({
+        priority: 3,
+        description: 'Financial and Compliance Violations',
+        violations: financialCompliance,
+        estimatedEffort: financialCompliance.reduce((sum, v) => sum + v.estimatedFixEffort, 0),
+        riskLevel: HealthcareRiskLevel.MEDIUM,
+        mustFixBefore: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 1 week
+      });
+    }
+    
+    // Priority 4: All other violations
+    const remaining = violations.filter(v => 
+      !v.clinicalSafetyRisk && !v.healthcareImpact && !v.financialImpact && !v.gdprImpact
+    );
+    if (remaining.length > 0) {
+      priorities.push({
+        priority: 4,
+        description: 'General Code Quality Violations',
+        violations: remaining,
+        estimatedEffort: remaining.reduce((sum, v) => sum + v.estimatedFixEffort, 0),
+        riskLevel: HealthcareRiskLevel.LOW,
+        mustFixBefore: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // 2 weeks
+      });
+    }
+    
+    return priorities;
+  }
+
+  private generateRiskAssessment(violations: Violation[]): RiskAssessment {
+    const clinicalSafetyViolations = violations.filter(v => v.clinicalSafetyRisk);
+    const gdprViolations = violations.filter(v => v.gdprImpact);
+    const financialViolations = violations.filter(v => v.financialImpact);
+    const criticalViolations = violations.filter(v => v.severity === 'critical');
+    
+    const overallRisk = this.calculateOverallRisk(violations);
+    
+    return {
+      overallRisk,
+      clinicalSafetyRisk: clinicalSafetyViolations.length > 0 ? HealthcareRiskLevel.CRITICAL : HealthcareRiskLevel.NONE,
+      dataProtectionRisk: gdprViolations.length > 0 ? HealthcareRiskLevel.HIGH : HealthcareRiskLevel.LOW,
+      financialRisk: financialViolations.length > 0 ? HealthcareRiskLevel.MEDIUM : HealthcareRiskLevel.LOW,
+      complianceRisk: criticalViolations.length > 0 ? HealthcareRiskLevel.HIGH : HealthcareRiskLevel.MEDIUM,
+      mitigationRequired: criticalViolations.length > 0 || clinicalSafetyViolations.length > 0,
+      immediateActionRequired: clinicalSafetyViolations.length > 0,
+      riskMitigationSteps: this.generateRiskMitigationSteps(violations)
+    };
+  }
+
+  private calculateOverallRisk(violations: Violation[]): HealthcareRiskLevel {
+    const criticalCount = violations.filter(v => v.severity === 'critical').length;
+    const clinicalSafetyCount = violations.filter(v => v.clinicalSafetyRisk).length;
+    
+    if (clinicalSafetyCount > 0 || criticalCount > 10) {
+      return HealthcareRiskLevel.CRITICAL;
+    }
+    
+    if (criticalCount > 0 || violations.filter(v => v.severity === 'high').length > 20) {
+      return HealthcareRiskLevel.HIGH;
+    }
+    
+    if (violations.length > 50) {
+      return HealthcareRiskLevel.MEDIUM;
+    }
+    
+    return HealthcareRiskLevel.LOW;
+  }
+
+  private generateRiskMitigationSteps(violations: Violation[]): string[] {
+    const steps: string[] = [];
+    
+    if (violations.some(v => v.clinicalSafetyRisk)) {
+      steps.push('Immediate clinical safety review required');
+      steps.push('Implement clinical governance approval process');
+      steps.push('Conduct risk assessment for patient safety impact');
+    }
+    
+    if (violations.some(v => v.gdprImpact)) {
+      steps.push('Data protection impact assessment required');
+      steps.push('Implement GDPR compliance measures');
+    }
+    
+    if (violations.some(v => v.financialImpact)) {
+      steps.push('Financial compliance review required');
+      steps.push('Implement audit trail for financial operations');
+    }
+    
+    steps.push('Implement automated detection in CI/CD pipeline');
+    steps.push('Establish code review process for elimination changes');
+    steps.push('Create monitoring and alerting for new violations');
+    
+    return steps;
+  }
+
+  private generateComplianceImpact(violations: Violation[]): ComplianceImpact {
+    const healthcareViolations = violations.filter(v => v.healthcareImpact);
+    const financialViolations = violations.filter(v => v.financialImpact);
+    const gdprViolations = violations.filter(v => v.gdprImpact);
+    
+    return {
+      cqcImpact: healthcareViolations.length > 0,
+      mhraImpact: violations.some(v => v.violationType === ViolationType.HEALTHCARE_MOCK),
+      gdprImpact: gdprViolations.length > 0,
+      nhsDigitalImpact: violations.some(v => v.filePath.includes('nhs')),
+      clinicalGovernanceImpact: violations.some(v => v.clinicalSafetyRisk),
+      affectedStandards: this.getAffectedStandards(violations),
+      complianceActions: this.getComplianceActions(violations)
+    };
+  }
+
+  private getAffectedStandards(violations: Violation[]): string[] {
+    const standards = new Set<string>();
+    
+    violations.forEach(v => {
+      v.complianceViolation.forEach(cv => standards.add(cv));
+    });
+    
+    return Array.from(standards);
+  }
+
+  private getComplianceActions(violations: Violation[]): string[] {
+    const actions: string[] = [];
+    
+    if (violations.some(v => v.healthcareImpact)) {
+      actions.push('Conduct CQC compliance review');
+      actions.push('Update clinical governance procedures');
+    }
+    
+    if (violations.some(v => v.gdprImpact)) {
+      actions.push('Update data protection policies');
+      actions.push('Conduct GDPR compliance audit');
+    }
+    
+    if (violations.some(v => v.financialImpact)) {
+      actions.push('Review financial compliance procedures');
+      actions.push('Update audit trail requirements');
+    }
+    
+    return actions;
+  }
+}
+</parameter>
+</invoke>

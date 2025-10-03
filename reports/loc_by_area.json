@@ -1,0 +1,18 @@
+{
+  "backend": {
+    "files": 563,
+    "loc": 257030
+  },
+  "schemas": {
+    "files": 31,
+    "loc": 10031
+  },
+  "infra": {
+    "files": 951,
+    "loc": 406606
+  },
+  "tests": {
+    "files": 7,
+    "loc": 1511
+  }
+}

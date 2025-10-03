@@ -1,0 +1,75 @@
+{
+  "modules": {
+    "medication_management": {
+      "path": "src/routes/medication-management.ts",
+      "classification": "IMPLEMENTATION",
+      "rationale": "Contains production medication management routes with real business logic",
+      "files": [
+        "src/routes/medication-management.ts",
+        "src/routes/medication-compliance.ts",
+        "src/routes/medication-interaction.ts",
+        "src/routes/medication-inventory.ts",
+        "src/routes/controlled-substances.ts"
+      ],
+      "implementation_ratio": 0.85
+    },
+    "healthcare_integration": {
+      "path": "src/routes/healthcare-integration.ts",
+      "classification": "IMPLEMENTATION", 
+      "rationale": "NHS integration routes with authentication and compliance middleware",
+      "files": [
+        "src/routes/healthcare-integration.ts",
+        "src/routes/external-integration.ts"
+      ],
+      "implementation_ratio": 0.80
+    },
+    "domiciliary_care": {
+      "path": "src/routes/domiciliary-care.ts",
+      "classification": "IMPLEMENTATION",
+      "rationale": "Care visit management with authorization middleware",
+      "files": [
+        "src/routes/domiciliary-care.ts",
+        "src/routes/domiciliary/careVisits.routes.ts"
+      ],
+      "implementation_ratio": 0.75
+    },
+    "consent_management": {
+      "path": "src/routes/consent.ts", 
+      "classification": "IMPLEMENTATION",
+      "rationale": "GDPR compliance routes with tenant middleware and audit logging",
+      "files": [
+        "src/routes/consent.ts"
+      ],
+      "implementation_ratio": 0.90
+    },
+    "emergency_oncall": {
+      "path": "src/routes/emergency-oncall.ts",
+      "classification": "IMPLEMENTATION", 
+      "rationale": "Emergency response system with rate limiting and audit middleware",
+      "files": [
+        "src/routes/emergency-oncall.ts"
+      ],
+      "implementation_ratio": 0.85
+    },
+    "facilities_management": {
+      "path": "src/routes/facilities.ts",
+      "classification": "IMPLEMENTATION",
+      "rationale": "Asset management with role-based authorization",
+      "files": [
+        "src/routes/facilities.ts",
+        "src/routes/enhanced-bed-room.ts",
+        "src/routes/maintenance-facilities.ts"
+      ],
+      "implementation_ratio": 0.70
+    },
+    "financial_analytics": {
+      "path": "src/routes/financial/financialAnalyticsRoutes.ts",
+      "classification": "IMPLEMENTATION",
+      "rationale": "Financial reporting with comprehensive middleware stack",
+      "files": [
+        "src/routes/financial/financialAnalyticsRoutes.ts"
+      ],
+      "implementation_ratio": 0.80
+    }
+  }
+}

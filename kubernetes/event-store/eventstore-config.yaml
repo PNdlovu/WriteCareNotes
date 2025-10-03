@@ -1,0 +1,234 @@
+# EventStore Configuration for WriteCareNotes Healthcare Event Sourcing
+# Provides immutable event storage for healthcare audit trails and compliance
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: event-store
+  labels:
+    name: event-store
+    tier: data
+
+---
+# EventStore ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eventstore-config
+  namespace: event-store
+data:
+  eventstore.conf: |
+    # EventStore configuration for healthcare event sourcing
+    Db: /var/lib/eventstore
+    Log: /var/log/eventstore
+    
+    # Network configuration
+    IntIp: 0.0.0.0
+    ExtIp: 0.0.0.0
+    IntTcpPort: 1112
+    ExtTcpPort: 1113
+    IntHttpPort: 2112
+    ExtHttpPort: 2113
+    
+    # Cluster configuration
+    ClusterSize: 3
+    DiscoverViaDns: false
+    ClusterDns: eventstore-cluster
+    ClusterGossipPort: 2114
+    
+    # Security configuration
+    EnableAtomPubOverHttp: true
+    DefaultUserPassword: WriteCareNotesEventStore2025
+    
+    # Healthcare-specific settings
+    MaxMemTableSize: 1000000
+    HashCollisionReadLimit: 100
+    Db: /var/lib/eventstore
+    Index: /var/lib/eventstore/index
+    
+    # Projections
+    RunProjections: All
+    ProjectionThreads: 3
+    
+    # Logging
+    LogLevel: Info
+    LogHttpRequests: true
+    
+    # Performance
+    WriteTimeout: 2000
+    PrepareTimeout: 2000
+    CommitTimeout: 2000
+    
+    # Healthcare compliance
+    MaxAppendSize: 1048576
+    OptimizeIndexMerge: true
+
+---
+# EventStore Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: eventstore-secret
+  namespace: event-store
+type: Opaque
+data:
+  admin-password: V3JpdGVDYXJlTm90ZXNFdmVudFN0b3JlMjAyNQ==
+
+---
+# EventStore StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eventstore
+  namespace: event-store
+spec:
+  serviceName: eventstore-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: eventstore
+  template:
+    metadata:
+      labels:
+        app: eventstore
+    spec:
+      containers:
+      - name: eventstore
+        image: eventstore/eventstore:23.10.0-jammy
+        ports:
+        - containerPort: 1112
+          name: int-tcp
+        - containerPort: 1113
+          name: ext-tcp
+        - containerPort: 2112
+          name: int-http
+        - containerPort: 2113
+          name: ext-http
+        - containerPort: 2114
+          name: gossip
+        env:
+        - name: EVENTSTORE_CLUSTER_SIZE
+          value: "3"
+        - name: EVENTSTORE_INT_TCP_PORT
+          value: "1112"
+        - name: EVENTSTORE_EXT_TCP_PORT
+          value: "1113"
+        - name: EVENTSTORE_INT_HTTP_PORT
+          value: "2112"
+        - name: EVENTSTORE_EXT_HTTP_PORT
+          value: "2113"
+        - name: EVENTSTORE_CLUSTER_GOSSIP_PORT
+          value: "2114"
+        - name: EVENTSTORE_DISCOVER_VIA_DNS
+          value: "false"
+        - name: EVENTSTORE_CLUSTER_DNS
+          value: "eventstore-headless.event-store.svc.cluster.local"
+        - name: EVENTSTORE_INT_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: EVENTSTORE_EXT_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP
+          value: "true"
+        - name: EVENTSTORE_RUN_PROJECTIONS
+          value: "All"
+        - name: EVENTSTORE_START_STANDARD_PROJECTIONS
+          value: "true"
+        - name: EVENTSTORE_INSECURE
+          value: "false"
+        - name: EVENTSTORE_ENABLE_EXTERNAL_TCP
+          value: "true"
+        - name: EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP
+          value: "true"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: eventstore-data
+          mountPath: /var/lib/eventstore
+        - name: eventstore-logs
+          mountPath: /var/log/eventstore
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 2113
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 2113
+          initialDelaySeconds: 30
+          periodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: eventstore-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      storageClassName: gp2
+  - metadata:
+      name: eventstore-logs
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: gp2
+
+---
+# EventStore Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: eventstore-headless
+  namespace: event-store
+spec:
+  clusterIP: None
+  ports:
+  - name: int-tcp
+    port: 1112
+    targetPort: 1112
+  - name: ext-tcp
+    port: 1113
+    targetPort: 1113
+  - name: int-http
+    port: 2112
+    targetPort: 2112
+  - name: ext-http
+    port: 2113
+    targetPort: 2113
+  - name: gossip
+    port: 2114
+    targetPort: 2114
+  selector:
+    app: eventstore
+
+---
+# EventStore Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: eventstore
+  namespace: event-store
+spec:
+  ports:
+  - name: ext-tcp
+    port: 1113
+    targetPort: 1113
+  - name: ext-http
+    port: 2113
+    targetPort: 2113
+  selector:
+    app: eventstore

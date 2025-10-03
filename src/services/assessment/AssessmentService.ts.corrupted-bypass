@@ -1,0 +1,1236 @@
+/**
+ * @fileoverview Assessment Service for WriteCareNotes
+ * @module AssessmentService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-09
+ * 
+ * @description Comprehensive assessment management system with risk assessment calculations,
+ * scoring algorithms, assessment scheduling, reminder notifications, reporting, trend analysis,
+ * and template management with healthcare compliance.
+ * 
+ * @compliance
+ * - CQC (Care Quality Commission) - England
+ * - Care Inspectorate - Scotland  
+ * - CIW (Care Inspectorate Wales) - Wales
+ * - RQIA (Regulation and Quality Improvement Authority) - Northern Ireland
+ * - NICE Guidelines for Assessment and Care Planning
+ * - Mental Capacity Act 2005
+ * - Care Act 2014
+ * 
+ * @security
+ * - Implements field-level encryption for sensitive assessment data
+ * - Comprehensive audit trails for all assessment operations
+ * - Role-based access control for assessment types
+ * - Mental capacity assessment protection
+ */
+
+import { DataSource, Repository } from 'typeorm';
+import { validate, ValidationError } from 'class-validator';
+import { Assessment, AssessmentType, AssessmentStatus, RiskLevel } from '../../entities/assessment/Assessment';
+import { AssessmentTemplate, TemplateType } from '../../entities/assessment/AssessmentTemplate';
+import { AssessmentQuestion, QuestionType, ResponseType } from '../../entities/assessment/AssessmentQuestion';
+import { AssessmentResponse } from '../../entities/assessment/AssessmentResponse';
+import { RiskAssessment, RiskCategory } from '../../entities/assessment/RiskAssessment';
+import { Resident } from '../../entities/resident/Resident';
+import { AssessmentRepository } from '../../repositories/assessment/AssessmentRepository';
+import { AssessmentTemplateRepository } from '../../repositories/assessment/AssessmentTemplateRepository';
+import { RiskAssessmentRepository } from '../../repositories/assessment/RiskAssessmentRepository';
+import { AuditTrailService } from '../audit/AuditTrailService';
+import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
+import { NotificationService } from '../notifications/NotificationService';
+import { EventPublishingService } from '../events/EventPublishingService';
+import { HealthcareCacheManager } from '../caching/HealthcareCacheManager';
+import { logger } from '../../utils/logger';
+
+export interface CreateAssessmentRequest {
+  residentId: string;
+  templateId?: string;
+  assessmentType: AssessmentType;
+  title: string;
+  description?: string;
+  scheduledDate?: Date;
+  dueDate?: Date;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  assessorId: string;
+  assessorName: string;
+  questions?: CreateAssessmentQuestionRequest[];
+  createdBy: string;
+}
+
+export interface CreateAssessmentQuestionRequest {
+  questionText: string;
+  questionType: QuestionType;
+  responseType: ResponseType;
+  isRequired: boolean;
+  options?: string[];
+  scoringWeight?: number;
+  riskIndicator?: boolean;
+}
+
+export interface UpdateAssessmentRequest {
+  title?: string;
+  description?: string;
+  scheduledDate?: Date;
+  dueDate?: Date;
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  assessorId?: string;
+  assessorName?: string;
+  status?: AssessmentStatus;
+  updatedBy: string;
+}
+
+export interface AssessmentResponseRequest {
+  assessmentId: string;
+  questionId: string;
+  responseValue: string | number | boolean;
+  responseText?: string;
+  notes?: string;
+  respondedBy: string;
+}
+
+export interface CompleteAssessmentRequest {
+  assessmentId: string;
+  responses: AssessmentResponseRequest[];
+  overallNotes?: string;
+  recommendations?: string[];
+  actionPlan?: string;
+  completedBy: string;
+}
+
+export interface AssessmentSearchFilters {
+  residentId?: string;
+  assessmentType?: AssessmentType;
+  status?: AssessmentStatus;
+  priority?: string;
+  assessorId?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+  isOverdue?: boolean;
+  riskLevel?: RiskLevel;
+}
+
+export interface RiskAssessmentCalculation {
+  overallRiskLevel: RiskLevel;
+  riskScore: number;
+  maxPossibleScore: number;
+  riskPercentage: number;
+  categoryRisks: CategoryRiskScore[];
+  recommendations: string[];
+  requiresImmediateAction: boolean;
+  nextAssessmentDate: Date;
+}
+
+export interface CategoryRiskScore {
+  category: RiskCategory;
+  score: number;
+  maxScore: number;
+  riskLevel: RiskLevel;
+  contributingFactors: string[];
+}
+
+export interface AssessmentTrendAnalysis {
+  residentId: string;
+  assessmentType: AssessmentType;
+  timeframe: {
+    from: Date;
+    to: Date;
+  };
+  trends: AssessmentTrend[];
+  overallDirection: 'improving' | 'stable' | 'declining' | 'fluctuating';
+  significantChanges: SignificantChange[];
+  recommendations: string[];
+}
+
+export interface AssessmentTrend {
+  date: Date;
+  score: number;
+  riskLevel: RiskLevel;
+  keyFindings: string[];
+}
+
+export interface SignificantChange {
+  date: Date;
+  changeType: 'improvement' | 'deterioration' | 'new_risk';
+  description: string;
+  severity: 'minor' | 'moderate' | 'major' | 'critical';
+  actionRequired: boolean;
+}
+
+export class AssessmentValidationError extends Error {
+  constructor(
+    message: string,
+    public validationErrors: ValidationError[]
+  ) {
+    super(message);
+    this.name = 'AssessmentValidationError';
+  }
+}
+
+export class AssessmentNotFoundError extends Error {
+  constructor(assessmentId: string) {
+    super(`Assessment with ID ${assessmentId} not found`);
+    this.name = 'AssessmentNotFoundError';
+  }
+}
+
+export class AssessmentTemplateNotFoundError extends Error {
+  constructor(templateId: string) {
+    super(`Assessment template with ID ${templateId} not found`);
+    this.name = 'AssessmentTemplateNotFoundError';
+  }
+}
+
+export class AssessmentCompletionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AssessmentCompletionError';
+  }
+}
+
+export class AssessmentService {
+  private assessmentRepository: AssessmentRepository;
+  private templateRepository: AssessmentTemplateRepository;
+  private riskAssessmentRepository: RiskAssessmentRepository;
+  private residentRepository: Repository<Resident>;
+  private questionRepository: Repository<AssessmentQuestion>;
+  private responseRepository: Repository<AssessmentResponse>;
+
+  constructor(
+    private dataSource: DataSource,
+    private auditService: AuditTrailService,
+    private encryptionService: FieldLevelEncryptionService,
+    private notificationService: NotificationService,
+    private eventPublisher: EventPublishingService,
+    private cacheManager: HealthcareCacheManager
+  ) {
+    this.assessmentRepository = new AssessmentRepository(dataSource);
+    this.templateRepository = new AssessmentTemplateRepository(dataSource);
+    this.riskAssessmentRepository = new RiskAssessmentRepository(dataSource);
+    this.residentRepository = dataSource.getRepository(Resident);
+    this.questionRepository = dataSource.getRepository(AssessmentQuestion);
+    this.responseRepository = dataSource.getRepository(AssessmentResponse);
+  }
+
+  /**
+   * Create a new assessment with comprehensive validation
+   */
+  async createAssessment(request: CreateAssessmentRequest): Promise<Assessment> {
+    const correlationId = `assessment-create-${Date.now()}`;
+    
+    try {
+      logger.info('Creating new assessment', { 
+        residentId: request.residentId,
+        assessmentType: request.assessmentType,
+        templateId: request.templateId,
+        correlationId 
+      });
+
+      // Validate resident exists
+      const resident = await this.residentRepository.findOne({
+        where: { id: request.residentId, deletedAt: null }
+      });
+
+      if (!resident) {
+        throw new Error(`Resident with ID ${request.residentId} not found`);
+      }
+
+      // Validate template if provided
+      let template: AssessmentTemplate | null = null;
+      if (request.templateId) {
+        template = await this.templateRepository.findById(request.templateId);
+        if (!template) {
+          throw new AssessmentTemplateNotFoundError(request.templateId);
+        }
+      }
+
+      // Create assessment entity
+      const assessment = new Assessment();
+      assessment.residentId = request.residentId;
+      assessment.templateId = request.templateId;
+      assessment.assessmentType = request.assessmentType;
+      assessment.title = request.title;
+      assessment.description = request.description;
+      assessment.scheduledDate = request.scheduledDate || new Date();
+      assessment.dueDate = request.dueDate || this.calculateDefaultDueDate(request.assessmentType);
+      assessment.priority = request.priority;
+      assessment.assessorId = request.assessorId;
+      assessment.assessorName = request.assessorName;
+      assessment.status = AssessmentStatus.SCHEDULED;
+      assessment.createdBy = request.createdBy;
+
+      // Validate entity
+      const validationErrors = await validate(assessment);
+      if (validationErrors.length > 0) {
+        throw new AssessmentValidationError('Assessment validation failed', validationErrors);
+      }
+
+      // Encrypt sensitive data
+      await this.encryptSensitiveAssessmentData(assessment);
+
+      // Save assessment
+      const savedAssessment = await this.assessmentRepository.create(assessment);
+
+      // Create questions from template or request
+      if (template && template.questions) {
+        await this.createQuestionsFromTemplate(savedAssessment.id, template.questions);
+      } else if (request.questions) {
+        await this.createCustomQuestions(savedAssessment.id, request.questions);
+      }
+
+      // Clear assessment cache
+      await this.cacheManager.invalidatePattern(`assessments:resident:${request.residentId}:*`);
+
+      // Log audit trail
+      await this.auditService.log({
+        action: 'ASSESSMENT_CREATED',
+        resourceType: 'Assessment',
+        resourceId: savedAssessment.id,
+        userId: request.createdBy,
+        details: {
+          residentId: request.residentId,
+          assessmentType: request.assessmentType,
+          templateId: request.templateId,
+          priority: request.priority,
+          correlationId
+        },
+        correlationId
+      });
+
+      // Publish event
+      await this.eventPublisher.publish('assessment.created', {
+        assessmentId: savedAssessment.id,
+        residentId: request.residentId,
+        assessmentType: request.assessmentType,
+        priority: request.priority,
+        dueDate: assessment.dueDate,
+        createdBy: request.createdBy,
+        correlationId
+      });
+
+      // Send notifications
+      await this.sendAssessmentNotifications(savedAssessment, 'created');
+
+      logger.info('Assessment created successfully', { 
+        assessmentId: savedAssessment.id,
+        correlationId 
+      });
+
+      return savedAssessment;
+
+    } catch (error: unknown) {
+      logger.error('Failed to create assessment', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        residentId: request.residentId,
+        correlationId 
+      });
+
+      await this.auditService.log({
+        action: 'ASSESSMENT_CREATE_FAILED',
+        resourceType: 'Assessment',
+        userId: request.createdBy,
+        details: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          residentId: request.residentId,
+          correlationId
+        },
+        correlationId
+      });
+
+      throw error;
+    }
+  }
+
+  /**
+   * Complete assessment with responses and risk calculation
+   */
+  async completeAssessment(request: CompleteAssessmentRequest): Promise<Assessment> {
+    const correlationId = `assessment-complete-${Date.now()}`;
+    
+    try {
+      logger.info('Completing assessment', { 
+        assessmentId: request.assessmentId,
+        responseCount: request.responses.length,
+        correlationId 
+      });
+
+      // Get assessment
+      const assessment = await this.assessmentRepository.findById(request.assessmentId, true);
+      if (!assessment) {
+        throw new AssessmentNotFoundError(request.assessmentId);
+      }
+
+      // Validate assessment can be completed
+      if (assessment.status === AssessmentStatus.COMPLETED) {
+        throw new AssessmentCompletionError('Assessment is already completed');
+      }
+
+      if (assessment.status === AssessmentStatus.CANCELLED) {
+        throw new AssessmentCompletionError('Cannot complete cancelled assessment');
+      }
+
+      // Save responses
+      const savedResponses = await this.saveAssessmentResponses(request.responses);
+
+      // Calculate risk assessment if applicable
+      let riskCalculation: RiskAssessmentCalculation | null = null;
+      if (this.isRiskAssessmentType(assessment.assessmentType)) {
+        riskCalculation = await this.calculateRiskAssessment(assessment, savedResponses);
+        await this.saveRiskAssessment(assessment.id, riskCalculation);
+      }
+
+      // Update assessment
+      assessment.status = AssessmentStatus.COMPLETED;
+      assessment.completedDate = new Date();
+      assessment.completedBy = request.completedBy;
+      assessment.overallNotes = request.overallNotes;
+      assessment.recommendations = request.recommendations;
+      assessment.actionPlan = request.actionPlan;
+
+      if (riskCalculation) {
+        assessment.riskLevel = riskCalculation.overallRiskLevel;
+        assessment.riskScore = riskCalculation.riskScore;
+      }
+
+      // Encrypt sensitive completion data
+      await this.encryptSensitiveAssessmentData(assessment);
+
+      // Save updated assessment
+      const completedAssessment = await this.assessmentRepository.update(assessment);
+
+      // Schedule next assessment if required
+      await this.scheduleNextAssessment(completedAssessment, riskCalculation);
+
+      // Clear assessment cache
+      await this.cacheManager.invalidatePattern(`assessments:resident:${assessment.residentId}:*`);
+
+      // Log audit trail
+      await this.auditService.log({
+        action: 'ASSESSMENT_COMPLETED',
+        resourceType: 'Assessment',
+        resourceId: request.assessmentId,
+        userId: request.completedBy,
+        details: {
+          responseCount: request.responses.length,
+          riskLevel: riskCalculation?.overallRiskLevel,
+          riskScore: riskCalculation?.riskScore,
+          requiresImmediateAction: riskCalculation?.requiresImmediateAction,
+          correlationId
+        },
+        correlationId
+      });
+
+      // Publish event
+      await this.eventPublisher.publish('assessment.completed', {
+        assessmentId: request.assessmentId,
+        residentId: assessment.residentId,
+        assessmentType: assessment.assessmentType,
+        riskLevel: riskCalculation?.overallRiskLevel,
+        requiresImmediateAction: riskCalculation?.requiresImmediateAction,
+        completedBy: request.completedBy,
+        correlationId
+      });
+
+      // Send notifications
+      await this.sendAssessmentNotifications(completedAssessment, 'completed', riskCalculation);
+
+      logger.info('Assessment completed successfully', { 
+        assessmentId: request.assessmentId,
+        riskLevel: riskCalculation?.overallRiskLevel,
+        correlationId 
+      });
+
+      return completedAssessment;
+
+    } catch (error: unknown) {
+      logger.error('Failed to complete assessment', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        assessmentId: request.assessmentId,
+        correlationId 
+      });
+
+      await this.auditService.log({
+        action: 'ASSESSMENT_COMPLETION_FAILED',
+        resourceType: 'Assessment',
+        resourceId: request.assessmentId,
+        userId: request.completedBy,
+        details: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          correlationId
+        },
+        correlationId
+      });
+
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate comprehensive risk assessment
+   */
+  async calculateRiskAssessment(
+    assessment: Assessment,
+    responses: AssessmentResponse[]
+  ): Promise<RiskAssessmentCalculation> {
+    try {
+      logger.debug('Calculating risk assessment', { 
+        assessmentId: assessment.id,
+        responseCount: responses.length 
+      });
+
+      // Get assessment questions with scoring weights
+      const questions = await this.questionRepository.find({
+        where: { assessmentId: assessment.id }
+      });
+
+      // Calculate category scores
+      const categoryRisks: CategoryRiskScore[] = [];
+      let totalScore = 0;
+      let maxPossibleScore = 0;
+
+      // Group responses by risk category
+      const categoryGroups = this.groupResponsesByCategory(responses, questions);
+
+      for (const [category, categoryResponses] of categoryGroups.entries()) {
+        const categoryScore = this.calculateCategoryScore(categoryResponses, questions);
+        const categoryMaxScore = this.calculateCategoryMaxScore(category, questions);
+        
+        categoryRisks.push({
+          category,
+          score: categoryScore.score,
+          maxScore: categoryMaxScore,
+          riskLevel: this.determineRiskLevel(categoryScore.score, categoryMaxScore),
+          contributingFactors: categoryScore.contributingFactors
+        });
+
+        totalScore += categoryScore.score;
+        maxPossibleScore += categoryMaxScore;
+      }
+
+      // Calculate overall risk
+      const riskPercentage = maxPossibleScore > 0 ? (totalScore / maxPossibleScore) * 100 : 0;
+      const overallRiskLevel = this.determineOverallRiskLevel(riskPercentage, categoryRisks);
+      
+      // Generate recommendations
+      const recommendations = this.generateRiskRecommendations(categoryRisks, overallRiskLevel);
+      
+      // Determine if immediate action required
+      const requiresImmediateAction = this.requiresImmediateAction(overallRiskLevel, categoryRisks);
+      
+      // Calculate next assessment date
+      const nextAssessmentDate = this.calculateNextAssessmentDate(overallRiskLevel, assessment.assessmentType);
+
+      const calculation: RiskAssessmentCalculation = {
+        overallRiskLevel,
+        riskScore: totalScore,
+        maxPossibleScore,
+        riskPercentage,
+        categoryRisks,
+        recommendations,
+        requiresImmediateAction,
+        nextAssessmentDate
+      };
+
+      logger.debug('Risk assessment calculated', { 
+        assessmentId: assessment.id,
+        overallRiskLevel,
+        riskScore: totalScore,
+        riskPercentage,
+        requiresImmediateAction
+      });
+
+      return calculation;
+
+    } catch (error: unknown) {
+      logger.error('Failed to calculate risk assessment', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        assessmentId: assessment.id 
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get assessment trend analysis for resident
+   */
+  async getAssessmentTrendAnalysis(
+    residentId: string,
+    assessmentType: AssessmentType,
+    timeframe: { from: Date; to: Date }
+  ): Promise<AssessmentTrendAnalysis> {
+    try {
+      logger.debug('Getting assessment trend analysis', { 
+        residentId,
+        assessmentType,
+        timeframe 
+      });
+
+      // Check cache first
+      const cacheKey = `assessment-trends:${residentId}:${assessmentType}:${timeframe.from.toISOString()}:${timeframe.to.toISOString()}`;
+      const cachedResult = await this.cacheManager.get(cacheKey);
+      
+      if (cachedResult) {
+        logger.debug('Assessment trends retrieved from cache', { residentId, assessmentType });
+        return cachedResult;
+      }
+
+      // Get assessments in timeframe
+      const assessments = await this.assessmentRepository.findByResidentAndTypeInTimeframe(
+        residentId,
+        assessmentType,
+        timeframe.from,
+        timeframe.to
+      );
+
+      // Build trends
+      const trends: AssessmentTrend[] = assessments
+        .filter(a => a.status === AssessmentStatus.COMPLETED)
+        .map(assessment => ({
+          date: assessment.completedDate!,
+          score: assessment.riskScore || 0,
+          riskLevel: assessment.riskLevel || RiskLevel.LOW,
+          keyFindings: this.extractKeyFindings(assessment)
+        }))
+        .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+      // Analyze overall direction
+      const overallDirection = this.analyzeOverallDirection(trends);
+      
+      // Identify significant changes
+      const significantChanges = this.identifySignificantChanges(trends);
+      
+      // Generate recommendations
+      const recommendations = this.generateTrendRecommendations(trends, overallDirection, significantChanges);
+
+      const analysis: AssessmentTrendAnalysis = {
+        residentId,
+        assessmentType,
+        timeframe,
+        trends,
+        overallDirection,
+        significantChanges,
+        recommendations
+      };
+
+      // Cache result for 1 hour
+      await this.cacheManager.set(cacheKey, analysis, 3600);
+
+      logger.debug('Assessment trend analysis completed', { 
+        residentId,
+        assessmentType,
+        trendCount: trends.length,
+        overallDirection,
+        significantChangeCount: significantChanges.length
+      });
+
+      return analysis;
+
+    } catch (error: unknown) {
+      logger.error('Failed to get assessment trend analysis', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        residentId,
+        assessmentType 
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get assessments due for completion
+   */
+  async getAssessmentsDue(daysAhead: number = 7): Promise<Assessment[]> {
+    try {
+      logger.debug('Getting assessments due', { daysAhead });
+
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + daysAhead);
+
+      const assessments = await this.assessmentRepository.findDue(dueDate);
+
+      // Decrypt sensitive data
+      for (const assessment of assessments) {
+        await this.decryptSensitiveAssessmentData(assessment);
+      }
+
+      logger.debug('Assessments due retrieved', { 
+        count: assessments.length,
+        daysAhead 
+      });
+
+      return assessments;
+
+    } catch (error: unknown) {
+      logger.error('Failed to get assessments due', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        daysAhead 
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Search assessments with filters
+   */
+  async searchAssessments(
+    filters: AssessmentSearchFilters,
+    page: number = 1,
+    limit: number = 20
+  ): Promise<{ assessments: Assessment[]; total: number; totalPages: number }> {
+    try {
+      logger.debug('Searching assessments', { filters, page, limit });
+
+      const result = await this.assessmentRepository.search(filters, page, limit);
+
+      // Decrypt sensitive data
+      for (const assessment of result.assessments) {
+        await this.decryptSensitiveAssessmentData(assessment);
+      }
+
+      const totalPages = Math.ceil(result.total / limit);
+
+      logger.debug('Assessment search completed', { 
+        found: result.assessments.length,
+        total: result.total,
+        totalPages
+      });
+
+      return {
+        assessments: result.assessments,
+        total: result.total,
+        totalPages
+      };
+
+    } catch (error: unknown) {
+      logger.error('Failed to search assessments', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        filters 
+      });
+      throw error;
+    }
+  }
+
+  // Private helper methods
+
+  private async encryptSensitiveAssessmentData(assessment: Assessment): Promise<void> {
+    if (assessment.description) {
+      assessment.description = await this.encryptionService.encrypt(assessment.description);
+    }
+    
+    if (assessment.overallNotes) {
+      assessment.overallNotes = await this.encryptionService.encrypt(assessment.overallNotes);
+    }
+    
+    if (assessment.actionPlan) {
+      assessment.actionPlan = await this.encryptionService.encrypt(assessment.actionPlan);
+    }
+  }
+
+  private async decryptSensitiveAssessmentData(assessment: Assessment): Promise<void> {
+    if (assessment.description) {
+      assessment.description = await this.encryptionService.decrypt(assessment.description);
+    }
+    
+    if (assessment.overallNotes) {
+      assessment.overallNotes = await this.encryptionService.decrypt(assessment.overallNotes);
+    }
+    
+    if (assessment.actionPlan) {
+      assessment.actionPlan = await this.encryptionService.decrypt(assessment.actionPlan);
+    }
+  }
+
+  private calculateDefaultDueDate(assessmentType: AssessmentType): Date {
+    const dueDate = new Date();
+    
+    switch (assessmentType) {
+      case AssessmentType.INITIAL:
+        dueDate.setDate(dueDate.getDate() + 7); // 1 week
+        break;
+      case AssessmentType.RISK:
+        dueDate.setDate(dueDate.getDate() + 3); // 3 days
+        break;
+      case AssessmentType.CARE_REVIEW:
+        dueDate.setDate(dueDate.getDate() + 14); // 2 weeks
+        break;
+      case AssessmentType.MENTAL_CAPACITY:
+        dueDate.setDate(dueDate.getDate() + 5); // 5 days
+        break;
+      default:
+        dueDate.setDate(dueDate.getDate() + 7); // Default 1 week
+    }
+    
+    return dueDate;
+  }
+
+  private async createQuestionsFromTemplate(
+    assessmentId: string,
+    templateQuestions: any[]
+  ): Promise<void> {
+    for (const templateQuestion of templateQuestions) {
+      const question = new AssessmentQuestion();
+      question.assessmentId = assessmentId;
+      question.questionText = templateQuestion.questionText;
+      question.questionType = templateQuestion.questionType;
+      question.responseType = templateQuestion.responseType;
+      question.isRequired = templateQuestion.isRequired;
+      question.options = templateQuestion.options;
+      question.scoringWeight = templateQuestion.scoringWeight;
+      question.riskIndicator = templateQuestion.riskIndicator;
+      
+      await this.questionRepository.save(question);
+    }
+  }
+
+  private async createCustomQuestions(
+    assessmentId: string,
+    questions: CreateAssessmentQuestionRequest[]
+  ): Promise<void> {
+    for (const questionRequest of questions) {
+      const question = new AssessmentQuestion();
+      question.assessmentId = assessmentId;
+      question.questionText = questionRequest.questionText;
+      question.questionType = questionRequest.questionType;
+      question.responseType = questionRequest.responseType;
+      question.isRequired = questionRequest.isRequired;
+      question.options = questionRequest.options;
+      question.scoringWeight = questionRequest.scoringWeight;
+      question.riskIndicator = questionRequest.riskIndicator;
+      
+      await this.questionRepository.save(question);
+    }
+  }
+
+  private async saveAssessmentResponses(
+    responses: AssessmentResponseRequest[]
+  ): Promise<AssessmentResponse[]> {
+    const savedResponses: AssessmentResponse[] = [];
+    
+    for (const responseRequest of responses) {
+      const response = new AssessmentResponse();
+      response.assessmentId = responseRequest.assessmentId;
+      response.questionId = responseRequest.questionId;
+      response.responseValue = responseRequest.responseValue;
+      response.responseText = responseRequest.responseText;
+      response.notes = responseRequest.notes;
+      response.respondedBy = responseRequest.respondedBy;
+      response.respondedAt = new Date();
+      
+      // Encrypt sensitive response data
+      if (response.responseText) {
+        response.responseText = await this.encryptionService.encrypt(response.responseText);
+      }
+      if (response.notes) {
+        response.notes = await this.encryptionService.encrypt(response.notes);
+      }
+      
+      const savedResponse = await this.responseRepository.save(response);
+      savedResponses.push(savedResponse);
+    }
+    
+    return savedResponses;
+  }
+
+  private isRiskAssessmentType(assessmentType: AssessmentType): boolean {
+    return [
+      AssessmentType.RISK,
+      AssessmentType.FALLS_RISK,
+      AssessmentType.PRESSURE_ULCER_RISK,
+      AssessmentType.MALNUTRITION_RISK
+    ].includes(assessmentType);
+  }
+
+  private groupResponsesByCategory(
+    responses: AssessmentResponse[],
+    questions: AssessmentQuestion[]
+  ): Map<RiskCategory, AssessmentResponse[]> {
+    const categoryGroups = new Map<RiskCategory, AssessmentResponse[]>();
+    
+    for (const response of responses) {
+      const question = questions.find(q => q.id === response.questionId);
+      if (question && question.riskCategory) {
+        if (!categoryGroups.has(question.riskCategory)) {
+          categoryGroups.set(question.riskCategory, []);
+        }
+        categoryGroups.get(question.riskCategory)!.push(response);
+      }
+    }
+    
+    return categoryGroups;
+  }
+
+  private calculateCategoryScore(
+    responses: AssessmentResponse[],
+    questions: AssessmentQuestion[]
+  ): { score: number; contributingFactors: string[] } {
+    let score = 0;
+    const contributingFactors: string[] = [];
+    
+    for (const response of responses) {
+      const question = questions.find(q => q.id === response.questionId);
+      if (question && question.scoringWeight) {
+        const responseScore = this.calculateResponseScore(response, question);
+        score += responseScore;
+        
+        if (responseScore > 0 && question.riskIndicator) {
+          contributingFactors.push(question.questionText);
+        }
+      }
+    }
+    
+    return { score, contributingFactors };
+  }
+
+  private calculateResponseScore(
+    response: AssessmentResponse,
+    question: AssessmentQuestion
+  ): number {
+    const weight = question.scoringWeight || 1;
+    
+    if (typeof response.responseValue === 'number') {
+      return response.responseValue * weight;
+    }
+    
+    if (typeof response.responseValue === 'boolean') {
+      return response.responseValue ? weight : 0;
+    }
+    
+    // For string responses, map to numeric values based on options
+    if (question.options && typeof response.responseValue === 'string') {
+      const optionIndex = question.options.indexOf(response.responseValue);
+      return optionIndex >= 0 ? optionIndex * weight : 0;
+    }
+    
+    return 0;
+  }
+
+  private calculateCategoryMaxScore(
+    category: RiskCategory,
+    questions: AssessmentQuestion[]
+  ): number {
+    return questions
+      .filter(q => q.riskCategory === category)
+      .reduce((max, question) => {
+        const weight = question.scoringWeight || 1;
+        if (question.options) {
+          return max + ((question.options.length - 1) * weight);
+        }
+        return max + weight;
+      }, 0);
+  }
+
+  private determineRiskLevel(score: number, maxScore: number): RiskLevel {
+    if (maxScore === 0) return RiskLevel.LOW;
+    
+    const percentage = (score / maxScore) * 100;
+    
+    if (percentage >= 75) return RiskLevel.SEVERE;
+    if (percentage >= 50) return RiskLevel.HIGH;
+    if (percentage >= 25) return RiskLevel.MODERATE;
+    return RiskLevel.LOW;
+  }
+
+  private determineOverallRiskLevel(
+    riskPercentage: number,
+    categoryRisks: CategoryRiskScore[]
+  ): RiskLevel {
+    // Check for any severe category risks
+    const hasSevereRisk = categoryRisks.some(cr => cr.riskLevel === RiskLevel.SEVERE);
+    if (hasSevereRisk) return RiskLevel.SEVERE;
+    
+    // Check for multiple high risks
+    const highRiskCount = categoryRisks.filter(cr => cr.riskLevel === RiskLevel.HIGH).length;
+    if (highRiskCount >= 2) return RiskLevel.HIGH;
+    
+    // Use overall percentage
+    if (riskPercentage >= 70) return RiskLevel.SEVERE;
+    if (riskPercentage >= 50) return RiskLevel.HIGH;
+    if (riskPercentage >= 30) return RiskLevel.MODERATE;
+    return RiskLevel.LOW;
+  }
+
+  private generateRiskRecommendations(
+    categoryRisks: CategoryRiskScore[],
+    overallRiskLevel: RiskLevel
+  ): string[] {
+    const recommendations: string[] = [];
+    
+    // Overall recommendations based on risk level
+    switch (overallRiskLevel) {
+      case RiskLevel.SEVERE:
+        recommendations.push('Immediate intervention required');
+        recommendations.push('Daily monitoring and review');
+        recommendations.push('Consider specialist referral');
+        break;
+      case RiskLevel.HIGH:
+        recommendations.push('Implement risk mitigation strategies');
+        recommendations.push('Increase monitoring frequency');
+        recommendations.push('Review care plan within 48 hours');
+        break;
+      case RiskLevel.MODERATE:
+        recommendations.push('Monitor closely for changes');
+        recommendations.push('Review risk factors weekly');
+        break;
+      case RiskLevel.LOW:
+        recommendations.push('Continue current care approach');
+        recommendations.push('Regular monitoring as per care plan');
+        break;
+    }
+    
+    // Category-specific recommendations
+    for (const categoryRisk of categoryRisks) {
+      if (categoryRisk.riskLevel === RiskLevel.HIGH || categoryRisk.riskLevel === RiskLevel.SEVERE) {
+        recommendations.push(`Address ${categoryRisk.category} risk factors: ${categoryRisk.contributingFactors.join(', ')}`);
+      }
+    }
+    
+    return recommendations;
+  }
+
+  private requiresImmediateAction(
+    overallRiskLevel: RiskLevel,
+    categoryRisks: CategoryRiskScore[]
+  ): boolean {
+    return overallRiskLevel === RiskLevel.SEVERE || 
+           categoryRisks.some(cr => cr.riskLevel === RiskLevel.SEVERE);
+  }
+
+  private calculateNextAssessmentDate(
+    riskLevel: RiskLevel,
+    assessmentType: AssessmentType
+  ): Date {
+    const nextDate = new Date();
+    
+    // Base frequency on risk level
+    let daysToAdd = 30; // Default monthly
+    
+    switch (riskLevel) {
+      case RiskLevel.SEVERE:
+        daysToAdd = 7; // Weekly
+        break;
+      case RiskLevel.HIGH:
+        daysToAdd = 14; // Bi-weekly
+        break;
+      case RiskLevel.MODERATE:
+        daysToAdd = 21; // Every 3 weeks
+        break;
+      case RiskLevel.LOW:
+        daysToAdd = 30; // Monthly
+        break;
+    }
+    
+    // Adjust based on assessment type
+    if (assessmentType === AssessmentType.MENTAL_CAPACITY) {
+      daysToAdd = Math.min(daysToAdd, 90); // Max 3 months for mental capacity
+    }
+    
+    nextDate.setDate(nextDate.getDate() + daysToAdd);
+    return nextDate;
+  }
+
+  private async saveRiskAssessment(
+    assessmentId: string,
+    calculation: RiskAssessmentCalculation
+  ): Promise<void> {
+    const riskAssessment = new RiskAssessment();
+    riskAssessment.assessmentId = assessmentId;
+    riskAssessment.overallRiskLevel = calculation.overallRiskLevel;
+    riskAssessment.riskScore = calculation.riskScore;
+    riskAssessment.maxPossibleScore = calculation.maxPossibleScore;
+    riskAssessment.riskPercentage = calculation.riskPercentage;
+    riskAssessment.categoryRisks = calculation.categoryRisks;
+    riskAssessment.recommendations = calculation.recommendations;
+    riskAssessment.requiresImmediateAction = calculation.requiresImmediateAction;
+    riskAssessment.nextAssessmentDate = calculation.nextAssessmentDate;
+    
+    await this.riskAssessmentRepository.save(riskAssessment);
+  }
+
+  private async scheduleNextAssessment(
+    assessment: Assessment,
+    riskCalculation: RiskAssessmentCalculation | null
+  ): Promise<void> {
+    if (riskCalculation && riskCalculation.nextAssessmentDate) {
+      // Create next assessment automatically
+      const nextAssessmentRequest: CreateAssessmentRequest = {
+        residentId: assessment.residentId,
+        templateId: assessment.templateId,
+        assessmentType: assessment.assessmentType,
+        title: `Follow-up ${assessment.title}`,
+        scheduledDate: riskCalculation.nextAssessmentDate,
+        dueDate: new Date(riskCalculation.nextAssessmentDate.getTime() + (7 * 24 * 60 * 60 * 1000)), // 1 week after scheduled
+        priority: riskCalculation.overallRiskLevel === RiskLevel.SEVERE ? 'urgent' : 
+                 riskCalculation.overallRiskLevel === RiskLevel.HIGH ? 'high' : 'medium',
+        assessorId: assessment.assessorId,
+        assessorName: assessment.assessorName,
+        createdBy: 'system'
+      };
+      
+      await this.createAssessment(nextAssessmentRequest);
+    }
+  }
+
+  private async sendAssessmentNotifications(
+    assessment: Assessment,
+    action: string,
+    riskCalculation?: RiskAssessmentCalculation | null
+  ): Promise<void> {
+    // Send notification to assessor
+    await this.notificationService.sendNotification({
+      type: `assessment_${action}`,
+      recipientType: 'assessor',
+      recipientId: assessment.assessorId,
+      residentId: assessment.residentId,
+      title: `Assessment ${action}`,
+      message: `Assessment "${assessment.title}" has been ${action}`,
+      data: {
+        assessmentId: assessment.id,
+        assessmentType: assessment.assessmentType,
+        riskLevel: riskCalculation?.overallRiskLevel,
+        requiresImmediateAction: riskCalculation?.requiresImmediateAction
+      }
+    });
+
+    // Send urgent notifications for high-risk assessments
+    if (riskCalculation?.requiresImmediateAction) {
+      await this.notificationService.sendNotification({
+        type: 'urgent_risk_assessment',
+        recipientType: 'care_manager',
+        residentId: assessment.residentId,
+        title: 'Urgent: High Risk Assessment',
+        message: `Assessment completed with ${riskCalculation.overallRiskLevel} risk level requiring immediate action`,
+        data: {
+          assessmentId: assessment.id,
+          riskLevel: riskCalculation.overallRiskLevel,
+          riskScore: riskCalculation.riskScore,
+          recommendations: riskCalculation.recommendations
+        }
+      });
+    }
+  }
+
+  private extractKeyFindings(assessment: Assessment): string[] {
+    // Extract key findings from assessment
+    const findings: string[] = [];
+    
+    if (assessment.riskLevel) {
+      findings.push(`Risk Level: ${assessment.riskLevel}`);
+    }
+    
+    if (assessment.recommendations) {
+      findings.push(...assessment.recommendations.slice(0, 3)); // Top 3 recommendations
+    }
+    
+    return findings;
+  }
+
+  private analyzeOverallDirection(trends: AssessmentTrend[]): 'improving' | 'stable' | 'declining' | 'fluctuating' {
+    if (trends.length < 2) return 'stable';
+    
+    const scores = trends.map(t => t.score);
+    const firstHalf = scores.slice(0, Math.floor(scores.length / 2));
+    const secondHalf = scores.slice(Math.floor(scores.length / 2));
+    
+    const firstAvg = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
+    const secondAvg = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
+    
+    const difference = secondAvg - firstAvg;
+    const threshold = Math.max(...scores) * 0.1; // 10% threshold
+    
+    if (Math.abs(difference) < threshold) return 'stable';
+    if (difference > threshold) return 'declining'; // Higher scores = higher risk = declining
+    if (difference < -threshold) return 'improving';
+    
+    // Check for fluctuation
+    const variance = this.calculateVariance(scores);
+    const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const coefficientOfVariation = Math.sqrt(variance) / mean;
+    
+    return coefficientOfVariation > 0.3 ? 'fluctuating' : 'stable';
+  }
+
+  private identifySignificantChanges(trends: AssessmentTrend[]): SignificantChange[] {
+    const changes: SignificantChange[] = [];
+    
+    for (let i = 1; i < trends.length; i++) {
+      const current = trends[i];
+      const previous = trends[i - 1];
+      
+      const scoreDifference = current.score - previous.score;
+      const percentageChange = Math.abs(scoreDifference) / previous.score * 100;
+      
+      if (percentageChange > 25) { // 25% change threshold
+        changes.push({
+          date: current.date,
+          changeType: scoreDifference > 0 ? 'deterioration' : 'improvement',
+          description: `${percentageChange.toFixed(1)}% change in risk score`,
+          severity: percentageChange > 50 ? 'critical' : percentageChange > 35 ? 'major' : 'moderate',
+          actionRequired: percentageChange > 35
+        });
+      }
+      
+      // Check for risk level changes
+      if (current.riskLevel !== previous.riskLevel) {
+        const riskLevelOrder = [RiskLevel.LOW, RiskLevel.MODERATE, RiskLevel.HIGH, RiskLevel.SEVERE];
+        const currentIndex = riskLevelOrder.indexOf(current.riskLevel);
+        const previousIndex = riskLevelOrder.indexOf(previous.riskLevel);
+        
+        changes.push({
+          date: current.date,
+          changeType: currentIndex > previousIndex ? 'deterioration' : 'improvement',
+          description: `Risk level changed from ${previous.riskLevel} to ${current.riskLevel}`,
+          severity: Math.abs(currentIndex - previousIndex) > 1 ? 'major' : 'moderate',
+          actionRequired: currentIndex > previousIndex && current.riskLevel === RiskLevel.SEVERE
+        });
+      }
+    }
+    
+    return changes;
+  }
+
+  private generateTrendRecommendations(
+    trends: AssessmentTrend[],
+    overallDirection: string,
+    significantChanges: SignificantChange[]
+  ): string[] {
+    const recommendations: string[] = [];
+    
+    switch (overallDirection) {
+      case 'improving':
+        recommendations.push('Continue current interventions as they appear effective');
+        recommendations.push('Consider reducing assessment frequency if improvement continues');
+        break;
+      case 'declining':
+        recommendations.push('Review and intensify current interventions');
+        recommendations.push('Consider additional risk mitigation strategies');
+        recommendations.push('Increase assessment frequency');
+        break;
+      case 'fluctuating':
+        recommendations.push('Investigate causes of fluctuation in risk levels');
+        recommendations.push('Consider more frequent monitoring during unstable periods');
+        break;
+      case 'stable':
+        recommendations.push('Maintain current care approach');
+        recommendations.push('Continue regular monitoring');
+        break;
+    }
+    
+    // Add recommendations based on significant changes
+    const criticalChanges = significantChanges.filter(c => c.severity === 'critical');
+    if (criticalChanges.length > 0) {
+      recommendations.push('Immediate review required due to critical changes in risk profile');
+    }
+    
+    const actionRequiredChanges = significantChanges.filter(c => c.actionRequired);
+    if (actionRequiredChanges.length > 0) {
+      recommendations.push('Implement immediate interventions for identified risk factors');
+    }
+    
+    return recommendations;
+  }
+
+  private calculateVariance(numbers: number[]): number {
+    const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+    const squaredDifferences = numbers.map(n => Math.pow(n - mean, 2));
+    return squaredDifferences.reduce((a, b) => a + b, 0) / numbers.length;
+  }
+}

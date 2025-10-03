@@ -1,0 +1,1357 @@
+/**
+ * @fileoverview Financial Repository for WriteCareNotes - Database operations for financial data
+ * @module FinancialRepository
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Repository layer for financial data access with optimized queries,
+ * connection pooling, and comprehensive error handling for healthcare compliance.
+ * 
+ * @compliance
+ * - GDPR data protection with field-level encryption
+ * - Audit trail for all financial operations
+ * - Healthcare regulatory compliance (CQC, Care Inspectorate, CIW, RQIA)
+ * - Financial regulations compliance (FCA, HMRC)
+ */
+
+import { Pool, PoolClient } from 'pg';
+import { logger } from '@/utils/logger';
+
+import {
+  ResidentBill,
+  Payment,
+  InsuranceClaim,
+  FinancialAccount,
+  Transaction,
+  RecurringBilling,
+  FinancialReport
+} from '@/entities/financial/FinancialEntities';
+
+import {
+  BillingStatus,
+  PaymentStatus,
+  ClaimStatus,
+  BillQueryFilters,
+  PaymentQueryFilters,
+  ClaimQueryFilters
+} from '../services/financial/interfaces/FinancialInterfaces';
+
+/**
+ * Financial Repository with optimized database operations
+ */
+export class FinancialRepository {
+  private pool: Pool;
+
+  constructor(pool: Pool) {
+    this.pool = pool;
+  }
+
+  /**
+   * Resident Bill Operations
+   */
+
+  async createBill(bill: ResidentBill): Promise<ResidentBill> {
+    const client = await this.pool.connect();
+    
+    try {
+      await client.query('BEGIN');
+
+      const billQuery = `
+        INSERT INTO resident_bills (
+          id, bill_number, resident_id, care_home_id, billing_period_start,
+          billing_period_end, issue_date, due_date, subtotal, vat_amount,
+          total_amount, currency, status, description, payment_terms,
+          notes, encrypted_bank_details, created_at, updated_at, created_by,
+          correlation_id
+        ) VALUES (
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15,
+          $16, $17, $18, $19, $20, $21
+        ) RETURNING *`;
+
+      const billResult = await client.query(billQuery, [
+        bill.id,
+        bill.billNumber,
+        bill.residentId,
+        bill.careHomeId,
+        bill.billingPeriodStart,
+        bill.billingPeriodEnd,
+        bill.issueDate,
+        bill.dueDate,
+        bill.subtotal,
+        bill.vatAmount,
+        bill.totalAmount,
+        bill.currency,
+        bill.status,
+        bill.description,
+        bill.paymentTerms,
+        bill.notes,
+        bill.encryptedBankDetails,
+        bill.createdAt,
+        bill.updatedAt,
+        bill.createdBy,
+        bill.correlationId
+      ]);
+
+      // Insert line items
+      if (bill.lineItems && bill.lineItems.length > 0) {
+        const lineItemQuery = `
+          INSERT INTO bill_line_items (
+            id, bill_id, description, quantity, unit_price, amount,
+            category, created_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+
+        for (const item of bill.lineItems) {
+          await client.query(lineItemQuery, [
+            item.id || require('uuid').v4(),
+            bill.id,
+            item.description,
+            item.quantity,
+            item.unitPrice,
+            item.amount,
+            item.category,
+            new Date()
+          ]);
+        }
+      }
+
+      await client.query('COMMIT');
+
+      logger.info('Bill created successfully', {
+        billId: bill.id,
+        billNumber: bill.billNumber
+      });
+
+      return billResult.rows[0];
+
+    } catch (error) {
+      await client.query('ROLLBACK');
+      logger.error('Failed to create bill', {
+        error: error.message,
+        billId: bill.id
+      });
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async getBill(billId: string): Promise<ResidentBill | null> {
+    const query = `
+      SELECT rb.*, 
+             json_agg(
+               json_build_object(
+                 'id', bli.id,
+                 'description', bli.description,
+                 'quantity', bli.quantity,
+                 'unitPrice', bli.unit_price,
+                 'amount', bli.amount,
+                 'category', bli.category
+               )
+             ) FILTER (WHERE bli.id IS NOT NULL) as line_items
+      FROM resident_bills rb
+      LEFT JOIN bill_line_items bli ON rb.id = bli.bill_id
+      WHERE rb.id = $1 AND rb.deleted_at IS NULL
+      GROUP BY rb.id`;
+
+    try {
+      const result = await this.pool.query(query, [billId]);
+      
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      const bill = result.rows[0];
+      bill.lineItems = bill.line_items || [];
+      delete bill.line_items;
+
+      return bill;
+
+    } catch (error) {
+      logger.error('Failed to get bill', {
+        error: error.message,
+        billId
+      });
+      throw error;
+    }
+  }
+
+  async updateBillStatus(billId: string, status: BillingStatus): Promise<void> {
+    const query = `
+      UPDATE resident_bills 
+      SET status = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2 AND deleted_at IS NULL`;
+
+    try {
+      await this.pool.query(query, [status, billId]);
+      
+      logger.info('Bill status updated', {
+        billId,
+        status
+      });
+
+    } catch (error) {
+      logger.error('Failed to update bill status', {
+        error: error.message,
+        billId,
+        status
+      });
+      throw error;
+    }
+  }
+
+  async getOutstandingBills(careHomeId: string): Promise<ResidentBill[]> {
+    const query = `
+      SELECT * FROM resident_bills
+      WHERE care_home_id = $1 
+        AND status IN ('pending', 'partially_paid', 'overdue')
+        AND deleted_at IS NULL
+      ORDER BY due_date ASC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId]);
+      return result.rows;
+
+    } catch (error) {
+      logger.error('Failed to get outstanding bills', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getOutstandingBillsWithAging(careHomeId: string): Promise<ResidentBill[]> {
+    const query = `
+      SELECT rb.*, 
+             EXTRACT(DAY FROM (CURRENT_DATE - rb.due_date)) as days_past_due,
+             r.first_name, r.last_name
+      FROM resident_bills rb
+      JOIN residents r ON rb.resident_id = r.id
+      WHERE rb.care_home_id = $1 
+        AND rb.status IN ('pending', 'partially_paid', 'overdue')
+        AND rb.deleted_at IS NULL
+      ORDER BY rb.due_date ASC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId]);
+      return result.rows;
+
+    } catch (error) {
+      logger.error('Failed to get outstanding bills with aging', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getPaidBills(careHomeId: string, startDate: Date, endDate: Date): Promise<ResidentBill[]> {
+    const query = `
+      SELECT * FROM resident_bills
+      WHERE care_home_id = $1 
+        AND status = 'paid'
+        AND issue_date BETWEEN $2 AND $3
+        AND deleted_at IS NULL
+      ORDER BY issue_date DESC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, startDate, endDate]);
+      return result.rows;
+
+    } catch (error) {
+      logger.error('Failed to get paid bills', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getNextBillSequence(careHomeId: string, year: number): Promise<number> {
+    const query = `
+      SELECT COALESCE(MAX(
+        CAST(SUBSTRING(bill_number FROM '\\d{6}$') AS INTEGER)
+      ), 0) + 1 as next_sequence
+      FROM resident_bills
+      WHERE care_home_id = $1 
+        AND EXTRACT(YEAR FROM created_at) = $2`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, year]);
+      return result.rows[0].next_sequence;
+
+    } catch (error) {
+      logger.error('Failed to get next bill sequence', {
+        error: error.message,
+        careHomeId,
+        year
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Payment Operations
+   */
+
+  async createPayment(payment: Payment): Promise<Payment> {
+    const query = `
+      INSERT INTO payments (
+        id, payment_reference, bill_id, resident_id, care_home_id,
+        amount, processing_fee, net_amount, currency, payment_method,
+        status, payment_date, description, notes, gateway_transaction_id,
+        gateway_response, encrypted_payment_details, created_at, updated_at,
+        created_by, correlation_id
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15,
+        $16, $17, $18, $19, $20, $21
+      ) RETURNING *`;
+
+    try {
+      const result = await this.pool.query(query, [
+        payment.id,
+        payment.paymentReference,
+        payment.billId,
+        payment.residentId,
+        payment.careHomeId,
+        payment.amount,
+        payment.processingFee,
+        payment.netAmount,
+        payment.currency,
+        payment.paymentMethod,
+        payment.status,
+        payment.paymentDate,
+        payment.description,
+        payment.notes,
+        payment.gatewayTransactionId,
+        payment.gatewayResponse ? JSON.stringify(payment.gatewayResponse) : null,
+        payment.encryptedPaymentDetails,
+        payment.createdAt,
+        payment.updatedAt,
+        payment.createdBy,
+        payment.correlationId
+      ]);
+
+      logger.info('Payment created successfully', {
+        paymentId: payment.id,
+        paymentReference: payment.paymentReference
+      });
+
+      return result.rows[0];
+
+    } catch (error) {
+      logger.error('Failed to create payment', {
+        error: error.message,
+        paymentId: payment.id
+      });
+      throw error;
+    }
+  }
+
+  async getPayment(paymentId: string): Promise<Payment | null> {
+    const query = `
+      SELECT * FROM payments
+      WHERE id = $1 AND deleted_at IS NULL`;
+
+    try {
+      const result = await this.pool.query(query, [paymentId]);
+      
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      const payment = result.rows[0];
+      if (payment.gateway_response) {
+        payment.gatewayResponse = JSON.parse(payment.gateway_response);
+      }
+
+      return payment;
+
+    } catch (error) {
+      logger.error('Failed to get payment', {
+        error: error.message,
+        paymentId
+      });
+      throw error;
+    }
+  }
+
+  async getTotalPaidForBill(billId: string): Promise<number> {
+    const query = `
+      SELECT COALESCE(SUM(amount), 0) as total_paid
+      FROM payments
+      WHERE bill_id = $1 
+        AND status = 'completed'
+        AND deleted_at IS NULL`;
+
+    try {
+      const result = await this.pool.query(query, [billId]);
+      return parseFloat(result.rows[0].total_paid);
+
+    } catch (error) {
+      logger.error('Failed to get total paid for bill', {
+        error: error.message,
+        billId
+      });
+      throw error;
+    }
+  }
+
+  async getRecentPayments(residentId: string, since: Date): Promise<Payment[]> {
+    const query = `
+      SELECT * FROM payments
+      WHERE resident_id = $1 
+        AND created_at >= $2
+        AND deleted_at IS NULL
+      ORDER BY created_at DESC`;
+
+    try {
+      const result = await this.pool.query(query, [residentId, since]);
+      return result.rows;
+
+    } catch (error) {
+      logger.error('Failed to get recent payments', {
+        error: error.message,
+        residentId
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Insurance Claim Operations
+   */
+
+  async createInsuranceClaim(claim: InsuranceClaim): Promise<InsuranceClaim> {
+    const query = `
+      INSERT INTO insurance_claims (
+        id, claim_number, resident_id, care_home_id, insurance_provider,
+        policy_number, claim_type, claim_amount, deductible, net_claim_amount,
+        currency, status, incident_date, submission_date, description,
+        supporting_documents, notes, created_at, updated_at, created_by,
+        correlation_id
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15,
+        $16, $17, $18, $19, $20, $21
+      ) RETURNING *`;
+
+    try {
+      const result = await this.pool.query(query, [
+        claim.id,
+        claim.claimNumber,
+        claim.residentId,
+        claim.careHomeId,
+        claim.insuranceProvider,
+        claim.policyNumber,
+        claim.claimType,
+        claim.claimAmount,
+        claim.deductible,
+        claim.netClaimAmount,
+        claim.currency,
+        claim.status,
+        claim.incidentDate,
+        claim.submissionDate,
+        claim.description,
+        JSON.stringify(claim.supportingDocuments),
+        claim.notes,
+        claim.createdAt,
+        claim.updatedAt,
+        claim.createdBy,
+        claim.correlationId
+      ]);
+
+      logger.info('Insurance claim created successfully', {
+        claimId: claim.id,
+        claimNumber: claim.claimNumber
+      });
+
+      return result.rows[0];
+
+    } catch (error) {
+      logger.error('Failed to create insurance claim', {
+        error: error.message,
+        claimId: claim.id
+      });
+      throw error;
+    }
+  }
+
+  async getPendingClaims(careHomeId: string): Promise<InsuranceClaim[]> {
+    const query = `
+      SELECT * FROM insurance_claims
+      WHERE care_home_id = $1 
+        AND status IN ('submitted', 'under_review')
+        AND deleted_at IS NULL
+      ORDER BY submission_date DESC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId]);
+      return result.rows.map(row => ({
+        ...row,
+        supportingDocuments: JSON.parse(row.supporting_documents || '[]')
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get pending claims', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getApprovedClaims(careHomeId: string, startDate: Date, endDate: Date): Promise<InsuranceClaim[]> {
+    const query = `
+      SELECT * FROM insurance_claims
+      WHERE care_home_id = $1 
+        AND status = 'approved'
+        AND submission_date BETWEEN $2 AND $3
+        AND deleted_at IS NULL
+      ORDER BY submission_date DESC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, startDate, endDate]);
+      return result.rows.map(row => ({
+        ...row,
+        supportingDocuments: JSON.parse(row.supporting_documents || '[]')
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get approved claims', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getNextClaimSequence(year: number): Promise<number> {
+    const query = `
+      SELECT COALESCE(MAX(
+        CAST(SUBSTRING(claim_number FROM '\\d{8}$') AS INTEGER)
+      ), 0) + 1 as next_sequence
+      FROM insurance_claims
+      WHERE EXTRACT(YEAR FROM created_at) = $1`;
+
+    try {
+      const result = await this.pool.query(query, [year]);
+      return result.rows[0].next_sequence;
+
+    } catch (error) {
+      logger.error('Failed to get next claim sequence', {
+        error: error.message,
+        year
+      });
+      throw error;
+    }
+  }
+
+  async getInsuranceCoverage(residentId: string, provider: string): Promise<any> {
+    const query = `
+      SELECT * FROM insurance_coverage
+      WHERE resident_id = $1 
+        AND provider = $2
+        AND is_active = true
+        AND deleted_at IS NULL
+      ORDER BY created_at DESC
+      LIMIT 1`;
+
+    try {
+      const result = await this.pool.query(query, [residentId, provider]);
+      return result.rows[0] || null;
+
+    } catch (error) {
+      logger.error('Failed to get insurance coverage', {
+        error: error.message,
+        residentId,
+        provider
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Financial Reporting Operations
+   */
+
+  async createFinancialReport(report: FinancialReport): Promise<FinancialReport> {
+    const query = `
+      INSERT INTO financial_reports (
+        id, report_type, care_home_id, start_date, end_date,
+        generated_date, data, format, parameters, created_by, correlation_id
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      ) RETURNING *`;
+
+    try {
+      const result = await this.pool.query(query, [
+        report.id,
+        report.reportType,
+        report.careHomeId,
+        report.startDate,
+        report.endDate,
+        report.generatedDate,
+        JSON.stringify(report.data),
+        report.format,
+        JSON.stringify(report.parameters),
+        report.createdBy,
+        report.correlationId
+      ]);
+
+      logger.info('Financial report created successfully', {
+        reportId: report.id,
+        reportType: report.reportType
+      });
+
+      return result.rows[0];
+
+    } catch (error) {
+      logger.error('Failed to create financial report', {
+        error: error.message,
+        reportId: report.id
+      });
+      throw error;
+    }
+  }
+
+  async getTotalRevenue(careHomeId: string, startDate: Date, endDate: Date): Promise<number> {
+    const query = `
+      SELECT COALESCE(SUM(total_amount), 0) as total_revenue
+      FROM resident_bills
+      WHERE care_home_id = $1 
+        AND status = 'paid'
+        AND issue_date BETWEEN $2 AND $3
+        AND deleted_at IS NULL`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, startDate, endDate]);
+      return parseFloat(result.rows[0].total_revenue);
+
+    } catch (error) {
+      logger.error('Failed to get total revenue', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getTotalExpenses(careHomeId: string, startDate: Date, endDate: Date): Promise<number> {
+    const query = `
+      SELECT COALESCE(SUM(amount), 0) as total_expenses
+      FROM expenses
+      WHERE care_home_id = $1 
+        AND expense_date BETWEEN $2 AND $3
+        AND deleted_at IS NULL`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, startDate, endDate]);
+      return parseFloat(result.rows[0].total_expenses);
+
+    } catch (error) {
+      logger.error('Failed to get total expenses', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getRevenueByCategory(careHomeId: string, startDate: Date, endDate: Date): Promise<any[]> {
+    const query = `
+      SELECT 
+        bli.category,
+        SUM(bli.amount) as amount,
+        COUNT(*) as count
+      FROM resident_bills rb
+      JOIN bill_line_items bli ON rb.id = bli.bill_id
+      WHERE rb.care_home_id = $1 
+        AND rb.status = 'paid'
+        AND rb.issue_date BETWEEN $2 AND $3
+        AND rb.deleted_at IS NULL
+      GROUP BY bli.category
+      ORDER BY amount DESC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, startDate, endDate]);
+      return result.rows.map(row => ({
+        category: row.category,
+        amount: parseFloat(row.amount),
+        count: parseInt(row.count)
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get revenue by category', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  async getExpensesByCategory(careHomeId: string, startDate: Date, endDate: Date): Promise<any[]> {
+    const query = `
+      SELECT 
+        category,
+        SUM(amount) as amount,
+        COUNT(*) as count
+      FROM expenses
+      WHERE care_home_id = $1 
+        AND expense_date BETWEEN $2 AND $3
+        AND deleted_at IS NULL
+      GROUP BY category
+      ORDER BY amount DESC`;
+
+    try {
+      const result = await this.pool.query(query, [careHomeId, startDate, endDate]);
+      return result.rows.map(row => ({
+        category: row.category,
+        amount: parseFloat(row.amount),
+        count: parseInt(row.count)
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get expenses by category', {
+        error: error.message,
+        careHomeId
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Resident Operations
+   */
+
+  async getResident(residentId: string): Promise<any> {
+    const query = `
+      SELECT id, first_name, last_name, is_active
+      FROM residents
+      WHERE id = $1 AND deleted_at IS NULL`;
+
+    try {
+      const result = await this.pool.query(query, [residentId]);
+      return result.rows[0] || null;
+
+    } catch (error) {
+      logger.error('Failed to get resident', {
+        error: error.message,
+        residentId
+      });
+      throw error;
+    }
+  }
+} 
+ /**
+   * Get resident bills with filters and pagination
+   */
+  async getResidentBillsWithFilters(filters: BillQueryFilters): Promise<ResidentBill[]> {
+    let query = `
+      SELECT rb.*, 
+             json_agg(
+               json_build_object(
+                 'id', bli.id,
+                 'description', bli.description,
+                 'quantity', bli.quantity,
+                 'unitPrice', bli.unit_price,
+                 'amount', bli.amount,
+                 'category', bli.category
+               )
+             ) FILTER (WHERE bli.id IS NOT NULL) as line_items
+      FROM resident_bills rb
+      LEFT JOIN bill_line_items bli ON rb.id = bli.bill_id
+      WHERE rb.deleted_at IS NULL`;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    // Apply filters
+    if (filters.residentId) {
+      query += ` AND rb.resident_id = $${paramIndex}`;
+      params.push(filters.residentId);
+      paramIndex++;
+    }
+
+    if (filters.careHomeId) {
+      query += ` AND rb.care_home_id = $${paramIndex}`;
+      params.push(filters.careHomeId);
+      paramIndex++;
+    }
+
+    if (filters.status) {
+      query += ` AND rb.status = $${paramIndex}`;
+      params.push(filters.status);
+      paramIndex++;
+    }
+
+    if (filters.startDate) {
+      query += ` AND rb.issue_date >= $${paramIndex}`;
+      params.push(filters.startDate);
+      paramIndex++;
+    }
+
+    if (filters.endDate) {
+      query += ` AND rb.issue_date <= $${paramIndex}`;
+      params.push(filters.endDate);
+      paramIndex++;
+    }
+
+    if (filters.minAmount) {
+      query += ` AND rb.total_amount >= $${paramIndex}`;
+      params.push(filters.minAmount);
+      paramIndex++;
+    }
+
+    if (filters.maxAmount) {
+      query += ` AND rb.total_amount <= $${paramIndex}`;
+      params.push(filters.maxAmount);
+      paramIndex++;
+    }
+
+    if (filters.isOverdue) {
+      query += ` AND rb.due_date < CURRENT_DATE AND rb.status IN ('pending', 'partially_paid')`;
+    }
+
+    query += ` GROUP BY rb.id ORDER BY rb.created_at DESC`;
+
+    // Add pagination
+    if (filters.limit) {
+      query += ` LIMIT $${paramIndex}`;
+      params.push(filters.limit);
+      paramIndex++;
+    }
+
+    if (filters.page && filters.limit) {
+      const offset = (filters.page - 1) * filters.limit;
+      query += ` OFFSET $${paramIndex}`;
+      params.push(offset);
+      paramIndex++;
+    }
+
+    try {
+      const result = await this.pool.query(query, params);
+      return result.rows.map(row => ({
+        ...row,
+        lineItems: row.line_items || []
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get resident bills with filters', {
+        error: error.message,
+        filters
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get count of resident bills matching filters
+   */
+  async getResidentBillsCount(filters: BillQueryFilters): Promise<number> {
+    let query = `
+      SELECT COUNT(*) as count
+      FROM resident_bills rb
+      WHERE rb.deleted_at IS NULL`;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    // Apply same filters as getResidentBillsWithFilters
+    if (filters.residentId) {
+      query += ` AND rb.resident_id = $${paramIndex}`;
+      params.push(filters.residentId);
+      paramIndex++;
+    }
+
+    if (filters.careHomeId) {
+      query += ` AND rb.care_home_id = $${paramIndex}`;
+      params.push(filters.careHomeId);
+      paramIndex++;
+    }
+
+    if (filters.status) {
+      query += ` AND rb.status = $${paramIndex}`;
+      params.push(filters.status);
+      paramIndex++;
+    }
+
+    if (filters.startDate) {
+      query += ` AND rb.issue_date >= $${paramIndex}`;
+      params.push(filters.startDate);
+      paramIndex++;
+    }
+
+    if (filters.endDate) {
+      query += ` AND rb.issue_date <= $${paramIndex}`;
+      params.push(filters.endDate);
+      paramIndex++;
+    }
+
+    if (filters.minAmount) {
+      query += ` AND rb.total_amount >= $${paramIndex}`;
+      params.push(filters.minAmount);
+      paramIndex++;
+    }
+
+    if (filters.maxAmount) {
+      query += ` AND rb.total_amount <= $${paramIndex}`;
+      params.push(filters.maxAmount);
+      paramIndex++;
+    }
+
+    if (filters.isOverdue) {
+      query += ` AND rb.due_date < CURRENT_DATE AND rb.status IN ('pending', 'partially_paid')`;
+    }
+
+    try {
+      const result = await this.pool.query(query, params);
+      return parseInt(result.rows[0].count);
+
+    } catch (error) {
+      logger.error('Failed to get resident bills count', {
+        error: error.message,
+        filters
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get payments with filters and pagination
+   */
+  async getPaymentsWithFilters(filters: PaymentQueryFilters): Promise<Payment[]> {
+    let query = `
+      SELECT * FROM payments
+      WHERE deleted_at IS NULL`;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    // Apply filters
+    if (filters.residentId) {
+      query += ` AND resident_id = $${paramIndex}`;
+      params.push(filters.residentId);
+      paramIndex++;
+    }
+
+    if (filters.careHomeId) {
+      query += ` AND care_home_id = $${paramIndex}`;
+      params.push(filters.careHomeId);
+      paramIndex++;
+    }
+
+    if (filters.billId) {
+      query += ` AND bill_id = $${paramIndex}`;
+      params.push(filters.billId);
+      paramIndex++;
+    }
+
+    if (filters.status) {
+      query += ` AND status = $${paramIndex}`;
+      params.push(filters.status);
+      paramIndex++;
+    }
+
+    if (filters.paymentMethod) {
+      query += ` AND payment_method = $${paramIndex}`;
+      params.push(filters.paymentMethod);
+      paramIndex++;
+    }
+
+    if (filters.startDate) {
+      query += ` AND payment_date >= $${paramIndex}`;
+      params.push(filters.startDate);
+      paramIndex++;
+    }
+
+    if (filters.endDate) {
+      query += ` AND payment_date <= $${paramIndex}`;
+      params.push(filters.endDate);
+      paramIndex++;
+    }
+
+    if (filters.minAmount) {
+      query += ` AND amount >= $${paramIndex}`;
+      params.push(filters.minAmount);
+      paramIndex++;
+    }
+
+    if (filters.maxAmount) {
+      query += ` AND amount <= $${paramIndex}`;
+      params.push(filters.maxAmount);
+      paramIndex++;
+    }
+
+    query += ` ORDER BY created_at DESC`;
+
+    // Add pagination
+    if (filters.limit) {
+      query += ` LIMIT $${paramIndex}`;
+      params.push(filters.limit);
+      paramIndex++;
+    }
+
+    if (filters.page && filters.limit) {
+      const offset = (filters.page - 1) * filters.limit;
+      query += ` OFFSET $${paramIndex}`;
+      params.push(offset);
+      paramIndex++;
+    }
+
+    try {
+      const result = await this.pool.query(query, params);
+      return result.rows.map(row => ({
+        ...row,
+        gatewayResponse: row.gateway_response ? JSON.parse(row.gateway_response) : null
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get payments with filters', {
+        error: error.message,
+        filters
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get count of payments matching filters
+   */
+  async getPaymentsCount(filters: PaymentQueryFilters): Promise<number> {
+    let query = `
+      SELECT COUNT(*) as count
+      FROM payments
+      WHERE deleted_at IS NULL`;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    // Apply same filters as getPaymentsWithFilters
+    if (filters.residentId) {
+      query += ` AND resident_id = $${paramIndex}`;
+      params.push(filters.residentId);
+      paramIndex++;
+    }
+
+    if (filters.careHomeId) {
+      query += ` AND care_home_id = $${paramIndex}`;
+      params.push(filters.careHomeId);
+      paramIndex++;
+    }
+
+    if (filters.billId) {
+      query += ` AND bill_id = $${paramIndex}`;
+      params.push(filters.billId);
+      paramIndex++;
+    }
+
+    if (filters.status) {
+      query += ` AND status = $${paramIndex}`;
+      params.push(filters.status);
+      paramIndex++;
+    }
+
+    if (filters.paymentMethod) {
+      query += ` AND payment_method = $${paramIndex}`;
+      params.push(filters.paymentMethod);
+      paramIndex++;
+    }
+
+    if (filters.startDate) {
+      query += ` AND payment_date >= $${paramIndex}`;
+      params.push(filters.startDate);
+      paramIndex++;
+    }
+
+    if (filters.endDate) {
+      query += ` AND payment_date <= $${paramIndex}`;
+      params.push(filters.endDate);
+      paramIndex++;
+    }
+
+    if (filters.minAmount) {
+      query += ` AND amount >= $${paramIndex}`;
+      params.push(filters.minAmount);
+      paramIndex++;
+    }
+
+    if (filters.maxAmount) {
+      query += ` AND amount <= $${paramIndex}`;
+      params.push(filters.maxAmount);
+      paramIndex++;
+    }
+
+    try {
+      const result = await this.pool.query(query, params);
+      return parseInt(result.rows[0].count);
+
+    } catch (error) {
+      logger.error('Failed to get payments count', {
+        error: error.message,
+        filters
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get insurance claims with filters and pagination
+   */
+  async getInsuranceClaimsWithFilters(filters: ClaimQueryFilters): Promise<InsuranceClaim[]> {
+    let query = `
+      SELECT * FROM insurance_claims
+      WHERE deleted_at IS NULL`;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    // Apply filters
+    if (filters.residentId) {
+      query += ` AND resident_id = $${paramIndex}`;
+      params.push(filters.residentId);
+      paramIndex++;
+    }
+
+    if (filters.careHomeId) {
+      query += ` AND care_home_id = $${paramIndex}`;
+      params.push(filters.careHomeId);
+      paramIndex++;
+    }
+
+    if (filters.insuranceProvider) {
+      query += ` AND insurance_provider = $${paramIndex}`;
+      params.push(filters.insuranceProvider);
+      paramIndex++;
+    }
+
+    if (filters.status) {
+      query += ` AND status = $${paramIndex}`;
+      params.push(filters.status);
+      paramIndex++;
+    }
+
+    if (filters.claimType) {
+      query += ` AND claim_type = $${paramIndex}`;
+      params.push(filters.claimType);
+      paramIndex++;
+    }
+
+    if (filters.startDate) {
+      query += ` AND submission_date >= $${paramIndex}`;
+      params.push(filters.startDate);
+      paramIndex++;
+    }
+
+    if (filters.endDate) {
+      query += ` AND submission_date <= $${paramIndex}`;
+      params.push(filters.endDate);
+      paramIndex++;
+    }
+
+    if (filters.minAmount) {
+      query += ` AND claim_amount >= $${paramIndex}`;
+      params.push(filters.minAmount);
+      paramIndex++;
+    }
+
+    if (filters.maxAmount) {
+      query += ` AND claim_amount <= $${paramIndex}`;
+      params.push(filters.maxAmount);
+      paramIndex++;
+    }
+
+    query += ` ORDER BY created_at DESC`;
+
+    // Add pagination
+    if (filters.limit) {
+      query += ` LIMIT $${paramIndex}`;
+      params.push(filters.limit);
+      paramIndex++;
+    }
+
+    if (filters.page && filters.limit) {
+      const offset = (filters.page - 1) * filters.limit;
+      query += ` OFFSET $${paramIndex}`;
+      params.push(offset);
+      paramIndex++;
+    }
+
+    try {
+      const result = await this.pool.query(query, params);
+      return result.rows.map(row => ({
+        ...row,
+        supportingDocuments: JSON.parse(row.supporting_documents || '[]'),
+        providerResponse: row.provider_response ? JSON.parse(row.provider_response) : null
+      }));
+
+    } catch (error) {
+      logger.error('Failed to get insurance claims with filters', {
+        error: error.message,
+        filters
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get count of insurance claims matching filters
+   */
+  async getInsuranceClaimsCount(filters: ClaimQueryFilters): Promise<number> {
+    let query = `
+      SELECT COUNT(*) as count
+      FROM insurance_claims
+      WHERE deleted_at IS NULL`;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    // Apply same filters as getInsuranceClaimsWithFilters
+    if (filters.residentId) {
+      query += ` AND resident_id = $${paramIndex}`;
+      params.push(filters.residentId);
+      paramIndex++;
+    }
+
+    if (filters.careHomeId) {
+      query += ` AND care_home_id = $${paramIndex}`;
+      params.push(filters.careHomeId);
+      paramIndex++;
+    }
+
+    if (filters.insuranceProvider) {
+      query += ` AND insurance_provider = $${paramIndex}`;
+      params.push(filters.insuranceProvider);
+      paramIndex++;
+    }
+
+    if (filters.status) {
+      query += ` AND status = $${paramIndex}`;
+      params.push(filters.status);
+      paramIndex++;
+    }
+
+    if (filters.claimType) {
+      query += ` AND claim_type = $${paramIndex}`;
+      params.push(filters.claimType);
+      paramIndex++;
+    }
+
+    if (filters.startDate) {
+      query += ` AND submission_date >= $${paramIndex}`;
+      params.push(filters.startDate);
+      paramIndex++;
+    }
+
+    if (filters.endDate) {
+      query += ` AND submission_date <= $${paramIndex}`;
+      params.push(filters.endDate);
+      paramIndex++;
+    }
+
+    if (filters.minAmount) {
+      query += ` AND claim_amount >= $${paramIndex}`;
+      params.push(filters.minAmount);
+      paramIndex++;
+    }
+
+    if (filters.maxAmount) {
+      query += ` AND claim_amount <= $${paramIndex}`;
+      params.push(filters.maxAmount);
+      paramIndex++;
+    }
+
+    try {
+      const result = await this.pool.query(query, params);
+      return parseInt(result.rows[0].count);
+
+    } catch (error) {
+      logger.error('Failed to get insurance claims count', {
+        error: error.message,
+        filters
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Update insurance claim status
+   */
+  async updateInsuranceClaimStatus(claimId: string, status: ClaimStatus): Promise<void> {
+    const query = `
+      UPDATE insurance_claims 
+      SET status = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2 AND deleted_at IS NULL`;
+
+    try {
+      await this.pool.query(query, [status, claimId]);
+      
+      logger.info('Insurance claim status updated', {
+        claimId,
+        status
+      });
+
+    } catch (error) {
+      logger.error('Failed to update insurance claim status', {
+        error: error.message,
+        claimId,
+        status
+      });
+      throw error;
+    }
+  }
+}  
+/**
+   * Get insurance provider configuration
+   */
+  async getInsuranceProviderConfig(provider: string): Promise<any> {
+    const query = `
+      SELECT * FROM insurance_provider_configs
+      WHERE provider_name = $1 AND is_active = true
+      ORDER BY created_at DESC
+      LIMIT 1`;
+
+    try {
+      const result = await this.pool.query(query, [provider]);
+      return result.rows[0] || null;
+
+    } catch (error) {
+      logger.error('Failed to get insurance provider configuration', {
+        error: error.message,
+        provider
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Update insurance claim with provider response
+   */
+  async updateInsuranceClaimWithProviderResponse(
+    claimId: string,
+    status: ClaimStatus,
+    providerResponse: any
+  ): Promise<void> {
+    const query = `
+      UPDATE insurance_claims 
+      SET status = $1, provider_response = $2, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $3 AND deleted_at IS NULL`;
+
+    try {
+      await this.pool.query(query, [status, JSON.stringify(providerResponse), claimId]);
+      
+      logger.info('Insurance claim updated with provider response', {
+        claimId,
+        status
+      });
+
+    } catch (error) {
+      logger.error('Failed to update insurance claim with provider response', {
+        error: error.message,
+        claimId,
+        status
+      });
+      throw error;
+    }
+  }
+}

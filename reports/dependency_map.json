@@ -1,0 +1,26 @@
+{
+  "packages": [],
+  "routeFiles": [
+    "/src/routes/external-integration.ts",
+    "/src/routes/medication-management.ts",
+    "/src/routes/dementia-care.ts",
+    "/src/routes/domiciliary/careVisits.routes.ts",
+    "/src/routes/safeguarding.ts",
+    "/src/routes/health.ts",
+    "/src/routes/seeded-data.ts",
+    "/src/routes/onboarding-migration.ts",
+    "/src/routes/transport-logistics.ts",
+    "/src/routes/activities-therapy.ts",
+    "/src/routes/auth/auth.routes.ts",
+    "/src/routes/multi-organization.ts",
+    "/src/routes/medication-compliance.ts",
+    "/src/routes/assessment.ts",
+    "/src/routes/consent.ts",
+    "/src/routes/domiciliary-care.ts",
+    "/src/routes/resident.ts",
+    "/src/routes/maintenance-facilities.ts",
+    "/src/routes/notifications.ts",
+    "/src/routes/integration-orchestration.ts"
+  ],
+  "routeEntries": []
+}

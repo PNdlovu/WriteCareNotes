@@ -1,0 +1,363 @@
+# Kong Consumers Configuration for WriteCareNotes Healthcare Users
+# Defines user types, authentication, and access control for healthcare APIs
+
+# Healthcare Staff Consumer Group
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: healthcare-staff
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: healthcare-staff
+custom_id: healthcare-staff-group
+
+---
+# Care Managers Consumer Group
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: care-managers
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: care-managers
+custom_id: care-managers-group
+
+---
+# Administrators Consumer Group
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: administrators
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: administrators
+custom_id: administrators-group
+
+---
+# Compliance Officers Consumer Group
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: compliance-officers
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: compliance-officers
+custom_id: compliance-officers-group
+
+---
+# Family Members Consumer Group
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: family-members
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: family-members
+custom_id: family-members-group
+
+---
+# NHS Integration Consumer
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: nhs-integration
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: nhs-integration
+custom_id: nhs-integration-system
+
+---
+# External Healthcare Systems Consumer
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: external-healthcare-systems
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: external-healthcare-systems
+custom_id: external-healthcare-systems
+
+---
+# Mobile Application Consumer
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: mobile-app
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: mobile-app
+custom_id: mobile-app-client
+
+---
+# Healthcare Staff JWT Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: healthcare-staff-jwt
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: jwt
+type: Opaque
+stringData:
+  kongCredType: jwt
+  key: healthcare-staff-jwt-key
+  algorithm: HS256
+  secret: healthcare-staff-jwt-secret-key-256-bits-long
+
+---
+# Care Managers JWT Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: care-managers-jwt
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: jwt
+type: Opaque
+stringData:
+  kongCredType: jwt
+  key: care-managers-jwt-key
+  algorithm: HS256
+  secret: care-managers-jwt-secret-key-256-bits-long
+
+---
+# Administrators JWT Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: administrators-jwt
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: jwt
+type: Opaque
+stringData:
+  kongCredType: jwt
+  key: administrators-jwt-key
+  algorithm: HS256
+  secret: administrators-jwt-secret-key-256-bits-long
+
+---
+# Compliance Officers JWT Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: compliance-officers-jwt
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: jwt
+type: Opaque
+stringData:
+  kongCredType: jwt
+  key: compliance-officers-jwt-key
+  algorithm: HS256
+  secret: compliance-officers-jwt-secret-key-256-bits-long
+
+---
+# Family Members JWT Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: family-members-jwt
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: jwt
+type: Opaque
+stringData:
+  kongCredType: jwt
+  key: family-members-jwt-key
+  algorithm: HS256
+  secret: family-members-jwt-secret-key-256-bits-long
+
+---
+# NHS Integration API Key
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nhs-integration-key
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: key-auth
+type: Opaque
+stringData:
+  kongCredType: key-auth
+  key: nhs-integration-api-key-secure-256-bits
+
+---
+# External Healthcare Systems OAuth2 Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: external-healthcare-oauth2
+  namespace: api-gateway
+  labels:
+    konghq.com/credential: oauth2
+type: Opaque
+stringData:
+  kongCredType: oauth2
+  name: external-healthcare-client
+  client_id: external-healthcare-client-id
+  client_secret: external-healthcare-client-secret-secure
+  redirect_uris: https://external-system.healthcare.gov.uk/callback
+
+---
+# Healthcare Staff ACL Group Assignment
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: healthcare-staff-acl
+  namespace: api-gateway
+  annotations:
+    konghq.com/plugins: healthcare-staff-acl-plugin
+username: healthcare-staff
+custom_id: healthcare-staff-group
+
+---
+# Healthcare Staff ACL Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-staff-acl-plugin
+  namespace: api-gateway
+consumerRef: healthcare-staff
+config:
+  allow:
+  - "healthcare-staff"
+  - "medication-administration"
+  - "resident-care"
+  - "assessment-access"
+  - "health-records-read"
+plugin: acl
+
+---
+# Care Managers ACL Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: care-managers-acl-plugin
+  namespace: api-gateway
+consumerRef: care-managers
+config:
+  allow:
+  - "care-managers"
+  - "care-planning"
+  - "resident-management"
+  - "staff-coordination"
+  - "family-communication"
+  - "assessment-management"
+plugin: acl
+
+---
+# Administrators ACL Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: administrators-acl-plugin
+  namespace: api-gateway
+consumerRef: administrators
+config:
+  allow:
+  - "administrators"
+  - "system-administration"
+  - "user-management"
+  - "configuration-management"
+  - "financial-management"
+  - "hr-management"
+  - "inventory-management"
+plugin: acl
+
+---
+# Compliance Officers ACL Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: compliance-officers-acl-plugin
+  namespace: api-gateway
+consumerRef: compliance-officers
+config:
+  allow:
+  - "compliance-officers"
+  - "audit-access"
+  - "compliance-monitoring"
+  - "regulatory-reporting"
+  - "gdpr-management"
+  - "violation-management"
+plugin: acl
+
+---
+# Family Members ACL Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: family-members-acl-plugin
+  namespace: api-gateway
+consumerRef: family-members
+config:
+  allow:
+  - "family-members"
+  - "family-portal"
+  - "resident-updates"
+  - "visit-scheduling"
+  - "communication"
+plugin: acl
+
+---
+# NHS Integration Rate Limiting
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: nhs-integration-rate-limiting
+  namespace: api-gateway
+consumerRef: nhs-integration
+config:
+  minute: 100
+  hour: 1000
+  day: 10000
+  policy: redis
+  redis_host: redis-cluster
+  redis_port: 6379
+  fault_tolerant: true
+plugin: rate-limiting-advanced
+
+---
+# External Healthcare Systems Rate Limiting
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: external-healthcare-rate-limiting
+  namespace: api-gateway
+consumerRef: external-healthcare-systems
+config:
+  minute: 200
+  hour: 2000
+  day: 20000
+  policy: redis
+  redis_host: redis-cluster
+  redis_port: 6379
+  fault_tolerant: true
+plugin: rate-limiting-advanced
+
+---
+# Mobile App Rate Limiting
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: mobile-app-rate-limiting
+  namespace: api-gateway
+consumerRef: mobile-app
+config:
+  minute: 500
+  hour: 5000
+  day: 50000
+  policy: redis
+  redis_host: redis-cluster
+  redis_port: 6379
+  fault_tolerant: true
+plugin: rate-limiting-advanced

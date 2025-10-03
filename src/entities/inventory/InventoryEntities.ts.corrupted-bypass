@@ -1,0 +1,1521 @@
+/**
+ * @fileoverview Inventory Entity Definitions for WriteCareNotes
+ * @module InventoryEntities
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Comprehensive entity definitions for inventory management
+ * including medical supplies, equipment, purchase orders, suppliers,
+ * stock movements, maintenance records, and asset tracking with full
+ * compliance and regulatory support.
+ * 
+ * @compliance
+ * - Medical Device Regulations (MDR)
+ * - MHRA requirements for medical supplies
+ * - CQC inventory management standards
+ * - GDPR data protection for supplier information
+ */
+
+export interface InventoryItem {
+  id: string;
+  itemCode: string;
+  name: string;
+  description?: string;
+  category: string;
+  subcategory?: string;
+  
+  // Stock information
+  currentStock: number;
+  reservedStock: number;
+  availableStock: number;
+  minStockLevel?: number;
+  maxStockLevel?: number;
+  reorderLevel?: number;
+  reorderQuantity?: number;
+  
+  // Pricing and costs
+  unitCost?: number;
+  unitPrice?: number;
+  currency?: string;
+  averageCost?: number;
+  totalValue?: number;
+  
+  // Physical properties
+  unit: string;
+  weight?: number;
+  dimensions?: ItemDimensions;
+  
+  // Storage and location
+  storageLocation?: string;
+  storageRequirements?: string[];
+  temperatureRange?: TemperatureRange;
+  
+  // Supplier information
+  primarySupplierId?: string;
+  alternativeSupplierIds?: string[];
+  
+  // Compliance and safety
+  isControlledSubstance: boolean;
+  requiresPrescription: boolean;
+  medicalDeviceClass?: 'I' | 'IIa' | 'IIb' | 'III';
+  regulatoryApprovals?: RegulatoryApproval[];
+  
+  // Expiry and maintenance
+  hasExpiryDate: boolean;
+  shelfLifeDays?: number;
+  nextExpiryDate?: Date;
+  requiresMaintenance: boolean;
+  maintenanceIntervalDays?: number;
+  nextMaintenanceDate?: Date;
+  
+  // Identification and tracking
+  barcode?: string;
+  manufacturerCode?: string;
+  batchTracking: boolean;
+  serialNumberTracking: boolean;
+  
+  // Automation and alerts
+  autoReorder: boolean;
+  criticalItem: boolean;
+  
+  // Status and tracking
+  status: 'active' | 'inactive' | 'discontinued';
+  lastStockCheck?: Date;
+  lastMovementDate?: Date;
+  lastScannedDate?: Date;
+  lastScannedBy?: string;
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+  version: number;
+  correlationId?: string;
+}
+
+export interface ItemDimensions {
+  length: number;
+  width: number;
+  height: number;
+  unit: 'mm' | 'cm' | 'm' | 'in' | 'ft';
+}
+
+export interface TemperatureRange {
+  minTemperature: number;
+  maxTemperature: number;
+  unit: 'celsius' | 'fahrenheit';
+}
+
+export interface RegulatoryApproval {
+  authority: string;
+  approvalNumber: string;
+  approvalDate: Date;
+  expiryDate?: Date;
+  status: 'active' | 'expired' | 'suspended' | 'revoked';
+  documentUrl?: string;
+}
+
+export interface Supplier {
+  id: string;
+  supplierCode: string;
+  name: string;
+  
+  // Contact information
+  contactPerson: string;
+  email: string;
+  phone: string;
+  alternativePhone?: string;
+  website?: string;
+  
+  // Address information
+  address: Address;
+  billingAddress?: Address;
+  
+  // Business details
+  companyRegistrationNumber?: string;
+  vatNumber?: string;
+  taxId?: string;
+  
+  // Trading terms
+  paymentTerms: string;
+  creditLimit?: number;
+  currency: string;
+  leadTimeDays: number;
+  minimumOrderValue?: number;
+  autoApprovalLimit?: number;
+  
+  // Categories and capabilities
+  supplierCategories: string[];
+  certifications?: string[];
+  qualityRating?: number;
+  
+  // Compliance
+  gdprCompliant: boolean;
+  iso9001Certified: boolean;
+  medicalDeviceLicense?: string;
+  
+  // Performance metrics
+  onTimeDeliveryRate?: number;
+  qualityScore?: number;
+  totalOrdersPlaced?: number;
+  totalOrderValue?: number;
+  averageOrderValue?: number;
+  
+  // Status and preferences
+  status: 'active' | 'inactive' | 'suspended' | 'blacklisted';
+  preferredSupplier: boolean;
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+  correlationId?: string;
+}
+
+export interface Address {
+  line1: string;
+  line2?: string;
+  city: string;
+  county?: string;
+  postcode: string;
+  country: string;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  orderNumber: string;
+  supplierId: string;
+  
+  // Order details
+  orderDate: Date;
+  requestedDeliveryDate?: Date;
+  expectedDeliveryDate?: Date;
+  actualDeliveryDate?: Date;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  
+  // Delivery information
+  deliveryAddress?: Address;
+  deliveryInstructions?: string;
+  
+  // Financial information
+  subtotal: number;
+  taxAmount: number;
+  discountAmount?: number;
+  shippingCost?: number;
+  totalAmount: number;
+  currency: string;
+  paymentTerms?: string;
+  
+  // Status and workflow
+  status: 'draft' | 'pending_approval' | 'approved' | 'sent' | 'acknowledged' | 'partially_received' | 'completed' | 'cancelled';
+  approvalStatus?: 'pending' | 'approved' | 'rejected';
+  approvedBy?: string;
+  approvedAt?: Date;
+  
+  // References and notes
+  internalReference?: string;
+  supplierReference?: string;
+  notes?: string;
+  
+  // Tracking
+  trackingNumber?: string;
+  carrierName?: string;
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy?: string;
+  correlationId?: string;
+}
+
+export interface PurchaseOrderItem {
+  id: string;
+  purchaseOrderId: string;
+  inventoryItemId: string;
+  
+  // Order details
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  
+  // Delivery tracking
+  receivedQuantity: number;
+  remainingQuantity: number;
+  
+  // Specifications
+  specifications?: string;
+  brandPreference?: string;
+  
+  // Delivery preferences
+  expectedDeliveryDate?: Date;
+  partialDeliveryAccepted: boolean;
+  
+  // Quality requirements
+  qualityStandards?: string[];
+  certificationRequired: boolean;
+  
+  // Status
+  status: 'pending' | 'partially_received' | 'completed' | 'cancelled';
+  
+  // System fields
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface StockMovement {
+  id: string;
+  inventoryItemId: string;
+  
+  // Movement details
+  movementType: 'stock_in' | 'stock_out' | 'adjustment' | 'transfer' | 'reserved' | 'unreserved' | 'expired' | 'damaged';
+  quantity: number;
+  previousStock: number;
+  newStock: number;
+  
+  // Movement information
+  reason: string;
+  reference?: string;
+  batchNumber?: string;
+  serialNumbers?: string[];
+  expiryDate?: Date;
+  
+  // Location information
+  fromLocation?: string;
+  toLocation?: string;
+  
+  // Cost information
+  unitCost?: number;
+  totalCost?: number;
+  
+  // Quality and condition
+  qualityStatus: 'good' | 'damaged' | 'expired' | 'recalled';
+  conditionNotes?: string;
+  
+  // Related records
+  purchaseOrderId?: string;
+  purchaseOrderItemId?: string;
+  maintenanceRecordId?: string;
+  
+  // Documentation
+  documentReference?: string;
+  attachments?: string[];
+  
+  // Timing
+  movementDate: Date;
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  performedBy: string;
+  correlationId?: string;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  inventoryItemId: string;
+  
+  // Maintenance details
+  maintenanceType: 'preventive' | 'corrective' | 'calibration' | 'inspection' | 'cleaning';
+  description: string;
+  instructions?: string;
+  
+  // Scheduling
+  scheduledDate: Date;
+  startedAt?: Date;
+  completedAt?: Date;
+  estimatedDuration?: number; // minutes
+  actualDuration?: number; // minutes
+  priority: 'low' | 'normal' | 'high' | 'critical';
+  
+  // Requirements
+  requiredSkills?: string[];
+  requiredTools?: string[];
+  requiredParts?: MaintenancePart[];
+  
+  // Service provider
+  internalMaintenance: boolean;
+  serviceProviderId?: string;
+  technicianId?: string;
+  technicianName?: string;
+  
+  // Costs
+  estimatedCost?: number;
+  actualCost?: number;
+  laborCost?: number;
+  partsCost?: number;
+  
+  // Results and findings
+  findings?: string;
+  workPerformed?: string;
+  partsReplaced?: string[];
+  recommendations?: string;
+  
+  // Compliance
+  regulatoryRequirement: boolean;
+  complianceStandard?: string;
+  certificationRequired: boolean;
+  certificateNumber?: string;
+  certificateUrl?: string;
+  
+  // Next maintenance
+  nextMaintenanceDate?: Date;
+  nextMaintenanceType?: string;
+  
+  // Status
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled' | 'overdue';
+  
+  // Documentation
+  workOrderNumber?: string;
+  attachments?: string[];
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  scheduledBy: string;
+  completedBy?: string;
+  correlationId?: string;
+}
+
+export interface MaintenancePart {
+  inventoryItemId: string;
+  quantity: number;
+  unitCost?: number;
+  totalCost?: number;
+  description?: string;
+  partNumber?: string;
+  used: boolean;
+}
+
+export interface AssetTag {
+  id: string;
+  inventoryItemId: string;
+  
+  // Tag details
+  tagType: 'qr_code' | 'rfid' | 'nfc' | 'barcode';
+  tagId: string;
+  tagData?: Record<string, any>;
+  
+  // Physical properties
+  tagLocation?: string;
+  installationDate?: Date;
+  
+  // Status and tracking
+  status: 'active' | 'inactive' | 'damaged' | 'lost';
+  lastScannedDate?: Date;
+  lastScannedBy?: string;
+  scanCount?: number;
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  assignedBy: string;
+  correlationId?: string;
+}
+
+export interface InventoryReport {
+  id: string;
+  reportType: 'stock_levels' | 'low_stock' | 'expiry_report' | 'movement_history' | 'supplier_performance' | 'cost_analysis' | 'usage_trends';
+  careHomeId: string;
+  
+  // Report parameters
+  period: string;
+  startDate?: Date;
+  endDate?: Date;
+  filters?: Record<string, any>;
+  
+  // Report content
+  data: any;
+  summary: any;
+  charts?: any[];
+  
+  // Generation details
+  generatedAt: Date;
+  generatedBy: string;
+  format: 'json' | 'pdf' | 'excel' | 'csv';
+  
+  // File information
+  fileUrl?: string;
+  fileSize?: number;
+  
+  // System fields
+  correlationId?: string;
+}
+
+export interface InventoryMetrics {
+  careHomeId: string;
+  period: string;
+  generatedAt: Date;
+  
+  // Stock metrics
+  stockMetrics: {
+    totalItems: number;
+    totalValue: number;
+    averageValue: number;
+    lowStockItems: number;
+    outOfStockItems: number;
+    overstockItems: number;
+    expiringItems: number;
+    expiredItems: number;
+  };
+  
+  // Movement metrics
+  movementMetrics: {
+    totalMovements: number;
+    stockInMovements: number;
+    stockOutMovements: number;
+    adjustments: number;
+    transfers: number;
+    stockTurnoverRate: number;
+    averageMovementValue: number;
+  };
+  
+  // Purchase metrics
+  purchaseMetrics: {
+    totalOrders: number;
+    totalOrderValue: number;
+    averageOrderValue: number;
+    averageLeadTime: number;
+    onTimeDeliveryRate: number;
+    orderFulfillmentRate: number;
+  };
+  
+  // Supplier metrics
+  supplierMetrics: {
+    totalSuppliers: number;
+    activeSuppliers: number;
+    averageSupplierRating: number;
+    topSuppliersByValue: SupplierMetric[];
+    supplierPerformanceIssues: number;
+  };
+  
+  // Maintenance metrics
+  maintenanceMetrics: {
+    scheduledMaintenance: number;
+    completedMaintenance: number;
+    overdueMaintenance: number;
+    totalMaintenanceCost: number;
+    averageMaintenanceCost: number;
+    maintenanceCompliance: number;
+  };
+  
+  // Cost metrics
+  costMetrics: {
+    totalInventoryValue: number;
+    averageItemCost: number;
+    costByCategory: CategoryCostMetric[];
+    monthlySpend: number;
+    yearToDateSpend: number;
+    budgetVariance: number;
+  };
+  
+  // Compliance metrics
+  complianceMetrics: {
+    regulatoryCompliance: number;
+    expiryCompliance: number;
+    maintenanceCompliance: number;
+    documentationCompliance: number;
+    auditReadiness: number;
+  };
+  
+  // System fields
+  correlationId?: string;
+}
+
+export interface SupplierMetric {
+  supplierId: string;
+  supplierName: string;
+  totalOrderValue: number;
+  orderCount: number;
+  performanceRating: number;
+}
+
+export interface CategoryCostMetric {
+  category: string;
+  totalValue: number;
+  itemCount: number;
+  averageValue: number;
+  percentage: number;
+}
+
+export interface StockAlert {
+  id: string;
+  inventoryItemId: string;
+  alertType: 'low_stock' | 'out_of_stock' | 'overstock' | 'expiring' | 'expired' | 'maintenance_due';
+  
+  // Alert details
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  message: string;
+  description?: string;
+  
+  // Thresholds
+  currentValue?: number;
+  thresholdValue?: number;
+  
+  // Status
+  status: 'active' | 'acknowledged' | 'resolved' | 'dismissed';
+  acknowledgedBy?: string;
+  acknowledgedAt?: Date;
+  resolvedBy?: string;
+  resolvedAt?: Date;
+  
+  // Actions
+  recommendedActions?: string[];
+  actionsTaken?: string[];
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  correlationId?: string;
+}
+
+export interface InventoryAuditTrail {
+  id: string;
+  inventoryItemId?: string;
+  purchaseOrderId?: string;
+  supplierId?: string;
+  
+  // Audit details
+  action: string;
+  entityType: string;
+  entityId: string;
+  
+  // Changes
+  oldValues?: Record<string, any>;
+  newValues?: Record<string, any>;
+  changedFields?: string[];
+  
+  // Context
+  reason?: string;
+  reference?: string;
+  
+  // User and timing
+  userId: string;
+  userName?: string;
+  timestamp: Date;
+  ipAddress?: string;
+  userAgent?: string;
+  
+  // Compliance
+  complianceRelevant: boolean;
+  regulatoryImpact?: string;
+  
+  // System fields
+  careHomeId: string;
+  correlationId?: string;
+}
+
+export interface BatchTracking {
+  id: string;
+  inventoryItemId: string;
+  batchNumber: string;
+  
+  // Batch details
+  manufacturingDate?: Date;
+  expiryDate?: Date;
+  quantity: number;
+  remainingQuantity: number;
+  
+  // Quality information
+  qualityStatus: 'good' | 'quarantine' | 'rejected' | 'recalled';
+  qualityTestResults?: Record<string, any>;
+  
+  // Supplier information
+  supplierId?: string;
+  purchaseOrderId?: string;
+  receivedDate?: Date;
+  
+  // Tracking
+  currentLocation?: string;
+  movements?: BatchMovement[];
+  
+  // Status
+  status: 'active' | 'consumed' | 'expired' | 'recalled' | 'disposed';
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  correlationId?: string;
+}
+
+export interface BatchMovement {
+  movementDate: Date;
+  fromLocation?: string;
+  toLocation?: string;
+  quantity: number;
+  reason: string;
+  performedBy: string;
+}
+
+export interface SerialNumberTracking {
+  id: string;
+  inventoryItemId: string;
+  serialNumber: string;
+  
+  // Device information
+  manufacturingDate?: Date;
+  warrantyExpiryDate?: Date;
+  
+  // Status and location
+  status: 'in_stock' | 'in_use' | 'maintenance' | 'disposed' | 'lost' | 'stolen';
+  currentLocation?: string;
+  assignedTo?: string;
+  
+  // Maintenance history
+  maintenanceRecords?: string[];
+  lastMaintenanceDate?: Date;
+  nextMaintenanceDate?: Date;
+  
+  // Purchase information
+  purchaseOrderId?: string;
+  purchaseDate?: Date;
+  purchaseCost?: number;
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  correlationId?: string;
+} 
+ // Notes and references
+  notes?: string;
+  supplierItemCode?: string;
+  manufacturerPartNumber?: string;
+  // System fields
+  createdAt: Date;
+  updatedAt: Date;
+  correlationId?: string;
+}
+
+export interface Supplier {
+  id: string;
+  supplierName: string;
+  supplierType: 'manufacturer' | 'distributor' | 'wholesaler' | 'service_provider';
+  registrationNumber?: string;
+  vatNumber?: string;
+  
+  // Contact information
+  primaryContact: ContactPerson;
+  alternativeContacts: ContactPerson[];
+  
+  // Address information
+  businessAddress: Address;
+  deliveryAddresses: Address[];
+  
+  // Financial information
+  paymentTerms: string;
+  creditLimit?: number;
+  currency: string;
+  bankDetails?: BankDetails; // Encrypted
+  
+  // Categories and capabilities
+  categories: string[];
+  capabilities: string[];
+  certifications: Certification[];
+  
+  // Performance metrics
+  minimumOrderValue?: number;
+  averageLeadTime: number;
+  deliveryZones: string[];
+  rating: number; // 0-5 stars
+  totalOrders: number;
+  totalSpend: number;
+  averageDeliveryTime: number;
+  onTimeDeliveryRate: number; // Percentage
+  qualityRating: number; // 0-5 stars
+  
+  // Compliance and certifications
+  insuranceCertificate?: string;
+  qualityAssuranceCertificate?: string;
+  gdprCompliant: boolean;
+  iso9001Certified?: boolean;
+  
+  // Status and dates
+  status: 'active' | 'inactive' | 'suspended' | 'blacklisted';
+  lastOrderDate?: Date;
+  lastPerformanceReview?: Date;
+  nextPerformanceReview?: Date;
+  
+  // System fields
+  careHomeId?: string; // If supplier is specific to a care home
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+  correlationId?: string;
+}
+
+export interface StockMovement {
+  id: string;
+  inventoryItemId: string;
+  movementType: 'stock_in' | 'stock_out' | 'purchase' | 'usage' | 'waste' | 'transfer_in' | 'transfer_out' | 'adjustment_in' | 'adjustment_out';
+  
+  // Quantities and costs
+  quantity: number;
+  previousStock: number;
+  newStock: number;
+  unitCost: number;
+  totalValue: number;
+  
+  // Movement details
+  reason: string;
+  reference?: string;
+  notes?: string;
+  
+  // Batch and expiry tracking
+  batchNumber?: string;
+  expiryDate?: Date;
+  manufacturingDate?: Date;
+  serialNumbers?: string[];
+  
+  // Location tracking
+  fromLocation?: string;
+  toLocation?: string;
+  
+  // Related records
+  purchaseOrderId?: string;
+  supplierId?: string;
+  transferToItemId?: string;
+  stockTakeId?: string;
+  
+  // Quality and compliance
+  qualityCheckRequired: boolean;
+  qualityCheckPassed?: boolean;
+  qualityNotes?: string;
+  
+  // Dates
+  movementDate: Date;
+  
+  // System fields
+  performedBy: string;
+  authorizedBy?: string;
+  createdAt: Date;
+  correlationId?: string;
+}
+
+export interface Asset {
+  id: string;
+  assetCode: string;
+  assetName: string;
+  assetType: 'equipment' | 'furniture' | 'vehicle' | 'technology' | 'other';
+  description?: string;
+  
+  // Asset details
+  manufacturer?: string;
+  model?: string;
+  serialNumber?: string;
+  barcode?: string;
+  
+  // Financial information
+  purchaseDate?: Date;
+  purchasePrice?: number;
+  currentValue?: number;
+  depreciationMethod?: 'straight_line' | 'declining_balance' | 'units_of_production';
+  depreciationRate?: number;
+  residualValue?: number;
+  
+  // Warranty and support
+  warrantyExpiry?: Date;
+  supportContract?: string;
+  supportExpiry?: Date;
+  
+  // Location and assignment
+  currentLocation: string;
+  assignedTo?: string;
+  department?: string;
+  responsiblePerson?: string;
+  
+  // Maintenance
+  maintenanceSchedule?: MaintenanceSchedule;
+  lastMaintenanceDate?: Date;
+  nextMaintenanceDate?: Date;
+  maintenanceHistory: MaintenanceRecord[];
+  
+  // Compliance and safety
+  requiresCalibration: boolean;
+  calibrationDue?: Date;
+  calibrationHistory: CalibrationRecord[];
+  complianceCertificates: string[];
+  safetyInspectionDue?: Date;
+  
+  // Usage tracking
+  usageHours?: number;
+  usageUnits?: number;
+  utilizationRate?: number;
+  
+  // Status and condition
+  status: 'active' | 'inactive' | 'maintenance' | 'retired' | 'disposed';
+  condition: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_repair';
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+  correlationId?: string;
+}
+
+export interface StockAlert {
+  id: string;
+  inventoryItemId: string;
+  alertType: 'low_stock' | 'critical_stock' | 'out_of_stock' | 'expiry_warning' | 'expired' | 'no_supplier' | 'reorder_failed' | 'quality_issue';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  
+  // Alert details
+  message: string;
+  description?: string;
+  currentStock?: number;
+  reorderPoint?: number;
+  expiryDate?: Date;
+  
+  // Resolution
+  isResolved: boolean;
+  resolvedBy?: string;
+  resolvedAt?: Date;
+  resolutionNotes?: string;
+  
+  // Escalation
+  escalationLevel: number;
+  escalatedTo?: string[];
+  escalatedAt?: Date;
+  
+  // Notifications
+  notificationsSent: NotificationRecord[];
+  
+  // System fields
+  createdAt: Date;
+  updatedAt?: Date;
+  correlationId?: string;
+}
+
+export interface InventoryMetrics {
+  careHomeId: string;
+  period: string;
+  generatedAt: Date;
+  
+  // Stock metrics
+  stockMetrics: {
+    totalItems: number;
+    totalValue: number;
+    averageValue: number;
+    lowStockItems: number;
+    outOfStockItems: number;
+    overstockItems: number;
+    stockTurnoverRate: number;
+    stockAccuracy: number;
+  };
+  
+  // Order metrics
+  orderMetrics: {
+    totalOrders: number;
+    totalOrderValue: number;
+    averageOrderValue: number;
+    pendingOrders: number;
+    overdueOrders: number;
+    orderFulfillmentRate: number;
+    averageLeadTime: number;
+  };
+  
+  // Supplier metrics
+  supplierMetrics: {
+    totalSuppliers: number;
+    activeSuppliers: number;
+    averageDeliveryTime: number;
+    onTimeDeliveryRate: number;
+    qualityRating: number;
+    topSuppliers: SupplierPerformanceSummary[];
+  };
+  
+  // Compliance metrics
+  complianceMetrics: {
+    expiryAlerts: number;
+    stockAlerts: number;
+    complianceViolations: number;
+    auditReadiness: number;
+  };
+  
+  // Cost metrics
+  costMetrics: {
+    totalSpend: number;
+    averageCostPerItem: number;
+    costSavings: number;
+    budgetVariance: number;
+  };
+  
+  correlationId?: string;
+}
+
+export interface InventoryReport {
+  id: string;
+  reportType: string;
+  careHomeId: string;
+  
+  // Report parameters
+  parameters: {
+    startDate?: Date;
+    endDate?: Date;
+    categories?: string[];
+    supplierIds?: string[];
+    inventoryItemIds?: string[];
+  };
+  
+  // Report data
+  data: any; // JSON data structure varies by report type
+  summary: ReportSummary;
+  
+  // Report metadata
+  generatedAt: Date;
+  generatedBy: string;
+  format: 'pdf' | 'excel' | 'csv' | 'json';
+  fileSize?: number;
+  filePath?: string;
+  
+  // Status
+  status: 'generating' | 'completed' | 'failed' | 'expired';
+  error?: string;
+  
+  correlationId?: string;
+}
+
+// Supporting interfaces
+export interface Address {
+  line1: string;
+  line2?: string;
+  city: string;
+  county?: string;
+  postcode: string;
+  country: string;
+}
+
+export interface ContactPerson {
+  name: string;
+  title?: string;
+  email: string;
+  phone: string;
+  mobile?: string;
+  isPrimary?: boolean;
+}
+
+export interface BankDetails {
+  bankName: string;
+  accountName: string;
+  accountNumber: string; // Encrypted
+  sortCode: string; // Encrypted
+  iban?: string; // Encrypted
+  swiftCode?: string;
+}
+
+export interface Certification {
+  certificationType: string;
+  certificateNumber: string;
+  issuingBody: string;
+  issueDate: Date;
+  expiryDate?: Date;
+  status: 'active' | 'expired' | 'suspended' | 'revoked';
+}
+
+export interface MaintenanceSchedule {
+  frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | 'custom';
+  interval?: number; // For custom frequency
+  description: string;
+  estimatedDuration?: number; // Minutes
+  requiredSkills?: string[];
+  cost?: number;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  assetId: string;
+  maintenanceType: 'preventive' | 'corrective' | 'emergency' | 'calibration';
+  description: string;
+  performedBy: string;
+  performedAt: Date;
+  duration?: number; // Minutes
+  cost?: number;
+  partsUsed?: string[];
+  notes?: string;
+  nextMaintenanceDate?: Date;
+}
+
+export interface CalibrationRecord {
+  id: string;
+  assetId: string;
+  calibrationType: string;
+  performedBy: string;
+  performedAt: Date;
+  certificateNumber?: string;
+  nextCalibrationDate: Date;
+  results?: any; // JSON structure for calibration results
+  passed: boolean;
+  notes?: string;
+}
+
+export interface NotificationRecord {
+  id: string;
+  type: 'email' | 'sms' | 'push' | 'in_app';
+  recipient: string;
+  sentAt: Date;
+  status: 'sent' | 'delivered' | 'failed' | 'bounced';
+  error?: string;
+}
+
+export interface ApprovalWorkflow {
+  id: string;
+  workflowType: string;
+  currentStep: number;
+  totalSteps: number;
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  steps: ApprovalStep[];
+  createdAt: Date;
+  completedAt?: Date;
+}
+
+export interface ApprovalStep {
+  stepNumber: number;
+  approverRole: string;
+  approverName?: string;
+  approverId?: string;
+  status: 'pending' | 'approved' | 'rejected' | 'skipped';
+  approvedAt?: Date;
+  comments?: string;
+  requiredBy?: Date;
+}
+
+export interface SupplierPerformanceSummary {
+  supplierId: string;
+  supplierName: string;
+  totalOrders: number;
+  totalValue: number;
+  onTimeDeliveryRate: number;
+  qualityRating: number;
+  averageLeadTime: number;
+}
+
+export interface ReportSummary {
+  totalRecords: number;
+  totalValue?: number;
+  keyMetrics: { [key: string]: any };
+  trends?: { [key: string]: any };
+  recommendations?: string[];
+}  //
+ Notes and references
+  notes?: string;
+  // System fields
+  createdAt: Date;
+  updatedAt: Date;
+  correlationId?: string;
+}
+
+export interface Supplier {
+  id: string;
+  supplierName: string;
+  supplierType: 'manufacturer' | 'distributor' | 'wholesaler' | 'service_provider';
+  registrationNumber?: string;
+  vatNumber?: string;
+  
+  // Contact information
+  primaryContact: ContactPerson;
+  alternativeContacts: ContactPerson[];
+  
+  // Address information
+  businessAddress: Address;
+  deliveryAddresses: Address[];
+  
+  // Financial information
+  paymentTerms: string;
+  creditLimit?: number;
+  currency: string;
+  bankDetails?: BankDetails; // Encrypted
+  
+  // Categories and capabilities
+  categories: string[];
+  capabilities: string[];
+  certifications: Certification[];
+  
+  // Performance metrics
+  minimumOrderValue?: number;
+  averageLeadTime: number;
+  deliveryZones: string[];
+  rating: number; // 0-5 stars
+  totalOrders: number;
+  totalSpend: number;
+  averageDeliveryTime: number;
+  onTimeDeliveryRate: number; // Percentage
+  qualityRating: number; // 0-5 stars
+  
+  // Compliance
+  insuranceCertificate?: string;
+  qualityAssuranceCertificate?: string;
+  gdprCompliant: boolean;
+  
+  // Status and dates
+  status: 'active' | 'inactive' | 'suspended' | 'blacklisted';
+  lastOrderDate?: Date;
+  lastPerformanceReview?: Date;
+  nextPerformanceReview?: Date;
+  
+  // System fields
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+  correlationId?: string;
+}
+
+export interface StockMovement {
+  id: string;
+  inventoryItemId: string;
+  movementType: 'stock_in' | 'stock_out' | 'purchase' | 'usage' | 'waste' | 'transfer_in' | 'transfer_out' | 'adjustment_in' | 'adjustment_out';
+  
+  // Quantities and costs
+  quantity: number;
+  unitCost: number;
+  totalValue: number;
+  previousStock: number;
+  newStock: number;
+  
+  // Movement details
+  reason: string;
+  reference?: string;
+  notes?: string;
+  
+  // Batch and expiry tracking
+  batchNumber?: string;
+  expiryDate?: Date;
+  manufacturingDate?: Date;
+  
+  // Location tracking
+  fromLocation?: string;
+  toLocation?: string;
+  
+  // Related records
+  purchaseOrderId?: string;
+  supplierId?: string;
+  transferToItemId?: string;
+  
+  // Dates
+  movementDate: Date;
+  createdAt: Date;
+  
+  // System fields
+  performedBy: string;
+  correlationId?: string;
+}
+
+export interface Asset {
+  id: string;
+  assetType: 'equipment' | 'furniture' | 'vehicle' | 'technology' | 'other';
+  assetName: string;
+  assetCode: string;
+  description?: string;
+  
+  // Asset details
+  manufacturer?: string;
+  model?: string;
+  serialNumber?: string;
+  
+  // Financial information
+  purchaseDate: Date;
+  purchasePrice: number;
+  currency: string;
+  warrantyExpiry?: Date;
+  
+  // Location and assignment
+  currentLocation: string;
+  assignedTo?: string;
+  department?: string;
+  
+  // Maintenance
+  maintenanceSchedule?: MaintenanceSchedule;
+  lastMaintenanceDate?: Date;
+  nextMaintenanceDate?: Date;
+  maintenanceHistory: MaintenanceRecord[];
+  
+  // Compliance
+  requiresCalibration: boolean;
+  calibrationDue?: Date;
+  complianceCertificates: string[];
+  
+  // Financial tracking
+  depreciationMethod: 'straight_line' | 'declining_balance' | 'units_of_production';
+  depreciationRate: number;
+  currentValue: number;
+  
+  // Status
+  status: 'active' | 'inactive' | 'maintenance' | 'disposed' | 'lost';
+  condition: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_repair';
+  
+  // System fields
+  careHomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+  correlationId?: string;
+}
+
+export interface StockAlert {
+  id: string;
+  inventoryItemId: string;
+  alertType: 'low_stock' | 'critical_stock' | 'out_of_stock' | 'expiry_warning' | 'expired' | 'no_supplier' | 'reorder_failed';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  message: string;
+  
+  // Stock information
+  currentStock: number;
+  reorderPoint?: number;
+  expiryDate?: Date;
+  
+  // Resolution
+  isResolved: boolean;
+  resolvedAt?: Date;
+  resolvedBy?: string;
+  resolutionNotes?: string;
+  
+  // Notifications
+  notificationsSent: number;
+  lastNotificationSent?: Date;
+  
+  // System fields
+  createdAt: Date;
+  correlationId?: string;
+}
+
+export interface InventoryMetrics {
+  careHomeId: string;
+  period: string;
+  generatedAt: Date;
+  
+  // Stock metrics
+  stockMetrics: {
+    totalItems: number;
+    totalValue: number;
+    averageValue: number;
+    lowStockItems: number;
+    outOfStockItems: number;
+    overstockItems: number;
+    stockTurnoverRate: number;
+    stockAccuracy: number;
+  };
+  
+  // Order metrics
+  orderMetrics: {
+    totalOrders: number;
+    totalOrderValue: number;
+    averageOrderValue: number;
+    pendingOrders: number;
+    overdueOrders: number;
+    orderFulfillmentRate: number;
+    averageLeadTime: number;
+  };
+  
+  // Supplier metrics
+  supplierMetrics: {
+    totalSuppliers: number;
+    activeSuppliers: number;
+    averageDeliveryTime: number;
+    onTimeDeliveryRate: number;
+    qualityRating: number;
+    topSuppliers: TopSupplier[];
+  };
+  
+  // Compliance metrics
+  complianceMetrics: {
+    expiryAlerts: number;
+    stockAlerts: number;
+    complianceViolations: number;
+    auditReadiness: number;
+  };
+  
+  // Cost metrics
+  costMetrics: {
+    totalSpend: number;
+    averageCostPerItem: number;
+    costSavings: number;
+    budgetVariance: number;
+  };
+  
+  correlationId?: string;
+}
+
+export interface InventoryReport {
+  id: string;
+  reportType: string;
+  careHomeId: string;
+  
+  // Report parameters
+  startDate?: Date;
+  endDate?: Date;
+  filters: Record<string, any>;
+  
+  // Report data
+  data: any;
+  summary: ReportSummary;
+  
+  // Generation info
+  generatedAt: Date;
+  generatedBy: string;
+  format: 'pdf' | 'excel' | 'csv' | 'json';
+  
+  // File information
+  fileName?: string;
+  fileSize?: number;
+  downloadUrl?: string;
+  
+  correlationId?: string;
+}
+
+// Supporting interfaces
+export interface Address {
+  line1: string;
+  line2?: string;
+  city: string;
+  county?: string;
+  postcode: string;
+  country: string;
+}
+
+export interface ContactPerson {
+  name: string;
+  title?: string;
+  email: string;
+  phone: string;
+  mobile?: string;
+  isPrimary: boolean;
+}
+
+export interface BankDetails {
+  bankName: string;
+  accountName: string;
+  accountNumber: string; // Encrypted
+  sortCode: string; // Encrypted
+  iban?: string; // Encrypted
+  swiftCode?: string;
+}
+
+export interface Certification {
+  certificationType: string;
+  certificateNumber: string;
+  issuingBody: string;
+  issueDate: Date;
+  expiryDate?: Date;
+  status: 'active' | 'expired' | 'suspended' | 'revoked';
+}
+
+export interface MaintenanceSchedule {
+  frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | 'custom';
+  interval?: number; // For custom frequency
+  description: string;
+  estimatedDuration?: number; // Minutes
+  requiredSkills: string[];
+  cost?: number;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  assetId: string;
+  maintenanceType: 'preventive' | 'corrective' | 'emergency' | 'calibration';
+  description: string;
+  
+  // Scheduling
+  scheduledDate: Date;
+  actualDate: Date;
+  duration: number; // Minutes
+  
+  // Personnel
+  performedBy: string;
+  supervisedBy?: string;
+  
+  // Details
+  workPerformed: string;
+  partsUsed?: PartUsed[];
+  cost: number;
+  
+  // Results
+  status: 'completed' | 'incomplete' | 'failed';
+  nextMaintenanceDate?: Date;
+  recommendations?: string;
+  
+  // System fields
+  createdAt: Date;
+  correlationId?: string;
+}
+
+export interface PartUsed {
+  inventoryItemId: string;
+  itemName: string;
+  quantity: number;
+  unitCost: number;
+  totalCost: number;
+}
+
+export interface ApprovalWorkflow {
+  id: string;
+  workflowType: 'purchase_order' | 'budget_variance' | 'supplier_change';
+  resourceId: string;
+  
+  // Workflow definition
+  steps: ApprovalStep[];
+  currentStep: number;
+  totalSteps: number;
+  
+  // Status
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  
+  // Timing
+  createdAt: Date;
+  completedAt?: Date;
+  
+  correlationId?: string;
+}
+
+export interface ApprovalStep {
+  stepNumber: number;
+  approverRole: string;
+  approverName?: string;
+  approverEmail?: string;
+  
+  // Requirements
+  requiredApprovals: number;
+  currentApprovals: number;
+  
+  // Status
+  status: 'pending' | 'approved' | 'rejected';
+  approvedAt?: Date;
+  approvedBy?: string;
+  comments?: string;
+  
+  // Escalation
+  escalationRequired?: boolean;
+  escalatedAt?: Date;
+  escalatedTo?: string;
+}
+
+export interface TopSupplier {
+  supplierId: string;
+  supplierName: string;
+  totalOrders: number;
+  totalSpend: number;
+  onTimeDeliveryRate: number;
+  qualityRating: number;
+  ranking: number;
+}
+
+export interface ReportSummary {
+  totalRecords: number;
+  totalValue?: number;
+  keyMetrics: Record<string, number>;
+  trends: Record<string, 'up' | 'down' | 'stable'>;
+  recommendations?: string[];
+}

@@ -1,0 +1,505 @@
+# Kong API Gateway Configuration for WriteCareNotes Healthcare Microservices
+# Provides centralized API management, authentication, and healthcare-specific policies
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: api-gateway
+  labels:
+    name: api-gateway
+    tier: infrastructure
+
+---
+# Kong PostgreSQL Database
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-postgres
+  namespace: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kong-postgres
+  template:
+    metadata:
+      labels:
+        app: kong-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15
+        env:
+        - name: POSTGRES_DB
+          value: kong
+        - name: POSTGRES_USER
+          value: kong
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kong-postgres-secret
+              key: password
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: kong-postgres-pvc
+
+---
+# Kong PostgreSQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-postgres
+  namespace: api-gateway
+spec:
+  selector:
+    app: kong-postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+
+---
+# Kong PostgreSQL PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kong-postgres-pvc
+  namespace: api-gateway
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp2
+
+---
+# Kong PostgreSQL Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-postgres-secret
+  namespace: api-gateway
+type: Opaque
+data:
+  password: V3JpdGVDYXJlTm90ZXNLb25nMjAyNQ== # WriteCareNotesKong2025
+
+---
+# Kong Migration Job
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kong-migration
+  namespace: api-gateway
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: kong-migration
+        image: kong:3.4
+        env:
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_HOST
+          value: kong-postgres
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PG_USER
+          value: kong
+        - name: KONG_PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kong-postgres-secret
+              key: password
+        - name: KONG_PG_DATABASE
+          value: kong
+        command: ["kong", "migrations", "bootstrap"]
+
+---
+# Kong Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong
+  namespace: api-gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kong
+  template:
+    metadata:
+      labels:
+        app: kong
+    spec:
+      containers:
+      - name: kong
+        image: kong:3.4
+        env:
+        # Database configuration
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_HOST
+          value: kong-postgres
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PG_USER
+          value: kong
+        - name: KONG_PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kong-postgres-secret
+              key: password
+        - name: KONG_PG_DATABASE
+          value: kong
+        
+        # Kong configuration
+        - name: KONG_PROXY_ACCESS_LOG
+          value: /dev/stdout
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: /dev/stdout
+        - name: KONG_PROXY_ERROR_LOG
+          value: /dev/stderr
+        - name: KONG_ADMIN_ERROR_LOG
+          value: /dev/stderr
+        - name: KONG_ADMIN_LISTEN
+          value: "0.0.0.0:8001"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, 0.0.0.0:8443 ssl"
+        
+        # Healthcare-specific configuration
+        - name: KONG_LOG_LEVEL
+          value: info
+        - name: KONG_PLUGINS
+          value: "bundled,correlation-id,request-id,rate-limiting,jwt,key-auth,oauth2,acl,cors,request-transformer,response-transformer,request-size-limiting,ip-restriction,bot-detection"
+        
+        # Security configuration
+        - name: KONG_REAL_IP_HEADER
+          value: X-Forwarded-For
+        - name: KONG_REAL_IP_RECURSIVE
+          value: "on"
+        - name: KONG_TRUSTED_IPS
+          value: "0.0.0.0/0,::/0"
+        
+        # Performance configuration
+        - name: KONG_WORKER_PROCESSES
+          value: "auto"
+        - name: KONG_WORKER_CONNECTIONS
+          value: "1024"
+        
+        ports:
+        - containerPort: 8000
+          name: proxy
+        - containerPort: 8443
+          name: proxy-ssl
+        - containerPort: 8001
+          name: admin
+        
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+---
+# Kong Proxy Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-proxy
+  namespace: api-gateway
+  labels:
+    app: kong
+spec:
+  type: LoadBalancer
+  selector:
+    app: kong
+  ports:
+  - name: proxy
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: proxy-ssl
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+
+---
+# Kong Admin Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-admin
+  namespace: api-gateway
+  labels:
+    app: kong
+spec:
+  type: ClusterIP
+  selector:
+    app: kong
+  ports:
+  - name: admin
+    port: 8001
+    targetPort: 8001
+    protocol: TCP
+
+---
+# Kong Ingress Controller
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-ingress-controller
+  namespace: api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kong-ingress-controller
+  template:
+    metadata:
+      labels:
+        app: kong-ingress-controller
+    spec:
+      serviceAccountName: kong-ingress-controller
+      containers:
+      - name: kong-ingress-controller
+        image: kong/kubernetes-ingress-controller:2.12
+        env:
+        - name: CONTROLLER_KONG_ADMIN_URL
+          value: "http://kong-admin:8001"
+        - name: CONTROLLER_PUBLISH_SERVICE
+          value: api-gateway/kong-proxy
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: CONTROLLER_INGRESS_CLASS
+          value: kong
+        - name: CONTROLLER_LOG_LEVEL
+          value: info
+        ports:
+        - containerPort: 8080
+          name: webhook
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 10254
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 10254
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+# Kong Ingress Controller ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kong-ingress-controller
+  namespace: api-gateway
+
+---
+# Kong Ingress Controller ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kong-ingress-controller
+rules:
+- apiGroups: [""]
+  resources: ["services", "endpoints", "secrets", "configmaps"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses/status"]
+  verbs: ["update"]
+- apiGroups: ["configuration.konghq.com"]
+  resources: ["*"]
+  verbs: ["*"]
+
+---
+# Kong Ingress Controller ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kong-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kong-ingress-controller
+subjects:
+- kind: ServiceAccount
+  name: kong-ingress-controller
+  namespace: api-gateway
+
+---
+# Healthcare API Gateway Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: writecarenotes-api-ingress
+  namespace: api-gateway
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "false"
+    konghq.com/preserve-host: "true"
+    konghq.com/protocols: "https"
+    konghq.com/https-redirect-status-code: "301"
+    # Healthcare-specific rate limiting
+    konghq.com/plugins: healthcare-rate-limiting,healthcare-cors,healthcare-auth,healthcare-logging
+spec:
+  tls:
+  - hosts:
+    - api.writecarenotes.com
+    secretName: writecarenotes-api-tls
+  rules:
+  - host: api.writecarenotes.com
+    http:
+      paths:
+      # Core Healthcare Services
+      - path: /api/v1/residents
+        pathType: Prefix
+        backend:
+          service:
+            name: resident-service
+            port:
+              number: 3001
+      - path: /api/v1/medications
+        pathType: Prefix
+        backend:
+          service:
+            name: medication-service
+            port:
+              number: 3002
+      - path: /api/v1/care-plans
+        pathType: Prefix
+        backend:
+          service:
+            name: care-planning-service
+            port:
+              number: 3003
+      - path: /api/v1/assessments
+        pathType: Prefix
+        backend:
+          service:
+            name: assessment-service
+            port:
+              number: 3004
+      - path: /api/v1/health-records
+        pathType: Prefix
+        backend:
+          service:
+            name: health-records-service
+            port:
+              number: 3005
+      
+      # Operational Services
+      - path: /api/v1/financial
+        pathType: Prefix
+        backend:
+          service:
+            name: financial-service
+            port:
+              number: 3006
+      - path: /api/v1/hr
+        pathType: Prefix
+        backend:
+          service:
+            name: hr-payroll-service
+            port:
+              number: 3007
+      - path: /api/v1/inventory
+        pathType: Prefix
+        backend:
+          service:
+            name: inventory-service
+            port:
+              number: 3008
+      
+      # Compliance Services
+      - path: /api/v1/compliance
+        pathType: Prefix
+        backend:
+          service:
+            name: compliance-service
+            port:
+              number: 3009
+      - path: /api/v1/audit
+        pathType: Prefix
+        backend:
+          service:
+            name: audit-service
+            port:
+              number: 3010
+      - path: /api/v1/gdpr
+        pathType: Prefix
+        backend:
+          service:
+            name: gdpr-service
+            port:
+              number: 3011
+      
+      # Integration Services
+      - path: /api/v1/nhs
+        pathType: Prefix
+        backend:
+          service:
+            name: nhs-integration-service
+            port:
+              number: 3012
+      - path: /api/v1/fhir
+        pathType: Prefix
+        backend:
+          service:
+            name: fhir-integration-service
+            port:
+              number: 3013

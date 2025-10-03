@@ -1,0 +1,228 @@
+{
+  "migrations": [
+    {
+      "file": "database/migrations/001_create_residents_table.ts",
+      "type": "table_creation",
+      "table": "residents",
+      "purpose": "Core resident data storage"
+    },
+    {
+      "file": "database/migrations/002_create_medications_table.ts", 
+      "type": "table_creation",
+      "table": "medications",
+      "purpose": "Medication inventory and management"
+    },
+    {
+      "file": "database/migrations/003_create_prescriptions_table.ts",
+      "type": "table_creation", 
+      "table": "prescriptions",
+      "purpose": "Prescription management and tracking"
+    },
+    {
+      "file": "database/migrations/004_create_administration_records_table.ts",
+      "type": "table_creation",
+      "table": "administration_records", 
+      "purpose": "Medication administration tracking"
+    },
+    {
+      "file": "database/migrations/005_create_controlled_substances_tables.ts",
+      "type": "table_creation",
+      "table": "controlled_substances",
+      "purpose": "Controlled drug management and compliance"
+    },
+    {
+      "file": "database/migrations/006_create_medication_scheduling_tables.ts",
+      "type": "table_creation",
+      "table": "medication_scheduling",
+      "purpose": "Medication scheduling and reminders"
+    },
+    {
+      "file": "database/migrations/007_create_medication_compliance_tables.ts",
+      "type": "table_creation",
+      "table": "medication_compliance",
+      "purpose": "Compliance monitoring and reporting"
+    },
+    {
+      "file": "database/migrations/008_create_medication_interaction_tables.ts",
+      "type": "table_creation",
+      "table": "medication_interactions",
+      "purpose": "Drug interaction checking and alerts"
+    },
+    {
+      "file": "database/migrations/009_create_medication_reconciliation_tables.ts",
+      "type": "table_creation",
+      "table": "medication_reconciliation",
+      "purpose": "Medication reconciliation processes"
+    },
+    {
+      "file": "database/migrations/010_create_care_plans_table.ts",
+      "type": "table_creation",
+      "table": "care_plans",
+      "purpose": "Individual care plan management"
+    },
+    {
+      "file": "database/migrations/011_create_care_domains_table.ts",
+      "type": "table_creation",
+      "table": "care_domains",
+      "purpose": "Care domain categorization"
+    },
+    {
+      "file": "database/migrations/012_create_care_interventions_table.ts",
+      "type": "table_creation",
+      "table": "care_interventions",
+      "purpose": "Care intervention tracking"
+    },
+    {
+      "file": "database/migrations/013_create_care_records_table.ts",
+      "type": "table_creation",
+      "table": "care_records",
+      "purpose": "Care record documentation"
+    },
+    {
+      "file": "database/migrations/014_create_care_activities_table.ts",
+      "type": "table_creation",
+      "table": "care_activities",
+      "purpose": "Care activity scheduling and tracking"
+    },
+    {
+      "file": "database/migrations/015_create_care_observations_table.ts",
+      "type": "table_creation",
+      "table": "care_observations",
+      "purpose": "Care observation documentation"
+    },
+    {
+      "file": "database/migrations/016_create_care_reviews_table.ts",
+      "type": "table_creation",
+      "table": "care_reviews",
+      "purpose": "Care review and assessment tracking"
+    },
+    {
+      "file": "database/migrations/017_create_review_participants_table.ts",
+      "type": "table_creation",
+      "table": "review_participants",
+      "purpose": "Care review participant management"
+    },
+    {
+      "file": "database/migrations/018_create_care_quality_metrics_table.ts",
+      "type": "table_creation",
+      "table": "care_quality_metrics",
+      "purpose": "Quality metrics and KPIs"
+    },
+    {
+      "file": "database/migrations/019_create_family_communications_table.ts",
+      "type": "table_creation",
+      "table": "family_communications",
+      "purpose": "Family communication tracking"
+    },
+    {
+      "file": "database/migrations/020_create_compliance_assessments_table.ts",
+      "type": "table_creation",
+      "table": "compliance_assessments",
+      "purpose": "Regulatory compliance assessments"
+    },
+    {
+      "file": "database/migrations/021_create_user_sessions_table.ts",
+      "type": "table_creation",
+      "table": "user_sessions",
+      "purpose": "User session management and tracking"
+    },
+    {
+      "file": "database/migrations/030_create_compliance_tables.ts",
+      "type": "table_creation",
+      "table": "compliance_tables",
+      "purpose": "General compliance tracking"
+    },
+    {
+      "file": "database/migrations/030_create_safeguarding_alerts_table.ts",
+      "type": "table_creation",
+      "table": "safeguarding_alerts",
+      "purpose": "Safeguarding alert management"
+    },
+    {
+      "file": "database/migrations/031_create_consent_management_table.ts",
+      "type": "table_creation",
+      "table": "consent_management",
+      "purpose": "GDPR consent management"
+    },
+    {
+      "file": "database/migrations/031_create_jurisdiction_compliance_tables.ts",
+      "type": "table_creation",
+      "table": "jurisdiction_compliance",
+      "purpose": "Jurisdiction-specific compliance"
+    },
+    {
+      "file": "database/migrations/032_create_documents_table.ts",
+      "type": "table_creation",
+      "table": "documents",
+      "purpose": "Document management and storage"
+    },
+    {
+      "file": "database/migrations/033_create_nurse_call_alerts_table.ts",
+      "type": "table_creation",
+      "table": "nurse_call_alerts",
+      "purpose": "Nurse call system alerts"
+    },
+    {
+      "file": "database/migrations/034_create_on_call_rota_table.ts",
+      "type": "table_creation",
+      "table": "on_call_rota",
+      "purpose": "On-call roster management"
+    },
+    {
+      "file": "database/migrations/035_create_blog_tables.ts",
+      "type": "table_creation",
+      "table": "blog_tables",
+      "purpose": "Blog system and content management"
+    },
+    {
+      "file": "database/migrations/036_create_ai_agent_tables.ts",
+      "type": "table_creation",
+      "table": "ai_agent_tables",
+      "purpose": "AI agent management and tracking"
+    },
+    {
+      "file": "database/migrations/20250103_create_nhs_integration_tables.sql",
+      "type": "table_creation",
+      "table": "nhs_integration_tables",
+      "purpose": "NHS system integration data"
+    }
+  ],
+  "seeds": [
+    {
+      "file": "database/seeds/001_residents_seed.ts",
+      "purpose": "Resident test data"
+    },
+    {
+      "file": "database/seeds/002_medications_seed.ts", 
+      "purpose": "Medication test data"
+    },
+    {
+      "file": "database/seeds/003_controlled_substances_seed.ts",
+      "purpose": "Controlled substances test data"
+    },
+    {
+      "file": "database/seeds/005_care_planning_seed.ts",
+      "purpose": "Care planning test data"
+    },
+    {
+      "file": "database/seeds/005_blog_seed.ts",
+      "purpose": "Blog system test data"
+    },
+    {
+      "file": "database/seeds/006_blog_articles_seed.ts",
+      "purpose": "Blog articles test data"
+    },
+    {
+      "file": "database/seeds/007_blog_articles_extended_seed.ts",
+      "purpose": "Extended blog articles test data"
+    },
+    {
+      "file": "database/seeds/008_blog_articles_final_seed.ts",
+      "purpose": "Final blog articles test data"
+    },
+    {
+      "file": "database/seeds/009_blog_articles_complete_seed.ts",
+      "purpose": "Complete blog articles test data"
+    }
+  ]
+}

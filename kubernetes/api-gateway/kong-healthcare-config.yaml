@@ -1,0 +1,247 @@
+# Kong API Gateway Configuration for WriteCareNotes Healthcare System
+# Provides secure, compliant API gateway with healthcare-specific features
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kong-config
+  namespace: api-gateway
+data:
+  kong.conf: |
+    # Kong configuration for healthcare API gateway
+    database = postgres
+    pg_host = kong-postgres
+    pg_port = 5432
+    pg_database = kong
+    pg_user = kong
+    pg_password = kong_password
+    
+    # Healthcare-specific settings
+    proxy_listen = 0.0.0.0:8000
+    admin_listen = 0.0.0.0:8001
+    
+    # Security settings
+    ssl_cert = /etc/kong/ssl/kong.crt
+    ssl_cert_key = /etc/kong/ssl/kong.key
+    
+    # Healthcare compliance
+    log_level = info
+    error_default_type = application/json
+    
+    # Performance settings
+    worker_processes = auto
+    worker_connections = 1024
+    
+    # Healthcare audit logging
+    nginx_http_log_format = '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_time $upstream_response_time healthcare_context="$http_x_healthcare_context" compliance_level="$http_x_compliance_level" correlation_id="$http_x_correlation_id"'
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-postgres
+  namespace: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kong-postgres
+  template:
+    metadata:
+      labels:
+        app: kong-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: kong
+        - name: POSTGRES_USER
+          value: kong
+        - name: POSTGRES_PASSWORD
+          value: kong_password        re
+sources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: kong-postgres-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kong-postgres-pvc
+  namespace: api-gateway
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-postgres
+  namespace: api-gateway
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: kong-postgres
+
+---
+# Kong Migration Job
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kong-migration
+  namespace: api-gateway
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: kong-migration
+        image: kong:3.4
+        command: ["kong", "migrations", "bootstrap"]
+        env:
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_HOST
+          value: kong-postgres
+        - name: KONG_PG_DATABASE
+          value: kong
+        - name: KONG_PG_USER
+          value: kong
+        - name: KONG_PG_PASSWORD
+          value: kong_password
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong
+  namespace: api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kong
+  template:
+    metadata:
+      labels:
+        app: kong
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: kong
+        image: kong:3.4
+        ports:
+        - containerPort: 8000
+          name: proxy
+        - containerPort: 8001
+          name: admin
+        - containerPort: 8443
+          name: proxy-ssl
+        - containerPort: 8444
+          name: admin-ssl
+        env:
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_HOST
+          value: kong-postgres
+        - name: KONG_PG_DATABASE
+          value: kong
+        - name: KONG_PG_USER
+          value: kong
+        - name: KONG_PG_PASSWORD
+          value: kong_password
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000"
+        - name: KONG_ADMIN_LISTEN
+          value: "0.0.0.0:8001"
+        - name: KONG_LOG_LEVEL
+          value: info
+        - name: KONG_PLUGINS
+          value: "bundled,healthcare-auth,healthcare-rate-limit,healthcare-audit"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: kong-config
+          mountPath: /etc/kong/kong.conf
+          subPath: kong.conf
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: kong-config
+        configMap:
+          name: kong-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-proxy
+  namespace: api-gateway
+spec:
+  type: LoadBalancer
+  ports:
+  - name: proxy
+    port: 80
+    targetPort: 8000
+  - name: proxy-ssl
+    port: 443
+    targetPort: 8443
+  selector:
+    app: kong
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-admin
+  namespace: api-gateway
+spec:
+  ports:
+  - name: admin
+    port: 8001
+    targetPort: 8001
+  - name: admin-ssl
+    port: 8444
+    targetPort: 8444
+  selector:
+    app: kong

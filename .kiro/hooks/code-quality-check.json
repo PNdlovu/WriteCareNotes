@@ -1,0 +1,16 @@
+{
+  "name": "WriteCareNotes Code Quality Check",
+  "description": "Automatically runs quality checks when code files are saved",
+  "trigger": {
+    "type": "file_save",
+    "patterns": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+  },
+  "actions": [
+    {
+      "type": "agent_execution",
+      "prompt": "Review the saved file for WriteCareNotes compliance:\n\n1. Check if file has proper JSDoc documentation with @fileoverview, @module, @compliance, and @security tags\n2. Verify TDD approach - ensure tests exist for the implementation\n3. Check API endpoints follow RESTful conventions and versioning\n4. Validate security implementations (input validation, encryption, audit logging)\n5. Ensure healthcare compliance requirements are met\n6. Verify error handling and logging are implemented\n7. Check if i18n is implemented for user-facing text\n8. Validate TypeScript interfaces and types are properly defined\n\nIf any issues found, provide specific recommendations for fixes. If file is complete and compliant, confirm it meets WriteCareNotes standards.",
+      "context": ["#File"]
+    }
+  ],
+  "enabled": true
+}

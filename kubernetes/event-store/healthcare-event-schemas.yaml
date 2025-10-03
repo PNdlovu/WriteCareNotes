@@ -1,0 +1,258 @@
+# Healthcare Event Schemas and Projections for WriteCareNotes
+# Defines event types and projections for healthcare event sourcing
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: healthcare-event-schemas-setup
+  namespace: event-store
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: event-schemas-setup
+        image: curlimages/curl:8.4.0
+        command:
+        - sh
+        - -c
+        - |
+          # Wait for EventStore to be ready
+          until curl -f http://eventstore:2113/ping; do
+            echo "Waiting for EventStore..."
+            sleep 5
+          done
+          
+          echo "Setting up healthcare event schemas and projections..."
+          
+          # Create healthcare event projections
+          
+          # Resident Events Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "resident-events-projection",
+              "query": "fromCategory(\"resident\").when({\"ResidentAdmitted\": function(s, e) { linkTo(\"resident-admissions\", e); }, \"ResidentDischarged\": function(s, e) { linkTo(\"resident-discharges\", e); }, \"ResidentTransferred\": function(s, e) { linkTo(\"resident-transfers\", e); }, \"ResidentUpdated\": function(s, e) { linkTo(\"resident-updates\", e); }})"
+            }'
+          
+          # Medication Events Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "medication-events-projection",
+              "query": "fromCategory(\"medication\").when({\"MedicationAdministered\": function(s, e) { linkTo(\"medication-administrations\", e); }, \"PrescriptionCreated\": function(s, e) { linkTo(\"prescription-creations\", e); }, \"PrescriptionModified\": function(s, e) { linkTo(\"prescription-modifications\", e); }, \"ControlledSubstanceDispensed\": function(s, e) { linkTo(\"controlled-substance-events\", e); }})"
+            }'
+          
+          # Care Plan Events Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "care-plan-events-projection",
+              "query": "fromCategory(\"care-plan\").when({\"CarePlanCreated\": function(s, e) { linkTo(\"care-plan-creations\", e); }, \"CarePlanUpdated\": function(s, e) { linkTo(\"care-plan-updates\", e); }, \"CarePlanReviewed\": function(s, e) { linkTo(\"care-plan-reviews\", e); }, \"CareGoalAchieved\": function(s, e) { linkTo(\"care-goal-achievements\", e); }})"
+            }'
+          
+          # Assessment Events Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "assessment-events-projection",
+              "query": "fromCategory(\"assessment\").when({\"AssessmentCompleted\": function(s, e) { linkTo(\"assessment-completions\", e); }, \"RiskAssessmentUpdated\": function(s, e) { linkTo(\"risk-assessment-updates\", e); }, \"AssessmentScheduled\": function(s, e) { linkTo(\"assessment-schedules\", e); }})"
+            }'
+          
+          # Compliance Events Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "compliance-events-projection",
+              "query": "fromCategory(\"compliance\").when({\"ComplianceViolationDetected\": function(s, e) { linkTo(\"compliance-violations\", e); }, \"AuditTrailCreated\": function(s, e) { linkTo(\"audit-trails\", e); }, \"GDPRRequestProcessed\": function(s, e) { linkTo(\"gdpr-requests\", e); }, \"RegulatoryReportGenerated\": function(s, e) { linkTo(\"regulatory-reports\", e); }})"
+            }'
+          
+          # Healthcare Analytics Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "healthcare-analytics-projection",
+              "query": "fromAll().when({\"MedicationAdministered\": function(s, e) { s.medicationCount = (s.medicationCount || 0) + 1; }, \"ResidentAdmitted\": function(s, e) { s.admissionCount = (s.admissionCount || 0) + 1; }, \"AssessmentCompleted\": function(s, e) { s.assessmentCount = (s.assessmentCount || 0) + 1; }, \"ComplianceViolationDetected\": function(s, e) { s.violationCount = (s.violationCount || 0) + 1; }})"
+            }'
+          
+          # NHS Integration Events Projection
+          curl -X POST http://eventstore:2113/projections/continuous \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "nhs-integration-projection",
+              "query": "fromCategory(\"nhs-integration\").when({\"PatientMatched\": function(s, e) { linkTo(\"nhs-patient-matches\", e); }, \"GPConnectDataSynced\": function(s, e) { linkTo(\"gp-connect-syncs\", e); }, \"NHSNumberValidated\": function(s, e) { linkTo(\"nhs-number-validations\", e); }})"
+            }'
+          
+          echo "Healthcare event schemas and projections setup completed!"
+
+---
+# Healthcare Event Store Database Schema
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthcare-event-schemas
+  namespace: event-store
+data:
+  resident-events.json: |
+    {
+      "eventTypes": {
+        "ResidentAdmitted": {
+          "version": "1.0",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "residentId": {"type": "string", "format": "uuid"},
+              "tenantId": {"type": "string", "format": "uuid"},
+              "nhsNumber": {"type": "string", "pattern": "^[0-9]{10}$"},
+              "firstName": {"type": "string", "minLength": 1, "maxLength": 100},
+              "lastName": {"type": "string", "minLength": 1, "maxLength": 100},
+              "dateOfBirth": {"type": "string", "format": "date"},
+              "admissionDate": {"type": "string", "format": "date"},
+              "careLevel": {"type": "string", "enum": ["residential", "nursing", "dementia", "mental-health"]},
+              "roomId": {"type": "string", "format": "uuid"},
+              "emergencyContacts": {"type": "array"},
+              "medicalConditions": {"type": "array", "items": {"type": "string"}},
+              "allergies": {"type": "array", "items": {"type": "string"}},
+              "admittedBy": {"type": "string", "format": "uuid"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "correlationId": {"type": "string", "format": "uuid"}
+            },
+            "required": ["residentId", "tenantId", "firstName", "lastName", "dateOfBirth", "admissionDate", "careLevel", "admittedBy", "timestamp"]
+          }
+        },
+        "ResidentDischarged": {
+          "version": "1.0",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "residentId": {"type": "string", "format": "uuid"},
+              "tenantId": {"type": "string", "format": "uuid"},
+              "dischargeDate": {"type": "string", "format": "date"},
+              "dischargeReason": {"type": "string"},
+              "dischargeDestination": {"type": "string"},
+              "dischargedBy": {"type": "string", "format": "uuid"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "correlationId": {"type": "string", "format": "uuid"}
+            },
+            "required": ["residentId", "tenantId", "dischargeDate", "dischargeReason", "dischargedBy", "timestamp"]
+          }
+        }
+      }
+    }
+  
+  medication-events.json: |
+    {
+      "eventTypes": {
+        "MedicationAdministered": {
+          "version": "1.0",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "administrationId": {"type": "string", "format": "uuid"},
+              "residentId": {"type": "string", "format": "uuid"},
+              "prescriptionId": {"type": "string", "format": "uuid"},
+              "medicationId": {"type": "string", "format": "uuid"},
+              "medicationName": {"type": "string"},
+              "dosage": {"type": "number"},
+              "dosageUnit": {"type": "string"},
+              "route": {"type": "string"},
+              "scheduledTime": {"type": "string", "format": "date-time"},
+              "administeredTime": {"type": "string", "format": "date-time"},
+              "administeredBy": {"type": "string", "format": "uuid"},
+              "witnessId": {"type": "string", "format": "uuid"},
+              "notes": {"type": "string"},
+              "sideEffectsObserved": {"type": "array", "items": {"type": "string"}},
+              "effectivenessRating": {"type": "integer", "minimum": 1, "maximum": 5},
+              "isControlledSubstance": {"type": "boolean"},
+              "controlledSubstanceCountBefore": {"type": "integer"},
+              "controlledSubstanceCountAfter": {"type": "integer"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "correlationId": {"type": "string", "format": "uuid"}
+            },
+            "required": ["administrationId", "residentId", "prescriptionId", "medicationId", "dosage", "dosageUnit", "administeredTime", "administeredBy", "timestamp"]
+          }
+        },
+        "PrescriptionCreated": {
+          "version": "1.0",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "prescriptionId": {"type": "string", "format": "uuid"},
+              "residentId": {"type": "string", "format": "uuid"},
+              "medicationId": {"type": "string", "format": "uuid"},
+              "prescriberName": {"type": "string"},
+              "prescriberId": {"type": "string"},
+              "prescribedDate": {"type": "string", "format": "date"},
+              "startDate": {"type": "string", "format": "date"},
+              "endDate": {"type": "string", "format": "date"},
+              "dosage": {"type": "number"},
+              "dosageUnit": {"type": "string"},
+              "frequency": {"type": "string"},
+              "route": {"type": "string"},
+              "instructions": {"type": "string"},
+              "quantityPrescribed": {"type": "integer"},
+              "refillsAuthorized": {"type": "integer"},
+              "isPRN": {"type": "boolean"},
+              "prnIndication": {"type": "string"},
+              "createdBy": {"type": "string", "format": "uuid"},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "correlationId": {"type": "string", "format": "uuid"}
+            },
+            "required": ["prescriptionId", "residentId", "medicationId", "prescriberName", "prescribedDate", "startDate", "dosage", "dosageUnit", "frequency", "route", "createdBy", "timestamp"]
+          }
+        }
+      }
+    }
+  
+  compliance-events.json: |
+    {
+      "eventTypes": {
+        "ComplianceViolationDetected": {
+          "version": "1.0",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "violationId": {"type": "string", "format": "uuid"},
+              "tenantId": {"type": "string", "format": "uuid"},
+              "violationType": {"type": "string"},
+              "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+              "description": {"type": "string"},
+              "affectedResidentId": {"type": "string", "format": "uuid"},
+              "affectedServiceArea": {"type": "string"},
+              "regulatoryFramework": {"type": "string", "enum": ["CQC", "Care Inspectorate", "CIW", "RQIA", "GDPR", "NHS Digital"]},
+              "detectedBy": {"type": "string", "format": "uuid"},
+              "detectionMethod": {"type": "string", "enum": ["automated", "manual", "audit", "inspection"]},
+              "requiresImmediateAction": {"type": "boolean"},
+              "notificationsSent": {"type": "array", "items": {"type": "string"}},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "correlationId": {"type": "string", "format": "uuid"}
+            },
+            "required": ["violationId", "tenantId", "violationType", "severity", "description", "regulatoryFramework", "detectedBy", "timestamp"]
+          }
+        },
+        "AuditTrailCreated": {
+          "version": "1.0",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "auditId": {"type": "string", "format": "uuid"},
+              "tenantId": {"type": "string", "format": "uuid"},
+              "userId": {"type": "string", "format": "uuid"},
+              "action": {"type": "string"},
+              "resourceType": {"type": "string"},
+              "resourceId": {"type": "string", "format": "uuid"},
+              "oldValues": {"type": "object"},
+              "newValues": {"type": "object"},
+              "ipAddress": {"type": "string"},
+              "userAgent": {"type": "string"},
+              "sessionId": {"type": "string"},
+              "complianceLevel": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+              "regulatoryRelevance": {"type": "array", "items": {"type": "string"}},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "correlationId": {"type": "string", "format": "uuid"}
+            },
+            "required": ["auditId", "tenantId", "userId", "action", "resourceType", "resourceId", "timestamp"]
+          }
+        }
+      }
+    }

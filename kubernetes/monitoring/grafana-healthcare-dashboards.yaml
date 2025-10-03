@@ -1,0 +1,599 @@
+# Grafana Configuration for WriteCareNotes Healthcare Dashboards
+# Provides comprehensive healthcare monitoring, compliance, and operational dashboards
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  namespace: monitoring
+data:
+  grafana.ini: |
+    [server]
+    http_port = 3000
+    domain = grafana.writecarenotes.local
+    root_url = http://grafana.writecarenotes.local:3000/
+    
+    [database]
+    type = sqlite3
+    path = /var/lib/grafana/grafana.db
+    
+    [security]
+    admin_user = admin
+    admin_password = ${GRAFANA_ADMIN_PASSWORD}
+    secret_key = writecarenotes-grafana-secret-key
+    
+    [users]
+    allow_sign_up = false
+    allow_org_create = false
+    auto_assign_org = true
+    auto_assign_org_role = Viewer
+    
+    [auth]
+    disable_login_form = false
+    disable_signout_menu = false
+    
+    [auth.anonymous]
+    enabled = false
+    
+    [dashboards]
+    default_home_dashboard_path = /etc/grafana/dashboards/healthcare-overview.json
+    
+    [alerting]
+    enabled = true
+    execute_alerts = true
+    
+    [smtp]
+    enabled = true
+    host = smtp.writecarenotes.local:587
+    user = alerts@writecarenotes.com
+    password = ${SMTP_PASSWORD}
+    from_address = alerts@writecarenotes.com
+    from_name = WriteCareNotes Alerts
+    
+    [log]
+    mode = console
+    level = info
+    
+    [metrics]
+    enabled = true
+    interval_seconds = 10
+    
+    [feature_toggles]
+    enable = publicDashboards
+
+  datasources.yml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus:9090
+        isDefault: true
+        editable: false
+        jsonData:
+          timeInterval: 15s
+          queryTimeout: 60s
+          httpMethod: POST
+        
+      - name: Elasticsearch-Logs
+        type: elasticsearch
+        access: proxy
+        url: https://elasticsearch:9200
+        database: healthcare-logs-*
+        basicAuth: true
+        basicAuthUser: elastic
+        secureJsonData:
+          basicAuthPassword: ${ELASTIC_PASSWORD}
+        jsonData:
+          timeField: "@timestamp"
+          esVersion: 8
+          includeFrozen: false
+          logMessageField: message
+          logLevelField: level
+          maxConcurrentShardRequests: 5
+          
+      - name: Elasticsearch-Audit
+        type: elasticsearch
+        access: proxy
+        url: https://elasticsearch:9200
+        database: audit-logs-*
+        basicAuth: true
+        basicAuthUser: elastic
+        secureJsonData:
+          basicAuthPassword: ${ELASTIC_PASSWORD}
+        jsonData:
+          timeField: "@timestamp"
+          esVersion: 8
+          includeFrozen: false
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-healthcare-overview-dashboard
+  namespace: monitoring
+data:
+  healthcare-overview.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "WriteCareNotes Healthcare Overview",
+        "tags": ["healthcare", "overview", "compliance"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "System Health Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "up{service_tier=\"core-healthcare\"}",
+                "legendFormat": "{{service}} Status"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "green", "value": 1}
+                  ]
+                },
+                "mappings": [
+                  {"options": {"0": {"text": "DOWN"}}, "type": "value"},
+                  {"options": {"1": {"text": "UP"}}, "type": "value"}
+                ]
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Active Residents",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "resident_count_total",
+                "legendFormat": "Total Residents"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {"mode": "palette-classic"},
+                "unit": "short"
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Medication Administration Rate",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "rate(medication_administrations_total[5m])",
+                "legendFormat": "Administrations/sec"
+              },
+              {
+                "expr": "rate(medication_administration_errors_total[5m])",
+                "legendFormat": "Errors/sec"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {"mode": "palette-classic"},
+                "unit": "reqps"
+              }
+            },
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+          },
+          {
+            "id": 4,
+            "title": "Care Plan Compliance",
+            "type": "piechart",
+            "targets": [
+              {
+                "expr": "care_plans_up_to_date",
+                "legendFormat": "Up to Date"
+              },
+              {
+                "expr": "care_plans_overdue",
+                "legendFormat": "Overdue"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+          },
+          {
+            "id": 5,
+            "title": "Staff on Duty",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "staff_on_duty_count",
+                "legendFormat": "Current Staff"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 5},
+                    {"color": "green", "value": 10}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+          }
+        ],
+        "time": {"from": "now-6h", "to": "now"},
+        "refresh": "30s",
+        "schemaVersion": 36,
+        "version": 1
+      }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-medication-safety-dashboard
+  namespace: monitoring
+data:
+  medication-safety.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Medication Safety Dashboard",
+        "tags": ["medication", "safety", "critical"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Medication Errors (Last 24h)",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "increase(medication_administration_errors_total[24h])",
+                "legendFormat": "Total Errors"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "yellow", "value": 1},
+                    {"color": "red", "value": 3}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 8, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Drug Interactions Detected",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "medication_interaction_warnings_total",
+                "legendFormat": "Active Warnings"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "red", "value": 1}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 8, "x": 8, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Missed Doses (Today)",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "increase(missed_medication_doses_total[24h])",
+                "legendFormat": "Missed Doses"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "yellow", "value": 1},
+                    {"color": "red", "value": 5}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 8, "x": 16, "y": 0}
+          },
+          {
+            "id": 4,
+            "title": "Medication Administration Timeline",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "rate(medication_administrations_total[5m])",
+                "legendFormat": "Successful Administrations"
+              },
+              {
+                "expr": "rate(medication_administration_errors_total[5m])",
+                "legendFormat": "Administration Errors"
+              },
+              {
+                "expr": "rate(missed_medication_doses_total[5m])",
+                "legendFormat": "Missed Doses"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+          },
+          {
+            "id": 5,
+            "title": "Critical Medication Alerts",
+            "type": "logs",
+            "targets": [
+              {
+                "expr": "{healthcare_context=\"medication-management\", compliance_level=\"critical\"}",
+                "refId": "A"
+              }
+            ],
+            "options": {
+              "showTime": true,
+              "showLabels": true,
+              "sortOrder": "Descending"
+            },
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16}
+          }
+        ],
+        "time": {"from": "now-24h", "to": "now"},
+        "refresh": "10s",
+        "schemaVersion": 36,
+        "version": 1
+      }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-compliance-dashboard
+  namespace: monitoring
+data:
+  compliance-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Healthcare Compliance Dashboard",
+        "tags": ["compliance", "audit", "regulatory"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "CQC Compliance Score",
+            "type": "gauge",
+            "targets": [
+              {
+                "expr": "cqc_compliance_score",
+                "legendFormat": "Compliance Score"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "min": 0,
+                "max": 100,
+                "unit": "percent",
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 70},
+                    {"color": "green", "value": 85}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "GDPR Compliance Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "gdpr_compliance_violations_total",
+                "legendFormat": "Active Violations"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "red", "value": 1}
+                  ]
+                }
+              }
+            },
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Audit Events Timeline",
+            "type": "timeseries",
+            "targets": [
+              {
+                "expr": "rate(audit_events_total[5m])",
+                "legendFormat": "Audit Events/sec"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+          },
+          {
+            "id": 4,
+            "title": "Data Protection Incidents",
+            "type": "table",
+            "targets": [
+              {
+                "expr": "increase(gdpr_violation_events_total[24h]) by (violation_type, service)",
+                "legendFormat": "{{violation_type}} - {{service}}"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16}
+          }
+        ],
+        "time": {"from": "now-7d", "to": "now"},
+        "refresh": "1m",
+        "schemaVersion": 36,
+        "version": 1
+      }
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:10.2.0
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: GRAFANA_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-secret
+              key: admin-password
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secret
+              key: password
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-secret
+              key: smtp-password
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: grafana-config
+          mountPath: /etc/grafana/grafana.ini
+          subPath: grafana.ini
+        - name: grafana-config
+          mountPath: /etc/grafana/provisioning/datasources/datasources.yml
+          subPath: datasources.yml
+        - name: grafana-healthcare-overview-dashboard
+          mountPath: /etc/grafana/dashboards/healthcare-overview.json
+          subPath: healthcare-overview.json
+        - name: grafana-medication-safety-dashboard
+          mountPath: /etc/grafana/dashboards/medication-safety.json
+          subPath: medication-safety.json
+        - name: grafana-compliance-dashboard
+          mountPath: /etc/grafana/dashboards/compliance-dashboard.json
+          subPath: compliance-dashboard.json
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+      - name: grafana-config
+        configMap:
+          name: grafana-config
+      - name: grafana-healthcare-overview-dashboard
+        configMap:
+          name: grafana-healthcare-overview-dashboard
+      - name: grafana-medication-safety-dashboard
+        configMap:
+          name: grafana-medication-safety-dashboard
+      - name: grafana-compliance-dashboard
+        configMap:
+          name: grafana-compliance-dashboard
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-storage
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-storage
+  namespace: monitoring
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: gp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+  selector:
+    app: grafana
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-secret
+  namespace: monitoring
+type: Opaque
+data:
+  admin-password: V3JpdGVDYXJlTm90ZXNHcmFmYW5hMjAyNQ==
+  smtp-password: V3JpdGVDYXJlTm90ZXNTTVRQMjAyNQ==

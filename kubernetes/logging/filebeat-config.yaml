@@ -1,0 +1,299 @@
+# Filebeat Configuration for WriteCareNotes Log Collection
+# Collects logs from all microservices and forwards to Logstash
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: logging
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+    # Healthcare service logs
+    - type: container
+      paths:
+        - /var/log/containers/*core-healthcare*.log
+      fields:
+        log_type: healthcare
+        compliance_level: high
+      fields_under_root: true
+      processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: "/var/log/containers/"
+      - decode_json_fields:
+          fields: ["message"]
+          target: ""
+          overwrite_keys: true
+
+    # Operational service logs
+    - type: container
+      paths:
+        - /var/log/containers/*operational*.log
+      fields:
+        log_type: operational
+        compliance_level: medium
+      fields_under_root: true
+      processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: "/var/log/containers/"
+
+    # Compliance service logs
+    - type: container
+      paths:
+        - /var/log/containers/*compliance*.log
+      fields:
+        log_type: compliance
+        compliance_level: critical
+        audit_required: true
+      fields_under_root: true
+      processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: "/var/log/containers/"
+
+    # Integration service logs
+    - type: container
+      paths:
+        - /var/log/containers/*integration*.log
+      fields:
+        log_type: integration
+        compliance_level: high
+      fields_under_root: true
+      processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: "/var/log/containers/"
+
+    # Infrastructure service logs
+    - type: container
+      paths:
+        - /var/log/containers/*infrastructure*.log
+        - /var/log/containers/*monitoring*.log
+      fields:
+        log_type: infrastructure
+        compliance_level: low
+      fields_under_root: true
+      processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: "/var/log/containers/"
+
+    # Audit logs (separate input for special handling)
+    - type: log
+      paths:
+        - /var/log/audit/*.log
+      fields:
+        log_type: audit
+        compliance_level: critical
+        audit_required: true
+      fields_under_root: true
+
+    processors:
+    # Add correlation ID if present in log message
+    - script:
+        lang: javascript
+        source: >
+          function process(event) {
+            var message = event.Get("message");
+            if (message && typeof message === "string") {
+              var correlationMatch = message.match(/correlation_id[=:]([a-f0-9-]+)/i);
+              if (correlationMatch) {
+                event.Put("correlation_id", correlationMatch[1]);
+              }
+              
+              var userMatch = message.match(/user_id[=:]([a-zA-Z0-9-]+)/i);
+              if (userMatch) {
+                event.Put("user_id", userMatch[1]);
+              }
+              
+              var tenantMatch = message.match(/tenant_id[=:]([a-zA-Z0-9-]+)/i);
+              if (tenantMatch) {
+                event.Put("tenant_id", tenantMatch[1]);
+              }
+            }
+          }
+
+    # Add healthcare context
+    - add_fields:
+        target: ""
+        fields:
+          environment: production
+          system: writecarenotes
+          region: uk
+
+    # Drop debug logs in production
+    - drop_event:
+        when:
+          equals:
+            log.level: debug
+
+    output.logstash:
+      hosts: ["logstash:5044", "logstash:5045", "logstash:5046"]
+      loadbalance: true
+      worker: 2
+
+    # Separate outputs for different log types
+    output.conditionals:
+    - condition:
+        equals:
+          log_type: healthcare
+      logstash:
+        hosts: ["logstash:5044"]
+    - condition:
+        equals:
+          log_type: audit
+      logstash:
+        hosts: ["logstash:5045"]
+    - condition:
+        or:
+        - equals:
+            log_type: operational
+        - equals:
+            log_type: infrastructure
+      logstash:
+        hosts: ["logstash:5046"]
+
+    logging.level: info
+    logging.to_files: true
+    logging.files:
+      path: /var/log/filebeat
+      name: filebeat
+      keepfiles: 7
+      permissions: 0644
+
+    monitoring.enabled: true
+
+---
+# Filebeat DaemonSet
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat
+  namespace: logging
+  labels:
+    app: filebeat
+spec:
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:8.11.0
+        args: [
+          "-c", "/etc/filebeat.yml",
+          "-e",
+        ]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          runAsUser: 0
+          capabilities:
+            add:
+            - SYS_ADMIN
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/filebeat.yml
+          readOnly: true
+          subPath: filebeat.yml
+        - name: data
+          mountPath: /usr/share/filebeat/data
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          defaultMode: 0640
+          name: filebeat-config
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: data
+        hostPath:
+          path: /var/lib/filebeat-data
+          type: DirectoryOrCreate
+
+---
+# Filebeat ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: filebeat
+  namespace: logging
+
+---
+# Filebeat ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: filebeat
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - namespaces
+  - pods
+  - services
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources:
+  - replicasets
+  verbs: ["get", "list", "watch"]
+
+---
+# Filebeat ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: filebeat
+subjects:
+- kind: ServiceAccount
+  name: filebeat
+  namespace: logging
+roleRef:
+  kind: ClusterRole
+  name: filebeat
+  apiGroup: rbac.authorization.k8s.io

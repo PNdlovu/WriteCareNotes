@@ -1,0 +1,142 @@
+# Healthcare-Specific Kafka Topics and RabbitMQ Exchanges
+# Defines messaging infrastructure for healthcare event-driven architecture
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-topics-setup
+  namespace: messaging
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: kafka-topics
+        image: confluentinc/cp-kafka:7.4.0
+        command:
+        - sh
+        - -c
+        - |
+          # Wait for Kafka to be ready
+          until kafka-broker-api-versions --bootstrap-server kafka:9092; do
+            echo "Waiting for Kafka..."
+            sleep 5
+          done
+          
+          # Healthcare Core Topics
+          kafka-topics --bootstrap-server kafka:9092 --create --topic healthcare.residents.events --partitions 6 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic healthcare.medications.events --partitions 6 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic healthcare.care-plans.events --partitions 6 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic healthcare.assessments.events --partitions 6 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic healthcare.health-records.events --partitions 6 --replication-factor 3 --if-not-exists
+          
+          # Operational Topics
+          kafka-topics --bootstrap-server kafka:9092 --create --topic operational.financial.events --partitions 3 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic operational.hr.events --partitions 3 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic operational.inventory.events --partitions 3 --replication-factor 3 --if-not-exists
+          
+          # Compliance Topics
+          kafka-topics --bootstrap-server kafka:9092 --create --topic compliance.audit.events --partitions 6 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic compliance.violations.events --partitions 3 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic compliance.gdpr.events --partitions 3 --replication-factor 3 --if-not-exists
+          
+          # Integration Topics
+          kafka-topics --bootstrap-server kafka:9092 --create --topic integration.nhs.events --partitions 3 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic integration.fhir.events --partitions 3 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic integration.external.events --partitions 3 --replication-factor 3 --if-not-exists
+          
+          # Analytics Topics
+          kafka-topics --bootstrap-server kafka:9092 --create --topic analytics.healthcare.metrics --partitions 6 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic analytics.operational.metrics --partitions 3 --replication-factor 3 --if-not-exists
+          
+          # Notification Topics
+          kafka-topics --bootstrap-server kafka:9092 --create --topic notifications.alerts --partitions 3 --replication-factor 3 --if-not-exists
+          kafka-topics --bootstrap-server kafka:9092 --create --topic notifications.family --partitions 3 --replication-factor 3 --if-not-exists
+          
+          echo "All Kafka topics created successfully"
+
+---
+# RabbitMQ Exchanges and Queues Setup
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rabbitmq-setup
+  namespace: messaging
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: rabbitmq-setup
+        image: rabbitmq:3.12-management
+        command:
+        - sh
+        - -c
+        - |
+          # Wait for RabbitMQ to be ready
+          until rabbitmqctl status; do
+            echo "Waiting for RabbitMQ..."
+            sleep 5
+          done
+          
+          # Healthcare Exchanges
+          rabbitmqadmin declare exchange name=healthcare.residents type=topic durable=true
+          rabbitmqadmin declare exchange name=healthcare.medications type=topic durable=true
+          rabbitmqadmin declare exchange name=healthcare.care-plans type=topic durable=true
+          rabbitmqadmin declare exchange name=healthcare.assessments type=topic durable=true
+          rabbitmqadmin declare exchange name=healthcare.health-records type=topic durable=true
+          
+          # Operational Exchanges
+          rabbitmqadmin declare exchange name=operational.financial type=topic durable=true
+          rabbitmqadmin declare exchange name=operational.hr type=topic durable=true
+          rabbitmqadmin declare exchange name=operational.inventory type=topic durable=true
+          
+          # Compliance Exchanges
+          rabbitmqadmin declare exchange name=compliance.audit type=topic durable=true
+          rabbitmqadmin declare exchange name=compliance.violations type=topic durable=true
+          rabbitmqadmin declare exchange name=compliance.gdpr type=topic durable=true
+          
+          # Integration Exchanges
+          rabbitmqadmin declare exchange name=integration.nhs type=topic durable=true
+          rabbitmqadmin declare exchange name=integration.fhir type=topic durable=true
+          rabbitmqadmin declare exchange name=integration.external type=topic durable=true
+          
+          # Notification Exchanges
+          rabbitmqadmin declare exchange name=notifications.alerts type=topic durable=true
+          rabbitmqadmin declare exchange name=notifications.family type=topic durable=true
+          
+          # Dead Letter Exchange
+          rabbitmqadmin declare exchange name=healthcare.dlx type=topic durable=true
+          
+          # Healthcare Queues with Dead Letter Queue
+          rabbitmqadmin declare queue name=residents.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"residents.failed","x-message-ttl":3600000}'
+          rabbitmqadmin declare queue name=medications.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"medications.failed","x-message-ttl":3600000}'
+          rabbitmqadmin declare queue name=care-plans.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"care-plans.failed","x-message-ttl":3600000}'
+          rabbitmqadmin declare queue name=assessments.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"assessments.failed","x-message-ttl":3600000}'
+          rabbitmqadmin declare queue name=health-records.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"health-records.failed","x-message-ttl":3600000}'
+          
+          # Compliance Queues (Critical)
+          rabbitmqadmin declare queue name=audit.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"audit.failed","x-message-ttl":7200000}'
+          rabbitmqadmin declare queue name=violations.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"violations.failed","x-message-ttl":7200000}'
+          rabbitmqadmin declare queue name=gdpr.events durable=true arguments='{"x-dead-letter-exchange":"healthcare.dlx","x-dead-letter-routing-key":"gdpr.failed","x-message-ttl":7200000}'
+          
+          # Dead Letter Queue
+          rabbitmqadmin declare queue name=healthcare.failed durable=true
+          
+          # Bind Queues to Exchanges
+          rabbitmqadmin declare binding source=healthcare.residents destination=residents.events routing_key="residents.*"
+          rabbitmqadmin declare binding source=healthcare.medications destination=medications.events routing_key="medications.*"
+          rabbitmqadmin declare binding source=healthcare.care-plans destination=care-plans.events routing_key="care-plans.*"
+          rabbitmqadmin declare binding source=healthcare.assessments destination=assessments.events routing_key="assessments.*"
+          rabbitmqadmin declare binding source=healthcare.health-records destination=health-records.events routing_key="health-records.*"
+          rabbitmqadmin declare binding source=compliance.audit destination=audit.events routing_key="audit.*"
+          rabbitmqadmin declare binding source=compliance.violations destination=violations.events routing_key="violations.*"
+          rabbitmqadmin declare binding source=compliance.gdpr destination=gdpr.events routing_key="gdpr.*"
+          rabbitmqadmin declare binding source=healthcare.dlx destination=healthcare.failed routing_key="*.failed"
+          
+          echo "All RabbitMQ exchanges and queues created successfully"
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: healthcare
+        - name: RABBITMQ_DEFAULT_PASS
+          value: WriteCareNotesRabbitMQ2025

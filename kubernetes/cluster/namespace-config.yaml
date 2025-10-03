@@ -1,0 +1,64 @@
+# Namespace Configuration for WriteCareNotes Microservices
+# This creates isolated namespaces for different service tiers
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: core-healthcare
+  labels:
+    tier: core-healthcare
+    compliance: healthcare
+    monitoring: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: operational
+  labels:
+    tier: operational
+    compliance: financial
+    monitoring: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: compliance
+  labels:
+    tier: compliance
+    compliance: regulatory
+    monitoring: enabled
+    audit: required
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: integration
+  labels:
+    tier: integration
+    compliance: healthcare
+    monitoring: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-analytics
+  labels:
+    tier: ai-analytics
+    compliance: healthcare
+    monitoring: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infrastructure
+  labels:
+    tier: infrastructure
+    monitoring: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    tier: monitoring
+    system: true

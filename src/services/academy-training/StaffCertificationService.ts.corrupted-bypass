@@ -1,0 +1,502 @@
+/**
+ * Staff Certification Service
+ * Manages staff training, certification, and compliance tracking
+ * Implements comprehensive learning management system for healthcare staff
+ */
+
+import { Injectable } from '@nestjs/common';
+import { AuditService } from '../audit/audit.service';
+import { ComplianceService } from '../compliance/compliance.service';
+import { Logger } from '@nestjs/common';
+
+export interface TrainingModule {
+  id: string;
+  title: string;
+  description: string;
+  category: 'mandatory' | 'optional' | 'specialized' | 'compliance' | 'safety';
+  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  duration: number; // minutes
+  prerequisites: string[];
+  learningObjectives: string[];
+  content: TrainingContent[];
+  assessment: Assessment;
+  complianceRequirements: string[];
+  expiryPeriod: number; // days
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TrainingContent {
+  type: 'video' | 'document' | 'interactive' | 'quiz' | 'simulation' | 'vr_experience';
+  title: string;
+  description: string;
+  url?: string;
+  content?: string;
+  duration: number; // minutes
+  order: number;
+  isRequired: boolean;
+}
+
+export interface Assessment {
+  id: string;
+  type: 'multiple_choice' | 'practical' | 'scenario' | 'observation' | 'portfolio';
+  questions: AssessmentQuestion[];
+  passingScore: number; // percentage
+  timeLimit: number; // minutes
+  attemptsAllowed: number;
+  isProctored: boolean;
+}
+
+export interface AssessmentQuestion {
+  id: string;
+  question: string;
+  type: 'multiple_choice' | 'true_false' | 'fill_blank' | 'scenario' | 'practical';
+  options?: string[];
+  correctAnswer: string | string[];
+  explanation: string;
+  points: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
+export interface StaffCertification {
+  id: string;
+  staffId: string;
+  careHomeId: string;
+  trainingModuleId: string;
+  status: 'not_started' | 'in_progress' | 'completed' | 'expired' | 'failed';
+  progress: number; // percentage
+  startedAt?: Date;
+  completedAt?: Date;
+  expiresAt?: Date;
+  score?: number;
+  attempts: number;
+  maxAttempts: number;
+  certificateId?: string;
+  auditTrail: AuditEntry[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface LearningPath {
+  id: string;
+  name: string;
+  description: string;
+  category: 'new_hire' | 'role_specific' | 'compliance' | 'career_development';
+  modules: string[]; // training module IDs
+  prerequisites: string[];
+  estimatedDuration: number; // hours
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MicroLearning {
+  id: string;
+  title: string;
+  description: string;
+  duration: number; // minutes (typically 5-15)
+  category: 'quick_tip' | 'policy_update' | 'safety_reminder' | 'best_practice';
+  content: string;
+  quiz?: AssessmentQuestion[];
+  isRequired: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AuditEntry {
+  action: string;
+  timestamp: Date;
+  userId: string;
+  details: Record<string, any>;
+  complianceFlags: string[];
+}
+
+@Injectable()
+export class StaffCertificationService {
+  private readonly logger = new Logger(StaffCertificationService.name);
+
+  constructor(
+    private readonly auditService: AuditService,
+    private readonly complianceService: ComplianceService
+  ) {}
+
+  /**
+   * Create a new training module
+   */
+  async createTrainingModule(module: Omit<TrainingModule, 'id' | 'createdAt' | 'updatedAt'>): Promise<TrainingModule> {
+    try {
+      const trainingModule: TrainingModule = {
+        ...module,
+        id: this.generateId(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      await this.auditService.log({
+        action: 'training_module_created',
+        resource: 'staff_certification_service',
+        details: {
+          moduleId: trainingModule.id,
+          title: trainingModule.title,
+          category: trainingModule.category,
+          level: trainingModule.level
+        },
+        userId: 'system',
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Created training module: ${trainingModule.id}`);
+      return trainingModule;
+
+    } catch (error) {
+      this.logger.error(`Failed to create training module: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Assign training module to staff member
+   */
+  async assignTraining(
+    staffId: string,
+    careHomeId: string,
+    trainingModuleId: string,
+    assignedBy: string
+  ): Promise<StaffCertification> {
+    try {
+      const certification: StaffCertification = {
+        id: this.generateId(),
+        staffId,
+        careHomeId,
+        trainingModuleId,
+        status: 'not_started',
+        progress: 0,
+        attempts: 0,
+        maxAttempts: 3,
+        auditTrail: [{
+          action: 'training_assigned',
+          timestamp: new Date(),
+          userId: assignedBy,
+          details: {
+            trainingModuleId,
+            assignedBy
+          },
+          complianceFlags: ['Training Assignment']
+        }],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      await this.auditService.log({
+        action: 'training_assigned',
+        resource: 'staff_certification_service',
+        details: {
+          certificationId: certification.id,
+          staffId,
+          trainingModuleId,
+          assignedBy
+        },
+        userId: assignedBy,
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Assigned training ${trainingModuleId} to staff ${staffId}`);
+      return certification;
+
+    } catch (error) {
+      this.logger.error(`Failed to assign training: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Start training for staff member
+   */
+  async startTraining(certificationId: string, staffId: string): Promise<StaffCertification> {
+    try {
+      // In a real implementation, this would update the database
+      const certification = await this.getCertification(certificationId);
+      
+      if (!certification) {
+        throw new Error(`Certification ${certificationId} not found`);
+      }
+
+      if (certification.staffId !== staffId) {
+        throw new Error('Unauthorized access to certification');
+      }
+
+      certification.status = 'in_progress';
+      certification.startedAt = new Date();
+      certification.updatedAt = new Date();
+
+      certification.auditTrail.push({
+        action: 'training_started',
+        timestamp: new Date(),
+        userId: staffId,
+        details: {
+          certificationId,
+          startedAt: certification.startedAt
+        },
+        complianceFlags: ['Training Progress']
+      });
+
+      await this.auditService.log({
+        action: 'training_started',
+        resource: 'staff_certification_service',
+        details: {
+          certificationId,
+          staffId
+        },
+        userId: staffId,
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Staff ${staffId} started training ${certificationId}`);
+      return certification;
+
+    } catch (error) {
+      this.logger.error(`Failed to start training: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Update training progress
+   */
+  async updateProgress(
+    certificationId: string,
+    staffId: string,
+    progress: number,
+    completedContent: string[]
+  ): Promise<StaffCertification> {
+    try {
+      const certification = await this.getCertification(certificationId);
+      
+      if (!certification) {
+        throw new Error(`Certification ${certificationId} not found`);
+      }
+
+      certification.progress = Math.min(100, Math.max(0, progress));
+      certification.updatedAt = new Date();
+
+      certification.auditTrail.push({
+        action: 'progress_updated',
+        timestamp: new Date(),
+        userId: staffId,
+        details: {
+          progress,
+          completedContent
+        },
+        complianceFlags: ['Training Progress']
+      });
+
+      // Check if training is completed
+      if (certification.progress >= 100) {
+        certification.status = 'completed';
+        certification.completedAt = new Date();
+        
+        certification.auditTrail.push({
+          action: 'training_completed',
+          timestamp: new Date(),
+          userId: staffId,
+          details: {
+            completedAt: certification.completedAt
+          },
+          complianceFlags: ['Training Completion']
+        });
+      }
+
+      this.logger.log(`Updated progress for certification ${certificationId}: ${progress}%`);
+      return certification;
+
+    } catch (error) {
+      this.logger.error(`Failed to update progress: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Submit assessment
+   */
+  async submitAssessment(
+    certificationId: string,
+    staffId: string,
+    answers: Record<string, string>,
+    timeSpent: number
+  ): Promise<{ score: number; passed: boolean; feedback: string }> {
+    try {
+      const certification = await this.getCertification(certificationId);
+      
+      if (!certification) {
+        throw new Error(`Certification ${certificationId} not found`);
+      }
+
+      // In a real implementation, this would grade the assessment
+      const score = Math.random() * 40 + 60; // Simulated score between 60-100
+      const passed = score >= 80; // 80% passing score
+      
+      certification.score = score;
+      certification.attempts += 1;
+      certification.updatedAt = new Date();
+
+      if (passed) {
+        certification.status = 'completed';
+        certification.completedAt = new Date();
+        certification.certificateId = this.generateCertificateId();
+      } else if (certification.attempts >= certification.maxAttempts) {
+        certification.status = 'failed';
+      }
+
+      certification.auditTrail.push({
+        action: 'assessment_submitted',
+        timestamp: new Date(),
+        userId: staffId,
+        details: {
+          score,
+          passed,
+          attempts: certification.attempts,
+          timeSpent
+        },
+        complianceFlags: ['Assessment Submission']
+      });
+
+      await this.auditService.log({
+        action: 'assessment_submitted',
+        resource: 'staff_certification_service',
+        details: {
+          certificationId,
+          staffId,
+          score,
+          passed
+        },
+        userId: staffId,
+        timestamp: new Date()
+      });
+
+      const feedback = passed 
+        ? 'Congratulations! You have successfully completed the assessment.'
+        : `Assessment not passed. Score: ${score.toFixed(1)}%. You have ${certification.maxAttempts - certification.attempts} attempts remaining.`;
+
+      this.logger.log(`Assessment submitted for certification ${certificationId}: ${score.toFixed(1)}%`);
+      return { score, passed, feedback };
+
+    } catch (error) {
+      this.logger.error(`Failed to submit assessment: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get staff certifications
+   */
+  async getStaffCertifications(staffId: string): Promise<StaffCertification[]> {
+    try {
+      // In a real implementation, this would query the database
+      return [];
+    } catch (error) {
+      this.logger.error(`Failed to get staff certifications: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get training modules by category
+   */
+  async getTrainingModules(category?: string): Promise<TrainingModule[]> {
+    try {
+      // In a real implementation, this would query the database
+      return [];
+    } catch (error) {
+      this.logger.error(`Failed to get training modules: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Create learning path
+   */
+  async createLearningPath(path: Omit<LearningPath, 'id' | 'createdAt' | 'updatedAt'>): Promise<LearningPath> {
+    try {
+      const learningPath: LearningPath = {
+        ...path,
+        id: this.generateId(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      await this.auditService.log({
+        action: 'learning_path_created',
+        resource: 'staff_certification_service',
+        details: {
+          pathId: learningPath.id,
+          name: learningPath.name,
+          category: learningPath.category
+        },
+        userId: 'system',
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Created learning path: ${learningPath.id}`);
+      return learningPath;
+
+    } catch (error) {
+      this.logger.error(`Failed to create learning path: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Create micro-learning content
+   */
+  async createMicroLearning(content: Omit<MicroLearning, 'id' | 'createdAt' | 'updatedAt'>): Promise<MicroLearning> {
+    try {
+      const microLearning: MicroLearning = {
+        ...content,
+        id: this.generateId(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      await this.auditService.log({
+        action: 'micro_learning_created',
+        resource: 'staff_certification_service',
+        details: {
+          microLearningId: microLearning.id,
+          title: microLearning.title,
+          category: microLearning.category
+        },
+        userId: 'system',
+        timestamp: new Date()
+      });
+
+      this.logger.log(`Created micro-learning: ${microLearning.id}`);
+      return microLearning;
+
+    } catch (error) {
+      this.logger.error(`Failed to create micro-learning: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get certification by ID
+   */
+  private async getCertification(certificationId: string): Promise<StaffCertification | null> {
+    // In a real implementation, this would query the database
+    return null;
+  }
+
+  /**
+   * Generate unique ID
+   */
+  private generateId(): string {
+    return `cert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Generate certificate ID
+   */
+  private generateCertificateId(): string {
+    return `CERT_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  }
+}

@@ -1,0 +1,571 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import { Repository, In, Between } from 'typeorm';
+import { EventEmitter2 } from 'eventemitter2';
+import AppDataSource from '../../config/database';
+import { RegulatoryCompliance, RegulatoryBody, ComplianceStatus } from '../../entities/regulatory/RegulatoryCompliance';
+import { NotificationService } from '../notifications/NotificationService';
+import { AuditTrailService } from '../audit/AuditTrailService';
+
+export interface ComplianceDashboard {
+  overallCompliance: number;
+  jurisdictionCompliance: {
+    jurisdiction: string;
+    complianceRate: number;
+    totalRequirements: number;
+    compliantRequirements: number;
+    actionRequired: number;
+    riskLevel: 'low' | 'medium' | 'high' | 'critical';
+    lastInspection: Date;
+    nextInspection: Date;
+    keyFindings: string[];
+  }[];
+  upcomingAssessments: {
+    id: string;
+    regulatoryBody: string;
+    assessmentType: string;
+    scheduledDate: Date;
+    status: string;
+    priority: string;
+  }[];
+  riskAlerts: {
+    id: string;
+    type: 'compliance_gap' | 'inspection_finding' | 'deadline_missed' | 'policy_violation';
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    title: string;
+    description: string;
+    affectedJurisdiction: string;
+    dueDate: Date;
+    status: 'open' | 'in_progress' | 'resolved';
+  }[];
+  performanceMetrics: {
+    inspectionPassRate: number;
+    averageResponseTime: number;
+    complianceTrend: 'improving' | 'stable' | 'declining';
+    benchmarkComparison: number;
+  };
+}
+
+export interface InspectionPreparation {
+  inspectionId: string;
+  regulatoryBody: string;
+  inspectionType: string;
+  scheduledDate: Date;
+  preparationStatus: 'not_started' | 'in_progress' | 'ready' | 'completed';
+  requiredDocuments: {
+    documentType: string;
+    documentName: string;
+    status: 'missing' | 'draft' | 'review' | 'approved';
+    lastUpdated: Date;
+    responsiblePerson: string;
+  }[];
+  keyAreas: {
+    area: string;
+    riskLevel: 'low' | 'medium' | 'high' | 'critical';
+    preparationStatus: 'not_started' | 'in_progress' | 'ready';
+    notes: string;
+    evidenceRequired: string[];
+  }[];
+  actionItems: {
+    id: string;
+    description: string;
+    assignedTo: string;
+    dueDate: Date;
+    status: 'pending' | 'in_progress' | 'completed';
+    priority: 'low' | 'medium' | 'high' | 'critical';
+  }[];
+}
+
+export interface ComplianceReport {
+  reportId: string;
+  reportType: 'quarterly' | 'annual' | 'inspection' | 'audit' | 'self_assessment';
+  period: {
+    startDate: Date;
+    endDate: Date;
+  };
+  jurisdiction: string;
+  regulatoryBody: string;
+  executiveSummary: string;
+  complianceStatus: {
+    overall: number;
+    byCategory: {
+      category: string;
+      complianceRate: number;
+      findings: string[];
+      recommendations: string[];
+    }[];
+  };
+  keyFindings: {
+    finding: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    impact: string;
+    recommendation: string;
+    timeline: string;
+  }[];
+  actionPlan: {
+    action: string;
+    responsible: string;
+    dueDate: Date;
+    status: 'pending' | 'in_progress' | 'completed';
+    progress: number;
+  }[];
+  attachments: {
+    name: string;
+    type: string;
+    url: string;
+    uploadedAt: Date;
+  }[];
+}
+
+export class RegulatoryPortalService {
+  private complianceRepository: Repository<RegulatoryCompliance>;
+  private notificationService: NotificationService;
+  private auditService: AuditTrailService;
+
+  constructor() {
+    this.complianceRepository = AppDataSource.getRepository(RegulatoryCompliance);
+    this.notificationService = new NotificationService(new EventEmitter2());
+    this.auditService = new AuditTrailService();
+  }
+
+  async createComplianceRecord(complianceData: Partial<RegulatoryCompliance>): Promise<RegulatoryCompliance> {
+    try {
+      const compliance = this.complianceRepository.create({
+        ...complianceData,
+        lastAssessmentDate: new Date(),
+        nextAssessmentDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        evidenceDocuments: []
+      });
+
+      const savedCompliance = await this.complianceRepository.save(compliance);
+      
+      await this.auditService.logEvent({
+        resource: 'RegulatoryCompliance',
+        entityType: 'RegulatoryCompliance',
+        entityId: savedCompliance.id,
+        action: 'CREATE',
+        details: { regulatoryBody: savedCompliance.regulatoryBody, requirement: savedCompliance.requirementName },
+        userId: 'system'
+      });
+
+      return savedCompliance;
+    } catch (error: unknown) {
+      console.error('Error creating compliance record:', error);
+      throw error;
+    }
+  }
+
+  async getComplianceDashboard(): Promise<ComplianceDashboard> {
+    try {
+      const allCompliance = await this.complianceRepository.find();
+      
+      const byJurisdiction = {
+        england: allCompliance.filter(c => c.regulatoryBody === RegulatoryBody.CQC),
+        scotland: allCompliance.filter(c => c.regulatoryBody === RegulatoryBody.CARE_INSPECTORATE),
+        wales: allCompliance.filter(c => c.regulatoryBody === RegulatoryBody.CIW),
+        northern_ireland: allCompliance.filter(c => c.regulatoryBody === RegulatoryBody.RQIA)
+      };
+
+      const jurisdictionCompliance = Object.entries(byJurisdiction).map(([jurisdiction, records]) => ({
+        jurisdiction,
+        complianceRate: this.calculateComplianceRate(records),
+        totalRequirements: records.length,
+        compliantRequirements: records.filter(r => r.isCompliant()).length,
+        actionRequired: records.filter(r => r.requiresAction()).length,
+        riskLevel: this.calculateRiskLevel(records),
+        lastInspection: this.getLastInspectionDate(records),
+        nextInspection: this.getNextInspectionDate(records),
+        keyFindings: this.getKeyFindings(records)
+      }));
+
+      const upcomingAssessments = await this.getUpcomingAssessments();
+      const riskAlerts = await this.getRiskAlerts();
+      const performanceMetrics = await this.getPerformanceMetrics();
+
+      return {
+        overallCompliance: this.calculateOverallCompliance(allCompliance),
+        jurisdictionCompliance,
+        upcomingAssessments,
+        riskAlerts,
+        performanceMetrics
+      };
+    } catch (error: unknown) {
+      console.error('Error getting compliance dashboard:', error);
+      throw error;
+    }
+  }
+
+  async prepareForInspection(inspectionId: string): Promise<InspectionPreparation> {
+    try {
+      // Get inspection details
+      const inspection = await this.getInspectionDetails(inspectionId);
+      
+      // Get required documents
+      const requiredDocuments = await this.getRequiredDocuments(inspection.regulatoryBody, inspection.inspectionType);
+      
+      // Get key areas for inspection
+      const keyAreas = await this.getKeyInspectionAreas(inspection.regulatoryBody, inspection.inspectionType);
+      
+      // Get action items
+      const actionItems = await this.getInspectionActionItems(inspectionId);
+      
+      // Calculate preparation status
+      const preparationStatus = this.calculatePreparationStatus(requiredDocuments, keyAreas, actionItems);
+
+      return {
+        inspectionId,
+        regulatoryBody: inspection.regulatoryBody,
+        inspectionType: inspection.inspectionType,
+        scheduledDate: inspection.scheduledDate,
+        preparationStatus,
+        requiredDocuments,
+        keyAreas,
+        actionItems
+      };
+    } catch (error: unknown) {
+      console.error('Error preparing for inspection:', error);
+      throw error;
+    }
+  }
+
+  async generateComplianceReport(reportType: string, period: { startDate: Date; endDate: Date }, jurisdiction: string): Promise<ComplianceReport> {
+    try {
+      const reportId = `report_${Date.now()}`;
+      
+      // Get compliance data for the period
+      const complianceData = await this.complianceRepository.find({
+        where: {
+          regulatoryBody: this.getRegulatoryBodyByJurisdiction(jurisdiction),
+          lastAssessmentDate: Between(period.startDate, period.endDate)
+        }
+      });
+
+      // Generate executive summary
+      const executiveSummary = await this.generateExecutiveSummary(complianceData, reportType, period);
+      
+      // Calculate compliance status
+      const complianceStatus = this.calculateDetailedComplianceStatus(complianceData);
+      
+      // Identify key findings
+      const keyFindings = this.identifyKeyFindings(complianceData);
+      
+      // Create action plan
+      const actionPlan = this.createActionPlan(complianceData);
+      
+      // Get attachments
+      const attachments = await this.getReportAttachments(reportId);
+
+      return {
+        reportId,
+        reportType: reportType as any,
+        period,
+        jurisdiction,
+        regulatoryBody: this.getRegulatoryBodyByJurisdiction(jurisdiction),
+        executiveSummary,
+        complianceStatus,
+        keyFindings,
+        actionPlan,
+        attachments
+      };
+    } catch (error: unknown) {
+      console.error('Error generating compliance report:', error);
+      throw error;
+    }
+  }
+
+  async submitComplianceReport(reportId: string, reportData: ComplianceReport): Promise<void> {
+    try {
+      // Validate report data
+      this.validateComplianceReport(reportData);
+      
+      // Submit to regulatory body
+      await this.submitToRegulatoryBody(reportData);
+      
+      // Update compliance records
+      await this.updateComplianceRecords(reportData);
+      
+      // Send notifications
+      await this.notificationService.sendNotification({
+        message: 'Notification: Compliance Report Submitted',
+        type: 'compliance_report_submitted',
+        recipients: ['compliance_team', 'management'],
+        data: {
+          reportId: reportId,
+          reportType: reportData.reportType,
+          jurisdiction: reportData.jurisdiction,
+          regulatoryBody: reportData.regulatoryBody
+        }
+      });
+
+      // Log audit trail
+      await this.auditService.logEvent({
+        resource: 'ComplianceReport',
+        entityType: 'ComplianceReport',
+        entityId: reportId,
+        action: 'SUBMIT',
+        details: {
+          reportType: reportData.reportType,
+          jurisdiction: reportData.jurisdiction,
+          regulatoryBody: reportData.regulatoryBody
+        },
+        userId: 'system'
+      });
+    } catch (error: unknown) {
+      console.error('Error submitting compliance report:', error);
+      throw error;
+    }
+  }
+
+  async getMultiJurisdictionCompliance(): Promise<any> {
+    try {
+      const dashboard = await this.getComplianceDashboard();
+      return {
+        overallCompliance: dashboard.overallCompliance,
+        jurisdictionCompliance: dashboard.jurisdictionCompliance.map(jc => ({
+          jurisdiction: jc.jurisdiction,
+          complianceRate: jc.complianceRate,
+          totalRequirements: jc.totalRequirements,
+          compliantRequirements: jc.compliantRequirements,
+          actionRequired: jc.actionRequired
+        }))
+      };
+    } catch (error: unknown) {
+      console.error('Error getting multi-jurisdiction compliance:', error);
+      throw error;
+    }
+  }
+
+  private calculateOverallCompliance(records: RegulatoryCompliance[]): number {
+    if (records.length === 0) return 100;
+    const compliant = records.filter(r => r.isCompliant()).length;
+    return (compliant / records.length) * 100;
+  }
+
+  private calculateComplianceRate(records: RegulatoryCompliance[]): number {
+    if (records.length === 0) return 100;
+    const compliant = records.filter(r => r.isCompliant()).length;
+    return (compliant / records.length) * 100;
+  }
+
+  private calculateRiskLevel(records: RegulatoryCompliance[]): 'low' | 'medium' | 'high' | 'critical' {
+    const nonCompliant = records.filter(r => !r.isCompliant()).length;
+    const total = records.length;
+    const nonComplianceRate = total > 0 ? (nonCompliant / total) * 100 : 0;
+
+    if (nonComplianceRate >= 25) return 'critical';
+    if (nonComplianceRate >= 15) return 'high';
+    if (nonComplianceRate >= 5) return 'medium';
+    return 'low';
+  }
+
+  private getLastInspectionDate(records: RegulatoryCompliance[]): Date {
+    const dates = records.map(r => r.lastAssessmentDate).filter(d => d);
+    return dates.length > 0 ? new Date(Math.max(...dates.map(d => d.getTime()))) : new Date();
+  }
+
+  private getNextInspectionDate(records: RegulatoryCompliance[]): Date {
+    const dates = records.map(r => r.nextAssessmentDate).filter(d => d);
+    return dates.length > 0 ? new Date(Math.min(...dates.map(d => d.getTime()))) : new Date();
+  }
+
+  private getKeyFindings(records: RegulatoryCompliance[]): string[] {
+    return records
+      .filter(r => !r.isCompliant())
+      .map(r => r.requirementName)
+      .slice(0, 5);
+  }
+
+  private async getUpcomingAssessments(): Promise<any[]> {
+    // In production, this would query actual assessment data
+    return [
+      {
+        id: 'assessment_1',
+        regulatoryBody: 'CQC',
+        assessmentType: 'Comprehensive Inspection',
+        scheduledDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        status: 'scheduled',
+        priority: 'high'
+      }
+    ];
+  }
+
+  private async getRiskAlerts(): Promise<any[]> {
+    // In production, this would query actual risk alert data
+    return [
+      {
+        id: 'alert_1',
+        type: 'compliance_gap',
+        severity: 'medium',
+        title: 'Missing Documentation',
+        description: 'Some compliance documents are missing or outdated',
+        affectedJurisdiction: 'england',
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        status: 'open'
+      }
+    ];
+  }
+
+  private async getPerformanceMetrics(): Promise<any> {
+    // In production, this would calculate actual performance metrics
+    return {
+      inspectionPassRate: 85,
+      averageResponseTime: 2.5,
+      complianceTrend: 'improving' as const,
+      benchmarkComparison: 12
+    };
+  }
+
+  private async getInspectionDetails(inspectionId: string): Promise<any> {
+    // In production, this would query actual inspection data
+    return {
+      regulatoryBody: 'CQC',
+      inspectionType: 'Comprehensive Inspection',
+      scheduledDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    };
+  }
+
+  private async getRequiredDocuments(regulatoryBody: string, inspectionType: string): Promise<any[]> {
+    // In production, this would query actual document requirements
+    return [
+      {
+        documentType: 'Policy Document',
+        documentName: 'Safeguarding Policy',
+        status: 'approved',
+        lastUpdated: new Date(),
+        responsiblePerson: 'Compliance Manager'
+      }
+    ];
+  }
+
+  private async getKeyInspectionAreas(regulatoryBody: string, inspectionType: string): Promise<any[]> {
+    // In production, this would query actual inspection areas
+    return [
+      {
+        area: 'Safeguarding',
+        riskLevel: 'low',
+        preparationStatus: 'ready',
+        notes: 'All policies and procedures are up to date',
+        evidenceRequired: ['Policy documents', 'Training records', 'Incident reports']
+      }
+    ];
+  }
+
+  private async getInspectionActionItems(inspectionId: string): Promise<any[]> {
+    // In production, this would query actual action items
+    return [
+      {
+        id: 'action_1',
+        description: 'Update staff training records',
+        assignedTo: 'HR Manager',
+        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        status: 'pending',
+        priority: 'medium'
+      }
+    ];
+  }
+
+  private calculatePreparationStatus(documents: any[], areas: any[], actions: any[]): 'not_started' | 'in_progress' | 'ready' | 'completed' {
+    const totalItems = documents.length + areas.length + actions.length;
+    const completedItems = 
+      documents.filter(d => d.status === 'approved').length +
+      areas.filter(a => a.preparationStatus === 'ready').length +
+      actions.filter(a => a.status === 'completed').length;
+
+    if (completedItems === 0) return 'not_started';
+    if (completedItems === totalItems) return 'completed';
+    if (completedItems >= totalItems * 0.8) return 'ready';
+    return 'in_progress';
+  }
+
+  private getRegulatoryBodyByJurisdiction(jurisdiction: string): RegulatoryBody {
+    switch (jurisdiction) {
+      case 'england': return RegulatoryBody.CQC;
+      case 'scotland': return RegulatoryBody.CARE_INSPECTORATE;
+      case 'wales': return RegulatoryBody.CIW;
+      case 'northern_ireland': return RegulatoryBody.RQIA;
+      default: return RegulatoryBody.CQC;
+    }
+  }
+
+  private async generateExecutiveSummary(complianceData: RegulatoryCompliance[], reportType: string, period: { startDate: Date; endDate: Date }): Promise<string> {
+    const totalRequirements = complianceData.length;
+    const compliantRequirements = complianceData.filter(r => r.isCompliant()).length;
+    const complianceRate = totalRequirements > 0 ? (compliantRequirements / totalRequirements) * 100 : 100;
+
+    return `This ${reportType} report covers the period from ${period.startDate.toLocaleDateString()} to ${period.endDate.toLocaleDateString()}. 
+    Overall compliance rate is ${complianceRate.toFixed(1)}% with ${compliantRequirements} out of ${totalRequirements} requirements being met. 
+    ${totalRequirements - compliantRequirements} requirements require attention.`;
+  }
+
+  private calculateDetailedComplianceStatus(complianceData: RegulatoryCompliance[]): any {
+    const categories = ['Safeguarding', 'Quality of Care', 'Staffing', 'Premises', 'Governance'];
+    
+    return {
+      overall: this.calculateComplianceRate(complianceData),
+      byCategory: categories.map(category => ({
+        category,
+        complianceRate: Math.random() * 100, // In production, calculate actual rates
+        findings: [`${category} policies need review`],
+        recommendations: [`Update ${category} procedures`]
+      }))
+    };
+  }
+
+  private identifyKeyFindings(complianceData: RegulatoryCompliance[]): any[] {
+    return complianceData
+      .filter(r => !r.isCompliant())
+      .map(r => ({
+        finding: `Non-compliance in ${r.requirementName}`,
+        severity: 'medium' as const,
+        impact: 'Potential regulatory action',
+        recommendation: 'Implement corrective measures',
+        timeline: '30 days'
+      }));
+  }
+
+  private createActionPlan(complianceData: RegulatoryCompliance[]): any[] {
+    return complianceData
+      .filter(r => !r.isCompliant())
+      .map((r, index) => ({
+        action: `Address ${r.requirementName}`,
+        responsible: 'Compliance Manager',
+        dueDate: new Date(Date.now() + (index + 1) * 7 * 24 * 60 * 60 * 1000),
+        status: 'pending' as const,
+        progress: 0
+      }));
+  }
+
+  private async getReportAttachments(reportId: string): Promise<any[]> {
+    // In production, this would query actual attachments
+    return [
+      {
+        name: 'Compliance Evidence.pdf',
+        type: 'application/pdf',
+        url: `/reports/${reportId}/attachments/evidence.pdf`,
+        uploadedAt: new Date()
+      }
+    ];
+  }
+
+  private validateComplianceReport(reportData: ComplianceReport): void {
+    if (!reportData.executiveSummary) {
+      throw new Error('Executive summary is required');
+    }
+    if (!reportData.complianceStatus) {
+      throw new Error('Compliance status is required');
+    }
+    if (!reportData.keyFindings) {
+      throw new Error('Key findings are required');
+    }
+  }
+
+  private async submitToRegulatoryBody(reportData: ComplianceReport): Promise<void> {
+    // In production, this would submit to actual regulatory body systems
+    console.log(`Submitting report ${reportData.reportId} to ${reportData.regulatoryBody}`);
+  }
+
+  private async updateComplianceRecords(reportData: ComplianceReport): Promise<void> {
+    // In production, this would update actual compliance records
+    console.log(`Updating compliance records for report ${reportData.reportId}`);
+  }
+}

@@ -1,0 +1,268 @@
+import { EventEmitter2 } from "eventemitter2";
+
+import { Repository } from 'typeorm';
+import AppDataSource from '../../config/database';
+import { VisitorManagement, VisitorType, VisitStatus, AccessLevel } from '../../entities/visitor/VisitorManagement';
+import { NotificationService } from '../notifications/NotificationService';
+import { AuditTrailService } from '../audit/AuditTrailService';
+
+export class VisitorManagementService {
+  private visitorRepository: Repository<VisitorManagement>;
+  private notificationService: NotificationService;
+  private auditService: AuditTrailService;
+
+  constructor() {
+    this.visitorRepository = AppDataSource.getRepository(VisitorManagement);
+    this.notificationService = new NotificationService(new EventEmitter2());
+    this.auditService = new AuditTrailService();
+  }
+
+  async registerAdvancedVisitor(visitorData: Partial<VisitorManagement>): Promise<VisitorManagement> {
+    try {
+      const visitorId = await this.generateVisitorId();
+      
+      const visitor = this.visitorRepository.create({
+        ...visitorData,
+        visitorId,
+        advancedScreening: await this.performAdvancedScreening(visitorData),
+        accessPermissions: await this.determineAccessPermissions(visitorData),
+        visitHistory: [],
+        digitalVisitingPlatform: await this.setupDigitalVisiting(),
+        contactTracingSystem: await this.setupContactTracing(),
+        emergencyProcedures: await this.setupEmergencyProcedures(visitorData),
+        isActive: true,
+        totalVisits: 0,
+        missedVisits: 0
+      });
+
+      const savedVisitor = await this.visitorRepository.save(visitor);
+      
+      if (savedVisitor.isHighRiskVisitor()) {
+        await this.implementEnhancedSecurity(savedVisitor);
+      }
+      
+      return savedVisitor;
+    } catch (error: unknown) {
+      console.error('Error registering advanced visitor:', error);
+      throw error;
+    }
+  }
+
+  async getVisitorAnalytics(): Promise<any> {
+    try {
+      const visitors = await this.visitorRepository.find();
+      
+      return {
+        totalVisitors: visitors.length,
+        visitorTypeDistribution: this.calculateVisitorTypeDistribution(visitors),
+        averageVisitDuration: this.calculateAverageVisitDuration(visitors),
+        securityMetrics: this.calculateSecurityMetrics(visitors),
+        satisfactionMetrics: this.calculateSatisfactionMetrics(visitors)
+      };
+    } catch (error: unknown) {
+      console.error('Error getting visitor analytics:', error);
+      throw error;
+    }
+  }
+
+  private async generateVisitorId(): Promise<string> {
+    const year = new Date().getFullYear();
+    const count = await this.visitorRepository.count();
+    return `VIS${year}${String(count + 1).padStart(4, '0')}`;
+  }
+
+  private async performAdvancedScreening(visitorData: any): Promise<any> {
+    return {
+      identityVerification: {
+        photoId: true,
+        biometricScan: false,
+        backgroundCheck: visitorData.visitorType === VisitorType.CONTRACTOR,
+        dbsCheck: visitorData.visitorType === VisitorType.VOLUNTEER,
+        verificationScore: 85
+      },
+      healthScreening: {
+        temperatureCheck: true,
+        symptomScreening: true,
+        vaccinationStatus: 'up_to_date',
+        healthDeclaration: true,
+        covidTestRequired: false,
+        healthRiskScore: 15
+      },
+      securityScreening: {
+        metalDetector: false,
+        bagSearch: false,
+        prohibitedItems: [],
+        watchListCheck: true,
+        riskAssessment: 'low'
+      },
+      behavioralAssessment: {
+        previousVisitBehavior: 'excellent',
+        riskIndicators: [],
+        specialRequirements: [],
+        communicationNeeds: [],
+        culturalConsiderations: []
+      }
+    };
+  }
+
+  private async determineAccessPermissions(visitorData: any): Promise<any> {
+    const basePermissions = {
+      [VisitorType.FAMILY_MEMBER]: {
+        accessLevel: AccessLevel.UNRESTRICTED,
+        authorizedAreas: ['resident_rooms', 'common_areas', 'garden'],
+        escortRequired: false
+      },
+      [VisitorType.HEALTHCARE_PROFESSIONAL]: {
+        accessLevel: AccessLevel.PROFESSIONAL_AREAS_ONLY,
+        authorizedAreas: ['clinical_areas', 'resident_rooms', 'office_areas'],
+        escortRequired: false
+      },
+      [VisitorType.CONTRACTOR]: {
+        accessLevel: AccessLevel.SUPERVISED,
+        authorizedAreas: ['work_areas'],
+        escortRequired: true
+      }
+    };
+    
+    const permissions = basePermissions[visitorData.visitorType] || {
+      accessLevel: AccessLevel.RESTRICTED_AREAS,
+      authorizedAreas: ['reception', 'common_areas'],
+      escortRequired: true
+    };
+    
+    return {
+      ...permissions,
+      restrictedAreas: ['medication_room', 'staff_areas', 'kitchen'],
+      timeRestrictions: [],
+      specialPermissions: [],
+      permissionGrantedBy: 'reception_staff',
+      permissionGrantedDate: new Date()
+    };
+  }
+
+  private async setupDigitalVisiting(): Promise<any> {
+    return {
+      virtualVisitCapabilities: {
+        videoCallQuality: 'hd',
+        multiParticipantSupport: true,
+        recordingCapability: false,
+        screenSharing: false,
+        documentSharing: false,
+        languageTranslation: true,
+        accessibilityFeatures: ['large_text', 'high_contrast', 'subtitles']
+      },
+      schedulingSystem: {
+        advanceBooking: 7,
+        flexibleScheduling: true,
+        recurringVisits: true,
+        groupVisits: true,
+        emergencyVisits: true,
+        timeSlotManagement: true
+      },
+      familyEngagement: {
+        familyPortalAccess: true,
+        careUpdatesSharing: true,
+        photoVideoSharing: true,
+        eventParticipation: true,
+        carePlanInvolvement: true,
+        feedbackCollection: true
+      },
+      technicalSupport: {
+        deviceSupport: ['tablets', 'smartphones', 'computers'],
+        troubleshooting: true,
+        userTraining: true,
+        technicalHelpdesk: true,
+        accessibilitySupport: true
+      }
+    };
+  }
+
+  private async setupContactTracing(): Promise<any> {
+    return {
+      contactTracing: {
+        enabled: true,
+        retentionPeriod: 21,
+        privacyCompliant: true,
+        automatedAlerts: true
+      },
+      exposureNotification: {
+        rapidNotification: true,
+        contactIdentification: true,
+        riskAssessment: true,
+        isolationProtocols: true,
+        testingCoordination: true
+      },
+      healthMonitoring: {
+        preVisitScreening: true,
+        postVisitMonitoring: true,
+        symptomTracking: true,
+        healthStatusUpdates: true,
+        quarantineManagement: true
+      }
+    };
+  }
+
+  private async setupEmergencyProcedures(visitorData: any): Promise<any> {
+    return {
+      emergencyContactPerson: 'emergency_coordinator',
+      emergencyContactPhone: '+44 121 123 4567',
+      medicalConditions: [],
+      medications: [],
+      allergies: [],
+      emergencyInstructions: [
+        'Contact emergency services if required',
+        'Notify care manager immediately',
+        'Provide first aid if trained',
+        'Document incident thoroughly'
+      ]
+    };
+  }
+
+  private async implementEnhancedSecurity(visitor: VisitorManagement): Promise<void> {
+    await this.notificationService.sendNotification({
+      message: 'Notification: High Risk Visitor Registered',
+        type: 'high_risk_visitor_registered',
+      recipients: ['security_team', 'care_managers'],
+      data: {
+        visitorId: visitor.visitorId,
+        riskLevel: visitor.advancedScreening.securityScreening.riskAssessment,
+        enhancedSecurityRequired: true
+      }
+    });
+  }
+
+  private calculateVisitorTypeDistribution(visitors: VisitorManagement[]): any {
+    return visitors.reduce((acc, visitor) => {
+      acc[visitor.visitorType] = (acc[visitor.visitorType] || 0) + 1;
+      return acc;
+    }, {});
+  }
+
+  private calculateAverageVisitDuration(visitors: VisitorManagement[]): number {
+    const allVisits = visitors.flatMap(visitor => visitor.visitHistory);
+    const visitsWithDuration = allVisits.filter(visit => visit.visitDuration);
+    
+    if (visitsWithDuration.length === 0) return 0;
+    
+    return visitsWithDuration.reduce((sum, visit) => sum + visit.visitDuration!, 0) / visitsWithDuration.length;
+  }
+
+  private calculateSecurityMetrics(visitors: VisitorManagement[]): any {
+    return {
+      highRiskVisitors: visitors.filter(v => v.isHighRiskVisitor()).length,
+      securityIncidents: visitors.reduce((sum, v) => sum + 0, 0),
+      averageVerificationScore: visitors.reduce((sum, v) => sum + v.advancedScreening.identityVerification.verificationScore, 0) / visitors.length
+    };
+  }
+
+  private calculateSatisfactionMetrics(visitors: VisitorManagement[]): any {
+    const allVisits = visitors.flatMap(visitor => visitor.visitHistory);
+    const ratedVisits = allVisits.filter(visit => visit.satisfactionRating);
+    
+    return {
+      averageSatisfaction: ratedVisits.length > 0 ? 
+        ratedVisits.reduce((sum, visit) => sum + visit.satisfactionRating!, 0) / ratedVisits.length : 0,
+      responseRate: allVisits.length > 0 ? (ratedVisits.length / allVisits.length) * 100 : 0
+    };
+  }
+}

@@ -1,0 +1,28 @@
+apiVersion: v2
+name: writecarenotes
+description: WriteCareNotes Enterprise Healthcare Management Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+home: https://writecarenotes.com
+sources:
+  - https://github.com/writecarenotes/writecarenotes
+maintainers:
+  - name: WriteCareNotes Team
+    email: support@writecarenotes.com
+keywords:
+  - healthcare
+  - care-home
+  - management
+  - enterprise
+  - nhs
+  - compliance
+dependencies:
+  - name: postgresql
+    version: 12.1.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: 17.3.7
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled

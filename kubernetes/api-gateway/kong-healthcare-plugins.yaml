@@ -1,0 +1,310 @@
+# Kong Healthcare-Specific Plugins Configuration
+# Provides healthcare compliance, authentication, and rate limiting
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kong-healthcare-plugins
+  namespace: api-gateway
+data:
+  # Healthcare Authentication Plugin
+  healthcare-auth.lua: |
+    local plugin = {
+      PRIORITY = 1000,
+      VERSION = "1.0.0",
+    }
+    
+    function plugin:access(plugin_conf)
+      local headers = kong.request.get_headers()
+      local method = kong.request.get_method()
+      local path = kong.request.get_path()
+      
+      -- Healthcare context validation
+      local healthcare_context = headers["x-healthcare-context"]
+      if not healthcare_context then
+        return kong.response.exit(400, {
+          message = "Healthcare context header required",
+          code = "MISSING_HEALTHCARE_CONTEXT"
+        })
+      end
+      
+      -- Compliance level validation
+      local compliance_level = headers["x-compliance-level"]
+      if not compliance_level then
+        compliance_level = "standard"
+        kong.service.request.set_header("x-compliance-level", compliance_level)
+      end
+      
+      -- Correlation ID validation
+      local correlation_id = headers["x-correlation-id"]
+      if not correlation_id then
+        correlation_id = kong.tools.uuid.uuid()
+        kong.service.request.set_header("x-correlation-id", correlation_id)
+      end
+      
+      -- NHS number validation for sensitive endpoints
+      if healthcare_context == "resident-management" or healthcare_context == "medication-management" then
+        local nhs_number = headers["x-nhs-number"]
+        if nhs_number and not validate_nhs_number(nhs_number) then
+          return kong.response.exit(400, {
+            message = "Invalid NHS number format",
+            code = "INVALID_NHS_NUMBER"
+          })
+        end
+      end
+      
+      -- Set audit headers
+      kong.service.request.set_header("x-audit-required", "true")
+      kong.service.request.set_header("x-request-timestamp", os.time())
+    end
+    
+    function validate_nhs_number(nhs_number)
+      if not nhs_number or string.len(nhs_number) ~= 10 then
+        return false
+      end
+      
+      local digits = {}
+      for i = 1, 10 do
+        digits[i] = tonumber(string.sub(nhs_number, i, i))
+        if not digits[i] then
+          return false
+        end
+      end
+      
+      local sum = 0
+      for i = 1, 9 do
+        sum = sum + digits[i] * (11 - i)
+      end
+      
+      local remainder = sum % 11
+      local check_digit = 11 - remainder
+      
+      if check_digit == 11 then
+        check_digit = 0
+      end
+      
+      return check_digit == digits[10]
+    end
+    
+    return plugin
+
+  # Healthcare Rate Limiting Plugin
+  healthcare-rate-limit.lua: |
+    local plugin = {
+      PRIORITY = 900,
+      VERSION = "1.0.0",
+    }
+    
+    function plugin:access(plugin_conf)
+      local headers = kong.request.get_headers()
+      local healthcare_context = headers["x-healthcare-context"]
+      local compliance_level = headers["x-compliance-level"]
+      local user_id = headers["x-user-id"]
+      
+      -- Healthcare-specific rate limits
+      local rate_limits = {
+        ["medication-management"] = {
+          critical = { requests = 100, window = 60 },
+          high = { requests = 200, window = 60 },
+          standard = { requests = 500, window = 60 }
+        },
+        ["resident-management"] = {
+          critical = { requests = 150, window = 60 },
+          high = { requests = 300, window = 60 },
+          standard = { requests = 600, window = 60 }
+        },
+        ["care-planning"] = {
+          critical = { requests = 100, window = 60 },
+          high = { requests = 250, window = 60 },
+          standard = { requests = 400, window = 60 }
+        },
+        ["compliance"] = {
+          critical = { requests = 50, window = 60 },
+          high = { requests = 100, window = 60 },
+          standard = { requests = 200, window = 60 }
+        },
+        ["reporting"] = {
+          critical = { requests = 20, window = 60 },
+          high = { requests = 50, window = 60 },
+          standard = { requests = 100, window = 60 }
+        }
+      }
+      
+      local context_limits = rate_limits[healthcare_context] or rate_limits["standard"]
+      local limit_config = context_limits[compliance_level] or context_limits["standard"]
+      
+      -- Apply rate limiting logic here
+      local cache_key = "rate_limit:" .. (user_id or "anonymous") .. ":" .. healthcare_context .. ":" .. compliance_level
+      
+      -- Set rate limit headers
+      kong.response.set_header("X-RateLimit-Limit", limit_config.requests)
+      kong.response.set_header("X-RateLimit-Window", limit_config.window)
+    end
+    
+    return plugin
+
+  # Healthcare Audit Plugin
+  healthcare-audit.lua: |
+    local plugin = {
+      PRIORITY = 800,
+      VERSION = "1.0.0",
+    }
+    
+    function plugin:log(plugin_conf)
+      local request_headers = kong.request.get_headers()
+      local response_headers = kong.response.get_headers()
+      
+      local audit_log = {
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+        method = kong.request.get_method(),
+        path = kong.request.get_path(),
+        status_code = kong.response.get_status(),
+        user_id = request_headers["x-user-id"],
+        correlation_id = request_headers["x-correlation-id"],
+        healthcare_context = request_headers["x-healthcare-context"],
+        compliance_level = request_headers["x-compliance-level"],
+        nhs_number = request_headers["x-nhs-number"],
+        ip_address = kong.client.get_ip(),
+        user_agent = request_headers["user-agent"],
+        request_size = kong.request.get_size(),
+        response_size = kong.response.get_size(),
+        latency = kong.ctx.shared.response_latency
+      }
+      
+      -- Send to audit service
+      local http = require "resty.http"
+      local httpc = http.new()
+      
+      local res, err = httpc:request_uri("http://audit-service.compliance.svc.cluster.local:8080/audit", {
+        method = "POST",
+        body = kong.tools.json.encode(audit_log),
+        headers = {
+          ["Content-Type"] = "application/json",
+          ["X-Healthcare-Context"] = "audit",
+          ["X-Compliance-Level"] = "critical"
+        }
+      })
+      
+      if err then
+        kong.log.err("Failed to send audit log: ", err)
+      end
+    end
+    
+    return plugin
+
+---
+# Kong Plugin Configuration
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-auth
+  namespace: api-gateway
+config:
+  enabled: true
+plugin: healthcare-auth
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-rate-limit
+  namespace: api-gateway
+config:
+  enabled: true
+plugin: healthcare-rate-limit
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: healthcare-audit
+  namespace: api-gateway
+config:
+  enabled: true
+plugin: healthcare-audit
+
+---
+# JWT Authentication Plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: jwt-auth
+  namespace: api-gateway
+config:
+  key_claim_name: iss
+  secret_is_base64: false
+  run_on_preflight: true
+plugin: jwt
+
+---
+# CORS Plugin for Healthcare Web Applications
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: cors-healthcare
+  namespace: api-gateway
+config:
+  origins:
+  - "https://app.writecarenotes.com"
+  - "https://admin.writecarenotes.com"
+  - "https://family.writecarenotes.com"
+  methods:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  - OPTIONS
+  headers:
+  - Accept
+  - Accept-Version
+  - Content-Length
+  - Content-MD5
+  - Content-Type
+  - Date
+  - X-Auth-Token
+  - X-Healthcare-Context
+  - X-Compliance-Level
+  - X-Correlation-ID
+  - X-NHS-Number
+  - X-User-ID
+  exposed_headers:
+  - X-Auth-Token
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  credentials: true
+  max_age: 3600
+plugin: cors
+
+---
+# Request Size Limiting for Healthcare Data
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: request-size-limit
+  namespace: api-gateway
+config:
+  allowed_payload_size: 10
+  size_unit: megabytes
+  require_content_length: true
+plugin: request-size-limiting
+
+---
+# Response Transformer for Healthcare Headers
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: response-transformer
+  namespace: api-gateway
+config:
+  add:
+    headers:
+    - "X-Healthcare-System: WriteCareNotes"
+    - "X-Compliance-Framework: CQC-GDPR"
+    - "X-Data-Classification: Healthcare"
+  remove:
+    headers:
+    - "Server"
+    - "X-Powered-By"
+plugin: response-transformer

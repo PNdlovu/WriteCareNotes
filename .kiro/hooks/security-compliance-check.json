@@ -1,0 +1,16 @@
+{
+  "name": "WriteCareNotes Security & Compliance Validator",
+  "description": "Validates security and healthcare compliance when sensitive files are saved",
+  "trigger": {
+    "type": "file_save",
+    "patterns": ["**/services/*.ts", "**/models/*.ts", "**/middleware/*.ts", "**/auth/*.ts"]
+  },
+  "actions": [
+    {
+      "type": "agent_execution",
+      "prompt": "Perform security and compliance validation for WriteCareNotes:\n\n**Security Checks:**\n1. Verify input validation and sanitization\n2. Check for SQL injection prevention\n3. Ensure XSS protection is implemented\n4. Validate authentication and authorization\n5. Check encryption for sensitive data (PII, NHS numbers)\n6. Ensure audit logging is implemented\n7. Verify rate limiting and DDoS protection\n\n**Healthcare Compliance:**\n1. Check GDPR compliance (consent, data subject rights)\n2. Verify CQC/Care Inspectorate/CIW/RQIA requirements\n3. Ensure NHS Data Dictionary standards\n4. Check medication management compliance\n5. Verify incident reporting requirements\n6. Ensure data retention policies\n\n**Audit Requirements:**\n1. Check audit trail implementation\n2. Verify correlation IDs for tracking\n3. Ensure compliance flags are set\n4. Check data access logging\n\nProvide specific recommendations for any security or compliance gaps found.",
+      "context": ["#File", "#Folder"]
+    }
+  ],
+  "enabled": true
+}

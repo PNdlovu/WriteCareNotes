@@ -1,0 +1,976 @@
+import { Repository } from 'typeorm';
+import { EventEmitter2 } from 'eventemitter2';
+import AppDataSource from '../../config/database';
+import { AttendanceRecord, AttendanceStatus, ParticipationLevel } from '../../entities/activities/AttendanceRecord';
+import { Activity } from '../../entities/activities/Activity';
+import { TherapySession } from '../../entities/activities/TherapySession';
+import { Resident } from '../../entities/resident/Resident';
+import { NotificationService } from '../notifications/NotificationService';
+import { AuditTrailService } from '../audit/AuditTrailService';
+
+export interface AttendanceSearchCriteria {
+  residentId?: string;
+  activityId?: string;
+  therapySessionId?: string;
+  status?: AttendanceStatus;
+  participationLevel?: ParticipationLevel;
+  dateRange?: {
+    start: Date;
+    end: Date;
+  };
+  requiresFollowUp?: boolean;
+  isExcused?: boolean;
+}
+
+export interface AttendanceSummary {
+  totalRecords: number;
+  presentRecords: number;
+  absentRecords: number;
+  lateRecords: number;
+  excusedRecords: number;
+  noShowRecords: number;
+  averageParticipationScore: number;
+  averageEngagementScore: number;
+  attendanceRate: number;
+  byStatus: {
+    status: AttendanceStatus;
+    count: number;
+    percentage: number;
+  }[];
+  byParticipationLevel: {
+    level: ParticipationLevel;
+    count: number;
+    percentage: number;
+  }[];
+  byMonth: {
+    month: string;
+    count: number;
+    attendanceRate: number;
+  }[];
+  trends: {
+    period: string;
+    attendanceRate: number;
+    participationScore: number;
+    engagementScore: number;
+  }[];
+}
+
+export interface AttendanceRecordData {
+  residentId: string;
+  activityId?: string;
+  therapySessionId?: string;
+  scheduledStartTime: Date;
+  scheduledEndTime: Date;
+  plannedDuration: number;
+  notes: AttendanceNotes;
+}
+
+export interface AttendanceNotes {
+  arrivalTime?: Date;
+  departureTime?: Date;
+  participationQuality: number;
+  engagementLevel: number;
+  behaviorObservations: string;
+  specialAccommodations: string[];
+  staffAssistance: string[];
+  residentFeedback?: string;
+  familyFeedback?: string;
+  concernsRaised: string[];
+  achievements: string[];
+  notes: string;
+  recordedBy: string;
+  recordedAt: Date;
+}
+
+export interface AttendanceAnalytics {
+  residentId: string;
+  totalSessions: number;
+  attendedSessions: number;
+  attendanceRate: number;
+  averageParticipationScore: number;
+  averageEngagementScore: number;
+  improvementTrend: 'improving' | 'stable' | 'declining';
+  preferredActivities: string[];
+  challengingActivities: string[];
+  behavioralPatterns: {
+    pattern: string;
+    frequency: number;
+    severity: 'mild' | 'moderate' | 'severe';
+    lastOccurred: Date;
+  }[];
+  healthObservations: {
+    observation: string;
+    frequency: number;
+    severity: 'normal' | 'concerning' | 'urgent';
+    lastObserved: Date;
+  }[];
+  therapeuticProgress: {
+    goal: string;
+    baselineScore: number;
+    currentScore: number;
+    improvement: number;
+    trend: 'improving' | 'stable' | 'declining';
+  }[];
+}
+
+export class AttendanceRecordService {
+  private attendanceRepository: Repository<AttendanceRecord>;
+  private activityRepository: Repository<Activity>;
+  private therapySessionRepository: Repository<TherapySession>;
+  private residentRepository: Repository<Resident>;
+  private notificationService: NotificationService;
+  private auditService: AuditTrailService;
+
+  constructor() {
+    this.attendanceRepository = AppDataSource.getRepository(AttendanceRecord);
+    this.activityRepository = AppDataSource.getRepository(Activity);
+    this.therapySessionRepository = AppDataSource.getRepository(TherapySession);
+    this.residentRepository = AppDataSource.getRepository(Resident);
+    this.notificationService = new NotificationService(new EventEmitter2());
+    this.auditService = new AuditTrailService();
+  }
+
+  // Attendance Record Management
+  async createAttendanceRecord(recordData: AttendanceRecordData): Promise<AttendanceRecord> {
+    // Validate resident exists
+    const resident = await this.residentRepository.findOne({
+      where: { id: recordData.residentId }
+    });
+    if (!resident) {
+      throw new Error('Resident not found');
+    }
+
+    // Validate activity or therapy session exists
+    if (recordData.activityId) {
+      const activity = await this.activityRepository.findOne({
+        where: { id: recordData.activityId }
+      });
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+    }
+
+    if (recordData.therapySessionId) {
+      const therapySession = await this.therapySessionRepository.findOne({
+        where: { id: recordData.therapySessionId }
+      });
+      if (!therapySession) {
+        throw new Error('Therapy session not found');
+      }
+    }
+
+    const attendanceRecord = this.attendanceRepository.create({
+      ...recordData,
+      status: AttendanceStatus.PRESENT,
+      participationLevel: ParticipationLevel.FULL
+    });
+
+    const savedRecord = await this.attendanceRepository.save(attendanceRecord);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: savedRecord.id,
+      action: 'CREATE',
+      details: {
+        residentId: savedRecord.residentId,
+        activityId: savedRecord.activityId,
+        therapySessionId: savedRecord.therapySessionId,
+        scheduledStartTime: savedRecord.scheduledStartTime
+      },
+      userId: 'system'
+    });
+
+    return savedRecord;
+  }
+
+  async getAttendanceRecordById(recordId: string): Promise<AttendanceRecord | null> {
+    return await this.attendanceRepository.findOne({
+      where: { id: recordId },
+      relations: ['resident', 'activity', 'therapySession']
+    });
+  }
+
+  async getAllAttendanceRecords(): Promise<AttendanceRecord[]> {
+    return await this.attendanceRepository.find({
+      relations: ['resident', 'activity', 'therapySession'],
+      order: { scheduledStartTime: 'DESC' }
+    });
+  }
+
+  async getAttendanceRecordsByResident(residentId: string): Promise<AttendanceRecord[]> {
+    return await this.attendanceRepository.find({
+      where: { residentId },
+      relations: ['resident', 'activity', 'therapySession'],
+      order: { scheduledStartTime: 'DESC' }
+    });
+  }
+
+  async searchAttendanceRecords(criteria: AttendanceSearchCriteria): Promise<AttendanceRecord[]> {
+    let queryBuilder = this.attendanceRepository.createQueryBuilder('attendance')
+      .leftJoinAndSelect('attendance.resident', 'resident')
+      .leftJoinAndSelect('attendance.activity', 'activity')
+      .leftJoinAndSelect('attendance.therapySession', 'therapySession');
+
+    if (criteria.residentId) {
+      queryBuilder = queryBuilder.andWhere('attendance.residentId = :residentId', { residentId: criteria.residentId });
+    }
+
+    if (criteria.activityId) {
+      queryBuilder = queryBuilder.andWhere('attendance.activityId = :activityId', { activityId: criteria.activityId });
+    }
+
+    if (criteria.therapySessionId) {
+      queryBuilder = queryBuilder.andWhere('attendance.therapySessionId = :therapySessionId', { therapySessionId: criteria.therapySessionId });
+    }
+
+    if (criteria.status) {
+      queryBuilder = queryBuilder.andWhere('attendance.status = :status', { status: criteria.status });
+    }
+
+    if (criteria.participationLevel) {
+      queryBuilder = queryBuilder.andWhere('attendance.participationLevel = :participationLevel', { participationLevel: criteria.participationLevel });
+    }
+
+    if (criteria.dateRange) {
+      queryBuilder = queryBuilder.andWhere('attendance.scheduledStartTime >= :startDate', { startDate: criteria.dateRange.start });
+      queryBuilder = queryBuilder.andWhere('attendance.scheduledStartTime <= :endDate', { endDate: criteria.dateRange.end });
+    }
+
+    if (criteria.requiresFollowUp !== undefined) {
+      queryBuilder = queryBuilder.andWhere('attendance.requiresFollowUp = :requiresFollowUp', { requiresFollowUp: criteria.requiresFollowUp });
+    }
+
+    if (criteria.isExcused !== undefined) {
+      queryBuilder = queryBuilder.andWhere('attendance.isExcused = :isExcused', { isExcused: criteria.isExcused });
+    }
+
+    return await queryBuilder.getMany();
+  }
+
+  async updateAttendanceRecord(recordId: string, updateData: Partial<AttendanceRecord>): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    Object.assign(record, updateData);
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'UPDATE',
+      details: updateData,
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  async deleteAttendanceRecord(recordId: string): Promise<void> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    await this.attendanceRepository.remove(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'DELETE',
+      details: {
+        residentId: record.residentId,
+        activityId: record.activityId,
+        therapySessionId: record.therapySessionId
+      },
+      userId: 'system'
+    });
+  }
+
+  // Attendance Status Management
+  async markPresent(recordId: string, arrivalTime?: Date, notes?: Partial<AttendanceNotes>): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.status = AttendanceStatus.PRESENT;
+    record.actualArrivalTime = arrivalTime || new Date();
+    record.participationLevel = ParticipationLevel.FULL;
+
+    if (notes) {
+      record.notes = { ...record.notes, ...notes };
+    }
+
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'MARK_PRESENT',
+      details: { arrivalTime: record.actualArrivalTime },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  async markAbsent(recordId: string, reason: string, isExcused: boolean = false): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.status = isExcused ? AttendanceStatus.EXCUSED : AttendanceStatus.ABSENT;
+    record.absenceReason = reason;
+    record.isExcused = isExcused;
+
+    if (isExcused) {
+      record.excusedAt = new Date();
+    }
+
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'MARK_ABSENT',
+      details: { reason, isExcused },
+      userId: 'system'
+    });
+
+    // Send notification if unexcused absence
+    if (!isExcused) {
+      await this.notificationService.sendNotification({
+        message: 'Unexcused Absence Recorded',
+        type: 'unexcused_absence',
+        recipients: ['care_managers', 'family_members'],
+        data: {
+          residentId: record.residentId,
+          activityId: record.activityId,
+          therapySessionId: record.therapySessionId,
+          scheduledTime: record.scheduledStartTime,
+          reason
+        }
+      });
+    }
+
+    return updatedRecord;
+  }
+
+  async markLate(recordId: string, arrivalTime: Date, reason?: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.status = AttendanceStatus.LATE;
+    record.actualArrivalTime = arrivalTime;
+    record.lateReason = reason;
+
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'MARK_LATE',
+      details: { arrivalTime, reason },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  async markLeftEarly(recordId: string, departureTime: Date, reason?: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.status = AttendanceStatus.LEFT_EARLY;
+    record.actualDepartureTime = departureTime;
+    record.earlyDepartureReason = reason;
+
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'MARK_LEFT_EARLY',
+      details: { departureTime, reason },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  async markNoShow(recordId: string, reason?: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.status = AttendanceStatus.NO_SHOW;
+    record.absenceReason = reason;
+
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'MARK_NO_SHOW',
+      details: { reason },
+      userId: 'system'
+    });
+
+    // Send notification
+    await this.notificationService.sendNotification({
+      message: 'No Show Recorded',
+      type: 'no_show',
+      recipients: ['care_managers', 'family_members'],
+      data: {
+        residentId: record.residentId,
+        activityId: record.activityId,
+        therapySessionId: record.therapySessionId,
+        scheduledTime: record.scheduledStartTime,
+        reason
+      }
+    });
+
+    return updatedRecord;
+  }
+
+  // Participation Management
+  async updateParticipationLevel(recordId: string, participationLevel: ParticipationLevel, notes?: Partial<AttendanceNotes>): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.participationLevel = participationLevel;
+
+    if (notes) {
+      record.notes = { ...record.notes, ...notes };
+    }
+
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'UPDATE_PARTICIPATION',
+      details: { participationLevel },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  async recordParticipationOutcome(recordId: string, outcome: Partial<AttendanceNotes>): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.notes = { ...record.notes, ...outcome };
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'RECORD_OUTCOME',
+      details: { outcome },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  // Follow-up Management
+  async scheduleFollowUp(recordId: string, followUpDate: Date, notes: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.scheduleFollowUp(followUpDate, notes);
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'SCHEDULE_FOLLOW_UP',
+      details: { followUpDate, notes },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  async markFollowUpComplete(recordId: string, completionNotes: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.requiresFollowUp = false;
+    record.followUpNotes = completionNotes;
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'COMPLETE_FOLLOW_UP',
+      details: { completionNotes },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  // Excuse Management
+  async excuseAbsence(recordId: string, excusedBy: string, reason: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.markAsExcused(excusedBy, reason);
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'EXCUSE_ABSENCE',
+      details: { excusedBy, reason },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  // Rescheduling
+  async rescheduleAttendance(recordId: string, newDate: Date, reason: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.markAsRescheduled(newDate, reason);
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'RESCHEDULE',
+      details: { newDate, reason },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  // Family Notification
+  async notifyFamily(recordId: string, notes?: string): Promise<AttendanceRecord> {
+    const record = await this.getAttendanceRecordById(recordId);
+    if (!record) {
+      throw new Error('Attendance record not found');
+    }
+
+    record.notifyFamily(notes);
+    const updatedRecord = await this.attendanceRepository.save(record);
+
+    // Log audit trail
+    await this.auditService.logEvent({
+      resource: 'AttendanceRecord',
+      entityType: 'AttendanceRecord',
+      entityId: recordId,
+      action: 'NOTIFY_FAMILY',
+      details: { notes },
+      userId: 'system'
+    });
+
+    return updatedRecord;
+  }
+
+  // Analytics and Reporting
+  async getAttendanceSummary(criteria?: AttendanceSearchCriteria): Promise<AttendanceSummary> {
+    const records = criteria ? await this.searchAttendanceRecords(criteria) : await this.getAllAttendanceRecords();
+    
+    const totalRecords = records.length;
+    const presentRecords = records.filter(r => r.isPresent()).length;
+    const absentRecords = records.filter(r => r.isAbsent()).length;
+    const lateRecords = records.filter(r => r.isLate()).length;
+    const excusedRecords = records.filter(r => r.isExcusedAbsence()).length;
+    const noShowRecords = records.filter(r => r.isNoShow()).length;
+
+    const attendanceRate = totalRecords > 0 ? (presentRecords / totalRecords) * 100 : 0;
+
+    const averageParticipationScore = records.length > 0
+      ? records.reduce((sum, r) => sum + r.getParticipationScore(), 0) / records.length
+      : 0;
+
+    const averageEngagementScore = records.length > 0
+      ? records.reduce((sum, r) => sum + r.getEngagementScore(), 0) / records.length
+      : 0;
+
+    // Group by status
+    const byStatus = Object.values(AttendanceStatus).map(status => {
+      const count = records.filter(r => r.status === status).length;
+      return {
+        status,
+        count,
+        percentage: totalRecords > 0 ? (count / totalRecords) * 100 : 0
+      };
+    });
+
+    // Group by participation level
+    const byParticipationLevel = Object.values(ParticipationLevel).map(level => {
+      const count = records.filter(r => r.participationLevel === level).length;
+      return {
+        level,
+        count,
+        percentage: totalRecords > 0 ? (count / totalRecords) * 100 : 0
+      };
+    });
+
+    // Group by month
+    const byMonth = this.groupByMonth(records);
+
+    // Calculate trends
+    const trends = this.calculateTrends(records);
+
+    return {
+      totalRecords,
+      presentRecords,
+      absentRecords,
+      lateRecords,
+      excusedRecords,
+      noShowRecords,
+      averageParticipationScore,
+      averageEngagementScore,
+      attendanceRate,
+      byStatus,
+      byParticipationLevel,
+      byMonth,
+      trends
+    };
+  }
+
+  async getResidentAttendanceAnalytics(residentId: string): Promise<AttendanceAnalytics> {
+    const records = await this.getAttendanceRecordsByResident(residentId);
+    
+    const totalSessions = records.length;
+    const attendedSessions = records.filter(r => r.isPresent()).length;
+    const attendanceRate = totalSessions > 0 ? (attendedSessions / totalSessions) * 100 : 0;
+
+    const averageParticipationScore = records.length > 0
+      ? records.reduce((sum, r) => sum + r.getParticipationScore(), 0) / records.length
+      : 0;
+
+    const averageEngagementScore = records.length > 0
+      ? records.reduce((sum, r) => sum + r.getEngagementScore(), 0) / records.length
+      : 0;
+
+    // Calculate improvement trend
+    const recentRecords = records.slice(0, 10); // Last 10 records
+    const olderRecords = records.slice(10, 20); // Previous 10 records
+    
+    let improvementTrend: 'improving' | 'stable' | 'declining' = 'stable';
+    if (recentRecords.length >= 5 && olderRecords.length >= 5) {
+      const recentAvg = recentRecords.reduce((sum, r) => sum + r.getOverallScore(), 0) / recentRecords.length;
+      const olderAvg = olderRecords.reduce((sum, r) => sum + r.getOverallScore(), 0) / olderRecords.length;
+      
+      if (recentAvg > olderAvg + 0.5) {
+        improvementTrend = 'improving';
+      } else if (recentAvg < olderAvg - 0.5) {
+        improvementTrend = 'declining';
+      }
+    }
+
+    // Analyze preferred and challenging activities
+    const activityScores = new Map<string, number[]>();
+    records.forEach(record => {
+      const activityName = record.activity?.activityName || record.therapySession?.therapyType || 'Unknown';
+      if (!activityScores.has(activityName)) {
+        activityScores.set(activityName, []);
+      }
+      activityScores.get(activityName)!.push(record.getOverallScore());
+    });
+
+    const preferredActivities = Array.from(activityScores.entries())
+      .map(([name, scores]) => ({
+        name,
+        averageScore: scores.reduce((sum, score) => sum + score, 0) / scores.length
+      }))
+      .sort((a, b) => b.averageScore - a.averageScore)
+      .slice(0, 5)
+      .map(item => item.name);
+
+    const challengingActivities = Array.from(activityScores.entries())
+      .map(([name, scores]) => ({
+        name,
+        averageScore: scores.reduce((sum, score) => sum + score, 0) / scores.length
+      }))
+      .sort((a, b) => a.averageScore - b.averageScore)
+      .slice(0, 5)
+      .map(item => item.name);
+
+    // Analyze behavioral patterns
+    const behavioralPatterns = this.analyzeBehavioralPatterns(records);
+
+    // Analyze health observations
+    const healthObservations = this.analyzeHealthObservations(records);
+
+    // Analyze therapeutic progress
+    const therapeuticProgress = this.analyzeTherapeuticProgress(records);
+
+    return {
+      residentId,
+      totalSessions,
+      attendedSessions,
+      attendanceRate,
+      averageParticipationScore,
+      averageEngagementScore,
+      improvementTrend,
+      preferredActivities,
+      challengingActivities,
+      behavioralPatterns,
+      healthObservations,
+      therapeuticProgress
+    };
+  }
+
+  // Private helper methods
+  private groupByMonth(records: AttendanceRecord[]): any[] {
+    const grouped = new Map<string, { count: number; attendanceRate: number }>();
+
+    records.forEach(record => {
+      const month = record.scheduledStartTime.toISOString().substring(0, 7); // YYYY-MM format
+      if (!grouped.has(month)) {
+        grouped.set(month, { count: 0, attendanceRate: 0 });
+      }
+      
+      const stats = grouped.get(month)!;
+      stats.count++;
+    });
+
+    // Calculate attendance rate for each month
+    for (const [month, stats] of grouped.entries()) {
+      const monthRecords = records.filter(r => 
+        r.scheduledStartTime.toISOString().substring(0, 7) === month
+      );
+      const attendedCount = monthRecords.filter(r => r.isPresent()).length;
+      stats.attendanceRate = monthRecords.length > 0 ? (attendedCount / monthRecords.length) * 100 : 0;
+    }
+
+    return Array.from(grouped.entries()).map(([month, stats]) => ({
+      month,
+      ...stats
+    }));
+  }
+
+  private calculateTrends(records: AttendanceRecord[]): any[] {
+    // Group records by week
+    const weeklyGroups = new Map<string, AttendanceRecord[]>();
+    
+    records.forEach(record => {
+      const weekStart = new Date(record.scheduledStartTime);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Start of week
+      const weekKey = weekStart.toISOString().substring(0, 10);
+      
+      if (!weeklyGroups.has(weekKey)) {
+        weeklyGroups.set(weekKey, []);
+      }
+      weeklyGroups.get(weekKey)!.push(record);
+    });
+
+    return Array.from(weeklyGroups.entries()).map(([week, weekRecords]) => {
+      const attendedCount = weekRecords.filter(r => r.isPresent()).length;
+      const attendanceRate = weekRecords.length > 0 ? (attendedCount / weekRecords.length) * 100 : 0;
+      
+      const participationScore = weekRecords.length > 0
+        ? weekRecords.reduce((sum, r) => sum + r.getParticipationScore(), 0) / weekRecords.length
+        : 0;
+
+      const engagementScore = weekRecords.length > 0
+        ? weekRecords.reduce((sum, r) => sum + r.getEngagementScore(), 0) / weekRecords.length
+        : 0;
+
+      return {
+        period: week,
+        attendanceRate,
+        participationScore,
+        engagementScore
+      };
+    }).sort((a, b) => a.period.localeCompare(b.period));
+  }
+
+  private analyzeBehavioralPatterns(records: AttendanceRecord[]): any[] {
+    const patterns = new Map<string, { frequency: number; severity: string; lastOccurred: Date }>();
+
+    records.forEach(record => {
+      if (record.behavioralObservations) {
+        record.behavioralObservations.forEach(obs => {
+          const key = obs.behaviorType;
+          if (!patterns.has(key)) {
+            patterns.set(key, { frequency: 0, severity: obs.severity, lastOccurred: obs.recordedAt });
+          }
+          
+          const pattern = patterns.get(key)!;
+          pattern.frequency++;
+          if (obs.severity === 'severe' || pattern.severity === 'mild') {
+            pattern.severity = obs.severity;
+          }
+          if (obs.recordedAt > pattern.lastOccurred) {
+            pattern.lastOccurred = obs.recordedAt;
+          }
+        });
+      }
+    });
+
+    return Array.from(patterns.entries()).map(([pattern, data]) => ({
+      pattern,
+      frequency: data.frequency,
+      severity: data.severity as 'mild' | 'moderate' | 'severe',
+      lastOccurred: data.lastOccurred
+    }));
+  }
+
+  private analyzeHealthObservations(records: AttendanceRecord[]): any[] {
+    const observations = new Map<string, { frequency: number; severity: string; lastObserved: Date }>();
+
+    records.forEach(record => {
+      if (record.healthObservations) {
+        record.healthObservations.forEach(obs => {
+          const key = obs.observationType;
+          if (!observations.has(key)) {
+            observations.set(key, { frequency: 0, severity: obs.severity, lastObserved: obs.recordedAt });
+          }
+          
+          const observation = observations.get(key)!;
+          observation.frequency++;
+          if (obs.severity === 'urgent' || observation.severity === 'normal') {
+            observation.severity = obs.severity;
+          }
+          if (obs.recordedAt > observation.lastObserved) {
+            observation.lastObserved = obs.recordedAt;
+          }
+        });
+      }
+    });
+
+    return Array.from(observations.entries()).map(([observation, data]) => ({
+      observation,
+      frequency: data.frequency,
+      severity: data.severity as 'normal' | 'concerning' | 'urgent',
+      lastObserved: data.lastObserved
+    }));
+  }
+
+  private analyzeTherapeuticProgress(records: AttendanceRecord[]): any[] {
+    const progress = new Map<string, { baselineScore: number; currentScore: number; scores: number[] }>();
+
+    records.forEach(record => {
+      if (record.therapeuticOutcomes) {
+        record.therapeuticOutcomes.forEach(outcome => {
+          const key = outcome.goalDescription;
+          if (!progress.has(key)) {
+            progress.set(key, { baselineScore: 0, currentScore: 0, scores: [] });
+          }
+          
+          const goalProgress = progress.get(key)!;
+          goalProgress.scores.push(outcome.progressMade);
+          
+          if (goalProgress.scores.length === 1) {
+            goalProgress.baselineScore = outcome.progressMade;
+          }
+          goalProgress.currentScore = outcome.progressMade;
+        });
+      }
+    });
+
+    return Array.from(progress.entries()).map(([goal, data]) => {
+      const improvement = data.baselineScore > 0 
+        ? ((data.currentScore - data.baselineScore) / data.baselineScore) * 100 
+        : 0;
+
+      // Calculate trend based on recent scores
+      const recentScores = data.scores.slice(-3);
+      const olderScores = data.scores.slice(0, -3);
+      
+      let trend: 'improving' | 'stable' | 'declining' = 'stable';
+      if (recentScores.length >= 2 && olderScores.length >= 2) {
+        const recentAvg = recentScores.reduce((sum, score) => sum + score, 0) / recentScores.length;
+        const olderAvg = olderScores.reduce((sum, score) => sum + score, 0) / olderScores.length;
+        
+        if (recentAvg > olderAvg + 5) {
+          trend = 'improving';
+        } else if (recentAvg < olderAvg - 5) {
+          trend = 'declining';
+        }
+      }
+
+      return {
+        goal,
+        baselineScore: data.baselineScore,
+        currentScore: data.currentScore,
+        improvement,
+        trend
+      };
+    });
+  }
+
+  // Reporting
+  async getAttendanceRecordsByDateRange(startDate: Date, endDate: Date): Promise<AttendanceRecord[]> {
+    return await this.searchAttendanceRecords({
+      dateRange: { start: startDate, end: endDate }
+    });
+  }
+
+  async getRecordsRequiringFollowUp(): Promise<AttendanceRecord[]> {
+    return await this.searchAttendanceRecords({ requiresFollowUp: true });
+  }
+
+  async getOverdueFollowUps(): Promise<AttendanceRecord[]> {
+    const records = await this.getRecordsRequiringFollowUp();
+    return records.filter(record => record.isFollowUpOverdue());
+  }
+
+  async getExcusedRecords(): Promise<AttendanceRecord[]> {
+    return await this.searchAttendanceRecords({ isExcused: true });
+  }
+
+  async exportAttendanceRecords(criteria: AttendanceSearchCriteria): Promise<AttendanceRecord[]> {
+    return await this.searchAttendanceRecords(criteria);
+  }
+}

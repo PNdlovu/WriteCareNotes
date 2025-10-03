@@ -1,0 +1,419 @@
+# Logstash Configuration for WriteCareNotes Log Processing
+# Processes and enriches healthcare logs before sending to Elasticsearch
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: logging
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    path.config: /usr/share/logstash/pipeline
+    pipeline.workers: 4
+    pipeline.batch.size: 1000
+    pipeline.batch.delay: 50
+    queue.type: persisted
+    queue.max_bytes: 2gb
+    dead_letter_queue.enable: true
+    monitoring.elasticsearch.hosts: ["https://elasticsearch-client:9200"]
+    monitoring.elasticsearch.username: "elastic"
+    monitoring.elasticsearch.password: "${ELASTIC_PASSWORD}"
+    monitoring.elasticsearch.ssl.verification_mode: none
+
+  pipelines.yml: |
+    - pipeline.id: healthcare-logs
+      path.config: "/usr/share/logstash/pipeline/healthcare-logs.conf"
+      pipeline.workers: 2
+    - pipeline.id: audit-logs
+      path.config: "/usr/share/logstash/pipeline/audit-logs.conf"
+      pipeline.workers: 2
+    - pipeline.id: application-logs
+      path.config: "/usr/share/logstash/pipeline/application-logs.conf"
+      pipeline.workers: 2
+
+  healthcare-logs.conf: |
+    input {
+      beats {
+        port => 5044
+        type => "healthcare"
+      }
+    }
+
+    filter {
+      # Parse JSON logs
+      if [message] =~ /^\{.*\}$/ {
+        json {
+          source => "message"
+        }
+      }
+
+      # Extract correlation ID from headers or message
+      if [headers] {
+        if [headers][x-correlation-id] {
+          mutate {
+            add_field => { "correlation_id" => "%{[headers][x-correlation-id]}" }
+          }
+        }
+      }
+
+      # Extract healthcare context
+      if [healthcare_context] {
+        mutate {
+          add_field => { "healthcare_operation" => "%{[healthcare_context]}" }
+        }
+      }
+
+      # Parse medication administration logs
+      if [service] == "medication-service" and [message] =~ /medication administered/ {
+        grok {
+          match => { 
+            "message" => "medication administered: resident_id=%{DATA:resident_id}, medication_id=%{DATA:medication_id}, dosage=%{NUMBER:dosage}, administered_by=%{DATA:administered_by}"
+          }
+        }
+        mutate {
+          add_field => { "event_type" => "medication_administration" }
+          add_field => { "compliance_level" => "critical" }
+          add_field => { "audit_required" => "true" }
+        }
+      }
+
+      # Parse resident admission logs
+      if [service] == "resident-service" and [message] =~ /resident admitted/ {
+        grok {
+          match => { 
+            "message" => "resident admitted: resident_id=%{DATA:resident_id}, nhs_number=%{DATA:nhs_number}, care_level=%{DATA:care_level}"
+          }
+        }
+        mutate {
+          add_field => { "event_type" => "resident_admission" }
+          add_field => { "compliance_level" => "high" }
+          add_field => { "audit_required" => "true" }
+        }
+      }
+
+      # Parse care plan updates
+      if [service] == "care-planning-service" and [message] =~ /care plan updated/ {
+        grok {
+          match => { 
+            "message" => "care plan updated: resident_id=%{DATA:resident_id}, care_plan_id=%{DATA:care_plan_id}, updated_by=%{DATA:updated_by}"
+          }
+        }
+        mutate {
+          add_field => { "event_type" => "care_plan_update" }
+          add_field => { "compliance_level" => "high" }
+          add_field => { "audit_required" => "true" }
+        }
+      }
+
+      # Parse assessment logs
+      if [service] == "assessment-service" and [message] =~ /assessment completed/ {
+        grok {
+          match => { 
+            "message" => "assessment completed: resident_id=%{DATA:resident_id}, assessment_id=%{DATA:assessment_id}, assessment_type=%{DATA:assessment_type}"
+          }
+        }
+        mutate {
+          add_field => { "event_type" => "assessment_completion" }
+          add_field => { "compliance_level" => "medium" }
+          add_field => { "audit_required" => "true" }
+        }
+      }
+
+      # Parse compliance violations
+      if [service] == "compliance-service" and [message] =~ /compliance violation/ {
+        grok {
+          match => { 
+            "message" => "compliance violation: violation_type=%{DATA:violation_type}, severity=%{DATA:severity}, resident_id=%{DATA:resident_id}"
+          }
+        }
+        mutate {
+          add_field => { "event_type" => "compliance_violation" }
+          add_field => { "compliance_level" => "critical" }
+          add_field => { "audit_required" => "true" }
+          add_field => { "alert_required" => "true" }
+        }
+      }
+
+      # Add timestamp if not present
+      if ![timestamp] {
+        mutate {
+          add_field => { "timestamp" => "%{@timestamp}" }
+        }
+      }
+
+      # Add healthcare-specific tags
+      mutate {
+        add_tag => [ "healthcare", "writecarenotes" ]
+      }
+
+      # Tag critical healthcare events
+      if [event_type] in ["medication_administration", "compliance_violation", "resident_admission"] {
+        mutate {
+          add_tag => [ "critical_healthcare_event" ]
+        }
+      }
+
+      # Remove sensitive data for GDPR compliance
+      if [message] =~ /password|ssn|credit_card/ {
+        mutate {
+          replace => { "message" => "[REDACTED - SENSITIVE DATA]" }
+          add_tag => [ "data_redacted" ]
+        }
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch-client:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "healthcare-logs-%{+YYYY.MM.dd}"
+        template_name => "healthcare-logs"
+        template_pattern => "healthcare-logs-*"
+        manage_template => false
+      }
+
+      # Send critical events to dead letter queue for additional processing
+      if "critical_healthcare_event" in [tags] {
+        elasticsearch {
+          hosts => ["https://elasticsearch-client:9200"]
+          user => "elastic"
+          password => "${ELASTIC_PASSWORD}"
+          ssl => true
+          ssl_certificate_verification => false
+          index => "critical-healthcare-events-%{+YYYY.MM.dd}"
+        }
+      }
+
+      # Debug output for development
+      if [level] == "DEBUG" {
+        stdout {
+          codec => rubydebug
+        }
+      }
+    }
+
+  audit-logs.conf: |
+    input {
+      beats {
+        port => 5045
+        type => "audit"
+      }
+    }
+
+    filter {
+      # Parse JSON audit logs
+      json {
+        source => "message"
+      }
+
+      # Ensure all audit logs have required fields
+      if ![user_id] {
+        mutate {
+          add_field => { "user_id" => "system" }
+        }
+      }
+
+      if ![action] {
+        mutate {
+          add_field => { "action" => "unknown" }
+        }
+      }
+
+      # Add audit-specific tags
+      mutate {
+        add_tag => [ "audit", "compliance" ]
+        add_field => { "log_type" => "audit" }
+      }
+
+      # Tag high-risk audit events
+      if [action] in ["DELETE", "ADMIN_ACCESS", "DATA_EXPORT", "MEDICATION_OVERRIDE"] {
+        mutate {
+          add_tag => [ "high_risk_audit" ]
+        }
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch-client:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "audit-logs-%{+YYYY.MM.dd}"
+        template_name => "audit-logs"
+        template_pattern => "audit-logs-*"
+        manage_template => false
+      }
+    }
+
+  application-logs.conf: |
+    input {
+      beats {
+        port => 5046
+        type => "application"
+      }
+    }
+
+    filter {
+      # Parse application logs
+      if [message] =~ /^\{.*\}$/ {
+        json {
+          source => "message"
+        }
+      }
+
+      # Extract log level
+      if [level] {
+        mutate {
+          uppercase => [ "level" ]
+        }
+      }
+
+      # Parse error logs with stack traces
+      if [level] == "ERROR" and [stack_trace] {
+        mutate {
+          add_tag => [ "error", "requires_investigation" ]
+        }
+      }
+
+      # Parse performance logs
+      if [response_time] {
+        if [response_time] > 1000 {
+          mutate {
+            add_tag => [ "slow_response" ]
+          }
+        }
+      }
+
+      # Add application-specific tags
+      mutate {
+        add_tag => [ "application" ]
+        add_field => { "log_type" => "application" }
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch-client:9200"]
+        user => "elastic"
+        password => "${ELASTIC_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+        index => "application-logs-%{+YYYY.MM.dd}"
+        template_name => "application-logs"
+        template_pattern => "application-logs-*"
+        manage_template => false
+      }
+    }
+
+---
+# Logstash Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:8.11.0
+        ports:
+        - containerPort: 5044
+          name: healthcare
+        - containerPort: 5045
+          name: audit
+        - containerPort: 5046
+          name: application
+        - containerPort: 9600
+          name: http
+        env:
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secrets
+              key: elastic-password
+        - name: LS_JAVA_OPTS
+          value: "-Xmx2g -Xms2g"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 1000m
+            memory: 4Gi
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/config
+        - name: pipeline
+          mountPath: /usr/share/logstash/pipeline
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9600
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9600
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+      - name: config
+        configMap:
+          name: logstash-config
+          items:
+          - key: logstash.yml
+            path: logstash.yml
+          - key: pipelines.yml
+            path: pipelines.yml
+      - name: pipeline
+        configMap:
+          name: logstash-config
+          items:
+          - key: healthcare-logs.conf
+            path: healthcare-logs.conf
+          - key: audit-logs.conf
+            path: audit-logs.conf
+          - key: application-logs.conf
+            path: application-logs.conf
+
+---
+# Logstash Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: logging
+  labels:
+    app: logstash
+spec:
+  selector:
+    app: logstash
+  ports:
+  - port: 5044
+    name: healthcare
+    targetPort: 5044
+  - port: 5045
+    name: audit
+    targetPort: 5045
+  - port: 5046
+    name: application
+    targetPort: 5046
+  - port: 9600
+    name: http
+    targetPort: 9600
