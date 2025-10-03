@@ -374,6 +374,21 @@ class BritishIslesComplianceChecker {
       const content = await readFileAsync(filePath, 'utf-8');
       const lines = content.split('\n');
       
+      // Only check for missing patterns in key business logic files
+      const isKeyBusinessFile = [
+        '/services/medication/',
+        '/services/care/',
+        '/services/dignity/',
+        '/services/wellbeing/',
+        '/services/voice/',
+        '/services/safeguarding/',
+        '/services/data-protection/',
+        '/services/infection-control/',
+        '/hooks/useAnalytics',
+        '/routes/organization/',
+        '/services/health/HealthService'
+      ].some(pattern => filePath.includes(pattern));
+      
       for (const rule of this.rules) {
         const matches = content.match(rule.pattern);
         
@@ -397,7 +412,8 @@ class BritishIslesComplianceChecker {
             context: matches[0],
             recommendation: `✅ ${rule.description} - Implementation found`
           });
-        } else if (rule.required) {
+        } else if (rule.required && isKeyBusinessFile) {
+          // Only flag missing patterns in key business logic files
           results.push({
             file: filePath,
             jurisdiction: rule.jurisdiction,

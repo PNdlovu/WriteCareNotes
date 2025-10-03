@@ -73,7 +73,7 @@ export class PaymentGatewayService {
     this.sentryService = SentryService.getInstance();
     
     this.stripe = new Stripe(process.env['STRIPE_SECRET_KEY']!, {
-      apiVersion: '2023-10-16',
+      apiVersion: '2025-09-30.clover',
       typescript: true
     });
   }
@@ -301,12 +301,12 @@ export class PaymentGatewayService {
           email: paymentMethod.billing_details.email || undefined,
           phone: paymentMethod.billing_details.phone || undefined,
           address: paymentMethod.billing_details.address ? {
-            line1: paymentMethod.billing_details.address.line1,
+            line1: paymentMethod.billing_details.address.line1 || '',
             line2: paymentMethod.billing_details.address.line2 || undefined,
-            city: paymentMethod.billing_details.address.city,
+            city: paymentMethod.billing_details.address.city || '',
             state: paymentMethod.billing_details.address.state || undefined,
-            postalCode: paymentMethod.billing_details.address.postal_code,
-            country: paymentMethod.billing_details.address.country
+            postalCode: paymentMethod.billing_details.address.postal_code || '',
+            country: paymentMethod.billing_details.address.country || ''
           } : undefined
         }
       };
@@ -335,11 +335,16 @@ export class PaymentGatewayService {
     organizationId?: string
   ): Promise<Invoice> {
     try {
-      const invoice = await this.stripe.invoices.create({
+      // Create invoice items first, then create invoice
+      const invoiceItem = await this.stripe.invoiceItems.create({
         customer: customerId,
         amount: Math.round(amount * 100), // Convert to pence
         currency,
-        description,
+        description
+      });
+
+      const invoice = await this.stripe.invoices.create({
+        customer: customerId,
         metadata: {
           ...metadata,
           organizationId: organizationId || 'default'
@@ -363,7 +368,7 @@ export class PaymentGatewayService {
         customerId: invoice.customer as string,
         dueDate: new Date(invoice.due_date! * 1000).toISOString(),
         paidAt: invoice.status_transitions.paid_at ? new Date(invoice.status_transitions.paid_at * 1000).toISOString() : undefined,
-        metadata: invoice.metadata
+        metadata: invoice.metadata || {}
       };
     } catch (error) {
       this.sentryService.captureException(error as Error, {
@@ -411,10 +416,10 @@ export class PaymentGatewayService {
         id: refund.id,
         amount: refund.amount,
         currency: refund.currency,
-        status: refund.status,
-        reason: refund.reason,
+        status: refund.status || 'unknown',
+        reason: refund.reason || undefined,
         paymentIntentId: refund.payment_intent as string,
-        metadata: refund.metadata
+        metadata: refund.metadata || {}
       };
     } catch (error) {
       this.sentryService.captureException(error as Error, {

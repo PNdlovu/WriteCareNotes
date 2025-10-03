@@ -559,3 +559,6 @@ export class AgentAuditService {
     };
   }
 }
+
+// Export alias for backward compatibility
+export const AuditService = AgentAuditService;

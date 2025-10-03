@@ -393,6 +393,29 @@ export class PrometheusService {
     }, errorRate);
   }
 
+  // External API Metrics
+  public recordExternalAPICall(
+    service: string, 
+    endpoint: string, 
+    method: string, 
+    statusCode: number, 
+    duration: number, 
+    organizationId: string = 'default'
+  ): void {
+    // Record the API call in request metrics
+    this.recordRequest(method, `external_${service}_${endpoint}`, statusCode, organizationId);
+    this.recordRequestDuration(method, `external_${service}_${endpoint}`, statusCode, duration / 1000, organizationId);
+    
+    logger.debug('External API call recorded', {
+      service,
+      endpoint,
+      method,
+      statusCode,
+      duration,
+      organizationId
+    });
+  }
+
   // Utility Methods
   public getMetrics(): string {
     return this.register.metrics();
