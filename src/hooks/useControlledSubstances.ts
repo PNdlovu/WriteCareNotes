@@ -221,6 +221,21 @@ interface UseControlledSubstancesReturn {
   setSearchTerm: (term: string) => void;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const useControlledSubstances = (
   organizationId: string,
   options: UseControlledSubstancesOptions = {}

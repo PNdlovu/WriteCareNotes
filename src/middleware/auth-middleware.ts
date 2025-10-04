@@ -11,6 +11,21 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const authenticate = (
   req: AuthenticatedRequest,
   res: Response,

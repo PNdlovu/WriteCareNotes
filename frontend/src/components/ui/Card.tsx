@@ -21,6 +21,21 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const Card: React.FC<CardProps> = ({ className, children, ...props }) => {
   return (
     <div
@@ -35,6 +50,21 @@ export const Card: React.FC<CardProps> = ({ className, children, ...props }) => 
   );
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const CardHeader: React.FC<CardHeaderProps> = ({ className, children, ...props }) => {
   return (
     <div
@@ -46,6 +76,21 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ className, children, ...
   );
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const CardTitle: React.FC<CardTitleProps> = ({ className, children, ...props }) => {
   return (
     <h3
@@ -57,6 +102,21 @@ export const CardTitle: React.FC<CardTitleProps> = ({ className, children, ...pr
   );
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const CardContent: React.FC<CardContentProps> = ({ className, children, ...props }) => {
   return (
     <div
@@ -68,6 +128,21 @@ export const CardContent: React.FC<CardContentProps> = ({ className, children, .
   );
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const CardFooter: React.FC<CardFooterProps> = ({ className, children, ...props }) => {
   return (
     <div

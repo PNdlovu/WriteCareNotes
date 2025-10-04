@@ -46,6 +46,21 @@ interface MedicationDashboardProps {
   userRole: string;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const MedicationDashboard: React.FC<MedicationDashboardProps> = ({
   organizationId,
   userId,

@@ -14,6 +14,21 @@ import { EventEmitter2 } from "eventemitter2";
 /**
  * Format date and time for display
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatDateTime = (date: Date | string): string => {
   const d = new Date(date);
   return d.toLocaleString('en-GB', {
@@ -29,6 +44,21 @@ export const formatDateTime = (date: Date | string): string => {
 /**
  * Format date only for display
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatDate = (date: Date | string): string => {
   const d = new Date(date);
   return d.toLocaleDateString('en-GB', {
@@ -41,6 +71,21 @@ export const formatDate = (date: Date | string): string => {
 /**
  * Format time only for display
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatTime = (date: Date | string): string => {
   const d = new Date(date);
   return d.toLocaleTimeString('en-GB', {
@@ -52,6 +97,21 @@ export const formatTime = (date: Date | string): string => {
 
 /**
  * Format relative time (e.g., "2 hours ago")
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const formatRelativeTime = (date: Date | string): string => {
   const d = new Date(date);
@@ -72,12 +132,42 @@ export const formatRelativeTime = (date: Date | string): string => {
 /**
  * Check if date is overdue
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const isOverdue = (date: Date | string): boolean => {
   return new Date(date) < new Date();
 };
 
 /**
  * Get minutes until/since a date
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const getMinutesUntil = (date: Date | string): number => {
   const d = new Date(date);
@@ -87,6 +177,21 @@ export const getMinutesUntil = (date: Date | string): number => {
 
 /**
  * Check if date is within specified days
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const isWithinDays = (date: Date | string, days: number): boolean => {
   const d = new Date(date);
@@ -99,6 +204,21 @@ export const isWithinDays = (date: Date | string, days: number): boolean => {
 /**
  * Add days to a date
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const addDays = (date: Date | string, days: number): Date => {
   const d = new Date(date);
   d.setDate(d.getDate() + days);
@@ -108,6 +228,21 @@ export const addDays = (date: Date | string, days: number): Date => {
 /**
  * Get start of day
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const startOfDay = (date: Date | string): Date => {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
@@ -116,6 +251,21 @@ export const startOfDay = (date: Date | string): Date => {
 
 /**
  * Get end of day
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const endOfDay = (date: Date | string): Date => {
   const d = new Date(date);

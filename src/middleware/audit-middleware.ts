@@ -6,6 +6,21 @@ import { logger } from '../utils/logger';
 /**
  * Basic audit middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const auditMiddleware = (
   req: Request,
   res: Response,

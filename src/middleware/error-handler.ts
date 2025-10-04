@@ -3,6 +3,21 @@ import { Logger } from '@nestjs/common';
 
 const logger = new Logger('ErrorHandler');
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const errorHandler = (
   error: Error,
   req: Request,

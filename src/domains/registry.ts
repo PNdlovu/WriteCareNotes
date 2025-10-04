@@ -13,6 +13,21 @@ import * as ComplianceDomain from './compliance';
 import * as AIDomain from './ai';
 import * as IntegrationDomain from './integration';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const DOMAIN_REGISTRY = {
   care: CareDomain,
   staff: StaffDomain,

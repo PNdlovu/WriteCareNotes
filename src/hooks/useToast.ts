@@ -30,6 +30,21 @@ interface ToastOptions {
 
 let toastCount = 0;
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const useToast = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 

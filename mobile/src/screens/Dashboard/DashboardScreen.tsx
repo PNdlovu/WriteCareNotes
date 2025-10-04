@@ -57,6 +57,21 @@ interface DashboardData {
   }
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const DashboardScreen: React.FC = () => {
   const { user, organizationId } = useSelector((state: RootState) => state.auth)
   const [refreshing, setRefreshing] = useState(false)

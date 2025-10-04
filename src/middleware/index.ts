@@ -23,6 +23,21 @@ export { ErrorCode, ErrorCodeHelper, HTTPStatusCode } from '../utils/errorCodes'
 /**
  * Complete middleware stack for production use
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const productionMiddlewareStack = [
   // 1. Correlation ID (must be first)
   'CorrelationIdMiddleware.addCorrelationId',
@@ -48,6 +63,21 @@ export const productionMiddlewareStack = [
 /**
  * Healthcare-specific middleware stack
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const healthcareMiddlewareStack = [
   ...productionMiddlewareStack,
   'RateLimitingMiddleware.healthcareLimit',
@@ -57,6 +87,21 @@ export const healthcareMiddlewareStack = [
 
 /**
  * Authentication middleware stack
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const authMiddlewareStack = [
   'CorrelationIdMiddleware.addCorrelationId',
@@ -68,6 +113,21 @@ export const authMiddlewareStack = [
 
 /**
  * File upload middleware stack
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const uploadMiddlewareStack = [
   'CorrelationIdMiddleware.addCorrelationId',

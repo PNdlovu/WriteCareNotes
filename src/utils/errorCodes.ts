@@ -108,6 +108,21 @@ export interface ErrorMapping {
   category: string;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const ERROR_MAPPINGS: Partial<Record<ErrorCode, ErrorMapping>> = {
   // Authentication & Authorization
   [ErrorCode.AUTH_TOKEN_MISSING]: {

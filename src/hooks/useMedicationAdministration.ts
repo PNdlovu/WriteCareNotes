@@ -58,6 +58,21 @@ interface AdministrationHistory {
   status: 'completed' | 'refused' | 'missed';
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const useMedicationAdministration = (residentId: string, organizationId: string) => {
   const [pendingMedications, setPendingMedications] = useState<PendingMedication[]>([]);
   const [prnMedications, setPrnMedications] = useState<PendingMedication[]>([]);

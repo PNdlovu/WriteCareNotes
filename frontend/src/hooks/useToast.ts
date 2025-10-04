@@ -5,6 +5,21 @@ interface ToastOptions {
   position?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const useToast = () => {
   const showToast = (message: string, type: 'success' | 'error' | 'loading' | 'custom' = 'custom', options?: ToastOptions) => {
     const defaultOptions: ToastOptions = {

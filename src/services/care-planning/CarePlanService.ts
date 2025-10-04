@@ -133,6 +133,7 @@ export class CarePlanService {
    * Create a new care plan with comprehensive validation
    */
   async createCarePlan(request: CreateCarePlanRequest): Promise<CarePlan> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     const correlationId = `care-plan-create-${Date.now()}`;
     
     try {
@@ -270,6 +271,7 @@ export class CarePlanService {
    * Get care plan by ID with decryption
    */
   async getCarePlanById(id: string, includeRelations: boolean = true): Promise<CarePlan | null> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const carePlan = await this.carePlanRepository.findById(id, includeRelations);
 
@@ -298,7 +300,8 @@ export class CarePlanService {
     filters: CarePlanSearchFilters,
     page: number = 1,
     limit: number = 20
-  ): Promise<{ carePlans: CarePlan[]; total: number; totalPages: number }> {
+  ): Promise<{
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() }); carePlans: CarePlan[]; total: number; totalPages: number }> {
     try {
       // Convert filters to repository search criteria
       const searchCriteria = {
@@ -354,6 +357,7 @@ export class CarePlanService {
    * Update care plan with validation and versioning
    */
   async updateCarePlan(id: string, request: UpdateCarePlanRequest): Promise<CarePlan> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     const correlationId = `care-plan-update-${Date.now()}`;
     
     try {
@@ -520,6 +524,7 @@ export class CarePlanService {
    * Approve care plan with workflow validation
    */
   async approveCarePlan(id: string, request: CarePlanApprovalRequest): Promise<CarePlan> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     const correlationId = `care-plan-approve-${Date.now()}`;
     
     try {
@@ -629,6 +634,7 @@ export class CarePlanService {
    * Archive care plan
    */
   async archiveCarePlan(id: string, archivedBy: string, reason?: string): Promise<CarePlan> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     const correlationId = `care-plan-archive-${Date.now()}`;
     
     try {
@@ -693,6 +699,7 @@ export class CarePlanService {
    * Get care plans due for review
    */
   async getCarePlansDueForReview(daysAhead: number = 7): Promise<CarePlan[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const carePlans = await this.carePlanRepository.findDueForReview(daysAhead);
 
@@ -716,6 +723,7 @@ export class CarePlanService {
    * Get care plan version history
    */
   async getCarePlanVersionHistory(id: string): Promise<CarePlanVersionInfo> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const currentVersion = await this.getCarePlanById(id);
       if (!currentVersion) {
@@ -757,6 +765,7 @@ export class CarePlanService {
    * Get active care plans count
    */
   async getActivePlansCount(): Promise<number> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       return await this.carePlanRepository.countActive();
     } catch (error: unknown) {
@@ -772,6 +781,7 @@ export class CarePlanService {
     filters: CarePlanSearchFilters,
     limit: number = 50
   ): Promise<any[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const searchCriteria = {
         residentId: filters.residentId,
@@ -797,6 +807,7 @@ export class CarePlanService {
    * Get care plan statistics
    */
   async getCarePlanStatistics(residentId?: string): Promise<any> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       return await this.carePlanRepository.getStatistics(residentId);
     } catch (error: unknown) {
@@ -815,6 +826,7 @@ export class CarePlanService {
     residentId: string, 
     includeArchived: boolean = false
   ): Promise<CarePlan[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const carePlans = await this.carePlanRepository.findByResidentId(residentId, includeArchived);
 
@@ -837,6 +849,7 @@ export class CarePlanService {
    * Get care plans requiring attention
    */
   async getCarePlansRequiringAttention(): Promise<CarePlan[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const carePlans = await this.carePlanRepository.findRequiringAttention();
 
@@ -862,6 +875,7 @@ export class CarePlanService {
     effectiveFrom: Date,
     effectiveTo?: Date
   ): Promise<CarePlan[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       return await this.carePlanRepository.findConflictingPlans(
         residentId,
@@ -883,6 +897,7 @@ export class CarePlanService {
    * Get active care plans by resident ID
    */
   async getActiveCarePlansByResidentId(residentId: string): Promise<CarePlan[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const carePlans = await this.carePlanRepository.findActiveByResidentId(residentId);
 
@@ -905,6 +920,7 @@ export class CarePlanService {
    * Get care plan history by resident ID
    */
   async getCarePlanHistoryByResidentId(residentId: string): Promise<CarePlan[]> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       const carePlans = await this.carePlanRepository.findHistoryByResidentId(residentId);
 
@@ -947,6 +963,7 @@ export class CarePlanService {
   }
 
   private async encryptSensitiveData(carePlan: CarePlan): Promise<void> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     // Encrypt sensitive fields in care goals, risk assessments, etc.
     if (carePlan.careGoals) {
       for (const goal of carePlan.careGoals) {
@@ -964,6 +981,7 @@ export class CarePlanService {
   }
 
   private async decryptSensitiveData(carePlan: CarePlan): Promise<void> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     // Decrypt sensitive fields
     if (carePlan.careGoals) {
       for (const goal of carePlan.careGoals) {
@@ -989,6 +1007,7 @@ export class CarePlanService {
   }
 
   private async validateCarePlanCompleteness(carePlan: CarePlan): Promise<void> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     const errors: string[] = [];
 
     if (!carePlan.planName || carePlan.planName.trim().length === 0) {

@@ -27,6 +27,21 @@ export interface GDPRContext {
 /**
  * GDPR compliance middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const gdprComplianceMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     // Add GDPR context to request

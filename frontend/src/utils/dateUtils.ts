@@ -1,20 +1,80 @@
 import { format, formatDistanceToNow, isToday, isTomorrow, isYesterday, parseISO } from 'date-fns';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatDateTime = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return format(dateObj, 'dd/MM/yyyy HH:mm');
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatDate = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return format(dateObj, 'dd/MM/yyyy');
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatTime = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return format(dateObj, 'HH:mm');
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatRelativeTime = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   
@@ -33,16 +93,61 @@ export const formatRelativeTime = (date: string | Date): string => {
   return formatDateTime(dateObj);
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatTimeAgo = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return formatDistanceToNow(dateObj, { addSuffix: true });
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const isOverdue = (scheduledTime: string | Date): boolean => {
   const scheduled = typeof scheduledTime === 'string' ? parseISO(scheduledTime) : scheduledTime;
   return scheduled < new Date();
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const getTimeUntilDue = (scheduledTime: string | Date): string => {
   const scheduled = typeof scheduledTime === 'string' ? parseISO(scheduledTime) : scheduledTime;
   const now = new Date();
@@ -54,6 +159,21 @@ export const getTimeUntilDue = (scheduledTime: string | Date): string => {
   return `Due in ${formatDistanceToNow(scheduled)}`;
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const formatMedicationTime = (scheduledTime: string | Date): {
   time: string;
   status: 'due' | 'overdue' | 'upcoming';

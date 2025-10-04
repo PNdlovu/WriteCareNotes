@@ -30,6 +30,21 @@ interface AIAgentFloatingButtonProps {
   position?: 'bottom-right' | 'bottom-left';
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const AIAgentFloatingButton: React.FC<AIAgentFloatingButtonProps> = ({
   tenantId,
   userId,

@@ -40,6 +40,21 @@ export interface RedisConfig {
 /**
  * Get Redis configuration based on environment
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function getRedisConfig(): RedisConfig {
 
   const nodeEnv = process.env['NODE_ENV'] || 'development';
@@ -105,6 +120,21 @@ export function getRedisConfig(): RedisConfig {
 /**
  * Redis database allocation for different purposes
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const REDIS_DATABASES = {
   CACHE: 0,           // General application cache
   SESSIONS: 1,        // User sessions
@@ -125,6 +155,21 @@ export const REDIS_DATABASES = {
 /**
  * Get Redis configuration for specific purpose
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function getRedisConfigForPurpose(purpose: keyof typeof REDIS_DATABASES): RedisConfig {
   const config = getRedisConfig();
   return {
@@ -136,6 +181,21 @@ export function getRedisConfigForPurpose(purpose: keyof typeof REDIS_DATABASES):
 
 /**
  * Redis connection options for different use cases
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const REDIS_CONNECTION_OPTIONS = {
   // High-performance cache
@@ -179,6 +239,21 @@ export const REDIS_CONNECTION_OPTIONS = {
 
 /**
  * Cache TTL configurations (in seconds)
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const CACHE_TTL = {
   // Short-term cache (5 minutes)
@@ -224,6 +299,21 @@ export const CACHE_TTL = {
 /**
  * Validate Redis configuration
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function validateRedisConfig(config: RedisConfig): void {
   if (!config.host) {
     throw new Error('Redis host is required');
@@ -249,6 +339,21 @@ export function validateRedisConfig(config: RedisConfig): void {
 /**
  * Get Redis health check configuration
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function getRedisHealthConfig() {
   return {
     timeout: 3000,
@@ -260,6 +365,21 @@ export function getRedisHealthConfig() {
 
 /**
  * Redis key patterns for different data types
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const REDIS_KEY_PATTERNS = {
   // User sessions
@@ -302,6 +422,21 @@ export const REDIS_KEY_PATTERNS = {
 
 /**
  * Default Redis configuration
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const defaultRedisConfig = getRedisConfig();
 

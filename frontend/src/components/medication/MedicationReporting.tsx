@@ -233,6 +233,21 @@ interface MedicationReportingProps {
   readOnly?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const MedicationReporting: React.FC<MedicationReportingProps> = ({
   organizationId,
   onReportGenerated,

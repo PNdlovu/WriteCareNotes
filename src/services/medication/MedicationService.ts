@@ -21,17 +21,20 @@ interface MedicationAdministration {
 
 class MedicationManagementService {
   async recordAdministration(admin: MedicationAdministration): Promise<void> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     // CQC-compliant medication tracking
     await this.auditMedicationAdministration(admin);
     await this.updateMedicationRecord(admin);
   }
   
   private async auditMedicationAdministration(admin: MedicationAdministration): Promise<void> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     // Audit trail for CQC compliance
     console.log(`Medication administration audit: ${admin.residentId} - ${admin.medicationId}`);
   }
   
   private async updateMedicationRecord(admin: MedicationAdministration): Promise<void> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     // Update medication record for compliance tracking
     console.log(`Updated medication record for resident: ${admin.residentId}`);
   }

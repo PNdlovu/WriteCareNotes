@@ -264,6 +264,21 @@ interface MedicationReconciliationProps {
   showHistory?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const MedicationReconciliation: React.FC<MedicationReconciliationProps> = ({
   residentId,
   reconciliationType = 'admission',

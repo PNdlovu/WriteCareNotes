@@ -76,6 +76,21 @@ interface Document {
   downloadUrl: string;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const useFamilyEngagement = (familyId: string, residentId: string) => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();

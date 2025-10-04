@@ -17,6 +17,21 @@ import { PerformanceLogger } from '@/utils/logger';
 /**
  * Performance monitoring middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const performanceMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const startTime = Date.now();
   const operationId = req.correlationId || `perf_${Date.now()}`;

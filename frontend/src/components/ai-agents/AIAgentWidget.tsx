@@ -21,6 +21,21 @@ interface AIAgentWidgetProps {
   defaultOpen?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
   position = 'bottom-right',
   residentId,

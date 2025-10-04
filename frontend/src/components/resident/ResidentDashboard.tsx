@@ -294,6 +294,21 @@ interface ResidentDashboardProps {
   compactView?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const ResidentDashboard: React.FC<ResidentDashboardProps> = ({
   residentId,
   onAlertTriggered,

@@ -1,5 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Check if user is authenticated
   if (!req.user) {

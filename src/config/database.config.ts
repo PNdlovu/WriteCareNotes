@@ -28,6 +28,21 @@ export interface DatabaseConfig {
   };
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const databaseConfig: DatabaseConfig = {
   host: process.env['DB_HOST'] || 'localhost',
   port: parseInt(process.env['DB_PORT'] || '5432'),

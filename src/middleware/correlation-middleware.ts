@@ -17,6 +17,21 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Correlation ID middleware for request tracing
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const correlationMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   // Get correlation ID from header or generate new one
   const correlationId = req.headers['x-correlation-id'] as string || uuidv4();

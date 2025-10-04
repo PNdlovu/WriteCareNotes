@@ -230,6 +230,21 @@ interface HealthcareIntegrationProps {
   readOnly?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const HealthcareIntegration: React.FC<HealthcareIntegrationProps> = ({
   organizationId,
   onIntegrationStatusChange,

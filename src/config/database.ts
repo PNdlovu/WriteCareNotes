@@ -17,12 +17,42 @@ const dbConfig = {
 config();
 
 // Create PostgreSQL connection pool
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const pool = new Pool(dbConfig);
 
 // Export TypeORM DataSource for entity operations
 export { AppDataSource };
 
 // Test database connection
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const testConnection = async (): Promise<boolean> => {
   try {
     const client = await pool.connect();

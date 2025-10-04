@@ -239,6 +239,21 @@ interface ClinicalSafetyDashboardProps {
   readOnly?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const ClinicalSafetyDashboard: React.FC<ClinicalSafetyDashboardProps> = ({
   organizationId,
   onSafetyAlert,

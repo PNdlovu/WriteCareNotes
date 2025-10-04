@@ -6,6 +6,21 @@ import StructuredLoggingService from '../services/logging/StructuredLoggingServi
  * Enterprise Metrics Collection Middleware
  * Collects comprehensive metrics for all HTTP requests
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const metricsCollectionMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const startTime = Date.now();
   const prometheusService = PrometheusService.getInstance();
@@ -88,6 +103,21 @@ function extractModuleFromPath(path: string): string {
  * Business Metrics Collection Middleware
  * Collects business-specific metrics for healthcare operations
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const businessMetricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const prometheusService = PrometheusService.getInstance();
   const organizationId = req.headers['x-organization-id'] as string || 'default';
@@ -114,6 +144,21 @@ export const businessMetricsMiddleware = (req: Request, res: Response, next: Nex
  * System Metrics Collection Middleware
  * Collects system-level metrics
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const systemMetricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const prometheusService = PrometheusService.getInstance();
   
@@ -133,6 +178,21 @@ export const systemMetricsMiddleware = (req: Request, res: Response, next: NextF
 /**
  * Error Metrics Collection Middleware
  * Collects error-specific metrics
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const errorMetricsMiddleware = (error: Error, req: Request, res: Response, next: NextFunction): void => {
   const prometheusService = PrometheusService.getInstance();
@@ -160,6 +220,21 @@ export const errorMetricsMiddleware = (error: Error, req: Request, res: Response
  * Performance Metrics Collection Middleware
  * Collects performance-specific metrics
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const performanceMetricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const startTime = process.hrtime.bigint();
   const logger = StructuredLoggingService.getInstance();
@@ -180,6 +255,21 @@ export const performanceMetricsMiddleware = (req: Request, res: Response, next: 
 /**
  * Compliance Metrics Collection Middleware
  * Collects compliance-related metrics
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const complianceMetricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const prometheusService = PrometheusService.getInstance();

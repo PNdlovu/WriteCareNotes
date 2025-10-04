@@ -10,6 +10,21 @@ import Joi from 'joi';
  */
 
 // NHS Credentials Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const nhsCredentialsSchema = Joi.object({
   clientId: Joi.string().required().min(10).max(100)
     .description('NHS Digital client ID'),
@@ -22,6 +37,21 @@ export const nhsCredentialsSchema = Joi.object({
 });
 
 // FHIR Coding Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const fhirCodingSchema = Joi.object({
   system: Joi.string().uri().required()
     .description('Code system URL'),
@@ -34,6 +64,21 @@ export const fhirCodingSchema = Joi.object({
 });
 
 // FHIR CodeableConcept Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const fhirCodeableConceptSchema = Joi.object({
   coding: Joi.array().items(fhirCodingSchema).min(1).required()
     .description('Array of coding elements'),
@@ -42,6 +87,21 @@ export const fhirCodeableConceptSchema = Joi.object({
 });
 
 // Care Record Section Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const careRecordSectionSchema = Joi.object({
   title: Joi.string().required().min(1).max(200)
     .description('Section title'),
@@ -54,6 +114,21 @@ export const careRecordSectionSchema = Joi.object({
 });
 
 // Care Record Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const careRecordSchema = Joi.object({
   patientId: Joi.string().required().pattern(/^[a-zA-Z0-9-]+$/)
     .description('Patient identifier'),
@@ -68,6 +143,21 @@ export const careRecordSchema = Joi.object({
 });
 
 // Medication Timing Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const medicationTimingSchema = Joi.object({
   frequency: Joi.number().integer().min(1).max(10).required()
     .description('Frequency of administration'),
@@ -78,6 +168,21 @@ export const medicationTimingSchema = Joi.object({
 });
 
 // Medication Details Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const medicationDetailsSchema = Joi.object({
   id: Joi.string().required().pattern(/^[a-zA-Z0-9-]+$/)
     .description('Medication identifier'),
@@ -96,6 +201,21 @@ export const medicationDetailsSchema = Joi.object({
 });
 
 // Medication Transfer Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const medicationTransferSchema = Joi.object({
   patientId: Joi.string().required().pattern(/^[a-zA-Z0-9-]+$/)
     .description('Patient identifier'),
@@ -114,6 +234,21 @@ export const medicationTransferSchema = Joi.object({
 });
 
 // DSCR Record Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const dscrRecordSchema = Joi.object({
   patientId: Joi.string().required().pattern(/^[a-zA-Z0-9-]+$/)
     .description('Patient identifier'),
@@ -124,6 +259,21 @@ export const dscrRecordSchema = Joi.object({
 });
 
 // DSCR Data Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const dscrDataSchema = Joi.object({
   facilityId: Joi.string().required().pattern(/^[a-zA-Z0-9-]+$/)
     .description('Facility identifier'),
@@ -142,6 +292,21 @@ export const dscrDataSchema = Joi.object({
 });
 
 // NHS Number Validation Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const nhsNumberSchema = Joi.string()
   .pattern(/^\d{10}$/)
   .custom((value, helpers) => {
@@ -167,6 +332,21 @@ export const nhsNumberSchema = Joi.string()
   .description('Valid NHS number (10 digits with valid checksum)');
 
 // Patient Search Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const patientSearchSchema = Joi.object({
   nhsNumber: nhsNumberSchema.optional(),
   familyName: Joi.string().min(2).max(50).optional(),
@@ -178,6 +358,21 @@ export const patientSearchSchema = Joi.object({
   .description('Patient search criteria - must include at least one search parameter');
 
 // GP Connect Query Parameters Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const gpConnectQuerySchema = Joi.object({
   includeResolvedAllergies: Joi.boolean().optional().default(false)
     .description('Include resolved allergies in the response'),
@@ -204,6 +399,21 @@ export const gpConnectQuerySchema = Joi.object({
 });
 
 // Integration Configuration Schema
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const integrationConfigSchema = Joi.object({
   enabled: Joi.boolean().required()
     .description('Enable NHS integration'),
@@ -224,6 +434,21 @@ export const integrationConfigSchema = Joi.object({
 });
 
 // Audit Log Schema for NHS Operations
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const nhsAuditSchema = Joi.object({
   operation: Joi.string().required()
     .description('NHS operation performed'),

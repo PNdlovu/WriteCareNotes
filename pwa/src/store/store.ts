@@ -52,6 +52,21 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 // Store configuration
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -63,6 +78,21 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production'
 })
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>

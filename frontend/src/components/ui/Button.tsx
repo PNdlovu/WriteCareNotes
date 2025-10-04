@@ -24,6 +24,21 @@ const buttonSizes = {
   lg: 'h-12 px-6 text-base',
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const Button: React.FC<ButtonProps> = ({
   className,
   variant = 'primary',

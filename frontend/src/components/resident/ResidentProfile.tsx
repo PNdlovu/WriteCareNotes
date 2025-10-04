@@ -185,6 +185,21 @@ interface ResidentProfileProps {
   showSensitiveInfo?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const ResidentProfile: React.FC<ResidentProfileProps> = ({
   residentId,
   onProfileUpdate,

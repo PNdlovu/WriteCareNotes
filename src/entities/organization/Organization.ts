@@ -232,6 +232,21 @@ export interface ComplianceConfiguration {
 }
 
 // Default organization settings
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const DEFAULT_ORGANIZATION_SETTINGS: OrganizationSettings = {
   timezone: 'Europe/London',
   currency: 'GBP',
@@ -256,6 +271,21 @@ export const DEFAULT_ORGANIZATION_SETTINGS: OrganizationSettings = {
 };
 
 // Organization types with descriptions
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const ORGANIZATION_TYPES = {
   CARE_HOME: 'Care Home',
   NURSING_HOME: 'Nursing Home',
@@ -265,6 +295,21 @@ export const ORGANIZATION_TYPES = {
 } as const;
 
 // Organization roles with permissions
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const ORGANIZATION_ROLES = {
   ADMIN: {
     name: 'Administrator',
@@ -312,6 +357,21 @@ export const ORGANIZATION_ROLES = {
 } as const;
 
 // Validation functions
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function validateOrganization(organization: Partial<Organization>): string[] {
   const errors: string[] = [];
 
@@ -342,6 +402,21 @@ export function validateOrganization(organization: Partial<Organization>): strin
   return errors;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function validateAddress(address: Address): string[] {
   const errors: string[] = [];
 
@@ -364,6 +439,21 @@ export function validateAddress(address: Address): string[] {
   return errors;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function validateContactInfo(contactInfo: ContactInfo): string[] {
   const errors: string[] = [];
 

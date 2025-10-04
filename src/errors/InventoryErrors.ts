@@ -301,6 +301,21 @@ export class CacheOperationError extends InventoryError {
 }
 
 // Error code constants for consistent error handling
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const INVENTORY_ERROR_CODES = {
   // Validation errors
   INVALID_ITEM_CODE: 'INVALID_ITEM_CODE',
@@ -404,6 +419,21 @@ export type InventoryErrorCode = typeof INVENTORY_ERROR_CODES[keyof typeof INVEN
 /**
  * Helper function to create standardized error responses
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function createInventoryErrorResponse(
   error: InventoryError,
   includeStack: boolean = false
@@ -426,6 +456,21 @@ export function createInventoryErrorResponse(
 /**
  * Helper function to determine if an error is retryable
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function isRetryableError(error: InventoryError): boolean {
   const retryableCodes = [
     INVENTORY_ERROR_CODES.NHS_DIGITAL_API_ERROR,
@@ -442,6 +487,21 @@ export function isRetryableError(error: InventoryError): boolean {
 
 /**
  * Helper function to determine error severity for monitoring
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export function getErrorSeverity(error: InventoryError): 'low' | 'medium' | 'high' | 'critical' {
   // Critical errors that require immediate attention

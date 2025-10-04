@@ -7,6 +7,21 @@ import { pilotService } from '../../services/pilotService';
 import { PilotDashboard as PilotDashboardType } from '../../types/pilot';
 import { FeedbackWidget } from './FeedbackWidget';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const PilotDashboard: React.FC = () => {
   const [dashboard, setDashboard] = useState<PilotDashboardType | null>(null);
   const [loading, setLoading] = useState(true);

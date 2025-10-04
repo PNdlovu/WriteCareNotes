@@ -769,26 +769,101 @@ export class ComplianceValidationMiddleware {
 /**
  * Middleware factory functions
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const complianceValidationMiddleware = (eventEmitter: EventEmitter2) => {
   const middleware = new ComplianceValidationMiddleware(eventEmitter);
   return middleware.validateCompliance;
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const jurisdictionComplianceMiddleware = (jurisdiction: string, eventEmitter: EventEmitter2) => {
   const middleware = new ComplianceValidationMiddleware(eventEmitter);
   return middleware.validateJurisdictionCompliance(jurisdiction);
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const professionalStandardsMiddleware = (professionalBody: string, eventEmitter: EventEmitter2) => {
   const middleware = new ComplianceValidationMiddleware(eventEmitter);
   return middleware.validateProfessionalStandards(professionalBody);
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const dataProtectionMiddleware = (eventEmitter: EventEmitter2) => {
   const middleware = new ComplianceValidationMiddleware(eventEmitter);
   return middleware.validateDataProtection;
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const clinicalSafetyMiddleware = (eventEmitter: EventEmitter2) => {
   const middleware = new ComplianceValidationMiddleware(eventEmitter);
   return middleware.validateClinicalSafety;

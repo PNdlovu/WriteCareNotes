@@ -10,6 +10,21 @@ interface SkipLinkProps {
  * Skip Link Component
  * Provides keyboard navigation shortcut to main content
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const SkipLink: React.FC<SkipLinkProps> = ({
   targetId,
   children,

@@ -205,6 +205,21 @@ const validationSchemas = {
 /**
  * Validation middleware factory
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const validationMiddleware = (schemaName: keyof typeof validationSchemas) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {

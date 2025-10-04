@@ -21,6 +21,21 @@ const badgeSizes = {
   lg: 'px-3 py-1 text-sm',
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const Badge: React.FC<BadgeProps> = ({
   className,
   variant = 'primary',

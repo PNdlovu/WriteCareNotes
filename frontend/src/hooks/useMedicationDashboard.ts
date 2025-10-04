@@ -2,6 +2,21 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { medicationService, DashboardStats, MedicationDue, MedicationAlert } from '../services/medicationService';
 import { useAuth } from '../contexts/AuthContext';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const useMedicationDashboard = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();

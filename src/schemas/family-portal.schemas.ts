@@ -10,6 +10,21 @@
 
 import Joi from 'joi';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const familyPortalSchemas = {
   getUpdates: {
     query: Joi.object({
@@ -190,6 +205,21 @@ export const familyPortalSchemas = {
 };
 
 // Additional validation schemas for specific use cases
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const familyPortalAdvancedSchemas = {
   emergencyContact: {
     body: Joi.object({
@@ -304,6 +334,21 @@ export const familyPortalAdvancedSchemas = {
 };
 
 // Validation middleware factory
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const createValidationMiddleware = (schema: any) => {
   return (req: any, res: any, next: any) => {
     const { error, value } = schema.validate(req.body || req.query, { 

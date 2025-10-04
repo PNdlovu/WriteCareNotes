@@ -14,6 +14,21 @@ const spinnerSizes = {
   xl: 'h-12 w-12',
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   className,
   size = 'md',

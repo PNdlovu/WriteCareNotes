@@ -6,6 +6,21 @@ import { logger } from '../utils/logger';
 /**
  * Basic metrics middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const metricsMiddleware = (
   req: Request,
   res: Response,

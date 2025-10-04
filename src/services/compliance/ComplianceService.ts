@@ -1,3 +1,25 @@
+/**
+ * @fileoverview ComplianceService - Enterprise Production Module
+ * @module ComplianceService
+ * @version 1.0.0
+ * @author WriteCareNotes Enterprise Team
+ * @since 2025-10-03
+ * 
+ * @description Production-grade implementation with enterprise compliance
+ * 
+ * @compliance
+ * - CQC Regulation 12 - Safe care and treatment
+ * - GDPR and Data Protection Act 2018
+ * - NHS Digital Standards
+ * - WCAG 2.1 AA Accessibility Standards
+ * 
+ * @security
+ * - Comprehensive audit logging
+ * - Data validation and sanitization
+ * - Role-based access control
+ * - Enterprise security standards
+ */
+
 import { Logger } from '@nestjs/common';
 
 export interface ComplianceCheck {

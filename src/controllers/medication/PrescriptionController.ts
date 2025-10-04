@@ -637,6 +637,21 @@ export class PrescriptionController {
 /**
  * Validation rules for prescription creation
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const createPrescriptionValidation = [
   body('residentId')
     .isUUID()
@@ -711,6 +726,21 @@ export const createPrescriptionValidation = [
 /**
  * Validation rules for prescription updates
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const updatePrescriptionValidation = [
   param('id')
     .isUUID()
@@ -740,6 +770,21 @@ export const updatePrescriptionValidation = [
 /**
  * Validation rules for prescription discontinuation
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const discontinuePrescriptionValidation = [
   param('id')
     .isUUID()
@@ -754,6 +799,21 @@ export const discontinuePrescriptionValidation = [
 /**
  * Validation rules for getting prescription by ID
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const getPrescriptionValidation = [
   param('id')
     .isUUID()
@@ -763,6 +823,21 @@ export const getPrescriptionValidation = [
 /**
  * Validation rules for resident prescriptions
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const getResidentPrescriptionsValidation = [
   param('residentId')
     .isUUID()
@@ -771,6 +846,21 @@ export const getResidentPrescriptionsValidation = [
 
 /**
  * Validation rules for prescription search
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const searchPrescriptionsValidation = [
   query('page')

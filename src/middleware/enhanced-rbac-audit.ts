@@ -17,6 +17,21 @@ export interface RBACConfig {
 /**
  * Enhanced RBAC middleware with comprehensive audit logging
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const enhancedAuthorize = (config: RBACConfig) => {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const auditService = new AuditTrailService();
@@ -139,6 +154,21 @@ export const enhancedAuthorize = (config: RBACConfig) => {
 /**
  * Simplified RBAC middleware for backward compatibility
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const authorize = (allowedRoles: string[]) => {
   return enhancedAuthorize({
     allowedRoles,
@@ -149,6 +179,21 @@ export const authorize = (allowedRoles: string[]) => {
 
 /**
  * High-security RBAC middleware for sensitive operations
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const authorizeHighSecurity = (allowedRoles: string[], resource: string, action: string) => {
   return enhancedAuthorize({
@@ -172,6 +217,21 @@ export const authorizeHighSecurity = (allowedRoles: string[], resource: string, 
 /**
  * Financial operations RBAC middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const authorizeFinancial = (allowedRoles: string[], action: string) => {
   return enhancedAuthorize({
     allowedRoles,
@@ -190,6 +250,21 @@ export const authorizeFinancial = (allowedRoles: string[], action: string) => {
 
 /**
  * HR operations RBAC middleware
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export const authorizeHR = (allowedRoles: string[], action: string) => {
   return enhancedAuthorize({

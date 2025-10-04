@@ -19,6 +19,21 @@ interface AccessibleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
  * Accessible Button Component
  * Provides full WCAG 2.1 AA compliance with keyboard navigation and screen reader support
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
   ({
     children,

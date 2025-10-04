@@ -75,6 +75,21 @@ interface MedicationAdminFormProps {
   requiresSignature?: boolean
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const MedicationAdminForm: React.FC<MedicationAdminFormProps> = ({
   medication,
   residentId,

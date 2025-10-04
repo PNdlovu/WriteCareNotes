@@ -260,6 +260,21 @@ interface InventoryManagementProps {
   compactView?: boolean;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const InventoryManagement: React.FC<InventoryManagementProps> = ({
   organizationId,
   onStockAlert,

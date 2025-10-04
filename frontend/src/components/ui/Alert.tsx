@@ -25,6 +25,21 @@ const alertIcons = {
   danger: X,
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const Alert: React.FC<AlertProps> = ({
   className,
   variant = 'info',
@@ -54,6 +69,21 @@ export const Alert: React.FC<AlertProps> = ({
   );
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const AlertDescription: React.FC<AlertDescriptionProps> = ({
   className,
   children,

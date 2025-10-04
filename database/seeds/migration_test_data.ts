@@ -829,6 +829,21 @@ async function seedMigrationPipelines(knex: Knex): Promise<void> {
 
 // Additional seeded data for edge cases and testing scenarios
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const migrationTestScenarios = {
   // Data quality scenarios
   poorQualityData: {
@@ -898,6 +913,21 @@ export const migrationTestScenarios = {
 };
 
 // Export additional test data generators
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const testDataGenerators = {
   generateResidentData: (count: number) => {
     const residents = [];

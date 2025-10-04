@@ -22,6 +22,21 @@ export interface RedisConfig {
   commandTimeout: number;
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const redisConfig: RedisConfig = {
   host: process.env['REDIS_HOST'] || 'localhost',
   port: parseInt(process.env['REDIS_PORT'] || '6379'),

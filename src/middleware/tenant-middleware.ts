@@ -17,6 +17,21 @@ import { AuthenticatedRequest } from './role-check-middleware';
 /**
  * Tenant isolation middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const tenantMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {

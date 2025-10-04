@@ -2,6 +2,21 @@ import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './auth-middleware';
 import { logger } from '../utils/logger';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const authorize = (allowedRoles: string[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {

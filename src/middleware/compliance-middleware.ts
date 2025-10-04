@@ -17,6 +17,21 @@ import { HealthcareLogger } from '@/utils/logger';
 /**
  * Compliance monitoring middleware
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const complianceMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   // Add compliance headers
   res.setHeader('x-content-type-options', 'nosniff');

@@ -1,6 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import { CreatePilotDto, PilotFeedbackDto } from '../dto/pilot.dto';
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const validatePilotRegistration = (req: Request, res: Response, next: NextFunction) => {
   const { careHomeName, location, region, size, type, contactEmail, contactPhone } = req.body;
 
@@ -79,6 +94,21 @@ export const validatePilotRegistration = (req: Request, res: Response, next: Nex
   next();
 };
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const validatePilotFeedback = (req: Request, res: Response, next: NextFunction) => {
   const { tenantId, module, description, severity, suggestedFix, submittedBy } = req.body;
 

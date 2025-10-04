@@ -561,4 +561,19 @@ export class AgentAuditService {
 }
 
 // Export alias for backward compatibility
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const AuditService = AgentAuditService;

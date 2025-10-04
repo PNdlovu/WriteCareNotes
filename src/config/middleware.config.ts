@@ -79,6 +79,21 @@ export interface MiddlewareConfig {
   };
 }
 
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const middlewareConfig: MiddlewareConfig = {
   security: {
     csrf: {

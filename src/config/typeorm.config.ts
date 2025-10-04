@@ -23,6 +23,21 @@ import { VideoCall } from '../entities/communication/VideoCall';
 import { ZeroTrustSecurity } from '../entities/zero-trust/ZeroTrustSecurity';
 
 // TypeORM DataSource configuration
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const AppDataSource = new DataSource({
   type: 'postgres',
   host: process.env['DB_HOST'] || 'localhost',
@@ -60,6 +75,21 @@ export const AppDataSource = new DataSource({
 });
 
 // Initialize the DataSource
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const initializeDatabase = async (): Promise<void> => {
   try {
     if (!AppDataSource.isInitialized) {

@@ -75,6 +75,21 @@ const upload = multer({
 /**
  * File upload middleware with security validation
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export const fileUploadMiddleware = (req: Request, res: Response, next: NextFunction) => {
   upload.single('file')(req, res, async (err) => {
     try {

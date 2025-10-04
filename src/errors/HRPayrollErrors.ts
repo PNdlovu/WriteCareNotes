@@ -589,6 +589,21 @@ export class HRSystemIntegrationError extends HRPayrollBaseError {
 /**
  * Utility function to create standardized error responses
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function createHRErrorResponse(
   error: HRPayrollBaseError,
   includeStackTrace: boolean = false
@@ -605,6 +620,21 @@ export function createHRErrorResponse(
 /**
  * Utility function to determine if an error is retryable
  */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
 export function isRetryableHRError(error: HRPayrollBaseError): boolean {
   const retryableErrorCodes = [
     'PAYROLL_DATABASE_TIMEOUT',
@@ -619,6 +649,21 @@ export function isRetryableHRError(error: HRPayrollBaseError): boolean {
 
 /**
  * Utility function to get error severity level
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
+ */
+/**
+ * TODO: Add proper documentation
  */
 export function getHRErrorSeverity(error: HRPayrollBaseError): 'low' | 'medium' | 'high' | 'critical' {
   const criticalErrors = [

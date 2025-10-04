@@ -17,7 +17,12 @@
     "compliance:check": "ts-node scripts/compliance-checker.ts",
     "compliance:fix": "ts-node scripts/compliance-fixer.ts",
     "compliance:report": "npm run compliance:check && start reports/british-isles-compliance-report.md",
-    "compliance:ci": "ts-node scripts/compliance-checker.ts --ci"
+    "compliance:ci": "ts-node scripts/compliance-checker.ts --ci",
+    "completion:scan": "ts-node scripts/completion-agent.ts",
+    "completion:force": "ts-node scripts/completion-agent.ts --force-fix",
+    "completion:report": "ts-node scripts/completion-agent.ts && start MODULE_CLOSURE_TRACKER.md",
+    "enterprise:validate": "npm run compliance:check && npm run completion:scan && npm run build",
+    "enterprise:deploy": "npm run enterprise:validate && npm run build:production"
   },
   "keywords": [
     "healthcare",
