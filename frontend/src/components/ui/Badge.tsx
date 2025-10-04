@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'secondary';
+  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'secondary' | 'destructive' | 'info' | 'error';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
 }
@@ -13,6 +13,9 @@ const badgeVariants = {
   warning: 'badge-warning',
   danger: 'badge-danger',
   secondary: 'bg-gray-100 text-gray-800',
+  destructive: 'badge-danger',
+  info: 'bg-blue-100 text-blue-800',
+  error: 'badge-danger',
 };
 
 const badgeSizes = {

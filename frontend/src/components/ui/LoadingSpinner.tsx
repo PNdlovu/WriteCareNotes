@@ -3,7 +3,7 @@ import { cn } from '../../utils/cn';
 import { Loader2 } from 'lucide-react';
 
 interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'large';
   text?: string;
 }
 
@@ -12,6 +12,7 @@ const spinnerSizes = {
   md: 'h-6 w-6',
   lg: 'h-8 w-8',
   xl: 'h-12 w-12',
+  large: 'h-12 w-12',
 };
 
 /**

@@ -17,9 +17,10 @@
  */
 
 // Core Resident Management Components
-export { ResidentDashboard } from './ResidentDashboard';
-export { ResidentProfile } from './ResidentProfile';
-export { ResidentAdmission } from './ResidentAdmission';
+// Note: These components were removed due to Material-UI dependencies
+// export { ResidentDashboard } from './ResidentDashboard';
+// export { ResidentProfile } from './ResidentProfile';
+// export { ResidentAdmission } from './ResidentAdmission';
 
 // Additional components to be implemented:
 // export { CarePlanManagement } from './CarePlanManagement';

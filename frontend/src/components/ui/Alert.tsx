@@ -3,7 +3,7 @@ import { cn } from '../../utils/cn';
 import { AlertTriangle, CheckCircle, Info, X } from 'lucide-react';
 
 interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'info' | 'success' | 'warning' | 'danger';
+  variant?: 'info' | 'success' | 'warning' | 'danger' | 'error' | 'destructive';
   children: React.ReactNode;
 }
 
@@ -16,6 +16,8 @@ const alertVariants = {
   success: 'alert-success',
   warning: 'alert-warning',
   danger: 'alert-danger',
+  error: 'alert-danger',
+  destructive: 'alert-danger',
 };
 
 const alertIcons = {
@@ -23,6 +25,8 @@ const alertIcons = {
   success: CheckCircle,
   warning: AlertTriangle,
   danger: X,
+  error: X,
+  destructive: X,
 };
 
 /**

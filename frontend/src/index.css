@@ -3,90 +3,185 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Enterprise Care Home Theme - Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 200 98% 39%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 200 98% 39%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 200 98% 39%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 200 98% 39%;
+  }
+
   html {
     font-family: 'Inter', system-ui, sans-serif;
   }
   
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
   }
 
   * {
-    @apply border-gray-200;
+    border-color: hsl(var(--border));
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: colors 150ms;
+  }
+  
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--primary));
+  }
+  
+  .btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  
+  .btn-primary:hover {
+    background-color: hsl(var(--primary) / 0.9);
   }
   
   .btn-secondary {
-    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300;
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
   }
   
-  .btn-danger {
-    @apply bg-danger-600 text-white hover:bg-danger-700 active:bg-danger-800;
+  .btn-secondary:hover {
+    background-color: hsl(var(--secondary) / 0.8);
   }
   
-  .btn-success {
-    @apply bg-healthcare-600 text-white hover:bg-healthcare-700 active:bg-healthcare-800;
-  }
-
   .card {
-    @apply bg-white rounded-lg border shadow-sm;
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   }
 
   .form-input {
-    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm;
+    display: block;
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid hsl(var(--border));
+    background-color: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
   }
 
-  .form-label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
+  .form-input:focus {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
   }
 
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 
   .badge-primary {
-    @apply bg-primary-100 text-primary-800;
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
   }
 
   .badge-success {
-    @apply bg-healthcare-100 text-healthcare-800;
+    background-color: rgb(220 252 231);
+    color: rgb(22 101 52);
   }
 
   .badge-warning {
-    @apply bg-warning-100 text-warning-800;
+    background-color: rgb(254 249 195);
+    color: rgb(133 77 14);
   }
 
   .badge-danger {
-    @apply bg-danger-100 text-danger-800;
+    background-color: rgb(254 226 226);
+    color: rgb(153 27 27);
   }
 
   .alert {
-    @apply rounded-md p-4;
+    border-radius: 0.375rem;
+    padding: 1rem;
   }
 
   .alert-info {
-    @apply bg-blue-50 border border-blue-200 text-blue-800;
+    background-color: rgb(239 246 255);
+    border: 1px solid rgb(191 219 254);
+    color: rgb(30 64 175);
   }
 
   .alert-success {
-    @apply bg-healthcare-50 border border-healthcare-200 text-healthcare-800;
+    background-color: rgb(240 253 244);
+    border: 1px solid rgb(187 247 208);
+    color: rgb(22 101 52);
   }
 
   .alert-warning {
-    @apply bg-warning-50 border border-warning-200 text-warning-800;
+    background-color: rgb(254 252 232);
+    border: 1px solid rgb(254 240 138);
+    color: rgb(133 77 14);
   }
 
   .alert-danger {
-    @apply bg-danger-50 border border-danger-200 text-danger-800;
+    background-color: rgb(254 242 242);
+    border: 1px solid rgb(252 165 165);
+    color: rgb(153 27 27);
   }
 }
 
@@ -101,5 +196,48 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .enterprise-shadow {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .care-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%);
+  }
+
+  .home-gradient {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  }
+
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
