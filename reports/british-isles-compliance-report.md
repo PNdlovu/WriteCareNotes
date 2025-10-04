@@ -1,10 +1,10 @@
 # British Isles Care Home Compliance Report
-Generated: 2025-10-04T09:19:43.601Z
+Generated: 2025-10-04T14:44:38.447Z
 
 ## 🎯 Executive Summary
 
-- **Total Files Analyzed**: 945
-- **Compliant Files**: 233
+- **Total Files Analyzed**: 948
+- **Compliant Files**: 237
 - **Files with Missing Requirements**: 0
 - **Jurisdictions Covered**: 8/8
 - **Critical Issues**: 0
@@ -31,8 +31,8 @@ Generated: 2025-10-04T09:19:43.601Z
 
 ## 🚀 Next Steps
 
-- 📊 Total files scanned: 945
-- ✅ Files with compliance evidence: 233
+- 📊 Total files scanned: 948
+- ✅ Files with compliance evidence: 237
 - ❌ Missing compliance requirements: 0
 - 🏴󠁧󠁢󠁪󠁥󠁲󠁿 Jurisdictions covered: England, Northern Ireland, Scotland, All British Isles, Jersey, Wales, Guernsey, Isle of Man
 - 🔧 Critical issues to address: 0
