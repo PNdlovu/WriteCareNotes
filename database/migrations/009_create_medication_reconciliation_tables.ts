@@ -175,15 +175,15 @@ export class CreateMedicationReconciliationTables1704067200009 implements Migrat
             comment: 'Soft delete timestamp'
           }
         ],
-        indices: [
-          new Index('idx_reconciliation_resident_org', ['resident_id', 'organization_id']),
-          new Index('idx_reconciliation_type_date', ['reconciliation_type', 'reconciliation_date']),
-          new Index('idx_reconciliation_status', ['status']),
-          new Index('idx_reconciliation_performed_by', ['performed_by']),
-          new Index('idx_reconciliation_reviewed_by', ['reviewed_by']),
-          new Index('idx_reconciliation_created_at', ['created_at']),
-          new Index('idx_reconciliation_organization', ['organization_id']),
-          new Index('idx_reconciliation_deleted_at', ['deleted_at'])
+        checks: [
+          {
+            name: 'ck_reconciliation_status_valid',
+            expression: "status IN ('in_progress', 'completed', 'requires_review', 'approved')"
+          },
+          {
+            name: 'ck_reconciliation_type_valid', 
+            expression: "reconciliation_type IN ('admission', 'discharge', 'transfer', 'periodic_review')"
+          }
         ]
       }),
       true
@@ -292,14 +292,6 @@ export class CreateMedicationReconciliationTables1704067200009 implements Migrat
             default: "'[]'::jsonb",
             comment: 'Compliance-related flags and metadata'
           }
-        ],
-        indices: [
-          new Index('idx_reconciliation_audit_reconciliation_id', ['reconciliation_id']),
-          new Index('idx_reconciliation_audit_action_type', ['action_type']),
-          new Index('idx_reconciliation_audit_performed_by', ['performed_by']),
-          new Index('idx_reconciliation_audit_performed_at', ['performed_at']),
-          new Index('idx_reconciliation_audit_organization', ['organization_id']),
-          new Index('idx_reconciliation_audit_correlation_id', ['correlation_id'])
         ]
       }),
       true
@@ -370,65 +362,61 @@ export class CreateMedicationReconciliationTables1704067200009 implements Migrat
             isNullable: false,
             comment: 'Organization identifier'
           }
-        ],
-        indices: [
-          new Index('idx_reconciliation_metrics_reconciliation_id', ['reconciliation_id']),
-          new Index('idx_reconciliation_metrics_type', ['metric_type']),
-          new Index('idx_reconciliation_metrics_recorded_at', ['recorded_at']),
-          new Index('idx_reconciliation_metrics_organization', ['organization_id'])
         ]
       }),
       true
     );
 
-    // Create foreign key constraints
-    await queryRunner.createForeignKey(
-      'medication_reconciliation_records',
-      new ForeignKey({
-        columnNames: ['resident_id'],
-        referencedTableName: 'residents',
-        referencedColumnNames: ['id'],
-        onDelete: 'RESTRICT',
-        onUpdate: 'CASCADE',
-        name: 'fk_reconciliation_resident'
-      })
-    );
+    // Create indexes for all tables
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_resident_org ON medication_reconciliation_records (resident_id, organization_id);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_type_date ON medication_reconciliation_records (reconciliation_type, reconciliation_date);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_status ON medication_reconciliation_records (status);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_performed_by ON medication_reconciliation_records (performed_by);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_reviewed_by ON medication_reconciliation_records (reviewed_by);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_created_at ON medication_reconciliation_records (created_at);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_organization ON medication_reconciliation_records (organization_id);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_deleted_at ON medication_reconciliation_records (deleted_at);`);
+    
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_audit_reconciliation_id ON medication_reconciliation_audit (reconciliation_id);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_audit_action_type ON medication_reconciliation_audit (action_type);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_audit_performed_by ON medication_reconciliation_audit (performed_by);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_audit_performed_at ON medication_reconciliation_audit (performed_at);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_audit_organization ON medication_reconciliation_audit (organization_id);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_audit_correlation_id ON medication_reconciliation_audit (correlation_id);`);
+    
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_metrics_reconciliation_id ON medication_reconciliation_metrics (reconciliation_id);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_metrics_type ON medication_reconciliation_metrics (metric_type);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_metrics_recorded_at ON medication_reconciliation_metrics (recorded_at);`);
+    await queryRunner.query(`CREATE INDEX idx_reconciliation_metrics_organization ON medication_reconciliation_metrics (organization_id);`);
 
-    await queryRunner.createForeignKey(
-      'medication_reconciliation_records',
-      new ForeignKey({
-        columnNames: ['organization_id'],
-        referencedTableName: 'organizations',
-        referencedColumnNames: ['id'],
-        onDelete: 'RESTRICT',
-        onUpdate: 'CASCADE',
-        name: 'fk_reconciliation_organization'
-      })
-    );
+    // Create foreign key constraints using SQL
+    await queryRunner.query(`
+      ALTER TABLE medication_reconciliation_records
+      ADD CONSTRAINT fk_reconciliation_resident
+      FOREIGN KEY (resident_id) REFERENCES residents(id)
+      ON DELETE RESTRICT ON UPDATE CASCADE;
+    `);
 
-    await queryRunner.createForeignKey(
-      'medication_reconciliation_audit',
-      new ForeignKey({
-        columnNames: ['reconciliation_id'],
-        referencedTableName: 'medication_reconciliation_records',
-        referencedColumnNames: ['id'],
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        name: 'fk_reconciliation_audit_reconciliation'
-      })
-    );
+    await queryRunner.query(`
+      ALTER TABLE medication_reconciliation_records
+      ADD CONSTRAINT fk_reconciliation_organization
+      FOREIGN KEY (organization_id) REFERENCES organizations(id)
+      ON DELETE RESTRICT ON UPDATE CASCADE;
+    `);
 
-    await queryRunner.createForeignKey(
-      'medication_reconciliation_metrics',
-      new ForeignKey({
-        columnNames: ['reconciliation_id'],
-        referencedTableName: 'medication_reconciliation_records',
-        referencedColumnNames: ['id'],
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        name: 'fk_reconciliation_metrics_reconciliation'
-      })
-    );
+    await queryRunner.query(`
+      ALTER TABLE medication_reconciliation_audit
+      ADD CONSTRAINT fk_reconciliation_audit_reconciliation
+      FOREIGN KEY (reconciliation_id) REFERENCES medication_reconciliation_records(id)
+      ON DELETE CASCADE ON UPDATE CASCADE;
+    `);
+
+    await queryRunner.query(`
+      ALTER TABLE medication_reconciliation_metrics
+      ADD CONSTRAINT fk_reconciliation_metrics_reconciliation
+      FOREIGN KEY (reconciliation_id) REFERENCES medication_reconciliation_records(id)
+      ON DELETE CASCADE ON UPDATE CASCADE;
+    `);
 
     // Create triggers for automatic timestamp updates
     await queryRunner.query(`
@@ -576,25 +564,196 @@ export class CreateMedicationReconciliationTables1704067200009 implements Migrat
       $$ language 'plpgsql';
     `);
 
-    // Add comments for documentation
+    // Add additional enterprise constraints and validations
+    await queryRunner.query(`
+      ALTER TABLE medication_reconciliation_records
+      ADD CONSTRAINT ck_reconciliation_dates_logical
+      CHECK (reconciliation_date <= CURRENT_TIMESTAMP AND reconciliation_date >= created_at);
+    `);
+
+    await queryRunner.query(`
+      ALTER TABLE medication_reconciliation_records
+      ADD CONSTRAINT ck_reconciliation_status_transition
+      CHECK (
+        (status = 'in_progress' AND reviewed_by IS NULL) OR
+        (status IN ('completed', 'requires_review', 'approved') AND performed_by IS NOT NULL)
+      );
+    `);
+
+    // Create materialized view for comprehensive reconciliation reporting
+    await queryRunner.query(`
+      CREATE MATERIALIZED VIEW medication_reconciliation_dashboard AS
+      SELECT 
+        organization_id,
+        DATE_TRUNC('month', reconciliation_date) as reconciliation_month,
+        reconciliation_type,
+        status,
+        COUNT(*) as total_reconciliations,
+        COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_count,
+        COUNT(CASE WHEN status = 'approved' THEN 1 END) as approved_count,
+        COUNT(CASE WHEN jsonb_array_length(discrepancies) > 0 THEN 1 END) as reconciliations_with_discrepancies,
+        COUNT(CASE WHEN pharmacist_review IS NOT NULL THEN 1 END) as pharmacist_reviews,
+        AVG(EXTRACT(EPOCH FROM (updated_at - created_at))/60) as avg_completion_time_minutes,
+        AVG(jsonb_array_length(discrepancies)) as avg_discrepancies_per_reconciliation,
+        MAX(jsonb_array_length(discrepancies)) as max_discrepancies,
+        SUM(CASE WHEN status = 'requires_review' THEN 1 ELSE 0 END) as pending_reviews,
+        SUM(CASE WHEN review_date < CURRENT_DATE THEN 1 ELSE 0 END) as overdue_reviews
+      FROM medication_reconciliation_records
+      WHERE deleted_at IS NULL
+      GROUP BY organization_id, DATE_TRUNC('month', reconciliation_date), reconciliation_type, status;
+    `);
+
+    await queryRunner.query(`
+      CREATE UNIQUE INDEX idx_reconciliation_dashboard_unique ON medication_reconciliation_dashboard 
+      (organization_id, reconciliation_month, reconciliation_type, status);
+    `);
+
+    // Create function for automated compliance checking
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION check_reconciliation_compliance(
+        p_organization_id varchar(255),
+        p_period_start timestamp with time zone,
+        p_period_end timestamp with time zone
+      )
+      RETURNS jsonb AS $$
+      DECLARE
+        compliance_report jsonb;
+        total_required integer;
+        total_completed integer;
+        overdue_count integer;
+        discrepancy_rate decimal;
+      BEGIN
+        -- Calculate compliance metrics
+        SELECT 
+          COUNT(*),
+          COUNT(CASE WHEN status IN ('completed', 'approved') THEN 1 END),
+          COUNT(CASE WHEN status = 'requires_review' AND review_date < CURRENT_DATE THEN 1 END),
+          AVG(jsonb_array_length(discrepancies))
+        INTO total_required, total_completed, overdue_count, discrepancy_rate
+        FROM medication_reconciliation_records
+        WHERE organization_id = p_organization_id
+          AND reconciliation_date BETWEEN p_period_start AND p_period_end
+          AND deleted_at IS NULL;
+
+        -- Build compliance report
+        compliance_report := jsonb_build_object(
+          'organization_id', p_organization_id,
+          'period_start', p_period_start,
+          'period_end', p_period_end,
+          'total_reconciliations', COALESCE(total_required, 0),
+          'completed_reconciliations', COALESCE(total_completed, 0),
+          'completion_rate', CASE WHEN total_required > 0 THEN (total_completed::decimal / total_required * 100) ELSE 0 END,
+          'overdue_reviews', COALESCE(overdue_count, 0),
+          'average_discrepancies', COALESCE(discrepancy_rate, 0),
+          'compliance_status', CASE 
+            WHEN total_required = 0 THEN 'no_data'
+            WHEN (total_completed::decimal / total_required) >= 0.95 AND overdue_count = 0 THEN 'compliant'
+            WHEN (total_completed::decimal / total_required) >= 0.80 THEN 'mostly_compliant'
+            ELSE 'non_compliant'
+          END,
+          'generated_at', CURRENT_TIMESTAMP
+        );
+
+        RETURN compliance_report;
+      END;
+      $$ language 'plpgsql';
+    `);
+
+    // Create function for automated quality metrics calculation
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION calculate_reconciliation_quality_metrics(
+        p_reconciliation_id varchar(255)
+      )
+      RETURNS void AS $$
+      DECLARE
+        rec_record record;
+        completion_time_minutes integer;
+        discrepancy_count integer;
+        critical_issues_count integer;
+      BEGIN
+        -- Get reconciliation record
+        SELECT * INTO rec_record
+        FROM medication_reconciliation_records
+        WHERE id = p_reconciliation_id;
+
+        IF NOT FOUND THEN
+          RAISE EXCEPTION 'Reconciliation record not found: %', p_reconciliation_id;
+        END IF;
+
+        -- Calculate metrics
+        completion_time_minutes := EXTRACT(EPOCH FROM (rec_record.updated_at - rec_record.created_at)) / 60;
+        discrepancy_count := jsonb_array_length(rec_record.discrepancies);
+        
+        -- Count critical issues (high-risk discrepancies)
+        SELECT COUNT(*)
+        INTO critical_issues_count
+        FROM jsonb_array_elements(rec_record.discrepancies) AS d
+        WHERE d->>'severity' IN ('high', 'critical');
+
+        -- Insert metrics
+        INSERT INTO medication_reconciliation_metrics (
+          reconciliation_id, metric_type, metric_value, metric_unit, 
+          metric_metadata, organization_id
+        ) VALUES
+        (p_reconciliation_id, 'completion_time', completion_time_minutes, 'minutes', 
+         jsonb_build_object('calculated_at', CURRENT_TIMESTAMP), rec_record.organization_id),
+        (p_reconciliation_id, 'discrepancy_count', discrepancy_count, 'count',
+         jsonb_build_object('calculated_at', CURRENT_TIMESTAMP), rec_record.organization_id),
+        (p_reconciliation_id, 'critical_issues_count', critical_issues_count, 'count',
+         jsonb_build_object('calculated_at', CURRENT_TIMESTAMP), rec_record.organization_id)
+        ON CONFLICT (reconciliation_id, metric_type) DO UPDATE SET
+          metric_value = EXCLUDED.metric_value,
+          metric_metadata = EXCLUDED.metric_metadata,
+          recorded_at = CURRENT_TIMESTAMP;
+
+      END;
+      $$ language 'plpgsql';
+    `);
+
+    // Create trigger to automatically calculate quality metrics
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION trigger_calculate_quality_metrics()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        IF TG_OP = 'UPDATE' AND NEW.status IN ('completed', 'approved') AND OLD.status != NEW.status THEN
+          PERFORM calculate_reconciliation_quality_metrics(NEW.id);
+        END IF;
+        RETURN NEW;
+      END;
+      $$ language 'plpgsql';
+    `);
+
+    await queryRunner.query(`
+      CREATE TRIGGER trigger_reconciliation_quality_metrics
+        AFTER UPDATE ON medication_reconciliation_records
+        FOR EACH ROW
+        EXECUTE FUNCTION trigger_calculate_quality_metrics();
+    `);
+
+    // Add comprehensive documentation comments
     await queryRunner.query(`
       COMMENT ON TABLE medication_reconciliation_records IS 
-      'Comprehensive medication reconciliation records supporting admission, discharge, transfer, and periodic review processes with full audit trail and compliance tracking';
+      'Enterprise-grade medication reconciliation records supporting admission, discharge, transfer, and periodic review processes with full audit trail, compliance tracking, and automated quality metrics calculation.';
     `);
 
     await queryRunner.query(`
       COMMENT ON TABLE medication_reconciliation_audit IS 
-      'Detailed audit trail for all medication reconciliation activities ensuring regulatory compliance and forensic capabilities';
+      'Comprehensive audit trail for all medication reconciliation activities ensuring regulatory compliance, forensic capabilities, and real-time monitoring.';
     `);
 
     await queryRunner.query(`
       COMMENT ON TABLE medication_reconciliation_metrics IS 
-      'Performance metrics and analytics for medication reconciliation processes supporting quality improvement initiatives';
+      'Performance metrics and analytics for medication reconciliation processes supporting quality improvement initiatives and compliance reporting.';
     `);
 
     await queryRunner.query(`
       COMMENT ON MATERIALIZED VIEW medication_reconciliation_analytics IS 
-      'Pre-aggregated analytics for medication reconciliation reporting and dashboard functionality';
+      'Pre-aggregated analytics for medication reconciliation reporting and dashboard functionality with monthly trending and performance indicators.';
+    `);
+
+    await queryRunner.query(`
+      COMMENT ON MATERIALIZED VIEW medication_reconciliation_dashboard IS 
+      'Comprehensive dashboard view providing real-time medication reconciliation compliance and quality metrics for organizational oversight.';
     `);
   }
 

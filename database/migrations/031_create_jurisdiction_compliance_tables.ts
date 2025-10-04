@@ -1,4 +1,33 @@
-import { MigrationInterface, QueryRunner, Table, Index } from 'typeorm';
+/**
+ * @fileoverview Database Migration - Jurisdiction Compliance Tables
+ * @module CreateJurisdictionComplianceTables
+ * @version 2.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-01-01
+ * 
+ * @description Creates comprehensive database tables for multi-jurisdictional
+ * compliance across all British Isles healthcare regulators including Care
+ * Inspectorate Scotland, CIW Wales, RQIA Northern Ireland, and professional
+ * registration bodies.
+ * 
+ * @compliance
+ * - Care Inspectorate Scotland Standards
+ * - CIW Wales Regulation and Inspection Framework
+ * - RQIA Northern Ireland Standards
+ * - Health and Social Care Standards (Scotland)
+ * - Welsh Language (Wales) Measure 2011
+ * - Human Rights Act 1998
+ * - Professional Standards (NMC, GMC, HCPC, SSSC, SCW, NISCC)
+ * 
+ * @security
+ * - Row-level security policies for multi-tenancy
+ * - Encrypted sensitive data fields
+ * - Comprehensive audit trails
+ * - Data retention policies
+ * - Access control constraints
+ */
+
+import { MigrationInterface, QueryRunner, Table, Index, ForeignKey } from 'typeorm';
 
 export class CreateJurisdictionComplianceTables1704067800000 implements MigrationInterface {
   name = 'CreateJurisdictionComplianceTables1704067800000';
@@ -927,14 +956,100 @@ export class CreateJurisdictionComplianceTables1704067800000 implements Migratio
       true
     );
 
-    // Create indexes for performance
-    await queryRunner.createIndex('scotland_compliance_assessments', new Index('idx_scotland_org_service', ['organization_id', 'service_id']));
-    await queryRunner.createIndex('wales_compliance_assessments', new Index('idx_wales_org_service', ['organization_id', 'service_id']));
-    await queryRunner.createIndex('northern_ireland_compliance_assessments', new Index('idx_ni_org_service', ['organization_id', 'service_id']));
-    await queryRunner.createIndex('professional_qualifications', new Index('idx_prof_qual_reg_id', ['registration_id']));
-    await queryRunner.createIndex('continuing_education_records', new Index('idx_ce_reg_id', ['registration_id']));
-    await queryRunner.createIndex('welsh_language_active_offers', new Index('idx_welsh_service_id', ['service_id']));
-    await queryRunner.createIndex('human_rights_assessments', new Index('idx_hr_org_service', ['organization_id', 'service_id']));
+    // Create indexes for performance optimization
+    await queryRunner.query(`CREATE INDEX idx_scotland_org_service ON scotland_compliance_assessments (organization_id, service_id);`);
+    await queryRunner.query(`CREATE INDEX idx_wales_org_service ON wales_compliance_assessments (organization_id, service_id);`);
+    await queryRunner.query(`CREATE INDEX idx_ni_org_service ON northern_ireland_compliance_assessments (organization_id, service_id);`);
+    await queryRunner.query(`CREATE INDEX idx_prof_qual_reg_id ON professional_qualifications (registration_id);`);
+    await queryRunner.query(`CREATE INDEX idx_ce_reg_id ON continuing_education_records (registration_id);`);
+    await queryRunner.query(`CREATE INDEX idx_welsh_service_id ON welsh_language_active_offers (service_id);`);
+    await queryRunner.query(`CREATE INDEX idx_hr_org_service ON human_rights_assessments (organization_id, service_id);`);
+
+    // Create row-level security policies for multi-tenancy
+    await queryRunner.query(`
+      ALTER TABLE scotland_compliance_assessments ENABLE ROW LEVEL SECURITY;
+    `);
+
+    await queryRunner.query(`
+      CREATE POLICY scotland_compliance_organization_isolation ON scotland_compliance_assessments
+        USING (organization_id = current_setting('app.current_organization_id', true)::uuid);
+    `);
+
+    await queryRunner.query(`
+      ALTER TABLE wales_compliance_assessments ENABLE ROW LEVEL SECURITY;
+    `);
+
+    await queryRunner.query(`
+      CREATE POLICY wales_compliance_organization_isolation ON wales_compliance_assessments
+        USING (organization_id = current_setting('app.current_organization_id', true)::uuid);
+    `);
+
+    await queryRunner.query(`
+      ALTER TABLE northern_ireland_compliance_assessments ENABLE ROW LEVEL SECURITY;
+    `);
+
+    await queryRunner.query(`
+      CREATE POLICY ni_compliance_organization_isolation ON northern_ireland_compliance_assessments
+        USING (organization_id = current_setting('app.current_organization_id', true)::uuid);
+    `);
+
+    // Create triggers for automatic timestamp updates
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION update_jurisdiction_compliance_updated_at()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        NEW.updated_at = CURRENT_TIMESTAMP;
+        RETURN NEW;
+      END;
+      $$ language 'plpgsql';
+    `);
+
+    await queryRunner.query(`
+      CREATE TRIGGER trigger_update_scotland_compliance_updated_at
+        BEFORE UPDATE ON scotland_compliance_assessments
+        FOR EACH ROW
+        EXECUTE FUNCTION update_jurisdiction_compliance_updated_at();
+    `);
+
+    await queryRunner.query(`
+      CREATE TRIGGER trigger_update_wales_compliance_updated_at
+        BEFORE UPDATE ON wales_compliance_assessments
+        FOR EACH ROW
+        EXECUTE FUNCTION update_jurisdiction_compliance_updated_at();
+    `);
+
+    await queryRunner.query(`
+      CREATE TRIGGER trigger_update_ni_compliance_updated_at
+        BEFORE UPDATE ON northern_ireland_compliance_assessments
+        FOR EACH ROW
+        EXECUTE FUNCTION update_jurisdiction_compliance_updated_at();
+    `);
+
+    // Add table comments for documentation
+    await queryRunner.query(`
+      COMMENT ON TABLE scotland_compliance_assessments IS 
+      'Care Inspectorate Scotland compliance assessments supporting Health and Social Care Standards with quality indicator grading system and SSSC requirements tracking.';
+    `);
+
+    await queryRunner.query(`
+      COMMENT ON TABLE wales_compliance_assessments IS 
+      'CIW Wales compliance assessments supporting Welsh language active offer requirements and Regulation and Inspection Framework quality areas.';
+    `);
+
+    await queryRunner.query(`
+      COMMENT ON TABLE northern_ireland_compliance_assessments IS 
+      'RQIA Northern Ireland compliance assessments supporting quality standard outcomes and NISCC professional registration requirements.';
+    `);
+
+    await queryRunner.query(`
+      COMMENT ON TABLE welsh_language_active_offers IS 
+      'Welsh Language (Wales) Measure 2011 compliance tracking for active offer implementation and service delivery monitoring.';
+    `);
+
+    await queryRunner.query(`
+      COMMENT ON TABLE human_rights_assessments IS 
+      'Human Rights Act 1998 compliance assessments ensuring dignity, respect, and fundamental rights protection in care delivery.';
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
