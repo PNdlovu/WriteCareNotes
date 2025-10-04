@@ -4,14 +4,14 @@
 
 **Generated:** ${new Date().toISOString()}
 **System:** WriteCareNotes Enterprise Care Management Platform
-**Classification:** Healthcare Data Processing System
+**Classification:** Care Home Data Processing System
 **Compliance Scope:** CQC, NHS Digital, GDPR, WCAG 2.1 AA
 
 ---
 
 ## 🎯 Executive Summary
 
-WriteCareNotes has undergone comprehensive security verification to ensure enterprise-grade protection of healthcare data and compliance with UK healthcare regulations.
+WriteCareNotes has undergone comprehensive security verification to ensure enterprise-grade protection of care home data and compliance with UK care home regulations.
 
 ### 🏆 Security Status
 - **Overall Security Score:** 95.8%
@@ -29,7 +29,7 @@ WriteCareNotes has undergone comprehensive security verification to ensure enter
 ### Authentication & Authorization
 - **Multi-Factor Authentication (MFA):** ✅ Mandatory for all users
 - **Single Sign-On (SSO):** ✅ NHS Identity Integration
-- **Role-Based Access Control:** ✅ Healthcare-specific roles
+- **Role-Based Access Control:** ✅ Care-specific roles
 - **Session Management:** ✅ Secure token-based authentication
 - **Password Policy:** ✅ Enterprise-grade requirements
 

@@ -7,7 +7,7 @@
  * 
  * @description Creates comprehensive database tables for medication reconciliation
  * functionality including reconciliation records, discrepancies, resolutions,
- * and pharmacist reviews with full audit trail support.
+ * and pharmacist reviews with full audit trail support for care home environments.
  * 
  * @compliance
  * - NICE Clinical Guidelines CG76 - Medicines reconciliation

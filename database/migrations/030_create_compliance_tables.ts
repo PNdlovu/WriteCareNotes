@@ -7,7 +7,7 @@
  * 
  * @description Creates comprehensive database tables for enterprise-grade compliance
  * management including clinical risk assessments, safety case reports, DSPT assessments,
- * CQC compliance, professional registrations, and cyber security assessments.
+ * CQC compliance, professional registrations, and cyber security assessments for care home organizations.
  * 
  * @compliance
  * - CQC Regulation 17 - Good governance

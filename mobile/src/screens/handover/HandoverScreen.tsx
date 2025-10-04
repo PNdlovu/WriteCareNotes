@@ -6,7 +6,7 @@
  * @since 2025-01-01
  * 
  * @description Production-grade handover screen for managing shift transitions
- * in healthcare environments. Features comprehensive handover summaries,
+ * in care home environments. Features comprehensive handover summaries,
  * AI-powered content generation, real-time updates, and enterprise security.
  * 
  * @compliance

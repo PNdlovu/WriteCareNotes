@@ -6,7 +6,7 @@
  * @since 2025-01-01
  * 
  * @description Production-grade AI form assistant providing intelligent form completion,
- * validation suggestions, clinical decision support, and automated healthcare workflows.
+ * validation suggestions, clinical decision support, and automated care workflows.
  * Implements enterprise AI standards with comprehensive audit trails and compliance.
  * 
  * @security 

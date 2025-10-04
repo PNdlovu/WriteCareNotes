@@ -51,7 +51,7 @@ async function startServer() {
       console.log('  ✅ Audit Logging');
       console.log('  ✅ Error Handling');
       console.log('');
-      console.log('🏥 Healthcare Features:');
+      console.log('� Care Home Features:');
       console.log('  ✅ Medication Management');
       console.log('  ✅ NHS Integration');
       console.log('  ✅ Consent Management');

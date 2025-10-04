@@ -6,7 +6,7 @@
  * @since 2025-01-01
  * 
  * @description Production-grade family member onboarding service with comprehensive
- * security, audit logging, healthcare compliance, and enterprise error handling.
+ * security, audit logging, care home compliance, and enterprise error handling.
  * Supports multi-factor authentication, biometric verification, GDPR compliance,
  * and robust invitation management.
  * 
@@ -15,7 +15,7 @@
  * - CQC Regulation 10 - Dignity and respect
  * - ISO 27001 Information Security Management
  * - OWASP Mobile Security Best Practices
- * - Healthcare Professional Standards
+ * - Care Home Professional Standards
  * 
  * @security
  * - End-to-end encryption for sensitive data

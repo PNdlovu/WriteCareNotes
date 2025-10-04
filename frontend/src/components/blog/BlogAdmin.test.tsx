@@ -54,7 +54,7 @@ const mockPosts = [
     featured: true,
     viewCount: 150,
     categories: [
-      { id: 'cat1', name: 'Healthcare', color: '#3B82F6', posts: [] }
+      { id: 'cat1', name: 'Care Home', color: '#3B82F6', posts: [] }
     ],
     publishedAt: '2025-01-01T10:00:00Z',
     createdAt: '2025-01-01T10:00:00Z',
@@ -80,7 +80,7 @@ const mockPosts = [
 ];
 
 const mockCategories = [
-  { id: 'cat1', name: 'Healthcare', color: '#3B82F6', posts: [] },
+  { id: 'cat1', name: 'Care Home', color: '#3B82F6', posts: [] },
   { id: 'cat2', name: 'Medication', color: '#10B981', posts: [] },
   { id: 'cat3', name: 'Compliance', color: '#F59E0B', posts: [] }
 ];
@@ -140,7 +140,7 @@ describe('BlogAdmin Component', () => {
 
       // Check main elements
       expect(screen.getByText('Blog Administration')).toBeInTheDocument();
-      expect(screen.getByText('Manage healthcare content, articles, and educational resources')).toBeInTheDocument();
+      expect(screen.getByText('Manage care content, articles, and educational resources')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /New Post/i })).toBeInTheDocument();
     });
 
@@ -514,7 +514,7 @@ describe('BlogAdmin Component', () => {
 
       await waitFor(() => {
         // Check for descriptive text
-        expect(screen.getByText('Manage healthcare content, articles, and educational resources')).toBeInTheDocument();
+        expect(screen.getByText('Manage care content, articles, and educational resources')).toBeInTheDocument();
         
         // Check for proper labeling of interactive elements
         expect(screen.getByLabelText(/Search posts/i)).toBeInTheDocument();

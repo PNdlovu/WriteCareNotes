@@ -5,9 +5,9 @@
  * @author WriteCareNotes Team
  * @since 2025-01-01
  * 
- * @description Production-grade blog administration interface for healthcare content management.
+ * @description Production-grade blog administration interface for care content management.
  * Provides comprehensive blog post management with audit trails, compliance validation,
- * and accessibility features for healthcare content creators.
+ * and accessibility features for care content creators.
  * 
  * @compliance
  * - CQC Regulation 17 - Good governance
@@ -447,7 +447,7 @@ export const BlogAdmin: React.FC<BlogAdminProps> = ({
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Blog Administration</h1>
             <p className="text-gray-600 mt-1">
-              Manage healthcare content, articles, and educational resources
+              Manage care content, articles, and educational resources
             </p>
           </div>
           

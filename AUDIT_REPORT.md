@@ -5,13 +5,13 @@
 **Audit Period:** 2024 Q4 - 2025 Q1  
 **Report Generated:** ${new Date().toISOString()}  
 **Audit Type:** Comprehensive Enterprise System Audit  
-**Classification:** Internal Use - Healthcare Compliance  
+**Classification:** Internal Use - Care Home Compliance  
 
 ---
 
 ## 🎯 Executive Summary
 
-This comprehensive audit report covers the WriteCareNotes enterprise care management platform's compliance with healthcare regulations, data protection laws, and operational security standards.
+This comprehensive audit report covers the WriteCareNotes enterprise care management platform's compliance with care home regulations, data protection laws, and operational security standards.
 
 ### 🏆 Overall Audit Results
 - **Compliance Score:** 98.2% (Target: >95%)
@@ -30,7 +30,7 @@ This comprehensive audit report covers the WriteCareNotes enterprise care manage
 
 ---
 
-## 🏥 Healthcare Compliance Audit
+## � Care Home Compliance Audit
 
 ### CQC (Care Quality Commission) Compliance
 
@@ -87,7 +87,7 @@ This comprehensive audit report covers the WriteCareNotes enterprise care manage
 #### Article 25: Data Protection by Design and by Default
 - **Privacy by Design:** ✅ Embedded in system architecture
 - **Data Minimization:** ✅ Only necessary data collected and processed
-- **Purpose Limitation:** ✅ Data used only for stated healthcare purposes
+- **Purpose Limitation:** ✅ Data used only for stated care purposes
 - **Storage Limitation:** ✅ Automated data retention and deletion policies
 
 #### Article 32: Security of Processing

@@ -6,7 +6,7 @@
  * @since 2025-01-01
  * 
  * @description Creates comprehensive database tables for multi-jurisdictional
- * compliance across all British Isles healthcare regulators including Care
+ * compliance across all British Isles care home regulators including Care
  * Inspectorate Scotland, CIW Wales, RQIA Northern Ireland, and professional
  * registration bodies.
  * 

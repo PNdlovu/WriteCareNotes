@@ -5,15 +5,15 @@
  * @author WriteCareNotes Team
  * @since 2025-01-01
  * 
- * @description Production-grade biometric authentication service for healthcare workforce
+ * @description Production-grade biometric authentication service for care home workforce
  * management with comprehensive security, audit trails, and compliance features.
- * Implements enterprise security standards for sensitive healthcare data protection.
+ * Implements enterprise security standards for sensitive care home data protection.
  * 
  * @compliance
  * - ISO 27001 Information Security Management
  * - NIST Cybersecurity Framework
  * - GDPR and Data Protection Act 2018
- * - HIPAA Security Rule (US healthcare compliance)
+ * - Care Home Data Protection Standards
  * - CQC Regulation 17 - Good governance
  * - NHS Digital Security Standards
  * - OWASP Mobile Application Security
@@ -207,7 +207,7 @@ interface RateLimitConfig {
  * - Real-time security monitoring
  */
 export class BiometricService {
-  private readonly SERVICE_NAME = 'WriteCareNotes_Healthcare_Workforce';
+  private readonly SERVICE_NAME = 'WriteCareNotes_CareHome_Workforce';
   private readonly API_VERSION = '1.0.0';
   private readonly ENCRYPTION_ALGORITHM = 'AES-256-GCM';
   private readonly TOKEN_EXPIRY_MS = 15 * 60 * 1000; // 15 minutes

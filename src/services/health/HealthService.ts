@@ -7,7 +7,7 @@
  * 
  * @description Complete enterprise-grade health management service providing
  * comprehensive health monitoring, assessment tracking, vital signs management,
- * and full healthcare compliance with zero tolerance for placeholders.
+ * and full care home clinical compliance with zero tolerance for placeholders.
  */
 
 import { EventEmitter } from 'events';
@@ -105,7 +105,7 @@ export interface HealthSearchFilters {
 /**
  * Enterprise Health Management Service
  * 
- * Provides comprehensive health record management with full healthcare compliance,
+ * Provides comprehensive health record management with full care home clinical compliance,
  * assessment tracking, vital signs monitoring, and alert management.
  */
 export class HealthService extends EventEmitter {

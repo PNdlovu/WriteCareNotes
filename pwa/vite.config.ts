@@ -10,16 +10,16 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'WriteCareNotes - Healthcare Management',
+        name: 'WriteCareNotes - Care Home Management',
         short_name: 'WriteCareNotes',
-        description: 'Professional healthcare management system for British Isles care homes',
+        description: 'Professional care home management system for British Isles care homes',
         theme_color: '#1976d2',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',
         scope: '/',
         start_url: '/',
-        categories: ['healthcare', 'medical', 'business'],
+        categories: ['care-home', 'medical', 'business'],
         icons: [
           {
             src: 'pwa-192x192.png',

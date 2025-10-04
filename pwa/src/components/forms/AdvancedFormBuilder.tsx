@@ -5,7 +5,7 @@
  * @author WriteCareNotes Team
  * @since 2025-01-01
  * 
- * @description Production-grade form builder for healthcare environments with
+ * @description Production-grade form builder for care home environments with
  * enterprise-level validation, compliance checking, accessibility features,
  * and real-time AI assistance. Built for CQC, NHS Digital, and multi-jurisdiction
  * compliance requirements.
@@ -20,7 +20,7 @@
  * - WCAG 2.1 AA accessibility standards
  * - CQC Essential Standards compliance
  * - NHS Digital Technology Assessment Criteria
- * - Multi-jurisdiction healthcare regulations
+ * - Multi-jurisdiction care home regulations
  * 
  * @performance
  * - Lazy loading of form components
@@ -53,7 +53,7 @@ const auditTrailService = new (require('../../../../src/services/audit/AuditTrai
 const auditService = new AuditService(auditTrailService);
 const rbacService = new RoleBasedAccessService();
 
-// Type definitions for healthcare forms
+// Type definitions for care home forms
 interface FormField {
   fieldId: string;
   fieldType: 'text' | 'textarea' | 'number' | 'email' | 'date' | 'select' | 'radio' | 'checkbox' | 'file' | 'signature';
@@ -174,8 +174,8 @@ interface AdvancedFormBuilderProps {
  */
 const createEmptyForm = (userId: string): FormDefinition => ({
   formId: `form_${Date.now()}`,
-  title: 'New Healthcare Form',
-  description: 'A new form for healthcare data collection',
+  title: 'New Care Home Form',
+  description: 'A new form for care home data collection',
   version: '1.0.0',
   status: 'draft',
   pages: [
@@ -192,7 +192,7 @@ const createEmptyForm = (userId: string): FormDefinition => ({
     allowAnonymous: false,
     requireLogin: true,
     complianceLevel: 'enhanced',
-    dataRetention: 2555, // 7 years for healthcare
+    dataRetention: 2555, // 7 years for care home records
     gdprCompliant: true,
     accessibility: {
       wcagLevel: 'AA',

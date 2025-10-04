@@ -45,7 +45,7 @@ router.get('/v1/system/info', (req, res) => {
       'Role-Based Access Control',
       'Enterprise Database Schema',
       'AI Service Integration',
-      'Healthcare Compliance'
+      'Care Home Compliance'
     ]
   });
 });
@@ -95,7 +95,7 @@ router.get('/v1/api-discovery', (req, res) => {
       },
       health: '/api/health'
     },
-    documentation: 'Enterprise Healthcare Management System',
+    documentation: 'Enterprise Care Home Management System',
     lastUpdated: new Date().toISOString()
   };
 
@@ -105,10 +105,10 @@ router.get('/v1/api-discovery', (req, res) => {
 // Welcome message for the enterprise transformation
 router.get('/', (req, res) => {
   res.json({
-    message: '🏥 WriteCareNotes Enterprise Healthcare Management System',
+    message: '� WriteCareNotes Enterprise Care Home Management System',
     status: 'ENTERPRISE TRANSFORMATION COMPLETE ✅',
     version: '1.0.0 Enterprise',
-    description: 'Complete healthcare management platform with AI integration',
+    description: 'Complete care home management platform with AI integration',
     achievements: [
       '✅ Enterprise Database Schema - Complete with 20+ tables',
       '✅ TypeORM Entity Framework - Implemented with full relationships', 

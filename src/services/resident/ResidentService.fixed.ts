@@ -7,7 +7,7 @@ import { EventEmitter2 } from "eventemitter2";
  * @author Care Home Management Team
  * @since 2025-01-01
  * 
- * @description Complete resident management service with real healthcare operations,
+ * @description Complete resident management service with real care home operations,
  * GDPR compliance, audit trails, and comprehensive business logic.
  */
 

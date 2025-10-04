@@ -1,12 +1,12 @@
-# WriteCareNotes - AI-Native Healthcare Management Platform
+# WriteCareNotes - AI-Native Care Home Management Platform
 ## Complete Care Home Management System with 53+ Modules and 15+ AI Agents
 
 **Version:** 1.0.0  
 **Status:** ✅ **PRODUCTION READY**  
-**Compliance:** Full UK Healthcare Standards (CQC, NHS, GDPR)  
+**Compliance:** Full UK Care Home Standards (CQC, NHS, GDPR)  
 **AI Integration:** Complete AI-Native Platform  
 
-WriteCareNotes is the most comprehensive, AI-native healthcare management platform available for the British Isles. With **53+ production-ready modules** and **15+ specialized AI agents**, we deliver unprecedented automation, intelligence, and compliance capabilities for care home management.
+WriteCareNotes is the most comprehensive, AI-native care home management platform available for the British Isles. With **53+ production-ready modules** and **15+ specialized AI agents**, we deliver unprecedented automation, intelligence, and compliance capabilities for care home management.
 
 ## 🤖 **AI Agent Ecosystem (15+ Agents)**
 
@@ -17,7 +17,7 @@ WriteCareNotes is the most comprehensive, AI-native healthcare management platfo
 - **LLMIntegrationService** - Large language model integration
 - **OpenAIAdapter** - OpenAI API integration and management
 
-### **Healthcare-Specific Agents**
+### **Care-Specific Agents**
 - **PilotFeedbackAgent** - Recommendation-only feedback with audit logging
 - **TenantCareAssistantAIService** - Tenant-isolated care assistance
 - **ComplianceAgent** - Real-time compliance monitoring and alerts
@@ -33,7 +33,7 @@ WriteCareNotes is the most comprehensive, AI-native healthcare management platfo
 
 ## 🏥 **Complete Module Inventory (53+ Modules)**
 
-### **Core Healthcare Management (15 Modules)**
+### **Core Care Home Management (15 Modules)**
 - **Resident Management** - Complete resident lifecycle management
 - **Medication Management** - 11 controllers, 8 services with full prescription tracking
 - **Care Planning** - Digital care plans with AI-powered optimization
