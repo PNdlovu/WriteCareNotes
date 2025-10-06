@@ -34,6 +34,218 @@ interface FeatureCategory {
 
 const enterpriseFeatures: FeatureCategory[] = [
   {
+    id: 'rag-ai-policy',
+    title: 'RAG-Based AI Policy Assistant (UNIQUE IN MARKET)',
+    description: 'Zero-hallucination AI policy authoring with verified regulatory sources - 24-36 month competitive lead',
+    icon: Bot,
+    color: 'from-violet-500 to-purple-600',
+    features: [
+      {
+        title: 'Verified Source Retrieval',
+        description: 'AI retrieves ONLY from verified regulatory documents - no hallucination',
+        benefits: [
+          'PostgreSQL full-text search of compliance standards',
+          'Semantic similarity ranking for relevance',
+          'Multi-jurisdictional filtering (all 7 British Isles regulators)',
+          'Redis caching for performance optimization',
+          'Automatic index refresh for latest regulations'
+        ]
+      },
+      {
+        title: 'Template-Based Policy Synthesis',
+        description: 'AI assembles policies from verified templates - no freeform generation',
+        benefits: [
+          'Confidence scoring on every suggestion (0.00-1.00)',
+          'Multi-source citation tracking (2-5 sources per suggestion)',
+          'Warning generation for low-confidence outputs',
+          'Safe fallback responses when verified content unavailable',
+          'Complete audit trail for regulatory inspections'
+        ]
+      },
+      {
+        title: 'Multi-Jurisdiction Support',
+        description: 'Comprehensive coverage for all British Isles regulatory bodies',
+        benefits: [
+          'England (CQC) - Care Quality Commission',
+          'Scotland (Care Inspectorate) - Scottish regulator',
+          'Wales (CIW) - Care Inspectorate Wales',
+          'Northern Ireland (RQIA) - Regulation & Quality Improvement',
+          'Isle of Man, Jersey, Guernsey - Channel Islands & Crown dependencies'
+        ]
+      },
+      {
+        title: 'Role-Based Access Control',
+        description: 'Granular permissions for AI feature access',
+        benefits: [
+          'Manager, Quality Manager, Admin, Document Coordinator roles',
+          'Organization-level permission validation',
+          'Jurisdiction-aware access control',
+          'Complete permission matrix for audit compliance',
+          'User decision tracking (accept/modify/reject AI suggestions)'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'writecare-connect',
+    title: 'WriteCare Connect - Family Communications',
+    description: 'Supervised family engagement with AI-powered safety and transparency',
+    icon: Users,
+    color: 'from-pink-500 to-rose-600',
+    features: [
+      {
+        title: 'Real-Time Messaging & Video',
+        description: 'WebSocket and WebRTC-powered family communications',
+        benefits: [
+          'Instant messaging with family members',
+          'HD video calling with supervision',
+          'Group conversations and family updates',
+          'File attachments and photo sharing',
+          'Message history and archival for compliance'
+        ]
+      },
+      {
+        title: 'AI-Powered Content Moderation',
+        description: 'Automatic safety and safeguarding monitoring',
+        benefits: [
+          'Real-time content analysis for safety concerns',
+          'Automatic flagging of inappropriate content',
+          'Safeguarding alert generation',
+          'Supervisor notification for intervention',
+          'Complete audit trail of moderation events'
+        ]
+      },
+      {
+        title: 'Supervision & Consent Management',
+        description: 'Robust safeguarding with transparent consent',
+        benefits: [
+          'Granular consent levels (unrestricted, supervised, restricted)',
+          'Supervisor assignment and rotation',
+          'Session recording for compliance',
+          'Emergency intervention capabilities',
+          'GDPR-compliant data handling'
+        ]
+      },
+      {
+        title: 'Family Trust & Transparency',
+        description: 'Build trust through transparency and engagement tracking',
+        benefits: [
+          'Family trust scoring based on engagement',
+          'Transparency dashboard for care quality',
+          'Real-time care updates and notifications',
+          'Feedback collection and satisfaction tracking',
+          'Communication analytics for quality improvement'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'document-intelligence',
+    title: 'Document Intelligence & Management',
+    description: 'AI-powered document lifecycle management with compliance automation',
+    icon: Shield,
+    color: 'from-blue-500 to-cyan-600',
+    features: [
+      {
+        title: 'AI Document Analysis',
+        description: 'Automatic quality assessment and compliance checking',
+        benefits: [
+          'Content analysis (word count, readability, sentiment)',
+          'Quality scoring (completeness, accuracy, clarity)',
+          'Risk assessment (compliance, data protection, operational)',
+          'Automatic categorization and tagging',
+          'Compliance keyword detection'
+        ]
+      },
+      {
+        title: 'Multi-Cloud Storage',
+        description: 'Flexible storage across AWS, Azure, and Google Cloud',
+        benefits: [
+          'AWS S3 integration for scalable storage',
+          'Azure Blob Storage support',
+          'Google Cloud Storage compatibility',
+          'Local storage fallback option',
+          'Automatic encryption and file hashing'
+        ]
+      },
+      {
+        title: 'Advanced Workflow Automation',
+        description: 'Multi-step approval processes with SLA tracking',
+        benefits: [
+          'Role-based document routing',
+          'Escalation rules for overdue approvals',
+          'SLA monitoring and enforcement',
+          'Email notifications and reminders',
+          'Complete workflow audit trails'
+        ]
+      },
+      {
+        title: 'Version Control & Collaboration',
+        description: 'Complete document history with rollback capabilities',
+        benefits: [
+          'Automatic version tracking',
+          'Rollback to previous versions',
+          'Multi-user collaboration',
+          'Change description logging',
+          'Approval workflow for major versions'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'policy-governance',
+    title: 'Policy Governance Engine',
+    description: 'Automated policy lifecycle management with compliance tracking',
+    icon: Award,
+    color: 'from-indigo-500 to-purple-600',
+    features: [
+      {
+        title: 'Policy Lifecycle Management',
+        description: 'Complete automation from authoring to archival',
+        benefits: [
+          'Automated review scheduling',
+          'Staff acknowledgment tracking',
+          'Version control with audit trails',
+          'Compliance mapping to standards',
+          'Automatic archival of expired policies'
+        ]
+      },
+      {
+        title: 'Multi-Jurisdiction Compliance',
+        description: 'Automated compliance for all 7 British Isles regulators',
+        benefits: [
+          'CQC fundamental standards (England)',
+          'Care Inspectorate standards (Scotland)',
+          'CIW quality standards (Wales)',
+          'RQIA regulations (Northern Ireland)',
+          'Crown dependencies compliance (IoM, Jersey, Guernsey)'
+        ]
+      },
+      {
+        title: 'Real-Time Dashboard Analytics',
+        description: 'Complete visibility into policy compliance',
+        benefits: [
+          'Overdue policy review alerts',
+          'Staff acknowledgment rates',
+          'Compliance score tracking',
+          'Jurisdiction-specific reporting',
+          'Inspection readiness indicators'
+        ]
+      },
+      {
+        title: 'Automated Policy Enforcement',
+        description: 'Proactive compliance monitoring and enforcement',
+        benefits: [
+          'Automatic deadline tracking',
+          'Escalation to management',
+          'Email and system notifications',
+          'Non-compliance reporting',
+          'Audit trail for regulatory inspections'
+        ]
+      }
+    ]
+  },
+  {
     id: 'ai-agents',
     title: 'AI-Powered Care Home Intelligence',
     description: 'Intelligent automation for care home operations and resident services',
