@@ -89,9 +89,10 @@ interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+  tenant?: string; // Add tenant for compatibility
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
  * TODO: Add proper documentation
@@ -158,6 +159,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     logout,
     clearError,
+    tenant: state.user?.organizationId || undefined,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

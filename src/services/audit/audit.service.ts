@@ -9,26 +9,20 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import { AuditTrailService } from './AuditTrailService';
-
-export interface AuditEvent {
-  id: string;
-  userId: string;
-  action: string;
-  resource: string;
-  timestamp: Date;
-  metadata?: Record<string, any>;
-  tenantId?: string;
-  correlationId?: string;
-}
+import { AuditTrailService, AuditEvent } from './AuditTrailService';
 
 export interface AuditEventRequest {
   userId: string;
   action: string;
   resource: string;
+  entityType?: string;
+  entityId?: string;
+  details?: Record<string, any>;
   metadata?: Record<string, any>;
   tenantId?: string;
   correlationId?: string;
+  ipAddress?: string;
+  userAgent?: string;
 }
 
 @Injectable()
@@ -49,10 +43,15 @@ export class AuditService {
         userId: event.userId,
         action: event.action,
         resource: event.resource,
+        entityType: event.entityType,
+        entityId: event.entityId,
+        details: event.details || {},
         timestamp: new Date(),
         metadata: event.metadata,
         tenantId: event.tenantId,
-        correlationId: event.correlationId
+        correlationId: event.correlationId,
+        ipAddress: event.ipAddress,
+        userAgent: event.userAgent
       };
 
       await this.auditTrailService.createAuditEvent(auditEvent);
@@ -60,8 +59,27 @@ export class AuditService {
       this.logger.log(`Audit event logged: ${event.action} on ${event.resource} by ${event.userId}`);
     } catch (error) {
       this.logger.error(`Failed to log audit event: ${error.message}`, error.stack);
-      throw error;
+      throw new Error(`Failed to log audit event: ${error.message}`);
     }
+  }
+
+  /**
+   * Log action (simplified interface for common use cases)
+   */
+  async logAction(
+    userId: string,
+    action: string,
+    resource: string,
+    details?: Record<string, any>,
+    metadata?: Record<string, any>
+  ): Promise<void> {
+    return this.logEvent({
+      userId,
+      action,
+      resource,
+      details,
+      metadata
+    });
   }
 
   /**

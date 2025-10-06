@@ -1,25 +1,36 @@
+export interface BlogAuthor {
+  name: string;
+  role: string;
+  avatar?: string;
+  bio?: string;
+}
+
 export interface BlogPost {
   id: string;
   title: string;
   slug: string;
   excerpt?: string;
   content: string;
+  author?: BlogAuthor;
+  category?: string;
+  tags?: string[];
+  publishedAt?: string;
+  updatedAt?: string;
+  readingTime?: string;
+  featured: boolean;
+  status: 'draft' | 'published' | 'archived';
+  metaDescription?: string;
+  comments?: BlogComment[];
+  // Legacy fields for backward compatibility
   featuredImage?: string;
   metaTitle?: string;
-  metaDescription?: string;
   metaKeywords?: string[];
-  status: 'draft' | 'published' | 'archived';
-  featured: boolean;
-  viewCount: number;
-  readTime: number;
-  publishedAt?: string;
+  viewCount?: number;
+  readTime?: number;
   authorName?: string;
   authorEmail?: string;
   categories?: BlogCategory[];
-  tags?: BlogTag[];
-  comments?: BlogComment[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
 }
 
 export interface BlogCategory {
@@ -68,6 +79,7 @@ export interface BlogQuery {
   sortOrder?: 'ASC' | 'DESC';
   page?: number;
   limit?: number;
+  organizationId?: string;
 }
 
 export interface BlogPostsResponse {
@@ -108,4 +120,28 @@ export interface CreateBlogCategoryData {
   description?: string;
   color?: string;
   sortOrder?: number;
+}
+
+// Additional types for admin functionality
+export enum BlogPostStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  ARCHIVED = 'archived',
+  SCHEDULED = 'scheduled'
+}
+
+export interface BlogAdminStats {
+  totalPosts: number;
+  publishedPosts: number;
+  draftPosts: number;
+  totalViews: number;
+  totalComments: number;
+  popularPosts: BlogPost[];
+  recentComments: BlogComment[];
+  monthlyStats: {
+    month: string;
+    posts: number;
+    views: number;
+    comments: number;
+  }[];
 }

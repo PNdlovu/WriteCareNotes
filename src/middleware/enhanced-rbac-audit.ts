@@ -14,6 +14,14 @@ export interface RBACConfig {
   auditDetails?: (req: AuthenticatedRequest) => any;
 }
 
+// Helper function to get primary role from roles array
+const getPrimaryRole = (user: any): string => {
+  if (user.roles && user.roles.length > 0) {
+    return user.roles[0];
+  }
+  return user.role || 'user';
+};
+
 /**
  * Enhanced RBAC middleware with comprehensive audit logging
  */
@@ -65,7 +73,12 @@ export const enhancedAuthorize = (config: RBACConfig) => {
       }
 
       // Check role authorization
-      if (!config.allowedRoles.includes(req.user.role)) {
+      const userPrimaryRole = getPrimaryRole(req.user);
+      const userHasRole = config.allowedRoles.some(role => 
+        req.user?.roles?.includes(role) || userPrimaryRole === role
+      );
+      
+      if (!userHasRole) {
         await auditService.logEvent({
           userId: req.user.id,
           action: 'ACCESS_DENIED',
@@ -74,19 +87,18 @@ export const enhancedAuthorize = (config: RBACConfig) => {
           entityId: req.path,
           details: {
             reason: 'Insufficient role permissions',
-            userRole: req.user.role,
+            userRole: userPrimaryRole,
+            userRoles: req.user.roles,
             requiredRoles: config.allowedRoles,
             method: req.method,
             path: req.path,
             ip: req.ip,
             userAgent: req.get('User-Agent')
           },
-          eventType: AuditEventType.SECURITY_EVENT,
-          riskLevel: RiskLevel.MEDIUM,
-          complianceFrameworks: [ComplianceFramework.GDPR, ComplianceFramework.SOC2]
+          riskLevel: RiskLevel.MEDIUM
         });
 
-        logger.warn(`Access denied for user ${req.user.id} with role ${req.user.role}`, {
+        logger.warn(`Access denied for user ${req.user.id} with role ${userPrimaryRole}`, {
           requiredRoles: config.allowedRoles,
           path: req.path,
           method: req.method

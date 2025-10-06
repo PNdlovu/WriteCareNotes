@@ -34,6 +34,15 @@ import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 // Legal pages
 import { PrivacyPolicyPage } from './pages/legal/PrivacyPolicyPage'
 import { TermsOfServicePage } from './pages/legal/TermsOfServicePage'
+import { GDPRCompliancePage } from './pages/legal/GDPRCompliancePage'
+import { DataSecurityPage } from './pages/legal/DataSecurityPage'
+import { CookiePolicyPage } from './pages/legal/CookiePolicyPage'
+import { SystemStatusPage } from './pages/legal/SystemStatusPage'
+
+// Platform pages
+import { ResourcesPage } from './pages/ResourcesPage'
+import { WhoWeServePage } from './pages/WhoWeServePage'
+import { EnterpriseFeaturesPage } from './pages/platform/EnterpriseFeaturesPage'
 
 // Layout wrapper for pages with navigation and footer
 const LayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -81,6 +90,15 @@ function App() {
           {/* Documentation routes */}
           <Route path="/docs/api" element={<LayoutWrapper><APIDocumentationPage /></LayoutWrapper>} />
           
+          {/* Platform routes */}
+          <Route path="/platform/ai-features" element={<LayoutWrapper><EnterpriseFeaturesPage /></LayoutWrapper>} />
+          
+          {/* Resources route */}
+          <Route path="/resources" element={<LayoutWrapper><ResourcesPage /></LayoutWrapper>} />
+          
+          {/* Who We Serve route */}
+          <Route path="/who-we-serve" element={<LayoutWrapper><WhoWeServePage /></LayoutWrapper>} />
+          
           {/* Auth routes - without navigation/footer */}
           <Route path="/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
           <Route path="/register" element={<AuthLayout><RegisterPage /></AuthLayout>} />
@@ -89,6 +107,10 @@ function App() {
           {/* Legal routes */}
           <Route path="/privacy-policy" element={<LayoutWrapper><PrivacyPolicyPage /></LayoutWrapper>} />
           <Route path="/terms-of-service" element={<LayoutWrapper><TermsOfServicePage /></LayoutWrapper>} />
+          <Route path="/gdpr" element={<LayoutWrapper><GDPRCompliancePage /></LayoutWrapper>} />
+          <Route path="/security" element={<LayoutWrapper><DataSecurityPage /></LayoutWrapper>} />
+          <Route path="/cookie-policy" element={<LayoutWrapper><CookiePolicyPage /></LayoutWrapper>} />
+          <Route path="/system-status" element={<LayoutWrapper><SystemStatusPage /></LayoutWrapper>} />
         </Routes>
       </div>
     </Router>

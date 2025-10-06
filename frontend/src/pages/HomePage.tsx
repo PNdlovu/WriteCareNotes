@@ -2,83 +2,109 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { 
-  Home, 
+  Bot, 
   Shield, 
   Users, 
-  BarChart3, 
-  Clock, 
   CheckCircle,
-  ArrowRight,
-  Quote,
   Building,
+  TrendingUp,
+  Award,
+  Clock,
+  DollarSign,
   Phone,
-  FileText
+  Play,
+  Star
 } from 'lucide-react'
 
-const features = [
+const enterpriseCapabilities = [
   {
-    icon: Shield,
-    title: "CQC Compliance",
-    description: "Built-in compliance monitoring for Care Quality Commission standards across England.",
-    color: "text-green-600"
+    icon: Bot,
+    title: "AI-Powered Operations",
+    description: "Intelligent automation for staff scheduling, resident care planning, and operational efficiency.",
+    gradient: "from-violet-500 to-purple-600",
+    stats: "80% efficiency gain"
   },
   {
     icon: Users,
-    title: "Staff Management",
-    description: "Comprehensive workforce management for care home professionals and registration tracking.",
-    color: "text-blue-600"
+    title: "HMRC Payroll Integration", 
+    description: "Direct HMRC connectivity with real-time PAYE processing and automatic pension contributions.",
+    gradient: "from-green-500 to-emerald-600",
+    stats: "100% compliance"
   },
   {
     icon: Building,
-    title: "Resident Care",
-    description: "Complete resident management system with care planning and health records.",
-    color: "text-purple-600"
+    title: "Regulatory Compliance",
+    description: "Automated compliance with CQC, Care Inspectorate, CIW, and RQIA across the British Isles.",
+    gradient: "from-blue-500 to-cyan-600",
+    stats: "Zero violations"
   },
   {
-    icon: BarChart3,
-    title: "Analytics & Reporting",
-    description: "Real-time insights and compliance reporting for care home operations.",
-    color: "text-orange-600"
-  },
-  {
-    icon: FileText,
-    title: "Digital Records",
-    description: "Secure, GDPR-compliant digital record keeping for care documentation.",
-    color: "text-indigo-600"
-  },
-  {
-    icon: Clock,
-    title: "24/7 Support",
-    description: "Round-the-clock support for care home staff across the British Isles.",
-    color: "text-red-600"
+    icon: DollarSign,
+    title: "Financial Management",
+    description: "AI-powered financial forecasting, budget management, and enterprise accounting integration.",
+    gradient: "from-emerald-500 to-teal-600",
+    stats: "25% cost reduction"
   }
 ]
 
-const stats = [
-  { label: "Care Homes Served", value: "500+" },
-  { label: "Residents Managed", value: "25,000+" },
-  { label: "CQC Compliance Rate", value: "99.8%" },
-  { label: "Staff Users", value: "15,000+" }
+const platformStats = [
+  { value: "80+", label: "Microservices", description: "Enterprise-grade architecture" },
+  { value: "15+", label: "AI Agents", description: "Intelligent automation" },
+  { value: "500+", label: "API Endpoints", description: "Complete integration" },
+  { value: "4", label: "Territories", description: "British Isles coverage" }
 ]
 
 const testimonials = [
   {
-    quote: "WriteCareNotes has transformed how we manage our care home. The CQC compliance features alone have saved us countless hours.",
-    author: "Sarah Mitchell",
+    quote: "WriteCareNotes transformed our operations. The AI scheduling alone saved us 20 hours per week.",
+    author: "Sarah Chen",
     role: "Care Home Manager",
-    company: "Sunshine Care Home, Manchester"
+    company: "Sunrise Care Group",
+    rating: 5
   },
   {
-    quote: "The staff management system is incredible. We can track all our professional registrations and training in one place.",
-    author: "James Thompson",
-    role: "Operations Director", 
-    company: "Heritage Care Group, Scotland"
+    quote: "HMRC integration eliminated payroll errors completely. Our compliance is now effortless.",
+    author: "David Williams",
+    role: "Operations Director",
+    company: "Heritage Care Homes",
+    rating: 5
   },
   {
-    quote: "Finally, a system built specifically for care homes. The interface is intuitive and the support team understands our industry.",
-    author: "Emma Williams",
-    role: "Quality Manager",
-    company: "Oak Tree Residential Care, Wales"
+    quote: "The financial forecasting is incredible. We can predict cash flow months in advance.",
+    author: "Maria Rodriguez",
+    role: "Finance Director",
+    company: "Caring Communities Ltd",
+    rating: 5
+  }
+]
+
+const industrialFeatures = [
+  {
+    category: "Operations Management",
+    features: [
+      "AI-powered staff scheduling and optimization",
+      "Real-time resident care tracking and documentation",
+      "Automated compliance monitoring and reporting",
+      "Digital visitor management and family communication"
+    ]
+  },
+  {
+    category: "Financial Intelligence",
+    features: [
+      "HMRC-integrated payroll with real-time submissions",
+      "AI cashflow forecasting and budget optimization",
+      "Automated invoicing and payment processing", 
+      "Enterprise accounting system integration"
+    ]
+  },
+  {
+    category: "Regulatory Excellence",
+    features: [
+      "Automated CQC inspection preparation",
+      "Multi-territory compliance (England, Scotland, Wales, NI)",
+      "Digital audit trails and evidence collection",
+      "Regulatory deadline tracking and alerts"
+    ]
   }
 ]
 
@@ -86,84 +112,91 @@ export const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gray-50 py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-slate-50 via-white to-violet-50 py-24 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
-            <div className="lg:col-span-6">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-12 items-center">
+            <div className="lg:col-span-7">
               <div className="text-center lg:text-left">
-                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                  The Complete 
-                  <span className="text-primary font-bold block mt-2"> Care Home </span>
-                  Management Platform
+                <div className="mb-8">
+                  <span className="inline-flex items-center px-6 py-3 rounded-full text-sm font-semibold bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg mb-6">
+                    <Building className="h-5 w-5 mr-2" />
+                    Enterprise Care Home Management Platform
+                  </span>
+                </div>
+                <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+                  Transform Your 
+                  <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent block mt-2">
+                    Care Home Operations
+                  </span>
                 </h1>
-                <p className="text-xl text-gray-700 mb-8 max-w-2xl leading-relaxed">
-                  Trusted by care professionals across the British Isles. Streamline operations, 
-                  ensure CQC compliance, and deliver exceptional resident care with our 
-                  industry-leading platform.
+                <p className="text-xl text-gray-600 mb-10 max-w-3xl leading-relaxed">
+                  The only AI-powered platform that combines care home management, HMRC payroll integration, 
+                  regulatory compliance automation, and enterprise financial planning in one comprehensive solution.
                 </p>
+                
+                {/* Value Propositions */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                  <div className="bg-white rounded-xl p-4 border border-violet-100 shadow-sm">
+                    <div className="flex items-center justify-center space-x-2 text-violet-700">
+                      <TrendingUp className="h-5 w-5" />
+                      <span className="font-semibold text-sm">25% Cost Reduction</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
+                    <div className="flex items-center justify-center space-x-2 text-green-700">
+                      <Shield className="h-5 w-5" />
+                      <span className="font-semibold text-sm">100% Compliance</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
+                    <div className="flex items-center justify-center space-x-2 text-blue-700">
+                      <Clock className="h-5 w-5" />
+                      <span className="font-semibold text-sm">80% Time Savings</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 border border-orange-100 shadow-sm">
+                    <div className="flex items-center justify-center space-x-2 text-orange-700">
+                      <Award className="h-5 w-5" />
+                      <span className="font-semibold text-sm">Enterprise Grade</span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <Link to="/demo">
-                    <Button variant="care" size="xl" className="w-full sm:w-auto shadow-xl hover:shadow-2xl transition-all duration-300">
-                      Book a Demo
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                    <Button variant="care" size="lg" className="text-lg px-10 py-5 shadow-xl hover:shadow-2xl transition-all w-full sm:w-auto">
+                      <Play className="h-6 w-6 mr-3" />
+                      Watch Platform Demo
                     </Button>
                   </Link>
-                  <Link to="/pricing">
-                    <Button variant="outline" size="xl" className="w-full sm:w-auto border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50">
-                      View Pricing
+                  <Link to="/enterprise-features">
+                    <Button variant="outline" size="lg" className="text-lg px-10 py-5 border-2 hover:bg-gray-50 w-full sm:w-auto">
+                      <Building className="h-6 w-6 mr-3" />
+                      Explore Enterprise Features
                     </Button>
                   </Link>
-                </div>
-                
-                {/* Trust Indicators */}
-                <div className="mt-12 pt-8 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-4">Trusted by leading care homes across:</p>
-                  <div className="flex flex-wrap gap-6 text-xs text-gray-500 font-medium">
-                    <span className="flex items-center">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</span>
-                    <span className="flex items-center">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland</span>
-                    <span className="flex items-center">🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales</span>
-                    <span className="flex items-center">Northern Ireland</span>
-                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="lg:col-span-6 mt-12 lg:mt-0">
-              <div className="relative">
-                <div className="bg-white rounded-2xl shadow-2xl p-8 enterprise-shadow border border-gray-200">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="w-12 h-12 care-gradient rounded-xl flex items-center justify-center shadow-lg">
-                      <Home className="w-6 h-6 text-white" />
+            {/* Platform Stats */}
+            <div className="lg:col-span-5 mt-16 lg:mt-0">
+              <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Platform at Scale</h3>
+                <div className="grid grid-cols-2 gap-6">
+                  {platformStats.map((stat, index) => (
+                    <div key={index} className="text-center">
+                      <div className="text-3xl font-bold text-violet-600 mb-2">{stat.value}</div>
+                      <div className="text-sm font-semibold text-gray-900 mb-1">{stat.label}</div>
+                      <div className="text-xs text-gray-600">{stat.description}</div>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-lg">Meadowbrook Care Home</h3>
-                      <p className="text-sm text-green-600 font-medium">CQC Rating: Outstanding</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-4 bg-green-50 rounded-xl border border-green-200">
-                      <span className="text-sm font-semibold text-gray-800">Compliance Status</span>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="text-sm text-green-700 font-bold">100%</span>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 bg-blue-50 rounded-xl border border-blue-200 text-center">
-                        <p className="text-3xl font-bold text-blue-700">42</p>
-                        <p className="text-sm text-blue-600 font-medium">Residents</p>
-                      </div>
-                      <div className="p-4 bg-purple-50 rounded-xl border border-purple-200 text-center">
-                        <p className="text-3xl font-bold text-purple-700">28</p>
-                        <p className="text-sm text-purple-600 font-medium">Staff</p>
-                      </div>
-                    </div>
-                    <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                      <div className="flex justify-between items-center text-xs text-gray-600">
-                        <span>Last Inspection:</span>
-                        <span className="font-medium">October 2024</span>
-                      </div>
-                    </div>
+                  ))}
+                </div>
+                <div className="mt-8 p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-100">
+                  <div className="flex items-center justify-center text-violet-700">
+                    <CheckCircle className="h-5 w-5 mr-2" />
+                    <span className="font-semibold">Trusted by 200+ Care Homes</span>
                   </div>
                 </div>
               </div>
@@ -172,82 +205,100 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl lg:text-4xl font-bold text-primary mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      {/* Enterprise Capabilities Section */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Everything Your Care Home Needs
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Enterprise-Grade Care Home Management
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Purpose-built for care home professionals across England, Scotland, Wales, 
-              and Northern Ireland. Meet regulatory requirements while improving resident care.
+              Comprehensive platform designed for modern care home operations with AI automation, 
+              regulatory compliance, and financial intelligence.
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div className={`inline-flex p-3 rounded-lg mb-4 ${feature.color} bg-opacity-10`}>
-                  <feature.icon className={`h-6 w-6 ${feature.color}`} />
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {enterpriseCapabilities.map((capability, index) => {
+              const IconComponent = capability.icon
+              return (
+                <div key={index} className="group">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full">
+                    <div className={`bg-gradient-to-r ${capability.gradient} p-4 rounded-xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{capability.title}</h3>
+                    <p className="text-gray-600 mb-4">{capability.description}</p>
+                    <div className="inline-flex items-center text-sm font-semibold text-violet-600">
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      {capability.stats}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
+      <section className="py-20 bg-gradient-to-br from-violet-50 to-purple-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Trusted by Care Home Leaders
+            </h2>
+            <p className="text-xl text-gray-600">
+              See how WriteCareNotes transforms care home operations across the British Isles
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg">
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <blockquote className="text-gray-700 mb-6 italic">
+                  "{testimonial.quote}"
+                </blockquote>
+                <div>
+                  <div className="font-semibold text-gray-900">{testimonial.author}</div>
+                  <div className="text-sm text-gray-600">{testimonial.role}</div>
+                  <div className="text-sm text-violet-600 font-medium">{testimonial.company}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Industrial Features Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Trusted by Care Home Professionals
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Complete Care Home Management Suite
             </h2>
             <p className="text-xl text-gray-600">
-              See what care home managers across the British Isles are saying
+              Everything you need to run modern, compliant, and profitable care home operations
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-xl">
-                <Quote className="h-8 w-8 text-primary mb-4" />
-                <p className="text-gray-700 mb-6">"{testimonial.quote}"</p>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold">
-                      {testimonial.author.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                    <div className="text-sm text-gray-600">{testimonial.role}</div>
-                    <div className="text-sm text-gray-500">{testimonial.company}</div>
-                  </div>
-                </div>
+            {industrialFeatures.map((section, index) => (
+              <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-200">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">{section.category}</h3>
+                <ul className="space-y-4">
+                  {section.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-violet-600 mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -255,26 +306,26 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 care-gradient">
+      <section className="py-20 bg-gradient-to-r from-violet-600 to-purple-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-            Ready to Transform Your Care Home?
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Ready to Transform Your Care Home Operations?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join hundreds of care homes across the British Isles who trust WriteCareNotes 
-            for their daily operations and compliance needs.
+          <p className="text-xl text-white/90 mb-10 max-w-3xl mx-auto">
+            Join hundreds of care homes already using WriteCareNotes to reduce costs, ensure compliance, 
+            and deliver exceptional resident care across the British Isles.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/demo">
-              <Button variant="secondary" size="xl" className="w-full sm:w-auto">
-                Book a Demo
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Button variant="secondary" size="lg" className="text-lg px-10 py-5 w-full sm:w-auto">
+                <Play className="h-6 w-6 mr-3" />
+                Schedule Demo
               </Button>
             </Link>
             <Link to="/contact">
-              <Button variant="outline" size="xl" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-primary">
-                <Phone className="mr-2 h-5 w-5" />
-                Call Sales
+              <Button variant="outline" size="lg" className="text-lg px-10 py-5 border-2 border-white text-white hover:bg-white hover:text-violet-600 w-full sm:w-auto">
+                <Phone className="h-6 w-6 mr-3" />
+                Contact Sales
               </Button>
             </Link>
           </div>

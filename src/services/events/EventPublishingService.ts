@@ -1,5 +1,3 @@
-import { EventEmitter2 } from "eventemitter2";
-
 /**
  * @fileoverview Event Publishing Service for WriteCareNotes
  * @module EventPublishingService
@@ -123,8 +121,9 @@ export interface EventDeliveryResult {
 }
 
 
+@Injectable()
 export class EventPublishingService {
-  // Logger removed
+  private readonly logger = new Logger(EventPublishingService.name);
   private subscriptions: Map<string, EventSubscription> = new Map();
   private eventHistory: Map<string, any> = new Map();
 

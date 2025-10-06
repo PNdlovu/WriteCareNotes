@@ -4,12 +4,12 @@ import { Button } from '../ui/Button'
 import { cn } from '../../lib/utils'
 import { 
   Home, 
-  Building, 
   FileText, 
-  Phone, 
   CreditCard,
   Menu,
-  X
+  X,
+  Zap,
+  Users
 } from 'lucide-react'
 
 interface NavigationProps {
@@ -18,10 +18,11 @@ interface NavigationProps {
 
 const navigation = [
   { name: 'Solutions', href: '/solutions', icon: FileText },
+  { name: 'Who We Serve', href: '/who-we-serve', icon: Home },
+  { name: 'Features', href: '/platform/ai-features', icon: Zap },
+  { name: 'Resources', href: '/resources', icon: Users },
   { name: 'Pricing', href: '/pricing', icon: CreditCard },
   { name: 'Blog', href: '/blog', icon: FileText },
-  { name: 'About', href: '/about', icon: Building },
-  { name: 'Contact', href: '/contact', icon: Phone },
 ]
 
 export const EnterpriseNavigation: React.FC<NavigationProps> = ({ className }) => {

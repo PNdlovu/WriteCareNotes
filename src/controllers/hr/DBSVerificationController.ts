@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import '../../types/express'; // Import extended Express types
 import { DBSVerificationService, DBSVerificationRequest, DBSVerificationUpdate, DBSVerificationSearchCriteria } from '../../services/hr/DBSVerificationService';
 import { logger } from '../../utils/logger';
 

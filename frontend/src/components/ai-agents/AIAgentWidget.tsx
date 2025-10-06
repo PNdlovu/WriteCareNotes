@@ -8,9 +8,9 @@
  * @description Floating widget that provides access to AI agents based on authentication status
  */
 
-import React, { useState, useContext } from 'react';
-import { MessageCircle, X, Bot, HelpCircle } from 'lucide-react';
-import { AuthContext } from '../../contexts/AuthContext';
+import React, { useState } from 'react';
+import { MessageCircle, X } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 import PublicAIAgentChat from './PublicAIAgentChat';
 import TenantAIAssistant from './TenantAIAssistant';
 
@@ -42,7 +42,7 @@ export const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
   careContext,
   defaultOpen = false
 }) => {
-  const { user, tenant } = useContext(AuthContext);
+  const { user, tenant } = useAuth();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isMinimized, setIsMinimized] = useState(false);
 
@@ -86,9 +86,9 @@ export const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
             title={isAuthenticated ? 'Open Care Assistant' : 'Open Customer Support'}
           >
             {isAuthenticated ? (
-              <Bot className="w-6 h-6" />
+              <MessageCircle className="w-6 h-6" />
             ) : (
-              <HelpCircle className="w-6 h-6" />
+              <MessageCircle className="w-6 h-6" />
             )}
           </button>
           
@@ -112,15 +112,15 @@ export const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
               <div className="flex items-center space-x-2">
                 {isAuthenticated ? (
                   <>
-                    <Bot className="w-5 h-5 text-green-600" />
+                    <MessageCircle className="w-5 h-5 text-green-600" />
                     <div>
                       <h4 className="font-medium text-sm">Care Assistant</h4>
-                      <p className="text-xs text-gray-500">Secure • {tenant?.name}</p>
+                      <p className="text-xs text-gray-500">Secure • {tenant || 'Organization'}</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <HelpCircle className="w-5 h-5 text-blue-600" />
+                    <MessageCircle className="w-5 h-5 text-blue-600" />
                     <div>
                       <h4 className="font-medium text-sm">Customer Support</h4>
                       <p className="text-xs text-gray-500">Ask about WriteCareNotes</p>

@@ -1,23 +1,10 @@
-import { EventEmitter2 } from "eventemitter2";
-
-/**
- * @fileoverview Toast Hook for WriteCareNotes
- * @module useToast
- * @version 1.0.0
- * @author WriteCareNotes Team
- * @since 2025-01-01
- * 
- * @description Hook for displaying toast notifications with different
- * variants and automatic dismissal functionality.
- */
-
 import { useState, useCallback } from 'react';
 
 export interface Toast {
   id: string;
   title: string;
   description?: string;
-  variant: 'default' | 'success' | 'error' | 'warning' | 'info';
+  variant: 'default' | 'success' | 'error' | 'warning' | 'info' | 'destructive';
   duration?: number;
 }
 
@@ -30,25 +17,10 @@ interface ToastOptions {
 
 let toastCount = 0;
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const useToast = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const toast = useCallback((options: ToastOptions) => {
+  const showToast = useCallback((options: ToastOptions) => {
     const id = (++toastCount).toString();
     const newToast: Toast = {
       id,
@@ -61,14 +33,35 @@ export const useToast = () => {
     setToasts(prev => [...prev, newToast]);
 
     // Auto-dismiss after duration
-    if (newToast.duration > 0) {
+    const duration = newToast.duration || 5000;
+    if (duration > 0) {
       setTimeout(() => {
         setToasts(prev => prev.filter(t => t.id !== id));
-      }, newToast.duration);
+      }, duration);
     }
 
     return id;
   }, []);
+
+  // Create toast object with helper methods
+  const toast = Object.assign(
+    (options: ToastOptions | string) => {
+      if (typeof options === 'string') {
+        return showToast({ title: options });
+      }
+      return showToast(options);
+    },
+    {
+      success: (title: string, description?: string) => 
+        showToast({ title, description, variant: 'success' as const }),
+      error: (title: string, description?: string) => 
+        showToast({ title, description, variant: 'error' as const }),
+      warning: (title: string, description?: string) => 
+        showToast({ title, description, variant: 'warning' as const }),
+      info: (title: string, description?: string) => 
+        showToast({ title, description, variant: 'info' as const })
+    }
+  );
 
   const dismiss = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
@@ -82,6 +75,7 @@ export const useToast = () => {
     toast,
     toasts,
     dismiss,
-    dismissAll
+    dismissAll,
+    error: undefined // Legacy compatibility
   };
 };

@@ -10,13 +10,14 @@
 
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Send, Bot, User, AlertTriangle, CheckCircle, Clock, Shield, AlertCircle } from 'lucide-react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext, useAuth } from '../../contexts/AuthContext';
 
 interface CareMessage {
   id: string;
   type: 'user' | 'agent' | 'system' | 'alert';
   content: string;
   timestamp: Date;
+  category?: string;
   confidence?: number;
   careRecommendations?: CareRecommendation[];
   complianceAlerts?: ComplianceAlert[];
@@ -66,7 +67,7 @@ export const TenantAIAssistant: React.FC<TenantAIAssistantProps> = ({
   careContext,
   onEscalation
 }) => {
-  const { user, tenant } = useContext(AuthContext);
+  const { user, tenant, token } = useAuth();
   const [messages, setMessages] = useState<CareMessage[]>([
     {
       id: 'welcome',
@@ -93,14 +94,15 @@ export const TenantAIAssistant: React.FC<TenantAIAssistantProps> = ({
     scrollToBottom();
   }, [messages]);
 
-  const sendCareInquiry = async (message: string) => {
+  const sendCareInquiry = async (message: string, category?: string) => {
     if (!message.trim() || isLoading || !user || !tenant) return;
 
     const userMessage: CareMessage = {
       id: `user_${Date.now()}`,
       type: 'user',
       content: message.trim(),
-      timestamp: new Date()
+      timestamp: new Date(),
+      category
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -112,8 +114,8 @@ export const TenantAIAssistant: React.FC<TenantAIAssistantProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-          'X-Tenant-ID': tenant.id
+          'Authorization': `Bearer ${token}`,
+          'X-Tenant-ID': tenant || ''
         },
         body: JSON.stringify({
           message: message.trim(),
@@ -208,8 +210,8 @@ export const TenantAIAssistant: React.FC<TenantAIAssistantProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-          'X-Tenant-ID': tenant.id
+          'Authorization': `Bearer ${token}`,
+          'X-Tenant-ID': tenant || ''
         },
         body: JSON.stringify({
           message: inputMessage,

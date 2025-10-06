@@ -38,6 +38,7 @@ const requireAuth = (req: Request, res: Response, next: any) => {
   // Add user to request object
   (req as any).user = { id: 'user-123', role: 'admin' };
   next();
+  return;
 };
 
 // Audit logging middleware
@@ -125,7 +126,7 @@ router.get('/',
         }
       }));
 
-      res.json({
+      return res.json({
         organizations: enhancedOrgs,
         pagination: {
           total,
@@ -141,7 +142,7 @@ router.get('/',
 
     } catch (error: any) {
       logger.error('Error retrieving organizations:', error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to retrieve organizations' 
       });
@@ -233,7 +234,7 @@ router.post('/',
         registrationNumber: organization.registrationNumber
       });
 
-      res.status(201).json({
+      return res.status(201).json({
         message: 'Organization created successfully',
         organization,
         links: {
@@ -245,7 +246,7 @@ router.post('/',
 
     } catch (error: any) {
       logger.error('Error creating organization:', error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to create organization' 
       });
@@ -325,7 +326,7 @@ router.get('/:id',
         accessCount: Math.floor(Math.random() * 1000) + 1
       };
 
-      res.json({
+      return res.json({
         organization: detailedOrganization,
         links: {
           self: `/api/organizations/${id}`,
@@ -339,7 +340,7 @@ router.get('/:id',
 
     } catch (error: any) {
       logger.error('Error retrieving organization:', error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to retrieve organization' 
       });
@@ -416,7 +417,7 @@ router.put('/:id',
         version: updatedOrg.version
       });
 
-      res.json({
+      return res.json({
         message: 'Organization updated successfully',
         organization: updatedOrg,
         changes,
@@ -428,7 +429,7 @@ router.put('/:id',
 
     } catch (error: any) {
       logger.error('Error updating organization:', error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to update organization' 
       });
@@ -491,7 +492,7 @@ router.delete('/:id',
         reason: archivedOrg.archivedReason
       });
 
-      res.json({
+      return res.json({
         message: 'Organization archived successfully',
         organizationId: id,
         archivedAt: archivedOrg.archivedAt,
@@ -503,7 +504,7 @@ router.delete('/:id',
       });
     } catch (error: any) {
       logger.error('Error archiving organization:', error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to archive organization' 
       });

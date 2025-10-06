@@ -17,39 +17,41 @@ import {
 } from 'lucide-react'
 
 const blogCategories = [
-  { id: 'cqc-compliance', name: 'CQC Compliance', count: 12, color: 'bg-blue-100 text-blue-800' },
-  { id: 'care-management', name: 'Care Management', count: 8, color: 'bg-green-100 text-green-800' },
-  { id: 'staff-training', name: 'Staff Training', count: 6, color: 'bg-purple-100 text-purple-800' },
-  { id: 'technology', name: 'Technology Updates', count: 4, color: 'bg-orange-100 text-orange-800' },
-  { id: 'best-practices', name: 'Best Practices', count: 10, color: 'bg-pink-100 text-pink-800' }
+  { id: 'ai-innovation', name: 'AI & Innovation', count: 5, color: 'bg-violet-100 text-violet-800' },
+  { id: 'integration-connectivity', name: 'Integration & Connectivity', count: 7, color: 'bg-blue-100 text-blue-800' },
+  { id: 'cqc-compliance', name: 'CQC Compliance', count: 12, color: 'bg-green-100 text-green-800' },
+  { id: 'staff-productivity', name: 'Staff Productivity', count: 8, color: 'bg-orange-100 text-orange-800' },
+  { id: 'service-efficiency', name: 'Service Efficiency', count: 10, color: 'bg-purple-100 text-purple-800' },
+  { id: 'going-digital', name: 'Going Digital', count: 6, color: 'bg-indigo-100 text-indigo-800' },
+  { id: 'best-practices', name: 'Best Practices', count: 15, color: 'bg-pink-100 text-pink-800' }
 ]
 
 const featuredPosts = [
   {
-    id: 1,
-    title: "How to Achieve Outstanding CQC Ratings in 2024: A Complete Guide",
-    excerpt: "Learn the proven strategies that helped over 200 care homes improve their CQC ratings with WriteCareNotes. From documentation to staff training, discover what CQC inspectors really look for.",
-    author: "Dr. Sarah Mitchell",
-    role: "CQC Compliance Expert",
-    category: "CQC Compliance",
-    publishDate: "2024-03-15",
+    id: 9,
+    title: "What is AI-Powered Care Management? The Complete Guide for UK Care Homes",
+    excerpt: "Discover how AI-powered care management is revolutionizing UK care homes with intelligent automation, predictive analytics, and seamless integration. Learn why leading care providers are choosing AI technology for better resident outcomes.",
+    author: "WriteCareNotes Team",
+    role: "AI & Innovation Specialists",
+    category: "AI & Innovation",
+    publishDate: "2025-01-15",
     readTime: "8 min read",
-    image: "/images/blog/cqc-outstanding.jpg",
+    image: "/images/blog/ai-care-management.jpg",
     featured: true,
-    tags: ["CQC", "Outstanding Rating", "Compliance"]
+    tags: ["AI care management", "automated care planning", "intelligent care systems"]
   },
   {
-    id: 2,
-    title: "Digital Transformation in Care: 5 Essential Steps for Success",
-    excerpt: "A practical roadmap for care homes transitioning from paper-based systems to digital platforms. Avoid common pitfalls and ensure staff buy-in with these proven strategies.",
-    author: "James Wilson",
-    role: "Care Technology Consultant", 
-    category: "Technology Updates",
-    publishDate: "2024-03-12",
-    readTime: "6 min read",
-    image: "/images/blog/digital-transformation.jpg",
+    id: 10,
+    title: "NHS Digital Integration for Care Homes: Complete Guide to GP Connect, eRedBag & DSCR",
+    excerpt: "Complete guide to NHS Digital integration for UK care homes. Learn how GP Connect, eRedBag, and DSCR integration transforms care coordination and reduces administrative burden.",
+    author: "WriteCareNotes Team",
+    role: "NHS Digital Integration Experts",
+    category: "Integration & Connectivity",
+    publishDate: "2025-01-18",
+    readTime: "10 min read",
+    image: "/images/blog/nhs-digital-integration.jpg",
     featured: true,
-    tags: ["Digital Transformation", "Technology", "Change Management"]
+    tags: ["NHS Digital integration", "GP Connect care homes", "eRedBag system"]
   }
 ]
 

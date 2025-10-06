@@ -12,70 +12,88 @@ import {
   BarChart3,
   Headphones,
   Shield,
-  CheckCircle
+  CheckCircle,
+  Brain,
+  Heart,
+  Zap
 } from 'lucide-react'
 
 const pricingPlans = [
   {
-    name: "Essential",
-    description: "Perfect for smaller care homes starting their digital transformation",
-    monthlyPrice: 149,
-    yearlyPrice: 1490,
+    name: "Essential Care",
+    description: "Perfect for smaller care homes (5-25 residents) starting their digital journey",
+    monthlyPrice: 99,
+    yearlyPrice: 990,
     maxResidents: 25,
     maxStaff: 15,
-    setup: "Standard setup included",
-    support: "Email & chat support",
+    setup: "Standard setup & training included",
+    support: "Email & chat support (9am-5pm)",
     features: [
-      "Resident management system",
-      "Basic care planning",
-      "Staff scheduling",
+      "Core resident management system",
+      "Basic care planning & documentation",
+      "Staff scheduling & shift management",
       "CQC compliance monitoring",
       "Digital care records",
+      "Family communication portal",
       "Basic reporting dashboard",
-      "Email support",
-      "2GB secure storage",
       "Mobile app access",
-      "GDPR compliance tools"
+      "Email notifications",
+      "5GB secure storage",
+      "GDPR compliance tools",
+      "Video calling (up to 4 participants)"
+    ],
+    addOnsAvailable: [
+      "AI Care Insights",
+      "Advanced Analytics",
+      "Staff Wellness Monitoring",
+      "Priority Support"
     ],
     notIncluded: [
+      "Advanced AI features",
+      "Multi-channel messaging",
       "Advanced analytics",
-      "API integrations",
-      "Custom workflows",
-      "Priority phone support",
-      "Dedicated account manager"
+      "Phone support"
     ],
     popular: false,
     cta: "Start Free Trial",
     color: "border-gray-200",
-    badge: null
+    badge: "Great for Small Homes"
   },
   {
-    name: "Professional",
-    description: "Comprehensive solution for medium to large care homes",
-    monthlyPrice: 299,
-    yearlyPrice: 2990,
-    maxResidents: 100,
-    maxStaff: 75,
-    setup: "Premium setup & training",
+    name: "Professional Care",
+    description: "Comprehensive solution for medium care homes (25-75 residents)",
+    monthlyPrice: 199,
+    yearlyPrice: 1990,
+    maxResidents: 75,
+    maxStaff: 50,
+    setup: "Premium setup, training & data migration",
     support: "Priority phone & email support",
     features: [
-      "Everything in Essential",
-      "Advanced care planning",
-      "Family portal access",
-      "Advanced analytics & insights",
-      "Staff training management",
-      "Medication management",
-      "Incident reporting system",
-      "Custom forms & workflows",
+      "Everything in Essential Care",
+      "AI-powered care insights & predictions",
+      "Advanced care planning workflows",
+      "Multi-channel messaging (SMS, Email, Push)",
+      "Staff wellness monitoring dashboard",
+      "Advanced family portal with transparency",
+      "Incident reporting & management",
+      "Custom forms & care pathways",
       "API integrations",
+      "Advanced analytics & insights",
       "25GB secure storage",
-      "Multi-location support",
-      "Advanced compliance tools"
+      "Video calling (unlimited participants)",
+      "Automated compliance reporting",
+      "Quality assurance tools"
+    ],
+    addOnsAvailable: [
+      "Enterprise Security",
+      "White-label Solution",
+      "Custom Integrations",
+      "24/7 Support"
     ],
     notIncluded: [
       "Dedicated account manager",
-      "Custom integrations",
-      "24/7 priority support"
+      "Custom white-labeling",
+      "24/7 support"
     ],
     popular: true,
     cta: "Start Free Trial",
@@ -83,88 +101,136 @@ const pricingPlans = [
     badge: "Most Popular"
   },
   {
-    name: "Enterprise",
-    description: "Complete platform for large care home groups and chains",
-    monthlyPrice: 599,
-    yearlyPrice: 5990,
+    name: "Enterprise Care",
+    description: "Complete platform for large homes & care groups (75+ residents)",
+    monthlyPrice: 349,
+    yearlyPrice: 3490,
     maxResidents: "Unlimited",
     maxStaff: "Unlimited",
-    setup: "White-glove implementation",
-    support: "24/7 dedicated support team",
+    setup: "White-glove implementation & training",
+    support: "Dedicated support team & account manager",
     features: [
-      "Everything in Professional",
-      "Unlimited locations",
+      "Everything in Professional Care",
+      "Complete AI supervision platform",
+      "Enterprise security & compliance",
+      "Multi-location management",
       "Custom API integrations",
       "Advanced reporting suite",
       "Dedicated account manager",
-      "24/7 priority support",
+      "Priority phone support",
       "Custom training programs",
-      "Enterprise security features",
+      "White-label options",
       "Unlimited storage",
       "Custom workflows & automations",
       "SLA guarantee (99.9% uptime)",
       "Regulatory compliance suite",
-      "Data export & migration tools"
+      "Data export & migration tools",
+      "24/7 monitoring & alerts"
+    ],
+    addOnsAvailable: [
+      "Custom Development",
+      "Additional Training",
+      "Compliance Consulting"
     ],
     notIncluded: [],
     popular: false,
     cta: "Contact Sales",
     color: "border-gray-200",
-    badge: "Enterprise"
+    badge: "Enterprise Scale"
   }
 ]
 
 const addOns = [
   {
-    name: "Family Portal",
-    description: "Secure portal for families to access resident information",
-    price: "£29/month",
-    icon: Users
+    name: "AI Care Insights",
+    description: "OpenAI-powered summarization, sentiment analysis, and predictive care recommendations",
+    price: "£39/month",
+    icon: Brain,
+    availableFor: ["Essential Care", "Professional Care", "Enterprise Care"]
   },
   {
     name: "Advanced Analytics",
-    description: "Detailed insights and predictive analytics for operations",
+    description: "Detailed insights, predictive analytics, and custom reporting for operations optimization",
     price: "£49/month", 
-    icon: BarChart3
+    icon: BarChart3,
+    availableFor: ["Essential Care", "Professional Care", "Enterprise Care"]
   },
   {
-    name: "Training Management",
-    description: "Complete staff training and certification tracking",
-    price: "£39/month",
-    icon: Award
+    name: "Staff Wellness Monitoring",
+    description: "Complete burnout prevention, wellness tracking, and staff satisfaction management",
+    price: "£59/month",
+    icon: Heart,
+    availableFor: ["Essential Care", "Professional Care", "Enterprise Care"]
+  },
+  {
+    name: "Multi-Channel Messaging",
+    description: "SMS, Email, Push notifications with bulk campaigns and automated workflows",
+    price: "£29/month",
+    icon: Zap,
+    availableFor: ["Essential Care"]
+  },
+  {
+    name: "Priority Support",
+    description: "Phone support during business hours with faster response times",
+    price: "£79/month",
+    icon: Headphones,
+    availableFor: ["Essential Care", "Professional Care"]
   },
   {
     name: "24/7 Support",
-    description: "Round-the-clock technical support for critical issues",
+    description: "Round-the-clock technical support for critical issues and emergencies",
+    price: "£149/month",
+    icon: Shield,
+    availableFor: ["Essential Care", "Professional Care"]
+  },
+  {
+    name: "Enterprise Security",
+    description: "Advanced security features, SOC2 compliance, and enhanced audit logging",
     price: "£99/month",
-    icon: Headphones
+    icon: Shield,
+    availableFor: ["Professional Care"]
+  },
+  {
+    name: "Training Management",
+    description: "Complete staff training, certification tracking, and compliance management",
+    price: "£39/month",
+    icon: Award,
+    availableFor: ["Essential Care", "Professional Care", "Enterprise Care"]
   }
 ]
 
 const faqs = [
   {
+    question: "Can small care homes access advanced features like AI?",
+    answer: "Absolutely! We believe every care home deserves access to the best technology. All add-on features, including AI-powered insights, are available to every plan. Small homes can add AI features for just £39/month - no feature lock-out based on size."
+  },
+  {
     question: "Is there a free trial available?",
-    answer: "Yes, we offer a 30-day free trial for Essential and Professional plans. No credit card required to start."
+    answer: "Yes, we offer a 30-day free trial for all plans with full access to features. No credit card required to start, and you can upgrade or add features anytime during your trial."
   },
   {
-    question: "Can I upgrade or downgrade my plan?",
-    answer: "Absolutely. You can change your plan at any time. Upgrades take effect immediately, downgrades at your next billing cycle."
+    question: "What happens if we grow beyond our plan limits?",
+    answer: "We're flexible! We'll contact you before you reach limits and help you upgrade smoothly. No service interruption - we want to grow with you. You can also temporarily exceed limits without penalty."
   },
   {
-    question: "What's included in implementation?",
-    answer: "All plans include basic setup and training. Professional and Enterprise plans include data migration and extended training sessions."
+    question: "How does pricing work for very small care homes?",
+    answer: "Our Essential Care plan starts at just £99/month for homes with 5-25 residents. We've specifically designed this to be affordable for smaller homes while still providing comprehensive care management and CQC compliance tools."
   },
   {
-    question: "Do you offer discounts for multiple locations?",
-    answer: "Yes, we offer volume discounts for care home groups. Contact our sales team for custom pricing based on your needs."
+    question: "Can we add and remove features as needed?",
+    answer: "Yes! Add-on features can be added or removed monthly. This gives you complete flexibility to try new features, scale up during busy periods, or adjust based on your budget and needs."
   },
   {
-    question: "Is my data secure and GDPR compliant?",
-    answer: "Yes, we maintain the highest security standards with ISO 27001 certification and full GDPR compliance for all resident data."
+    question: "What's included in setup and training?",
+    answer: "All plans include setup assistance and basic training. Professional and Enterprise plans include data migration, extended training sessions, and ongoing support to ensure successful implementation."
   },
   {
-    question: "What happens if I exceed my resident/staff limits?",
-    answer: "We'll contact you before you reach your limits to discuss upgrading. No service interruption - we're flexible with temporary overages."
+    question: "Do you offer discounts for care home groups?",
+    answer: "Yes, we offer volume discounts for care home groups and multi-location operators. Contact our sales team for custom pricing that scales with your organization's size and needs."
+  },
+  {
+    question: "Is the platform suitable for specialized care homes?",
+    answer: "Absolutely! Our platform supports all types of care including residential, nursing, dementia, learning disabilities, and mental health. The system adapts to your specific care requirements and regulatory standards."
   }
 ]
 
@@ -187,13 +253,13 @@ export const PricingPage: React.FC = () => {
               Trusted by 500+ Care Homes
             </div>
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Simple, Transparent 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"> Pricing</span>
+              Fair Pricing for 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"> Every Care Home</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Choose the perfect plan for your care home. All plans include 
-              CQC compliance monitoring, 24/7 data security, and our commitment 
-              to helping you achieve Outstanding ratings.
+              From small family-run homes to large care groups - comprehensive features 
+              that scale with your needs. No care home left behind with our add-on approach 
+              that gives everyone access to advanced AI and automation.
             </p>
             
             {/* Trust Indicators */}
@@ -318,7 +384,20 @@ export const PricingPage: React.FC = () => {
                     </div>
                   ))}
                   
-                  {plan.notIncluded.map((feature, featureIndex) => (
+                  {plan.addOnsAvailable && plan.addOnsAvailable.length > 0 && (
+                    <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                      <h4 className="text-sm font-semibold text-blue-900 mb-2">Available Add-ons:</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {plan.addOnsAvailable.map((addon, addonIndex) => (
+                          <span key={addonIndex} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                            {addon}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {plan.notIncluded && plan.notIncluded.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-start opacity-50">
                       <X className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-gray-500 text-sm line-through">{feature}</span>
@@ -347,16 +426,20 @@ export const PricingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Enhanced Features
+              Flexible Add-On Features
             </h2>
-            <p className="text-xl text-gray-600">
-              Add specialized features to meet your care home's unique needs
+            <p className="text-xl text-gray-600 mb-8">
+              Enhance any plan with specialized features that grow with your care home
             </p>
+            <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+              <CheckCircle className="h-4 w-4 mr-2" />
+              All care homes can access any add-on feature
+            </div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {addOns.map((addon, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200">
                 <div className="inline-flex p-3 rounded-lg mb-4 bg-primary/10">
                   <addon.icon className="h-6 w-6 text-primary" />
                 </div>
@@ -366,11 +449,122 @@ export const PricingPage: React.FC = () => {
                 <p className="text-gray-600 text-sm mb-4">
                   {addon.description}
                 </p>
-                <div className="text-lg font-bold text-primary">
+                <div className="text-lg font-bold text-primary mb-4">
                   {addon.price}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Available for: {addon.availableFor.join(', ')}
                 </div>
               </div>
             ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <div className="bg-blue-50 rounded-xl p-8 max-w-4xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                No Feature Lock-Out Policy
+              </h3>
+              <p className="text-lg text-gray-600 mb-6">
+                We believe every care home, regardless of size, should have access to the best technology. 
+                All add-on features are available to every plan, ensuring small care homes aren't locked out of advanced capabilities.
+              </p>
+              <div className="grid md:grid-cols-3 gap-6 text-center">
+                <div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2">5+</div>
+                  <div className="text-sm text-gray-600">Resident homes can access AI features</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2">100%</div>
+                  <div className="text-sm text-gray-600">Feature parity across all plans</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2">0</div>
+                  <div className="text-sm text-gray-600">Hidden costs or setup fees</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Inclusive Philosophy Section */}
+      <section className="py-20 bg-gradient-to-r from-green-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Built for All Care Home Sizes
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our mission is to ensure every resident receives outstanding care, 
+              regardless of their care home's size or budget.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Small Homes (5-25 beds)</h3>
+              <p className="text-gray-600 text-sm">
+                Essential Care plan with full core features and optional AI add-ons starting at £99/month
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BarChart3 className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Medium Homes (25-75 beds)</h3>
+              <p className="text-gray-600 text-sm">
+                Professional Care with AI included, advanced analytics, and comprehensive family engagement
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Large Homes (75+ beds)</h3>
+              <p className="text-gray-600 text-sm">
+                Enterprise Care with white-label options, unlimited users, and dedicated support
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Care Groups</h3>
+              <p className="text-gray-600 text-sm">
+                Custom pricing with volume discounts, multi-location management, and group analytics
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-12 bg-white rounded-xl p-8 shadow-lg border border-gray-200">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Commitment to Small Care Homes</h3>
+              <p className="text-lg text-gray-600">
+                We understand that small care homes are the backbone of personalized care. 
+                That's why we've designed our pricing to be accessible while ensuring no compromise on quality.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">£3.96</div>
+                <div className="text-sm text-gray-600">Per resident per month<br/>(25-bed home on Essential Care)</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">100%</div>
+                <div className="text-sm text-gray-600">Feature access with add-ons<br/>(No features locked out)</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600 mb-2">30</div>
+                <div className="text-sm text-gray-600">Day free trial<br/>(Full access, no restrictions)</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -396,45 +590,81 @@ export const PricingPage: React.FC = () => {
                       Feature
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">
-                      Essential
+                      Essential Care
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">
-                      Professional
+                      Professional Care
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">
-                      Enterprise
+                      Enterprise Care
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   <tr>
-                    <td className="px-6 py-4 text-sm text-gray-900">Resident Management</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">Resident Management & Care Planning</td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                   </tr>
                   <tr className="bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900">CQC Compliance</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">CQC Compliance & Reporting</td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 text-sm text-gray-900">Advanced Analytics</td>
-                    <td className="px-6 py-4 text-center"><X className="h-5 w-5 text-gray-400 mx-auto" /></td>
+                    <td className="px-6 py-4 text-sm text-gray-900">Family Communication Portal</td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                   </tr>
                   <tr className="bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900">API Access</td>
-                    <td className="px-6 py-4 text-center"><X className="h-5 w-5 text-gray-400 mx-auto" /></td>
-                    <td className="px-6 py-4 text-center"><X className="h-5 w-5 text-gray-400 mx-auto" /></td>
+                    <td className="px-6 py-4 text-sm text-gray-900">Video Calling & Communication</td>
+                    <td className="px-6 py-4 text-center text-sm">Up to 4 people</td>
+                    <td className="px-6 py-4 text-center text-sm">Unlimited</td>
+                    <td className="px-6 py-4 text-center text-sm">Unlimited</td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 text-sm text-gray-900">AI-Powered Care Insights (Add-on)</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £39/mo</td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900">Multi-Channel Messaging (SMS/Email/Push)</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £29/mo</td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 text-sm text-gray-900">Staff Wellness Monitoring (Add-on)</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £59/mo</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £59/mo</td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900">Advanced Analytics & Reporting</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £49/mo</td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                   </tr>
                   <tr>
                     <td className="px-6 py-4 text-sm text-gray-900">Phone Support</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £79/mo</td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900">API Access & Integrations</td>
                     <td className="px-6 py-4 text-center"><X className="h-5 w-5 text-gray-400 mx-auto" /></td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 text-sm text-gray-900">24/7 Support</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £149/mo</td>
+                    <td className="px-6 py-4 text-center text-sm text-blue-600">Available £149/mo</td>
                     <td className="px-6 py-4 text-center"><Check className="h-5 w-5 text-green-500 mx-auto" /></td>
                   </tr>
                   <tr className="bg-gray-50">

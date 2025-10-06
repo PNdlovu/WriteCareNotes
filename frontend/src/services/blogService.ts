@@ -91,15 +91,25 @@ class BlogService {
     });
   }
 
-  async deletePost(id: string): Promise<void> {
-    await this.request<void>(`/posts/${id}`, {
+  async deletePost(id: string, options?: { organizationId?: string }): Promise<void> {
+    const params = new URLSearchParams();
+    if (options?.organizationId) {
+      params.append('organizationId', options.organizationId);
+    }
+    const query = params.toString() ? `?${params.toString()}` : '';
+    await this.request<void>(`/posts/${id}${query}`, {
       method: 'DELETE',
     });
   }
 
   // Categories
-  async getCategories(): Promise<BlogCategory[]> {
-    return this.request<BlogCategory[]>('/categories');
+  async getCategories(options?: { organizationId?: string }): Promise<BlogCategory[]> {
+    const params = new URLSearchParams();
+    if (options?.organizationId) {
+      params.append('organizationId', options.organizationId);
+    }
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return this.request<BlogCategory[]>(`/categories${query}`);
   }
 
   async getCategoryBySlug(slug: string): Promise<BlogCategory> {
@@ -168,6 +178,23 @@ class BlogService {
   async getRSSFeed(): Promise<string> {
     const response = await fetch(`${API_BASE_URL}/api/blog/rss`);
     return response.text();
+  }
+
+  // Admin methods
+  async getStats(options?: { organizationId?: string }): Promise<any> {
+    const params = new URLSearchParams();
+    if (options?.organizationId) {
+      params.append('organizationId', options.organizationId);
+    }
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return this.request<any>(`/admin/stats${query}`);
+  }
+
+  async bulkUpdate(postIds: string[], updates: any): Promise<any> {
+    return this.request<any>('/admin/bulk-update', {
+      method: 'PUT',
+      body: JSON.stringify({ postIds, updates }),
+    });
   }
 }
 

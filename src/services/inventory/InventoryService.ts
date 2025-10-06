@@ -27,14 +27,13 @@
  * - Asset tracking with tamper-proof logging
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import Decimal from 'decimal.js';
 import { v4 as uuidv4 } from 'uuid';
-import { InventoryRepository } from '@/repositories/inventory/InventoryRepository';
-import { AuditService } from '@/services/audit/AuditService';
-import { NotificationService } from '@/services/notification/NotificationService';
-import { CacheService } from '@/services/caching/CacheService';
-import { logger } from '@/utils/logger';
+import { InventoryRepository } from '../../repositories/inventory/InventoryRepository';
+import { AuditTrailService } from '../audit/AuditTrailService';
+import { NotificationService } from '../notifications/NotificationService';
+import { CacheService } from '../caching/CacheService';
 import {
   CreateInventoryItemRequest,
   UpdateInventoryItemRequest,
@@ -45,17 +44,7 @@ import {
   MaintenanceScheduleRequest,
   InventoryReportRequest,
   BarcodeRequest
-} from '@/services/inventory/interfaces/InventoryInterfaces';
-import {
-  InventoryItem,
-  PurchaseOrder,
-  Supplier,
-  StockMovement,
-  MaintenanceRecord,
-  InventoryReport,
-  InventoryMetrics,
-  AssetTag
-} from '@/entities/inventory/InventoryEntities';
+} from './interfaces/InventoryInterfaces';
 import {
   InventoryValidationError,
   InventoryItemNotFoundError,
@@ -64,7 +53,76 @@ import {
   PurchaseOrderError,
   MaintenanceSchedulingError,
   BarcodeError
-} from '@/errors/InventoryErrors';
+} from '../../errors/InventoryErrors';
+
+// Define interfaces locally for now - these should be moved to separate files
+export interface InventoryItem {
+  id: string;
+  name: string;
+  itemCode: string;
+  category: string;
+  barcode?: string;
+  currentStock: number;
+  reservedStock: number;
+  availableStock: number;
+  minStockLevel?: number;
+  maxStockLevel?: number;
+  reorderLevel?: number;
+  autoReorder?: boolean;
+  careHomeId: string;
+  status: string;
+  lastStockCheck: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  orderNumber: string;
+  supplierId: string;
+  subtotal: number;
+  taxAmount: number;
+  totalAmount: number;
+  status: string;
+  orderDate: Date;
+  expectedDeliveryDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Supplier {
+  id: string;
+  name: string;
+  status: string;
+  leadTimeDays: number;
+  autoApprovalLimit: number;
+}
+
+export interface StockMovement {
+  id: string;
+  inventoryItemId: string;
+  movementType: string;
+  quantity: number;
+  previousStock: number;
+  newStock: number;
+  reason: string;
+  reference?: string;
+  performedBy: string;
+  movementDate: Date;
+  createdAt: Date;
+}
+
+export interface InventoryReport {
+  id: string;
+  reportType: string;
+  careHomeId: string;
+  period: string;
+  generatedAt: Date;
+  generatedBy: string;
+  data: any;
+  summary: any;
+  correlationId: string;
+}
 
 @Injectable()
 export class InventoryService {
@@ -72,9 +130,11 @@ export class InventoryService {
   private readonly CRITICAL_STOCK_PERCENTAGE = new Decimal(0.10); // 10% of max stock
   private readonly EXPIRY_WARNING_DAYS = 90; // 90 days before expiry
 
+  private readonly logger = new Logger(InventoryService.name);
+
   constructor(
     private readonly repository: InventoryRepository,
-    private readonly auditService: AuditService,
+    private readonly auditService: AuditTrailService,
     private readonly notificationService: NotificationService,
     private readonly cacheService: CacheService
   ) {}
@@ -86,7 +146,7 @@ export class InventoryService {
     request: CreateInventoryItemRequest,
     correlationId: string
   ): Promise<InventoryItem> {
-    logger.info('Creating inventory item', { 
+    this.logger.log('Creating inventory item', { 
       itemName: request.name,
       category: request.category,
       correlationId 
@@ -135,31 +195,30 @@ export class InventoryService {
       }
 
       // Create audit trail
-      await this.auditService.log({
+      await this.auditService.logEvent({
         action: 'INVENTORY_ITEM_CREATED',
-        resourceType: 'InventoryItem',
-        resourceId: inventoryItem.id,
+        resource: 'InventoryItem',
+        entityType: 'InventoryItem',
+        entityId: inventoryItem.id,
         userId: request.createdBy,
         details: {
           itemCode: inventoryItem.itemCode,
           name: inventoryItem.name,
           category: inventoryItem.category,
           initialStock: request.initialStock
-        },
-        correlationId,
-        complianceFlags: ['INVENTORY_MANAGEMENT', 'ASSET_TRACKING']
+        }
       });
 
-      logger.info('Inventory item created successfully', { 
+      this.logger.log('Inventory item created successfully', { 
         inventoryItemId: inventoryItem.id,
         correlationId 
       });
 
       return inventoryItem;
 
-    } catch (error) {
-      logger.error('Failed to create inventory item', { 
-        error: error.message,
+    } catch (error: unknown) {
+      this.logger.error('Failed to create inventory item', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
         correlationId 
       });
 
@@ -170,7 +229,7 @@ export class InventoryService {
       throw new InventoryValidationError(
         'Failed to create inventory item',
         'INVENTORY_ITEM_CREATION_FAILED',
-        { originalError: error.message }
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
   }  /**
@@ -181,7 +240,7 @@ export class InventoryService {
     request: CreatePurchaseOrderRequest,
     correlationId: string
   ): Promise<PurchaseOrder> {
-    logger.info('Creating purchase order', { 
+    this.logger.log('Creating purchase order', { 
       supplierId: request.supplierId,
       totalItems: request.orderItems.length,
       correlationId 
@@ -242,22 +301,21 @@ export class InventoryService {
       }
 
       // Create audit trail
-      await this.auditService.log({
+      await this.auditService.logEvent({
         action: 'PURCHASE_ORDER_CREATED',
-        resourceType: 'PurchaseOrder',
-        resourceId: purchaseOrder.id,
+        resource: 'PurchaseOrder',
+        entityType: 'PurchaseOrder',
+        entityId: purchaseOrder.id,
         userId: request.createdBy,
         details: {
           orderNumber: purchaseOrder.orderNumber,
           supplierId: request.supplierId,
           totalAmount: orderTotals.totalAmount,
           itemCount: request.orderItems.length
-        },
-        correlationId,
-        complianceFlags: ['PROCUREMENT', 'FINANCIAL_TRANSACTION']
+        }
       });
 
-      logger.info('Purchase order created successfully', { 
+      this.logger.log('Purchase order created successfully', { 
         purchaseOrderId: purchaseOrder.id,
         orderNumber: purchaseOrder.orderNumber,
         correlationId 
@@ -265,9 +323,9 @@ export class InventoryService {
 
       return purchaseOrder;
 
-    } catch (error) {
-      logger.error('Failed to create purchase order', { 
-        error: error.message,
+    } catch (error: unknown) {
+      this.logger.error('Failed to create purchase order', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
         correlationId 
       });
 
@@ -278,7 +336,7 @@ export class InventoryService {
       throw new PurchaseOrderError(
         'Failed to create purchase order',
         'PURCHASE_ORDER_CREATION_FAILED',
-        { originalError: error.message }
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
   }
@@ -290,7 +348,7 @@ export class InventoryService {
     request: StockMovementRequest,
     correlationId: string
   ): Promise<StockMovement> {
-    logger.info('Creating stock movement', { 
+    this.logger.log('Creating stock movement', { 
       inventoryItemId: request.inventoryItemId,
       movementType: request.movementType,
       quantity: request.quantity,
@@ -348,10 +406,11 @@ export class InventoryService {
       }
 
       // Create audit trail
-      await this.auditService.log({
+      await this.auditService.logEvent({
         action: 'STOCK_MOVEMENT_RECORDED',
-        resourceType: 'StockMovement',
-        resourceId: stockMovement.id,
+        resource: 'StockMovement',
+        entityType: 'StockMovement',
+        entityId: stockMovement.id,
         userId: request.performedBy,
         details: {
           inventoryItemId: request.inventoryItemId,
@@ -359,21 +418,19 @@ export class InventoryService {
           quantity: request.quantity,
           previousStock: inventoryItem.currentStock,
           newStock: newStockLevels.currentStock
-        },
-        correlationId,
-        complianceFlags: ['INVENTORY_TRACKING', 'STOCK_CONTROL']
+        }
       });
 
-      logger.info('Stock movement created successfully', { 
+      this.logger.log('Stock movement created successfully', { 
         stockMovementId: stockMovement.id,
         correlationId 
       });
 
       return stockMovement;
 
-    } catch (error) {
-      logger.error('Failed to create stock movement', { 
-        error: error.message,
+    } catch (error: unknown) {
+      this.logger.error('Failed to create stock movement', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
         correlationId 
       });
 
@@ -384,7 +441,7 @@ export class InventoryService {
       throw new InventoryValidationError(
         'Failed to create stock movement',
         'STOCK_MOVEMENT_CREATION_FAILED',
-        { originalError: error.message }
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
   }
@@ -396,7 +453,7 @@ export class InventoryService {
     request: BarcodeRequest,
     correlationId: string
   ): Promise<InventoryItem> {
-    logger.info('Processing barcode scan', { 
+    this.logger.log('Processing barcode scan', { 
       barcode: request.barcode,
       operation: request.operation,
       correlationId 
@@ -444,22 +501,21 @@ export class InventoryService {
       );
 
       // Create audit trail
-      await this.auditService.log({
+      await this.auditService.logEvent({
         action: 'BARCODE_SCANNED',
-        resourceType: 'InventoryItem',
-        resourceId: inventoryItem.id,
+        resource: 'InventoryItem',
+        entityType: 'InventoryItem',
+        entityId: inventoryItem.id,
         userId: request.scannedBy,
         details: {
           barcode: request.barcode,
           operation: request.operation,
           location: request.location,
           quantity: request.quantity
-        },
-        correlationId,
-        complianceFlags: ['BARCODE_TRACKING', 'INVENTORY_AUDIT']
+        }
       });
 
-      logger.info('Barcode scanning processed successfully', { 
+      this.logger.log('Barcode scanning processed successfully', { 
         inventoryItemId: inventoryItem.id,
         barcode: request.barcode,
         correlationId 
@@ -467,9 +523,9 @@ export class InventoryService {
 
       return inventoryItem;
 
-    } catch (error) {
-      logger.error('Failed to process barcode scanning', { 
-        error: error.message,
+    } catch (error: unknown) {
+      this.logger.error('Failed to process barcode scanning', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
         barcode: request.barcode,
         correlationId 
       });
@@ -481,7 +537,7 @@ export class InventoryService {
       throw new BarcodeError(
         'Failed to process barcode scanning',
         'BARCODE_PROCESSING_FAILED',
-        { originalError: error.message }
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
   }
@@ -493,7 +549,7 @@ export class InventoryService {
     request: InventoryReportRequest,
     correlationId: string
   ): Promise<InventoryReport> {
-    logger.info('Generating inventory report', { 
+    this.logger.log('Generating inventory report', { 
       reportType: request.reportType,
       careHomeId: request.careHomeId,
       correlationId 
@@ -505,7 +561,7 @@ export class InventoryService {
       const cachedReport = await this.cacheService.get<InventoryReport>(cacheKey);
       
       if (cachedReport && !request.forceRefresh) {
-        logger.info('Returning cached inventory report', { correlationId });
+        this.logger.log('Returning cached inventory report', { correlationId });
         return cachedReport;
       }
 
@@ -531,37 +587,36 @@ export class InventoryService {
       await this.cacheService.set(cacheKey, inventoryReport, 3600);
 
       // Create audit trail
-      await this.auditService.log({
+      await this.auditService.logEvent({
         action: 'INVENTORY_REPORT_GENERATED',
-        resourceType: 'InventoryReport',
-        resourceId: inventoryReport.id,
+        resource: 'InventoryReport',
+        entityType: 'InventoryReport',
+        entityId: inventoryReport.id,
         userId: request.generatedBy,
         details: {
           reportType: request.reportType,
           period: request.period,
           itemCount: reportData.items?.length || 0
-        },
-        correlationId,
-        complianceFlags: ['INVENTORY_REPORTING']
+        }
       });
 
-      logger.info('Inventory report generated successfully', { 
+      this.logger.log('Inventory report generated successfully', { 
         reportId: inventoryReport.id,
         correlationId 
       });
 
       return inventoryReport;
 
-    } catch (error) {
-      logger.error('Failed to generate inventory report', { 
-        error: error.message,
+    } catch (error: unknown) {
+      this.logger.error('Failed to generate inventory report', { 
+        error: error instanceof Error ? error.message : 'Unknown error',
         correlationId 
       });
 
       throw new InventoryValidationError(
         'Failed to generate inventory report',
         'INVENTORY_REPORT_GENERATION_FAILED',
-        { originalError: error.message }
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
   }

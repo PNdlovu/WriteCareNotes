@@ -1,23 +1,95 @@
-import { Request, Response } from 'express';
-import { AgentManager } from '../../services/ai-agents/AgentManager';
+import { Controller, Get, Put, Param, Query, Body, UseGuards, Request, Logger, Res, HttpStatus } from '@nestjs/common';
+import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import { AuthGuard } from '../../middleware/auth.guard';
+import { RbacGuard } from '../../middleware/rbac.guard';
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
-import { Logger } from '@nestjs/common';
 
-export class AgentConsoleController {
-  private agentManager: AgentManager;
-  private auditService: AuditTrailService;
-  private logger: Logger;
+// Define interfaces for agent management
+interface AgentStatus {
+  id: string;
+  name: string;
+  status: 'idle' | 'busy' | 'error' | 'disabled';
+  lastActivity: Date;
+  processedCount: number;
+  errorCount: number;
+  averageProcessingTime: number;
+  capabilities: string[];
+}
 
-  constructor() {
-    this.agentManager = new AgentManager();
-    this.auditService = new AuditTrailService();
-    this.logger = new Logger(AgentConsoleController.name);
+interface AuthenticatedRequest extends ExpressRequest {
+  user?: {
+    id: string;
+    email: string;
+    tenantId: string;
+    permissions: string[];
+    roles: string[];
+    organizationId?: string;
+  };
+}
+
+// Mock AgentManager service for now - this should be replaced with actual implementation
+class AgentManager {
+  getAllAgentStatuses(): AgentStatus[] {
+    return [
+      {
+        id: 'voice_to_note',
+        name: 'Voice-to-Note Agent',
+        status: 'idle',
+        lastActivity: new Date(),
+        processedCount: 150,
+        errorCount: 5,
+        averageProcessingTime: 1200,
+        capabilities: ['transcription', 'note_generation']
+      },
+      {
+        id: 'smart_roster',
+        name: 'Smart Roster Agent',
+        status: 'busy',
+        lastActivity: new Date(),
+        processedCount: 89,
+        errorCount: 2,
+        averageProcessingTime: 2500,
+        capabilities: ['roster_optimization', 'scheduling']
+      },
+      {
+        id: 'risk_flag',
+        name: 'Risk Flag Agent',
+        status: 'idle',
+        lastActivity: new Date(),
+        processedCount: 234,
+        errorCount: 8,
+        averageProcessingTime: 800,
+        capabilities: ['risk_assessment', 'anomaly_detection']
+      }
+    ];
   }
+
+  async setAgentEnabled(agentId: string, enabled: boolean): Promise<void> {
+    // In a real implementation, this would update the agent status in database
+    console.log(`Setting agent ${agentId} enabled: ${enabled}`);
+  }
+}
+
+@Controller('api/agent-console')
+@UseGuards(AuthGuard)
+export class AgentConsoleController {
+  private readonly logger = new Logger(AgentConsoleController.name);
+
+  constructor(
+    private readonly auditService: AuditTrailService,
+  ) {
+    // Initialize AgentManager - in a real implementation, this would be injected
+    this.agentManager = new AgentManager();
+  }
+
+  private readonly agentManager: AgentManager;
 
   /**
    * Get agent metrics
    */
-  async getAgentMetrics(req: Request, res: Response): Promise<void> {
+  @Get('metrics')
+  @UseGuards(RbacGuard)
+  async getAgentMetrics(@Request() req: any) {
     try {
       const agentStatuses = this.agentManager.getAllAgentStatuses();
       
@@ -47,47 +119,66 @@ export class AgentConsoleController {
         action: 'READ',
         details: { agentCount: metrics.length },
         userId: req.user?.id || 'system',
-        timestamp: new Date()
       });
 
-      res.json(metrics);
+      return {
+        success: true,
+        data: metrics,
+        message: 'Agent metrics retrieved successfully',
+      };
     } catch (error) {
-      this.logger.error('Error fetching agent metrics:', error);
-      res.status(500).json({ error: 'Failed to fetch agent metrics' });
+      this.logger.error(`Error fetching agent metrics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch agent metrics',
+      };
     }
   }
 
   /**
    * Get agent performance data
    */
-  async getAgentPerformance(req: Request, res: Response): Promise<void> {
+  @Get('performance')
+  @UseGuards(RbacGuard)
+  async getAgentPerformance(
+    @Query('agentId') agentId?: string,
+    @Query('hours') hoursParam: string = '24',
+    @Request() req?: any
+  ) {
     try {
-      const { agentId, hours = 24 } = req.query;
-      
+      const hours = parseInt(hoursParam);
       // In a real implementation, this would query performance data from database
-      const performanceData = await this.getPerformanceData(agentId as string, parseInt(hours as string));
+      const performanceData = await this.getPerformanceData(agentId, hours);
       
       await this.auditService.logEvent({
         resource: 'AgentConsole',
         entityType: 'Performance',
         entityId: agentId || 'all_agents',
         action: 'READ',
-        details: { agentId, hours },
-        userId: req.user?.id || 'system',
-        timestamp: new Date()
+        details: { agentId, hours: hoursParam },
+        userId: req?.user?.id || 'system',
       });
 
-      res.json(performanceData);
+      return {
+        success: true,
+        data: performanceData,
+        message: 'Agent performance data retrieved successfully',
+      };
     } catch (error) {
-      this.logger.error('Error fetching agent performance:', error);
-      res.status(500).json({ error: 'Failed to fetch agent performance' });
+      this.logger.error(`Error fetching agent performance: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch agent performance',
+      };
     }
   }
 
   /**
    * Get agent configurations
    */
-  async getAgentConfigurations(req: Request, res: Response): Promise<void> {
+  @Get('configurations')
+  @UseGuards(RbacGuard)
+  async getAgentConfigurations(@Request() req: any) {
     try {
       const configurations = await this.getConfigurationData();
       
@@ -98,20 +189,28 @@ export class AgentConsoleController {
         action: 'READ',
         details: { configurationCount: configurations.length },
         userId: req.user?.id || 'system',
-        timestamp: new Date()
       });
 
-      res.json(configurations);
+      return {
+        success: true,
+        data: configurations,
+        message: 'Agent configurations retrieved successfully',
+      };
     } catch (error) {
-      this.logger.error('Error fetching agent configurations:', error);
-      res.status(500).json({ error: 'Failed to fetch agent configurations' });
+      this.logger.error(`Error fetching agent configurations: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch agent configurations',
+      };
     }
   }
 
   /**
    * Get system health
    */
-  async getSystemHealth(req: Request, res: Response): Promise<void> {
+  @Get('health')
+  @UseGuards(RbacGuard)
+  async getSystemHealth(@Request() req: any) {
     try {
       const agentStatuses = this.agentManager.getAllAgentStatuses();
       
@@ -138,23 +237,35 @@ export class AgentConsoleController {
         action: 'READ',
         details: health,
         userId: req.user?.id || 'system',
-        timestamp: new Date()
       });
 
-      res.json(health);
+      return {
+        success: true,
+        data: health,
+        message: 'System health retrieved successfully',
+      };
     } catch (error) {
-      this.logger.error('Error fetching system health:', error);
-      res.status(500).json({ error: 'Failed to fetch system health' });
+      this.logger.error(`Error fetching system health: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch system health',
+      };
     }
   }
 
   /**
    * Toggle agent enabled/disabled
    */
-  async toggleAgent(req: Request, res: Response): Promise<void> {
+  @Put(':agentId/toggle')
+  @UseGuards(RbacGuard)
+  async toggleAgent(
+    @Param('agentId') agentId: string,
+    @Body() body: { enabled: boolean },
+    @Request() req: AuthenticatedRequest,
+    @Res() res: ExpressResponse
+  ): Promise<void> {
     try {
-      const { agentId } = req.params;
-      const { enabled } = req.body;
+      const { enabled } = body;
 
       await this.agentManager.setAgentEnabled(agentId, enabled);
 
@@ -168,21 +279,31 @@ export class AgentConsoleController {
         timestamp: new Date()
       });
 
-      res.json({ success: true, message: `Agent ${enabled ? 'enabled' : 'disabled'} successfully` });
+      res.status(HttpStatus.OK).json({ 
+        success: true, 
+        message: `Agent ${enabled ? 'enabled' : 'disabled'} successfully` 
+      });
     } catch (error) {
       this.logger.error('Error toggling agent:', error);
-      res.status(500).json({ error: 'Failed to toggle agent' });
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ 
+        success: false,
+        error: 'Failed to toggle agent' 
+      });
     }
   }
 
   /**
    * Update agent configuration
    */
-  async updateAgentConfiguration(req: Request, res: Response): Promise<void> {
+  @Put(':agentId/configuration')
+  @UseGuards(RbacGuard)
+  async updateAgentConfiguration(
+    @Param('agentId') agentId: string,
+    @Body() updates: Record<string, any>,
+    @Request() req: AuthenticatedRequest,
+    @Res() res: ExpressResponse
+  ): Promise<void> {
     try {
-      const { agentId } = req.params;
-      const updates = req.body;
-
       // In a real implementation, this would update the agent configuration
       await this.updateConfiguration(agentId, updates);
 
@@ -196,22 +317,33 @@ export class AgentConsoleController {
         timestamp: new Date()
       });
 
-      res.json({ success: true, message: 'Configuration updated successfully' });
+      res.status(HttpStatus.OK).json({ 
+        success: true, 
+        message: 'Configuration updated successfully' 
+      });
     } catch (error) {
       this.logger.error('Error updating agent configuration:', error);
-      res.status(500).json({ error: 'Failed to update agent configuration' });
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ 
+        success: false,
+        error: 'Failed to update agent configuration' 
+      });
     }
   }
 
   /**
    * Get agent logs
    */
-  async getAgentLogs(req: Request, res: Response): Promise<void> {
+  @Get(':agentId/logs')
+  @UseGuards(RbacGuard)
+  async getAgentLogs(
+    @Param('agentId') agentId: string,
+    @Query('limit') limit: string = '100',
+    @Query('level') level?: string,
+    @Request() req?: AuthenticatedRequest,
+    @Res() res?: ExpressResponse
+  ): Promise<void> {
     try {
-      const { agentId } = req.params;
-      const { limit = 100, level } = req.query;
-
-      const logs = await this.getLogs(agentId, parseInt(limit as string), level as string);
+      const logs = await this.getLogs(agentId, parseInt(limit), level);
 
       await this.auditService.logEvent({
         resource: 'AgentConsole',
@@ -219,14 +351,21 @@ export class AgentConsoleController {
         entityId: agentId,
         action: 'READ',
         details: { agentId, limit, level },
-        userId: req.user?.id || 'system',
+        userId: req?.user?.id || 'system',
         timestamp: new Date()
       });
 
-      res.json(logs);
+      res?.status(HttpStatus.OK).json({
+        success: true,
+        data: logs,
+        message: 'Agent logs retrieved successfully'
+      });
     } catch (error) {
       this.logger.error('Error fetching agent logs:', error);
-      res.status(500).json({ error: 'Failed to fetch agent logs' });
+      res?.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ 
+        success: false,
+        error: 'Failed to fetch agent logs' 
+      });
     }
   }
 

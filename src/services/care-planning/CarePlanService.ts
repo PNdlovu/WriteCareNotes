@@ -300,8 +300,8 @@ export class CarePlanService {
     filters: CarePlanSearchFilters,
     page: number = 1,
     limit: number = 20
-  ): Promise<{
-    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() }); carePlans: CarePlan[]; total: number; totalPages: number }> {
+  ): Promise<{ carePlans: CarePlan[]; total: number; totalPages: number }> {
+    logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
     try {
       // Convert filters to repository search criteria
       const searchCriteria = {

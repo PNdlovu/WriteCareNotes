@@ -1,5 +1,3 @@
-import { EventEmitter2 } from "eventemitter2";
-
 /**
  * @fileoverview Compliance Check Service for WriteCareNotes
  * @module ComplianceCheckService
@@ -91,6 +89,8 @@ export interface ComplianceCheckResult {
   checkId: string;
   framework: ComplianceFramework;
   checkType: ComplianceCheckType;
+  entityType: string;
+  entityId: string;
   status: ComplianceStatus;
   severity: ComplianceSeverity;
   findings: ComplianceFinding[];
@@ -150,11 +150,24 @@ export interface ComplianceViolation {
 }
 
 /**
+ * Compliance rule interface
+ */
+export interface ComplianceRule {
+  ruleId: string;
+  name: string;
+  description: string;
+  framework: ComplianceFramework;
+  checkType: ComplianceCheckType;
+  severity: ComplianceSeverity;
+  validator: (request: ComplianceCheckRequest) => Promise<{ findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; }>;
+}
+
+/**
  * Compliance Check Service
  */
-
+@Injectable()
 export class ComplianceCheckService {
-  // Logger removed
+  private readonly logger = new Logger(ComplianceCheckService.name);
 
   // Compliance rules registry
   private readonly complianceRules = new Map<string, ComplianceRule[]>();
@@ -164,7 +177,7 @@ export class ComplianceCheckService {
   constructor(
     private readonly eventEmitter: EventEmitter2
   ) {
-    console.log('Compliance Check Service initialized');
+    this.logger.log('Compliance Check Service initialized');
     this.initializeComplianceRules();
   }
 
@@ -213,6 +226,8 @@ export class ComplianceCheckService {
         checkId: request.checkId,
         framework: request.framework,
         checkType: request.checkType,
+        entityType: request.entityType,
+        entityId: request.entityId,
         status,
         severity,
         findings,
@@ -1145,20 +1160,6 @@ export class ComplianceCheckService {
   }
 }
 
-/**
- * Compliance rule interface
- */
-interface ComplianceRule {
-  ruleId: string;
-  name: string;
-  description: string;
-  framework: ComplianceFramework;
-  checkType: ComplianceCheckType;
-  severity: ComplianceSeverity;
-  validator: (request: ComplianceCheckRequest) => Promise<{
-    findings: ComplianceFinding[];
-    recommendations: ComplianceRecommendation[];
-  }>;
-}
+
 
 export default ComplianceCheckService;

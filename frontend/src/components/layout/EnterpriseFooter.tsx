@@ -10,7 +10,6 @@ import {
   Linkedin, 
   Facebook,
   Shield,
-  FileText,
   Building
 } from 'lucide-react'
 
@@ -22,6 +21,7 @@ const footerLinks = {
     { name: 'Contact Us', href: '/contact' },
   ],
   solutions: [
+    { name: 'AI-Powered Platform', href: '/platform/ai-features' },
     { name: 'Care Home Management', href: '/solutions/care-home' },
     { name: 'CQC Compliance', href: '/solutions/compliance' },
     { name: 'Staff Management', href: '/solutions/staff' },
@@ -31,6 +31,7 @@ const footerLinks = {
   ],
   resources: [
     { name: 'Help Center', href: '/help' },
+    { name: 'AI Platform Features', href: '/platform/ai-features' },
     { name: 'Pricing', href: '/pricing' },
     { name: 'Book a Demo', href: '/demo' },
     { name: 'API Documentation', href: '/docs/api' },
@@ -40,6 +41,8 @@ const footerLinks = {
     { name: 'Terms of Service', href: '/terms-of-service' },
     { name: 'GDPR Compliance', href: '/gdpr' },
     { name: 'Data Security', href: '/security' },
+    { name: 'Cookie Policy', href: '/cookie-policy' },
+    { name: 'System Status', href: '/system-status' },
   ],
 }
 

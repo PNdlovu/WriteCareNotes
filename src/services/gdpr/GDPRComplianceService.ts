@@ -17,11 +17,8 @@ import { Injectable, Logger } from '@nestjs/common';
 
 
 
-import { OvertimeStatus, HolidayStatus } from '../entities/workforce/OvertimeRequest';
-import { OvertimeStatus, HolidayStatus } from '../entities/workforce/OvertimeRequest';
-import { OvertimeStatus, HolidayStatus } from '../entities/workforce/OvertimeRequest';
-import { OvertimeStatus, HolidayStatus } from '../entities/workforce/OvertimeRequest';
-import { OvertimeStatus, HolidayStatus, ResidentStatus } from '../entities/workforce/OvertimeRequest';
+// Note: These imports are commented out as the entities don't exist yet
+// import { OvertimeStatus, HolidayStatus, ResidentStatus } from '../entities/workforce/OvertimeRequest';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface GDPRDataProcessingRequest {
@@ -88,8 +85,9 @@ export interface GDPRViolation {
 }
 
 
+@Injectable()
 export class GDPRComplianceService {
-  // Logger removed
+  private readonly logger = new Logger(GDPRComplianceService.name);
 
   constructor() {
     console.log('GDPR Compliance Service initialized');
