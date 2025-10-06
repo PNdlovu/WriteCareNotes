@@ -94,17 +94,24 @@ This document outlines the implementation plan for **Phase 2 enhancements** to t
 
 ### **TIER 3: Integration & Mobility** (Week 5-6) ⭐
 
-#### 7. External System Integration
-**Business Value:** Seamless data flow with existing care home systems  
-**User Story:** As an IT manager, I need policies to sync with our existing systems
+#### 7. British Isles Regulatory Integration (All 7 Jurisdictions)
+**Business Value:** Seamless compliance across all British Isles regulators  
+**User Story:** As a compliance manager operating across multiple jurisdictions, I need automated sync with ALL relevant regulators
 
 **Features:**
-- ✅ CQC inspection report integration
-- ✅ Local authority policy sync
+- ✅ **CQC (England)** - Inspection report integration, fundamental standards mapping
+- ✅ **Care Inspectorate Wales (CIW)** - National minimum standards sync, inspection scheduling
+- ✅ **RQIA (Northern Ireland)** - Quality standards integration, improvement notice tracking
+- ✅ **Care Inspectorate (Scotland)** - Health and social care standards, self-assessment integration
+- ✅ **HIQA (Ireland)** - National standards compliance, inspection report sync
+- ✅ **Regulation & Quality Improvement (Jersey)** - Care standards integration
+- ✅ **DHSC (Isle of Man)** - Regulatory framework compliance tracking
+- ✅ Local authority policy sync (all jurisdictions)
 - ✅ Third-party compliance tool webhooks
 - ✅ SCIM integration for user provisioning
-- ✅ REST API with full documentation
-- ✅ Webhook event subscriptions
+- ✅ Multi-jurisdiction REST API with full documentation
+- ✅ Cross-border compliance reporting
+- ✅ Unified regulatory dashboard (all 7 regulators in one view)
 
 #### 8. Mobile-Optimized Features
 **Business Value:** Enable policy management on-the-go  
@@ -176,9 +183,21 @@ export class PolicyDependencyService {
 // New service: PolicyAnalyticsService
 export class PolicyAnalyticsService {
   async calculateRiskScore(policy: PolicyDraft): Promise<RiskScore>
-  async detectGaps(organizationId: string): Promise<PolicyGap[]>
+  async detectGaps(organizationId: string, jurisdiction?: string): Promise<PolicyGap[]>
   async getEffectivenessMetrics(policyId: string): Promise<EffectivenessMetrics>
   async generateExecutiveReport(orgId: string, period: DateRange): Promise<Report>
+  async getMultiJurisdictionCompliance(orgId: string): Promise<ComplianceMatrix>
+}
+
+// New service: BritishIslesRegulatoryService
+export class BritishIslesRegulatoryService {
+  // Integration with all 7 British Isles regulators
+  async syncInspectionReports(orgId: string, regulator: RegulatorType): Promise<void>
+  async mapPolicyToStandards(policyId: string, jurisdiction: Jurisdiction): Promise<StandardsMapping>
+  async getComplianceStatus(orgId: string, regulator: RegulatorType): Promise<ComplianceStatus>
+  async submitComplianceReport(orgId: string, regulator: RegulatorType): Promise<SubmissionResult>
+  async trackImprovementActions(inspectionId: string): Promise<ActionTracker>
+  async generateCrossBorderReport(orgId: string): Promise<UnifiedReport>
 }
 ```
 
@@ -250,18 +269,43 @@ CREATE TABLE policy_risk_scores (
   INDEX idx_policy_risk_time (policy_id, calculated_at)
 );
 
--- External Integrations
+-- External Integrations (All British Isles Regulators)
 CREATE TABLE external_integrations (
   id UUID PRIMARY KEY,
   organization_id UUID REFERENCES organizations(id),
-  integration_type VARCHAR(50), -- cqc, local_authority, third_party
-  config JSONB,
+  regulator_type VARCHAR(50), -- cqc, ciw, rqia, care_inspectorate, hiqa, jersey_rqi, iom_dhsc
+  integration_type VARCHAR(50), -- inspection_sync, policy_sync, compliance_report, local_authority
+  jurisdiction VARCHAR(50), -- england, wales, northern_ireland, scotland, ireland, jersey, isle_of_man
+  config JSONB, -- regulator-specific configuration
+  credentials_encrypted TEXT, -- encrypted API keys/credentials
   status VARCHAR(20) DEFAULT 'active',
   last_sync TIMESTAMP,
+  sync_frequency VARCHAR(20) DEFAULT 'daily', -- realtime, hourly, daily, weekly
+  error_log JSONB,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  INDEX idx_org_regulator (organization_id, regulator_type)
+);
+
+-- Regulatory Inspection Reports (Multi-Jurisdiction)
+CREATE TABLE regulatory_inspections (
+  id UUID PRIMARY KEY,
+  organization_id UUID REFERENCES organizations(id),
+  regulator_type VARCHAR(50), -- cqc, ciw, rqia, care_inspectorate, hiqa, jersey_rqi, iom_dhsc
+  jurisdiction VARCHAR(50),
+  inspection_date DATE,
+  inspection_type VARCHAR(50), -- scheduled, unannounced, follow_up, themed
+  overall_rating VARCHAR(20), -- outstanding, good, requires_improvement, inadequate (or jurisdiction equivalent)
+  key_questions JSONB, -- regulator-specific assessment areas
+  findings JSONB, -- inspection findings and requirements
+  action_plan JSONB, -- required improvements and deadlines
+  report_url TEXT,
+  synced_at TIMESTAMP DEFAULT NOW(),
+  policy_gaps_identified UUID[], -- links to policy_gaps table
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Mobile Acknowledgments
+-- Mobile Acknowledgments (with Biometric Data)
 CREATE TABLE mobile_acknowledgments (
   id UUID PRIMARY KEY,
   acknowledgment_id UUID REFERENCES user_acknowledgments(id),
@@ -375,19 +419,25 @@ frontend/src/components/policy/mobile/OfflineSync.tsx
 
 ### **Week 5-6: TIER 3 Features**
 
-#### Week 5: External Integrations
+#### Week 5: External Integrations (All British Isles Regulators)
 - **Day 1-2:** Integration framework
   - Webhook infrastructure
   - REST API enhancement
   - SCIM integration
-- **Day 3-4:** CQC integration
-  - Inspection report parsing
-  - Policy mapping
-  - Automated recommendations
-- **Day 5:** Third-party connectors
-  - Generic webhook handlers
+  - Multi-regulator connector architecture
+- **Day 3-4:** British Isles regulator integrations
+  - **CQC (England):** Inspection report parsing, policy mapping, automated recommendations
+  - **Care Inspectorate Wales (CIW):** Inspection sync, compliance tracking
+  - **RQIA (Northern Ireland):** Quality standards integration, policy alignment
+  - **Care Inspectorate (Scotland):** Self-assessment sync, improvement plan tracking
+  - **HIQA (Ireland):** National standards mapping, compliance reporting
+  - **Regulation and Quality Improvement Authority (Jersey):** Standards integration
+  - **DHSC (Isle of Man):** Regulatory framework compliance
+- **Day 5:** Third-party connectors & local authority sync
+  - Generic webhook handlers for all 7 regulators
+  - Local authority policy sync (all jurisdictions)
   - OAuth2 support
-  - API documentation
+  - Multi-jurisdiction API documentation
 
 #### Week 6: Mobile & Lifecycle
 - **Day 1-2:** Mobile optimization
@@ -468,12 +518,17 @@ analytics.e2e.spec.ts              // Analytics and reporting
 - ✅ Session timeout (30 minutes idle)
 - ✅ Encrypted WebSocket connections (WSS)
 
-### **External Integration Security**
+### **External Integration Security (All British Isles Regulators)**
 - ✅ OAuth2 for third-party integrations
-- ✅ API key rotation every 90 days
-- ✅ Webhook signature verification
-- ✅ IP whitelisting for sensitive integrations
-- ✅ Audit logging for all external calls
+- ✅ Separate encrypted credentials per regulator (CQC, CIW, RQIA, Care Inspectorate, HIQA, Jersey, IoM)
+- ✅ API key rotation every 90 days (automated)
+- ✅ Webhook signature verification (regulator-specific)
+- ✅ IP whitelisting for sensitive integrations (per jurisdiction)
+- ✅ Audit logging for all external calls (compliance requirement)
+- ✅ Regulator-specific rate limiting (respecting API quotas)
+- ✅ Encrypted data in transit and at rest (for all 7 jurisdictions)
+- ✅ GDPR compliance for cross-border data (Ireland/UK)
+- ✅ Jurisdiction-aware data residency
 
 ### **Mobile Security**
 - ✅ Biometric data never stored (hash only)
@@ -545,9 +600,18 @@ analytics.e2e.spec.ts              // Analytics and reporting
 ### **Technical Documentation**
 - ✅ API documentation for new endpoints
 - ✅ WebSocket protocol specification
-- ✅ Integration guide for external systems
+- ✅ Integration guide for all 7 British Isles regulators:
+  - CQC (England) integration guide
+  - CIW (Wales) integration guide
+  - RQIA (Northern Ireland) integration guide
+  - Care Inspectorate (Scotland) integration guide
+  - HIQA (Ireland) integration guide
+  - Jersey RQI integration guide
+  - Isle of Man DHSC integration guide
+- ✅ Local authority sync documentation (all jurisdictions)
+- ✅ Cross-border compliance setup guide
 - ✅ Database migration guide
-- ✅ Deployment runbook
+- ✅ Multi-jurisdiction deployment runbook
 
 ### **User Documentation**
 - ✅ Video tutorials for each new feature
