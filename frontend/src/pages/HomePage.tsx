@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
+import { AIChatWidget } from '../components/AIChatWidget'
 import { 
   Bot, 
   Shield, 
@@ -13,7 +14,11 @@ import {
   DollarSign,
   Phone,
   Play,
-  Star
+  Star,
+  Zap,
+  Lock,
+  Globe,
+  BarChart3
 } from 'lucide-react'
 
 const enterpriseCapabilities = [
@@ -133,6 +138,23 @@ const industrialFeatures = [
   }
 ]
 
+const trustIndicators = [
+  { icon: Shield, label: "ISO 27001 Certified", description: "Enterprise security" },
+  { icon: Lock, label: "GDPR Compliant", description: "Full data protection" },
+  { icon: Globe, label: "99.99% Uptime", description: "Bank-level reliability" },
+  { icon: BarChart3, label: "ROI in 3 Months", description: "Proven savings" }
+]
+
+const complianceBadges = [
+  "CQC (England)",
+  "Care Inspectorate (Scotland)",
+  "CIW (Wales)",
+  "RQIA (Northern Ireland)",
+  "ISO 27001",
+  "NHS DSP Toolkit",
+  "Cyber Essentials Plus"
+]
+
 export const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
@@ -155,10 +177,23 @@ export const HomePage: React.FC = () => {
                     Care Home Operations
                   </span>
                 </h1>
-                <p className="text-xl text-gray-600 mb-10 max-w-3xl leading-relaxed">
-                  The only AI-powered platform that combines care home management, HMRC payroll integration, 
-                  regulatory compliance automation, and enterprise financial planning in one comprehensive solution.
+                <p className="text-xl text-gray-600 mb-6 max-w-3xl leading-relaxed">
+                  The <span className="font-bold text-violet-600">only AI-powered platform</span> combining care home management, 
+                  RAG-based policy authoring, HMRC payroll integration, and full British Isles regulatory compliance.
                 </p>
+                
+                <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
+                  <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
+                    <Zap className="h-6 w-6 text-green-600" />
+                    <span className="text-lg font-bold text-green-900">
+                      🎯 Market-Leading Innovation
+                    </span>
+                  </div>
+                  <p className="text-green-800 text-center lg:text-left">
+                    <span className="font-semibold">RAG AI Policy Assistant</span> - UNIQUE in British Isles market. 
+                    Zero-hallucination AI gives you a <span className="font-bold">24-36 month competitive advantage</span>.
+                  </p>
+                </div>
                 
                 {/* Value Propositions */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
@@ -312,20 +347,171 @@ export const HomePage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {industrialFeatures.map((section, index) => (
               <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-200">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">{section.category}</h3>
-                <ul className="space-y-4">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">{section.category}</h3>
+                <ul className="space-y-3">
                   {section.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
                       <CheckCircle className="h-5 w-5 text-violet-600 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-sm text-gray-700">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-violet-900 to-purple-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Transparent, Fair Pricing for Every Care Home
+            </h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+              No hidden fees. No surprises. Just enterprise-grade care management at a fraction of traditional costs.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {/* Starter Plan */}
+            <div className="bg-white rounded-2xl p-8 shadow-2xl border-2 border-gray-200 hover:border-violet-400 transition-all">
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+                <p className="text-gray-600">Perfect for small care homes</p>
+              </div>
+              <div className="mb-6">
+                <div className="flex items-baseline">
+                  <span className="text-5xl font-bold text-gray-900">£199</span>
+                  <span className="text-gray-600 ml-2">/month</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">Up to 50 residents</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">Core care management</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">Mobile apps (iOS/Android)</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">CQC compliance tools</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">Email support</span>
+                </li>
+              </ul>
+              <Link to="/pricing">
+                <Button variant="outline" size="lg" className="w-full">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+
+            {/* Professional Plan - Highlighted */}
+            <div className="bg-gradient-to-br from-violet-600 to-purple-600 rounded-2xl p-8 shadow-2xl border-4 border-yellow-400 relative transform scale-105">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                  ⭐ MOST POPULAR
+                </span>
+              </div>
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-white mb-2">Professional</h3>
+                <p className="text-white/80">For growing care providers</p>
+              </div>
+              <div className="mb-6">
+                <div className="flex items-baseline">
+                  <span className="text-5xl font-bold text-white">£399</span>
+                  <span className="text-white/80 ml-2">/month</span>
+                </div>
+                <p className="text-sm text-white/70 mt-2">Up to 150 residents</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-white">Everything in Starter, plus:</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-white font-semibold">RAG AI Policy Assistant</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-white font-semibold">WriteCare Connect</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-white">Document Intelligence</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-300 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-white">Priority support</span>
+                </li>
+              </ul>
+              <Link to="/pricing">
+                <Button variant="secondary" size="lg" className="w-full shadow-xl">
+                  Start Free Trial
+                </Button>
+              </Link>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="bg-white rounded-2xl p-8 shadow-2xl border-2 border-gray-200 hover:border-violet-400 transition-all">
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                <p className="text-gray-600">For care home groups</p>
+              </div>
+              <div className="mb-6">
+                <div className="flex items-baseline">
+                  <span className="text-4xl font-bold text-gray-900">Custom</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">Unlimited residents & sites</p>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">Everything in Professional, plus:</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700 font-semibold">Multi-site management</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">Dedicated account manager</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">Custom integrations</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">24/7 premium support</span>
+                </li>
+              </ul>
+              <Link to="/contact">
+                <Button variant="care" size="lg" className="w-full">
+                  Contact Sales
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full border border-white/20">
+              <TrendingUp className="h-6 w-6 text-green-300" />
+              <span className="text-white font-semibold">
+                Average ROI: £8,400/year savings per home  •  14-day free trial  •  No credit card required
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -356,6 +542,108 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Trust Indicators Section */}
+      <section className="py-16 bg-white border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {trustIndicators.map((indicator, index) => {
+              const IconComponent = indicator.icon
+              return (
+                <div key={index} className="text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="bg-violet-100 p-3 rounded-full">
+                      <IconComponent className="h-6 w-6 text-violet-600" />
+                    </div>
+                  </div>
+                  <div className="font-semibold text-gray-900 mb-1">{indicator.label}</div>
+                  <div className="text-sm text-gray-600">{indicator.description}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Compliance Badges Section */}
+      <section className="py-12 bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              Fully Compliant Across British Isles
+            </h3>
+            <p className="text-gray-600">Certified and audited by leading regulatory bodies</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {complianceBadges.map((badge, index) => (
+              <div
+                key={index}
+                className="bg-white px-6 py-3 rounded-full border-2 border-violet-200 text-sm font-semibold text-gray-700 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <CheckCircle className="h-4 w-4 text-green-500 inline mr-2" />
+                {badge}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Calculator Preview */}
+      <section className="py-20 bg-gradient-to-br from-violet-50 to-purple-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-2xl p-10">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Calculate Your ROI
+              </h2>
+              <p className="text-lg text-gray-600">
+                Average care homes save <span className="text-violet-600 font-bold">£8,400/year</span> with WriteCareNotes
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                <div className="text-center">
+                  <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-3" />
+                  <div className="text-3xl font-bold text-green-700 mb-2">80%</div>
+                  <div className="text-sm font-semibold text-gray-700 mb-1">Time Savings</div>
+                  <div className="text-xs text-gray-600">Admin & paperwork</div>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
+                <div className="text-center">
+                  <DollarSign className="h-8 w-8 text-blue-600 mx-auto mb-3" />
+                  <div className="text-3xl font-bold text-blue-700 mb-2">25%</div>
+                  <div className="text-sm font-semibold text-gray-700 mb-1">Cost Reduction</div>
+                  <div className="text-xs text-gray-600">Operational expenses</div>
+                </div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-6 border border-purple-200">
+                <div className="text-center">
+                  <Award className="h-8 w-8 text-purple-600 mx-auto mb-3" />
+                  <div className="text-3xl font-bold text-purple-700 mb-2">100%</div>
+                  <div className="text-sm font-semibold text-gray-700 mb-1">Compliance</div>
+                  <div className="text-xs text-gray-600">All inspections</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link to="/pricing">
+                <Button variant="care" size="lg" className="shadow-lg">
+                  <Zap className="h-5 w-5 mr-2" />
+                  View Pricing & Calculate Savings
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Chat Widget */}
+      <AIChatWidget />
     </div>
   )
 }
