@@ -11,7 +11,8 @@ import {
   ArrowRight,
   Phone,
   Mail,
-  MessageCircle
+  MessageCircle,
+  FileText
 } from 'lucide-react'
 
 interface ResourceCategory {
@@ -45,22 +46,137 @@ const resourceCategories: ResourceCategory[] = [
         featured: true
       },
       {
+        title: 'RAG AI Policy Assistant Quick Start',
+        description: 'Get started with zero-hallucination AI policy authoring in 15 minutes',
+        type: 'Quick Start',
+        link: '/resources/rag-ai-quickstart',
+        featured: true
+      },
+      {
+        title: 'WriteCare Connect Setup Guide',
+        description: 'Configure family communications, video calling, and supervision features',
+        type: 'Setup Guide',
+        link: '/resources/writecare-connect-setup'
+      },
+      {
+        title: 'Document Intelligence Configuration',
+        description: 'Set up AI-powered document analysis and workflow automation',
+        type: 'Configuration',
+        link: '/resources/document-intelligence-config'
+      },
+      {
         title: 'Quick Start Checklist',
         description: 'Essential checklist for your first 30 days with the platform',
         type: 'Checklist',
         link: '/resources/quick-start'
       },
       {
-        title: 'Training Materials',
-        description: 'Comprehensive training resources for your care team',
-        type: 'Training',
-        link: '/resources/training'
-      },
-      {
         title: 'Platform Demo Video',
         description: 'Watch our comprehensive platform walkthrough',
         type: 'Video',
         link: '/demo'
+      }
+    ]
+  },
+  {
+    id: 'ai-innovation',
+    title: 'AI & Innovation Features',
+    description: 'Leverage cutting-edge AI for policy authoring and intelligent automation',
+    icon: Lightbulb,
+    color: 'from-violet-500 to-purple-600',
+    resources: [
+      {
+        title: 'RAG AI Policy Assistant Complete Guide',
+        description: 'Master zero-hallucination AI policy authoring with verified sources',
+        type: 'Comprehensive Guide',
+        link: '/resources/rag-ai-complete-guide',
+        featured: true
+      },
+      {
+        title: 'Policy Templates Library',
+        description: 'Pre-built CQC-compliant policy templates for all 7 jurisdictions',
+        type: 'Templates',
+        link: '/resources/policy-templates'
+      },
+      {
+        title: 'Multi-Jurisdiction Policy Authoring',
+        description: 'Create policies compliant with England, Scotland, Wales, NI, Ireland, Crown Dependencies',
+        type: 'Guide',
+        link: '/resources/multi-jurisdiction-policies'
+      },
+      {
+        title: 'Source Citation Best Practices',
+        description: 'Ensure every policy statement is traceable to verified sources',
+        type: 'Best Practices',
+        link: '/resources/source-citations'
+      }
+    ]
+  },
+  {
+    id: 'family-communications',
+    title: 'WriteCare Connect & Family Engagement',
+    description: 'Build trust through supervised, secure family communications',
+    icon: Users,
+    color: 'from-pink-500 to-rose-600',
+    resources: [
+      {
+        title: 'WriteCare Connect User Manual',
+        description: 'Complete guide to family messaging, video calls, and supervision',
+        type: 'Manual',
+        link: '/resources/writecare-connect-manual',
+        featured: true
+      },
+      {
+        title: 'Video Calling Best Practices',
+        description: 'Maximize engagement with scheduled HD video calls',
+        type: 'Best Practices',
+        link: '/resources/video-calling-practices'
+      },
+      {
+        title: 'Consent Management Guide',
+        description: 'GDPR-compliant consent for photos, videos, and communications',
+        type: 'Compliance Guide',
+        link: '/resources/consent-management'
+      },
+      {
+        title: 'AI Content Moderation Setup',
+        description: 'Configure automatic content filtering and safety controls',
+        type: 'Technical',
+        link: '/resources/content-moderation'
+      }
+    ]
+  },
+  {
+    id: 'document-management',
+    title: 'Document Intelligence System',
+    description: 'AI-powered document management with quality assessment',
+    icon: FileText,
+    color: 'from-cyan-500 to-blue-600',
+    resources: [
+      {
+        title: 'Document Intelligence Overview',
+        description: 'Transform paperwork with AI quality assessment and automation',
+        type: 'Overview',
+        link: '/resources/document-intelligence-overview',
+        featured: true
+      },
+      {
+        title: 'Workflow Automation Guide',
+        description: 'Set up approval chains and automated document routing',
+        type: 'Technical Guide',
+        link: '/resources/workflow-automation'
+      },
+      {
+        title: 'Multi-Cloud Storage Configuration',
+        description: 'Configure AWS S3, Azure Blob, and GCP storage redundancy',
+        type: 'Technical',
+        link: '/resources/multi-cloud-storage'
+      },
+      {
+        title: 'Document Quality Standards',
+        description: 'Achieve 85%+ quality scores across all documentation',
+        type: 'Standards',
+        link: '/resources/document-quality'
       }
     ]
   },
@@ -79,6 +195,12 @@ const resourceCategories: ResourceCategory[] = [
         featured: true
       },
       {
+        title: 'Policy Governance Engine Guide',
+        description: 'Lifecycle management for all policies with automated enforcement',
+        type: 'Technical Guide',
+        link: '/resources/policy-governance'
+      },
+      {
         title: 'DOLS Documentation Templates',
         description: 'Ready-to-use templates for DOLS compliance',
         type: 'Templates',
@@ -92,7 +214,7 @@ const resourceCategories: ResourceCategory[] = [
       },
       {
         title: 'Multi-Jurisdiction Compliance',
-        description: 'Compliance across England, Scotland, Wales, and Northern Ireland',
+        description: 'Compliance across England, Scotland, Wales, Northern Ireland, Ireland, Crown Dependencies',
         type: 'Guide',
         link: '/resources/multi-jurisdiction'
       }
@@ -102,7 +224,7 @@ const resourceCategories: ResourceCategory[] = [
     id: 'best-practices',
     title: 'Best Practices',
     description: 'Industry best practices and expert insights for care home management',
-    icon: Lightbulb,
+    icon: TrendingUp,
     color: 'from-amber-500 to-orange-600',
     resources: [
       {
@@ -136,33 +258,33 @@ const resourceCategories: ResourceCategory[] = [
     id: 'case-studies',
     title: 'Case Studies & Success Stories',
     description: 'Real-world examples of WriteCareNotes transforming care homes',
-    icon: TrendingUp,
+    icon: BookOpen,
     color: 'from-purple-500 to-violet-600',
     resources: [
+      {
+        title: 'RAG AI Saves 10 Hours Weekly',
+        description: 'How Oakwood Care achieved policy authoring efficiency with RAG AI',
+        type: 'Case Study',
+        link: '/resources/case-study-rag-ai',
+        featured: true
+      },
+      {
+        title: '95% Family Satisfaction with WriteCare Connect',
+        description: 'Meadowbrook Care Home transforms family engagement',
+        type: 'Case Study',
+        link: '/resources/case-study-family-satisfaction'
+      },
       {
         title: 'Reducing Admin Time by 40%',
         description: 'How Sunshine Care Home streamlined their operations',
         type: 'Case Study',
-        link: '/resources/case-study-admin-reduction',
-        featured: true
+        link: '/resources/case-study-admin-reduction'
       },
       {
         title: 'Improving CQC Ratings',
         description: 'From "Requires Improvement" to "Outstanding" in 12 months',
         type: 'Case Study',
         link: '/resources/case-study-cqc-improvement'
-      },
-      {
-        title: 'Staff Satisfaction Success',
-        description: 'How technology improved staff morale and retention',
-        type: 'Case Study',
-        link: '/resources/case-study-staff-satisfaction'
-      },
-      {
-        title: 'Family Engagement Results',
-        description: 'Increasing family satisfaction scores through better communication',
-        type: 'Case Study',
-        link: '/resources/case-study-family-engagement'
       }
     ]
   }

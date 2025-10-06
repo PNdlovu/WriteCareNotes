@@ -142,6 +142,22 @@ const helpCategories = [
 
 const faqs = [
   {
+    question: "What is RAG AI Policy Assistant and why is it unique?",
+    answer: "RAG AI Policy Assistant is our revolutionary zero-hallucination AI that generates care home policies using Retrieval-Augmented Generation (RAG) technology. Unlike traditional AI that can 'make things up', our RAG system ONLY uses verified sources (CQC guidelines, NICE standards, NHS policies, your custom templates). Every statement includes source citations. It's the ONLY system of its kind in the British Isles care sector, giving you a 24-36 month competitive advantage. Features: ✅ Multi-jurisdiction support (7 territories), ✅ Template-based synthesis, ✅ Complete audit trails, ✅ Role-based access control, ✅ 10+ hours saved per week on policy authoring."
+  },
+  {
+    question: "What is WriteCare Connect and how does it work?",
+    answer: "WriteCare Connect is our integrated family communications platform that combines real-time messaging, video calling, photo sharing, and supervision tools - all within WriteCareNotes. Features include: 📞 HD video calling with scheduling, 💬 Secure instant messaging, 📸 Photo & video sharing with consent management, 🛡️ AI-powered content moderation, 👁️ Supervision dashboard for managers, 📊 Family engagement analytics, 🔒 GDPR-compliant privacy controls. Unlike standalone apps, WriteCare Connect integrates directly with resident records, care plans, and your existing workflow. 95% of families report improved satisfaction and connection with their loved ones."
+  },
+  {
+    question: "How does Document Intelligence improve my care home operations?",
+    answer: "Document Intelligence is our AI-powered document management system that transforms how you handle paperwork. It automatically: 📄 Analyzes document quality (85%+ quality scores achievable), ✅ Checks compliance with regulatory requirements, 🔍 Extracts key information from uploaded documents, 📊 Provides workflow automation with approval chains, ☁️ Stores across multi-cloud (AWS S3, Azure Blob, GCP) for redundancy, 🔄 Manages versions and audit trails, 🔔 Sends intelligent reminders for renewals/reviews. Supports 8+ document types including care plans, risk assessments, policies, training records, and incident reports. Most homes save 6+ hours/week on document administration."
+  },
+  {
+    question: "What is Policy Governance Engine?",
+    answer: "Our Policy Governance Engine provides complete lifecycle management for all your care home policies. It handles: 📋 Policy creation, review, approval, and retirement, 🌍 Multi-jurisdiction compliance (automatically adapts policies for England/Scotland/Wales/NI/Ireland/Crown Dependencies), 📊 Real-time analytics on policy effectiveness and adoption, ⚖️ Automated enforcement with compliance checking, 🔔 Review reminders and expiration alerts, 📈 Version control with full audit trails, 👥 Role-based access and approval workflows. Integrates seamlessly with RAG AI Policy Assistant for the most advanced policy management system in UK care."
+  },
+  {
     question: "Which countries and regions does WriteCareNotes support?",
     answer: "WriteCareNotes provides comprehensive coverage across all British Isles territories: ✅ UK Nations: England (CQC), Scotland (Care Inspectorate), Wales (CIW), Northern Ireland (RQIA) ✅ Republic of Ireland (HIQA) ✅ Crown Dependencies: Jersey (Care Commission), Guernsey (Care Standards Committee), Isle of Man (Care Standards Team). Each territory has dedicated local support teams, jurisdiction-specific compliance features, and regulatory expertise."
   },

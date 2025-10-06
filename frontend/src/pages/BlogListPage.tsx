@@ -13,20 +13,60 @@ import {
   Shield,
   Users,
   BookOpen,
-  Tag
+  Tag,
+  Bot
 } from 'lucide-react'
 
 const blogCategories = [
-  { id: 'ai-innovation', name: 'AI & Innovation', count: 5, color: 'bg-violet-100 text-violet-800' },
+  { id: 'ai-innovation', name: 'AI & Innovation', count: 8, color: 'bg-violet-100 text-violet-800' },
+  { id: 'family-communication', name: 'Family Communication', count: 6, color: 'bg-pink-100 text-pink-800' },
   { id: 'integration-connectivity', name: 'Integration & Connectivity', count: 7, color: 'bg-blue-100 text-blue-800' },
   { id: 'cqc-compliance', name: 'CQC Compliance', count: 12, color: 'bg-green-100 text-green-800' },
-  { id: 'staff-productivity', name: 'Staff Productivity', count: 8, color: 'bg-orange-100 text-orange-800' },
-  { id: 'service-efficiency', name: 'Service Efficiency', count: 10, color: 'bg-purple-100 text-purple-800' },
-  { id: 'going-digital', name: 'Going Digital', count: 6, color: 'bg-indigo-100 text-indigo-800' },
-  { id: 'best-practices', name: 'Best Practices', count: 15, color: 'bg-pink-100 text-pink-800' }
+  { id: 'document-management', name: 'Document Management', count: 5, color: 'bg-cyan-100 text-cyan-800' },
+  { id: 'policy-governance', name: 'Policy Governance', count: 7, color: 'bg-indigo-100 text-indigo-800' },
+  { id: 'best-practices', name: 'Best Practices', count: 15, color: 'bg-amber-100 text-amber-800' }
 ]
 
 const featuredPosts = [
+  {
+    id: 11,
+    title: "RAG AI Policy Assistant: The Future of Care Home Policy Management is Here",
+    excerpt: "Discover how Retrieval-Augmented Generation (RAG) AI is revolutionizing policy authoring for UK care homes. Zero hallucination, verified sources only, 10+ hours saved weekly. UNIQUE in the British Isles market - learn why this gives you a 24-36 month competitive advantage.",
+    author: "WriteCareNotes Innovation Team",
+    role: "AI & Product Development",
+    category: "AI & Innovation",
+    publishDate: "2025-01-22",
+    readTime: "12 min read",
+    image: "/images/blog/rag-ai-policy-assistant.jpg",
+    featured: true,
+    tags: ["RAG AI", "policy authoring", "zero hallucination", "competitive advantage"]
+  },
+  {
+    id: 12,
+    title: "WriteCare Connect: Transforming Family Engagement in Care Homes",
+    excerpt: "The complete guide to supervised family communications in modern care. Real-time video calling, secure messaging, AI content moderation, and GDPR compliance - all integrated into your care workflow. See how homes achieve 95% family satisfaction scores.",
+    author: "WriteCareNotes Team",
+    role: "Family Engagement Specialists",
+    category: "Family Communication",
+    publishDate: "2025-01-20",
+    readTime: "10 min read",
+    image: "/images/blog/writecare-connect-family.jpg",
+    featured: true,
+    tags: ["family engagement", "video calling", "secure messaging", "GDPR"]
+  },
+  {
+    id: 13,
+    title: "Document Intelligence: AI-Powered Document Management for Care Homes",
+    excerpt: "Transform your paperwork with AI that automatically assesses quality, checks compliance, and automates workflows. Learn how Document Intelligence saves 6+ hours weekly while ensuring 85%+ quality scores across all your care documentation.",
+    author: "WriteCareNotes Technical Team",
+    role: "Document Intelligence Experts",
+    category: "Document Management",
+    publishDate: "2025-01-18",
+    readTime: "9 min read",
+    image: "/images/blog/document-intelligence.jpg",
+    featured: true,
+    tags: ["document management", "AI analysis", "workflow automation", "compliance"]
+  },
   {
     id: 9,
     title: "What is AI-Powered Care Management? The Complete Guide for UK Care Homes",
@@ -37,7 +77,7 @@ const featuredPosts = [
     publishDate: "2025-01-15",
     readTime: "8 min read",
     image: "/images/blog/ai-care-management.jpg",
-    featured: true,
+    featured: false,
     tags: ["AI care management", "automated care planning", "intelligent care systems"]
   },
   {
@@ -50,7 +90,7 @@ const featuredPosts = [
     publishDate: "2025-01-18",
     readTime: "10 min read",
     image: "/images/blog/nhs-digital-integration.jpg",
-    featured: true,
+    featured: false,
     tags: ["NHS Digital integration", "GP Connect care homes", "eRedBag system"]
   }
 ]
@@ -209,17 +249,38 @@ const BlogListPage: React.FC = () => {
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-2 gap-8">
-            {featuredPosts.map((post) => (
-              <article key={post.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-indigo-100 to-purple-100">
-                  <div className="flex items-center justify-center">
-                    <FileText className="h-20 w-20 text-indigo-300" />
+          <div className="grid lg:grid-cols-3 gap-8">
+            {featuredPosts.filter(post => post.featured).map((post) => (
+              <article key={post.id} className="group bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-violet-200">
+                <div className="relative aspect-w-16 aspect-h-9 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 overflow-hidden">
+                  {/* Enterprise-grade gradient placeholder with icon */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-20 h-20 bg-gradient-to-br from-violet-600 to-purple-600 rounded-2xl flex items-center justify-center mb-4 mx-auto transform group-hover:scale-110 transition-transform shadow-2xl">
+                        {post.id === 11 && <Bot className="h-10 w-10 text-white" />}
+                        {post.id === 12 && <Users className="h-10 w-10 text-white" />}
+                        {post.id === 13 && <FileText className="h-10 w-10 text-white" />}
+                      </div>
+                      <div className="px-4">
+                        <span className="inline-block px-4 py-2 bg-white/90 backdrop-blur-sm text-violet-700 rounded-full text-sm font-bold shadow-lg">
+                          Featured Article
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Decorative pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600 rounded-full filter blur-3xl transform translate-x-32 -translate-y-32"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600 rounded-full filter blur-3xl transform -translate-x-32 translate-y-32"></div>
                   </div>
                 </div>
                 <div className="p-8">
                   <div className="flex items-center space-x-4 mb-4">
-                    <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
+                    <span className={`px-4 py-2 ${
+                      post.category === 'AI & Innovation' ? 'bg-violet-100 text-violet-800' :
+                      post.category === 'Family Communication' ? 'bg-pink-100 text-pink-800' :
+                      'bg-cyan-100 text-cyan-800'
+                    } rounded-full text-sm font-bold`}>
                       {post.category}
                     </span>
                     <div className="flex items-center text-sm text-gray-500">
@@ -227,28 +288,28 @@ const BlogListPage: React.FC = () => {
                       {post.readTime}
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-violet-600 transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
                         <span className="text-white font-bold text-sm">
-                          {post.author.split(' ').map(n => n[0]).join('')}
+                          WC
                         </span>
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">{post.author}</div>
-                        <div className="text-sm text-gray-500">{post.role}</div>
+                        <div className="font-semibold text-gray-900 text-sm">{post.author}</div>
+                        <div className="text-xs text-gray-500">{post.publishDate}</div>
                       </div>
                     </div>
                     <Link to={`/blog/${post.id}`}>
-                      <Button variant="care" size="sm">
+                      <Button variant="care" size="sm" className="group-hover:shadow-lg transition-shadow">
                         Read More
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
                   </div>
