@@ -5,6 +5,7 @@ import hrRoutes from './hr';
 import financialRoutes from './financial';
 import healthRoutes from './health.routes';
 import policyVersionRoutes from './policy-versions.routes';
+import collaborationRoutes from './collaboration.routes';
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use('/v1/financial', financialRoutes);
 
 // Policy governance routes
 router.use('/policies', policyVersionRoutes);
+router.use('/collaboration', collaborationRoutes);
 
 // System endpoints (inline implementation)
 router.get('/v1/system/status', (req, res) => {
@@ -96,7 +98,8 @@ router.get('/v1/api-discovery', (req, res) => {
       business: {
         hr: '/api/v1/hr',
         financial: '/api/v1/financial',
-        policies: '/api/policies'
+        policies: '/api/policies',
+        collaboration: '/api/collaboration'
       },
       health: '/api/health'
     },
