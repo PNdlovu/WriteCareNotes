@@ -6,7 +6,7 @@
  * @created 2025-10-06
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   ArrowLeftRight, 
   Clock, 
@@ -15,16 +15,14 @@ import {
   AlertCircle,
   CheckCircle2,
   XCircle,
-  RotateCcw,
-  Download,
-  Eye
+  RotateCcw
 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Button } from '../ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { Alert, AlertDescription } from '../ui/Alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
+import { Separator } from '../ui/Separator';
 import DiffViewer from './DiffViewer';
 import VersionTimeline from './VersionTimeline';
 
@@ -172,7 +170,7 @@ export default function PolicyVersionComparison({
     const { variant, label } = config[status as keyof typeof config] || config.draft;
     
     return (
-      <Badge variant={variant} className="ml-2">
+      <Badge variant={variant === 'default' ? 'secondary' : variant} className="ml-2">
         {label}
       </Badge>
     );
@@ -334,9 +332,9 @@ export default function PolicyVersionComparison({
               <Card>
                 <CardHeader>
                   <CardTitle>Changes</CardTitle>
-                  <CardDescription>
+                  <p className="text-sm text-gray-600 mt-1">
                     Side-by-side comparison of policy content
-                  </CardDescription>
+                  </p>
                 </CardHeader>
                 <CardContent>
                   <DiffViewer
@@ -373,7 +371,7 @@ export default function PolicyVersionComparison({
         <TabsContent value="timeline">
           <VersionTimeline
             versions={versions}
-            onSelectVersion={(versionId) => {
+            onSelectVersion={(versionId: string) => {
               if (!selectedVersion1) {
                 setSelectedVersion1(versionId);
               } else {
@@ -381,7 +379,7 @@ export default function PolicyVersionComparison({
               }
               setActiveTab('comparison');
             }}
-            onRollback={onRollback ? (versionId) => {
+            onRollback={onRollback ? (versionId: string) => {
               setShowRollbackDialog(true);
               setSelectedVersion1(versionId);
             } : undefined}
@@ -405,7 +403,7 @@ export default function PolicyVersionComparison({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-700">Category</p>
-                    <Badge variant="outline">{comparison.oldVersion.category}</Badge>
+                    <Badge variant="secondary">{comparison.oldVersion.category}</Badge>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-700">Word Count</p>
@@ -443,7 +441,7 @@ export default function PolicyVersionComparison({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-700">Category</p>
-                    <Badge variant="outline">{comparison.newVersion.category}</Badge>
+                    <Badge variant="secondary">{comparison.newVersion.category}</Badge>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-700">Word Count</p>
@@ -478,9 +476,9 @@ export default function PolicyVersionComparison({
           <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle>Confirm Rollback</CardTitle>
-              <CardDescription>
+              <p className="text-sm text-gray-600 mt-1">
                 This will restore the policy to version {comparison?.oldVersion.version}
-              </CardDescription>
+              </p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>

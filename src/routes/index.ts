@@ -4,6 +4,7 @@ import { Router } from 'express';
 import hrRoutes from './hr';
 import financialRoutes from './financial';
 import healthRoutes from './health.routes';
+import policyVersionRoutes from './policy-versions.routes';
 
 const router = Router();
 
@@ -19,6 +20,9 @@ router.use('/health', healthRoutes);
 // Core business routes
 router.use('/v1/hr', hrRoutes);
 router.use('/v1/financial', financialRoutes);
+
+// Policy governance routes
+router.use('/policies', policyVersionRoutes);
 
 // System endpoints (inline implementation)
 router.get('/v1/system/status', (req, res) => {
@@ -91,7 +95,8 @@ router.get('/v1/api-discovery', (req, res) => {
       },
       business: {
         hr: '/api/v1/hr',
-        financial: '/api/v1/financial'
+        financial: '/api/v1/financial',
+        policies: '/api/policies'
       },
       health: '/api/health'
     },
