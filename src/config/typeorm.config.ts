@@ -15,6 +15,7 @@ import { PasswordReset } from '../entities/auth/PasswordReset';
 
 // Domain entities
 import { Resident } from '../entities/Resident';
+import { CareNote } from '../domains/care/entities/CareNote';
 import { AuditEvent } from '../entities/audit/AuditEvent';
 import { UniversalUser } from '../entities/auth/UniversalUser';
 import { Bed } from '../entities/bed/Bed';
@@ -68,6 +69,7 @@ export const AppDataSource = new DataSource({
     
     // Domain entities
     Resident,
+    CareNote,
     AuditEvent,
     UniversalUser,
     Bed,
