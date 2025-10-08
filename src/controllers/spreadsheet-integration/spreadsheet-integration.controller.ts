@@ -1,3 +1,15 @@
+/**
+ * @fileoverview spreadsheet-integration.controller
+ * @module Spreadsheet-integration/Spreadsheet-integration.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description spreadsheet-integration.controller
+ */
+
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../../middleware/auth.guard';
@@ -10,7 +22,7 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 export class SpreadsheetIntegrationController {
   constructor(
     private readonly spreadsheetIntegrationService: SpreadsheetIntegrationService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {}
 
   /**

@@ -1,32 +1,19 @@
 /**
- * @fileoverview Role-Based Access Control Guard
- * @description NestJS guard for RBAC validation
- * @author WriteCareNotes Team
+ * @fileoverview NestJS guard for RBAC validation
+ * @module Rbac.guard
  * @version 1.0.0
- * @license MIT
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
  * @stability stable
- * @audit-hook rbac-guard-created
+ * 
+ * @description NestJS guard for RBAC validation
  */
 
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const ROLES_KEY = 'roles';
 
 @Injectable()

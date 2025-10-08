@@ -1,95 +1,77 @@
-/**
+﻿/**
  * @fileoverview Medication Administration Form
  * @module MedicationAdminForm
- * @version 1.0.0
- * @description Shared form component for medication administration across PWA and mobile
+ * @version 2.0.0
+ * @description Shared form component for medication administration (Tailwind + shadcn/ui)
  */
 
-import React, { useState, useEffect } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { format } from 'date-fns'
+import React, { useState, useEffect } from ''react'';
+import { useForm, Controller } from ''react-hook-form'';
+import { yupResolver } from ''@hookform/resolvers/yup'';
+import * as yup from ''yup'';
+import { format } from ''date-fns'';
 
-// Platform-specific imports (will be resolved differently in PWA vs mobile)
+import { Card, CardContent, CardHeader, CardTitle } from ''../ui/Card'';
+import { Button } from ''../ui/Button'';
+import { Input } from ''../ui/Input'';
+import { Label } from ''../ui/Label'';
+import { Badge } from ''../ui/Badge'';
+import { Alert } from ''../ui/Alert'';
+import { Textarea } from ''../ui/Textarea'';
 import {
-  TextField,
   Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Button,
-  Box,
-  Typography,
-  Alert,
-  Chip,
-  Grid,
-  Card,
-  CardContent,
-  FormHelperText,
-  Switch,
-  FormControlLabel
-} from '@mui/material' // PWA
-// For mobile, these would be React Native components
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from ''../ui/Select'';
+import {
+  Pill, Clock, User, UserCheck, AlertTriangle, Camera, FileSignature
+} from ''lucide-react'';
 
-import { healthcareServices, Medication, MedicationAdministration } from '../../services/healthcareServices'
-import { BiometricVerification } from '../BiometricVerification/BiometricVerification'
-import { PhotoCapture } from '../PhotoCapture/PhotoCapture'
-import { SignatureCapture } from '../SignatureCapture/SignatureCapture'
+import { healthcareServices, Medication, MedicationAdministration } from ''../../services/healthcareServices'';
+import { BiometricVerification } from ''../BiometricVerification/BiometricVerification'';
+import { PhotoCapture } from ''../PhotoCapture/PhotoCapture'';
+import { SignatureCapture } from ''../SignatureCapture/SignatureCapture'';
 
 // Validation schema
 const administrationSchema = yup.object({
-  medicationId: yup.string().required('Medication is required'),
-  residentId: yup.string().required('Resident is required'),
-  scheduledTime: yup.string().required('Scheduled time is required'),
-  actualTime: yup.string().required('Actual administration time is required'),
-  dosageGiven: yup.string().required('Dosage given is required'),
-  status: yup.string().oneOf(['given', 'missed', 'refused', 'not_required']).required('Status is required'),
-  administeredBy: yup.string().required('Administrator is required'),
-  witnessedBy: yup.string().when('requiresWitness', {
+  medicationId: yup.string().required(''Medication is required''),
+  residentId: yup.string().required(''Resident is required''),
+  scheduledTime: yup.string().required(''Scheduled time is required''),
+  actualTime: yup.string().required(''Actual administration time is required''),
+  dosageGiven: yup.string().required(''Dosage given is required''),
+  status: yup.string().oneOf([''given'', ''missed'', ''refused'', ''not_required'']).required(''Status is required''),
+  administeredBy: yup.string().required(''Administrator is required''),
+  witnessedBy: yup.string().when(''requiresWitness'', {
     is: true,
-    then: yup.string().required('Witness is required for this medication')
+    then: yup.string().required(''Witness is required for this medication'')
   }),
   notes: yup.string(),
   sideEffectsObserved: yup.array().of(yup.string()),
-  refusalReason: yup.string().when('status', {
-    is: 'refused',
-    then: yup.string().required('Refusal reason is required')
+  refusalReason: yup.string().when(''status'', {
+    is: ''refused'',
+    then: yup.string().required(''Refusal reason is required'')
   }),
   biometricVerified: yup.boolean(),
   photoEvidence: yup.string(),
   signature: yup.string()
-})
+});
 
-type AdminFormData = yup.InferType<typeof administrationSchema>
+type AdminFormData = yup.InferType<typeof administrationSchema>;
 
 interface MedicationAdminFormProps {
-  medication: Medication
-  residentId: string
-  scheduledTime: string
-  onSubmit: (data: MedicationAdministration) => Promise<void>
-  onCancel: () => void
-  requiresBiometric?: boolean
-  requiresWitness?: boolean
-  requiresPhoto?: boolean
-  requiresSignature?: boolean
+  medication: Medication;
+  residentId: string;
+  scheduledTime: string;
+  onSubmit: (data: MedicationAdministration) => Promise<void>;
+  onCancel: () => void;
+  requiresBiometric?: boolean;
+  requiresWitness?: boolean;
+  requiresPhoto?: boolean;
+  requiresSignature?: boolean;
 }
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const MedicationAdminForm: React.FC<MedicationAdminFormProps> = ({
   medication,
   residentId,
@@ -101,11 +83,11 @@ export const MedicationAdminForm: React.FC<MedicationAdminFormProps> = ({
   requiresPhoto = false,
   requiresSignature = false
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [biometricVerified, setBiometricVerified] = useState(false)
-  const [photoEvidence, setPhotoEvidence] = useState<string | null>(null)
-  const [signature, setSignature] = useState<string | null>(null)
-  const [sideEffects, setSideEffects] = useState<string[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [biometricVerified, setBiometricVerified] = useState(false);
+  const [photoEvidence, setPhotoEvidence] = useState<string | null>(null);
+  const [signature, setSignature] = useState<string | null>(null);
+  const [sideEffects, setSideEffects] = useState<string[]>([]);
 
   const {
     control,
@@ -119,315 +101,342 @@ export const MedicationAdminForm: React.FC<MedicationAdminFormProps> = ({
       medicationId: medication.id,
       residentId,
       scheduledTime,
-      actualTime: format(new Date(), 'yyyy-MM-dd HH:mm'),
+      actualTime: format(new Date(), ''yyyy-MM-dd HH:mm''),
       dosageGiven: medication.dosage,
-      status: 'given',
-      administeredBy: '', // Would be populated from current user
-      witnessedBy: '',
-      notes: '',
+      status: ''given'',
+      administeredBy: '''', // Would be populated from current user
+      witnessedBy: '''',
+      notes: '''',
       sideEffectsObserved: [],
       biometricVerified: false,
-      photoEvidence: '',
-      signature: ''
+      photoEvidence: '''',
+      signature: ''''
     },
-    mode: 'onChange'
-  })
+    mode: ''onChange''
+  });
 
-  const watchedStatus = watch('status')
+  const watchedStatus = watch(''status'');
 
   useEffect(() => {
-    setValue('biometricVerified', biometricVerified)
-    setValue('photoEvidence', photoEvidence || '')
-    setValue('signature', signature || '')
-    setValue('sideEffectsObserved', sideEffects)
-  }, [biometricVerified, photoEvidence, signature, sideEffects, setValue])
+    setValue(''biometricVerified'', biometricVerified);
+    setValue(''photoEvidence'', photoEvidence || '''');
+    setValue(''signature'', signature || '''');
+    setValue(''sideEffectsObserved'', sideEffects);
+  }, [biometricVerified, photoEvidence, signature, sideEffects, setValue]);
 
   const handleFormSubmit = async (data: AdminFormData) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     
     try {
       // Validate required verifications
       if (requiresBiometric && !biometricVerified) {
-        throw new Error('Biometric verification is required')
+        throw new Error(''Biometric verification is required'');
       }
       
       if (requiresPhoto && !photoEvidence) {
-        throw new Error('Photo evidence is required')
+        throw new Error(''Photo evidence is required'');
       }
       
       if (requiresSignature && !signature) {
-        throw new Error('Signature is required')
+        throw new Error(''Signature is required'');
       }
 
-      const administrationData: Omit<MedicationAdministration, 'id'> = {
+      const administrationData: Omit<MedicationAdministration, ''id''> = {
         medicationId: data.medicationId,
         scheduledTime: data.scheduledTime,
         actualTime: data.actualTime,
         dosageGiven: data.dosageGiven,
         administeredBy: data.administeredBy,
-        status: data.status as 'scheduled' | 'given' | 'missed' | 'refused' | 'not_required',
+        status: data.status as ''scheduled'' | ''given'' | ''missed'' | ''refused'' | ''not_required'',
         notes: data.notes,
         witnessedBy: data.witnessedBy,
         sideEffectsObserved: data.sideEffectsObserved
-      }
+      };
 
-      await onSubmit(administrationData as MedicationAdministration)
+      await onSubmit(administrationData as MedicationAdministration);
     } catch (error) {
-      console.error('Administration submission failed:', error)
-      // Handle error display
+      console.error(''Administration submission failed:'', error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const commonSideEffects = [
-    'Nausea',
-    'Dizziness',
-    'Drowsiness',
-    'Headache',
-    'Rash',
-    'Vomiting',
-    'Diarrhea',
-    'Constipation',
-    'Loss of appetite',
-    'Fatigue'
-  ]
+    ''Nausea'', ''Dizziness'', ''Drowsiness'', ''Headache'', ''Rash'',
+    ''Vomiting'', ''Diarrhea'', ''Constipation'', ''Loss of appetite'', ''Fatigue''
+  ];
 
   const refusalReasons = [
-    'Resident refused',
-    'Resident asleep',
-    'Resident not present',
-    'Medical contraindication',
-    'Medication unavailable',
-    'Doctor\'s instruction',
-    'Other'
-  ]
+    ''Resident refused'', ''Resident asleep'', ''Resident not present'',
+    ''Medical contraindication'', ''Medication unavailable'',
+    ''Doctor\''s instruction'', ''Other''
+  ];
+
+  const toggleSideEffect = (effect: string) => {
+    setSideEffects(prev => 
+      prev.includes(effect)
+        ? prev.filter(e => e !== effect)
+        : [...prev, effect]
+    );
+  };
 
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
+    <Card className="max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Pill className="w-5 h-5 text-blue-600" />
           Medication Administration
-        </Typography>
-        
-        {/* Medication Info */}
-        <Box mb={3} p={2} bgcolor="background.paper" borderRadius={1}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            {medication.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {medication.genericName && `Generic: ${medication.genericName}`}
-          </Typography>
-          <Typography variant="body2">
-            Prescribed Dosage: {medication.dosage}
-          </Typography>
-          <Typography variant="body2">
-            Route: {medication.route}
-          </Typography>
-          <Typography variant="body2">
-            Indication: {medication.indication}
-          </Typography>
-        </Box>
+        </CardTitle>
+      </CardHeader>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Grid container spacing={3}>
+      <CardContent>
+        {/* Medication Info */}
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {medication.name}
+          </h3>
+          {medication.genericName && (
+            <p className="text-sm text-gray-600">Generic: {medication.genericName}</p>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-sm">
+            <p className="text-gray-700">
+              <span className="font-medium">Prescribed Dosage:</span> {medication.dosage}
+            </p>
+            <p className="text-gray-700">
+              <span className="font-medium">Route:</span> {medication.route}
+            </p>
+            <p className="text-gray-700 col-span-2">
+              <span className="font-medium">Indication:</span> {medication.indication}
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Administration Status */}
-            <Grid item xs={12} sm={6}>
+            <div className="space-y-2">
+              <Label htmlFor="status" className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" />
+                Administration Status *
+              </Label>
               <Controller
                 name="status"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth error={!!errors.status}>
-                    <InputLabel>Administration Status</InputLabel>
-                    <Select {...field} label="Administration Status">
-                      <MenuItem value="given">Given</MenuItem>
-                      <MenuItem value="refused">Refused</MenuItem>
-                      <MenuItem value="missed">Missed</MenuItem>
-                      <MenuItem value="not_required">Not Required</MenuItem>
-                    </Select>
-                    {errors.status && (
-                      <FormHelperText>{errors.status.message}</FormHelperText>
-                    )}
-                  </FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className={errors.status ? ''border-red-500'' : ''''}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="given">Given</SelectItem>
+                      <SelectItem value="refused">Refused</SelectItem>
+                      <SelectItem value="missed">Missed</SelectItem>
+                      <SelectItem value="not_required">Not Required</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
               />
-            </Grid>
+              {errors.status && (
+                <p className="text-sm text-red-500">{errors.status.message}</p>
+              )}
+            </div>
 
             {/* Actual Time */}
-            <Grid item xs={12} sm={6}>
+            <div className="space-y-2">
+              <Label htmlFor="actualTime" className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                Actual Administration Time *
+              </Label>
               <Controller
                 name="actualTime"
                 control={control}
                 render={({ field }) => (
-                  <TextField
+                  <Input
                     {...field}
-                    label="Actual Administration Time"
                     type="datetime-local"
-                    fullWidth
-                    error={!!errors.actualTime}
-                    helperText={errors.actualTime?.message}
-                    InputLabelProps={{ shrink: true }}
+                    className={errors.actualTime ? ''border-red-500'' : ''''}
                   />
                 )}
               />
-            </Grid>
+              {errors.actualTime && (
+                <p className="text-sm text-red-500">{errors.actualTime.message}</p>
+              )}
+            </div>
 
             {/* Dosage Given */}
-            <Grid item xs={12} sm={6}>
+            <div className="space-y-2">
+              <Label htmlFor="dosageGiven">Dosage Given *</Label>
               <Controller
                 name="dosageGiven"
                 control={control}
                 render={({ field }) => (
-                  <TextField
+                  <Input
                     {...field}
-                    label="Dosage Given"
-                    fullWidth
-                    error={!!errors.dosageGiven}
-                    helperText={errors.dosageGiven?.message}
+                    placeholder="e.g., 500mg"
+                    className={errors.dosageGiven ? ''border-red-500'' : ''''}
                   />
                 )}
               />
-            </Grid>
+              {errors.dosageGiven && (
+                <p className="text-sm text-red-500">{errors.dosageGiven.message}</p>
+              )}
+            </div>
 
             {/* Administrator */}
-            <Grid item xs={12} sm={6}>
+            <div className="space-y-2">
+              <Label htmlFor="administeredBy" className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Administered By *
+              </Label>
               <Controller
                 name="administeredBy"
                 control={control}
                 render={({ field }) => (
-                  <TextField
+                  <Input
                     {...field}
-                    label="Administered By"
-                    fullWidth
-                    error={!!errors.administeredBy}
-                    helperText={errors.administeredBy?.message}
+                    placeholder="Staff name"
+                    className={errors.administeredBy ? ''border-red-500'' : ''''}
                   />
                 )}
               />
-            </Grid>
+              {errors.administeredBy && (
+                <p className="text-sm text-red-500">{errors.administeredBy.message}</p>
+              )}
+            </div>
 
             {/* Witness (if required) */}
             {requiresWitness && (
-              <Grid item xs={12} sm={6}>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="witnessedBy" className="flex items-center gap-2">
+                  <UserCheck className="w-4 h-4" />
+                  Witnessed By *
+                </Label>
                 <Controller
                   name="witnessedBy"
                   control={control}
                   render={({ field }) => (
-                    <TextField
+                    <Input
                       {...field}
-                      label="Witnessed By"
-                      fullWidth
-                      error={!!errors.witnessedBy}
-                      helperText={errors.witnessedBy?.message}
+                      placeholder="Witness name"
+                      className={errors.witnessedBy ? ''border-red-500'' : ''''}
                     />
                   )}
                 />
-              </Grid>
+                {errors.witnessedBy && (
+                  <p className="text-sm text-red-500">{errors.witnessedBy.message}</p>
+                )}
+              </div>
             )}
+          </div>
 
-            {/* Refusal Reason (if refused) */}
-            {watchedStatus === 'refused' && (
-              <Grid item xs={12}>
-                <Controller
-                  name="refusalReason"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl fullWidth error={!!errors.refusalReason}>
-                      <InputLabel>Refusal Reason</InputLabel>
-                      <Select {...field} label="Refusal Reason">
-                        {refusalReasons.map(reason => (
-                          <MenuItem key={reason} value={reason}>
-                            {reason}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {errors.refusalReason && (
-                        <FormHelperText>{errors.refusalReason.message}</FormHelperText>
-                      )}
-                    </FormControl>
-                  )}
-                />
-              </Grid>
-            )}
-
-            {/* Side Effects */}
-            <Grid item xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
-                Side Effects Observed
-              </Typography>
-              <Box display="flex" flexWrap="wrap" gap={1}>
-                {commonSideEffects.map(effect => (
-                  <Chip
-                    key={effect}
-                    label={effect}
-                    clickable
-                    color={sideEffects.includes(effect) ? 'primary' : 'default'}
-                    onClick={() => {
-                      setSideEffects(prev => 
-                        prev.includes(effect)
-                          ? prev.filter(e => e !== effect)
-                          : [...prev, effect]
-                      )
-                    }}
-                  />
-                ))}
-              </Box>
-            </Grid>
-
-            {/* Notes */}
-            <Grid item xs={12}>
+          {/* Refusal Reason (if refused) */}
+          {watchedStatus === ''refused'' && (
+            <div className="space-y-2">
+              <Label htmlFor="refusalReason">Refusal Reason *</Label>
               <Controller
-                name="notes"
+                name="refusalReason"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Additional Notes"
-                    multiline
-                    rows={3}
-                    fullWidth
-                    error={!!errors.notes}
-                    helperText={errors.notes?.message}
-                  />
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className={errors.refusalReason ? ''border-red-500'' : ''''}>
+                      <SelectValue placeholder="Select reason..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {refusalReasons.map(reason => (
+                        <SelectItem key={reason} value={reason}>
+                          {reason}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
               />
-            </Grid>
+              {errors.refusalReason && (
+                <p className="text-sm text-red-500">{errors.refusalReason.message}</p>
+              )}
+            </div>
+          )}
 
-            {/* Biometric Verification */}
-            {requiresBiometric && (
-              <Grid item xs={12}>
-                <BiometricVerification
-                  onVerified={() => setBiometricVerified(true)}
-                  onError={(error) => console.error('Biometric verification failed:', error)}
-                />
-              </Grid>
-            )}
+          {/* Side Effects */}
+          <div className="space-y-3">
+            <Label>Side Effects Observed</Label>
+            <div className="flex flex-wrap gap-2">
+              {commonSideEffects.map(effect => (
+                <Badge
+                  key={effect}
+                  variant={sideEffects.includes(effect) ? ''default'' : ''outline''}
+                  className="cursor-pointer"
+                  onClick={() => toggleSideEffect(effect)}
+                >
+                  {effect}
+                </Badge>
+              ))}
+            </div>
+          </div>
 
-            {/* Photo Evidence */}
-            {requiresPhoto && (
-              <Grid item xs={12}>
-                <PhotoCapture
-                  onPhotoTaken={setPhotoEvidence}
-                  label="Photo Evidence"
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Additional Notes</Label>
+            <Controller
+              name="notes"
+              control={control}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  placeholder="Enter any additional observations or notes..."
+                  rows={3}
+                  className={errors.notes ? ''border-red-500'' : ''''}
                 />
-              </Grid>
+              )}
+            />
+            {errors.notes && (
+              <p className="text-sm text-red-500">{errors.notes.message}</p>
             )}
+          </div>
 
-            {/* Signature */}
-            {requiresSignature && (
-              <Grid item xs={12}>
-                <SignatureCapture
-                  onSignature={setSignature}
-                  label="Administrator Signature"
-                />
-              </Grid>
-            )}
-          </Grid>
+          {/* Biometric Verification */}
+          {requiresBiometric && (
+            <div className="border border-gray-200 rounded-lg p-4">
+              <BiometricVerification
+                onVerified={() => setBiometricVerified(true)}
+                onError={(error) => console.error(''Biometric verification failed:'', error)}
+              />
+            </div>
+          )}
+
+          {/* Photo Evidence */}
+          {requiresPhoto && (
+            <div className="border border-gray-200 rounded-lg p-4">
+              <Label className="flex items-center gap-2 mb-3">
+                <Camera className="w-4 h-4" />
+                Photo Evidence
+              </Label>
+              <PhotoCapture
+                onPhotoTaken={setPhotoEvidence}
+                label="Take Photo"
+              />
+            </div>
+          )}
+
+          {/* Signature */}
+          {requiresSignature && (
+            <div className="border border-gray-200 rounded-lg p-4">
+              <Label className="flex items-center gap-2 mb-3">
+                <FileSignature className="w-4 h-4" />
+                Administrator Signature
+              </Label>
+              <SignatureCapture
+                onSignature={setSignature}
+                label="Sign Here"
+              />
+            </div>
+          )}
 
           {/* Action Buttons */}
-          <Box mt={3} display="flex" gap={2} justifyContent="flex-end">
+          <div className="flex gap-3 justify-end pt-4 border-t">
             <Button
-              variant="outlined"
+              type="button"
+              variant="outline"
               onClick={onCancel}
               disabled={isSubmitting}
             >
@@ -435,14 +444,13 @@ export const MedicationAdminForm: React.FC<MedicationAdminFormProps> = ({
             </Button>
             <Button
               type="submit"
-              variant="contained"
               disabled={!isValid || isSubmitting}
             >
-              {isSubmitting ? 'Recording...' : 'Record Administration'}
+              {isSubmitting ? ''Recording...'' : ''Record Administration''}
             </Button>
-          </Box>
+          </div>
         </form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};

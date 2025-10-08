@@ -1,3 +1,15 @@
+/**
+ * @fileoverview budget Controller
+ * @module Financial/BudgetController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description budget Controller
+ */
+
 import { Request, Response } from 'express';
 import { BudgetService, BudgetRequest, BudgetUpdate, BudgetSearchCriteria } from '../../services/financial/BudgetService';
 import { logger } from '../../utils/logger';

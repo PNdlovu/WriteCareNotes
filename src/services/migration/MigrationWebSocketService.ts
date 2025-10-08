@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Real-time WebSocket service for migration progress updates,
+ * @module Migration/MigrationWebSocketService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Real-time WebSocket service for migration progress updates,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -16,7 +28,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { Server } from 'http';
 import { AdvancedOnboardingDataMigrationService } from '../onboarding/AdvancedOnboardingDataMigrationService';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface MigrationSocketEvents {
   // Client to Server events
@@ -42,7 +54,7 @@ export class MigrationWebSocketService {
   private io: SocketIOServer;
   private migrationService: AdvancedOnboardingDataMigrationService;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private connectedClients: Map<string, Set<string>> = new Map(); // pipelineId -> socketIds
   private clientPipelines: Map<string, string> = new Map(); // socketId -> pipelineId
 

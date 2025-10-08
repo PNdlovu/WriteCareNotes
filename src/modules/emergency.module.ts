@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive emergency management module with nurse call system,
+ * @module Modules/Emergency.module
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive emergency management module with nurse call system,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

@@ -1,11 +1,13 @@
 /**
- * Policy Template Service - Template Library Management
+ * @fileoverview policy template Service
+ * @module Policy-authoring/PolicyTemplateService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements the PolicyGovernanceEngine template library with:
- * - Pre-built templates for safeguarding, data protection, complaints
- * - Template customization and organization-specific modifications
- * - Template search, filtering, and recommendation engine
- * - Usage analytics and template optimization
+ * @description policy template Service
  */
 
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
@@ -13,7 +15,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PolicyTemplate, PolicyCategory, Jurisdiction, TemplateStatus, RichTextContent, TemplateSection, TemplateField, ComplianceMapping } from '../../entities/policy-authoring/PolicyTemplate';
 import { PolicyDraft } from '../../entities/policy-draft.entity';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface CreateTemplateDto {
   title: string;

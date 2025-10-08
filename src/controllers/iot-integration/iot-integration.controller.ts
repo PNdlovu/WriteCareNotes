@@ -1,3 +1,15 @@
+/**
+ * @fileoverview iot-integration.controller
+ * @module Iot-integration/Iot-integration.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description iot-integration.controller
+ */
+
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { JwtAuthGuard } from '../../middleware/auth.guard';
 import { RbacGuard } from '../../middleware/rbac.guard';
@@ -9,7 +21,7 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 export class IoTIntegrationController {
   constructor(
     private readonly iotIntegrationService: IoTIntegrationService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {}
 
   /**

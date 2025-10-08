@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Express middleware for comprehensive request validation
+ * @module Validation-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Express middleware for comprehensive request validation
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -204,21 +216,6 @@ const validationSchemas = {
 
 /**
  * Validation middleware factory
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const validationMiddleware = (schemaName: keyof typeof validationSchemas) => {
   return (req: Request, res: Response, next: NextFunction) => {

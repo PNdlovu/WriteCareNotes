@@ -1,3 +1,15 @@
+/**
+ * @fileoverview health check Service
+ * @module HealthCheckService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description health check Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Sequelize } from 'sequelize';

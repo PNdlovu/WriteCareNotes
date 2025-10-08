@@ -1,7 +1,19 @@
+/**
+ * @fileoverview GP connectivity service focused on care home resident health coordination
+ * @module Gp-connect/GPConnectService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description GP connectivity service focused on care home resident health coordination
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 /**
@@ -122,7 +134,7 @@ export class GPConnectService extends EventEmitter2 {
   private healthSummaryRepository: Repository<any>;
   private consultationRepository: Repository<any>;
   private communicationRepository: Repository<any>;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
 
   constructor() {

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Master orchestration service for all compliance frameworks and services.
+ * @module Compliance/ComplianceOrchestrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Master orchestration service for all compliance frameworks and services.
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

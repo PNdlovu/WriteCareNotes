@@ -1,3 +1,15 @@
+/**
+ * @fileoverview h r management Service
+ * @module Hr/HRManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description h r management Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,7 +17,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { Employee, EmploymentStatus, RightToWorkStatus } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface EmployeeSearchCriteria {
   department?: string;
@@ -60,7 +72,7 @@ export interface TrainingPlan {
 export class HRManagementService {
   private employeeRepository: Repository<Employee>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);

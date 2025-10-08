@@ -1,8 +1,20 @@
+/**
+ * @fileoverview g p connect Service
+ * @module External-integration/GPConnectService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description g p connect Service
+ */
+
 import { EventEmitter2 } from 'eventemitter2';
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { ExternalSystem, SystemType, IntegrationStatus } from '../../entities/external-integration/ExternalSystem';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 
@@ -151,7 +163,7 @@ export interface AsyncCallbackResponse {
 
 export class GPConnectService {
   private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private encryptionService: FieldLevelEncryptionService;
   private eventEmitter: EventEmitter2;

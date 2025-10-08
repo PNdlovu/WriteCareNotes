@@ -1,6 +1,18 @@
+/**
+ * @fileoverview advanced predictive health Service
+ * @module Analytics/AdvancedPredictiveHealthService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description advanced predictive health Service
+ */
+
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from 'eventemitter2';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { Logger } from '@nestjs/common';
 
 export interface HealthPrediction {
@@ -172,7 +184,7 @@ export interface HealthDashboard {
 export class AdvancedPredictiveHealthService {
   private readonly logger = new Logger(AdvancedPredictiveHealthService.name);
   private eventEmitter: EventEmitter2;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.eventEmitter = new EventEmitter2();

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview database.service
+ * @module Database/Database.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description database.service
+ */
+
 import { logger } from '../../utils/logger';
 
 /**

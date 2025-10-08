@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Express middleware for GDPR compliance validation
+ * @module Gdpr-compliance-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Express middleware for GDPR compliance validation
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -26,21 +38,6 @@ export interface GDPRContext {
 
 /**
  * GDPR compliance middleware
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const gdprComplianceMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {

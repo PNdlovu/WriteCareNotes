@@ -1,7 +1,13 @@
 /**
- * AI Agent Orchestration Controller
- * Manages the coordination and orchestration of all AI agents
- * Provides unified API for AI agent operations with compliance guardrails
+ * @fileoverview a i agent orchestration Controller
+ * @module Ai-agents/AIAgentOrchestrationController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description a i agent orchestration Controller
  */
 
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';

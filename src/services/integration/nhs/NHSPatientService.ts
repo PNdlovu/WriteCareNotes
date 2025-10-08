@@ -1,3 +1,15 @@
+/**
+ * @fileoverview n h s patient Service
+ * @module Integration/Nhs/NHSPatientService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description n h s patient Service
+ */
+
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { logger } from '../../../utils/logger';
 import PrometheusService from '../../monitoring/PrometheusService';

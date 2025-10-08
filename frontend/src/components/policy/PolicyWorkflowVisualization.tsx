@@ -1,589 +1,323 @@
-/**
- * @fileoverview Policy Workflow Visualization Component
- * @module PolicyWorkflowVisualization
- * @version 1.0.0
- * @description Interactive workflow visualization for policy progression tracking
- */
-
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { Button } from '../ui/Button';
+import { Progress } from '../ui/Progress';
 import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
-  Button,
-  Chip,
-  Avatar,
-  Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
-  TimelineOppositeContent,
-  Paper,
-  Grid,
-  LinearProgress,
-  Tooltip,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel
-} from '@mui/material';
-import {
-  CheckCircle,
-  RadioButtonUnchecked,
-  Schedule,
-  Person,
-  Comment,
-  PlayArrow,
-  Pause,
-  Edit,
-  Visibility,
-  Flag,
-  Warning,
-  Info,
-  Assignment,
-  Gavel,
-  Publish,
-  Archive,
-  Refresh,
-  Timeline as TimelineIcon
-} from '@mui/icons-material';
-import { format, formatDistanceToNow } from 'date-fns';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+  CheckCircle, Circle, Clock, User, Edit, Eye, PlayArrow,
+  Flag, AlertTriangle, FileText, Gavel, Upload, Archive,
+  RefreshCw, Activity
+} from 'lucide-react';
+import { format } from 'date-fns';
 
-import { PolicyTrackerService, PolicyStatus, WorkflowStage, PolicyTrackingData } from '../../services/policy-tracking/PolicyTrackerService';
-
-/**
- * Interface for workflow props
- */
 interface PolicyWorkflowVisualizationProps {
   policyId: string;
   organizationId: string;
-  onStatusUpdate?: (newStatus: PolicyStatus) => void;
+  onStatusUpdate?: (newStatus: string) => void;
   readOnly?: boolean;
 }
 
-/**
- * Interface for workflow step data
- */
+type WorkflowStage = 'initiation' | 'drafting' | 'review' | 'compliance' | 'approval' | 'publication' | 'implementation' | 'monitoring';
+type StepStatus = 'completed' | 'active' | 'pending' | 'skipped';
+
 interface WorkflowStep {
   stage: WorkflowStage;
-  status: 'completed' | 'active' | 'pending' | 'skipped';
+  status: StepStatus;
   title: string;
   description: string;
-  icon: React.ReactElement;
+  icon: React.ReactNode;
   completedAt?: Date;
   assignee?: string;
-  notes?: string;
   estimatedDuration?: string;
-  dependencies?: WorkflowStage[];
 }
 
-/**
- * Policy Workflow Visualization Component
- */
 export const PolicyWorkflowVisualization: React.FC<PolicyWorkflowVisualizationProps> = ({
   policyId,
   organizationId,
   onStatusUpdate,
   readOnly = false
 }) => {
-  // State management
-  const [viewMode, setViewMode] = useState<'stepper' | 'timeline' | 'kanban'>('stepper');
-  const [selectedStep, setSelectedStep] = useState<WorkflowStep | null>(null);
-  const [statusUpdateDialog, setStatusUpdateDialog] = useState(false);
-  const [newStatus, setNewStatus] = useState<PolicyStatus>(PolicyStatus.DRAFT);
-  const [updateReason, setUpdateReason] = useState('');
+  const [viewMode, setViewMode] = useState<'stepper' | 'timeline'>('stepper');
 
-  const queryClient = useQueryClient();
-  const policyService = new PolicyTrackerService();
-
-  // Data fetching
-  const { data: policy, isLoading } = useQuery(
-    ['policy-workflow', policyId],
-    () => policyService.getPolicyById(policyId, organizationId),
-    { refetchInterval: 30000 }
-  );
-
-  const { data: workflowData } = useQuery(
-    ['policy-workflow-data', policyId],
-    () => policyService.getPolicyWorkflow(policyId, organizationId),
-    { enabled: !!policy }
-  );
-
-  // Status update mutation
-  const statusUpdateMutation = useMutation(
-    ({ status, reason, notes }: { status: PolicyStatus; reason: string; notes?: string }) =>
-      policyService.updatePolicyStatus(policyId, status, 'current-user-id', reason, notes),
+  // Mock workflow steps
+  const steps: WorkflowStep[] = [
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['policy-workflow', policyId]);
-        setStatusUpdateDialog(false);
-        setUpdateReason('');
-        if (onStatusUpdate) {
-          onStatusUpdate(newStatus);
-        }
-      }
+      stage: 'initiation',
+      status: 'completed',
+      title: 'Policy Initiation',
+      description: 'Policy creation and initial setup',
+      icon: <FileText className="w-5 h-5" />,
+      completedAt: new Date('2024-09-15'),
+      assignee: 'Dr. Sarah Johnson',
+      estimatedDuration: '1-2 days'
+    },
+    {
+      stage: 'drafting',
+      status: 'completed',
+      title: 'Content Drafting',
+      description: 'Writing and structuring policy content',
+      icon: <Edit className="w-5 h-5" />,
+      completedAt: new Date('2024-09-20'),
+      assignee: 'Policy Team',
+      estimatedDuration: '3-5 days'
+    },
+    {
+      stage: 'review',
+      status: 'active',
+      title: 'Stakeholder Review',
+      description: 'Review by relevant stakeholders and subject matter experts',
+      icon: <Eye className="w-5 h-5" />,
+      assignee: 'Review Committee',
+      estimatedDuration: '5-7 days'
+    },
+    {
+      stage: 'compliance',
+      status: 'pending',
+      title: 'Compliance Verification',
+      description: 'Ensuring compliance with regulatory requirements',
+      icon: <CheckCircle className="w-5 h-5" />,
+      estimatedDuration: '2-3 days'
+    },
+    {
+      stage: 'approval',
+      status: 'pending',
+      title: 'Management Approval',
+      description: 'Final approval from management team',
+      icon: <Gavel className="w-5 h-5" />,
+      estimatedDuration: '1-2 days'
+    },
+    {
+      stage: 'publication',
+      status: 'pending',
+      title: 'Policy Publication',
+      description: 'Publishing policy and making it available to staff',
+      icon: <Upload className="w-5 h-5" />,
+      estimatedDuration: '1 day'
+    },
+    {
+      stage: 'implementation',
+      status: 'pending',
+      title: 'Implementation',
+      description: 'Rolling out policy and training staff',
+      icon: <PlayArrow className="w-5 h-5" />,
+      estimatedDuration: '2-4 weeks'
+    },
+    {
+      stage: 'monitoring',
+      status: 'pending',
+      title: 'Ongoing Monitoring',
+      description: 'Monitoring compliance and effectiveness',
+      icon: <Activity className="w-5 h-5" />,
+      estimatedDuration: 'Ongoing'
     }
-  );
+  ];
 
-  /**
-   * Define workflow steps with visual properties
-   */
-  const getWorkflowSteps = (): WorkflowStep[] => {
-    if (!policy) return [];
-
-    const baseSteps: WorkflowStep[] = [
-      {
-        stage: WorkflowStage.INITIATION,
-        status: 'completed',
-        title: 'Policy Initiation',
-        description: 'Policy creation and initial setup',
-        icon: <Assignment />,
-        completedAt: policy.createdAt,
-        assignee: policy.authorName,
-        estimatedDuration: '1-2 days'
-      },
-      {
-        stage: WorkflowStage.DRAFTING,
-        status: policy.status === PolicyStatus.DRAFT ? 'active' : 'completed',
-        title: 'Content Drafting',
-        description: 'Writing and structuring policy content',
-        icon: <Edit />,
-        assignee: policy.assigneeName || policy.authorName,
-        estimatedDuration: '3-5 days',
-        dependencies: [WorkflowStage.INITIATION]
-      },
-      {
-        stage: WorkflowStage.STAKEHOLDER_REVIEW,
-        status: policy.status === PolicyStatus.UNDER_REVIEW ? 'active' : 
-                policy.status === PolicyStatus.DRAFT ? 'pending' : 'completed',
-        title: 'Stakeholder Review',
-        description: 'Review by relevant stakeholders and subject matter experts',
-        icon: <Visibility />,
-        estimatedDuration: '5-7 days',
-        dependencies: [WorkflowStage.DRAFTING]
-      },
-      {
-        stage: WorkflowStage.COMPLIANCE_CHECK,
-        status: policy.status === PolicyStatus.UNDER_REVIEW ? 'active' : 
-                [PolicyStatus.DRAFT, PolicyStatus.UNDER_REVIEW].includes(policy.status) ? 'pending' : 'completed',
-        title: 'Compliance Verification',
-        description: 'Ensuring compliance with regulatory requirements',
-        icon: <CheckCircle />,
-        estimatedDuration: '2-3 days',
-        dependencies: [WorkflowStage.STAKEHOLDER_REVIEW]
-      },
-      {
-        stage: WorkflowStage.MANAGEMENT_APPROVAL,
-        status: policy.status === PolicyStatus.APPROVED ? 'completed' :
-                policy.status === PolicyStatus.UNDER_REVIEW ? 'active' : 'pending',
-        title: 'Management Approval',
-        description: 'Final approval from management team',
-        icon: <Gavel />,
-        estimatedDuration: '1-2 days',
-        dependencies: [WorkflowStage.COMPLIANCE_CHECK]
-      },
-      {
-        stage: WorkflowStage.PUBLICATION,
-        status: policy.status === PolicyStatus.PUBLISHED ? 'completed' :
-                policy.status === PolicyStatus.APPROVED ? 'active' : 'pending',
-        title: 'Policy Publication',
-        description: 'Publishing policy and making it available to staff',
-        icon: <Publish />,
-        completedAt: policy.publishedAt,
-        estimatedDuration: '1 day',
-        dependencies: [WorkflowStage.MANAGEMENT_APPROVAL]
-      },
-      {
-        stage: WorkflowStage.IMPLEMENTATION,
-        status: policy.status === PolicyStatus.PUBLISHED ? 'active' : 'pending',
-        title: 'Implementation',
-        description: 'Rolling out policy and training staff',
-        icon: <PlayArrow />,
-        estimatedDuration: '2-4 weeks',
-        dependencies: [WorkflowStage.PUBLICATION]
-      },
-      {
-        stage: WorkflowStage.MONITORING,
-        status: policy.status === PolicyStatus.PUBLISHED ? 'active' : 'pending',
-        title: 'Ongoing Monitoring',
-        description: 'Monitoring compliance and effectiveness',
-        icon: <TimelineIcon />,
-        estimatedDuration: 'Ongoing',
-        dependencies: [WorkflowStage.IMPLEMENTATION]
-      }
-    ];
-
-    // Add conditional steps based on policy requirements
-    if (policy.requiresLegalReview) {
-      baseSteps.splice(4, 0, {
-        stage: WorkflowStage.LEGAL_REVIEW,
-        status: 'pending',
-        title: 'Legal Review',
-        description: 'Legal team review for compliance and risk assessment',
-        icon: <Gavel />,
-        estimatedDuration: '3-5 days',
-        dependencies: [WorkflowStage.COMPLIANCE_CHECK]
-      });
-    }
-
-    return baseSteps;
+  const getStatusBadge = (status: StepStatus) => {
+    const variants = {
+      completed: 'bg-green-100 text-green-800',
+      active: 'bg-blue-100 text-blue-800',
+      pending: 'bg-gray-100 text-gray-600',
+      skipped: 'bg-slate-100 text-slate-600'
+    };
+    return <Badge className={variants[status]}>{status.toUpperCase()}</Badge>;
   };
 
-  /**
-   * Get step status color
-   */
-  const getStepStatusColor = (status: string) => {
+  const getStatusIcon = (status: StepStatus) => {
     switch (status) {
-      case 'completed': return 'success';
-      case 'active': return 'primary';
-      case 'pending': return 'default';
-      case 'skipped': return 'secondary';
-      default: return 'default';
+      case 'completed':
+        return <CheckCircle className="w-6 h-6 text-green-600" />;
+      case 'active':
+        return <Circle className="w-6 h-6 text-blue-600 fill-blue-100" />;
+      case 'pending':
+        return <Clock className="w-6 h-6 text-gray-400" />;
+      default:
+        return <Circle className="w-6 h-6 text-gray-300" />;
     }
   };
 
-  /**
-   * Get step status icon
-   */
-  const getStepStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed': return <CheckCircle color="success" />;
-      case 'active': return <RadioButtonUnchecked color="primary" />;
-      case 'pending': return <Schedule color="disabled" />;
-      case 'skipped': return <RadioButtonUnchecked color="secondary" />;
-      default: return <RadioButtonUnchecked />;
-    }
-  };
-
-  /**
-   * Stepper View Component
-   */
-  const StepperView = () => {
-    const steps = getWorkflowSteps();
-    const activeStep = steps.findIndex(step => step.status === 'active');
-
-    return (
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            📋 Policy Workflow Progress
-          </Typography>
-          <Stepper activeStep={activeStep} orientation="vertical">
-            {steps.map((step, index) => (
-              <Step key={step.stage} completed={step.status === 'completed'}>
-                <StepLabel
-                  StepIconComponent={() => getStepStatusIcon(step.status)}
-                  onClick={() => setSelectedStep(step)}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography variant="subtitle2" fontWeight="bold">
-                      {step.title}
-                    </Typography>
-                    <Chip
-                      label={step.status.toUpperCase()}
-                      size="small"
-                      color={getStepStatusColor(step.status) as any}
-                    />
-                  </Box>
-                </StepLabel>
-                <StepContent>
-                  <Box sx={{ pl: 2, pb: 2 }}>
-                    <Typography variant="body2" color="textSecondary" gutterBottom>
-                      {step.description}
-                    </Typography>
-                    
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                      {step.assignee && (
-                        <Grid item xs={6}>
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <Person fontSize="small" color="action" />
-                            <Typography variant="caption">
-                              {step.assignee}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      )}
-                      
-                      <Grid item xs={6}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Schedule fontSize="small" color="action" />
-                          <Typography variant="caption">
-                            {step.estimatedDuration}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                      
-                      {step.completedAt && (
-                        <Grid item xs={12}>
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <CheckCircle fontSize="small" color="success" />
-                            <Typography variant="caption" color="success.main">
-                              Completed {format(step.completedAt, 'MMM dd, yyyy')}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      )}
-                    </Grid>
-
-                    {step.status === 'active' && !readOnly && (
-                      <Box sx={{ mt: 2 }}>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          onClick={() => setStatusUpdateDialog(true)}
-                        >
-                          Update Status
-                        </Button>
-                      </Box>
-                    )}
-                  </Box>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  /**
-   * Timeline View Component
-   */
-  const TimelineView = () => {
-    const steps = getWorkflowSteps();
-
-    return (
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            🕐 Policy Timeline
-          </Typography>
-          <Timeline>
-            {steps.map((step, index) => (
-              <TimelineItem key={step.stage}>
-                <TimelineOppositeContent color="textSecondary">
-                  {step.completedAt ? format(step.completedAt, 'MMM dd') : 'Pending'}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                  <TimelineDot color={getStepStatusColor(step.status) as any}>
-                    {step.icon}
-                  </TimelineDot>
-                  {index < steps.length - 1 && <TimelineConnector />}
-                </TimelineSeparator>
-                <TimelineContent>
-                  <Paper elevation={1} sx={{ p: 2 }}>
-                    <Typography variant="subtitle2" fontWeight="bold">
-                      {step.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {step.description}
-                    </Typography>
-                    <Box display="flex" alignItems="center" gap={1} mt={1}>
-                      <Chip
-                        label={step.status.toUpperCase()}
-                        size="small"
-                        color={getStepStatusColor(step.status) as any}
-                      />
-                      {step.assignee && (
-                        <Chip
-                          label={step.assignee}
-                          size="small"
-                          variant="outlined"
-                          avatar={<Avatar sx={{ width: 20, height: 20 }}>
-                            {step.assignee.charAt(0)}
-                          </Avatar>}
-                        />
-                      )}
-                    </Box>
-                  </Paper>
-                </TimelineContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  /**
-   * Progress Overview Component
-   */
-  const ProgressOverview = () => {
-    if (!policy) return null;
-
-    const steps = getWorkflowSteps();
-    const completedSteps = steps.filter(step => step.status === 'completed').length;
-    const totalSteps = steps.length;
-    const progressPercentage = (completedSteps / totalSteps) * 100;
-
-    return (
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box display="flex" justifyContent="between" alignItems="center" mb={2}>
-            <Typography variant="h6">
-              📊 Overall Progress
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {progressPercentage.toFixed(0)}%
-            </Typography>
-          </Box>
-          
-          <LinearProgress
-            variant="determinate"
-            value={progressPercentage}
-            sx={{ height: 10, borderRadius: 5, mb: 2 }}
-          />
-          
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <Box textAlign="center">
-                <Typography variant="h6" color="success.main">
-                  {completedSteps}
-                </Typography>
-                <Typography variant="caption" color="textSecondary">
-                  Completed
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={4}>
-              <Box textAlign="center">
-                <Typography variant="h6" color="primary.main">
-                  {steps.filter(s => s.status === 'active').length}
-                </Typography>
-                <Typography variant="caption" color="textSecondary">
-                  In Progress
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={4}>
-              <Box textAlign="center">
-                <Typography variant="h6" color="text.secondary">
-                  {steps.filter(s => s.status === 'pending').length}
-                </Typography>
-                <Typography variant="caption" color="textSecondary">
-                  Pending
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  /**
-   * Status Update Dialog
-   */
-  const StatusUpdateDialog = () => (
-    <Dialog open={statusUpdateDialog} onClose={() => setStatusUpdateDialog(false)}>
-      <DialogTitle>Update Policy Status</DialogTitle>
-      <DialogContent>
-        <FormControl fullWidth margin="normal">
-          <InputLabel>New Status</InputLabel>
-          <Select
-            value={newStatus}
-            onChange={(e) => setNewStatus(e.target.value as PolicyStatus)}
-            label="New Status"
-          >
-            {Object.values(PolicyStatus).map((status) => (
-              <MenuItem key={status} value={status}>
-                {status.replace('_', ' ').toUpperCase()}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Reason for Change"
-          value={updateReason}
-          onChange={(e) => setUpdateReason(e.target.value)}
-          required
-          multiline
-          rows={3}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setStatusUpdateDialog(false)}>Cancel</Button>
-        <Button
-          onClick={() => statusUpdateMutation.mutate({
-            status: newStatus,
-            reason: updateReason
-          })}
-          variant="contained"
-          disabled={!updateReason.trim() || statusUpdateMutation.isLoading}
-        >
-          {statusUpdateMutation.isLoading ? 'Updating...' : 'Update Status'}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-
-  if (isLoading) {
-    return <LinearProgress />;
-  }
-
-  if (!policy) {
-    return (
-      <Card>
-        <CardContent>
-          <Typography color="error">Policy not found</Typography>
-        </CardContent>
-      </Card>
-    );
-  }
+  const completedSteps = steps.filter(s => s.status === 'completed').length;
+  const progressPercentage = (completedSteps / steps.length) * 100;
 
   return (
-    <Box>
-      {/* View Mode Selector */}
-      <Box display="flex" justifyContent="between" alignItems="center" mb={3}>
-        <Typography variant="h5" fontWeight="bold">
-          🔄 Policy Workflow
-        </Typography>
-        <Box display="flex" gap={1}>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-gray-900"> Policy Workflow</h2>
+        <div className="flex gap-2">
           <Button
-            variant={viewMode === 'stepper' ? 'contained' : 'outlined'}
+            variant={viewMode === 'stepper' ? 'default' : 'outline'}
             onClick={() => setViewMode('stepper')}
-            size="small"
+            size="sm"
           >
             Stepper
           </Button>
           <Button
-            variant={viewMode === 'timeline' ? 'contained' : 'outlined'}
+            variant={viewMode === 'timeline' ? 'default' : 'outline'}
             onClick={() => setViewMode('timeline')}
-            size="small"
+            size="sm"
           >
             Timeline
           </Button>
-        </Box>
-      </Box>
+        </div>
+      </div>
 
       {/* Progress Overview */}
-      <ProgressOverview />
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold"> Overall Progress</h3>
+            <span className="text-3xl font-bold text-blue-600">{progressPercentage.toFixed(0)}%</span>
+          </div>
+          
+          <Progress value={progressPercentage} className="h-3 mb-4" />
+          
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-green-600">{completedSteps}</p>
+              <p className="text-sm text-gray-600">Completed</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-blue-600">
+                {steps.filter(s => s.status === 'active').length}
+              </p>
+              <p className="text-sm text-gray-600">In Progress</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-gray-600">
+                {steps.filter(s => s.status === 'pending').length}
+              </p>
+              <p className="text-sm text-gray-600">Pending</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Main Content */}
-      {viewMode === 'stepper' && <StepperView />}
-      {viewMode === 'timeline' && <TimelineView />}
+      {/* Stepper View */}
+      {viewMode === 'stepper' && (
+        <Card>
+          <CardHeader>
+            <CardTitle> Policy Workflow Progress</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {steps.map((step, index) => (
+                <div key={step.stage} className="relative">
+                  {/* Connector Line */}
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`absolute left-3 top-12 w-0.5 h-16 ${
+                        step.status === 'completed' ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
+                    />
+                  )}
 
-      {/* Status Update Dialog */}
-      <StatusUpdateDialog />
-    </Box>
+                  <div className="flex gap-4">
+                    {/* Icon */}
+                    <div className="flex-shrink-0">
+                      {getStatusIcon(step.status)}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 pb-8">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-semibold text-gray-900">{step.title}</h4>
+                        {getStatusBadge(step.status)}
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 mb-3">{step.description}</p>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        {step.assignee && (
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <User className="w-4 h-4" />
+                            <span>{step.assignee}</span>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Clock className="w-4 h-4" />
+                          <span>{step.estimatedDuration}</span>
+                        </div>
+                        
+                        {step.completedAt && (
+                          <div className="flex items-center gap-2 text-green-600">
+                            <CheckCircle className="w-4 h-4" />
+                            <span>Completed {format(step.completedAt, 'MMM dd, yyyy')}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {step.status === 'active' && !readOnly && (
+                        <Button size="sm" className="mt-3">
+                          Update Status
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Timeline View */}
+      {viewMode === 'timeline' && (
+        <Card>
+          <CardHeader>
+            <CardTitle> Policy Timeline</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {steps.map((step, index) => (
+                <div key={step.stage} className="relative flex gap-4">
+                  {/* Timeline connector */}
+                  {index < steps.length - 1 && (
+                    <div className="absolute left-14 top-16 w-0.5 h-16 bg-gray-300" />
+                  )}
+
+                  {/* Date */}
+                  <div className="w-24 flex-shrink-0 text-right pt-2">
+                    <span className="text-sm text-gray-600">
+                      {step.completedAt ? format(step.completedAt, 'MMM dd') : 'Pending'}
+                    </span>
+                  </div>
+
+                  {/* Icon */}
+                  <div className="flex-shrink-0">
+                    <div className={`p-2 rounded-full ${
+                      step.status === 'completed' ? 'bg-green-100' :
+                      step.status === 'active' ? 'bg-blue-100' : 'bg-gray-100'
+                    }`}>
+                      {step.icon}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 pb-8">
+                    <Card className="shadow-sm">
+                      <CardContent className="pt-4">
+                        <h4 className="font-semibold text-gray-900 mb-1">{step.title}</h4>
+                        <p className="text-sm text-gray-600 mb-3">{step.description}</p>
+                        <div className="flex gap-2 flex-wrap">
+                          {getStatusBadge(step.status)}
+                          {step.assignee && (
+                            <Badge variant="outline" className="text-xs">
+                              <User className="w-3 h-3 mr-1" />
+                              {step.assignee}
+                            </Badge>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 

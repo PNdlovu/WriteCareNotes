@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Controller for public customer support AI agent endpoints
+ * @module Ai-agents/PublicAIAgentController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Controller for public customer support AI agent endpoints
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive enterprise consent management service with
+ * @module Consent/EnterpriseConsentManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive enterprise consent management service with
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -24,7 +36,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ConsentManagement, ConsentType, ConsentStatus, LawfulBasis, SpecialCategoryBasis, ConsentGivenBy } from '../../entities/consent/ConsentManagement';
 import { Resident } from '../../entities/resident/Resident';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { EncryptionService } from '../encryption/EncryptionService';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -119,7 +131,7 @@ export class EnterpriseConsentManagementService {
     
     private readonly residentRepository: Repository<Resident>,
     private readonly notificationService: NotificationService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly encryptionService: EncryptionService
   ) {
     console.log('Enterprise Consent Management Service initialized');

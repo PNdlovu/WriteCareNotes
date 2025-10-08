@@ -1,8 +1,13 @@
 /**
- * AI Transparency Service - User Empowerment & Explainability
+ * @fileoverview a i transparency Service
+ * @module Ai-safety/AITransparencyService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Provides transparency features to help users understand AI responses,
- * make informed decisions, and maintain control over AI-assisted policy management.
+ * @description a i transparency Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -580,5 +585,22 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
     };
     
     return names[jurisdiction] || jurisdiction;
+  }
+
+  // Additional method for PolicyAuthoringAssistantService compatibility
+  async logAIDecision(params: { 
+    action: string; 
+    context: any; 
+    result: any; 
+    userId?: string; 
+  }): Promise<void> {
+    // Log AI decision making for audit trail
+    console.log('AI Decision logged:', {
+      action: params.action,
+      timestamp: new Date().toISOString(),
+      userId: params.userId || 'system',
+      context: params.context,
+      result: params.result
+    });
   }
 }

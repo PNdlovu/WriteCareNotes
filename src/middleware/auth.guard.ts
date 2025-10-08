@@ -1,11 +1,13 @@
 /**
- * @fileoverview Authentication Guard
- * @description NestJS guard for authentication validation
- * @author WriteCareNotes Team
+ * @fileoverview NestJS guard for authentication validation
+ * @module Auth.guard
  * @version 1.0.0
- * @license MIT
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
  * @stability stable
- * @audit-hook auth-guard-created
+ * 
+ * @description NestJS guard for authentication validation
  */
 
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';

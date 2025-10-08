@@ -1,11 +1,13 @@
 /**
- * @fileoverview Compliance Service
- * @description Centralized compliance management service for regulatory adherence
- * @author WriteCareNotes Team
+ * @fileoverview Centralized compliance management service for regulatory adherence
+ * @module Compliance/Compliance.service
  * @version 1.0.0
- * @license MIT
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
  * @stability stable
- * @audit-hook compliance-service-created
+ * 
+ * @description Centralized compliance management service for regulatory adherence
  */
 
 import { Injectable, Logger } from '@nestjs/common';

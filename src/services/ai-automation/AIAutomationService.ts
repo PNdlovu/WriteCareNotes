@@ -1,3 +1,15 @@
+/**
+ * @fileoverview a i automation Service
+ * @module Ai-automation/AIAutomationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description a i automation Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,7 +17,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { AISummary, SummaryType, AIModel, ConfidenceLevel } from '../../entities/ai-automation/AISummary';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 
 export interface AdvancedAICapabilities {
@@ -152,7 +164,7 @@ export interface IntelligentAutomation {
 export class AIAutomationService {
   private summaryRepository: Repository<AISummary>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private encryptionService: FieldLevelEncryptionService;
 
   constructor() {

@@ -1,6 +1,18 @@
+/**
+ * @fileoverview background check Service
+ * @module Compliance/BackgroundCheckService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description background check Service
+ */
+
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { ComplianceService } from '../compliance/ComplianceService';
 
@@ -174,7 +186,7 @@ export class BackgroundCheckService {
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly notificationService: NotificationService,
     private readonly complianceService: ComplianceService
   ) {

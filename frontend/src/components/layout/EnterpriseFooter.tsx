@@ -23,10 +23,14 @@ const footerLinks = {
   solutions: [
     { name: 'AI-Powered Platform', href: '/platform/ai-features' },
     { name: 'Care Home Management', href: '/solutions/care-home' },
+    { name: 'Domiciliary Care', href: '/solutions/domiciliary' },
     { name: 'CQC Compliance', href: '/solutions/compliance' },
-    { name: 'Staff Management', href: '/solutions/staff' },
+    { name: 'Staff Management & Rota', href: '/solutions/staff' },
+    { name: 'Academy & Training', href: '/solutions/training' },
     { name: 'Resident Care Plans', href: '/solutions/residents' },
     { name: 'Family Portal', href: '/solutions/family' },
+    { name: 'Incident Reporting', href: '/solutions/incidents' },
+    { name: 'HMRC Payroll', href: '/solutions/payroll' },
     { name: 'Analytics & Reporting', href: '/solutions/analytics' },
   ],
   resources: [

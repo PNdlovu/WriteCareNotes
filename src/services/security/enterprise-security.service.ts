@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Zero-trust security architecture with advanced threat detection and compliance
+ * @module Security/Enterprise-security.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Zero-trust security architecture with advanced threat detection and compliance
+ */
+
+/**
  * @fileoverview Multi-Tenant Enterprise Security Service
  * @description Zero-trust security architecture with advanced threat detection and compliance
  * @version 2.0.0
@@ -11,7 +23,7 @@
  * - SOC 2 Type II Compliance
  * - ISO 27001 Standards
  * - NIST Cybersecurity Framework
- * - Healthcare Security Standards
+ * - Care Home Security Standards
  * 
  * @features
  * - Multi-factor authentication
@@ -105,7 +117,7 @@ export interface AccessRequest {
  * Enterprise Multi-Tenant Security Service
  * 
  * Provides comprehensive security services including authentication, authorization,
- * threat detection, and compliance monitoring for multi-tenant healthcare environments.
+ * threat detection, and compliance monitoring for multi-tenant care home environments.
  */
 @Injectable()
 export class EnterpriseSecurityService {
@@ -131,7 +143,7 @@ export class EnterpriseSecurityService {
     private readonly biometricRepository: Repository<BiometricData>,
     
     private readonly jwtService: JwtService,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly notificationService: NotificationService,
     private readonly threatDetectionService: ThreatDetectionService
   ) {}

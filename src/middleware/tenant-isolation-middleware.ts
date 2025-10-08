@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Middleware to enforce strict tenant isolation in multi-tenant environment
+ * @module Tenant-isolation-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Middleware to enforce strict tenant isolation in multi-tenant environment
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -24,14 +36,7 @@ interface TenantContext {
   isolationLevel: 'STRICT' | 'MODERATE' | 'RELAXED';
 }
 
-interface AuthenticatedUser {
-  id: string;
-  tenantId: string;
-  roles: string[];
-  permissions: string[];
-  organizationId?: string;
-  dataAccessLevel: string;
-}
+import { AuthenticatedUser } from '../services/auth/JWTAuthenticationService';
 
 declare global {
   namespace Express {

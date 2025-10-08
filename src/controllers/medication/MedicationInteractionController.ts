@@ -1,3 +1,15 @@
+/**
+ * @fileoverview REST API controller for medication interaction checking, allergy alerts,
+ * @module Medication/MedicationInteractionController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description REST API controller for medication interaction checking, allergy alerts,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -33,7 +45,7 @@ import Joi from 'joi';
 
 export class MedicationInteractionController {
   private interactionService: MedicationInteractionService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.interactionService = new MedicationInteractionService();

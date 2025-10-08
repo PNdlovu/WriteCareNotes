@@ -1,8 +1,20 @@
+/**
+ * @fileoverview Real-time inventory tracking with automated stock level monitoring,
+ * @module Medication/MedicationInventoryService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Real-time inventory tracking with automated stock level monitoring,
+ */
+
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from "eventemitter2";
 import AppDataSource from '../../config/database';
 import { Medication } from '../../entities/medication/Medication';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 /**
@@ -128,7 +140,7 @@ export interface StockAlert {
 
 export class MedicationInventoryService extends EventEmitter2 {
   private inventoryRepository: Repository<any>;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
 
   constructor() {

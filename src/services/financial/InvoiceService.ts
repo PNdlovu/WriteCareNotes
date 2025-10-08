@@ -1,7 +1,19 @@
+/**
+ * @fileoverview Comprehensive invoice management service with healthcare billing features,
+ * @module Financial/InvoiceService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive invoice management service with healthcare billing features,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 /**
@@ -127,7 +139,7 @@ export interface AgedDebtorAnalysis {
 export class InvoiceService extends EventEmitter2 {
   private invoiceRepository: Repository<any>;
   private paymentRepository: Repository<any>;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
 
   constructor() {

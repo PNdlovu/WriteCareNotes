@@ -1,3 +1,15 @@
+/**
+ * @fileoverview right to work check Service
+ * @module Hr/RightToWorkCheckService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description right to work check Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../config/database';
@@ -5,7 +17,7 @@ import { RightToWorkCheck, RightToWorkStatus, RightToWorkDocumentType, RightToWo
 import { RightToWorkDocument } from '../../entities/hr/RightToWorkDocument';
 import { RightToWorkNotification } from '../../entities/hr/RightToWorkNotification';
 import { Employee } from '../../entities/hr/Employee';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { logger } from '../../utils/logger';
 
@@ -100,7 +112,7 @@ export class RightToWorkCheckService {
   private rightToWorkDocumentRepository: Repository<RightToWorkDocument>;
   private rightToWorkNotificationRepository: Repository<RightToWorkNotification>;
   private employeeRepository: Repository<Employee>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private eventEmitter: EventEmitter2;
 

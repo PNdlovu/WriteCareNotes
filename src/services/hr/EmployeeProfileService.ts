@@ -1,10 +1,22 @@
+/**
+ * @fileoverview employee profile Service
+ * @module Hr/EmployeeProfileService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description employee profile Service
+ */
+
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { EmployeeProfile, ProfileStatus, ProfileType } from '../../entities/hr/EmployeeProfile';
 import { Employee } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { HealthcareEncryption } from '@/utils/healthcare-encryption';
 
 export interface EmployeeProfileSearchCriteria {
@@ -72,7 +84,7 @@ export class EmployeeProfileService {
   private profileRepository: Repository<EmployeeProfile>;
   private employeeRepository: Repository<Employee>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.profileRepository = AppDataSource.getRepository(EmployeeProfile);

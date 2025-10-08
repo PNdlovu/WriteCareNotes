@@ -1,6 +1,6 @@
 // Test script to verify AI Safety Services are functional
-import { AISafetyGuardService } from '../services/ai-safety/AISafetyGuardService';
-import { AITransparencyService } from '../services/ai-safety/AITransparencyService';
+import { AISafetyGuardService } from '../src/services/ai-safety/AISafetyGuardService';
+import { AITransparencyService } from '../src/services/ai-safety/AITransparencyService';
 
 async function testAISafetyServices() {
   console.log('🛡️ Testing AI Safety Services...\n');

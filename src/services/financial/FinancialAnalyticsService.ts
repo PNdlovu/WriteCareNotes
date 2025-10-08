@@ -33,7 +33,7 @@ import { Budget } from '../../entities/financial/Budget';
 import { Forecast } from '../../entities/financial/Forecast';
 import { FinancialKPI } from '../../entities/financial/FinancialKPI';
 
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { ComplianceCheckService } from '../compliance/ComplianceCheckService';
 import { GDPRComplianceService } from '../gdpr/GDPRComplianceService';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
@@ -206,7 +206,7 @@ export class FinancialAnalyticsService implements FinancialAnalyticsServiceInter
     private readonly eventEmitter: EventEmitter2,
 
     // Healthcare Compliance Services
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly gdprService: GDPRComplianceService,
     private readonly encryptionService: FieldLevelEncryptionService,
     private readonly eventService: EventPublishingService,

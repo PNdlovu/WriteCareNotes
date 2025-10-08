@@ -1,3 +1,15 @@
+/**
+ * @fileoverview enhanced bed room Service
+ * @module Enhanced-bed-room/EnhancedBedRoomService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description enhanced bed room Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -18,7 +30,7 @@ import AppDataSource from '../../config/database';
 import { BedRoom } from '../../entities/enhanced-bed-room/BedRoom';
 import { RoomOccupancy } from '../../entities/enhanced-bed-room/RoomOccupancy';
 import { Resident } from '../../entities/Resident';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export interface CreateRoomDto {
@@ -79,7 +91,7 @@ export class EnhancedBedRoomService {
   private bedRoomRepository: Repository<BedRoom>;
   private occupancyRepository: Repository<RoomOccupancy>;
   private residentRepository: Repository<Resident>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
 
   constructor() {

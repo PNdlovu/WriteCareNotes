@@ -8,7 +8,7 @@ import { EventEmitter2 } from "eventemitter2";
  * @since 2025-01-01
  * 
  * @description Utility functions for date formatting and manipulation
- * with healthcare-specific date handling requirements.
+ * with care home-specific date handling requirements.
  */
 
 /**

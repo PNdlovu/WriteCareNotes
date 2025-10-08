@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Simple medication incident service for care home management.
+ * @module Medication/MedicationIncidentService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Simple medication incident service for care home management.
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview mobile self Service
+ * @module Mobile/MobileSelfServiceService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description mobile self Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,7 +17,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { MobileSession, DeviceType, SessionStatus, SyncStatus } from '../../entities/mobile/MobileSession';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 
 export interface AdvancedMobileFeatures {
@@ -85,7 +97,7 @@ export interface OfflineDataManager {
 export class MobileSelfServiceService {
   private sessionRepository: Repository<MobileSession>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private encryptionService: FieldLevelEncryptionService;
 
   constructor() {

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview cash transaction Controller
+ * @module Financial/CashTransactionController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description cash transaction Controller
+ */
+
 import { Request, Response } from 'express';
 import { CashTransactionService, CashTransactionRequest, CashTransactionUpdate, CashTransactionSearchCriteria } from '../../services/financial/CashTransactionService';
 import { logger } from '../../utils/logger';

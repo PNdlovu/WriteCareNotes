@@ -1,16 +1,13 @@
 /**
- * 🧩 CLAUSE SYNTHESIZER SERVICE
- * 
- * Assembles AI suggestions from retrieved content - NEVER generates freeform text
- * 
- * Key Features:
- * - Template-based synthesis (no hallucination)
- * - Confidence scoring based on source quality
- * - Multi-document synthesis with conflict resolution
- * - Structured output formatting
- * 
- * @module ClauseSynthesizerService
+ * @fileoverview clause synthesizer Service
+ * @module Policy-authoring-assistant/ClauseSynthesizerService
  * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description clause synthesizer Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';

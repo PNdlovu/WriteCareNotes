@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Middleware for ensuring healthcare compliance
+ * @module Compliance-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Middleware for ensuring healthcare compliance
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -16,21 +28,6 @@ import { HealthcareLogger } from '@/utils/logger';
 
 /**
  * Compliance monitoring middleware
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const complianceMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   // Add compliance headers

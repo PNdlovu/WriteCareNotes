@@ -1,3 +1,15 @@
+/**
+ * @fileoverview agent-review.service
+ * @module Pilot/Agent-review.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description agent-review.service
+ */
+
 import { logger } from '../../utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 import { 

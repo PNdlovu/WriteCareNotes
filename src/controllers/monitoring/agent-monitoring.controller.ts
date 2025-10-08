@@ -1,3 +1,15 @@
+/**
+ * @fileoverview agent-monitoring.controller
+ * @module Monitoring/Agent-monitoring.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description agent-monitoring.controller
+ */
+
 import { Request, Response } from 'express';
 import { AgentMonitoringService } from '../../services/monitoring/agent-monitoring.service';
 import { logger } from '../../utils/logger';

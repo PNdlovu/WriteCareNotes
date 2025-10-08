@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Implementation of UK Cyber Essentials and Cyber Essentials Plus
+ * @module Compliance/UKCyberEssentialsService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Implementation of UK Cyber Essentials and Cyber Essentials Plus
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

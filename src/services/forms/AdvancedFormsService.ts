@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Dynamic form builder with conditional logic, digital signatures,
+ * @module Forms/AdvancedFormsService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Dynamic form builder with conditional logic, digital signatures,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -16,7 +28,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { Repository, EntityManager } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 
 export enum FormFieldType {
@@ -245,7 +257,7 @@ export interface FormAnalytics {
 export class AdvancedFormsService {
   // Logger removed
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private encryptionService: FieldLevelEncryptionService;
 
   // In-memory storage (would be replaced with proper database entities)

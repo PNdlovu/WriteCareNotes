@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Middleware for monitoring API performance and response times
+ * @module Performance-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Middleware for monitoring API performance and response times
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -16,21 +28,6 @@ import { PerformanceLogger } from '@/utils/logger';
 
 /**
  * Performance monitoring middleware
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const performanceMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const startTime = Date.now();

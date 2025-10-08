@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { VisitorManagement } from '../../entities/visitor/VisitorManagement';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export enum RegulatoryAuthority {
@@ -178,7 +178,7 @@ export interface ComplianceReport {
 export class ComplianceAutomationEngine {
   private visitorRepository: Repository<VisitorManagement>;
   private eventEmitter: EventEmitter2;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
   
   private complianceChecks: Map<string, ComplianceCheck>;
@@ -188,7 +188,7 @@ export class ComplianceAutomationEngine {
 
   constructor(
     eventEmitter: EventEmitter2,
-    auditTrailService: AuditTrailService,
+    auditTrailService: AuditService,
     notificationService: NotificationService,
     facilityLocation: RegulatoryAuthority = RegulatoryAuthority.CQC
   ) {

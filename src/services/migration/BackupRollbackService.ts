@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive backup and rollback service for migration operations
+ * @module Migration/BackupRollbackService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive backup and rollback service for migration operations
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -19,7 +31,7 @@ import { exec } from 'child_process';
 import { v4 as uuidv4 } from 'uuid';
 import { EventEmitter } from 'events';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import archiver from 'archiver';
 import { createReadStream, createWriteStream } from 'fs';
@@ -100,7 +112,7 @@ export interface RestorePerformanceMetrics {
 
 export class BackupRollbackService extends EventEmitter {
   private backupStorage: string;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private activeBackups: Map<string, BackupConfiguration> = new Map();
   private backupMetadata: Map<string, BackupMetadata> = new Map();

@@ -2,7 +2,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { ExternalSystem, SystemType, IntegrationStatus } from '../../entities/external-integration/ExternalSystem';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 
 export interface ConnectorConfig {
@@ -216,7 +216,7 @@ export interface ConnectorExecution {
 
 export class ConnectorSDK {
   private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private encryptionService: FieldLevelEncryptionService;
   private eventEmitter: EventEmitter2;
   private connectors: Map<string, ConnectorConfig> = new Map();

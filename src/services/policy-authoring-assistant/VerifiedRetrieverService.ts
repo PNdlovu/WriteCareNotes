@@ -1,26 +1,21 @@
 /**
- * 🔍 VERIFIED RETRIEVER SERVICE
- * 
- * Retrieval component for RAG architecture
- * Indexes and retrieves only verified policy templates, standards, and jurisdictional rules
- * 
- * Key Features:
- * - Vector similarity search for semantic retrieval
- * - Structured, versioned knowledge base (no open web)
- * - Multi-jurisdictional filtering
- * - Relevance scoring and ranking
- * - Deprecation handling
- * 
- * @module VerifiedRetrieverService
+ * @fileoverview verified retriever Service
+ * @module Policy-authoring-assistant/VerifiedRetrieverService
  * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description verified retriever Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { PolicyTemplate } from '../../entities/policy-template.entity';
-import { ComplianceStandard } from '../../entities/compliance-standard.entity';
-import { JurisdictionalRule } from '../../entities/jurisdictional-rule.entity';
+import { ComplianceStandard, ComplianceStandardStatus } from '../../entities/compliance-standard.entity';
+import { JurisdictionalRule, JurisdictionalRuleStatus } from '../../entities/jurisdictional-rule.entity';
 import { RegulatoryJurisdiction, KnowledgeBaseQuery } from './PolicyAuthoringAssistantService';
 
 /**
@@ -152,14 +147,14 @@ export class VerifiedRetrieverService {
       version: template.version,
       section: template.category,
       relevanceScore: this.calculateRelevanceScore(template, query.keywords),
-      jurisdiction: template.jurisdiction as RegulatoryJurisdiction[],
-      standards: template.standards,
-      verificationStatus: template.deprecated ? 'deprecated' : 'verified',
+      jurisdiction: template.jurisdiction as unknown as RegulatoryJurisdiction[],
+      standards: [], // PolicyTemplate entity doesn't have standards property - use empty array
+      verificationStatus: template.isActive ? 'verified' : 'deprecated', // Use isActive instead of deprecated
       lastUpdated: template.updatedAt,
       metadata: {
         category: template.category,
         author: template.createdBy,
-        usageCount: template.usageCount || 0,
+        usageCount: 0, // PolicyTemplate entity doesn't track usageCount - default to 0
       },
     }));
   }
@@ -308,9 +303,9 @@ export class VerifiedRetrieverService {
     // In production, this would update vector embeddings for semantic search
     // For now, we rely on PostgreSQL full-text search
     
-    const templateCount = await this.policyTemplateRepository.count({ where: { status: 'published' } });
-    const standardCount = await this.complianceStandardRepository.count({ where: { status: 'active' } });
-    const ruleCount = await this.jurisdictionalRuleRepository.count({ where: { status: 'active' } });
+    const templateCount = await this.policyTemplateRepository.count({ where: { isActive: true } });
+    const standardCount = await this.complianceStandardRepository.count({ where: { status: ComplianceStandardStatus.ACTIVE } });
+    const ruleCount = await this.jurisdictionalRuleRepository.count({ where: { status: JurisdictionalRuleStatus.ACTIVE } });
     
     this.logger.log(`Index refreshed: ${templateCount} templates, ${standardCount} standards, ${ruleCount} rules`);
   }
@@ -320,9 +315,9 @@ export class VerifiedRetrieverService {
    */
   async getStats(): Promise<any> {
     const [templates, standards, rules] = await Promise.all([
-      this.policyTemplateRepository.count({ where: { status: 'published' } }),
-      this.complianceStandardRepository.count({ where: { status: 'active' } }),
-      this.jurisdictionalRuleRepository.count({ where: { status: 'active' } }),
+      this.policyTemplateRepository.count({ where: { isActive: true } }),
+      this.complianceStandardRepository.count({ where: { status: ComplianceStandardStatus.ACTIVE } }),
+      this.jurisdictionalRuleRepository.count({ where: { status: JurisdictionalRuleStatus.ACTIVE } }),
     ]);
 
     const jurisdictionCoverage = await this.getJurisdictionCoverage();
@@ -345,13 +340,13 @@ export class VerifiedRetrieverService {
     for (const jurisdiction of Object.values(RegulatoryJurisdiction)) {
       const [templates, standards, rules] = await Promise.all([
         this.policyTemplateRepository.count({
-          where: { jurisdiction: In([jurisdiction]), status: 'published' },
+          where: { jurisdiction: In([jurisdiction]), isActive: true },
         }),
         this.complianceStandardRepository.count({
-          where: { jurisdiction: In([jurisdiction]), status: 'active' },
+          where: { jurisdiction: In([jurisdiction]), status: ComplianceStandardStatus.ACTIVE },
         }),
         this.jurisdictionalRuleRepository.count({
-          where: { jurisdiction, status: 'active' },
+          where: { jurisdiction, status: JurisdictionalRuleStatus.ACTIVE },
         }),
       ]);
 

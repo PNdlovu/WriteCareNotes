@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 48px;
+            margin: 0 0 20px 0;
+        }
+        p {
+            font-size: 24px;
+            line-height: 1.5;
+        }
+        .box {
+            background: white;
+            color: #333;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ TEST PAGE WORKING!</h1>
+        <p>If you can see this page, the Vite server is working correctly.</p>
+        
+        <div class="box">
+            <h2>Current Time:</h2>
+            <p id="time"></p>
+        </div>
+        
+        <div class="box">
+            <h2>Next Steps:</h2>
+            <ul>
+                <li>Vite server: ✅ Working</li>
+                <li>HTML rendering: ✅ Working</li>
+                <li>CSS styling: ✅ Working</li>
+                <li>JavaScript: <span id="js-status">❌ Testing...</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Test JavaScript
+        document.getElementById('js-status').textContent = '✅ Working';
+        
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('time').textContent = now.toLocaleString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        console.log('Test page loaded successfully!');
+    </script>
+</body>
+</html>

@@ -1,13 +1,25 @@
+/**
+ * @fileoverview external integration Service
+ * @module External-integration/ExternalIntegrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description external integration Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { ExternalSystem, SystemType, IntegrationStatus } from '../../entities/external-integration/ExternalSystem';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export class ExternalIntegrationService {
   private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);

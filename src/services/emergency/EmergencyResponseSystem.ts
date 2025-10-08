@@ -3,7 +3,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { VisitorManagement } from '../../entities/visitor/VisitorManagement';
 import { SecurityIntegrationService } from './SecurityIntegrationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export enum EmergencyType {
@@ -177,7 +177,7 @@ export class EmergencyResponseSystem {
   private visitorRepository: Repository<VisitorManagement>;
   private eventEmitter: EventEmitter2;
   private securityService: SecurityIntegrationService;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
   
   private activeIncidents: Map<string, EmergencyIncident>;
@@ -189,7 +189,7 @@ export class EmergencyResponseSystem {
   constructor(
     eventEmitter: EventEmitter2,
     securityService: SecurityIntegrationService,
-    auditTrailService: AuditTrailService,
+    auditTrailService: AuditService,
     notificationService: NotificationService
   ) {
     this.visitorRepository = AppDataSource.getRepository(VisitorManagement);

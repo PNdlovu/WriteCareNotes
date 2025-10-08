@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Healthcare compliance validation service supporting
+ * @module Compliance/ComplianceCheckService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Healthcare compliance validation service supporting
+ */
+
+/**
  * @fileoverview Compliance Check Service for WriteCareNotes
  * @module ComplianceCheckService
  * @version 1.0.0

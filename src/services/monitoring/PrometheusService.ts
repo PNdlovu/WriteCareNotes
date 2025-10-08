@@ -1,3 +1,15 @@
+/**
+ * @fileoverview prometheus Service
+ * @module Monitoring/PrometheusService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description prometheus Service
+ */
+
 // Mock prom-client types for compilation
 interface Counter<T = string> {
   inc(labels?: Record<string, string>): void;

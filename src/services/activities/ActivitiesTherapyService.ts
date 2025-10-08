@@ -1,9 +1,13 @@
 /**
- * @fileoverview Activities and Therapy Service
- * @description Real activities and therapy service with comprehensive management and tracking
- * @author WriteCareNotes Team
+ * @fileoverview Real activities and therapy service with comprehensive management and tracking
+ * @module Activities/ActivitiesTherapyService
  * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
  * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Real activities and therapy service with comprehensive management and tracking
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -11,7 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Activity, ActivityType, ActivityCategory, ParticipationLevel } from '../../entities/activities/Activity';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
@@ -140,7 +144,7 @@ export class ActivitiesTherapyService {
     @InjectRepository(TherapySession)
     private readonly therapySessionRepository: Repository<TherapySession>,
     private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly notificationService: NotificationService,
   ) {}
 

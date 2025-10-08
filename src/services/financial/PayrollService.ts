@@ -1,9 +1,21 @@
+/**
+ * @fileoverview Comprehensive payroll processing system with HMRC compliance,
+ * @module Financial/PayrollService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive payroll processing system with HMRC compliance,
+ */
+
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2 } from "eventemitter2";
 import { Repository, Between } from 'typeorm';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index, ManyToOne, OneToMany } from 'typeorm';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { DatabaseService } from '../core/DatabaseService';
 import Decimal from 'decimal.js';
@@ -183,7 +195,7 @@ export class PayrollService extends EventEmitter2 {
   private employeeRepository: Repository<any>;
   private payrollRunRepository: Repository<any>;
   private payslipRepository: Repository<any>;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
 
   // HMRC tax rates and thresholds for 2025/26 tax year

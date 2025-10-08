@@ -1,12 +1,13 @@
 /**
- * AI Policy Controller - REST API for AI-Powered Policy Features
+ * @fileoverview a i policy Controller
+ * @module Ai/AIPolicyController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Provides REST endpoints for AI-powered policy management:
- * - Policy analysis and suggestions
- * - AI-generated policy creation
- * - Natural language policy queries
- * - Compliance risk assessment
- * - Template recommendations
+ * @description a i policy Controller
  */
 
 import { 

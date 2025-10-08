@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Advanced template processing engine for dynamic content generation
+ * @module Template-engine/Template-engine.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Advanced template processing engine for dynamic content generation
+ */
+
+/**
  * @fileoverview Template Engine Service
  * @description Advanced template processing engine for dynamic content generation
  * @version 2.0.0
@@ -19,7 +31,7 @@
  * @compliance
  * - GDPR Article 25 (Data protection by design)
  * - ISO 27001 (Information Security)
- * - Healthcare data processing standards
+ * - Care home data processing standards
  */
 
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';

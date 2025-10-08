@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Advanced nurse call system with AI-powered prioritization,
+ * @module Emergency/NurseCallSystemService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Advanced nurse call system with AI-powered prioritization,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -24,7 +36,7 @@ import { NurseCallAlert, CallType, CallPriority, CallStatus, CallSource } from '
 import { OnCallRota, OnCallRole, OnCallStatus } from '../../entities/emergency/OnCallRota';
 import { Resident } from '../../entities/resident/Resident';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ModernNurseCallSystem {

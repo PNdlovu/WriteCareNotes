@@ -91,7 +91,7 @@ describe('SpreadsheetIntegrationService', () => {
           useValue: mockEventEmitter,
         },
         {
-          provide: AuditTrailService,
+          provide: AuditService,
           useValue: mockAuditService,
         },
       ],

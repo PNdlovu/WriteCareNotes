@@ -1,4 +1,16 @@
 /**
+ * @fileoverview AI-powered service for generating concise, structured summaries
+ * @module Ai/Handover.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description AI-powered service for generating concise, structured summaries
+ */
+
+/**
  * @fileoverview AI-Powered Daily Handover Summarizer Service
  * @module HandoverSummarizerService
  * @version 1.0.0
@@ -13,7 +25,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Repository, EntityManager } from 'typeorm';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface HandoverSummary {
   summaryId: string;
@@ -190,7 +202,7 @@ export class HandoverSummarizerService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly notificationService: NotificationService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {
     this.logger.log('AI-Powered Handover Summarizer Service initialized');
   }

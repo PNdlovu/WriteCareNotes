@@ -1,3 +1,15 @@
+/**
+ * @fileoverview a i Service
+ * @module Core/AIService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description a i Service
+ */
+
 import OpenAI from 'openai';
 import { configService } from './ConfigurationService';
 import { loggerService } from './LoggerService';

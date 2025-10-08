@@ -1,3 +1,15 @@
+/**
+ * @fileoverview AI agent service for authenticated users within tenant context.
+ * @module Ai-agents/TenantCareAssistantAIService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description AI agent service for authenticated users within tenant context.
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -17,7 +29,7 @@ import AppDataSource from '../../config/database';
 import { KnowledgeArticle } from '../../entities/knowledge-base/KnowledgeArticle';
 import { Logger } from '@nestjs/common';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface TenantAIAgentCapabilities {
   careAssistance: {
@@ -119,7 +131,7 @@ export class TenantCareAssistantAIService {
   // Logger removed
   private knowledgeRepository: Repository<KnowledgeArticle>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);

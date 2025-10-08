@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive encryption module for enterprise data protection
+ * @module Modules/Encryption.module
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive encryption module for enterprise data protection
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

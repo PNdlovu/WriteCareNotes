@@ -1,9 +1,21 @@
+/**
+ * @fileoverview security integration Service
+ * @module Security/SecurityIntegrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description security integration Service
+ */
+
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { VisitorManagement } from '../../entities/visitor/VisitorManagement';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export interface SecuritySystemStatus {
@@ -71,7 +83,7 @@ export class SecurityIntegrationService {
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly notificationService: NotificationService
   ) {
     this.initializeSecuritySystems();

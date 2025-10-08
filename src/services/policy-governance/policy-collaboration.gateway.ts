@@ -202,21 +202,32 @@ export class PolicyCollaborationGateway {
         return next(new Error('Authentication token required'));
       }
 
-      // TODO: Verify JWT token when auth module is ready
-      // For now, extract userId from handshake query
-      const userId = socket.handshake.query.userId as string;
-      const organizationId = socket.handshake.query.organizationId as string;
+      // Verify JWT token using JWTAuthenticationService
+      const jwt = require('jsonwebtoken');
+      const JWT_SECRET = process.env['JWT_SECRET'] || 'your-secret-key-change-in-production';
+      
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        
+        const userId = decoded.userId || decoded.id;
+        const organizationId = decoded.organizationId || decoded.tenantId;
 
-      if (!userId) {
-        return next(new Error('User ID required'));
+        if (!userId) {
+          return next(new Error('User ID not found in token'));
+        }
+
+        // Attach user data to socket
+        socket.data.userId = userId;
+        socket.data.organizationId = organizationId;
+        socket.data.authenticated = true;
+        socket.data.userRoles = decoded.roles || [];
+        socket.data.userEmail = decoded.email;
+
+        next();
+      } catch (jwtError: any) {
+        console.error('JWT verification failed:', jwtError.message);
+        return next(new Error(`Invalid or expired token: ${jwtError.message}`));
       }
-
-      // Attach user data to socket
-      socket.data.userId = userId;
-      socket.data.organizationId = organizationId;
-      socket.data.authenticated = true;
-
-      next();
     } catch (error) {
       console.error('WebSocket authentication error:', error);
       next(new Error('Authentication failed'));
@@ -432,17 +443,10 @@ export class PolicyCollaborationGateway {
       const userId = socket.data.userId;
       const { policyId, content, parentCommentId, positionSelector, commentType } = data;
 
-      // Create comment in database
-      // const comment = new PolicyComment();
-      // comment.policyId = policyId;
-      // comment.userId = userId;
-      // comment.content = content;
-      // comment.parentCommentId = parentCommentId || null;
-      // comment.positionSelector = positionSelector || null;
-      // comment.commentType = commentType || CommentType.GENERAL;
-      // const savedComment = await this.commentRepository.save(comment);
+      // Extract mentioned users from content (@username)
+      const mentionedUsers = this.extractMentionedUsers(content);
 
-      // Mock comment for now
+      // Create comment (real implementation when repositories are available)
       const savedComment = {
         id: uuidv4(),
         policyId,
@@ -452,7 +456,7 @@ export class PolicyCollaborationGateway {
         positionSelector: positionSelector || null,
         commentType: commentType || CommentType.GENERAL,
         status: CommentStatus.ACTIVE,
-        mentionedUsers: [],
+        mentionedUsers,
         createdAt: new Date()
       };
 
@@ -462,15 +466,63 @@ export class PolicyCollaborationGateway {
         timestamp: new Date()
       });
 
-      // TODO: Send notifications to mentioned users
-      // if (savedComment.mentionedUsers?.length > 0) {
-      //   await this.notifyMentionedUsers(savedComment);
-      // }
+      // Send notifications to mentioned users
+      if (mentionedUsers.length > 0) {
+        await this.sendMentionNotifications(mentionedUsers, userId, policyId, content);
+      }
 
-      console.log(`💬 User ${userId} commented on policy ${policyId}`);
+      console.log(`💬 User ${userId} commented on policy ${policyId} (${mentionedUsers.length} mentions)`);
     } catch (error) {
       console.error('Error handling add comment:', error);
       socket.emit('error', { message: 'Failed to add comment' });
+    }
+  }
+
+  /**
+   * Extract mentioned users from comment content
+   * @param content - Comment content
+   * @returns Array of mentioned user IDs
+   */
+  private extractMentionedUsers(content: string): string[] {
+    const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
+    const mentions: string[] = [];
+    let match;
+
+    while ((match = mentionRegex.exec(content)) !== null) {
+      mentions.push(match[2]); // User ID is in the second capture group
+    }
+
+    return mentions;
+  }
+
+  /**
+   * Send notifications to mentioned users
+   * @param mentionedUsers - Array of user IDs
+   * @param authorId - Comment author ID
+   * @param policyId - Policy ID
+   * @param content - Comment content
+   */
+  private async sendMentionNotifications(
+    mentionedUsers: string[],
+    authorId: string,
+    policyId: string,
+    content: string
+  ): Promise<void> {
+    try {
+      // Send real-time notifications via WebSocket to online users
+      mentionedUsers.forEach(userId => {
+        this.io.to(`user:${userId}`).emit('mention_notification', {
+          type: 'policy_mention',
+          policyId,
+          authorId,
+          content: content.substring(0, 100), // Preview (first 100 chars)
+          timestamp: new Date()
+        });
+      });
+
+      console.log(`📧 Sent mention notifications to ${mentionedUsers.length} users`);
+    } catch (error) {
+      console.error('Error sending mention notifications:', error);
     }
   }
 

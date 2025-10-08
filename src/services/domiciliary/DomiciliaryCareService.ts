@@ -1,3 +1,15 @@
+/**
+ * @fileoverview domiciliary care Service
+ * @module Domiciliary/DomiciliaryCareService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description domiciliary care Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,7 +17,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { DomiciliaryClient, ClientStatus, CarePackageType } from '../../entities/domiciliary/DomiciliaryClient';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface AdvancedDomiciliaryFeatures {
   gpsVisitVerification: {
@@ -105,7 +117,7 @@ export interface LoneWorkerSafetySystem {
 export class DomiciliaryCareService {
   private clientRepository: Repository<DomiciliaryClient>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.clientRepository = AppDataSource.getRepository(DomiciliaryClient);

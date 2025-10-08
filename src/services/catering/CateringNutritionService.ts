@@ -1,3 +1,15 @@
+/**
+ * @fileoverview catering nutrition Service
+ * @module Catering/CateringNutritionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description catering nutrition Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -6,7 +18,7 @@ import AppDataSource from '../../config/database';
 import { Menu, MenuType, MealType } from '../../entities/catering/Menu';
 import { ResidentDietaryProfile, NutritionalRisk, HydrationLevel } from '../../entities/catering/ResidentDietaryProfile';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface MenuPlanningCriteria {
   menuType?: MenuType;
@@ -51,7 +63,7 @@ export class CateringNutritionService {
   private menuRepository: Repository<Menu>;
   private dietaryProfileRepository: Repository<ResidentDietaryProfile>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.menuRepository = AppDataSource.getRepository(Menu);

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Service for managing care domains within care plans,
+ * @module Care-planning/CareDomainService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Service for managing care domains within care plans,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -26,7 +38,7 @@ import { Repository, DataSource } from 'typeorm';
 import { validate, ValidationError } from 'class-validator';
 import { CareDomain, DomainType, CurrentStatus, RiskLevel, MonitoringFrequency, DomainGoal, RiskFactor, EquipmentRequirement, StaffRequirement } from '../../entities/care-planning/CareDomain';
 import { CarePlan } from '../../entities/care-planning/CarePlan';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 import { NotificationService } from '../notifications/NotificationService';
 import { EventPublishingService } from '../events/EventPublishingService';
@@ -105,7 +117,7 @@ export class CareDomainService {
 
   constructor(
     private dataSource: DataSource,
-    private auditService: AuditTrailService,
+    private auditService: AuditService,
     private encryptionService: FieldLevelEncryptionService,
     private notificationService: NotificationService,
     private eventPublisher: EventPublishingService

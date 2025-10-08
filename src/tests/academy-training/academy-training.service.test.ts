@@ -110,7 +110,7 @@ describe('AcademyTrainingService', () => {
           useValue: mockEventEmitter,
         },
         {
-          provide: AuditTrailService,
+          provide: AuditService,
           useValue: mockAuditService,
         },
       ],

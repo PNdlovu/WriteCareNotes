@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive medication reconciliation service providing admission,
+ * @module Medication/MedicationReconciliationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive medication reconciliation service providing admission,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -28,7 +40,7 @@ import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { EventPublishingService } from '../events/EventPublishingService';
 import { logger } from '../../utils/logger';
@@ -178,7 +190,7 @@ export interface ReconciliationMetrics {
 }
 
 export class MedicationReconciliationService {
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private eventService: EventPublishingService;
 

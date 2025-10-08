@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Enterprise event publishing service for real-time notifications
+ * @module Events/EventPublishingService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Enterprise event publishing service for real-time notifications
+ */
+
+/**
  * @fileoverview Event Publishing Service for WriteCareNotes
  * @module EventPublishingService
  * @version 1.0.0

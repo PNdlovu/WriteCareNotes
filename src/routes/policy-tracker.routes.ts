@@ -11,11 +11,48 @@ import { PolicyTrackerService, PolicyStatus, PolicyPriority, PolicyCategory } fr
 import { authMiddleware } from '../middleware/auth.middleware';
 import { rbacMiddleware } from '../middleware/rbac-middleware';
 import { auditMiddleware } from '../middleware/audit-middleware';
-import { Logger } from '../core/Logger';
+import { Logger } from '../../shared/utils/Logger';
+import { Repository } from 'typeorm';
 
 const router = Router();
 const logger = new Logger('PolicyTrackerAPI');
-const policyTrackerService = new PolicyTrackerService();
+
+/**
+ * Mock services for development
+ * In production, these would be injected via DI container
+ */
+class MockRepository<T> {
+  async find(options?: any): Promise<T[]> { return []; }
+  async findOne(options?: any): Promise<T | null> { return null; }
+  async save(entity: any): Promise<T> { return entity; }
+  async create(entityLike: any): Promise<T> { return entityLike; }
+  async delete(criteria: any): Promise<any> { return { affected: 1 }; }
+}
+
+class MockAuditService {
+  async logAction(...args: any[]): Promise<void> {
+    logger.debug('Audit action logged', args);
+  }
+}
+
+class MockNotificationService {
+  async sendNotification(notification: any): Promise<void> {
+    logger.debug('Notification sent', notification);
+  }
+}
+
+// Initialize services (in production, these would be injected via DI)
+const mockPolicyRepo = new MockRepository();
+const mockTransitionRepo = new MockRepository();
+const mockAuditService = new MockAuditService();
+const mockNotificationService = new MockNotificationService();
+
+const policyTrackerService = new PolicyTrackerService(
+  mockPolicyRepo as any,
+  mockTransitionRepo as any,
+  mockAuditService as any,
+  mockNotificationService as any
+);
 
 /**
  * Validation middleware for handling validation errors

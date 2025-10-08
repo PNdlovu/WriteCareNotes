@@ -1,3 +1,15 @@
+/**
+ * @fileoverview d v l a check Controller
+ * @module Hr/DVLACheckController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description d v l a check Controller
+ */
+
 import { Request, Response } from 'express';
 import { DVLACheckService, DVLACheckRequest, DVLACheckUpdate, DVLACheckSearchCriteria } from '../../services/hr/DVLACheckService';
 import { logger } from '../../utils/logger';

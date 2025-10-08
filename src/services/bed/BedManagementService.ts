@@ -1,3 +1,15 @@
+/**
+ * @fileoverview bed management Service
+ * @module Bed/BedManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description bed management Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -7,7 +19,7 @@ import { Bed, BedStatus, CareLevel } from '../../entities/bed/Bed';
 import { Room } from '../../entities/bed/Room';
 import { WaitingListEntry, WaitingListStatus } from '../../entities/bed/WaitingListEntry';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface BedSearchCriteria {
   careLevel?: CareLevel[];
@@ -52,7 +64,7 @@ export class BedManagementService {
   private roomRepository: Repository<Room>;
   private waitingListRepository: Repository<WaitingListEntry>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.bedRepository = AppDataSource.getRepository(Bed);

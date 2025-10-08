@@ -1,3 +1,15 @@
+/**
+ * @fileoverview emergency on call Service
+ * @module Emergency/EmergencyOnCallService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description emergency on call Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -6,13 +18,13 @@ import AppDataSource from '../../config/database';
 import { EmergencyIncident, EmergencyType, EmergencySeverity, DetectionMethod } from '../../entities/emergency/EmergencyIncident';
 import { OnCallRota, OnCallRole, OnCallStatus, CallType, ContactMethod } from '../../entities/emergency/OnCallRota';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export class EmergencyOnCallService {
   private incidentRepository: Repository<EmergencyIncident>;
   private onCallRepository: Repository<OnCallRota>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.incidentRepository = AppDataSource.getRepository(EmergencyIncident);

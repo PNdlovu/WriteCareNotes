@@ -1,16 +1,13 @@
 /**
- * 🛡️ ROLE GUARD SERVICE
- * 
- * Enforces role-based access control for AI assistant features
- * 
- * Key Features:
- * - Intent-based authorization
- * - Organization-level permissions
- * - Audit trail integration
- * - Granular feature access
- * 
- * @module RoleGuardService
+ * @fileoverview role guard Service
+ * @module Policy-authoring-assistant/RoleGuardService
  * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description role guard Service
  */
 
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
@@ -18,45 +15,44 @@ import { User, UserRole } from '../../entities/user.entity';
 
 /**
  * 🎯 AI ASSISTANT PERMISSION MATRIX
+ * Maps AI assistant intents to authorized user roles
  */
 const PERMISSION_MATRIX = {
   suggest_clause: [
     UserRole.SUPER_ADMIN,
-    UserRole.COMPLIANCE_OFFICER,
-    UserRole.MANAGER,
-    UserRole.ADMIN,
+    UserRole.ORGANIZATION_ADMIN,
+    UserRole.CARE_MANAGER,
   ],
   map_policy: [
     UserRole.SUPER_ADMIN,
-    UserRole.COMPLIANCE_OFFICER,
-    UserRole.MANAGER,
-    UserRole.ADMIN,
+    UserRole.ORGANIZATION_ADMIN,
+    UserRole.CARE_MANAGER,
   ],
   review_policy: [
     UserRole.SUPER_ADMIN,
-    UserRole.COMPLIANCE_OFFICER,
-    UserRole.MANAGER,
-    UserRole.ADMIN,
-    UserRole.SENIOR_CARER,
+    UserRole.ORGANIZATION_ADMIN,
+    UserRole.CARE_MANAGER,
+    UserRole.NURSE,
   ],
   suggest_improvement: [
     UserRole.SUPER_ADMIN,
-    UserRole.COMPLIANCE_OFFICER,
-    UserRole.MANAGER,
+    UserRole.ORGANIZATION_ADMIN,
+    UserRole.CARE_MANAGER,
   ],
   validate_compliance: [
     UserRole.SUPER_ADMIN,
-    UserRole.COMPLIANCE_OFFICER,
+    UserRole.ORGANIZATION_ADMIN,
   ],
 };
 
 /**
  * 🔒 PUBLISHING PERMISSION MATRIX
+ * Roles authorized to publish AI-assisted policies
  */
 const PUBLISHING_ROLES = [
   UserRole.SUPER_ADMIN,
-  UserRole.COMPLIANCE_OFFICER,
-  UserRole.MANAGER,
+  UserRole.ORGANIZATION_ADMIN,
+  UserRole.CARE_MANAGER,
 ];
 
 @Injectable()
@@ -224,19 +220,21 @@ export class RoleGuardService {
 
   /**
    * 📊 GET ROLE HIERARCHY
+   * Returns security level for each user role (higher = more permissions)
    */
   getRoleHierarchy(): { [key in UserRole]: number } {
     return {
       [UserRole.SUPER_ADMIN]: 100,
-      [UserRole.COMPLIANCE_OFFICER]: 90,
-      [UserRole.MANAGER]: 80,
-      [UserRole.ADMIN]: 70,
-      [UserRole.SENIOR_CARER]: 60,
-      [UserRole.CARER]: 50,
-      [UserRole.NURSE]: 55,
+      [UserRole.ORGANIZATION_ADMIN]: 90,
+      [UserRole.CARE_MANAGER]: 80,
+      [UserRole.NURSE]: 70,
+      [UserRole.CARE_ASSISTANT]: 50,
+      [UserRole.ACTIVITIES_COORDINATOR]: 45,
       [UserRole.KITCHEN_STAFF]: 30,
       [UserRole.MAINTENANCE]: 30,
-      [UserRole.VIEWER]: 10,
+      [UserRole.FAMILY_MEMBER]: 20,
+      [UserRole.VISITOR]: 10,
+      [UserRole.EXTERNAL_PROFESSIONAL]: 40,
     };
   }
 

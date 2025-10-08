@@ -1,4 +1,5 @@
 import { EventEmitter2 } from "eventemitter2";
+import { AuthenticatedUser } from "../services/auth/JWTAuthenticationService";
 
 /**
  * @fileoverview Express Type Extensions for WriteCareNotes
@@ -8,20 +9,13 @@ import { EventEmitter2 } from "eventemitter2";
  * @since 2025-01-01
  * 
  * @description Type extensions for Express.js to support
- * healthcare-specific request context and user information.
+ * care home-specific request context and user information.
  */
 
 declare global {
   namespace Express {
     interface Request {
-      user?: {
-        id: string;
-        email: string;
-        tenantId: string;
-        permissions: string[];
-        roles: string[];
-        organizationId?: string;
-      };
+      user?: AuthenticatedUser;
       tenant?: {
         id: string;
         isolationLevel: 'strict' | 'relaxed';

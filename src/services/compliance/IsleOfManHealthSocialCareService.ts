@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Implementation of Isle of Man Department of Health & Social Care
+ * @module Compliance/IsleOfManHealthSocialCareService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Implementation of Isle of Man Department of Health & Social Care
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -23,7 +35,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IsleOfManCompliance } from '../../entities/compliance/IsleOfManCompliance';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 /**
  * Isle of Man Care Standards
@@ -82,7 +94,7 @@ export class IsleOfManHealthSocialCareService {
   constructor(
     
     private readonly iomComplianceRepository: Repository<IsleOfManCompliance>,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 

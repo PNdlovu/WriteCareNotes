@@ -1,7 +1,13 @@
 /**
- * IoT Integration Service
- * Provides Internet of Things device integration for care home monitoring and automation
- * Implements compliance-ready IoT data collection with audit logging
+ * @fileoverview io t integration Service
+ * @module Iot-integration/IoTIntegrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description io t integration Service
  */
 
 import { Injectable } from '@nestjs/common';

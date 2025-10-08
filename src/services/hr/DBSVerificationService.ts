@@ -1,3 +1,15 @@
+/**
+ * @fileoverview d b s verification Service
+ * @module Hr/DBSVerificationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description d b s verification Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../config/database';
@@ -5,7 +17,7 @@ import { DBSVerification, DBSStatus, DBSCheckType, DBSPriority } from '../../ent
 import { DBSDocument } from '../../entities/hr/DBSDocument';
 import { DBSNotification } from '../../entities/hr/DBSNotification';
 import { Employee } from '../../entities/hr/Employee';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { logger } from '../../utils/logger';
 
@@ -81,7 +93,7 @@ export class DBSVerificationService {
   private dbsDocumentRepository: Repository<DBSDocument>;
   private dbsNotificationRepository: Repository<DBSNotification>;
   private employeeRepository: Repository<Employee>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private eventEmitter: EventEmitter2;
 

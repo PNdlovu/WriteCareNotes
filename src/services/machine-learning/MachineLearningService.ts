@@ -1,3 +1,15 @@
+/**
+ * @fileoverview machine learning Service
+ * @module Machine-learning/MachineLearningService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description machine learning Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import * as tf from '@tensorflow/tfjs-node';
 import OpenAI from 'openai';

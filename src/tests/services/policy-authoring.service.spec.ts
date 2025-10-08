@@ -227,7 +227,7 @@ describe('PolicyAuthoringService', () => {
   let policyImportRepository: Repository<PolicyImportJob>;
   let acknowledgmentRepository: Repository<UserAcknowledgment>;
   let auditEventRepository: Repository<AuditEvent>;
-  let auditTrailService: AuditTrailService;
+  let auditTrailService: AuditService;
   let notificationService: NotificationService;
   let fileProcessingService: FileProcessingService;
 
@@ -312,7 +312,7 @@ describe('PolicyAuthoringService', () => {
           useValue: mockAuditEventRepository
         },
         {
-          provide: AuditTrailService,
+          provide: AuditService,
           useValue: mockAuditTrailService
         },
         {

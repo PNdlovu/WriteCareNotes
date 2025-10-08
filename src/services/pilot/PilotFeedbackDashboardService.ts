@@ -1,7 +1,13 @@
 /**
- * Pilot Feedback Dashboard Service
- * Provides comprehensive feedback analytics and insights for pilot programs
- * Implements real-time monitoring and reporting for pilot success metrics
+ * @fileoverview pilot feedback dashboard Service
+ * @module Pilot/PilotFeedbackDashboardService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description pilot feedback dashboard Service
  */
 
 import { Injectable } from '@nestjs/common';

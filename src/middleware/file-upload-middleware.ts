@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Express middleware for secure file upload handling
+ * @module File-upload-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Express middleware for secure file upload handling
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -74,21 +86,6 @@ const upload = multer({
 
 /**
  * File upload middleware with security validation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const fileUploadMiddleware = (req: Request, res: Response, next: NextFunction) => {
   upload.single('file')(req, res, async (err) => {

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive employee rewards and recognition system
+ * @module Hr/EmployeeRewardsService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive employee rewards and recognition system
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -17,7 +29,7 @@ import { Repository, EntityManager } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { Employee } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { Decimal } from 'decimal.js';
 
 export enum RewardType {
@@ -140,7 +152,7 @@ export class EmployeeRewardsService {
   // Logger removed
   private employeeRepository: Repository<Employee>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);

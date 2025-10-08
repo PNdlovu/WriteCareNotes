@@ -1,12 +1,13 @@
 /**
- * Policy Enforcer Service - Workflow Integration Hooks
+ * @fileoverview policy enforcer Service
+ * @module Policy-authoring/PolicyEnforcerService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements the PolicyGovernanceEngine enforcement layer that:
- * - Hooks into workflows to enforce policy logic
- * - Triggers alerts and actions when policies are violated
- * - Blocks workflows if required policies are not acknowledged
- * - Tracks enforcement events for audit compliance
- * - Integrates with safeguarding, training, onboarding workflows
+ * @description policy enforcer Service
  */
 
 import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
@@ -14,7 +15,7 @@ import { PolicyDraft, PolicyStatus } from '../../entities/policy-draft.entity';
 import { UserAcknowledgment } from '../../entities/user-acknowledgment.entity';
 import { AuditEvent, AuditEventType } from '../../entities/audit-event.entity';
 import { PolicyStatusService, PolicyTrackingColor } from './PolicyStatusService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/notification.service';
 
 export enum WorkflowType {
@@ -111,7 +112,7 @@ export class PolicyEnforcerService {
 
   constructor(
     private readonly policyStatusService: PolicyStatusService,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly notificationService: NotificationService
   ) {}
 

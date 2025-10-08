@@ -1,7 +1,19 @@
 /**
+ * @fileoverview policy authoring assistant Service
+ * @module Policy-authoring-assistant/PolicyAuthoringAssistantService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description policy authoring assistant Service
+ */
+
+/**
  * 🤖 POLICY AUTHORING ASSISTANT - RAG-BASED AI SYSTEM
  * 
- * World-first RAG-based AI assistant for healthcare policy authoring
+ * World-first RAG-based AI assistant for care home policy authoring
  * with zero hallucination guarantees and complete audit integrity.
  * 
  * Key Features:
@@ -13,7 +25,7 @@
  * - Role-based access controls
  * 
  * Competitive Advantage:
- * - ONLY RAG-based policy assistant in British Isles healthcare
+ * - ONLY RAG-based policy assistant in British Isles care homes
  * - ONLY zero hallucination guarantee in care management software
  * - ONLY multi-jurisdictional AI system (all 7 regulatory bodies)
  * 
@@ -29,14 +41,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Core entities
 import { User } from '../../entities/user.entity';
-import { AISuggestionLog } from '../../entities/ai-suggestion-log.entity';
+import { AISuggestionLog, UserDecision, VerificationStatus, AIIntent, SuggestionStatus } from '../../entities/ai-suggestion-log.entity';
 import { PolicyTemplate } from '../../entities/policy-template.entity';
 import { ComplianceStandard } from '../../entities/compliance-standard.entity';
 
 // AI Safety integration
 import { AISafetyGuardService } from '../ai-safety/AISafetyGuardService';
 import { AITransparencyService } from '../ai-safety/AITransparencyService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
+
+// RAG Components
+import { VerifiedRetrieverService } from './VerifiedRetrieverService';
+import { ClauseSynthesizerService } from './ClauseSynthesizerService';
+import { FallbackHandlerService } from './FallbackHandlerService';
+import { RoleGuardService } from './RoleGuardService';
 
 /**
  * 🎯 AI SUGGESTION PROMPT STRUCTURE
@@ -155,7 +173,7 @@ export class PolicyAuthoringAssistantService {
     
     private readonly aiSafetyGuard: AISafetyGuardService,
     private readonly aiTransparency: AITransparencyService,
-    private readonly auditTrail: AuditTrailService,
+    private readonly auditTrail: AuditService,
     private readonly promptOrchestrator: PromptOrchestratorService,
     private readonly verifiedRetriever: VerifiedRetrieverService,
     private readonly clauseSynthesizer: ClauseSynthesizerService,
@@ -215,16 +233,15 @@ export class PolicyAuthoringAssistantService {
       // 🛡️ GUARDRAIL 5: AI Safety validation
       const safetyValidation = await this.aiSafetyGuard.validateContent({
         content: synthesizedSuggestion.content,
-        contentType: 'policy_suggestion',
-        userId: user.id,
         context: {
           jurisdiction: prompt.jurisdiction,
-          standards: prompt.standards,
-        },
+          category: prompt.standards?.[0] || 'general',
+          criticalCompliance: true
+        }
       });
 
-      if (!safetyValidation.isApproved) {
-        this.logger.warn(`[${suggestionId}] AI safety validation failed: ${safetyValidation.reasoning}`);
+      if (!safetyValidation.safe || safetyValidation.confidence < 0.7) {
+        this.logger.warn(`[${suggestionId}] AI safety validation failed. Safe: ${safetyValidation.safe}, Confidence: ${safetyValidation.confidence}`);
         return this.handleFallback(suggestionId, prompt, user, startTime, 'safety_validation_failed');
       }
 
@@ -257,14 +274,20 @@ export class PolicyAuthoringAssistantService {
 
       // 🔍 TRANSPARENCY LOGGING
       await this.aiTransparency.logAIDecision({
+        action: `policy_suggestion_${prompt.intent}`,
         userId: user.id,
-        aiSystemId: 'policy-authoring-assistant',
-        decisionType: prompt.intent,
-        inputData: prompt,
-        outputData: response,
-        confidenceScore: synthesizedSuggestion.confidence,
-        sourceReferences: response.sourceReferences,
-        timestamp: new Date(),
+        context: {
+          decisionType: prompt.intent,
+          inputData: prompt,
+          confidenceScore: synthesizedSuggestion.confidence,
+          sourceReferences: response.sourceReferences,
+          jurisdictionContext: prompt.jurisdiction
+        },
+        result: {
+          suggestionId,
+          success: true,
+          processingTimeMs: Date.now() - startTime
+        }
       });
 
       this.logger.log(`[${suggestionId}] AI suggestion generated successfully in ${Date.now() - startTime}ms`);
@@ -292,7 +315,7 @@ export class PolicyAuthoringAssistantService {
     prompt: AISuggestionPrompt,
     user: User,
     startTime: number,
-    reason: string,
+    reason: 'insufficient_sources' | 'low_confidence' | 'safety_validation_failed' | 'system_error',
   ): Promise<AISuggestionResponse> {
     this.logger.warn(`[${suggestionId}] Fallback triggered: ${reason}`);
 
@@ -333,22 +356,40 @@ export class PolicyAuthoringAssistantService {
     status: 'success' | 'fallback' | 'error',
     errorMessage?: string,
   ): Promise<void> {
-    const log = this.suggestionLogRepository.create({
-      id: suggestionId,
-      userId: user.id,
-      prompt: prompt,
-      response: response,
-      sourceReferences: response?.sourceReferences || [],
-      timestamp: new Date(),
-      status: status,
-      errorMessage: errorMessage,
-      overrideDecision: null, // Set when user accepts/modifies/rejects
-      regulatoryContext: {
-        jurisdiction: prompt.jurisdiction,
-        standards: prompt.standards,
-      },
-      verificationStatus: status === 'success' ? 'verified' : 'pending',
-    });
+    // Map intent string to AIIntent enum
+    const intentMap: Record<string, AIIntent> = {
+      'suggest_clause': AIIntent.SUGGEST_CLAUSE,
+      'map_policy': AIIntent.MAP_POLICY,
+      'review_policy': AIIntent.REVIEW_POLICY,
+      'suggest_improvement': AIIntent.SUGGEST_IMPROVEMENT,
+      'validate_compliance': AIIntent.VALIDATE_COMPLIANCE,
+    };
+    
+    // Map status string to SuggestionStatus enum
+    const statusMap: Record<string, SuggestionStatus> = {
+      'success': SuggestionStatus.SUCCESS,
+      'fallback': SuggestionStatus.FALLBACK,
+      'error': SuggestionStatus.ERROR,
+    };
+    
+    // Create log entry directly (bypassing repository.create() due to type inference issues)
+    const log = new AISuggestionLog();
+    log.id = suggestionId;
+    log.userId = user.id;
+    log.organizationId = user.organizationId;
+    log.intent = intentMap[prompt.intent] || AIIntent.SUGGEST_CLAUSE;
+    log.jurisdiction = prompt.jurisdiction;
+    log.prompt = prompt as any;
+    log.response = response || undefined;
+    log.sourceReferences = response?.sourceReferences || [];
+    log.status = statusMap[status] || SuggestionStatus.ERROR;
+    log.errorMessage = errorMessage;
+    log.overrideDecision = UserDecision.PENDING;
+    log.regulatoryContext = {
+      jurisdiction: prompt.jurisdiction,
+      standards: prompt.standards,
+    };
+    log.verificationStatus = status === 'success' ? VerificationStatus.VERIFIED : VerificationStatus.PENDING;
 
     await this.suggestionLogRepository.save(log);
 
@@ -372,7 +413,7 @@ export class PolicyAuthoringAssistantService {
   async recordUserDecision(
     suggestionId: string,
     userId: string,
-    decision: 'accepted' | 'modified' | 'rejected',
+    decision: UserDecision,
     modifiedContent?: any,
     rejectionReason?: string,
   ): Promise<void> {

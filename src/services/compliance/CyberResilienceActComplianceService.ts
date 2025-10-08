@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive compliance service for the EU Cyber Resilience Act,
+ * @module Compliance/CyberResilienceActComplianceService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive compliance service for the EU Cyber Resilience Act,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

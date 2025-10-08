@@ -1,7 +1,13 @@
 /**
- * Enhanced Pilot Controller
- * Provides comprehensive pilot program management with feedback dashboard and case study generation
- * Implements structured onboarding and success tracking
+ * @fileoverview enhanced pilot Controller
+ * @module Pilot/EnhancedPilotController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description enhanced pilot Controller
  */
 
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';

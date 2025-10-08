@@ -180,7 +180,7 @@ export class PolicyAuthoringService {
     @InjectRepository(AuditEvent)
     private readonly auditEventRepository: Repository<AuditEvent>,
     
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly notificationService: NotificationService,
     private readonly fileProcessingService: FileProcessingService
   ) {}

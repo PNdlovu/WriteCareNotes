@@ -1,16 +1,13 @@
 /**
- * 🚨 FALLBACK HANDLER SERVICE
- * 
- * Provides safe, scoped responses when verified content is unavailable
- * 
- * Key Features:
- * - Context-aware fallback messages
- * - Escalation guidance
- * - No hallucination risk
- * - Actionable next steps
- * 
- * @module FallbackHandlerService
+ * @fileoverview fallback handler Service
+ * @module Policy-authoring-assistant/FallbackHandlerService
  * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description fallback handler Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';

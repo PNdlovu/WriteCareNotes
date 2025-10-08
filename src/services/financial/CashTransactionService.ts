@@ -1,9 +1,21 @@
+/**
+ * @fileoverview cash transaction Service
+ * @module Financial/CashTransactionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description cash transaction Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../config/database';
 import { CashTransaction, CashTransactionType, CashTransactionStatus } from '../../entities/financial/CashTransaction';
 import { LedgerAccount } from '../../entities/financial/LedgerAccount';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { logger } from '../../utils/logger';
 import { Decimal } from 'decimal.js';
@@ -68,7 +80,7 @@ export interface CashTransactionReport {
 export class CashTransactionService {
   private cashTransactionRepository: Repository<CashTransaction>;
   private ledgerAccountRepository: Repository<LedgerAccount>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private eventEmitter: EventEmitter2;
 

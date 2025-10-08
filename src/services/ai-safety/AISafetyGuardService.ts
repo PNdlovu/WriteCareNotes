@@ -1,8 +1,13 @@
 /**
- * AI Safety Guard Service - Comprehensive Protection System
+ * @fileoverview a i safety guard Service
+ * @module Ai-safety/AISafetyGuardService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements multi-layer safety measures to protect users from AI hallucinations
- * and ensure reliable, safe AI responses in healthcare policy management.
+ * @description a i safety guard Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -685,5 +690,10 @@ export class AISafetyGuardService {
     ];
 
     return uncertaintyIndicators.some(pattern => pattern.test(response));
+  }
+
+  // Additional method for PolicyAuthoringAssistantService compatibility
+  async validateContent(params: { content: string; context: any }): Promise<ValidationResult> {
+    return this.validateInput(params.content, params.context);
   }
 }

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview integration Service
+ * @module Integration/IntegrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description integration Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,12 +17,12 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { SystemIntegration, IntegrationType, IntegrationStatus } from '../../entities/integration/SystemIntegration';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export class IntegrationService {
   private integrationRepository: Repository<SystemIntegration>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.integrationRepository = AppDataSource.getRepository(SystemIntegration);

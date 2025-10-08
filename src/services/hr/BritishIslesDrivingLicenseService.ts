@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive driving license validation for all British Isles jurisdictions
+ * @module Hr/BritishIslesDrivingLicenseService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive driving license validation for all British Isles jurisdictions
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -18,7 +30,7 @@ import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { Employee } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export enum BritishIslesJurisdiction {
   ENGLAND = 'england',
@@ -157,7 +169,7 @@ export class BritishIslesDrivingLicenseService {
   // Logger removed
   private employeeRepository: Repository<Employee>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   // In-memory license storage (would be replaced with proper database entity)
   private licenses: Map<string, DrivingLicense> = new Map();

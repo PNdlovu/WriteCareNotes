@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Session management service for AI agents using Redis for performance and scalability
+ * @module Ai-agents/AIAgentSessionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Session management service for AI agents using Redis for performance and scalability
+ */
+
+/**
  * @fileoverview AI Agent Session Service with Redis
  * @module AIAgentSessionService
  * @version 1.0.0

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview ledger account Controller
+ * @module Financial/LedgerAccountController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description ledger account Controller
+ */
+
 import { Request, Response } from 'express';
 import { LedgerAccountService, LedgerAccountRequest, LedgerAccountUpdate, LedgerAccountSearchCriteria } from '../../services/financial/LedgerAccountService';
 import { logger } from '../../utils/logger';

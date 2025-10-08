@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive, friction-free migration system with AI assistance,
+ * @module Onboarding/AdvancedOnboardingDataMigrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive, friction-free migration system with AI assistance,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -16,7 +28,7 @@ import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { EventEmitter } from 'events';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -173,7 +185,7 @@ export interface FileImportResult {
 
 export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private migrationProgress: Map<string, MigrationProgress> = new Map();
   private legacyConnectors: Map<string, LegacySystemConnector> = new Map();
 

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview five s methodology Service
+ * @module Methodology/FiveSMethodologyService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description five s methodology Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,12 +17,12 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { FiveSWorkplace, FiveSPhase, WorkplaceArea } from '../../entities/methodology/FiveSWorkplace';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export class FiveSMethodologyService {
   private workplaceRepository: Repository<FiveSWorkplace>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.workplaceRepository = AppDataSource.getRepository(FiveSWorkplace);

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview pilot.controller
+ * @module Pilot/Pilot.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description pilot.controller
+ */
+
 import { Request, Response } from 'express';
 import { PilotService } from '../../services/pilot/pilot.service';
 import { CreatePilotDto, PilotFeedbackDto, PilotMetricsDto } from '../../dto/pilot.dto';

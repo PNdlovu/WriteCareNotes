@@ -1,20 +1,20 @@
 /**
- * AI Policy Assistant Service - Advanced AI Integration
+ * @fileoverview a i policy assistant Service
+ * @module Policy-authoring/AIPolicyAssistantService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements AI-powered features for the PolicyGovernanceEngine:
- * - Intelligent policy creation and drafting
- * - Compliance gap analysis and recommendations
- * - Natural language policy queries
- * - Automated policy reviews and improvements
- * - Smart template suggestions
- * - Risk assessment and prediction
+ * @description a i policy assistant Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PolicyDraft, PolicyCategory, Jurisdiction } from '../../entities/policy-draft.entity';
 import { PolicyTemplate } from '../../entities/policy-authoring/PolicyTemplate';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService } from '../audit';
 import { AISafetyGuardService, ValidationResult, ConfidenceScore, PolicyContext } from '../ai-safety/AISafetyGuardService';
 import { AITransparencyService, AIExplanation, SafetyFeatures } from '../ai-safety/AITransparencyService';
 import { OpenAI } from 'openai';
@@ -124,7 +124,7 @@ export class AIPolicyAssistantService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly safetyGuard: AISafetyGuardService,
     private readonly transparencyService: AITransparencyService
   ) {

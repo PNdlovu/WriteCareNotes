@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive validation service for financial operations
+ * @module Financial/Validation/FinancialValidationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive validation service for financial operations
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

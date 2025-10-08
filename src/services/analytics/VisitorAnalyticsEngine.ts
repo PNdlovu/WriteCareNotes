@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { VisitorManagement, VisitorType, AccessLevel, VisitStatus } from '../../entities/visitor/VisitorManagement';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export interface VisitorAnalyticsMetrics {
@@ -171,14 +171,14 @@ export interface RealTimeDashboardData {
 export class VisitorAnalyticsEngine {
   private visitorRepository: Repository<VisitorManagement>;
   private eventEmitter: EventEmitter2;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
   private analyticsCache: Map<string, { data: any; timestamp: Date; ttl: number }>;
   private realTimeSubscribers: Set<WebSocket>;
 
   constructor(
     eventEmitter: EventEmitter2,
-    auditTrailService: AuditTrailService,
+    auditTrailService: AuditService,
     notificationService: NotificationService
   ) {
     this.visitorRepository = AppDataSource.getRepository(VisitorManagement);

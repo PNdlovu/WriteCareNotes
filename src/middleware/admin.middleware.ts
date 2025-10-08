@@ -1,20 +1,17 @@
+/**
+ * @fileoverview admin.middleware
+ * @module Admin.middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description admin.middleware
+ */
+
 import { Request, Response, NextFunction } from 'express';
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Check if user is authenticated
   if (!req.user) {

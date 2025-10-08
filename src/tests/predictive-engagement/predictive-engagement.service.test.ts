@@ -69,7 +69,7 @@ describe('PredictiveEngagementService', () => {
           useValue: mockEventEmitterInstance,
         },
         {
-          provide: AuditTrailService,
+          provide: AuditService,
           useValue: mockAuditServiceInstance,
         },
       ],

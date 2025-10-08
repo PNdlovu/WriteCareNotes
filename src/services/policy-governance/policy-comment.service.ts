@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Service layer for managing comments, annotations, and threaded discussions
+ * @module Policy-governance/Policy-comment.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Service layer for managing comments, annotations, and threaded discussions
+ */
+
+/**
  * @fileoverview PolicyCommentService - Comment Management for Policy Collaboration
  * @module Services/PolicyCommentService
  * @description Service layer for managing comments, annotations, and threaded discussions
@@ -155,10 +167,10 @@ export class PolicyCommentService {
 
       console.log(`💬 Created comment ${savedComment.id} on policy ${data.policyId}`);
       
-      // TODO: Trigger notifications for mentioned users
-      // if (savedComment.mentionedUsers?.length > 0) {
-      //   await this.notifyMentionedUsers(savedComment);
-      // }
+      // Trigger notifications for mentioned users
+      if (savedComment.mentionedUsers && savedComment.mentionedUsers.length > 0) {
+        await this.notifyMentionedUsers(savedComment);
+      }
 
       return savedComment;
     } catch (error) {
@@ -417,7 +429,7 @@ export class PolicyCommentService {
    * @param userId - User requesting deletion
    * @returns Deleted comment
    */
-  async deleteComment(commentId: string, userId: string): Promise<PolicyComment> {
+  async deleteComment(commentId: string, userId: string, userRoles: string[] = []): Promise<PolicyComment> {
     try {
       const comment = await this.getComment(commentId);
       
@@ -425,16 +437,18 @@ export class PolicyCommentService {
         throw new Error('Comment not found');
       }
 
-      // Check if user is the author or has admin rights
-      // TODO: Add admin check when role system is ready
-      if (comment.userId !== userId) {
-        throw new Error('Only comment author can delete');
+      // Check if user is the author or has admin/policy_manager rights
+      const isAdmin = userRoles.includes('admin') || userRoles.includes('policy_manager');
+      const isAuthor = comment.userId === userId;
+
+      if (!isAuthor && !isAdmin) {
+        throw new Error('Only comment author or administrators can delete comments');
       }
 
       comment.softDelete();
       const deletedComment = await this.commentRepository.save(comment);
 
-      console.log(`🗑️  Deleted comment ${commentId}`);
+      console.log(`🗑️  Deleted comment ${commentId} by ${userId} (admin: ${isAdmin})`);
       return deletedComment;
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -646,6 +660,48 @@ export class PolicyCommentService {
     } catch (error) {
       console.error('Error deleting all comments:', error);
       throw new Error('Failed to delete all comments');
+    }
+  }
+
+  /**
+   * Send notifications to mentioned users in a comment
+   * @param comment - Policy comment with mentions
+   * @private
+   */
+  private async notifyMentionedUsers(comment: PolicyComment): Promise<void> {
+    try {
+      if (!comment.mentionedUsers || comment.mentionedUsers.length === 0) {
+        return;
+      }
+
+      // Create notification data
+      const notificationData = {
+        type: 'policy_comment_mention' as const,
+        policyId: comment.policyId,
+        commentId: comment.id,
+        authorId: comment.userId,
+        content: comment.content.substring(0, 100), // Preview
+        timestamp: new Date()
+      };
+
+      // Send notifications (real-time via WebSocket if available)
+      // In a full implementation, this would integrate with NotificationService
+      console.log(`📧 Sending mention notifications to ${comment.mentionedUsers.length} users:`, {
+        commentId: comment.id,
+        mentionedUsers: comment.mentionedUsers,
+        notification: notificationData
+      });
+
+      // TODO: Integrate with NotificationService when available
+      // const notificationService = new NotificationService();
+      // await notificationService.sendBulk({
+      //   userIds: comment.mentionedUsers,
+      //   ...notificationData
+      // });
+
+    } catch (error) {
+      console.error('Error sending mention notifications:', error);
+      // Don't throw - notifications are not critical
     }
   }
 }

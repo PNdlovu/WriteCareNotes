@@ -1,3 +1,15 @@
+/**
+ * @fileoverview document management Service
+ * @module Document/DocumentManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description document management Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository, In, Between } from 'typeorm';
@@ -5,7 +17,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { DocumentManagement, DocumentType, DocumentStatus } from '../../entities/document/DocumentManagement';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface DocumentWorkflow {
   workflowId: string;
@@ -113,7 +125,7 @@ export interface DocumentCollaboration {
 export class DocumentManagementService {
   private documentRepository: Repository<DocumentManagement>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.documentRepository = AppDataSource.getRepository(DocumentManagement);

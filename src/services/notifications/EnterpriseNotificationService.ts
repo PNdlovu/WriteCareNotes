@@ -1,9 +1,21 @@
+/**
+ * @fileoverview enterprise notification Service
+ * @module Notifications/EnterpriseNotificationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description enterprise notification Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { NotificationChannel, NotificationType, NotificationPriority, DeliveryChannel, DeliveryStatus } from '../../entities/notifications/NotificationChannel';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface EnterpriseNotificationCapabilities {
   multiChannelDelivery: {
@@ -71,7 +83,7 @@ export interface NotificationCampaign {
 
 export class EnterpriseNotificationService {
   private channelRepository: Repository<NotificationChannel>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.channelRepository = AppDataSource.getRepository(NotificationChannel);

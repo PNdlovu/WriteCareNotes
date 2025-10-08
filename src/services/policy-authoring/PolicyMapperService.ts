@@ -1,12 +1,13 @@
 /**
- * Policy Mapper Service - Integration Hooks and Workflow Bindings
+ * @fileoverview policy mapper Service
+ * @module Policy-authoring/PolicyMapperService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements the PolicyGovernanceEngine integration layer that:
- * - Links policies to workflows, modules, and compliance standards
- * - Creates enforcement triggers and mappings
- * - Manages policy-module relationships
- * - Provides policy lookup for workflow enforcement
- * - Tracks policy effectiveness across modules
+ * @description policy mapper Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Middleware to generate and manage correlation IDs
+ * @module Correlation-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Middleware to generate and manage correlation IDs
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -16,21 +28,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Correlation ID middleware for request tracing
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const correlationMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   // Get correlation ID from header or generate new one

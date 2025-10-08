@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Express middleware for role-based access control with
+ * @module Role-check-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Express middleware for role-based access control with
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -28,21 +40,6 @@ export interface AuthenticatedRequest extends Request {
 
 /**
  * Role check middleware factory
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export const roleCheckMiddleware = (allowedRoles: string[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

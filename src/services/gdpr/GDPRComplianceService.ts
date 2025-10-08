@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive GDPR compliance service for healthcare data protection
+ * @module Gdpr/GDPRComplianceService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive GDPR compliance service for healthcare data protection
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

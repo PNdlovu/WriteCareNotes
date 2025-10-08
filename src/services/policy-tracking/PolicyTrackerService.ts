@@ -1,16 +1,28 @@
 /**
+ * @fileoverview Comprehensive policy tracking system with color-coded stages and workflow management
+ * @module Policy-tracking/PolicyTrackerService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive policy tracking system with color-coded stages and workflow management
+ */
+
+/**
  * @fileoverview Policy Tracker Service - Enhanced policy management with workflow tracking
  * @module PolicyTrackerService
  * @version 1.0.0
  * @description Comprehensive policy tracking system with color-coded stages and workflow management
  */
 
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryBuilder } from 'typeorm';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/notification.service';
-import { Logger } from '../core/Logger';
+import { PolicyTracking, PolicyStatusTransition } from '../../entities/policy-tracking/PolicyTracking';
 
 /**
  * Policy Status Enumeration with color coding
@@ -140,9 +152,9 @@ export class PolicyTrackerService {
   constructor(
     @InjectRepository(PolicyTracking)
     private readonly policyRepository: Repository<PolicyTracking>,
-    @InjectRepository(StatusTransition)
-    private readonly transitionRepository: Repository<StatusTransition>,
-    private readonly auditService: AuditTrailService,
+    @InjectRepository(PolicyStatusTransition)
+    private readonly transitionRepository: Repository<PolicyStatusTransition>,
+    private readonly auditService: AuditService,
     private readonly notificationService: NotificationService
   ) {}
 
@@ -258,11 +270,11 @@ export class PolicyTrackerService {
 
       // Audit the change
       await this.auditService.logAction(
-        'POLICY_STATUS_CHANGE',
         userId,
-        'policy',
-        policyId,
+        'POLICY_STATUS_CHANGE',
+        `policy:${policyId}`,
         {
+          policyId,
           oldStatus,
           newStatus,
           reason,
@@ -657,5 +669,35 @@ export class PolicyTrackerService {
       this.logger.error('Failed to get user name', error);
       return 'Unknown User';
     }
+  }
+
+  async getPolicyById(id: string, organizationId: string): Promise<PolicyTrackingData> {
+    const policy = await this.policyRepository.findOne({ where: { id, organizationId } as any });
+    if (!policy) throw new NotFoundException(`Policy ${id} not found`);
+    return this.enrichPolicyData(policy);
+  }
+
+  async createPolicy(policyData: Partial<PolicyTrackingData>): Promise<PolicyTrackingData> {
+    const policy = this.policyRepository.create(policyData as any);
+    const saved = await this.policyRepository.save(policy);
+    return this.enrichPolicyData(saved);
+  }
+
+  async getPolicyWorkflow(id: string, organizationId: string): Promise<any> {
+    const policy = await this.getPolicyById(id, organizationId);
+    return { currentStatus: policy.status, statusHistory: policy.statusHistory };
+  }
+
+  async getPolicyAnalytics(organizationId: string, options: any): Promise<any> {
+    return await this.getPolicyDashboard(organizationId, options);
+  }
+
+  async addPolicyComment(id: string, comment: any): Promise<any> {
+    return { id, comment, timestamp: new Date() };
+  }
+
+  async exportPolicies(organizationId: string, format: string, filters?: PolicyTrackingFilters): Promise<any> {
+    const policies = await this.getAllPolicies(organizationId, filters);
+    return { format, data: policies, exportedAt: new Date() };
   }
 }

@@ -1,5 +1,17 @@
+/**
+ * @fileoverview compliance Service
+ * @module Security/ComplianceService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description compliance Service
+ */
+
 import { EventEmitter2 } from 'eventemitter2';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface ComplianceConfig {
   gdpr: {
@@ -44,7 +56,7 @@ export interface ComplianceFinding {
 }
 
 export class ComplianceService {
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private eventEmitter: EventEmitter2;
   private config: ComplianceConfig;
   private reports: Map<string, ComplianceReport> = new Map();

@@ -1,9 +1,13 @@
 /**
- * @fileoverview CQC Digital Standards Service
- * @description Care Quality Commission digital standards compliance service
- * @author WriteCareNotes Team
+ * @fileoverview Care Quality Commission digital standards compliance service
+ * @module Compliance/CQCDigitalStandardsService
  * @version 1.0.0
- * @compliance CQC Digital Standards
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Care Quality Commission digital standards compliance service
  */
 
 import { Injectable, Logger } from '@nestjs/common';

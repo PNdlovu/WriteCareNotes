@@ -1,15 +1,15 @@
 /**
- * @fileoverview User Entity - Core user management for healthcare system
+ * @fileoverview User Entity - Core user management for care home system
  * @module UserEntity
  * @version 1.0.0
- * @description Complete user entity with healthcare-specific fields and GDPR compliance
+ * @description Complete user entity with care home-specific fields and GDPR compliance
  */
 
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, Index } from 'typeorm';
 import { IsEmail, IsString, IsEnum, IsOptional, IsBoolean, IsDate, IsArray } from 'class-validator';
 
 /**
- * User role enumeration for healthcare organizations
+ * User role enumeration for care home organizations
  */
 export enum UserRole {
   SUPER_ADMIN = 'super_admin',

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview voice-assistant.controller
+ * @module Voice-assistant/Voice-assistant.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description voice-assistant.controller
+ */
+
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../../middleware/auth.guard';
@@ -10,7 +22,7 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 export class VoiceAssistantController {
   constructor(
     private readonly voiceAssistantService: VoiceAssistantService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {}
 
   /**

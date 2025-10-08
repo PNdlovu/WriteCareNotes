@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Advanced financial planning and cash management service
+ * @module Financial/EnterpriseFinancialPlanningService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Advanced financial planning and cash management service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -21,7 +33,7 @@ import { BuiltInSpreadsheetService } from '../spreadsheet/BuiltInSpreadsheetServ
 import { FinancialTransaction, Currency } from '../../entities/financial/FinancialTransaction';
 import { Budget } from '../../entities/financial/Budget';
 import { ChartOfAccounts } from '../../entities/financial/ChartOfAccounts';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export interface CashFlowManagement {
@@ -170,7 +182,7 @@ export class EnterpriseFinancialPlanningService {
     private readonly accountRepository: Repository<ChartOfAccounts>,
 
     private readonly entityManager: EntityManager,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly notificationService: NotificationService,
     private readonly spreadsheetService: BuiltInSpreadsheetService
   ) {

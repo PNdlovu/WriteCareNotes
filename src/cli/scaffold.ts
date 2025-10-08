@@ -348,7 +348,7 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 export class ${serviceName} {
   private repository: Repository<${serviceName.replace('Service', '')}>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.repository = AppDataSource.getRepository(${serviceName.replace('Service', '')});

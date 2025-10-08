@@ -1,3 +1,15 @@
+/**
+ * @fileoverview agent-review.controller
+ * @module Pilot/Agent-review.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description agent-review.controller
+ */
+
 import { Request, Response } from 'express';
 import { AgentReviewService } from '../../services/pilot/agent-review.service';
 import { logger } from '../../utils/logger';

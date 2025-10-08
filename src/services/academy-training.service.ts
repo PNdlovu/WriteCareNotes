@@ -1,9 +1,33 @@
 /**
- * @fileoverview Academy Training Service
- * @description Real academy training service with comprehensive course management and tracking
+ * @fileoverview Training Management System - Internal learning & external training tracking
+ * @module Academy-training.service
+ * @version 2.0.0
  * @author WriteCareNotes Team
- * @version 1.0.0
- * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @since 2025-10-07
+ * @compliance 
+ *   - CQC (England)
+ *   - Care Inspectorate (Scotland)
+ *   - CIW (Wales)
+ *   - RQIA (Northern Ireland)
+ *   - Jersey Care Commission (Jersey)
+ *   - Guernsey Health Improvement Commission (Guernsey)
+ *   - Isle of Man DHSC (Isle of Man)
+ *   - GDPR & Data Protection Act 2018
+ * @stability stable
+ * 
+ * @description Complete training management hub for care homes across the British Isles:
+ * - Internal app training (role-based modules, updates, onboarding)
+ * - External accredited training tracking (Skills for Care, awarding bodies)
+ * - Compliance monitoring and regulatory audit reports
+ * 
+ * @important COMPLIANCE NOTICE
+ * This system provides internal training (company induction, app usage, procedures)
+ * and tracks external accredited training. It does NOT replace nationally recognized
+ * qualifications from Skills for Care, awarding bodies, or registered training organizations.
+ * 
+ * For regulatory compliance across England, Scotland, Wales, Northern Ireland, Jersey,
+ * Guernsey, and Isle of Man, staff must complete appropriate accredited training from
+ * recognized providers. This system helps you manage and prove that compliance.
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -27,8 +51,24 @@ export class TrainingCourse {
   @Column('text')
   description: string;
 
+  @Column({
+    type: 'enum',
+    enum: ['internal_app', 'internal_induction', 'internal_competency', 'internal_refresher', 'external_accredited'],
+    default: 'internal_app'
+  })
+  trainingType: 'internal_app' | 'internal_induction' | 'internal_competency' | 'internal_refresher' | 'external_accredited';
+
+  @Column({ nullable: true })
+  accreditedProvider?: string; // e.g., "Skills for Care", "City & Guilds", "NCFE"
+
+  @Column({ nullable: true })
+  awardingBody?: string; // e.g., "Pearson", "Edexcel", "OCR"
+
+  @Column({ nullable: true })
+  qualificationLevel?: string; // e.g., "Level 2", "Level 3", "Care Certificate"
+
   @Column()
-  category: 'care_skills' | 'safety' | 'compliance' | 'technology' | 'leadership' | 'communication' | 'healthcare' | 'emergency_response';
+  category: 'app_usage' | 'role_training' | 'care_skills' | 'safety' | 'compliance' | 'technology' | 'leadership' | 'communication' | 'emergency_response' | 'external_qualification';
 
   @Column()
   level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
@@ -210,11 +250,11 @@ export class TrainingSession {
   updatedAt: Date;
 }
 
-// Training Certificate Entity
-@Entity('training_certificates')
+// Training Completion Record Entity (replaces "Certificate")
+@Entity('training_completion_records')
 @Index(['userId', 'courseId'])
-@Index(['certificateNumber'])
-export class TrainingCertificate {
+@Index(['recordNumber'])
+export class TrainingCompletionRecord {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -225,7 +265,14 @@ export class TrainingCertificate {
   userId: string;
 
   @Column({ unique: true })
-  certificateNumber: string;
+  recordNumber: string; // e.g., "INTERNAL-2025-ABC123" or "EXTERNAL-CERT-XYZ789"
+
+  @Column({
+    type: 'enum',
+    enum: ['internal_completion', 'external_certificate'],
+    default: 'internal_completion'
+  })
+  recordType: 'internal_completion' | 'external_certificate';
 
   @CreateDateColumn()
   issuedAt: Date;
@@ -313,10 +360,10 @@ export class AcademyTrainingService {
     private readonly enrollmentRepository: Repository<TrainingEnrollment>,
     @InjectRepository(TrainingSession)
     private readonly sessionRepository: Repository<TrainingSession>,
-    @InjectRepository(TrainingCertificate)
-    private readonly certificateRepository: Repository<TrainingCertificate>,
+    @InjectRepository(TrainingCompletionRecord)
+    private readonly completionRecordRepository: Repository<TrainingCompletionRecord>,
     private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {}
 
   /**
@@ -599,9 +646,11 @@ export class AcademyTrainingService {
   }
 
   /**
-   * Generate training certificate
+   * Generate training completion record
+   * For internal training, generates completion record
+   * For external training, stores uploaded certificate
    */
-  async generateCertificate(enrollmentId: string): Promise<TrainingCertificate> {
+  async generateCompletionRecord(enrollmentId: string): Promise<TrainingCompletionRecord> {
     try {
       const enrollment = await this.enrollmentRepository.findOne({ where: { id: enrollmentId } });
       if (!enrollment) {
@@ -609,7 +658,7 @@ export class AcademyTrainingService {
       }
 
       if (enrollment.status !== 'completed') {
-        throw new Error('Course must be completed to generate certificate');
+        throw new Error('Course must be completed to generate record');
       }
 
       const course = await this.courseRepository.findOne({ where: { id: enrollment.courseId } });
@@ -617,53 +666,65 @@ export class AcademyTrainingService {
         throw new Error('Course not found');
       }
 
-      const certificate = this.certificateRepository.create({
+      // Determine record type and number based on training type
+      const isExternal = course.trainingType === 'external_accredited';
+      const recordType: 'internal_completion' | 'external_certificate' = isExternal ? 'external_certificate' : 'internal_completion';
+      const recordPrefix = isExternal ? 'EXTERNAL-CERT' : 'INTERNAL';
+      
+      const completionRecord = this.completionRecordRepository.create({
         courseId: enrollment.courseId,
         userId: enrollment.userId,
-        certificateNumber: `CERT-${Date.now()}-${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
+        recordNumber: `${recordPrefix}-${Date.now()}-${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
+        recordType,
         expiresAt: course.credits > 0 ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : undefined, // 1 year for credit courses
         isActive: true,
         verificationCode: Math.random().toString(36).substring(2, 14).toUpperCase(),
-        pdfPath: `/certificates/${enrollmentId}.pdf`,
+        pdfPath: `/completion-records/${enrollmentId}.pdf`,
         metadata: {
           courseTitle: course.title,
+          trainingType: course.trainingType,
+          accreditedProvider: course.accreditedProvider,
+          awardingBody: course.awardingBody,
+          qualificationLevel: course.qualificationLevel,
           completionDate: enrollment.completedAt,
           score: enrollment.score,
           credits: course.credits,
         },
       });
 
-      const savedCertificate = await this.certificateRepository.save(certificate);
+      const savedRecord = await this.completionRecordRepository.save(completionRecord);
 
       await this.auditService.logEvent({
         resource: 'AcademyTraining',
-        entityType: 'Certificate',
-        entityId: savedCertificate.id,
+        entityType: 'CompletionRecord',
+        entityId: savedRecord.id,
         action: 'CREATE',
         details: {
           courseId: enrollment.courseId,
           userId: enrollment.userId,
-          certificateNumber: savedCertificate.certificateNumber,
-          issuedAt: savedCertificate.issuedAt,
+          recordNumber: savedRecord.recordNumber,
+          recordType: savedRecord.recordType,
+          issuedAt: savedRecord.issuedAt,
         },
         userId: 'system',
       });
 
-      this.eventEmitter.emit('academy.certificate.generated', {
-        certificateId: savedCertificate.id,
+      this.eventEmitter.emit('academy.completion_record.generated', {
+        recordId: savedRecord.id,
         courseId: enrollment.courseId,
         userId: enrollment.userId,
-        certificateNumber: savedCertificate.certificateNumber,
+        recordNumber: savedRecord.recordNumber,
+        recordType: savedRecord.recordType,
         timestamp: new Date(),
       });
 
-      this.logger.log(`Certificate generated: ${savedCertificate.certificateNumber} for user ${enrollment.userId}`);
-      return savedCertificate;
+      this.logger.log(`Completion record generated: ${savedRecord.recordNumber} (${savedRecord.recordType}) for user ${enrollment.userId}`);
+      return savedRecord;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to generate certificate: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to generate certificate: ${errorMessage}`);
+      this.logger.error(`Failed to generate completion record: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to generate completion record: ${errorMessage}`);
     }
   }
 
@@ -702,7 +763,7 @@ export class AcademyTrainingService {
           passed: enrollment.status === 'completed',
         }));
 
-        const certificates = await this.certificateRepository.find({
+        const completionRecords = await this.completionRecordRepository.find({
           where: { userId: enrollment.userId, courseId: enrollment.courseId },
         });
 
@@ -715,7 +776,7 @@ export class AcademyTrainingService {
           timeSpent: enrollment.timeSpent,
           lastAccessedAt: enrollment.lastAccessedAt || enrollment.enrolledAt,
           completionDate: enrollment.completedAt,
-          certificates: certificates.map(c => c.id),
+          certificates: completionRecords.map(c => c.id), // Renamed from certificates
         });
       }
 
@@ -804,8 +865,8 @@ export class AcademyTrainingService {
       const totalSessions = await this.sessionRepository.count();
       const scheduledSessions = await this.sessionRepository.count({ where: { status: 'scheduled' } });
       const completedSessions = await this.sessionRepository.count({ where: { status: 'completed' } });
-      const totalCertificates = await this.certificateRepository.count();
-      const activeCertificates = await this.certificateRepository.count({ where: { isActive: true } });
+      const totalCompletionRecords = await this.completionRecordRepository.count();
+      const activeCompletionRecords = await this.completionRecordRepository.count({ where: { isActive: true } });
 
       const statistics = {
         courses: {
@@ -825,10 +886,10 @@ export class AcademyTrainingService {
           scheduled: scheduledSessions,
           completed: completedSessions,
         },
-        certificates: {
-          total: totalCertificates,
-          active: activeCertificates,
-          expired: totalCertificates - activeCertificates,
+        completionRecords: {
+          total: totalCompletionRecords,
+          active: activeCompletionRecords,
+          expired: totalCompletionRecords - activeCompletionRecords,
         },
         lastUpdated: new Date(),
       };

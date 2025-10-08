@@ -1,5 +1,5 @@
 /**
- * @fileoverview Organization Entity - Healthcare organization management
+ * @fileoverview Organization Entity - Care home organization management
  * @module OrganizationEntity
  * @version 1.0.0
  * @description Complete organization entity with multi-jurisdictional support

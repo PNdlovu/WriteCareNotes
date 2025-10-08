@@ -1,9 +1,21 @@
+/**
+ * @fileoverview role based access Service
+ * @module Auth/RoleBasedAccessService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description role based access Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { Employee } from '../../entities/hr/Employee';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export enum UserRole {
   WORKER = 'worker',
@@ -107,7 +119,7 @@ export interface AccessContext {
 
 export class RoleBasedAccessService {
   private employeeRepository: Repository<Employee>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   // Role-Permission Matrix
   private readonly ROLE_PERMISSIONS: Map<UserRole, RolePermissions> = new Map([

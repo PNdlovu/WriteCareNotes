@@ -6,6 +6,7 @@ import financialRoutes from './financial';
 import healthRoutes from './health.routes';
 import policyVersionRoutes from './policy-versions.routes';
 import collaborationRoutes from './collaboration.routes';
+import policyIntelligenceRoutes from './policy-intelligence.routes';
 
 const router = Router();
 
@@ -25,6 +26,9 @@ router.use('/v1/financial', financialRoutes);
 // Policy governance routes
 router.use('/policies', policyVersionRoutes);
 router.use('/collaboration', collaborationRoutes);
+
+// Policy Intelligence routes (Gap Analysis, Risk, Analytics)
+router.use('/v1', policyIntelligenceRoutes);
 
 // System endpoints (inline implementation)
 router.get('/v1/system/status', (req, res) => {

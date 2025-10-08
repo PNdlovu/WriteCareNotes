@@ -1,8 +1,20 @@
+/**
+ * @fileoverview Comprehensive medication interaction and allergy checking service providing
+ * @module Medication/MedicationInteractionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive medication interaction and allergy checking service providing
+ */
+
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { Medication } from '../../entities/medication/Medication';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 /**
@@ -93,7 +105,7 @@ export interface InteractionCheckResult {
 
 export class MedicationInteractionService extends EventEmitter2 {
   private medicationRepository: Repository<Medication>;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
   private interactionDatabase: Map<string, DrugInteraction[]>;
 

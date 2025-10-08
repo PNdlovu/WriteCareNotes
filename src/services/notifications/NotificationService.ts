@@ -1,9 +1,13 @@
 /**
- * @fileoverview Real Notification Service
- * @description Production-ready notification service with email, SMS, and push capabilities
- * @author WriteCareNotes Team
+ * @fileoverview Production-ready notification service with email, SMS, and push capabilities
+ * @module Notifications/NotificationService
  * @version 1.0.0
- * @compliance GDPR, CQC, Healthcare Communications
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Production-ready notification service with email, SMS, and push capabilities
  */
 
 import { Injectable, Logger } from '@nestjs/common';

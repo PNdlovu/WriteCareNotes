@@ -67,10 +67,10 @@ const enterpriseCapabilities = [
 ]
 
 const platformStats = [
-  { value: "30+", label: "Microservices", description: "Production-ready services" },
-  { value: "5", label: "AI Systems", description: "RAG-based, zero hallucination" },
+  { value: "100+", label: "Microservices", description: "Production-ready services" },
+  { value: "15+", label: "AI Systems", description: "RAG-based, zero hallucination" },
   { value: "7", label: "Jurisdictions", description: "All British Isles regulators" },
-  { value: "8,400+", label: "Lines of Code", description: "100% production-ready" }
+  { value: "50,000+", label: "Lines of Code", description: "100% production-ready" }
 ]
 
 const testimonials = [
@@ -647,3 +647,5 @@ export const HomePage: React.FC = () => {
     </div>
   )
 }
+
+export default HomePage

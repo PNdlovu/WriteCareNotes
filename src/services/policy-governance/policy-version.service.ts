@@ -1,15 +1,13 @@
 /**
- * @fileoverview Policy Version Service
- * @description Manages policy versioning, comparison, and rollback functionality
- * @version 2.0.0
- * @author WriteCareNotes Development Team
- * @created 2025-10-06
- * @lastModified 2025-10-06
+ * @fileoverview Manages policy versioning, comparison, and rollback functionality
+ * @module Policy-governance/Policy-version.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * @compliance
- * - GDPR Article 5 (Data accuracy and audit trails)
- * - ISO 27001 (Version control)
- * - British Isles regulatory requirements
+ * @description Manages policy versioning, comparison, and rollback functionality
  */
 
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
@@ -18,7 +16,7 @@ import { Repository } from 'typeorm';
 import { PolicyDraft } from '../../entities/policy-draft.entity';
 import { PolicyVersion } from '../../entities/policy-version.entity';
 import { User } from '../../entities/user.entity';
-import { AuditTrailService } from '../audit/audit-trail.service';
+import { AuditTrailService } from '../audit/AuditTrailService';
 
 /**
  * Diff operation types

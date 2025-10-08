@@ -1,10 +1,22 @@
+/**
+ * @fileoverview visitor management Service
+ * @module Visitor/VisitorManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description visitor management Service
+ */
+
 import { Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import AppDataSource from '../../config/database';
 import { VisitorManagement, VisitorType, VisitStatus, AccessLevel } from '../../entities/visitor/VisitorManagement';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { SecurityIntegrationService } from '../security/SecurityIntegrationService';
 import { BackgroundCheckService } from '../compliance/BackgroundCheckService';
 import { ComplianceService } from '../compliance/ComplianceService';
@@ -96,7 +108,7 @@ export class VisitorManagementService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly notificationService: NotificationService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly securityService: SecurityIntegrationService,
     private readonly backgroundCheckService: BackgroundCheckService,
     private readonly complianceService: ComplianceService

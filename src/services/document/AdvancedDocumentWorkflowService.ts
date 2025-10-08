@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Enterprise document workflow management with automated
+ * @module Document/AdvancedDocumentWorkflowService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Enterprise document workflow management with automated
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -18,7 +30,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DocumentManagement } from '../../entities/document/DocumentManagement';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface DocumentWorkflow {

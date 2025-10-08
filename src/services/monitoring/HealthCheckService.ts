@@ -1,7 +1,19 @@
+/**
+ * @fileoverview health check Service
+ * @module Monitoring/HealthCheckService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description health check Service
+ */
+
 import { EventEmitter2 } from 'eventemitter2';
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface HealthCheckResult {
   service: string;
@@ -61,7 +73,7 @@ export interface PrometheusMetrics {
 }
 
 export class HealthCheckService {
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private eventEmitter: EventEmitter2;
   private healthChecks: Map<string, HealthCheckResult> = new Map();
   private metrics: SystemMetrics[] = [];

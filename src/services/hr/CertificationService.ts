@@ -1,10 +1,22 @@
+/**
+ * @fileoverview certification Service
+ * @module Hr/CertificationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description certification Service
+ */
+
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { Certification, CertificationStatus } from '../../entities/hr/Certification';
 import { Employee } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface CertificationSearchCriteria {
   status?: CertificationStatus;
@@ -62,7 +74,7 @@ export class CertificationService {
   private certificationRepository: Repository<Certification>;
   private employeeRepository: Repository<Employee>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.certificationRepository = AppDataSource.getRepository(Certification);

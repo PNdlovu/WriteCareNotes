@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive migration controller orchestrating all migration services
+ * @module Migration/MigrationController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive migration controller orchestrating all migration services
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -19,7 +31,7 @@ import { AIDataMappingService } from '../../services/migration/AIDataMappingServ
 import { BackupRollbackService } from '../../services/migration/BackupRollbackService';
 import { LegacySystemConnectors } from '../../services/migration/LegacySystemConnectors';
 import { DataValidationService } from '../../services/migration/DataValidationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export class MigrationController {
@@ -29,7 +41,7 @@ export class MigrationController {
   private backupService: BackupRollbackService;
   private legacyConnectors: LegacySystemConnectors;
   private validationService: DataValidationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
 
   constructor() {

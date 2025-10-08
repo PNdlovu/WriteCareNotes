@@ -185,7 +185,7 @@ describe('PolicyTemplateService', () => {
   let module: TestingModule;
   let policyTemplateRepository: Repository<PolicyTemplate>;
   let policyInstanceRepository: Repository<PolicyInstance>;
-  let auditTrailService: AuditTrailService;
+  let auditTrailService: AuditService;
   let validationService: ValidationService;
   let organizationService: OrganizationService;
 
@@ -247,7 +247,7 @@ describe('PolicyTemplateService', () => {
           useValue: mockPolicyInstanceRepository
         },
         {
-          provide: AuditTrailService,
+          provide: AuditService,
           useValue: mockAuditTrailService
         },
         {

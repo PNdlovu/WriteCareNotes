@@ -1,7 +1,19 @@
+/**
+ * @fileoverview graph q l gateway Service
+ * @module Graphql/GraphQLGatewayService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description graph q l gateway Service
+ */
+
 import { EventEmitter2 } from 'eventemitter2';
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 
 export interface GraphQLSchema {
@@ -172,7 +184,7 @@ export interface GraphQLMetrics {
 }
 
 export class GraphQLGatewayService {
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private encryptionService: FieldLevelEncryptionService;
   private eventEmitter: EventEmitter2;
   private schemas: Map<string, GraphQLSchema> = new Map();

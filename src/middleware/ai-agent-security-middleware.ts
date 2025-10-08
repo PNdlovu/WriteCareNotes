@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Security middleware specifically for AI agents with enhanced protection
+ * @module Ai-agent-security-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Security middleware specifically for AI agents with enhanced protection
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -49,21 +61,6 @@ const logger = new Logger('AIAgentSecurityMiddleware');
 /**
  * Public AI Agent Rate Limiting
  */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const publicAIRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 50, // 50 requests per window
@@ -85,21 +82,6 @@ export const publicAIRateLimit = rateLimit({
 /**
  * Tenant AI Agent Rate Limiting
  */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const tenantAIRateLimit = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
   max: 100, // 100 requests per window per tenant
@@ -117,21 +99,6 @@ export const tenantAIRateLimit = rateLimit({
 
 /**
  * AI Agent Security Middleware Factory
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export function aiAgentSecurityMiddleware(agentType: 'PUBLIC' | 'TENANT') {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -468,21 +435,6 @@ function getObjectDepth(obj: any): number {
 /**
  * Tenant AI Agent Input Sanitization
  */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export function sanitizeTenantAIInput(req: Request, res: Response, next: NextFunction): void {
   try {
     if (req.body && req.body['message']) {
@@ -573,21 +525,6 @@ function sanitizeCareContext(careContext: any): any {
 
 /**
  * Tenant AI Agent Isolation Validation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export function validateTenantAIIsolation(req: Request, res: Response, next: NextFunction): void {
   try {
@@ -687,21 +624,6 @@ function isValidResidentAccess(residentId: string, tenantId: string): boolean {
 /**
  * AI Response Encryption Middleware
  */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export function encryptAIResponse(req: Request, res: Response, next: NextFunction): void {
   if (req.aiSecurity?.encryptionRequired) {
     const originalSend = res.send;
@@ -757,21 +679,6 @@ function encryptResponseData(data: any, tenantId: string): any {
 
 /**
  * AI Agent Audit Logging Middleware
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
  */
 export function auditAIInteraction(req: Request, res: Response, next: NextFunction): void {
   const startTime = Date.now();

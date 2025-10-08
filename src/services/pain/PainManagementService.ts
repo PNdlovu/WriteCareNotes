@@ -1,3 +1,15 @@
+/**
+ * @fileoverview pain management Service
+ * @module Pain/PainManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description pain management Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,12 +17,12 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { PainAssessment, PainScale, PainType } from '../../entities/pain/PainAssessment';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export class PainManagementService {
   private painAssessmentRepository: Repository<PainAssessment>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.painAssessmentRepository = AppDataSource.getRepository(PainAssessment);

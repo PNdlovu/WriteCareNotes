@@ -1,5 +1,16 @@
+/**
+ * @fileoverview d b s verification Controller
+ * @module Hr/DBSVerificationController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description d b s verification Controller
+ */
+
 import { Request, Response } from 'express';
-import '../../types/express'; // Import extended Express types
 import { DBSVerificationService, DBSVerificationRequest, DBSVerificationUpdate, DBSVerificationSearchCriteria } from '../../services/hr/DBSVerificationService';
 import { logger } from '../../utils/logger';
 

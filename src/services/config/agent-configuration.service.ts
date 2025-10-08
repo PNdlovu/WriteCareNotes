@@ -1,3 +1,15 @@
+/**
+ * @fileoverview agent-configuration.service
+ * @module Config/Agent-configuration.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description agent-configuration.service
+ */
+
 import { logger } from '../../utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 import { 

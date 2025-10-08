@@ -1,9 +1,21 @@
+/**
+ * @fileoverview journal entry Service
+ * @module Financial/JournalEntryService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description journal entry Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../config/database';
 import { JournalEntry, JournalEntryStatus, JournalEntryType } from '../../entities/financial/JournalEntry';
 import { LedgerAccount } from '../../entities/financial/LedgerAccount';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { logger } from '../../utils/logger';
 import { Decimal } from 'decimal.js';
@@ -72,7 +84,7 @@ export interface JournalEntryReport {
 export class JournalEntryService {
   private journalEntryRepository: Repository<JournalEntry>;
   private ledgerAccountRepository: Repository<LedgerAccount>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private eventEmitter: EventEmitter2;
 

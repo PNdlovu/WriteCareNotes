@@ -1,9 +1,13 @@
 /**
- * @fileoverview NHS Digital Compliance Service
- * @description NHS Digital compliance checking and validation service
- * @author WriteCareNotes Team
+ * @fileoverview NHS Digital compliance checking and validation service
+ * @module Compliance/NHSDigitalComplianceService
  * @version 1.0.0
- * @compliance NHS Digital Standards
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description NHS Digital compliance checking and validation service
  */
 
 import { Injectable, Logger } from '@nestjs/common';

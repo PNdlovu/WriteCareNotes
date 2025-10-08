@@ -1,3 +1,15 @@
+/**
+ * @fileoverview REST API controller for controlled substances management with dual witness
+ * @module Medication/ControlledSubstancesController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description REST API controller for controlled substances management with dual witness
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

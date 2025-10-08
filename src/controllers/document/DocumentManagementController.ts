@@ -1,3 +1,15 @@
+/**
+ * @fileoverview RESTful API controller for enterprise document management
+ * @module Document/DocumentManagementController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description RESTful API controller for enterprise document management
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

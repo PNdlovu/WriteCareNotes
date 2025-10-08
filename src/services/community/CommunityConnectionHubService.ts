@@ -1,3 +1,15 @@
+/**
+ * @fileoverview community connection hub Service
+ * @module Community/CommunityConnectionHubService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description community connection hub Service
+ */
+
 import express, { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { body, param, query, validationResult } from 'express-validator';

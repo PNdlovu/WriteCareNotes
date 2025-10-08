@@ -1,7 +1,19 @@
+/**
+ * @fileoverview Comprehensive budget management service with AI-powered forecasting,
+ * @module Financial/BudgetService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive budget management service with AI-powered forecasting,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import AppDataSource from '../../config/database';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { Decimal } from 'decimal.js';
 
@@ -130,7 +142,7 @@ export interface MonthlyProjection {
 
 export class BudgetService extends EventEmitter2 {
   private budgetRepository: Repository<any>;
-  private auditTrailService: AuditTrailService;
+  private auditTrailService: AuditService;
   private notificationService: NotificationService;
 
   constructor() {

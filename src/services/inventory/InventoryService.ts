@@ -31,7 +31,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import Decimal from 'decimal.js';
 import { v4 as uuidv4 } from 'uuid';
 import { InventoryRepository } from '../../repositories/inventory/InventoryRepository';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { CacheService } from '../caching/CacheService';
 import {
@@ -134,7 +134,7 @@ export class InventoryService {
 
   constructor(
     private readonly repository: InventoryRepository,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly notificationService: NotificationService,
     private readonly cacheService: CacheService
   ) {}

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Frontend service for medication administration API interactions
+ * @module MedicationAdministrationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Frontend service for medication administration API interactions
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -165,19 +177,4 @@ class MedicationAdministrationService {
   }
 }
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const medicationAdministrationService = new MedicationAdministrationService();

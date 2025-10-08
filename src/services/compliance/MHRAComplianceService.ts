@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Implementation of MHRA medical device regulations compliance
+ * @module Compliance/MHRAComplianceService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Implementation of MHRA medical device regulations compliance
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

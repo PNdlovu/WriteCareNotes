@@ -1,3 +1,15 @@
+/**
+ * @fileoverview inventory management Service
+ * @module Inventory/InventoryManagementService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description inventory management Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,12 +17,12 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { InventoryItem, ItemCategory, StockStatus, TrackingMethod } from '../../entities/inventory/InventoryItem';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export class InventoryManagementService {
   private inventoryRepository: Repository<InventoryItem>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.inventoryRepository = AppDataSource.getRepository(InventoryItem);

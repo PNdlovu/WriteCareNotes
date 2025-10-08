@@ -1,7 +1,13 @@
 /**
- * Enhanced Academy Training Controller
- * Provides comprehensive training and certification management
- * Implements staff onboarding, certification tracking, and micro-learning
+ * @fileoverview enhanced academy Controller
+ * @module Academy-training/EnhancedAcademyController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description enhanced academy Controller
  */
 
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, HttpStatus, HttpException } from '@nestjs/common';

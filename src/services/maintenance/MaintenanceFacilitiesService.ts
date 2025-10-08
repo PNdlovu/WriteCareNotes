@@ -1,3 +1,15 @@
+/**
+ * @fileoverview maintenance facilities Service
+ * @module Maintenance/MaintenanceFacilitiesService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description maintenance facilities Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -6,7 +18,7 @@ import AppDataSource from '../../config/database';
 import { Asset, AssetType, AssetStatus, MaintenanceType, Priority } from '../../entities/maintenance/Asset';
 import { WorkOrder, WorkOrderStatus } from '../../entities/maintenance/WorkOrder';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface MaintenanceWorkOrder {
   id: string;
@@ -76,7 +88,7 @@ export class MaintenanceFacilitiesService {
   private assetRepository: Repository<Asset>;
   private workOrderRepository: Repository<WorkOrder>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.assetRepository = AppDataSource.getRepository(Asset);

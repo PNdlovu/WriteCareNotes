@@ -1,3 +1,15 @@
+/**
+ * @fileoverview WebSocket service for real-time AI agent conversations with tenant isolation
+ * @module Ai-agents/AIAgentWebSocketService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description WebSocket service for real-time AI agent conversations with tenant isolation
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

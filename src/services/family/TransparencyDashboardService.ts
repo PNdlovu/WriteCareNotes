@@ -1,3 +1,15 @@
+/**
+ * @fileoverview transparency dashboard Service
+ * @module Family/TransparencyDashboardService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description transparency dashboard Service
+ */
+
 import { DatabaseService } from '../core/DatabaseService';
 import { Logger } from '../core/Logger';
 import { AnalyticsService } from '../core/AnalyticsService';

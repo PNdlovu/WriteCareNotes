@@ -11,14 +11,14 @@ import { Pool, PoolClient } from 'pg';
 import { EncryptionService } from '../../../utils/encryption';
 import { AuditService } from '../../audit/AuditService';
 import { EventStoreService } from '../../event-store/EventStoreService';
-import { HealthcareCacheManager } from '../../caching/HealthcareCacheManager';
+import { CareHomeCacheManager } from '../../caching/CareHomeCacheManager';
 
 // Mock dependencies
 jest.mock('pg');
 jest.mock('../../../utils/encryption');
 jest.mock('../../audit/AuditService');
 jest.mock('../../event-store/EventStoreService');
-jest.mock('../../caching/HealthcareCacheManager');
+jest.mock('../../caching/CareHomeCacheManager');
 jest.mock('../../../utils/logger', () => ({
   createLogger: jest.fn(() => ({
     info: jest.fn(),
@@ -35,7 +35,7 @@ describe('ResidentService', () => {
   let mockEncryptionService: jest.Mocked<EncryptionService>;
   let mockAuditService: jest.Mocked<AuditService>;
   let mockEventStoreService: jest.Mocked<EventStoreService>;
-  let mockCacheManager: jest.Mocked<HealthcareCacheManager>;
+  let mockCacheManager: jest.Mocked<CareHomeCacheManager>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -77,7 +77,7 @@ describe('ResidentService', () => {
 
     (EventStoreService as jest.MockedClass<typeof EventStoreService>).mockImplementation(() => mockEventStoreService);
 
-    // Mock HealthcareCacheManager
+    // Mock CareHomeCacheManager
     mockCacheManager = {
       cacheResident: jest.fn(),
       getResident: jest.fn(),
@@ -86,7 +86,7 @@ describe('ResidentService', () => {
       shutdown: jest.fn()
     } as any;
 
-    (HealthcareCacheManager as jest.MockedClass<typeof HealthcareCacheManager>).mockImplementation(() => mockCacheManager);
+    (CareHomeCacheManager as jest.MockedClass<typeof CareHomeCacheManager>).mockImplementation(() => mockCacheManager);
 
     residentService = new ResidentService();
   });

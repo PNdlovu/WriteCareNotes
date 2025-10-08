@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Comprehensive British Isles compliance module integrating all
+ * @module Modules/Compliance.module
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Comprehensive British Isles compliance module integrating all
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

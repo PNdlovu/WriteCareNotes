@@ -1256,6 +1256,250 @@ const enterpriseFeatures: FeatureCategory[] = [
         ]
       }
     ]
+  },
+  {
+    id: 'academy-training-platform',
+    title: 'Academy & Training Platform',
+    description: 'Comprehensive staff training system with regulatory compliance tracking across all British Isles jurisdictions',
+    icon: Award,
+    color: 'from-orange-500 to-red-600',
+    features: [
+      {
+        title: 'Complete Training Management System',
+        description: 'Enterprise-grade training platform covering all roles and regulatory requirements',
+        benefits: [
+          '11 comprehensive training modules covering all microservices',
+          'Role-based training assignments (Care Assistants, Nurses, Managers, Activities Coordinators)',
+          'Self-serve portal training (mandatory for all users)',
+          'Interactive training content with video tutorials and assessments',
+          'Progress tracking with completion certificates',
+          'Quiz and assessment system with pass/fail criteria',
+          'Automatic training history for regulatory inspections'
+        ]
+      },
+      {
+        title: 'British Isles Regulatory Compliance',
+        description: 'Training content aligned with all 7 British Isles regulatory bodies',
+        benefits: [
+          'CQC (England) - Care Certificate and mandatory training compliance',
+          'Care Inspectorate (Scotland) - SSSC registration support',
+          'CIW (Wales) - Induction Framework and Social Care Wales requirements',
+          'RQIA (Northern Ireland) - NISCC compliance tracking',
+          'Jersey Care Commission - Channel Islands standards',
+          'Guernsey Health Improvement Commission - Crown Dependencies compliance',
+          'Isle of Man DHSC - Registration and inspection requirements'
+        ]
+      },
+      {
+        title: 'Automated Update Notifications',
+        description: 'Smart notification system ensuring staff stay current with platform updates',
+        benefits: [
+          'Automatic training modules for new features and updates',
+          'Role-based notification preferences with email/in-app alerts',
+          'Version tracking showing users what\'s new since last login',
+          'Engagement analytics showing training completion rates',
+          'Mandatory vs optional training categorization',
+          'Digest mode for consolidated weekly updates',
+          'Training assignment automation based on role changes'
+        ]
+      },
+      {
+        title: 'Internal Training Compliance Tracking',
+        description: 'Complete training record system distinguishing internal app training from external qualifications',
+        benefits: [
+          'Internal completion records for app training (100% legally compliant)',
+          'External certificate tracking for Skills for Care, NVQ, QCF qualifications',
+          'Training matrix showing staff competencies and gaps',
+          'Renewal and expiry date tracking with automated reminders',
+          'Regulatory audit reports ready for CQC/Care Inspectorate inspections',
+          'Training cost tracking and ROI analysis',
+          'Integration with external training marketplace (post-launch feature)'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'domiciliary-care-management',
+    title: 'Domiciliary Care Management',
+    description: 'Complete home care and community care operations platform for care-at-home services',
+    icon: Home,
+    color: 'from-teal-500 to-cyan-600',
+    features: [
+      {
+        title: 'Care Visit Management & Scheduling',
+        description: 'Intelligent visit scheduling with GPS tracking and real-time verification',
+        benefits: [
+          'Automated care visit scheduling with route optimization',
+          'GPS-based visit verification with geofencing',
+          'Electronic visit verification (EVV) with digital signatures',
+          'Real-time visit tracking and progress monitoring',
+          'Missed visit alerts with automatic escalation',
+          'Care worker availability management with skill matching',
+          'Multi-visit scheduling for complex care packages'
+        ]
+      },
+      {
+        title: 'Service User Care Planning',
+        description: 'Person-centered care planning for domiciliary care clients',
+        benefits: [
+          'Individual care package design with outcome tracking',
+          'Assessment tools for home environment and needs',
+          'Medication administration recording for home visits',
+          'Task checklists with photo verification capability',
+          'Family communication portal with visit updates',
+          'Risk assessment for lone working and safeguarding',
+          'Care package review scheduling and outcome measurement'
+        ]
+      },
+      {
+        title: 'Compliance & Quality Assurance',
+        description: 'Complete regulatory compliance for domiciliary care services',
+        benefits: [
+          'CQC domiciliary care inspection readiness',
+          'Care Inspectorate home care standards compliance',
+          'Spot check scheduling and quality monitoring',
+          'Service user feedback and satisfaction surveys',
+          'Complaints and safeguarding incident management',
+          'Staff supervision and competency tracking',
+          'Care worker DBS and training compliance verification'
+        ]
+      },
+      {
+        title: 'Financial Management for Home Care',
+        description: 'Billing and invoicing optimized for domiciliary care funding models',
+        benefits: [
+          'Time and attendance tracking with payroll integration',
+          'LA and NHS contract management with invoicing',
+          'Private pay client billing with automated statements',
+          'Direct payments and personal budgets support',
+          'Visit-based pricing with adjustable rates',
+          'Mileage and expense tracking for care workers',
+          'Revenue forecasting based on care package utilization'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'rota-workforce-scheduling',
+    title: 'Rota & Workforce Scheduling Platform',
+    description: 'AI-powered staff scheduling with skill matching, compliance monitoring, and cost optimization',
+    icon: Clock,
+    color: 'from-amber-500 to-orange-600',
+    features: [
+      {
+        title: 'Intelligent Shift Scheduling',
+        description: 'AI-driven rota creation that balances care needs, staff preferences, and cost efficiency',
+        benefits: [
+          'AI-powered shift allocation based on resident acuity and care needs',
+          'Skills-based matching ensuring qualified staff for specialist care',
+          'Staff preference learning with work-life balance optimization',
+          'Automatic shift pattern generation with fairness algorithms',
+          'Shift swapping and cover requests with approval workflows',
+          'Agency staff integration with cost comparison',
+          'Multi-site scheduling for care home groups'
+        ]
+      },
+      {
+        title: 'Working Time Regulations Compliance',
+        description: 'Automated compliance monitoring for British Isles employment laws',
+        benefits: [
+          'Working Time Regulations monitoring (48-hour week limits)',
+          'Rest break enforcement with automated alerts',
+          'Night worker health assessment tracking',
+          'Overtime calculation with double-time rules',
+          'Annual leave entitlement tracking and scheduling',
+          'Bank holiday premium calculations',
+          'Local variations support (Jersey, Guernsey, Isle of Man employment laws)'
+        ]
+      },
+      {
+        title: 'Real-Time Rota Management',
+        description: 'Live rota updates with mobile access and instant notifications',
+        benefits: [
+          'Mobile app for staff to view shifts and make requests',
+          'Push notifications for shift changes and cover needs',
+          'Real-time staffing level monitoring with red/amber/green alerts',
+          'Emergency cover finding with SMS/email blast to available staff',
+          'Clock-in/clock-out with GPS verification',
+          'Late arrival and absence tracking with escalation',
+          'Shift handover notes and care task completion tracking'
+        ]
+      },
+      {
+        title: 'Cost Optimization & Analytics',
+        description: 'Financial intelligence showing true cost of workforce deployment',
+        benefits: [
+          'Real-time labor cost tracking against budget',
+          'Agency spend reduction recommendations',
+          'Overtime cost analysis with reduction strategies',
+          'Staff utilization rates with productivity insights',
+          'Skill gap analysis with recruitment planning',
+          'Shift cost comparison (permanent vs agency vs bank staff)',
+          'Payroll integration with accurate hour calculations'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'incident-reporting-system',
+    title: 'Incident Reporting & Safeguarding',
+    description: 'Comprehensive incident management with AI-powered risk analysis and regulatory notification',
+    icon: Shield,
+    color: 'from-red-500 to-pink-600',
+    features: [
+      {
+        title: 'Incident Capture & Classification',
+        description: 'Quick incident logging with intelligent categorization and severity assessment',
+        benefits: [
+          'Mobile-first incident reporting with voice-to-text capability',
+          'Photo and video evidence capture with timestamp verification',
+          'Automatic incident type classification (falls, medication errors, safeguarding)',
+          'Severity scoring with escalation triggers',
+          'Witness statements with digital signatures',
+          'Body map diagrams for injury documentation',
+          'Anonymous reporting option for whistleblowing protection'
+        ]
+      },
+      {
+        title: 'Safeguarding & Regulatory Notifications',
+        description: 'Automated notification to regulators with compliance tracking across all British Isles jurisdictions',
+        benefits: [
+          'Automatic regulator notification (CQC, Care Inspectorate, CIW, RQIA within required timeframes)',
+          'Safeguarding alert generation with local authority notifications',
+          'DoLS deprivation incidents with best interest assessor alerts',
+          'Police notification for criminal incidents',
+          'Family notification with consent management',
+          'Serious incident requiring investigation (SIRI) workflows',
+          'Notification tracking showing sent/acknowledged/responded status'
+        ]
+      },
+      {
+        title: 'Root Cause Analysis & Learning',
+        description: 'AI-powered incident analysis identifying patterns and prevention opportunities',
+        benefits: [
+          'Fishbone diagram tools for systematic root cause analysis',
+          '5 Whys investigation methodology with structured questioning',
+          'Contributing factors analysis (staff, environment, systems, resident)',
+          'Trend analysis showing incident patterns by type, location, time',
+          'Predictive analytics identifying high-risk scenarios',
+          'Corrective action planning with responsibility assignment',
+          'Learning dissemination to all staff with quiz verification'
+        ]
+      },
+      {
+        title: 'Quality Improvement Integration',
+        description: 'Turning incidents into improvement opportunities with evidence-based action plans',
+        benefits: [
+          'Immediate action tracking with photo evidence of implementation',
+          'Long-term improvement initiatives with project management',
+          'PDSA (Plan-Do-Study-Act) cycles with outcome measurement',
+          'Best practice library from successful interventions',
+          'Benchmarking against industry incident rates',
+          'CQC/Care Inspectorate quality improvement evidence',
+          'Staff training needs identification from incident themes'
+        ]
+      }
+    ]
   }
 ]
 
@@ -1315,7 +1559,7 @@ export const EnterpriseFeaturesPage: React.FC = () => {
             <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
               <div className="flex items-center justify-center space-x-2 text-orange-700">
                 <Globe className="h-4 w-4" />
-                <span className="font-medium">80+ Microservices</span>
+                <span className="font-medium">100+ Microservices</span>
               </div>
             </div>
           </div>
@@ -1459,6 +1703,26 @@ export const EnterpriseFeaturesPage: React.FC = () => {
               <div className="text-lg font-bold text-green-600 mb-1">8</div>
               <div className="text-gray-600 text-xs">Territories</div>
             </div>
+            <div className="text-center min-w-20 flex-shrink-0">
+              <div className="text-lg font-bold text-orange-600 mb-1">Academy</div>
+              <div className="text-gray-600 text-xs">Training</div>
+            </div>
+            <div className="text-center min-w-20 flex-shrink-0">
+              <div className="text-lg font-bold text-teal-600 mb-1">Home</div>
+              <div className="text-gray-600 text-xs">Domiciliary</div>
+            </div>
+            <div className="text-center min-w-20 flex-shrink-0">
+              <div className="text-lg font-bold text-amber-600 mb-1">Smart</div>
+              <div className="text-gray-600 text-xs">Rota AI</div>
+            </div>
+            <div className="text-center min-w-20 flex-shrink-0">
+              <div className="text-lg font-bold text-red-600 mb-1">Safe</div>
+              <div className="text-gray-600 text-xs">Incidents</div>
+            </div>
+            <div className="text-center min-w-20 flex-shrink-0">
+              <div className="text-lg font-bold text-violet-600 mb-1">100+</div>
+              <div className="text-gray-600 text-xs">Services</div>
+            </div>
           </div>
         </div>
 
@@ -1467,8 +1731,9 @@ export const EnterpriseFeaturesPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-white mb-4">Transform Your Care Home Operations Today</h2>
           <p className="text-white/90 mb-8 max-w-2xl mx-auto">
             Join care homes already using our AI-powered management system, HMRC-compliant payroll, 
-            advanced financial planning, staff rewards program, and comprehensive regulatory compliance. 
-            See how our 80+ microservices transform care home operations across the British Isles.
+            advanced financial planning, staff rewards program, comprehensive training academy, domiciliary care management, 
+            intelligent rota scheduling, and complete regulatory compliance. 
+            See how our 100+ microservices transform care home operations across the British Isles.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/demo">

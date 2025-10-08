@@ -1,10 +1,22 @@
+/**
+ * @fileoverview d v l a check Service
+ * @module Hr/DVLACheckService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description d v l a check Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../config/database';
 import { DVLACheck, DVLACheckStatus, DVLALicenseType, DVLACheckPriority, DVLALicenseCategory } from '../../entities/hr/DVLACheck';
 import { DVLAService } from '../../entities/hr/DVLAService';
 import { Employee } from '../../entities/hr/Employee';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 import { logger } from '../../utils/logger';
 
@@ -98,7 +110,7 @@ export class DVLACheckService {
   private dvlaCheckRepository: Repository<DVLACheck>;
   private dvlaServiceRepository: Repository<DVLAService>;
   private employeeRepository: Repository<Employee>;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private notificationService: NotificationService;
   private eventEmitter: EventEmitter2;
 

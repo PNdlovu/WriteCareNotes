@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Controller for system testing, monitoring, and health checks
+ * @module System/SystemController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Controller for system testing, monitoring, and health checks
+ */
+
 import { Controller, Get, Post, Body, Query, HttpStatus, HttpException } from '@nestjs/common';
 import { SystemService, SystemTestResult, E2ETestResult, SmokeTestResult, RegressionTestResult, SystemStatus, SystemMetrics } from '../../services/system/SystemService';
 

@@ -1,10 +1,10 @@
-import React from 'react'
+﻿import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { EnterpriseNavigation } from './components/layout/EnterpriseNavigation'
 import { EnterpriseFooter } from './components/layout/EnterpriseFooter'
 
 // Page imports
-import { HomePageTest } from './pages/HomePageTest'
+import HomePage from './pages/HomePage'
 import { AboutPage } from './pages/AboutPage'
 import { ContactPage } from './pages/ContactPage'
 import { CareersPage } from './pages/CareersPage'
@@ -68,7 +68,7 @@ function App() {
       <div className="min-h-screen bg-background">
         <Routes>
           {/* Main pages with navigation and footer */}
-          <Route path="/" element={<LayoutWrapper><HomePageTest /></LayoutWrapper>} />
+          <Route path="/" element={<LayoutWrapper><HomePage /></LayoutWrapper>} />
           <Route path="/about" element={<LayoutWrapper><AboutPage /></LayoutWrapper>} />
           <Route path="/blog" element={<LayoutWrapper><BlogListPage /></LayoutWrapper>} />
           <Route path="/blog/:id" element={<LayoutWrapper><BlogPostPage /></LayoutWrapper>} />

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Provides REST API endpoints for comprehensive clinical safety functionality including
+ * @module Medication/ClinicalSafetyController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Provides REST API endpoints for comprehensive clinical safety functionality including
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**

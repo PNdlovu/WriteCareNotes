@@ -1,3 +1,15 @@
+/**
+ * @fileoverview communication analytics Service
+ * @module Family/CommunicationAnalyticsService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description communication analytics Service
+ */
+
 import { DatabaseService } from '../core/DatabaseService';
 import { Logger } from '../core/Logger';
 import { AIService } from '../core/AIService';

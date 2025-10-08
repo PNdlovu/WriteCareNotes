@@ -1,8 +1,20 @@
+/**
+ * @fileoverview technical communication Service
+ * @module Communication/TechnicalCommunicationService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description technical communication Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { NotificationService } from '../notifications/NotificationService';
 import { EventEmitter2 } from 'eventemitter2';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface TechnicalMessagingInfrastructure {
   smsServices: {
@@ -37,7 +49,7 @@ export interface TechnicalMessagingInfrastructure {
 
 export class TechnicalCommunicationService {
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.notificationService = new NotificationService(new EventEmitter2());

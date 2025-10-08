@@ -1,3 +1,15 @@
+/**
+ * @fileoverview assistive-robotics.service
+ * @module Assistive-robotics.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description assistive-robotics.service
+ */
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -103,7 +115,7 @@ export class AssistiveRoboticsService {
     @InjectRepository(RobotMaintenance)
     private maintenanceRepository: Repository<RobotMaintenance>,
     private eventEmitter: EventEmitter2,
-    private auditService: AuditTrailService,
+    private auditService: AuditService,
   ) {}
 
   /**

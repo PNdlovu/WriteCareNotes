@@ -1,3 +1,15 @@
+/**
+ * @fileoverview agent-monitoring.service
+ * @module Monitoring/Agent-monitoring.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description agent-monitoring.service
+ */
+
 import { logger } from '../../utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 import { 

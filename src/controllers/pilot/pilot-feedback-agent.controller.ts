@@ -1,3 +1,15 @@
+/**
+ * @fileoverview pilot-feedback-agent.controller
+ * @module Pilot/Pilot-feedback-agent.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description pilot-feedback-agent.controller
+ */
+
 import { Request, Response } from 'express';
 import { PilotFeedbackAgentService } from '../../services/pilot/pilot-feedback-agent.service';
 import { logger } from '../../utils/logger';

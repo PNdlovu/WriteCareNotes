@@ -1,3 +1,15 @@
+/**
+ * @fileoverview database Service
+ * @module Core/DatabaseService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description database Service
+ */
+
 import { Pool, PoolClient, QueryResult } from 'pg';
 import { configService } from './ConfigurationService';
 import { loggerService } from './LoggerService';

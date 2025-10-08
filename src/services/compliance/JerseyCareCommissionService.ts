@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Implementation of Jersey Care Commission specific requirements
+ * @module Compliance/JerseyCareCommissionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Implementation of Jersey Care Commission specific requirements
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -22,7 +34,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { JerseyCompliance } from '../../entities/compliance/JerseyCompliance';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 /**
  * Jersey Care Standards
@@ -69,7 +81,7 @@ export class JerseyCareCommissionService {
   constructor(
     
     private readonly jerseyComplianceRepository: Repository<JerseyCompliance>,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 

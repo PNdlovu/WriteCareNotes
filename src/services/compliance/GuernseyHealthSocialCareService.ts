@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Implementation of Guernsey Committee for Health & Social Care
+ * @module Compliance/GuernseyHealthSocialCareService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Implementation of Guernsey Committee for Health & Social Care
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -22,7 +34,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { GuernseyCompliance } from '../../entities/compliance/GuernseyCompliance';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 /**
  * Guernsey Care Standards Framework
@@ -68,7 +80,7 @@ export class GuernseyHealthSocialCareService {
   constructor(
     
     private readonly guernseyComplianceRepository: Repository<GuernseyCompliance>,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 

@@ -1,14 +1,13 @@
 /**
- * AI Policy Chat Service - Conversational Policy Management
+ * @fileoverview a i policy chat Service
+ * @module Policy-authoring/AIPolicyChatService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements conversational AI for policy management:
- * - Natural language policy creation
- * - Conversational policy editing
- * - Interactive compliance assistance
- * - Real-time policy Q&A
- * 
- * Note: This service provides the core chat functionality that can be used
- * by REST controllers or WebSocket gateways when those dependencies are available.
+ * @description a i policy chat Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -16,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import { OpenAI } from 'openai';
 import { AIPolicyAssistantService } from './AIPolicyAssistantService';
 import { PolicyAuthoringService } from './policy-authoring.service';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { PolicyDraft, PolicyCategory, Jurisdiction } from '../../entities/policy-draft.entity';
 
 export interface ChatMessage {
@@ -82,7 +81,7 @@ export class AIPolicyChatService {
   constructor(
     private readonly aiAssistant: AIPolicyAssistantService,
     private readonly policyService: PolicyAuthoringService,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
     private readonly configService: ConfigService
   ) {
     this.openai = new OpenAI({
@@ -459,6 +458,12 @@ Focus on providing accurate, jurisdiction-specific advice for all British Isles 
       const generatedPolicy = await this.aiAssistant.generatePolicyFromRequirements(parameters.requirements);
 
       // Create policy draft
+      // Create minimal User object for policy creation
+      const userForCreation = {
+        id: session.userId,
+        organizationId: session.organizationId
+      } as any;
+      
       const createdDraft = await this.policyService.createPolicyDraft({
         title: generatedPolicy.title,
         content: generatedPolicy.content,
@@ -468,7 +473,7 @@ Focus on providing accurate, jurisdiction-specific advice for all British Isles 
         linkedModules: [],
         tags: [],
         reviewDue: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // Set review due to 1 year from now
-      }, session.userId);
+      }, userForCreation);
 
       return {
         id: this.generateMessageId(),

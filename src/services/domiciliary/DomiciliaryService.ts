@@ -1,3 +1,15 @@
+/**
+ * @fileoverview domiciliary Service
+ * @module Domiciliary/DomiciliaryService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description domiciliary Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -9,7 +21,7 @@ import { ServiceUser, ServiceUserStatus } from '../../entities/domiciliary/Servi
 import { CareVisit, VisitStatus, VisitType, VerificationMethod } from '../../entities/domiciliary/CareVisit';
 import { Employee } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface VisitSchedulingData {
   serviceUserId: string;
@@ -92,7 +104,7 @@ export class DomiciliaryService {
   private careVisitRepository: Repository<CareVisit>;
   private employeeRepository: Repository<Employee>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   // In-memory tracking for real-time features
   private careWorkerLocations: Map<string, CareWorkerLocation> = new Map();

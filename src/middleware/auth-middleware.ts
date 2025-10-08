@@ -1,3 +1,15 @@
+/**
+ * @fileoverview auth-middleware
+ * @module Auth-middleware
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description auth-middleware
+ */
+
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config';
@@ -8,21 +20,6 @@ export interface AuthenticatedRequest extends Request {
   // Inherit user from global Express.Request - no need to redeclare
 }
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const authenticate = (
   req: AuthenticatedRequest,
   res: Response,

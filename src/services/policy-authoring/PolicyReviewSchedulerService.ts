@@ -1,12 +1,13 @@
 /**
- * Policy Review Scheduler Service - Auto-Reminders & Compliance Checks
+ * @fileoverview policy review scheduler Service
+ * @module Policy-authoring/PolicyReviewSchedulerService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements the PolicyGovernanceEngine review scheduling layer that:
- * - Schedules automatic policy reviews based on review cycles
- * - Sends reminders for expiring policies and review deadlines
- * - Monitors compliance deadlines and triggers alerts
- * - Integrates with calendar systems for review scheduling
- * - Provides dashboard notifications for upcoming actions
+ * @description policy review scheduler Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -15,7 +16,7 @@ import { PolicyDraft, PolicyStatus } from '../../entities/policy-draft.entity';
 import { PolicyTemplate } from '../../entities/policy-authoring/PolicyTemplate';
 import { UserAcknowledgment } from '../../entities/user-acknowledgment.entity';
 import { PolicyStatusService, PolicyTrackingColor } from './PolicyStatusService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/notification.service';
 
 export enum ReminderType {
@@ -111,7 +112,7 @@ export class PolicyReviewSchedulerService {
 
   constructor(
     private readonly policyStatusService: PolicyStatusService,
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly notificationService: NotificationService
   ) {}
 

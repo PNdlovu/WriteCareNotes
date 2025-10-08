@@ -1,3 +1,15 @@
+/**
+ * @fileoverview quality of life assessment Service
+ * @module Resident/QualityOfLifeAssessmentService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description quality of life assessment Service
+ */
+
 import { DatabaseService } from '../core/DatabaseService';
 import { Logger } from '../core/Logger';
 import { AuditService } from '../core/AuditService';

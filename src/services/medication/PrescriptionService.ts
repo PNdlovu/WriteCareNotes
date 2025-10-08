@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Complete prescription management service with CRUD operations,
+ * @module Medication/PrescriptionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Complete prescription management service with CRUD operations,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -153,7 +165,7 @@ export class PrescriptionService {
 
   constructor(
     private dataSource: DataSource,
-    private auditService: AuditTrailService,
+    private auditService: AuditService,
     private gdprService: GDPRComplianceService,
     private notificationService: NotificationService,
     private residentService: ResidentService

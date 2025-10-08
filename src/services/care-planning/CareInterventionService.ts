@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Service for managing care interventions within care domains,
+ * @module Care-planning/CareInterventionService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Service for managing care interventions within care domains,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -26,7 +38,7 @@ import { Repository, DataSource } from 'typeorm';
 import { validate, ValidationError } from 'class-validator';
 import { CareIntervention, InterventionType, Priority, RequiredSkill, EquipmentNeeded, SafetyConsideration, OutcomeMeasure, DocumentationRequirement, Contraindication } from '../../entities/care-planning/CareIntervention';
 import { CareDomain } from '../../entities/care-planning/CareDomain';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 import { NotificationService } from '../notifications/NotificationService';
 import { EventPublishingService } from '../events/EventPublishingService';
@@ -135,7 +147,7 @@ export class CareInterventionService {
 
   constructor(
     private dataSource: DataSource,
-    private auditService: AuditTrailService,
+    private auditService: AuditService,
     private encryptionService: FieldLevelEncryptionService,
     private notificationService: NotificationService,
     private eventPublisher: EventPublishingService

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Core service for care plan lifecycle management including
+ * @module Care-planning/CarePlanService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Core service for care plan lifecycle management including
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -29,7 +41,7 @@ import { CarePlan, CarePlanType, CarePlanStatus, ReviewFrequency, CareGoal, Risk
 import { CareDomain } from '../../entities/care-planning/CareDomain';
 import { Resident } from '../../entities/resident/Resident';
 import { CarePlanRepository } from '../../repositories/care-planning/CarePlanRepository';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { FieldLevelEncryptionService } from '../encryption/FieldLevelEncryptionService';
 import { NotificationService } from '../notifications/NotificationService';
 import { EventPublishingService } from '../events/EventPublishingService';
@@ -119,7 +131,7 @@ export class CarePlanService {
 
   constructor(
     private dataSource: DataSource,
-    private auditService: AuditTrailService,
+    private auditService: AuditService,
     private encryptionService: FieldLevelEncryptionService,
     private notificationService: NotificationService,
     private eventPublisher: EventPublishingService

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview AI agent service for assisting potential customers with product inquiries,
+ * @module Ai-agents/PublicCustomerSupportAIService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description AI agent service for assisting potential customers with product inquiries,
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 /**
@@ -17,7 +29,7 @@ import AppDataSource from '../../config/database';
 import { KnowledgeArticle } from '../../entities/knowledge-base/KnowledgeArticle';
 import { Logger } from '@nestjs/common';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface PublicAIAgentCapabilities {
   productInformation: {
@@ -160,7 +172,7 @@ export class PublicCustomerSupportAIService {
   // Logger removed
   private knowledgeRepository: Repository<KnowledgeArticle>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
   private publicKnowledgeBase: PublicKnowledgeBase;
 
   constructor() {

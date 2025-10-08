@@ -1,6 +1,18 @@
+/**
+ * @fileoverview digital security Service
+ * @module Security/DigitalSecurityService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description digital security Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface DigitalSecurityFramework {
   identityAndAccessManagement: {
@@ -34,7 +46,7 @@ export interface DigitalSecurityFramework {
 }
 
 export class DigitalSecurityService {
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.auditService = new AuditTrailService();

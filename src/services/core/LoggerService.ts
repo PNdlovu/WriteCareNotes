@@ -1,3 +1,15 @@
+/**
+ * @fileoverview logger Service
+ * @module Core/LoggerService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description logger Service
+ */
+
 import winston from 'winston';
 import path from 'path';
 import { configService } from './ConfigurationService';

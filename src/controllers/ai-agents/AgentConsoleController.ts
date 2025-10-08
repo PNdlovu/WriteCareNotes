@@ -1,3 +1,15 @@
+/**
+ * @fileoverview agent console Controller
+ * @module Ai-agents/AgentConsoleController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description agent console Controller
+ */
+
 import { Controller, Get, Put, Param, Query, Body, UseGuards, Request, Logger, Res, HttpStatus } from '@nestjs/common';
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { AuthGuard } from '../../middleware/auth.guard';
@@ -76,7 +88,7 @@ export class AgentConsoleController {
   private readonly logger = new Logger(AgentConsoleController.name);
 
   constructor(
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {
     // Initialize AgentManager - in a real implementation, this would be injected
     this.agentManager = new AgentManager();

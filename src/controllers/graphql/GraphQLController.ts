@@ -1,3 +1,15 @@
+/**
+ * @fileoverview graph q l Controller
+ * @module Graphql/GraphQLController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description graph q l Controller
+ */
+
 import { Request, Response } from 'express';
 import { GraphQLGatewayService } from '../../services/graphql/GraphQLGatewayService';
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
@@ -24,7 +36,7 @@ export interface GraphQLResponse {
 
 export class GraphQLController {
   private graphQLService: GraphQLGatewayService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.graphQLService = new GraphQLGatewayService();

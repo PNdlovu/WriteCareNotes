@@ -1,16 +1,20 @@
 /**
- * @fileoverview Staff Certification Service
- * @description Real staff certification service with comprehensive training management
- * @author WriteCareNotes Team
+ * @fileoverview Real staff certification service with comprehensive training management
+ * @module Academy-training/StaffCertificationService
  * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
  * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Real staff certification service with comprehensive training management
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 // Training Module Entity
@@ -208,7 +212,7 @@ export class StaffCertificationService {
     @InjectRepository(MicroLearning)
     private readonly microLearningRepository: Repository<MicroLearning>,
     private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditTrailService,
+    private readonly auditService: AuditService,
   ) {}
 
   /**

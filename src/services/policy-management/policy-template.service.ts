@@ -1,4 +1,16 @@
 /**
+ * @fileoverview Enterprise-grade policy template system for care homes with regulatory compliance
+ * @module Policy-management/Policy-template.service
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description Enterprise-grade policy template system for care homes with regulatory compliance
+ */
+
+/**
  * @fileoverview Policy Template Management Service
  * @description Enterprise-grade policy template system for care homes with regulatory compliance
  * @version 2.0.0
@@ -134,7 +146,7 @@ export class PolicyTemplateService {
     @InjectRepository(PolicyInstance)
     private readonly policyInstanceRepository: Repository<PolicyInstance>,
     
-    private readonly auditTrailService: AuditTrailService,
+    private readonly auditTrailService: AuditService,
     private readonly validationService: ValidationService,
     private readonly organizationService: OrganizationService
   ) {}

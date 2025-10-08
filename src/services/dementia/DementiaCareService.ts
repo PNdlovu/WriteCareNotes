@@ -1,3 +1,15 @@
+/**
+ * @fileoverview dementia care Service
+ * @module Dementia/DementiaCareService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description dementia care Service
+ */
+
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
@@ -5,7 +17,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { DementiaCarePlan, DementiaType, DementiaStage, WanderingRiskLevel } from '../../entities/dementia/DementiaCarePlan';
 import { NotificationService } from '../notifications/NotificationService';
-import { AuditTrailService } from '../audit/AuditTrailService';
+import { AuditService,  AuditTrailService } from '../audit';
 
 export interface AdvancedDementiaAnalytics {
   populationInsights: {
@@ -154,7 +166,7 @@ export interface CognitiveStimulatonProgram {
 export class DementiaCareService {
   private carePlanRepository: Repository<DementiaCarePlan>;
   private notificationService: NotificationService;
-  private auditService: AuditTrailService;
+  private auditService: AuditService;
 
   constructor() {
     this.carePlanRepository = AppDataSource.getRepository(DementiaCarePlan);

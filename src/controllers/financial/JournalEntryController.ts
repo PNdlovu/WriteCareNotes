@@ -1,3 +1,15 @@
+/**
+ * @fileoverview journal entry Controller
+ * @module Financial/JournalEntryController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description journal entry Controller
+ */
+
 import { Request, Response } from 'express';
 import { JournalEntryService, JournalEntryRequest, JournalEntryUpdate, JournalEntrySearchCriteria } from '../../services/financial/JournalEntryService';
 import { logger } from '../../utils/logger';

@@ -1,12 +1,13 @@
 /**
- * Policy Status Service - Color-Coded Tracker Logic
+ * @fileoverview policy status Service
+ * @module Policy-authoring/PolicyStatusService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
  * 
- * Implements the PolicyGovernanceEngine color-coded status system:
- * ✅ Green (Compliant) - Policy active, acknowledged, enforced
- * ⏳ Amber (Review Due) - Policy nearing review date—reminders triggered  
- * ❌ Red (Non-Compliant) - Policy expired, unacknowledged, enforcement failed
- * 🆕 Blue (New Policy) - Recently added—pending acknowledgment or training
- * 🛠️ Grey (In Draft) - Not yet published—visible only to admins
+ * @description policy status Service
  */
 
 import { Injectable, Logger } from '@nestjs/common';

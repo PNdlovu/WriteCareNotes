@@ -1,4 +1,16 @@
 /**
+ * @fileoverview REST API endpoints for policy version management, comparison, and rollback operations
+ * @module Policy-version.controller
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description REST API endpoints for policy version management, comparison, and rollback operations
+ */
+
+/**
  * @fileoverview Policy Version Controller
  * @description REST API endpoints for policy version management, comparison, and rollback operations
  * @version 2.0.0

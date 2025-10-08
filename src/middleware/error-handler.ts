@@ -1,23 +1,20 @@
+/**
+ * @fileoverview error-handler
+ * @module Error-handler
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description error-handler
+ */
+
 import { Request, Response, NextFunction } from 'express';
 import { Logger } from '@nestjs/common';
 
 const logger = new Logger('ErrorHandler');
 
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
-/**
- * TODO: Add proper documentation
- */
 export const errorHandler = (
   error: Error,
   req: Request,

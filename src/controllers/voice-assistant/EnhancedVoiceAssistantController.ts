@@ -1,3 +1,15 @@
+/**
+ * @fileoverview enhanced voice assistant Controller
+ * @module Voice-assistant/EnhancedVoiceAssistantController
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description enhanced voice assistant Controller
+ */
+
 import { Request, Response } from 'express';
 import { EnhancedVoiceAssistantService } from '../../services/voice-assistant/EnhancedVoiceAssistantService';
 import { Logger } from '@nestjs/common';

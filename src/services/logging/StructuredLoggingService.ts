@@ -1,3 +1,15 @@
+/**
+ * @fileoverview structured logging Service
+ * @module Logging/StructuredLoggingService
+ * @version 1.0.0
+ * @author WriteCareNotes Team
+ * @since 2025-10-07
+ * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
+ * @stability stable
+ * 
+ * @description structured logging Service
+ */
+
 import winston from 'winston';
 import { v4 as uuidv4 } from 'uuid';
 import { Request, Response } from 'express';
