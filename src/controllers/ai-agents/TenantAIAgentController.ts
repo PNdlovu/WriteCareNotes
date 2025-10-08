@@ -24,7 +24,7 @@ import { EventEmitter2 } from "eventemitter2";
 
 import { Request, Response } from 'express';
 import { Logger } from '@nestjs/common';
-import { TenantCareAssistantAIService, TenantCareInquiry } from '../services/ai-agents/TenantCareAssistantAIService';
+import { TenantCareAssistantAIService, TenantCareInquiry } from '../../services/ai-agents/TenantCareAssistantAIService';
 
 export class TenantAIAgentController {
   // Logger removed

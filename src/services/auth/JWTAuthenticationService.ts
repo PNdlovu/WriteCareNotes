@@ -22,6 +22,7 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   tenantId: string;
+  organizationId?: string;
   roles: string[];
   permissions: string[];
   dataAccessLevel: number;

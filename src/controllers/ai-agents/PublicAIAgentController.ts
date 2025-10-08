@@ -24,7 +24,7 @@ import { EventEmitter2 } from "eventemitter2";
 
 import { Request, Response } from 'express';
 import { Logger } from '@nestjs/common';
-import { PublicCustomerSupportAIService, CustomerInquiry } from '../services/ai-agents/PublicCustomerSupportAIService';
+import { PublicCustomerSupportAIService, CustomerInquiry } from '../../services/ai-agents/PublicCustomerSupportAIService';
 
 export class PublicAIAgentController {
   // Logger removed
