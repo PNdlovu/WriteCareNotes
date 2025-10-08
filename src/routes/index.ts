@@ -8,6 +8,13 @@ import policyVersionRoutes from './policy-versions.routes';
 import collaborationRoutes from './collaboration.routes';
 import policyIntelligenceRoutes from './policy-intelligence.routes';
 
+// Import Service #1 & #2 routes
+import authRoutes from './auth.routes';
+import { createOrganizationRoutes } from './organization.routes';
+
+// Import database connection for organization routes
+import { AppDataSource } from '../config/typeorm.config';
+
 const router = Router();
 
 // Request logging middleware
@@ -18,6 +25,12 @@ router.use((req, res, next) => {
 
 // Health check routes (public)
 router.use('/health', healthRoutes);
+
+// Authentication routes (Service #1) - PUBLIC
+router.use('/auth', authRoutes);
+
+// Organization routes (Service #2) - PROTECTED (requires auth + tenant isolation)
+router.use('/organizations', createOrganizationRoutes(AppDataSource));
 
 // Core business routes
 router.use('/v1/hr', hrRoutes);

@@ -4,6 +4,16 @@ import { config } from 'dotenv';
 config();
 
 // Import all entities
+
+// Core entities (Service #1 & #2)
+import { User } from '../entities/User';
+import { Organization } from '../entities/Organization';
+import { Tenant } from '../entities/Tenant';
+import { Session } from '../entities/auth/Session';
+import { RefreshToken } from '../entities/auth/RefreshToken';
+import { PasswordReset } from '../entities/auth/PasswordReset';
+
+// Domain entities
 import { Resident } from '../entities/Resident';
 import { AuditEvent } from '../entities/audit/AuditEvent';
 import { UniversalUser } from '../entities/auth/UniversalUser';
@@ -48,6 +58,15 @@ export const AppDataSource = new DataSource({
   synchronize: process.env['NODE_ENV'] === 'development',
   logging: process.env['NODE_ENV'] === 'development',
   entities: [
+    // Core entities (Service #1 & #2)
+    User,
+    Organization,
+    Tenant,
+    Session,
+    RefreshToken,
+    PasswordReset,
+    
+    // Domain entities
     Resident,
     AuditEvent,
     UniversalUser,

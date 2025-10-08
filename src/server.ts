@@ -1,26 +1,67 @@
 import app from './app';
 import { config } from './config';
 import { logger } from './utils/logger';
+import { initializeDatabase } from './config/typeorm.config';
 
-const server = app.listen(config.port, () => {
-  logger.info(`Server running on port ${config.port}`);
-});
+// Initialize database before starting server
+const startServer = async () => {
+  try {
+    // Step 1: Initialize TypeORM database connection
+    await initializeDatabase();
+    logger.info('✅ Database initialized successfully');
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated');
-    process.exit(0);
-  });
-});
+    // Step 2: Start Express server
+    const server = app.listen(config.port, () => {
+      logger.info(`🚀 Server running on port ${config.port}`);
+      logger.info(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`🔐 Authentication endpoints: /api/auth/*`);
+      logger.info(`🏢 Organization endpoints: /api/organizations/*`);
+      logger.info(`💚 Health check: /api/health`);
+    });
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated');
-    process.exit(0);
-  });
-});
+    // Graceful shutdown
+    process.on('SIGTERM', async () => {
+      logger.info('SIGTERM received, shutting down gracefully');
+      server.close(async () => {
+        logger.info('✅ HTTP server closed');
+        
+        // Close database connection
+        const { AppDataSource } = await import('./config/typeorm.config');
+        if (AppDataSource.isInitialized) {
+          await AppDataSource.destroy();
+          logger.info('✅ Database connection closed');
+        }
+        
+        logger.info('Process terminated');
+        process.exit(0);
+      });
+    });
 
-export default server;
+    process.on('SIGINT', async () => {
+      logger.info('SIGINT received, shutting down gracefully');
+      server.close(async () => {
+        logger.info('✅ HTTP server closed');
+        
+        // Close database connection
+        const { AppDataSource } = await import('./config/typeorm.config');
+        if (AppDataSource.isInitialized) {
+          await AppDataSource.destroy();
+          logger.info('✅ Database connection closed');
+        }
+        
+        logger.info('Process terminated');
+        process.exit(0);
+      });
+    });
+
+    return server;
+  } catch (error) {
+    logger.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+// Start the server
+startServer();
+
+export default startServer;
