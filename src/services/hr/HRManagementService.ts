@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { Employee, EmploymentStatus, RightToWorkStatus } from '../../entities/hr/Employee';
 import { NotificationService } from '../notifications/NotificationService';

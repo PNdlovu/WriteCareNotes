@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { AnalyticsDataset, DataSourceType, RefreshFrequency } from '../../entities/analytics/AnalyticsDataset';
 import { NotificationService } from '../notifications/NotificationService';

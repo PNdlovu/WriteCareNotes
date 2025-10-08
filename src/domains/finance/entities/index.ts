@@ -27,4 +27,3 @@ export { default as PaymentPlan } from './PaymentPlan';
 export { default as PurchaseOrder } from './PurchaseOrder';
 export { default as Supplier } from './Supplier';
 export { default as Contract } from './Contract';
-export { default as InvoiceLineItem } from './InvoiceLineItem';

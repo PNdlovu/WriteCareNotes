@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { DementiaCarePlan, DementiaType, DementiaStage, WanderingRiskLevel } from '../../entities/dementia/DementiaCarePlan';
 import { NotificationService } from '../notifications/NotificationService';

@@ -261,7 +261,7 @@ export class FamilyConsent {
     return !!this.expiresAt && this.expiresAt < new Date();
   }
 
-  isActive(): boolean {
+  getIsActive(): boolean {
     return this.isActive && 
            this.status === ConsentStatus.GRANTED && 
            !this.isExpired() &&
@@ -400,7 +400,7 @@ export class FamilyConsent {
       granted: this.granted,
       submittedAt: this.submittedAt,
       expiresAt: this.expiresAt,
-      isActive: this.isActive(),
+      isActive: this.getIsActive(),
       isExpired: this.isExpired(),
       daysUntilExpiry: this.getDaysUntilExpiry(),
       requiresRenewal: this.requiresRenewal,

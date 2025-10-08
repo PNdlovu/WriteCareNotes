@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository, In, Between } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { DocumentManagement, DocumentType, DocumentStatus } from '../../entities/document/DocumentManagement';
 import { NotificationService } from '../notifications/NotificationService';

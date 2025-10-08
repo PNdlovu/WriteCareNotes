@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { NotificationService } from '../notifications/NotificationService';
-import { EventEmitter2 } from 'eventemitter2';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export interface TechnicalMessagingInfrastructure {

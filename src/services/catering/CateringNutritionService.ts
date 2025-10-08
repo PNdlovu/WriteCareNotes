@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { Menu, MenuType, MealType } from '../../entities/catering/Menu';
 import { ResidentDietaryProfile, NutritionalRisk, HydrationLevel } from '../../entities/catering/ResidentDietaryProfile';

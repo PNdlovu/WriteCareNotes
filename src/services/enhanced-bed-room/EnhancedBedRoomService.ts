@@ -23,7 +23,6 @@ import { EventEmitter2 } from "eventemitter2";
 import { Injectable } from '@nestjs/common';
 
 import { ResidentStatus } from '../entities/Resident';
-import { EventEmitter2 } from 'eventemitter2';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, In } from 'typeorm';
 import AppDataSource from '../../config/database';

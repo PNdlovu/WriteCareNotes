@@ -24,7 +24,6 @@ import { EventEmitter2 } from "eventemitter2";
  */
 
 import * as fs from 'fs';
-import { EventEmitter2 } from 'eventemitter2';
 import * as path from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';

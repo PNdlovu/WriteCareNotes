@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { PalliativeCare, PalliativeStage, ComfortLevel, SymptomSeverity } from '../../entities/palliative/PalliativeCare';
 import { NotificationService } from '../notifications/NotificationService';

@@ -136,7 +136,7 @@ export class AttendanceRecord {
     return this.status === AttendanceStatus.UNEXCUSED;
   }
 
-  public isNoShow(): boolean {
+  public getIsNoShow(): boolean {
     return this.isNoShow;
   }
 

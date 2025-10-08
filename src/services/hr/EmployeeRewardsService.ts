@@ -24,7 +24,6 @@ import { EventEmitter2 } from "eventemitter2";
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import { EventEmitter2 } from 'eventemitter2';
 import { Repository, EntityManager } from 'typeorm';
 import AppDataSource from '../../config/database';
 import { Employee } from '../../entities/hr/Employee';

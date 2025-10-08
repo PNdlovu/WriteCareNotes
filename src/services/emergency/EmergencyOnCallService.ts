@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { EmergencyIncident, EmergencyType, EmergencySeverity, DetectionMethod } from '../../entities/emergency/EmergencyIncident';
 import { OnCallRota, OnCallRole, OnCallStatus, CallType, ContactMethod } from '../../entities/emergency/OnCallRota';

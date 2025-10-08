@@ -24,12 +24,12 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
-import { ResidentService, Resident, AdmissionData, DischargeData, TransferData } from '../services/resident/ResidentService';
-import { authMiddleware } from '../middleware/auth.middleware';
-import { healthcareContextMiddleware } from '../middleware/healthcare-context.middleware';
-import { rateLimitMiddleware } from '../middleware/rate-limit.middleware';
-import { auditMiddleware } from '../middleware/audit.middleware';
-import { createLogger } from '../utils/logger';
+import { ResidentService, Resident, AdmissionData, DischargeData, TransferData } from '../../services/resident/ResidentService';
+import { authMiddleware } from '../../middleware/auth.middleware';
+import { healthcareContextMiddleware } from '../../middleware/healthcare-context.middleware';
+import { rateLimitMiddleware } from '../../middleware/rate-limit.middleware';
+import { auditMiddleware } from '../../middleware/audit.middleware';
+import { createLogger } from '../../utils/logger';
 
 const router = Router();
 const logger = createLogger('ResidentRoutes');

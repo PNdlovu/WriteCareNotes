@@ -13,7 +13,6 @@
 import { EventEmitter2 } from "eventemitter2";
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { Bed, BedStatus, CareLevel } from '../../entities/bed/Bed';
 import { Room } from '../../entities/bed/Room';

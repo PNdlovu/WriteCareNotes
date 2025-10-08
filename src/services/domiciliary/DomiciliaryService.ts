@@ -15,7 +15,6 @@ import { EventEmitter2 } from "eventemitter2";
 import { Repository } from 'typeorm';
 
 import { ResidentStatus } from '../entities/Resident';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { ServiceUser, ServiceUserStatus } from '../../entities/domiciliary/ServiceUser';
 import { CareVisit, VisitStatus, VisitType, VerificationMethod } from '../../entities/domiciliary/CareVisit';

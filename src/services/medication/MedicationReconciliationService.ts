@@ -38,7 +38,6 @@ import { EventEmitter2 } from "eventemitter2";
  */
 
 import { Repository } from 'typeorm';
-import { EventEmitter2 } from 'eventemitter2';
 import AppDataSource from '../../config/database';
 import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';

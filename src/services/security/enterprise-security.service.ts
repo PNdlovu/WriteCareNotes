@@ -36,7 +36,7 @@
  * - Attribute-based access control (ABAC)
  */
 
-import { Injectable, Logger, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // import { JwtService } from '@nestjs/jwt'; // TODO: Install @nestjs/jwt package

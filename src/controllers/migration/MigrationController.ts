@@ -24,7 +24,6 @@ import { EventEmitter2 } from "eventemitter2";
  */
 
 import { Request, Response } from 'express';
-import { EventEmitter2 } from 'eventemitter2';
 import { AdvancedOnboardingDataMigrationService } from '../../services/onboarding/AdvancedOnboardingDataMigrationService';
 import { FileImportService } from '../../services/migration/FileImportService';
 import { AIDataMappingService } from '../../services/migration/AIDataMappingService';

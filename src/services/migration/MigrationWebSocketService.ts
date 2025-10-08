@@ -24,7 +24,6 @@ import { EventEmitter2 } from "eventemitter2";
  */
 
 import { Server as SocketIOServer } from 'socket.io';
-import { EventEmitter2 } from 'eventemitter2';
 import { Server } from 'http';
 import { AdvancedOnboardingDataMigrationService } from '../onboarding/AdvancedOnboardingDataMigrationService';
 import { NotificationService } from '../notifications/NotificationService';

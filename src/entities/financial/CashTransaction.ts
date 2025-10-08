@@ -351,16 +351,6 @@ export class CashTransaction extends BaseEntity {
   @IsOptional()
   reversedBy?: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  @IsDate()
-  @IsOptional()
-  reversedAt?: Date;
-
-  @Column({ type: 'text', nullable: true })
-  @IsString()
-  @IsOptional()
-  reversalReason?: string;
-
   /**
    * Validate cash transaction before insert
    */
