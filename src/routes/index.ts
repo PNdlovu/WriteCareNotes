@@ -8,7 +8,7 @@ import policyVersionRoutes from './policy-versions.routes';
 import collaborationRoutes from './collaboration.routes';
 import policyIntelligenceRoutes from './policy-intelligence.routes';
 
-// Import Service #1-7 routes
+// Import Service #1-7 routes (Phase 1)
 import authRoutes from './auth.routes';
 import { createOrganizationRoutes } from './organization.routes';
 import { createResidentRoutes } from './resident.routes';
@@ -16,6 +16,9 @@ import { createStaffRoutes } from './staff.routes';
 import { createAuditRoutes } from './audit.routes';
 import { createCarePlanRoutes } from './care-plan.routes';
 import { createMedicationRoutes } from './medication.routes';
+
+// Import Service #8+ routes (Phase 2)
+import { createDocumentRoutes } from './document.routes';
 
 // Import database connection for organization routes
 import { AppDataSource } from '../config/typeorm.config';
@@ -51,6 +54,9 @@ router.use('/care-plans', createCarePlanRoutes(AppDataSource));
 
 // Medication routes (Service #7) - PROTECTED (requires auth + tenant isolation)
 router.use('/medications', createMedicationRoutes(AppDataSource));
+
+// Document Management routes (Service #8) - PROTECTED (requires auth + tenant isolation)
+router.use('/documents', createDocumentRoutes(AppDataSource));
 
 // Core business routes
 router.use('/v1/hr', hrRoutes);
