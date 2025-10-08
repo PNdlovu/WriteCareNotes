@@ -8,11 +8,12 @@ import policyVersionRoutes from './policy-versions.routes';
 import collaborationRoutes from './collaboration.routes';
 import policyIntelligenceRoutes from './policy-intelligence.routes';
 
-// Import Service #1 & #2 routes
+// Import Service #1-5 routes
 import authRoutes from './auth.routes';
 import { createOrganizationRoutes } from './organization.routes';
 import { createResidentRoutes } from './resident.routes';
 import { createStaffRoutes } from './staff.routes';
+import { createAuditRoutes } from './audit.routes';
 
 // Import database connection for organization routes
 import { AppDataSource } from '../config/typeorm.config';
@@ -39,6 +40,9 @@ router.use('/residents', createResidentRoutes(AppDataSource));
 
 // Staff routes (Service #4) - PROTECTED (requires auth + tenant isolation)
 router.use('/staff', createStaffRoutes(AppDataSource));
+
+// Audit routes (Service #5) - PROTECTED (requires auth)
+router.use('/audit', createAuditRoutes(AppDataSource));
 
 // Core business routes
 router.use('/v1/hr', hrRoutes);
