@@ -84,7 +84,7 @@ export class TenantAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to handle tenant care inquiry', {
+      console.error('Failed to handle tenant care inquiry', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
         path: req.path,
         tenantId: req.tenant?.tenantId,
@@ -152,7 +152,7 @@ export class TenantAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to get care recommendations', {
+      console.error('Failed to get care recommendations', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
         residentId: req.params['residentId'],
         tenantId: req.tenant?.tenantId
@@ -199,7 +199,7 @@ export class TenantAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to get compliance alerts', {
+      console.error('Failed to get compliance alerts', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
         tenantId: req.tenant?.tenantId
       });
@@ -249,7 +249,7 @@ export class TenantAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to provide documentation assistance', {
+      console.error('Failed to provide documentation assistance', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
         tenantId: req.tenant?.tenantId
       });
@@ -296,7 +296,7 @@ export class TenantAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to handle emergency inquiry', {
+      console.error('Failed to handle emergency inquiry', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
         tenantId: req.tenant?.tenantId,
         emergencyType: req.body['emergencyType']

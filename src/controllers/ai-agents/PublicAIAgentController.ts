@@ -71,7 +71,7 @@ export class PublicAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to handle customer inquiry', {
+      console.error('Failed to handle customer inquiry', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
         path: req.path,
         ip: req.ip
@@ -99,7 +99,7 @@ export class PublicAIAgentController {
       });
 
     } catch (error: unknown) {
-      this.console.error('Failed to get knowledge base summary', {
+      console.error('Failed to get knowledge base summary', {
         error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
       });
 

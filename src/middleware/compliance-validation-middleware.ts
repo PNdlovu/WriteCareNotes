@@ -107,7 +107,7 @@ export class ComplianceValidationMiddleware {
 
       // Log warnings if present
       if (validationResult.warnings.length > 0) {
-        this.console.warn(`Compliance warnings for ${context.organizationId}: ${validationResult.warnings.length} warnings`);
+        console.warn(`Compliance warnings for ${context.organizationId}: ${validationResult.warnings.length} warnings`);
       }
 
       // Emit compliance validation event
@@ -122,7 +122,7 @@ export class ComplianceValidationMiddleware {
       next();
 
     } catch (error: unknown) {
-      this.console.error(`Compliance validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Compliance validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
       return res.status(500).json({
         success: false,
         message: 'Compliance validation error',
@@ -160,7 +160,7 @@ export class ComplianceValidationMiddleware {
         next();
 
       } catch (error: unknown) {
-        this.console.error(`${jurisdiction} compliance validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+        console.error(`${jurisdiction} compliance validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
         return res.status(500).json({
           success: false,
           message: `${jurisdiction} compliance validation error`,
@@ -199,7 +199,7 @@ export class ComplianceValidationMiddleware {
         next();
 
       } catch (error: unknown) {
-        this.console.error(`Professional standards validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+        console.error(`Professional standards validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
         return res.status(500).json({
           success: false,
           message: 'Professional standards validation error',
@@ -233,7 +233,7 @@ export class ComplianceValidationMiddleware {
       next();
 
     } catch (error: unknown) {
-      this.console.error(`Data protection validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Data protection validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
       return res.status(500).json({
         success: false,
         message: 'Data protection validation error',
@@ -266,7 +266,7 @@ export class ComplianceValidationMiddleware {
       next();
 
     } catch (error: unknown) {
-      this.console.error(`Clinical safety validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Clinical safety validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
       return res.status(500).json({
         success: false,
         message: 'Clinical safety validation error',

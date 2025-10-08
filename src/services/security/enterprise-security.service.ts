@@ -39,18 +39,25 @@
 import { Injectable, Logger, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+// import { JwtService } from '@nestjs/jwt'; // TODO: Install @nestjs/jwt package
+// import * as bcrypt from 'bcrypt'; // TODO: Install bcrypt package
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import { User } from '../../entities/user.entity';
 import { Organization } from '../../entities/organization.entity';
-import { SecurityEvent } from '../../entities/security-event.entity';
-import { AccessPolicy } from '../../entities/access-policy.entity';
-import { BiometricData } from '../../entities/biometric-data.entity';
-import { AuditTrailService } from '../audit/audit-trail.service';
+// import { SecurityEvent } from '../../entities/security-event.entity'; // TODO: Create entity
+// import { AccessPolicy } from '../../entities/access-policy.entity'; // TODO: Create entity
+// import { BiometricData } from '../../entities/biometric-data.entity'; // TODO: Create entity
+import { AuditTrailService } from '../audit/AuditTrailService';
 import { NotificationService } from '../notifications/notification.service';
-import { ThreatDetectionService } from './threat-detection.service';
+// import { ThreatDetectionService } from './threat-detection.service'; // TODO: Create service
+
+// Temporary stub types until entities are created
+type SecurityEvent = any;
+type AccessPolicy = any;
+type BiometricData = any;
+type JwtService = any;
+type ThreatDetectionService = any;
 
 /**
  * Authentication methods enumeration
@@ -129,26 +136,24 @@ export class EnterpriseSecurityService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    
+
     @InjectRepository(Organization)
     private readonly organizationRepository: Repository<Organization>,
-    
-    @InjectRepository(SecurityEvent)
-    private readonly securityEventRepository: Repository<SecurityEvent>,
-    
-    @InjectRepository(AccessPolicy)
-    private readonly accessPolicyRepository: Repository<AccessPolicy>,
-    
-    @InjectRepository(BiometricData)
-    private readonly biometricRepository: Repository<BiometricData>,
-    
-    private readonly jwtService: JwtService,
-    private readonly auditTrailService: AuditService,
-    private readonly notificationService: NotificationService,
-    private readonly threatDetectionService: ThreatDetectionService
-  ) {}
 
-  /**
+    // @InjectRepository(SecurityEvent) // TODO: Create SecurityEvent entity
+    // private readonly securityEventRepository: Repository<SecurityEvent>,
+    
+    // @InjectRepository(AccessPolicy) // TODO: Create AccessPolicy entity
+    // private readonly accessPolicyRepository: Repository<AccessPolicy>,
+    
+    // @InjectRepository(BiometricData) // TODO: Create BiometricData entity
+    // private readonly biometricRepository: Repository<BiometricData>,
+    
+    // private readonly jwtService: JwtService, // TODO: Install @nestjs/jwt
+    private readonly auditTrailService: AuditTrailService,
+    private readonly notificationService: NotificationService,
+    // private readonly threatDetectionService: ThreatDetectionService // TODO: Create service
+  ) {}  /**
    * Authenticate user with multi-factor support
    */
   async authenticateUser(
