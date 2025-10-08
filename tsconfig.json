@@ -43,6 +43,14 @@
     "node_modules",
     "dist",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "frontend",
+    "pwa",
+    "mobile",
+    "shared/**/*.tsx",
+    "src/components/**/*.tsx",
+    "src/hooks/**/*.tsx",
+    "src/domains/**/*.tsx",
+    "src/routes/**/*.tsx"
   ]
 }
