@@ -20,6 +20,7 @@ import { createMedicationRoutes } from './medication.routes';
 // Import Service #8+ routes (Phase 2)
 import { createDocumentRoutes } from './document.routes';
 import { createFamilyCommunicationRoutes } from './family-communication.routes';
+import { createIncidentRoutes } from './incident.routes';
 
 // Import database connection for organization routes
 import { AppDataSource } from '../config/typeorm.config';
@@ -61,6 +62,9 @@ router.use('/documents', createDocumentRoutes(AppDataSource));
 
 // Family Communication routes (Service #9) - PROTECTED (requires auth + tenant isolation)
 router.use('/family', createFamilyCommunicationRoutes(AppDataSource));
+
+// Incident Management routes (Service #10) - PROTECTED (requires auth + tenant isolation)
+router.use('/incidents', createIncidentRoutes(AppDataSource));
 
 // Core business routes
 router.use('/v1/hr', hrRoutes);
