@@ -22,6 +22,7 @@ import { createDocumentRoutes } from './document.routes';
 import { createFamilyCommunicationRoutes } from './family-communication.routes';
 import { createIncidentRoutes } from './incident.routes';
 import { createHealthMonitoringRoutes } from './health-monitoring.routes';
+import { createActivityWellbeingRoutes } from './activity-wellbeing.routes';
 
 // Import database connection for organization routes
 import { AppDataSource } from '../config/typeorm.config';
@@ -69,6 +70,9 @@ router.use('/incidents', createIncidentRoutes(AppDataSource));
 
 // Health Monitoring routes (Service #11) - PROTECTED (requires auth + tenant isolation)
 router.use('/health-monitoring', createHealthMonitoringRoutes(AppDataSource));
+
+// Activity & Wellbeing routes (Service #12) - PROTECTED (requires auth + tenant isolation)
+router.use('/activities', createActivityWellbeingRoutes(AppDataSource));
 
 // Core business routes
 router.use('/v1/hr', hrRoutes);
