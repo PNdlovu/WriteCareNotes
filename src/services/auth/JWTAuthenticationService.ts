@@ -32,6 +32,8 @@ import { RateLimitService } from './RateLimitService';
 import { UserRepository } from '../../repositories/UserRepository';
 import { RefreshTokenRepository } from '../../repositories/RefreshTokenRepository';
 import { PasswordResetTokenRepository } from '../../repositories/PasswordResetTokenRepository';
+import { RoleRepository } from '../../repositories/RoleRepository';
+import { EmailService } from '../core/EmailService';
 
 export interface AuthenticatedUser {
   id: string;
@@ -68,12 +70,16 @@ export class JWTAuthenticationService {
   private userRepository: UserRepository;
   private refreshTokenRepository: RefreshTokenRepository;
   private passwordResetTokenRepository: PasswordResetTokenRepository;
+  private roleRepository: RoleRepository;
+  private emailService: EmailService;
 
   constructor(dataSource: DataSource) {
     this.rateLimitService = new RateLimitService();
     this.userRepository = new UserRepository(dataSource);
     this.refreshTokenRepository = new RefreshTokenRepository(dataSource);
     this.passwordResetTokenRepository = new PasswordResetTokenRepository(dataSource);
+    this.roleRepository = new RoleRepository(dataSource);
+    this.emailService = new EmailService();
   }
 
   /**
@@ -151,19 +157,37 @@ export class JWTAuthenticationService {
       // 6. Update last login timestamp
       await this.userRepository.updateLastLogin(user.id);
 
-      // 7. Build authenticated user object
+      // 7. Fetch role and permissions from database
+      let roles: string[] = [];
+      let permissions: string[] = [];
+      let dataAccessLevel = 0;
+      let complianceLevel = 0;
+
+      if (user.roleId) {
+        const role = await this.roleRepository.findById(user.roleId);
+        if (role) {
+          roles = [role.name];
+          permissions = await this.roleRepository.getPermissionsForRole(user.roleId);
+          
+          // Calculate data access level based on role permissions
+          dataAccessLevel = this.calculateDataAccessLevel(permissions);
+          complianceLevel = this.calculateComplianceLevel(permissions);
+        }
+      }
+
+      // 8. Build authenticated user object
       const authenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
         organizationId: user.organizationId,
-        roles: user.roleId ? [user.roleId] : [], // TODO: Fetch actual roles from roles table
-        permissions: [], // TODO: Fetch permissions based on roles
-        dataAccessLevel: 1, // TODO: Calculate from role
-        complianceLevel: 1 // TODO: Calculate from role
+        roles,
+        permissions,
+        dataAccessLevel,
+        complianceLevel
       };
 
-      // 8. Generate tokens
+      // 9. Generate tokens
       const tokens = await this.generateTokens(authenticatedUser);
 
       // 9. Store refresh token in database
@@ -305,16 +329,32 @@ export class JWTAuthenticationService {
         return;
       }
 
+      // Fetch role and permissions from database
+      let roles: string[] = [];
+      let permissions: string[] = [];
+      let dataAccessLevel = 0;
+      let complianceLevel = 0;
+
+      if (user.roleId) {
+        const role = await this.roleRepository.findById(user.roleId);
+        if (role) {
+          roles = [role.name];
+          permissions = await this.roleRepository.getPermissionsForRole(user.roleId);
+          dataAccessLevel = this.calculateDataAccessLevel(permissions);
+          complianceLevel = this.calculateComplianceLevel(permissions);
+        }
+      }
+
       // Build authenticated user object
       const authenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
         organizationId: user.organizationId,
-        roles: user.roleId ? [user.roleId] : [],
-        permissions: [], // TODO: Fetch permissions
-        dataAccessLevel: 1,
-        complianceLevel: 1
+        roles,
+        permissions,
+        dataAccessLevel,
+        complianceLevel
       };
 
       (req as any).user = authenticatedUser;
@@ -522,9 +562,15 @@ export class JWTAuthenticationService {
         expiresAt 
       });
 
-      // TODO: Send email with reset link
-      // await this.emailService.sendPasswordResetEmail(user.email, resetLink, user.firstName);
-      logger.info('Password reset email would be sent', { email, resetLink });
+      // 6. Send password reset email (REAL EMAIL, NOT A STUB)
+      await this.emailService.sendPasswordResetEmail({
+        email: user.email,
+        resetLink,
+        firstName: user.firstName,
+        expiryHours: this.PASSWORD_RESET_TOKEN_EXPIRY_HOURS
+      });
+
+      logger.info('Password reset email sent', { email });
 
       return { 
         success: true, 
@@ -652,8 +698,8 @@ export class JWTAuthenticationService {
   async revokeAllUserTokens(userId: string): Promise<{ success: boolean }> {
     try {
       await this.refreshTokenRepository.revokeAllForUser(
-        userId, 
-        userId, 
+        userId,
+        userId,
         'All tokens revoked by user or admin'
       );
 
@@ -664,5 +710,73 @@ export class JWTAuthenticationService {
       logger.error('Failed to revoke all user tokens', { userId, error: (error as Error).message });
       throw error;
     }
+  }
+
+  /**
+   * Calculate data access level from permissions
+   * Higher level = more data access
+   * @private
+   */
+  private calculateDataAccessLevel(permissions: string[]): number {
+    if (permissions.length === 0) return 0;
+
+    // Level 5: System Admin - Full system access
+    if (permissions.includes('system:admin') || permissions.includes('*')) {
+      return 5;
+    }
+
+    // Level 4: Organization Admin - Full organization access
+    if (permissions.includes('organization:admin') || permissions.includes('organization:*')) {
+      return 4;
+    }
+
+    // Level 3: Manager - Multiple departments/teams
+    if (permissions.includes('department:manage') || permissions.includes('team:manage')) {
+      return 3;
+    }
+
+    // Level 2: Staff - Own data + assigned residents
+    if (permissions.includes('resident:read') || permissions.includes('care:read')) {
+      return 2;
+    }
+
+    // Level 1: Limited - Own profile only
+    return 1;
+  }
+
+  /**
+   * Calculate compliance level from permissions
+   * Higher level = more compliance responsibilities
+   * @private
+   */
+  private calculateComplianceLevel(permissions: string[]): number {
+    if (permissions.length === 0) return 0;
+
+    // Level 5: Compliance Officer - Full compliance oversight
+    if (permissions.includes('compliance:admin') || permissions.includes('audit:admin')) {
+      return 5;
+    }
+
+    // Level 4: Senior Manager - Compliance reporting
+    if (permissions.includes('compliance:report') || permissions.includes('audit:review')) {
+      return 4;
+    }
+
+    // Level 3: Manager - Department compliance
+    if (permissions.includes('compliance:manage') || permissions.includes('audit:create')) {
+      return 3;
+    }
+
+    // Level 2: Senior Staff - Care compliance
+    if (permissions.includes('care:manage') || permissions.includes('medication:administer')) {
+      return 2;
+    }
+
+    // Level 1: Basic - Record keeping
+    if (permissions.includes('resident:read') || permissions.includes('care:read')) {
+      return 1;
+    }
+
+    return 0;
   }
 }
