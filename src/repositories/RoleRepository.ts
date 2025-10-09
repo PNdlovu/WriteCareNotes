@@ -145,7 +145,7 @@ export class RoleRepository {
         return [...acc, ...(role.permissions || [])];
       }, [] as string[]);
 
-      return [...new Set(allPermissions)];
+      return Array.from(new Set(allPermissions));
     } catch (error) {
       logger.error('Error getting aggregated permissions', { roleIds, error });
       throw error;
