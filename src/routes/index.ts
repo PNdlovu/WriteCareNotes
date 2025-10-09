@@ -10,6 +10,7 @@ import policyIntelligenceRoutes from './policy-intelligence.routes';
 
 // Import Service #1-7 routes (Phase 1)
 import authRoutes from './auth.routes';
+import { createTenantRoutes } from './tenants';
 import { createOrganizationRoutes } from './organization.routes';
 import { createResidentRoutes } from './resident.routes';
 import { createStaffRoutes } from './staff.routes';
@@ -41,6 +42,9 @@ router.use('/health', healthRoutes);
 
 // Authentication routes (Service #1) - PUBLIC
 router.use('/auth', authRoutes);
+
+// Tenant routes (Admin only) - PROTECTED (requires admin permissions)
+router.use('/tenants', createTenantRoutes(AppDataSource));
 
 // Organization routes (Service #2) - PROTECTED (requires auth + tenant isolation)
 router.use('/organizations', createOrganizationRoutes(AppDataSource));
