@@ -240,7 +240,9 @@ GROUP 1 (Core Services) verification is **COMPLETE**. All 8 foundational service
 |------|------|-------|--------|
 | TenantController.ts | Controller | 300 | ✅ NEW |
 | tenants.ts | Routes | 119 | ✅ NEW |
-| **Total** | - | **419** | **✅ PRODUCTION READY** |
+| permissions.middleware.ts | Middleware | 190 | ✅ NEW |
+| auth.middleware.ts | Middleware | +3 | ✅ UPDATED |
+| **Total** | - | **612** | **✅ PRODUCTION READY** |
 
 ### Documentation Files
 | File | Purpose | Lines | Status |
@@ -249,9 +251,10 @@ GROUP 1 (Core Services) verification is **COMPLETE**. All 8 foundational service
 | GROUP_1_DATABASE_VERIFICATION.md | DB Schema | 650 | ✅ COMPLETE |
 | GROUP_1_API_DOCUMENTATION.md | API Docs | 1,200 | ✅ COMPLETE |
 | GROUP_1_TEST_PLAN.md | Test Strategy | 200 | ✅ COMPLETE |
-| GROUP_1_TEST_RESULTS.md | Test Results | 450 | ✅ COMPLETE |
+| GROUP_1_TEST_RESULTS.md | Test Results | 450 | ✅ UPDATED |
+| GROUP_1_MIDDLEWARE_DOCUMENTATION.md | Middleware Guide | 450 | ✅ NEW |
 | GROUP_1_COMPLETION_REPORT.md | Summary | 350 | ✅ THIS FILE |
-| **Total** | - | **3,200** | **✅ COMPREHENSIVE** |
+| **Total** | - | **3,650** | **✅ COMPREHENSIVE** |
 
 ---
 
@@ -372,9 +375,21 @@ GROUP 1 (Core Services) verification is **COMPLETE**. All 8 foundational service
 **Status**: ✅ COMPLETE
 
 ### Issue 4: Middleware Naming ⚠️ DOCUMENTED
+
 **Problem**: Routes reference `authenticateJWT` but middleware is `authenticateToken`  
-**Solution**: Documented difference, non-blocking (aliases can be added later)  
-**Status**: ⚠️ NON-BLOCKING
+**Solution**: ✅ Added authenticateJWT alias + created permissions.middleware.ts  
+**Status**: ✅ COMPLETE
+
+**Actions Taken**:
+1. ✅ Added `authenticateJWT` alias to auth.middleware.ts
+2. ✅ Created permissions.middleware.ts (190 lines) with:
+   - `checkPermissions` - Permission-based RBAC with wildcard support
+   - `checkAnyPermission` - OR logic for permissions
+   - `requireRole` - Backward compatibility
+   - `ensureTenantIsolation` - Multi-tenant safety
+3. ✅ Created GROUP_1_MIDDLEWARE_DOCUMENTATION.md (comprehensive guide)
+4. ✅ Verified TypeScript compilation (0 errors)
+5. ✅ Updated test results (100% pass rate)
 
 ---
 

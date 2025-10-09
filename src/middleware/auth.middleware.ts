@@ -45,3 +45,6 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
 // Alias for backward compatibility
 export const authMiddleware = authenticateToken;
+
+// Alias for consistency with tenant routes (GROUP 1 verification)
+export const authenticateJWT = authenticateToken;
