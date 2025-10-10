@@ -34,6 +34,32 @@ import { Message } from '../entities/communication/Message';
 import { VideoCall } from '../entities/communication/VideoCall';
 import { ZeroTrustSecurity } from '../entities/zero-trust/ZeroTrustSecurity';
 
+// Children's Care System entities (Modules 1-9)
+import { Child } from '../domains/children/entities/Child';
+import { Placement } from '../domains/placements/entities/Placement';
+import { PlacementRequest } from '../domains/placements/entities/PlacementRequest';
+import { PlacementAgreement } from '../domains/placements/entities/PlacementAgreement';
+import { PlacementReview } from '../domains/placements/entities/PlacementReview';
+import { SafeguardingIncident } from '../domains/safeguarding/entities/SafeguardingIncident';
+import { ChildProtectionPlan } from '../domains/safeguarding/entities/ChildProtectionPlan';
+import { SafeguardingConcern } from '../domains/safeguarding/entities/SafeguardingConcern';
+import { PersonalEducationPlan } from '../domains/education/entities/PersonalEducationPlan';
+import { SchoolPlacement } from '../domains/education/entities/SchoolPlacement';
+import { HealthAssessment } from '../domains/health/entities/HealthAssessment';
+import { MedicalConsent } from '../domains/health/entities/MedicalConsent';
+import { FamilyMember } from '../domains/family/entities/FamilyMember';
+import { ContactSchedule } from '../domains/family/entities/ContactSchedule';
+import { ContactSession } from '../domains/family/entities/ContactSession';
+import { ContactRiskAssessment } from '../domains/family/entities/ContactRiskAssessment';
+import { CarePlan as ChildCarePlan } from '../domains/careplanning/entities/CarePlan';
+import { CarePlanReview } from '../domains/careplanning/entities/CarePlanReview';
+import { CarePlanGoal } from '../domains/careplanning/entities/CarePlanGoal';
+import { PathwayPlan } from '../domains/leavingcare/entities/PathwayPlan';
+import { UASCProfile } from '../domains/uasc/entities/UASCProfile';
+import { AgeAssessment } from '../domains/uasc/entities/AgeAssessment';
+import { ImmigrationStatus } from '../domains/uasc/entities/ImmigrationStatus';
+import { HomeOfficeCorrespondence } from '../domains/uasc/entities/HomeOfficeCorrespondence';
+
 // TypeORM DataSource configuration
 /**
  * TODO: Add proper documentation
@@ -88,6 +114,32 @@ export const AppDataSource = new DataSource({
     Message,
     VideoCall,
     ZeroTrustSecurity,
+    
+    // Children's Care System entities (Modules 1-9)
+    Child,
+    Placement,
+    PlacementRequest,
+    PlacementAgreement,
+    PlacementReview,
+    SafeguardingIncident,
+    ChildProtectionPlan,
+    SafeguardingConcern,
+    PersonalEducationPlan,
+    SchoolPlacement,
+    HealthAssessment,
+    MedicalConsent,
+    FamilyMember,
+    ContactSchedule,
+    ContactSession,
+    ContactRiskAssessment,
+    ChildCarePlan,
+    CarePlanReview,
+    CarePlanGoal,
+    PathwayPlan,
+    UASCProfile,
+    AgeAssessment,
+    ImmigrationStatus,
+    HomeOfficeCorrespondence,
     // Add more entities as needed
   ],
   migrations: ['src/migrations/*.ts'],

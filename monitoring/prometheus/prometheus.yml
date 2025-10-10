@@ -1,0 +1,62 @@
+# Prometheus Configuration
+# Monitoring for WriteCareNotes High-Availability Setup
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'writecarenotes-production'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - 'alerts.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Application instances
+  - job_name: 'writecarenotes-app'
+    static_configs:
+      - targets:
+          - 'app-1:3001'
+          - 'app-2:3001'
+          - 'app-3:3001'
+    metrics_path: '/api/metrics'
+    scrape_interval: 10s
+
+  # PostgreSQL Primary
+  - job_name: 'postgres-primary'
+    static_configs:
+      - targets:
+          - 'postgres-exporter:9187'
+
+  # System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets:
+          - 'node-exporter:9100'
+
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets:
+          - 'localhost:9090'
+
+  # Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets:
+          - 'redis:6379'
+
+  # Nginx
+  - job_name: 'nginx'
+    static_configs:
+      - targets:
+          - 'nginx:80'

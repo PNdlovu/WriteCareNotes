@@ -14,6 +14,7 @@ export enum InvoiceStatus {
 
 export enum InvoiceType {
   RESIDENT_BILLING = 'resident_billing',
+  CHILD_PLACEMENT = 'child_placement', // For children's residential care
   SERVICE_CHARGE = 'service_charge',
   ADDITIONAL_SERVICE = 'additional_service',
   MEDICATION = 'medication',
@@ -112,6 +113,14 @@ export class Invoice {
 
   @Column({ type: 'uuid', nullable: true })
   residentBillingId: string;
+
+  // Child billing relationship (for children's residential care)
+  @ManyToOne('ChildBilling', 'invoices')
+  @JoinColumn({ name: 'childBillingId' })
+  childBilling: any; // Using 'any' to avoid circular dependency
+
+  @Column({ type: 'uuid', nullable: true })
+  childBillingId: string;
 
   @CreateDateColumn()
   createdAt: Date;

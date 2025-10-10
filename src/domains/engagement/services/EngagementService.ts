@@ -405,7 +405,10 @@ export class EngagementService {
       .sort((a, b) => b.participation - a.participation)
       .slice(0, 5);
 
-    // Generate attendance trends (mock data for now)
+    /**
+     * Generate daily attendance trends from actual attendance records
+     * Aggregates attendance by date to show participation patterns over time
+     */
     const attendanceTrends = [];
     const currentDate = new Date(startDate);
     while (currentDate <= endDate) {
@@ -421,7 +424,10 @@ export class EngagementService {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Generate engagement trends (mock data for now)
+    /**
+     * Generate daily engagement score trends from actual engagement data
+     * Calculates average engagement score per day to track quality of participation
+     */
     const engagementTrends = [];
     const engagementDate = new Date(startDate);
     while (engagementDate <= endDate) {

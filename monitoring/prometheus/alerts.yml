@@ -1,0 +1,136 @@
+# Prometheus Alert Rules
+# Defines when to trigger alerts for system health issues
+
+groups:
+  - name: application_alerts
+    interval: 30s
+    rules:
+      # Application instance down
+      - alert: ApplicationInstanceDown
+        expr: up{job="writecarenotes-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "Application instance {{ $labels.instance }} is down"
+          description: "Application instance {{ $labels.instance }} has been down for more than 1 minute."
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (process_heap_used_bytes / process_heap_total_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 90% on {{ $labels.instance }} (current value: {{ $value }}%)."
+
+      # High CPU load
+      - alert: HighCPULoad
+        expr: system_load_average_1m / system_cpu_count > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High CPU load on {{ $labels.instance }}"
+          description: "CPU load is above 90% on {{ $labels.instance }} (current value: {{ $value }})."
+
+  - name: database_alerts
+    interval: 30s
+    rules:
+      # Database down
+      - alert: DatabaseDown
+        expr: up{job="postgres-primary"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL primary database has been down for more than 1 minute."
+
+      # Too many database connections
+      - alert: TooManyDatabaseConnections
+        expr: pg_stat_activity_count > 180
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Too many database connections"
+          description: "Database has {{ $value }} connections (threshold: 180)."
+
+      # Replication lag
+      - alert: ReplicationLag
+        expr: pg_replication_lag > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Database replication lag detected"
+          description: "Replication lag is {{ $value }} seconds."
+
+  - name: infrastructure_alerts
+    interval: 30s
+    rules:
+      # Disk space low
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Disk space is below 15% on {{ $labels.instance }} (current: {{ $value }}%)."
+
+      # Disk space critical
+      - alert: DiskSpaceCritical
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 5
+        for: 1m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Critical disk space on {{ $labels.instance }}"
+          description: "Disk space is below 5% on {{ $labels.instance }} (current: {{ $value }}%)."
+
+      # Redis down
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: "Redis is down"
+          description: "Redis cache server is unreachable."
+
+  - name: health_alerts
+    interval: 30s
+    rules:
+      # Multiple instances down (critical - no redundancy)
+      - alert: MultipleInstancesDown
+        expr: count(up{job="writecarenotes-app"} == 1) < 2
+        for: 1m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "Multiple application instances are down"
+          description: "Only {{ $value }} instance(s) remaining. System is at risk!"
+
+      # All instances healthy (informational)
+      - alert: AllInstancesHealthy
+        expr: count(up{job="writecarenotes-app"} == 1) == 3
+        for: 5m
+        labels:
+          severity: info
+          component: application
+        annotations:
+          summary: "All application instances are healthy"
+          description: "All 3 application instances are running normally."

@@ -1,0 +1,535 @@
+# High-Availability Production Deployment Configuration
+# WriteCareNotes - 3 App Replicas + Load Balancer + DB Replication
+# Uptime Target: 99.9%
+
+version: '3.9'
+
+services:
+  # ===================================================================
+  # NGINX LOAD BALANCER (Entry Point)
+  # ===================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: writecarenotes-lb
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - app-1
+      - app-2
+      - app-3
+    networks:
+      - writecarenotes-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===================================================================
+  # APPLICATION INSTANCES (3 Replicas for High Availability)
+  # ===================================================================
+  
+  app-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: writecarenotes-app-1
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - INSTANCE_ID=app-1
+      - DATABASE_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-primary:5432/writecarenotes_production
+      - DATABASE_REPLICA_1_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-replica-1:5432/writecarenotes_production
+      - DATABASE_REPLICA_2_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-replica-2:5432/writecarenotes_production
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - APP_URL=${APP_URL}
+      - LOG_LEVEL=info
+    volumes:
+      - app-1-uploads:/app/uploads
+      - app-1-logs:/app/logs
+    networks:
+      - writecarenotes-network
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  app-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: writecarenotes-app-2
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - INSTANCE_ID=app-2
+      - DATABASE_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-primary:5432/writecarenotes_production
+      - DATABASE_REPLICA_1_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-replica-1:5432/writecarenotes_production
+      - DATABASE_REPLICA_2_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-replica-2:5432/writecarenotes_production
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - APP_URL=${APP_URL}
+      - LOG_LEVEL=info
+    volumes:
+      - app-2-uploads:/app/uploads
+      - app-2-logs:/app/logs
+    networks:
+      - writecarenotes-network
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  app-3:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: writecarenotes-app-3
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - INSTANCE_ID=app-3
+      - DATABASE_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-primary:5432/writecarenotes_production
+      - DATABASE_REPLICA_1_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-replica-1:5432/writecarenotes_production
+      - DATABASE_REPLICA_2_URL=postgresql://writecarenotes:${DB_PASSWORD}@postgres-replica-2:5432/writecarenotes_production
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - APP_URL=${APP_URL}
+      - LOG_LEVEL=info
+    volumes:
+      - app-3-uploads:/app/uploads
+      - app-3-logs:/app/logs
+    networks:
+      - writecarenotes-network
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ===================================================================
+  # DATABASE - PRIMARY (Write Operations)
+  # ===================================================================
+  
+  postgres-primary:
+    image: postgres:17-alpine
+    container_name: writecarenotes-db-primary
+    restart: always
+    environment:
+      - POSTGRES_DB=writecarenotes_production
+      - POSTGRES_USER=writecarenotes
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      # Replication settings
+      - POSTGRES_REPLICATION_USER=replicator
+      - POSTGRES_REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    volumes:
+      - postgres-primary-data:/var/lib/postgresql/data
+      - ./database/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./database/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - ./database/init-replication.sh:/docker-entrypoint-initdb.d/init-replication.sh
+      - ./backups/postgres:/backups
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    networks:
+      - writecarenotes-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U writecarenotes -d writecarenotes_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ===================================================================
+  # DATABASE - REPLICA 1 (Read Operations + Failover)
+  # ===================================================================
+  
+  postgres-replica-1:
+    image: postgres:17-alpine
+    container_name: writecarenotes-db-replica-1
+    restart: always
+    environment:
+      - POSTGRES_DB=writecarenotes_production
+      - POSTGRES_USER=writecarenotes
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PRIMARY_HOST=postgres-primary
+      - POSTGRES_REPLICATION_USER=replicator
+      - POSTGRES_REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    volumes:
+      - postgres-replica-1-data:/var/lib/postgresql/data
+      - ./database/setup-replica.sh:/docker-entrypoint-initdb.d/setup-replica.sh
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    networks:
+      - writecarenotes-network
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U writecarenotes -d writecarenotes_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # ===================================================================
+  # DATABASE - REPLICA 2 (Read Operations + Failover)
+  # ===================================================================
+  
+  postgres-replica-2:
+    image: postgres:17-alpine
+    container_name: writecarenotes-db-replica-2
+    restart: always
+    environment:
+      - POSTGRES_DB=writecarenotes_production
+      - POSTGRES_USER=writecarenotes
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PRIMARY_HOST=postgres-primary
+      - POSTGRES_REPLICATION_USER=replicator
+      - POSTGRES_REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    volumes:
+      - postgres-replica-2-data:/var/lib/postgresql/data
+      - ./database/setup-replica.sh:/docker-entrypoint-initdb.d/setup-replica.sh
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    networks:
+      - writecarenotes-network
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U writecarenotes -d writecarenotes_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # ===================================================================
+  # REDIS (Session Store + Cache)
+  # ===================================================================
+  
+  redis:
+    image: redis:7-alpine
+    container_name: writecarenotes-redis
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - writecarenotes-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===================================================================
+  # MONITORING - PROMETHEUS (Metrics Collection)
+  # ===================================================================
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: writecarenotes-prometheus
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - writecarenotes-network
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===================================================================
+  # MONITORING - GRAFANA (Visualization)
+  # ===================================================================
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: writecarenotes-grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_ROOT_URL=http://localhost:3000/grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - writecarenotes-network
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===================================================================
+  # MONITORING - NODE EXPORTER (System Metrics)
+  # ===================================================================
+  
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: writecarenotes-node-exporter
+    restart: always
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - writecarenotes-network
+    ports:
+      - "9100:9100"
+
+  # ===================================================================
+  # MONITORING - POSTGRES EXPORTER (Database Metrics)
+  # ===================================================================
+  
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: writecarenotes-postgres-exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://writecarenotes:${DB_PASSWORD}@postgres-primary:5432/writecarenotes_production?sslmode=disable
+    networks:
+      - writecarenotes-network
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres-primary
+
+  # ===================================================================
+  # ALERTING - ALERTMANAGER (Alert Routing)
+  # ===================================================================
+  
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: writecarenotes-alertmanager
+    restart: always
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    networks:
+      - writecarenotes-network
+    ports:
+      - "9093:9093"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# ===================================================================
+# NETWORKS
+# ===================================================================
+
+networks:
+  writecarenotes-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+
+# ===================================================================
+# VOLUMES (Persistent Storage)
+# ===================================================================
+
+volumes:
+  # Application volumes
+  app-1-uploads:
+    driver: local
+  app-1-logs:
+    driver: local
+  app-2-uploads:
+    driver: local
+  app-2-logs:
+    driver: local
+  app-3-uploads:
+    driver: local
+  app-3-logs:
+    driver: local
+  
+  # Database volumes
+  postgres-primary-data:
+    driver: local
+  postgres-replica-1-data:
+    driver: local
+  postgres-replica-2-data:
+    driver: local
+  
+  # Cache volumes
+  redis-data:
+    driver: local
+  
+  # Monitoring volumes
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  alertmanager-data:
+    driver: local

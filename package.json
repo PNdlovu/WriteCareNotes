@@ -22,7 +22,15 @@
     "completion:force": "ts-node scripts/completion-agent.ts --force-fix",
     "completion:report": "ts-node scripts/completion-agent.ts && start MODULE_CLOSURE_TRACKER.md",
     "enterprise:validate": "npm run compliance:check && npm run completion:scan && npm run build",
-    "enterprise:deploy": "npm run enterprise:validate && npm run build:production"
+    "enterprise:deploy": "npm run enterprise:validate && npm run build:production",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:generate": "npm run typeorm migration:generate -- -d src/config/typeorm.config.ts",
+    "migration:create": "npm run typeorm migration:create",
+    "migration:run": "npm run typeorm migration:run -- -d src/config/typeorm.config.ts",
+    "migration:revert": "npm run typeorm migration:revert -- -d src/config/typeorm.config.ts",
+    "migration:show": "npm run typeorm migration:show -- -d src/config/typeorm.config.ts",
+    "schema:sync": "npm run typeorm schema:sync -- -d src/config/typeorm.config.ts",
+    "schema:drop": "npm run typeorm schema:drop -- -d src/config/typeorm.config.ts"
   },
   "keywords": [
     "healthcare",

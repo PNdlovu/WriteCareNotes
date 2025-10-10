@@ -121,6 +121,35 @@ WriteCareConnect transforms care through measurable outcomes:
 - **Family Engagement** - Family portal and care team collaboration
 - **Family Portal** - Family communication, photo sharing, appointment scheduling
 
+### **Children's Residential Care System (NEW)**
+- **Young Person Portal (16+)** - Age-gated self-service portal with dashboard, pathway plans, life skills tracking
+- **Developmental Tracking (0-5)** - 120 milestones across 5 domains (motor, language, social-emotional, cognitive, self-care)
+- **Life Skills Assessment (16-25)** - 54 skills across 6 categories with British Isles regional resources
+- **Leaving Care Support** - Pathway planning, personal advisor assignment, finances tracking
+- **Residential Placements** - Placement management, care plan integration, statutory reviews
+- **British Isles Compliance** - ALL 8 JURISDICTIONS (England, Scotland, Wales, Northern Ireland, Ireland, Jersey, Guernsey, Isle of Man)
+- **Statutory Frameworks**:
+  - **UK**: Children (Leaving Care) Act 2000 (England & Wales), Regulation of Care (Scotland) Act 2001, Children (Leaving Care) Act (NI) 2002, Staying Put Scotland 2013, Social Services and Well-being (Wales) Act 2014
+  - **Ireland**: Child Care Act 1991, Aftercare Act 2015
+  - **Crown Dependencies**: Children (Jersey) Law 2002, Children (Guernsey) Law 2008, Children and Young Persons Act 2001 (Isle of Man)
+
+**Access Control Matrix**:
+- **Ages 0-15**: ZERO access (staff-managed only)
+- **Ages 16+**: Limited self-service portal (own data only)
+- **Staff**: Full administrative access
+
+**British Isles Regional Support (ALL 8 JURISDICTIONS)**:
+- **England**: Universal Credit, Council Tax Support, NHS England, GOV.UK
+- **Scotland**: Scottish Welfare Fund, NHS Scotland, Skills Development Scotland, Continuing Care to 26
+- **Wales**: Welsh language support, Apprenticeships Wales, NHS Wales, Communities First
+- **Northern Ireland**: Housing Executive, HSC Trusts, ApprenticeshipsNI, Discretionary Support
+- **Ireland**: HSE, Social Welfare Ireland, EPIC, Aftercare to 23
+- **Jersey**: Jersey Social Security, Jersey Health Services, Jersey Care Commission
+- **Guernsey**: Guernsey Social Security, States Health & Social Care, Guernsey Welfare Service
+- **Isle of Man**: Manx Care, IoM Social Security, Isle of Man Children's Centre
+
+📁 **[Complete Documentation](CHILDREN_APP_VERIFICATION_COMPLETE.md)** | **[API Reference](CHILDREN_APP_API_DOCUMENTATION.md)** | **[Quick Start](CHILDREN_APP_QUICK_START.md)**
+
 ### **Compliance & Security (6 Modules)**
 - **Compliance** - Regulatory compliance and audit management
 - **Security** - 4 services covering access control, encryption, threat detection
