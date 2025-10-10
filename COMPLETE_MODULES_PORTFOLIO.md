@@ -1,13 +1,29 @@
-# 🚀 WriteCareNotes Complete Microservices Portfolio
+# 🚀 WriteCareNotes Complete Modules Portfolio
 
-## 📋 **COMPREHENSIVE MICROSERVICES ARCHITECTURE**
-**53 Production-Ready Microservices | 500+ API Endpoints | Enterprise-Grade Healthcare Management**
+## 📋 **COMPREHENSIVE MODULAR MONOLITH ARCHITECTURE**
+**53 Production-Ready Feature Modules | 500+ API Endpoints | Enterprise-Grade Healthcare Management**
+
+### Architecture Overview
+
+WriteCareNotes is built as a **modular monolith** - a single, well-organized application with domain-driven design. This architecture provides the benefits of clean separation without the complexity of distributed systems.
+
+**Current Architecture:**
+- ✅ Single Express.js application
+- ✅ Shared PostgreSQL database
+- ✅ 53 feature modules organized by business capability
+- ✅ Domain-driven design with clean boundaries
+- ✅ Single deployment unit (simplified operations)
+
+**Future Migration:**
+- 📋 Phase 6: modules architecture when scale requires it
+- 📋 Triggers: 1000+ concurrent users, multi-region deployment, independent scaling needs
+- 📋 Current modular structure enables straightforward extraction
 
 ---
 
-## 🎯 **FOUNDATION SERVICES (1-10)**
+## 🎯 **FOUNDATION MODULES (1-10)**
 
-### 1. **Resident Management Service** `/api/v1/residents/*`
+### 1. **Resident Management Module** `/api/v1/residents/*`
 **Complete resident lifecycle management with AI insights**
 - Comprehensive resident profiles with medical history
 - Admission and discharge workflows
@@ -109,7 +125,7 @@
 
 ---
 
-## 🚀 **ADVANCED SERVICES (11-20)**
+## 🚀 **ADVANCED MODULES (11-20)**
 
 ### 11. **Communication & Engagement** `/api/v1/communication-engagement/*`
 **Unified communication platform with social features**
@@ -171,7 +187,7 @@
 - Audit and compliance tracking
 - Training and development
 
-### 17. **Communication Service** `/api/v1/communication-service/*`
+### 17. **Communication Module** `/api/v1/communication-service/*`
 **Advanced communication infrastructure**
 - Message routing and delivery
 - Multi-channel notifications
@@ -213,9 +229,9 @@
 
 ---
 
-## 💎 **ENTERPRISE SERVICES (21-30)**
+## 💎 **ENTERPRISE MODULES (21-30)**
 
-### 21. **Mobile Self-Service** `/api/v1/mobile-self-service/*`
+### 21. **Mobile Self-Module** `/api/v1/mobile-self-service/*`
 **PWA with offline-first and contextual AI**
 - Mobile-optimized interfaces
 - Offline data synchronization
@@ -255,7 +271,7 @@
 - Performance KPI tracking
 - Executive reporting
 
-### 25. **Integration Service** `/api/v1/integration-service/*`
+### 25. **Integration Module** `/api/v1/integration-service/*`
 **Enterprise API gateway with real-time sync**
 - Third-party system integration
 - API management and routing
@@ -265,7 +281,7 @@
 - Integration monitoring
 - Error handling and retry logic
 
-### 26. **Security Service** `/api/v1/security-service/*`
+### 26. **Security Module** `/api/v1/security-service/*`
 **Advanced security infrastructure**
 - Multi-factor authentication
 - Security monitoring and alerts
@@ -317,7 +333,7 @@
 
 ---
 
-## 🌟 **SPECIALIZED SERVICES (31-40)**
+## 🌟 **SPECIALIZED MODULES (31-40)**
 
 ### 31. **Palliative Care** `/api/v1/palliative-care/*`
 **Advanced symptom management and comfort care**
@@ -421,7 +437,7 @@
 
 ---
 
-## 🔧 **SUPPORTING SERVICES (41-53)**
+## 🔧 **SUPPORTING MODULES (41-53)**
 
 ### 41-45. **Integration & Operations**
 - **Integration Orchestration** - Service connectivity and workflow automation
@@ -470,7 +486,7 @@
 ## 📊 **TECHNICAL SPECIFICATIONS**
 
 ### **Architecture:**
-- Microservices architecture with Docker containerization
+- modules architecture with Docker containerization
 - Kubernetes orchestration for scalability
 - API-first design with RESTful endpoints
 - Real-time data processing with Redis
@@ -525,6 +541,13 @@
 
 ## 🚀 **READY FOR DEPLOYMENT**
 
-**WriteCareNotes represents the most comprehensive care home management platform available, with 53 specialized microservices covering every aspect of care home operations. Our enterprise-grade architecture ensures scalability, security, and compliance while delivering measurable improvements in care quality and operational efficiency.**
+**WriteCareNotes represents a comprehensive care management platform with 53 specialized feature modules covering every aspect of care home operations. Our modular monolith architecture ensures simplicity, reliability, and performance while maintaining clean boundaries for future microservices migration when scale requires it.**
+
+**Architecture Advantages:**
+- ✅ **Simplified Deployment** - Single application, no orchestration complexity
+- ✅ **Faster Development** - Shared code, no inter-service overhead  
+- ✅ **Data Consistency** - ACID transactions across all modules
+- ✅ **Lower Costs** - One application server vs. 53 separate services
+- ✅ **Future-Ready** - Clean module boundaries enable microservices extraction
 
 **Contact us today to see how WriteCareNotes can transform your care home operations!**

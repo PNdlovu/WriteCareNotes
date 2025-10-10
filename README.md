@@ -12,14 +12,14 @@
 **Codebase:** 90,000+ lines of enterprise-grade TypeScript  
 **Domain:** https://writecarenotes.com
 
-WriteCareNotes is a comprehensive enterprise care management platform designed to transform care delivery across residential care, children's care, and healthcare settings. With **53 production-ready microservices** delivering over **90,000 lines** of code, we provide complete digital transformation for person-centered care communities.
+WriteCareNotes is a comprehensive enterprise care management platform designed to transform care delivery across residential care, children's care, and healthcare settings. Built as a **modular monolith** with **53 feature modules** delivering over **90,000 lines** of code, we provide complete digital transformation for person-centered care communities.
 
 ---
 
 ## 📋 Table of Contents
 
 - [Platform Overview](#-platform-overview)
-- [Microservices Architecture](#-microservices-architecture-53-services)
+- [Modular Architecture](#-modular-architecture-53-feature-modules)
 - [Module Inventory](#-complete-module-inventory-53-modules)
 - [Architecture & Technology Stack](#-architecture--technology-stack)
 - [Quick Start](#-quick-start)
@@ -51,8 +51,9 @@ Transform care homes from institutional environments into person-centered commun
 
 ### Key Metrics
 - **90,000+ Lines** of enterprise-grade TypeScript
-- **53 Microservices** covering all aspects of care management
+- **53 Feature Modules** covering all aspects of care management
 - **500+ REST API Endpoints** with comprehensive documentation
+- **Single Monolithic Application** with domain-driven design
 - **24 Allowance Types** for children's financial management
 - **8 British Isles Jurisdictions** with statutory compliance
 - **99.9% Uptime** guarantee with high availability architecture
@@ -67,165 +68,178 @@ Transform care homes from institutional environments into person-centered commun
 
 ---
 
-## 🏗️ Microservices Architecture (53 Services)
+## 🏗️ Modular Architecture (53 Feature Modules)
 
-### Foundation Services (1-10)
+### Architecture Overview
 
-#### 1. **Resident Management Service** 
+WriteCareNotes is built as a **modular monolith** - a single application with well-organized, domain-driven modules. This architecture provides:
+
+✅ **Single Codebase** - Unified development and deployment  
+✅ **Shared Database** - PostgreSQL with TypeORM for data consistency  
+✅ **Domain-Driven Design** - Modules organized by business capability  
+✅ **Simplified Deployment** - Single deployment unit (no distributed complexity)  
+✅ **Fast Development** - No inter-service communication overhead  
+✅ **Future-Ready** - Clean module boundaries enable microservices migration when needed  
+
+**Note**: Microservices architecture is planned for **Phase 6** when the platform scales to support large enterprise deployments. The current modular structure makes this migration straightforward.
+
+### Foundation Modules (1-10)
+
+#### 1. **Resident Management Module** 
 **Endpoints:** `/api/v1/residents/*`  
 **LOC:** 2,500+  
 Complete resident lifecycle management with AI-powered health insights, admission workflows, family contact management, and emergency protocols.
 
-#### 2. **Bed & Room Management**
+#### 2. **Bed & Room Management Module**
 **Endpoints:** `/api/v1/bed-management/*`  
 **LOC:** 1,800+  
 Smart occupancy optimization with predictive analytics, maintenance scheduling, equipment tracking, and environmental monitoring.
 
-#### 3. **Medication Management**
+#### 3. **Medication Management Module**
 **Endpoints:** `/api/v1/medications/*`  
 **LOC:** 3,200+  
 Safety-critical electronic prescribing, medication administration records (MAR), drug interaction checking, controlled substances, and clinical decision support.
 
-#### 4. **HR & Employee Management**
+#### 4. **HR & Employee Management Module**
 **Endpoints:** `/api/v1/hr-management/*`  
 **LOC:** 2,900+  
 Complete workforce management with scheduling, training records, performance tracking, competency assessments, and compliance monitoring (DBS, Right to Work, DVLA).
 
-#### 5. **Financial Management**
+#### 5. **Financial Management Module**
 **Endpoints:** `/api/v1/financial/*`  
 **LOC:** 3,500+  
 Comprehensive financial reporting with forecasting, budget planning, invoice management, cost center analysis, and reimbursement tracking.
 
-#### 6. **Catering & Nutrition**
+#### 6. **Catering & Nutrition Module**
 **Endpoints:** `/api/v1/catering-nutrition/*`  
 **LOC:** 2,100+  
 Smart dietary management with AI-powered menu optimization, nutritional analysis, allergy tracking, and meal planning.
 
-#### 7. **Activities & Therapy**
+#### 7. **Activities & Therapy Module**
 **Endpoints:** `/api/v1/activities-therapy/*`  
 **LOC:** 2,400+  
 Therapeutic programs with outcome prediction, activity scheduling, wellness programs, and progress tracking.
 
-#### 8. **Maintenance & Facilities**
+#### 8. **Maintenance & Facilities Module**
 **Endpoints:** `/api/v1/maintenance-facilities/*`  
 **LOC:** 2,200+  
 Predictive maintenance with asset management, preventive scheduling, safety inspections, and energy monitoring.
 
-#### 9. **Transport & Logistics**
+#### 9. **Transport & Logistics Module**
 **Endpoints:** `/api/v1/transport-logistics/*`  
 **LOC:** 1,900+  
 Fleet management with GPS tracking, route optimization, driver management, and appointment transportation.
 
-#### 10. **Care Planning**
+#### 10. **Care Planning Module**
 **Endpoints:** `/api/v1/care-planning/*`  
 **LOC:** 2,800+  
 Personalized care planning with AI recommendations, goal setting, multi-disciplinary coordination, and family involvement.
 
-### Advanced Services (11-20)
+### Advanced Modules (11-20)
 
-#### 11. **Communication & Engagement**
+#### 11. **Communication & Engagement Module**
 **Endpoints:** `/api/v1/communication-engagement/*`  
 **LOC:** 2,919+  
 WebRTC video platform with Daily.co integration, real-time messaging via Socket.IO, consent management, and emergency communication systems.
 
-#### 12. **Procurement & Supply Chain**
+#### 12. **Procurement & Supply Chain Module**
 **Endpoints:** `/api/v1/procurement-supply-chain/*`  
 **LOC:** 2,300+  
 AI-driven procurement optimization, supplier management, purchase order automation, and spend analysis.
 
-#### 13. **Inventory Management**
+#### 13. **Inventory Management Module**
 **Endpoints:** `/api/v1/inventory-management/*`  
 **LOC:** 2,000+  
 RFID/IoT tracking with smart reordering, expiry date monitoring, and predictive demand forecasting.
 
-#### 14. **Security & Access Control**
+#### 14. **Security & Access Control Module**
 **Endpoints:** `/api/v1/security-access-control/*`  
 **LOC:** 2,500+  
 Biometric authentication, role-based access control (RBAC), visitor management, CCTV integration, and threat detection.
 
-#### 15. **Emergency & On-Call**
+#### 15. **Emergency & On-Call Module**
 **Endpoints:** `/api/v1/emergency-oncall/*`  
 **LOC:** 1,700+  
 AI incident detection with crisis management, emergency response protocols, and escalation procedures.
 
-#### 16. **Communication Service**
+#### 16. **Communication Service Module**
 **Endpoints:** `/api/v1/communication-service/*`  
 **LOC:** 1,800+  
 Advanced communication infrastructure with multi-channel notifications, message routing, and real-time monitoring.
 
-#### 17. **Pain Management**
+#### 17. **Pain Management Module**
 **Endpoints:** `/api/v1/pain-management/*`  
 **LOC:** 2,100+  
 3D body mapping with AI-powered pain analysis, trend tracking, and treatment effectiveness monitoring.
 
-#### 18. **Regulatory Portal**
+#### 18. **Regulatory Portal Module**
 **Endpoints:** `/api/v1/regulatory/*`  
 **LOC:** 2,400+  
 Multi-jurisdiction compliance automation, audit preparation, policy management, and regulatory updates.
 
-#### 19. **Advanced Analytics**
+#### 19. **Advanced Analytics Module**
 **Endpoints:** `/api/v1/advanced-analytics/*`  
 **LOC:** 2,170+  
 AI/ML platform with predictive health analytics, operational efficiency modeling, and performance benchmarking.
 
-#### 20. **Staff Wellness Platform**
+#### 20. **Staff Wellness Platform Module**
 **Endpoints:** `/api/v1/staff-wellness/*`  
 **LOC:** 1,476+  
 AI-powered burnout prevention, wellness monitoring, and support programs reducing staff turnover by 27%.
 
-### Enterprise Services (21-30)
+### Enterprise Modules (21-30)
 
-#### 21. **Family Trust Engine**
+#### 21. **Family Trust Engine Module**
 **Endpoints:** `/api/v1/family-trust/*`  
 **LOC:** 1,978+  
 Trust metrics tracking, satisfaction monitoring, transparency dashboards, and AI-powered sentiment analysis.
 
-#### 22. **Resident Voice Amplification**
+#### 22. **Resident Voice Amplification Module**
 **Endpoints:** `/api/v1/resident-voice/*`  
 **LOC:** 2,431+  
 Multi-modal communication, advocacy management, quality of life assessment across 10 domains, and professional rights protection.
 
-#### 23. **Mobile Self-Service**
+#### 23. **Mobile Self-Service Module**
 **Endpoints:** `/api/v1/mobile-self-service/*`  
 **LOC:** 2,200+  
 PWA with offline-first capability, biometric authentication, contextual AI assistance, and React Native mobile app.
 
-#### 24. **Incident Management**
+#### 24. **Incident Management Module**
 **Endpoints:** `/api/v1/incident-management/*`  
 **LOC:** 2,100+  
 AI root cause analysis with prevention modeling, investigation workflows, and regulatory notification.
 
-#### 25. **Document Management**
+#### 25. **Document Management Module**
 **Endpoints:** `/api/v1/document-management/*`  
 **LOC:** 2,300+  
 AI content analysis with compliance automation, version control, and retention policy management.
 
-#### 26. **Business Intelligence**
+#### 26. **Business Intelligence Module**
 **Endpoints:** `/api/v1/business-intelligence/*`  
 **LOC:** 2,500+  
 Enterprise data warehouse with ML pipeline, custom dashboards, and executive reporting.
 
-#### 27. **Integration Service**
+#### 27. **Integration Service Module**
 **Endpoints:** `/api/v1/integration-service/*`  
 **LOC:** 1,651+  
 Enterprise API gateway with real-time sync, third-party integrations, and webhook management.
 
-#### 28. **Notifications**
+#### 28. **Notifications Module**
 **Endpoints:** `/api/v1/notifications/*`  
 **LOC:** 1,900+  
 Multi-channel delivery (email, SMS, push) with AI personalization, template management, and delivery tracking.
 
-#### 29. **Mental Health**
+#### 29. **Mental Health Module**
 **Endpoints:** `/api/v1/mental-health/*`  
 **LOC:** 2,400+  
 AI crisis detection with therapeutic programs, medication management, and family involvement.
 
-#### 30. **Dementia Care**
+#### 30. **Dementia Care Module**
 **Endpoints:** `/api/v1/dementia-care/*`  
 **LOC:** 2,300+  
 Cognitive prediction with IoT wandering prevention, behavioral tracking, and sensory stimulation programs.
 
-### Specialized Services (31-53)
+### Specialized Modules (31-53)
 
 **31. Palliative Care** - Advanced symptom management and end-of-life care (2,200+ LOC)  
 **32. Rehabilitation** - Comprehensive therapy programs and progress monitoring (2,100+ LOC)  
@@ -251,7 +265,7 @@ Cognitive prediction with IoT wandering prevention, behavioral tracking, and sen
 **52. Compliance Service** - Automated compliance monitoring and reporting (2,000+ LOC)  
 **53. Audit Service** - Forensic analysis with compliance automation (1,800+ LOC)
 
-📁 **[Complete Microservices Documentation](COMPLETE_MICROSERVICES_PORTFOLIO.md)**
+📁 **[Complete Modules Documentation](COMPLETE_MODULES_PORTFOLIO.md)**
 
 ---
 
@@ -336,6 +350,55 @@ Cognitive prediction with IoT wandering prevention, behavioral tracking, and sen
 ---
 
 ## 🏗️ Architecture & Technology Stack
+
+### Application Architecture
+
+WriteCareNotes uses a **modular monolith architecture** - a single, well-organized application with clean module boundaries:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Single Express.js Application             │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              53 Feature Modules                        │  │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐  │  │
+│  │  │ Children │ │   HR     │ │ Finance  │ │  Care   │  │  │
+│  │  │   Care   │ │  Module  │ │  Module  │ │Planning │  │  │
+│  │  └──────────┘ └──────────┘ └──────────┘ └─────────┘  │  │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐  │  │
+│  │  │Medication│ │Inventory │ │  Audit   │ │   ...   │  │  │
+│  │  └──────────┘ └──────────┘ └──────────┘ └─────────┘  │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │          Shared TypeORM Database Layer                 │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Single PostgreSQL Database                      │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │   All modules share one database with proper        │     │
+│  │   table relationships and foreign keys              │     │
+│  └────────────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Why Modular Monolith?
+
+**Current Benefits:**
+- ✅ **Simpler Deployment** - Single deployment unit, no orchestration complexity
+- ✅ **Faster Development** - No inter-service communication, shared code reuse
+- ✅ **Data Consistency** - ACID transactions across all modules
+- ✅ **Easier Testing** - Single test suite, no distributed system testing
+- ✅ **Lower Infrastructure Costs** - One application server vs. 53+ microservices
+- ✅ **Better Performance** - In-process calls vs. network calls
+
+**Future Migration Path:**
+- 📋 **Phase 6 Roadmap** - Microservices migration when scaling requires it
+- 📋 **Clean Module Boundaries** - Current structure makes extraction straightforward
+- 📋 **Domain-Driven Design** - Modules already organized by business capability
+- 📋 **Planned Triggers** - Migrate when: 1000+ concurrent users, multi-region deployment needed, independent scaling required
 
 ### Backend Stack
 - **Framework**: Express.js 4.18.2 with TypeScript 5.9.3
@@ -1269,7 +1332,12 @@ We aim to respond within 48 hours.
 - 📋 Third-Party System Connectors
 - 📋 ML-Powered Risk Detection
 
-### 📋 Phase 6: Expansion (FUTURE)
+### 📋 Phase 6: Expansion & Microservices Migration (FUTURE)
+- 📋 **Microservices Architecture** - Migrate to microservices when scale requires it
+  - Triggers: 1000+ concurrent users, multi-region deployment, independent module scaling
+  - Extract high-traffic modules (Medication, Care Planning, Children's Care)
+  - Service mesh implementation (Istio/Linkerd)
+  - Event-driven architecture with message queues
 - 📋 International Localization
 - 📋 Multi-Language Support
 - 📋 Regional Compliance Extensions
@@ -1282,10 +1350,12 @@ We aim to respond within 48 hours.
 
 ### ✨ Enterprise-Grade Architecture
 - **90,000+ Lines** of production-ready TypeScript
-- **53 Microservices** with comprehensive API coverage
+- **53 Feature Modules** with comprehensive API coverage
 - **500+ REST Endpoints** with OpenAPI documentation
+- **Modular Monolith** with domain-driven design
 - **Zero Trust Security** with multi-layer protection
-- **High Availability** with master-slave replication
+- **High Availability** with master-slave database replication
+- **Single Deployment** - simplified operations and maintenance
 
 ### 💡 AI-Powered Intelligence
 - **Predictive Analytics** for health outcomes

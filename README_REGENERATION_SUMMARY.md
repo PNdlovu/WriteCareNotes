@@ -2,8 +2,25 @@
 
 **Date**: October 10, 2025  
 **Repository**: WriteCareNotes (https://github.com/PNdlovu/WriteCareNotes.git)  
-**Commit**: 0b974db  
-**Status**: ✅ COMPLETE
+**Commits**: 0b974db (initial), 59babe1 (summary), [latest] (architecture correction)  
+**Status**: ✅ COMPLETE + ARCHITECTURE CORRECTED
+
+---
+
+## ⚠️ IMPORTANT CORRECTION (October 10, 2025)
+
+**Architecture Terminology Update**: The initial documentation incorrectly referred to WriteCareNotes as having a "microservices architecture". This has been corrected to accurately reflect the **modular monolith architecture**.
+
+### What Changed:
+- ❌ **Incorrect**: "53 microservices"  
+- ✅ **Correct**: "53 feature modules in a modular monolith"
+
+### Why This Matters:
+- **Current Architecture**: Single Express.js application with well-organized modules
+- **Deployment**: Single deployment unit (not 53 separate services)
+- **Database**: Shared PostgreSQL database (not per-service databases)
+- **Benefits**: Simplified operations, faster development, lower infrastructure costs
+- **Future**: Microservices migration planned for Phase 6 when scale requires it
 
 ---
 
@@ -404,7 +421,7 @@ Complete resource mapping for all 8 jurisdictions:
 ### Before
 - **Lines in README**: ~355 lines
 - **Word Count**: ~3,500 words
-- **Microservices Listed**: 11
+- **Architecture**: 11 microservices listed (INCORRECT TERMINOLOGY)
 - **Total LOC Claimed**: 15,000+
 - **Sections**: 18 basic sections
 - **Domain**: Incorrect references
@@ -414,10 +431,10 @@ Complete resource mapping for all 8 jurisdictions:
 - **Security**: Limited overview
 - **Deployment**: Basic instructions
 
-### After
-- **Lines in README**: ~1,552 lines (337% increase)
-- **Word Count**: ~15,000 words (328% increase)
-- **Microservices Listed**: 53 complete
+### After (Corrected)
+- **Lines in README**: ~1,600 lines (350% increase)
+- **Word Count**: ~16,000 words (357% increase)
+- **Architecture**: 53 feature modules in modular monolith (CORRECT)
 - **Total LOC Verified**: 90,000+
 - **Sections**: 18 comprehensive sections
 - **Domain**: Correct (writecarenotes.com)
@@ -426,6 +443,7 @@ Complete resource mapping for all 8 jurisdictions:
 - **Testing**: Complete testing strategy, tools, and scripts
 - **Security**: Comprehensive security architecture, GDPR compliance, standards
 - **Deployment**: Production-ready deployment guide with Docker, HA, blue-green
+- **Architecture Clarity**: Clear explanation of modular monolith with future microservices migration path
 
 ---
 
