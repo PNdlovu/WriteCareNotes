@@ -159,7 +159,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       // Determine applicable jurisdictions based on organization locations
       const applicableJurisdictions = this.determineApplicableJurisdictions(organization);
       
-      const assessment: MultiJurisdictionalAssessment = {
+      constassessment: MultiJurisdictionalAssessment = {
         organizationId,
         assessmentDate: new Date(),
         jurisdictions: {},
@@ -188,7 +188,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       console.log(`Comprehensive compliance assessment completed for organization ${organizationId}`);
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get comprehensive compliance status: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get comprehensive compliance status: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -224,7 +224,7 @@ export class BritishIslesRegulatoryOrchestrationService {
           throw new Error(`Unsupported jurisdiction: ${jurisdiction}`);
       }
     } catch (error: unknown) {
-      console.error(`Failed to get ${jurisdiction} compliance: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get ${jurisdiction} compliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -233,7 +233,7 @@ export class BritishIslesRegulatoryOrchestrationService {
    * Determine applicable jurisdictions based on organization locations
    */
   private determineApplicableJurisdictions(organization: Organization): BritishIslesJurisdiction[] {
-    const jurisdictions: BritishIslesJurisdiction[] = [];
+    constjurisdictions: BritishIslesJurisdiction[] = [];
     
     // Check each location and determine jurisdiction
     for (const location of organization.locations || []) {
@@ -267,7 +267,7 @@ export class BritishIslesRegulatoryOrchestrationService {
   async getAllRegulatoryUpdates(jurisdictions?: BritishIslesJurisdiction[]): Promise<RegulatoryUpdate[]> {
     try {
       const applicableJurisdictions = jurisdictions || Object.values(BritishIslesJurisdiction);
-      const allUpdates: RegulatoryUpdate[] = [];
+      constallUpdates: RegulatoryUpdate[] = [];
 
       for (const jurisdiction of applicableJurisdictions) {
         const updates = await this.getJurisdictionRegulatoryUpdates(jurisdiction);
@@ -277,7 +277,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       // Sort by effective date (most recent first)
       return allUpdates.sort((a, b) => b.effectiveDate.getTime() - a.effectiveDate.getTime());
     } catch (error: unknown) {
-      console.error(`Failed to get regulatory updates: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get regulatory updates: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -314,7 +314,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       console.log(`Harmonized compliance report generated for organization ${organizationId}`);
       return report;
     } catch (error: unknown) {
-      console.error(`Failed to generate harmonized report: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to generate harmonized report: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -328,7 +328,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       console.log('Starting daily regulatory monitoring across British Isles');
 
       const jurisdictions = Object.values(BritishIslesJurisdiction);
-      const newUpdates: RegulatoryUpdate[] = [];
+      constnewUpdates: RegulatoryUpdate[] = [];
 
       for (const jurisdiction of jurisdictions) {
         const updates = await this.checkForRegulatoryUpdates(jurisdiction);
@@ -345,7 +345,7 @@ export class BritishIslesRegulatoryOrchestrationService {
         console.log(`Found ${newUpdates.length} new regulatory updates across British Isles`);
       }
     } catch (error: unknown) {
-      console.error(`Failed to monitor regulatory changes: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to monitor regulatory changes: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -497,7 +497,7 @@ export class BritishIslesRegulatoryOrchestrationService {
         efficiencyGains: this.identifyEfficiencyGains(assessment.jurisdictions),
       };
     } catch (error: unknown) {
-      console.error(`Failed to perform cross-jurisdictional analysis: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to perform cross-jurisdictional analysis: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -533,7 +533,7 @@ export class BritishIslesRegulatoryOrchestrationService {
 
       return actionPlan;
     } catch (error: unknown) {
-      console.error(`Failed to generate unified action plan: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to generate unified action plan: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -562,7 +562,7 @@ export class BritishIslesRegulatoryOrchestrationService {
 
       console.log('Real-time compliance monitoring completed');
     } catch (error: unknown) {
-      console.error(`Failed to perform real-time monitoring: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to perform real-time monitoring: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 

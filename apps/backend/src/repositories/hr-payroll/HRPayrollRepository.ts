@@ -203,7 +203,7 @@ export class HRPayrollRepository {
 
   async searchEmployees(filters: EmployeeSearchFilters): Promise<{ employees: Employee[], total: number }> {
     let whereConditions = ['e.deleted_at IS NULL'];
-    let queryParams: any[] = [];
+    letqueryParams: any[] = [];
     let paramIndex = 1;
 
     // Build WHERE conditions

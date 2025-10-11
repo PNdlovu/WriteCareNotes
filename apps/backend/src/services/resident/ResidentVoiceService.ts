@@ -303,13 +303,13 @@ interface Evidence {
 }
 
 export class ResidentVoiceService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private audit: AuditService;
-  private notifications: NotificationService;
-  private ai: AIService;
-  private advocacyService: AdvocacyManagementService;
-  private qualityService: QualityOfLifeAssessmentService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateaudit: AuditService;
+  privatenotifications: NotificationService;
+  privateai: AIService;
+  privateadvocacyService: AdvocacyManagementService;
+  privatequalityService: QualityOfLifeAssessmentService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -361,8 +361,8 @@ export class ResidentVoiceService {
           WHERE resident_id = $1 AND tenant_id = $2
         `, [residentId, tenantId]);
 
-        let profileId: string;
-        let operation: string;
+        letprofileId: string;
+        letoperation: string;
 
         if (existingProfile.rows.length > 0) {
           // Update existing profile
@@ -599,7 +599,7 @@ export class ResidentVoiceService {
           submittedBy: userId
         });
 
-        const response: ResidentFeedback = {
+        constresponse: ResidentFeedback = {
           id: feedback.id,
           residentId: feedback.resident_id,
           tenantId: feedback.tenant_id,
@@ -690,7 +690,7 @@ export class ResidentVoiceService {
     const result = await this.db.query(summaryQuery, [profileId, tenantId]);
     
     // Process results into summary format
-    const feedbackByType: Record<string, number> = {};
+    constfeedbackByType: Record<string, number> = {};
     let totalFeedback = 0;
     let avgResponseTime = 0;
     let resolutionRate = 0;
@@ -706,7 +706,7 @@ export class ResidentVoiceService {
       if (row.avg_satisfaction) satisfactionScore = parseFloat(row.avg_satisfaction);
     });
 
-    const feedbackHistory: FeedbackSummary = {
+    constfeedbackHistory: FeedbackSummary = {
       totalFeedback,
       feedbackByType: feedbackByType as Record<FeedbackType, number>,
       averageResponseTime: Math.round(avgResponseTime * 10) / 10,
@@ -729,7 +729,7 @@ export class ResidentVoiceService {
   ): Promise<void> {
     // Check for concerning quality of life scores (below 6/10)
     const concernThreshold = 6;
-    const concernAreas: string[] = [];
+    constconcernAreas: string[] = [];
 
     if (qualityMetrics.overallSatisfaction < concernThreshold) concernAreas.push('overall satisfaction');
     if (qualityMetrics.autonomyLevel < concernThreshold) concernAreas.push('autonomy');

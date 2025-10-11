@@ -99,15 +99,15 @@ export interface DomiciliaryMetrics {
 }
 
 export class DomiciliaryService {
-  private serviceUserRepository: Repository<ServiceUser>;
-  private careVisitRepository: Repository<CareVisit>;
-  private employeeRepository: Repository<Employee>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateserviceUserRepository: Repository<ServiceUser>;
+  privatecareVisitRepository: Repository<CareVisit>;
+  privateemployeeRepository: Repository<Employee>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   // In-memory tracking for real-time features
-  private careWorkerLocations: Map<string, CareWorkerLocation> = new Map();
-  private activeEmergencies: Map<string, EmergencyAlert> = new Map();
+  privatecareWorkerLocations: Map<string, CareWorkerLocation> = new Map();
+  privateactiveEmergencies: Map<string, EmergencyAlert> = new Map();
 
   constructor() {
     this.serviceUserRepository = AppDataSource.getRepository(ServiceUser);
@@ -354,7 +354,7 @@ export class DomiciliaryService {
       throw new Error('No visits scheduled for this date');
     }
 
-    const routeData: RouteOptimization = {
+    constrouteData: RouteOptimization = {
       careWorkerId,
       date,
       visits: visits.map(visit => ({
@@ -400,7 +400,7 @@ export class DomiciliaryService {
 
   // Emergency Management
   async raiseEmergencyAlert(alertData: Omit<EmergencyAlert, 'id' | 'timestamp' | 'status'>): Promise<EmergencyAlert> {
-    const alert: EmergencyAlert = {
+    constalert: EmergencyAlert = {
       ...alertData,
       id: `emergency_${Date.now()}`,
       timestamp: new Date(),

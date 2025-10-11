@@ -73,9 +73,9 @@ interface NHSResponse<T> {
  */
 export class NHSPatientService {
   private static instance: NHSPatientService;
-  private apiClient: AxiosInstance;
-  private prometheusService: PrometheusService;
-  private sentryService: SentryService;
+  privateapiClient: AxiosInstance;
+  privateprometheusService: PrometheusService;
+  privatesentryService: SentryService;
 
   private constructor() {
     this.prometheusService = PrometheusService.getInstance();
@@ -351,7 +351,7 @@ export class NHSPatientService {
         throw new Error('Invalid NHS number format');
       }
 
-      const params: any = {};
+      constparams: any = {};
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
 

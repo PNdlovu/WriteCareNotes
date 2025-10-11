@@ -169,7 +169,7 @@ async function performSecurityValidation(file: Express.Multer.File): Promise<{
   safe: boolean;
   issues: string[];
 }> {
-  const issues: string[] = [];
+  constissues: string[] = [];
 
   // Check for executable file extensions
   const dangerousExtensions = ['.exe', '.bat', '.cmd', '.scr', '.vbs', '.js', '.jar'];

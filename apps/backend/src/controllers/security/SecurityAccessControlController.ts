@@ -17,7 +17,7 @@ import { SecurityAccessControlService } from '../../services/security/SecurityAc
 import { BiometricType } from '../../entities/security/AccessControlUser';
 
 export class SecurityAccessControlController {
-  private securityService: SecurityAccessControlService;
+  privatesecurityService: SecurityAccessControlService;
 
   constructor() {
     this.securityService = new SecurityAccessControlService();
@@ -31,7 +31,7 @@ export class SecurityAccessControlController {
       );
       res.json({ success: true, data: result });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -41,7 +41,7 @@ export class SecurityAccessControlController {
       await this.securityService.grantAdvancedAccess(userId, accessLevel, permissions, biometricRequired);
       res.json({ success: true, message: 'Access granted successfully' });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -50,7 +50,7 @@ export class SecurityAccessControlController {
       const threats = await this.securityService.performAdvancedThreatDetection();
       res.json({ success: true, data: threats });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -59,7 +59,7 @@ export class SecurityAccessControlController {
       const metrics = await this.securityService.getComprehensiveSecurityMetrics();
       res.json({ success: true, data: metrics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -68,7 +68,7 @@ export class SecurityAccessControlController {
       const assessment = await this.securityService.performCybersecurityAssessment();
       res.json({ success: true, data: assessment });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -77,7 +77,7 @@ export class SecurityAccessControlController {
       const surveillance = await this.securityService.integrateAdvancedSurveillance();
       res.json({ success: true, data: surveillance });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

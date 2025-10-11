@@ -58,8 +58,8 @@ export interface OrganizationFilters {
 }
 
 export class OrganizationService {
-  private organizationRepository: Repository<Organization>;
-  private tenantRepository: Repository<Tenant>;
+  privateorganizationRepository: Repository<Organization>;
+  privatetenantRepository: Repository<Tenant>;
 
   constructor(dataSource: DataSource) {
     this.organizationRepository = dataSource.getRepository(Organization);
@@ -113,7 +113,7 @@ export class OrganizationService {
    * Find organization by ID
    */
   async findById(id: string, tenantId?: string): Promise<Organization | null> {
-    const where: any = { id };
+    constwhere: any = { id };
     
     if (tenantId) {
       where.tenantId = tenantId;
@@ -357,7 +357,7 @@ export class OrganizationService {
       },
     };
 
-    const typeSpecificSettings: Record<OrganizationType, Record<string, any>> = {
+    consttypeSpecificSettings: Record<OrganizationType, Record<string, any>> = {
       [OrganizationType.CARE_HOME]: {
         ...baseSettings,
         maxResidents: 50,
@@ -404,7 +404,7 @@ export class OrganizationService {
       areas: [],
     };
 
-    const typeSpecificStatus: Record<OrganizationType, Record<string, any>> = {
+    consttypeSpecificStatus: Record<OrganizationType, Record<string, any>> = {
       [OrganizationType.CARE_HOME]: {
         ...baseStatus,
         regulator: 'CQC',

@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { PainManagementService } from '../../services/pain/PainManagementService';
 
 export class PainManagementController {
-  private painService: PainManagementService;
+  privatepainService: PainManagementService;
 
   constructor() {
     this.painService = new PainManagementService();
@@ -27,7 +27,7 @@ export class PainManagementController {
       const assessment = await this.painService.createAdvancedPainAssessment(req.body);
       res.status(201).json({ success: true, data: assessment });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -37,7 +37,7 @@ export class PainManagementController {
       const visualization = await this.painService.generate3DPainVisualization(assessmentId);
       res.json({ success: true, data: visualization });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -47,7 +47,7 @@ export class PainManagementController {
       const analytics = await this.painService.getPainAnalytics(residentId as string);
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

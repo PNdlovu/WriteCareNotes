@@ -15,7 +15,7 @@ import { LedgerAccountService, LedgerAccountRequest, LedgerAccountUpdate, Ledger
 import { logger } from '../../utils/logger';
 
 export class LedgerAccountController {
-  private ledgerAccountService: LedgerAccountService;
+  privateledgerAccountService: LedgerAccountService;
 
   constructor() {
     this.ledgerAccountService = new LedgerAccountService();
@@ -26,7 +26,7 @@ export class LedgerAccountController {
    */
   async createLedgerAccount(req: Request, res: Response): Promise<void> {
     try {
-      const request: LedgerAccountRequest = req.body;
+      constrequest: LedgerAccountRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const account = await this.ledgerAccountService.createLedgerAccount(request, createdBy);
@@ -122,7 +122,7 @@ export class LedgerAccountController {
    */
   async searchLedgerAccounts(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: LedgerAccountSearchCriteria = req.query;
+      constcriteria: LedgerAccountSearchCriteria = req.query;
 
       const accounts = await this.ledgerAccountService.searchLedgerAccounts(criteria);
 
@@ -150,7 +150,7 @@ export class LedgerAccountController {
   async updateLedgerAccount(req: Request, res: Response): Promise<void> {
     try {
       const { accountId } = req.params;
-      const updates: LedgerAccountUpdate = req.body;
+      constupdates: LedgerAccountUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const account = await this.ledgerAccountService.updateLedgerAccount(

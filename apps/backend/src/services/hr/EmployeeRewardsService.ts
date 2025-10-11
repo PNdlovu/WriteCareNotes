@@ -149,9 +149,9 @@ export interface RecognitionProgram {
 
 export class EmployeeRewardsService {
   // Logger removed
-  private employeeRepository: Repository<Employee>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateemployeeRepository: Repository<Employee>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);
@@ -180,7 +180,7 @@ export class EmployeeRewardsService {
       const applicableCriteria = await this.getApplicableRewardCriteria(employee, metrics);
       
       // Generate rewards based on performance
-      const rewards: EmployeeReward[] = [];
+      constrewards: EmployeeReward[] = [];
       
       for (const criteria of applicableCriteria) {
         if (this.meetsRewardCriteria(metrics, criteria)) {
@@ -207,7 +207,7 @@ export class EmployeeRewardsService {
 
     } catch (error: unknown) {
       console.error('Failed to calculate performance rewards', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         employeeId
       });
       throw error;
@@ -236,7 +236,7 @@ export class EmployeeRewardsService {
       await this.validateNomination(nomination);
       
       // Create peer nomination reward
-      const reward: EmployeeReward = {
+      constreward: EmployeeReward = {
         rewardId: `peer-${Date.now()}`,
         employeeId: nomination.nomineeId,
         rewardType: RewardType.PEER_NOMINATION,
@@ -272,7 +272,7 @@ export class EmployeeRewardsService {
 
     } catch (error: unknown) {
       console.error('Failed to process peer nomination', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         nomination
       });
       throw error;
@@ -328,7 +328,7 @@ export class EmployeeRewardsService {
 
     } catch (error: unknown) {
       console.error('Failed to generate rewards report', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         month
       });
@@ -345,7 +345,7 @@ export class EmployeeRewardsService {
         where: { employmentInformation: { employmentStatus: 'ACTIVE' } as any }
       });
 
-      const milestoneRewards: EmployeeReward[] = [];
+      constmilestoneRewards: EmployeeReward[] = [];
 
       for (const employee of employees) {
         // Check for service anniversaries
@@ -374,7 +374,7 @@ export class EmployeeRewardsService {
 
     } catch (error: unknown) {
       console.error('Failed to process milestone achievements', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }
@@ -417,7 +417,7 @@ export class EmployeeRewardsService {
 
   private async getApplicableRewardCriteria(employee: Employee, metrics: PerformanceMetrics): Promise<RewardCriteria[]> {
     // Return reward criteria that the employee is eligible for
-    const criteria: RewardCriteria[] = [
+    constcriteria: RewardCriteria[] = [
       {
         criteriaId: 'performance-excellence',
         criteriaName: 'Performance Excellence',
@@ -605,7 +605,7 @@ export class EmployeeRewardsService {
   }
 
   private async groupRewardsByDepartment(rewards: EmployeeReward[]): Promise<{ [key: string]: number }> {
-    const departmentGroups: { [key: string]: number } = {};
+    constdepartmentGroups: { [key: string]: number } = {};
     
     for (const reward of rewards) {
       const employee = await this.employeeRepository.findOne({ where: { id: reward.employeeId } });
@@ -650,7 +650,7 @@ export class EmployeeRewardsService {
   }
 
   private async generateRewardsRecommendations(organizationId: string, rewards: EmployeeReward[], roi: any): Promise<string[]> {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (roi.percentage < 200) {
       recommendations.push('Consider increasing reward values to improve ROI');
@@ -698,7 +698,7 @@ export class EmployeeRewardsService {
   }
 
   private async checkTrainingMilestones(employee: Employee): Promise<EmployeeReward[]> {
-    const rewards: EmployeeReward[] = [];
+    constrewards: EmployeeReward[] = [];
     
     // Check for recent training completions
     const recentCompletions = employee.trainingRecords.filter(tr => 
@@ -730,7 +730,7 @@ export class EmployeeRewardsService {
   }
 
   private async checkPerformanceMilestones(employee: Employee): Promise<EmployeeReward[]> {
-    const rewards: EmployeeReward[] = [];
+    constrewards: EmployeeReward[] = [];
     
     const avgRating = employee.getAveragePerformanceRating();
     if (avgRating >= 4.5) {

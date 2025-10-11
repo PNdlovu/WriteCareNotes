@@ -81,7 +81,7 @@ export class IncidentManagementController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      const filters: any = {};
+      constfilters: any = {};
       if (req.query.incidentType) filters.incidentType = req.query.incidentType;
       if (req.query.severity) filters.severity = req.query.severity;
       if (req.query.status) filters.status = req.query.status;

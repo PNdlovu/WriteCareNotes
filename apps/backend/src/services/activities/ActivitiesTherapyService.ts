@@ -692,7 +692,7 @@ export class ActivitiesTherapyService {
   // Activity Planning
   async planActivitiesForWeek(startDate: Date): Promise<ActivityPlanningResult[]> {
     try {
-      const weekResults: ActivityPlanningResult[] = [];
+      constweekResults: ActivityPlanningResult[] = [];
       
       for (let i = 0; i < 7; i++) {
         const date = new Date(startDate);
@@ -1106,7 +1106,7 @@ export class ActivitiesTherapyService {
 
   private calculateTherapeuticProgress(residentId: string, activities: Activity[]): { [goal: string]: number } {
     const therapeuticActivities = activities.filter(activity => activity.isTherapeutic());
-    const progress: { [goal: string]: number } = {};
+    constprogress: { [goal: string]: number } = {};
 
     for (const activity of therapeuticActivities) {
       for (const goal of activity.therapeuticGoals.primary) {
@@ -1169,7 +1169,7 @@ export class ActivitiesTherapyService {
 
   private checkResourceConflicts(activities: Activity[]): string[] {
     const conflicts = [];
-    const resourceUsage: { [resource: string]: Activity[] } = {};
+    constresourceUsage: { [resource: string]: Activity[] } = {};
 
     // Group activities by resource usage
     for (const activity of activities) {
@@ -1200,7 +1200,7 @@ export class ActivitiesTherapyService {
   }
 
   private calculateStaffingRequirements(activities: Activity[]): { [timeSlot: string]: number } {
-    const requirements: { [timeSlot: string]: number } = {};
+    constrequirements: { [timeSlot: string]: number } = {};
     
     for (const activity of activities) {
       const timeSlot = `${activity.scheduledStartTime.getHours()}:00`;

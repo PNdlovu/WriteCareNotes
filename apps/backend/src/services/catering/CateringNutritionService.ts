@@ -59,10 +59,10 @@ export interface FoodSafetyAlert {
 }
 
 export class CateringNutritionService {
-  private menuRepository: Repository<Menu>;
-  private dietaryProfileRepository: Repository<ResidentDietaryProfile>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatemenuRepository: Repository<Menu>;
+  privatedietaryProfileRepository: Repository<ResidentDietaryProfile>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.menuRepository = AppDataSource.getRepository(Menu);
@@ -236,15 +236,15 @@ export class CateringNutritionService {
       throw new Error('No active standard menu found');
     }
 
-    const results: MealPlanningResult[] = [];
+    constresults: MealPlanningResult[] = [];
     const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER];
 
     for (const mealType of mealTypes) {
       const mealItems = standardMenu.getMenuItemsForMeal(mealType);
       
       // Calculate portions by dietary requirements
-      const specialDietPortions: { [dietType: string]: number } = {};
-      const textureModifications: { [modification: string]: number } = {};
+      constspecialDietPortions: { [dietType: string]: number } = {};
+      consttextureModifications: { [modification: string]: number } = {};
       
       let totalPortions = 0;
       let estimatedCost = 0;
@@ -451,7 +451,7 @@ export class CateringNutritionService {
 
   // Food Safety Management
   async reportFoodSafetyIssue(issueData: Partial<FoodSafetyAlert>): Promise<void> {
-    const alert: FoodSafetyAlert = {
+    constalert: FoodSafetyAlert = {
       alertType: issueData.alertType!,
       description: issueData.description!,
       severity: issueData.severity!,
@@ -581,7 +581,7 @@ export class CateringNutritionService {
     const mealPlans = await this.planMealsForDate(date);
     
     // Aggregate ingredients needed
-    const ingredientRequirements: { [ingredient: string]: number } = {};
+    constingredientRequirements: { [ingredient: string]: number } = {};
     
     for (const mealPlan of mealPlans) {
       const menu = await this.getMenuById(mealPlan.menuId);
@@ -636,7 +636,7 @@ export class CateringNutritionService {
     const bmi = latestWeight.weight / (height * height);
 
     // Determine weight status
-    let weightStatus: 'underweight' | 'normal' | 'overweight' | 'obese';
+    letweightStatus: 'underweight' | 'normal' | 'overweight' | 'obese';
     if (bmi < 18.5) weightStatus = 'underweight';
     else if (bmi < 25) weightStatus = 'normal';
     else if (bmi < 30) weightStatus = 'overweight';

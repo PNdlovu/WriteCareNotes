@@ -77,7 +77,7 @@ export const useVoiceProcessing = (options: UseVoiceProcessingOptions) => {
       // Use actual Web Speech API for voice recognition
       console.log('Starting voice recognition...');
       
-      const session: VoiceSession = {
+      constsession: VoiceSession = {
         id: Date.now().toString(),
         startTime: new Date(),
         transcript: '',
@@ -113,7 +113,7 @@ export const useVoiceProcessing = (options: UseVoiceProcessingOptions) => {
       // Process actual voice recognition result
       const processedResult = await voiceService.processVoiceInput(voiceSession?.transcript || '');
       
-      const result: VoiceResult = {
+      constresult: VoiceResult = {
         text: processedResult.text,
         confidence: processedResult.confidence,
         timestamp: new Date(),

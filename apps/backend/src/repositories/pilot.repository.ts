@@ -62,7 +62,7 @@ interface DateFilter {
 }
 
 export class PilotRepository {
-  private auditLogger: AuditLogger;
+  privateauditLogger: AuditLogger;
 
   constructor() {
     this.auditLogger = new AuditLogger();
@@ -156,7 +156,7 @@ export class PilotRepository {
   async getAllPilots(filters: { status?: string; region?: string }): Promise<PilotData[]> {
     try {
       const repository = getRepository('pilots');
-      const whereConditions: any = {};
+      constwhereConditions: any = {};
 
       if (filters.status) {
         whereConditions.status = filters.status;
@@ -199,7 +199,7 @@ export class PilotRepository {
       }
 
       // Prepare update data with database field names
-      const dbUpdateData: any = {
+      constdbUpdateData: any = {
         updated_at: new Date()
       };
 
@@ -406,7 +406,7 @@ export class PilotRepository {
    */
   async getPilotMetrics(tenantId: string, startDate?: string, endDate?: string): Promise<any> {
     let query = 'SELECT * FROM pilot_metrics WHERE tenant_id = ?';
-    const values: any[] = [tenantId];
+    constvalues: any[] = [tenantId];
 
     if (startDate) {
       query += ' AND created_at >= ?';
@@ -632,7 +632,7 @@ export class PilotRepository {
 
       if (metrics) {
         // Update feedback count and severity-specific counters
-        const updateData: any = {
+        constupdateData: any = {
           total_feedback: metrics.total_feedback + 1,
           updated_at: new Date()
         };
@@ -722,7 +722,7 @@ export class PilotRepository {
    */
   private buildDateFilter(startDate?: string, endDate?: string): DateFilter {
     let clause = '';
-    const params: any[] = [];
+    constparams: any[] = [];
 
     if (startDate) {
       clause += ' AND created_at >= ?';

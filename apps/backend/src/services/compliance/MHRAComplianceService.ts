@@ -262,7 +262,7 @@ export class MHRAComplianceService {
       // Create post-market surveillance plan
       const postMarketSurveillance = await this.createPostMarketSurveillancePlan(deviceDetails);
 
-      const registration: MHRADeviceRegistration = {
+      constregistration: MHRADeviceRegistration = {
         id: this.generateRegistrationId(),
         deviceName: deviceDetails.deviceName || 'WriteCareNotes Healthcare Management System',
         deviceClass,
@@ -295,8 +295,8 @@ export class MHRAComplianceService {
       return savedRegistration;
 
     } catch (error: unknown) {
-      console.error(`Failed to register medical device: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
-      throw new Error(`Medical device registration failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to register medical device: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Medical device registration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -340,7 +340,7 @@ export class MHRAComplianceService {
       // Generate recommendations
       const recommendations = await this.generateMHRARecommendations(complianceResults);
 
-      const assessment: MHRAComplianceAssessment = {
+      constassessment: MHRAComplianceAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         deviceRegistrations,
@@ -368,7 +368,7 @@ export class MHRAComplianceService {
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`MHRA assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`MHRA assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -517,7 +517,7 @@ export class MHRAComplianceService {
    */
   private async conductRiskAnalysis(deviceDetails: Partial<MHRADeviceRegistration>): Promise<MHRARiskAnalysis> {
     // Identify hazards
-    const hazards: MHRAHazard[] = [
+    consthazards: MHRAHazard[] = [
       {
         id: 'HAZ-001',
         hazardType: 'Software Error',
@@ -545,7 +545,7 @@ export class MHRAComplianceService {
     ];
 
     // Estimate risks
-    const riskEstimations: MHRARiskEstimation[] = hazards.map(hazard => ({
+    constriskEstimations: MHRARiskEstimation[] = hazards.map(hazard => ({
       hazardId: hazard.id,
       severity: this.estimateHazardSeverity(hazard),
       probability: this.estimateHazardProbability(hazard),
@@ -554,7 +554,7 @@ export class MHRAComplianceService {
     }));
 
     // Define risk controls
-    const riskControls: MHRARiskControl[] = hazards.map(hazard => ({
+    constriskControls: MHRARiskControl[] = hazards.map(hazard => ({
       hazardId: hazard.id,
       controlMeasures: this.defineControlMeasures(hazard),
       controlType: 'protective_measures',
@@ -564,7 +564,7 @@ export class MHRAComplianceService {
     }));
 
     // Calculate residual risks
-    const residualRisks: MHRAResidualRisk[] = hazards.map(hazard => ({
+    constresidualRisks: MHRAResidualRisk[] = hazards.map(hazard => ({
       hazardId: hazard.id,
       residualSeverity: 'Minor',
       residualProbability: 'Remote',
@@ -756,7 +756,7 @@ export class MHRAComplianceService {
       return ukca_documentation;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate UKCA marking documentation: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to generate UKCA marking documentation: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -790,7 +790,7 @@ export class MHRAComplianceService {
       return complianceStatus;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor MHRA compliance: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to monitor MHRA compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }

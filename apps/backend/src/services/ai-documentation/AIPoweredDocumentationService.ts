@@ -196,8 +196,8 @@ export interface DocumentationAnalytics {
 @Injectable()
 export class AIPoweredDocumentationService {
   private readonly logger = new Logger(AIPoweredDocumentationService.name);
-  private eventEmitter: EventEmitter2;
-  private auditService: AuditService;
+  privateeventEmitter: EventEmitter2;
+  privateauditService: AuditService;
 
   constructor() {
     this.eventEmitter = new EventEmitter2();
@@ -275,7 +275,7 @@ export class AIPoweredDocumentationService {
       // Calculate quality score
       const qualityScore = this.calculateQualityScore(summaryContent, keyPoints, recommendations);
       
-      const careSummary: CareSummary = {
+      constcareSummary: CareSummary = {
         id: `summary_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         residentId,
         summaryType,
@@ -387,7 +387,7 @@ export class AIPoweredDocumentationService {
       // Calculate confidence
       const confidence = this.calculateConfidence(processedData, reportContent);
       
-      const intelligentReport: IntelligentReport = {
+      constintelligentReport: IntelligentReport = {
         id: `report_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         reportType,
         residentId,
@@ -499,7 +499,7 @@ export class AIPoweredDocumentationService {
     regulations: string[] = ['CQC', 'GDPR', 'NHS', 'DSPT']
   ): Promise<ComplianceFlag[]> {
     try {
-      const complianceFlags: ComplianceFlag[] = [];
+      constcomplianceFlags: ComplianceFlag[] = [];
       
       for (const regulation of regulations) {
         const flags = await this.checkRegulationCompliance(data, regulation);
@@ -619,7 +619,7 @@ export class AIPoweredDocumentationService {
   ): Promise<DocumentationAnalytics> {
     try {
       // In a real implementation, this would calculate analytics from database
-      const analytics: DocumentationAnalytics = {
+      constanalytics: DocumentationAnalytics = {
         totalDocuments: 1250,
         aiGeneratedDocuments: 980,
         averageQualityScore: 87.5,

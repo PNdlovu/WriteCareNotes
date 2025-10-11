@@ -254,8 +254,8 @@ export class UKCyberEssentialsService {
       const vulnerabilityFindings = await this.conductVulnerabilityAssessment(organizationId);
 
       // Conduct Cyber Essentials Plus assessments if required
-      let plusAssessments: CyberEssentialsPlusAssessment[] = [];
-      let penetrationTestResults: PenetrationTestResult[] = [];
+      letplusAssessments: CyberEssentialsPlusAssessment[] = [];
+      letpenetrationTestResults: PenetrationTestResult[] = [];
 
       if (certificationLevel === 'plus') {
         plusAssessments = await this.conductCyberEssentialsPlusAssessments(organizationId);
@@ -276,7 +276,7 @@ export class UKCyberEssentialsService {
         organizationId
       );
 
-      const assessment: CyberEssentialsAssessment = {
+      constassessment: CyberEssentialsAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentType: certificationLevel === 'plus' ? 'cyber_essentials_plus' : 'cyber_essentials',
@@ -309,7 +309,7 @@ export class UKCyberEssentialsService {
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Cyber Essentials assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Cyber Essentials assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -319,7 +319,7 @@ export class UKCyberEssentialsService {
    */
   private async assessAllControls(organizationId: string): Promise<CyberEssentialsControlAssessment[]> {
     const controls = Object.values(CyberEssentialsControl);
-    const assessments: CyberEssentialsControlAssessment[] = [];
+    constassessments: CyberEssentialsControlAssessment[] = [];
 
     for (const control of controls) {
       const assessment = await this.assessControl(control, organizationId);
@@ -339,7 +339,7 @@ export class UKCyberEssentialsService {
     try {
       console.log(`Assessing Cyber Essentials control: ${control}`);
 
-      let assessment: CyberEssentialsControlAssessment;
+      letassessment: CyberEssentialsControlAssessment;
 
       switch (control) {
         case CyberEssentialsControl.BOUNDARY_FIREWALLS:
@@ -368,7 +368,7 @@ export class UKCyberEssentialsService {
       return assessment;
 
     } catch (error: unknown) {
-      console.error(`Failed to assess control ${control}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to assess control ${control}: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -686,7 +686,7 @@ export class UKCyberEssentialsService {
       console.log(`Conducting vulnerability assessment for: ${organizationId}`);
 
       // Simulate comprehensive vulnerability assessment
-      const vulnerabilities: VulnerabilityFinding[] = [
+      constvulnerabilities: VulnerabilityFinding[] = [
         {
           id: this.generateVulnerabilityId(),
           severity: 'medium',
@@ -711,7 +711,7 @@ export class UKCyberEssentialsService {
       return vulnerabilities;
 
     } catch (error: unknown) {
-      console.error(`Vulnerability assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Vulnerability assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -722,7 +722,7 @@ export class UKCyberEssentialsService {
   private async conductCyberEssentialsPlusAssessments(
     organizationId: string
   ): Promise<CyberEssentialsPlusAssessment[]> {
-    const assessments: CyberEssentialsPlusAssessment[] = [];
+    constassessments: CyberEssentialsPlusAssessment[] = [];
 
     // Vulnerability Assessment
     assessments.push({
@@ -771,7 +771,7 @@ export class UKCyberEssentialsService {
    * Conduct penetration testing
    */
   private async conductPenetrationTesting(organizationId: string): Promise<PenetrationTestResult[]> {
-    const testResults: PenetrationTestResult[] = [
+    consttestResults: PenetrationTestResult[] = [
       {
         id: this.generatePentestId(),
         testType: 'external',
@@ -845,7 +845,7 @@ export class UKCyberEssentialsService {
     const highVulnerabilities = vulnerabilities.filter(v => v.severity === 'high');
 
     let certified = false;
-    let certificationLevel: 'basic' | 'plus' | 'none' = 'none';
+    letcertificationLevel: 'basic' | 'plus' | 'none' = 'none';
 
     if (overallResult === AssessmentResultStatus.PASS && criticalVulnerabilities.length === 0) {
       certified = true;
@@ -872,7 +872,7 @@ export class UKCyberEssentialsService {
     vulnerabilities: VulnerabilityFinding[],
     organizationId: string
   ): Promise<CyberEssentialsActionPlan> {
-    const actions: CyberEssentialsAction[] = [];
+    constactions: CyberEssentialsAction[] = [];
 
     // Generate actions for control gaps
     for (const control of controlAssessments) {
@@ -910,7 +910,7 @@ export class UKCyberEssentialsService {
       }
     }
 
-    const actionPlan: CyberEssentialsActionPlan = {
+    constactionPlan: CyberEssentialsActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,
@@ -956,7 +956,7 @@ export class UKCyberEssentialsService {
       console.log('Cyber Essentials compliance monitoring completed');
 
     } catch (error: unknown) {
-      console.error(`Cyber Essentials compliance monitoring failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Cyber Essentials compliance monitoring failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -998,7 +998,7 @@ export class UKCyberEssentialsService {
       return readinessReport;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate certification readiness report: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to generate certification readiness report: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }

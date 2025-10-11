@@ -87,7 +87,7 @@ export class FinancialValidationService {
     request: CreateTransactionRequest,
     correlationId?: string
   ): Promise<void> {
-    const errors: ValidationError[] = [];
+    consterrors: ValidationError[] = [];
 
     try {
       // Schema validation
@@ -119,11 +119,11 @@ export class FinancialValidationService {
       }
       
       console.error('Transaction validation failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         correlationId
       });
       
-      throw new Error(`Transaction validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Transaction validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -134,7 +134,7 @@ export class FinancialValidationService {
     request: UpdateTransactionRequest,
     correlationId?: string
   ): Promise<void> {
-    const errors: ValidationError[] = [];
+    consterrors: ValidationError[] = [];
 
     // Validate only provided fields
     if (request.amount !== undefined) {
@@ -183,7 +183,7 @@ export class FinancialValidationService {
     request: BudgetCreationRequest,
     correlationId?: string
   ): Promise<void> {
-    const errors: ValidationError[] = [];
+    consterrors: ValidationError[] = [];
 
     try {
       // Schema validation
@@ -213,11 +213,11 @@ export class FinancialValidationService {
       }
       
       console.error('Budget validation failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         correlationId
       });
       
-      throw new Error(`Budget validation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Budget validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -228,7 +228,7 @@ export class FinancialValidationService {
     request: ForecastRequest,
     correlationId?: string
   ): Promise<void> {
-    const errors: ValidationError[] = [];
+    consterrors: ValidationError[] = [];
 
     // Schema validation
     const { error } = this.forecastSchema.validate(request, { abortEarly: false });
@@ -270,7 +270,7 @@ export class FinancialValidationService {
    * Validate forecast results
    */
   async validateForecastResults(forecastResult: any): Promise<void> {
-    const errors: ValidationError[] = [];
+    consterrors: ValidationError[] = [];
 
     if (!forecastResult.projections || forecastResult.projections.length === 0) {
       errors.push({

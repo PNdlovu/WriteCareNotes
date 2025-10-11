@@ -502,7 +502,7 @@ export class OrganizationPermission extends BaseEntity {
       this.auditTrail = [];
     }
 
-    const auditEntry: PermissionAudit = {
+    constauditEntry: PermissionAudit = {
       auditId: uuidv4(),
       action: action as any,
       timestamp: new Date(),
@@ -592,7 +592,7 @@ export class OrganizationPermission extends BaseEntity {
     if (!this.conditions) return true;
 
     return this.conditions.every(condition => {
-      let contextValue: any;
+      letcontextValue: any;
 
       switch (condition.context) {
         case 'user':

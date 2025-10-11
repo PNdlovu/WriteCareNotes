@@ -16,9 +16,9 @@ import { AgentFeatureFlag, AgentDeploymentConfig } from '../../types/pilot-feedb
 import { DatabaseService } from '../database/database.service';
 
 export class AgentFeatureFlagsService {
-  private db: DatabaseService;
-  private flagCache: Map<string, AgentFeatureFlag> = new Map();
-  private cacheExpiry: Map<string, number> = new Map();
+  privatedb: DatabaseService;
+  privateflagCache: Map<string, AgentFeatureFlag> = new Map();
+  privatecacheExpiry: Map<string, number> = new Map();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   constructor() {
@@ -62,7 +62,7 @@ export class AgentFeatureFlagsService {
     rolloutPercentage?: number,
     conditions?: Record<string, any>
   ): Promise<void> {
-    const flagData: AgentFeatureFlag = {
+    constflagData: AgentFeatureFlag = {
       tenantId,
       flag,
       enabled,
@@ -231,7 +231,7 @@ export class AgentFeatureFlagsService {
       FROM agent_feature_flags
     `;
 
-    const params: any[] = [];
+    constparams: any[] = [];
     if (tenantId) {
       query += ' WHERE tenant_id = ?';
       params.push(tenantId);
@@ -280,7 +280,7 @@ export class AgentFeatureFlagsService {
       WHERE tenant_id = ?
     `;
 
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
     
     if (flag) {
       query += ' AND flag = ?';
@@ -412,7 +412,7 @@ export class AgentFeatureFlagsService {
   }
 
   private getDefaultFlagValue(flag: string): boolean {
-    const defaultFlags: Record<string, boolean> = {
+    constdefaultFlags: Record<string, boolean> = {
       'agent.pilotFeedback.enabled': false,
       'agent.pilotFeedback.autonomy': false,
       'agent.pilotFeedback.clustering': true,

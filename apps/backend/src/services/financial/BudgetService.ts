@@ -141,9 +141,9 @@ export interface MonthlyProjection {
 }
 
 export class BudgetService extends EventEmitter2 {
-  private budgetRepository: Repository<any>;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privatebudgetRepository: Repository<any>;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
 
   constructor() {
     super();
@@ -156,7 +156,7 @@ export class BudgetService extends EventEmitter2 {
     budgetData: Omit<Budget, 'id' | 'actualRevenue' | 'actualExpenses' | 'actualProfit' | 'createdAt' | 'updatedAt'>,
     userId: string
   ): Promise<Budget> {
-    const budget: Budget = {
+    constbudget: Budget = {
       id: this.generateId(),
       ...budgetData,
       actualRevenue: 0,
@@ -282,7 +282,7 @@ export class BudgetService extends EventEmitter2 {
       throw new Error('Budget not found');
     }
 
-    const report: BudgetVarianceReport = {
+    constreport: BudgetVarianceReport = {
       budgetId,
       budgetName: budget.budgetName,
       reportDate: reportDate || new Date(),
@@ -299,7 +299,7 @@ export class BudgetService extends EventEmitter2 {
     };
 
     for (const category of budget.categories) {
-      const variance: BudgetVariance = {
+      constvariance: BudgetVariance = {
         categoryId: category.categoryId,
         categoryName: category.categoryName,
         budgetedAmount: category.budgetedAmount,
@@ -339,7 +339,7 @@ export class BudgetService extends EventEmitter2 {
 
     const historicalData = await this.getHistoricalBudgetData(organizationId, budget.budgetType);
     
-    const forecast: BudgetForecast = {
+    constforecast: BudgetForecast = {
       budgetId,
       forecastDate: new Date(),
       forecastPeriod: `${forecastPeriodMonths} months`,
@@ -423,7 +423,7 @@ export class BudgetService extends EventEmitter2 {
   }
 
   private generateKeyInsights(report: BudgetVarianceReport): string[] {
-    const insights: string[] = [];
+    constinsights: string[] = [];
 
     if (report.overallVariancePercentage > 10) {
       insights.push(`Overall budget variance of ${report.overallVariancePercentage.toFixed(1)}% exceeds acceptable threshold`);
@@ -444,7 +444,7 @@ export class BudgetService extends EventEmitter2 {
   }
 
   private generateRecommendations(report: BudgetVarianceReport): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (report.overallVariancePercentage < -10) {
       recommendations.push('Consider budget revision due to significant negative variance');
@@ -464,7 +464,7 @@ export class BudgetService extends EventEmitter2 {
   }
 
   private identifyRiskFactors(report: BudgetVarianceReport): string[] {
-    const riskFactors: string[] = [];
+    constriskFactors: string[] = [];
 
     if (report.unfavorableVariances.length > 3) {
       riskFactors.push('Multiple categories showing negative performance');
@@ -485,7 +485,7 @@ export class BudgetService extends EventEmitter2 {
   }
 
   private async projectRevenue(budget: Budget, historicalData: any[], months: number): Promise<MonthlyProjection[]> {
-    const projections: MonthlyProjection[] = [];
+    constprojections: MonthlyProjection[] = [];
     const baseMonthlyRevenue = budget.totalBudgetedRevenue / 12;
     
     for (let i = 0; i < months; i++) {
@@ -508,7 +508,7 @@ export class BudgetService extends EventEmitter2 {
   }
 
   private async projectExpenses(budget: Budget, historicalData: any[], months: number): Promise<MonthlyProjection[]> {
-    const projections: MonthlyProjection[] = [];
+    constprojections: MonthlyProjection[] = [];
     const baseMonthlyExpenses = budget.totalBudgetedExpenses / 12;
     
     for (let i = 0; i < months; i++) {

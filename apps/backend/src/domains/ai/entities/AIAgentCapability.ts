@@ -149,7 +149,7 @@ export class AIAgentCapability {
   }
 
   public validateParameters(parameters: any): { valid: boolean; errors: string[] } {
-    const errors: string[] = [];
+    consterrors: string[] = [];
     
     if (!this.parameters) {
       return { valid: true, errors: [] };

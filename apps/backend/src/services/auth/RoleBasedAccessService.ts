@@ -118,8 +118,8 @@ export interface AccessContext {
 }
 
 export class RoleBasedAccessService {
-  private employeeRepository: Repository<Employee>;
-  private auditService: AuditService;
+  privateemployeeRepository: Repository<Employee>;
+  privateauditService: AuditService;
 
   // Role-Permission Matrix
   private readonly ROLE_PERMISSIONS: Map<UserRole, RolePermissions> = new Map([
@@ -595,7 +595,7 @@ export class RoleBasedAccessService {
     return async (req: any, res: any, next: any) => {
       try {
         const userId = req.user?.id;
-        const context: AccessContext = {
+        constcontext: AccessContext = {
           userId,
           role: await this.getUserRole(userId),
           deviceType: req.headers['device-type'] === 'organization' ? 'organization' : 'personal',

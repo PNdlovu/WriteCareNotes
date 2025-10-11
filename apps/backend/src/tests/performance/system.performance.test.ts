@@ -24,11 +24,11 @@ import * as request from 'supertest';
  */
 
 describe('System Performance Tests', () => {
-  let app: INestApplication;
-  let systemService: SystemService;
+  letapp: INestApplication;
+  letsystemService: SystemService;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    constmoduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',

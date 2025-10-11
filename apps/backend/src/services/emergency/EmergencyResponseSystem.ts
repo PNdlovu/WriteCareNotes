@@ -174,17 +174,17 @@ export interface EmergencyResponse {
 }
 
 export class EmergencyResponseSystem {
-  private visitorRepository: Repository<VisitorManagement>;
-  private eventEmitter: EventEmitter2;
-  private securityService: SecurityIntegrationService;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privatevisitorRepository: Repository<VisitorManagement>;
+  privateeventEmitter: EventEmitter2;
+  privatesecurityService: SecurityIntegrationService;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
   
-  private activeIncidents: Map<string, EmergencyIncident>;
-  private emergencyContacts: Map<string, any>;
-  private evacuationPlans: Map<string, any>;
-  private emergencyProtocols: Map<EmergencyType, any>;
-  private systemStatus: 'normal' | 'alert' | 'emergency' | 'lockdown';
+  privateactiveIncidents: Map<string, EmergencyIncident>;
+  privateemergencyContacts: Map<string, any>;
+  privateevacuationPlans: Map<string, any>;
+  privateemergencyProtocols: Map<EmergencyType, any>;
+  privatesystemStatus: 'normal' | 'alert' | 'emergency' | 'lockdown';
 
   constructor(
     eventEmitter: EventEmitter2,
@@ -243,7 +243,7 @@ export class EmergencyResponseSystem {
       const responseId = `RESP-${Date.now()}-${Math.random().toString(36).substr(2, 8)}`.toUpperCase();
 
       // Create emergency incident
-      const incident: EmergencyIncident = {
+      constincident: EmergencyIncident = {
         incidentId,
         type: emergencyDetails.type,
         priority: emergencyDetails.priority,
@@ -684,7 +684,7 @@ export class EmergencyResponseSystem {
       }
 
       const resolvedAt = new Date();
-      const restorationActions: string[] = [];
+      constrestorationActions: string[] = [];
 
       // End lockdown if active
       if (incident.lockdownData && !incident.lockdownData.lockdownEndTime) {
@@ -822,14 +822,14 @@ export class EmergencyResponseSystem {
       const testId = `TEST-${Date.now()}-${Math.random().toString(36).substr(2, 8)}`.toUpperCase();
       const testStartTime = new Date();
 
-      let testResults: any = {
+      lettestResults: any = {
         systemsResponded: [],
         responseTime: 0,
         successRate: 0,
         issuesIdentified: []
       };
 
-      let recommendations: string[] = [];
+      letrecommendations: string[] = [];
 
       switch (testType) {
         case 'lockdown':
@@ -949,7 +949,7 @@ export class EmergencyResponseSystem {
   }
 
   private async initiateAutomatedResponse(incident: EmergencyIncident, protocol: any): Promise<string[]> {
-    const actionsTriggered: string[] = [];
+    constactionsTriggered: string[] = [];
 
     if (protocol?.autoActions) {
       for (const action of protocol.autoActions) {
@@ -1487,7 +1487,7 @@ export class EmergencyResponseSystem {
   }
 
   private generateTestRecommendations(testResults: any): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (testResults.successRate < 100) {
       recommendations.push('Address identified system issues to achieve 100% success rate');

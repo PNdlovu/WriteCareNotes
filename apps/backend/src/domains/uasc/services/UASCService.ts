@@ -64,10 +64,10 @@ import {
 } from '../entities/HomeOfficeCorrespondence';
 
 export class UASCService {
-  private uascProfileRepository: Repository<UASCProfile>;
-  private ageAssessmentRepository: Repository<AgeAssessment>;
-  private immigrationStatusRepository: Repository<ImmigrationStatus>;
-  private correspondenceRepository: Repository<HomeOfficeCorrespondence>;
+  privateuascProfileRepository: Repository<UASCProfile>;
+  privateageAssessmentRepository: Repository<AgeAssessment>;
+  privateimmigrationStatusRepository: Repository<ImmigrationStatus>;
+  privatecorrespondenceRepository: Repository<HomeOfficeCorrespondence>;
 
   constructor() {
     this.uascProfileRepository = AppDataSource.getRepository(UASCProfile);

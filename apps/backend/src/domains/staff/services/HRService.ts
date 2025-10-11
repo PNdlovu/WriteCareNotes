@@ -76,17 +76,17 @@ export interface OnboardingChecklist {
 export class HRService {
   constructor(
     @InjectRepository(EmployeeProfile)
-    private employeeProfileRepository: Repository<EmployeeProfile>,
+    privateemployeeProfileRepository: Repository<EmployeeProfile>,
     @InjectRepository(TimeOffRequest)
-    private timeOffRequestRepository: Repository<TimeOffRequest>,
+    privatetimeOffRequestRepository: Repository<TimeOffRequest>,
     @InjectRepository(ShiftSwap)
-    private shiftSwapRepository: Repository<ShiftSwap>,
+    privateshiftSwapRepository: Repository<ShiftSwap>,
     @InjectRepository(Certification)
-    private certificationRepository: Repository<Certification>,
+    privatecertificationRepository: Repository<Certification>,
     @InjectRepository(Department)
-    private departmentRepository: Repository<Department>,
+    privatedepartmentRepository: Repository<Department>,
     @InjectRepository(Position)
-    private positionRepository: Repository<Position>,
+    privatepositionRepository: Repository<Position>,
   ) {}
 
   /**

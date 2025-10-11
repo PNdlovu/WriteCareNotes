@@ -122,7 +122,7 @@ export class SessionValidationService {
       healthcareLogger.security('error', 'Session validation failed', {
         sessionId,
         userId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         auditTrail: true,
         securityIncident: true
       });
@@ -145,7 +145,7 @@ export class SessionValidationService {
       const now = new Date();
       const expiresAt = new Date(now.getTime() + this.SESSION_TIMEOUT * 1000);
 
-      const sessionInfo: SessionInfo = {
+      constsessionInfo: SessionInfo = {
         sessionId,
         userId,
         deviceId,
@@ -184,7 +184,7 @@ export class SessionValidationService {
         userId,
         deviceId,
         ipAddress,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         auditTrail: true,
         securityIncident: true
       });
@@ -224,7 +224,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       healthcareLogger.security('error', 'Session invalidation failed', {
         sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         auditTrail: true,
         securityIncident: true
       });
@@ -257,7 +257,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       healthcareLogger.security('error', 'Failed to invalidate all user sessions', {
         userId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         auditTrail: true,
         securityIncident: true
       });
@@ -288,7 +288,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       console.error('Failed to update session activity', {
         sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   }
@@ -311,7 +311,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       console.error('Failed to get session from cache', {
         sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
       return null;
     }
@@ -348,7 +348,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       console.error('Failed to get session from database', {
         sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
       return null;
     }
@@ -367,7 +367,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       console.error('Failed to cache session', {
         sessionId: session.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   }
@@ -433,7 +433,7 @@ export class SessionValidationService {
     } catch (error: unknown) {
       console.error('Failed to get user sessions', {
         userId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
       return [];
     }
@@ -450,7 +450,7 @@ export class SessionValidationService {
       console.error('Failed to add user session', {
         userId,
         sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   }
@@ -465,7 +465,7 @@ export class SessionValidationService {
       console.error('Failed to remove user session', {
         userId,
         sessionId,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   }

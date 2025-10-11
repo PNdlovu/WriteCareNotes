@@ -15,8 +15,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
  */
 
 describe('SystemController', () => {
-  let controller: SystemController;
-  let systemService: SystemService;
+  letcontroller: SystemController;
+  letsystemService: SystemService;
 
   const mockSystemTestResult = {
     testSuite: 'WriteCareNotes System Tests',
@@ -200,7 +200,7 @@ describe('SystemController', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       controllers: [SystemController],
       providers: [
         {

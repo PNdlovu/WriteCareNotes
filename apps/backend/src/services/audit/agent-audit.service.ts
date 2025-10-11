@@ -16,9 +16,9 @@ import { AgentAuditRecord, AgentComplianceReport } from '../../types/pilot-feedb
 import { DatabaseService } from '../database/database.service';
 
 export class AgentAuditService {
-  private db: DatabaseService;
-  private auditQueue: AgentAuditRecord[] = [];
-  private isProcessing: boolean = false;
+  privatedb: DatabaseService;
+  privateauditQueue: AgentAuditRecord[] = [];
+  privateisProcessing: boolean = false;
 
   constructor() {
     this.db = new DatabaseService();
@@ -28,7 +28,7 @@ export class AgentAuditService {
    * Log agent event with full audit trail
    */
   async logAgentEvent(event: Omit<AgentAuditRecord, 'auditId' | 'timestamp'>): Promise<void> {
-    const auditRecord: AgentAuditRecord = {
+    constauditRecord: AgentAuditRecord = {
       ...event,
       auditId: uuidv4(),
       timestamp: new Date()
@@ -134,7 +134,7 @@ export class AgentAuditService {
       WHERE tenant_id = ?
     `;
 
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
 
     if (filters.from) {
       query += ' AND timestamp >= ?';

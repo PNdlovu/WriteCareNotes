@@ -222,7 +222,7 @@ export class MedicationScheduleService {
     }
 
     // Generate recurring doses
-    const scheduledDoses: ScheduledDose[] = [];
+    constscheduledDoses: ScheduledDose[] = [];
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + durationDays);
 
@@ -395,7 +395,7 @@ export class MedicationScheduleService {
 
     const medications = await queryBuilder.getMany();
 
-    const metricsArray: AdherenceMetrics[] = [];
+    constmetricsArray: AdherenceMetrics[] = [];
 
     for (const med of medications) {
       // Count doses (in production, query from scheduled_doses table)
@@ -455,7 +455,7 @@ export class MedicationScheduleService {
     refusedDoses: number,
     trend: 'improving' | 'stable' | 'declining'
   ): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (adherenceRate < 90) {
       if (missedDoses > refusedDoses * 2) {
@@ -565,7 +565,7 @@ export class MedicationScheduleService {
       }
     });
 
-    const patterns: PRNUsagePattern[] = [];
+    constpatterns: PRNUsagePattern[] = [];
 
     for (const med of prnMeds) {
       // Analyze usage (in production, query administration records)

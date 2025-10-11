@@ -172,7 +172,7 @@ export class AISafetyGuardService {
     validationResults: ValidationResult[]
   ): ConfidenceScore {
     
-    const factors: ConfidenceFactors = {
+    constfactors: ConfidenceFactors = {
       knowledgeBaseMatch: this.assessKnowledgeBaseMatch(response, context),
       regulatoryAlignment: this.assessRegulatoryAlignment(response, context),
       responseSpecificity: this.assessResponseSpecificity(response),
@@ -275,8 +275,8 @@ export class AISafetyGuardService {
       const flagged = moderation.results[0].flagged;
       const categories = moderation.results[0].categories;
 
-      const warnings: SafetyWarning[] = [];
-      const flags: SafetyFlag[] = [];
+      constwarnings: SafetyWarning[] = [];
+      constflags: SafetyFlag[] = [];
 
       if (flagged) {
         const flaggedCategories = Object.entries(categories)
@@ -363,8 +363,8 @@ export class AISafetyGuardService {
     const regulatoryClaimsPattern = /(regulation|standard|requirement)\s+(\d+)/gi;
     const claims = response.match(regulatoryClaimsPattern) || [];
 
-    const warnings: SafetyWarning[] = [];
-    const flags: SafetyFlag[] = [];
+    constwarnings: SafetyWarning[] = [];
+    constflags: SafetyFlag[] = [];
 
     for (const claim of claims) {
       if (!this.validateRegulatoryClaim(claim, context)) {
@@ -401,7 +401,7 @@ export class AISafetyGuardService {
   }
 
   private validateRegulatoryReferences(response: string, context: PolicyContext): { safe: boolean; confidence: number; warnings: SafetyWarning[]; flags: SafetyFlag[] } {
-    const warnings: SafetyWarning[] = [];
+    constwarnings: SafetyWarning[] = [];
     
     // Check jurisdiction-specific references
     for (const jurisdiction of context.jurisdiction) {
@@ -486,7 +486,7 @@ export class AISafetyGuardService {
 
   private async validateFactualClaims(response: string, context: PolicyContext): Promise<{ safe: boolean; confidence: number; warnings: SafetyWarning[]; flags: SafetyFlag[] }> {
     // Basic fact checking - would be enhanced with real fact-checking service
-    const warnings: SafetyWarning[] = [];
+    constwarnings: SafetyWarning[] = [];
     
     // Check for absolute statements that may be overgeneralizations
     const absolutePatterns = [

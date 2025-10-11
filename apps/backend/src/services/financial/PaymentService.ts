@@ -123,13 +123,13 @@ export class PaymentService {
 
   constructor(
     @InjectRepository(Payment)
-    private paymentRepository: Repository<Payment>,
+    privatepaymentRepository: Repository<Payment>,
     @InjectRepository(Invoice)
-    private invoiceRepository: Repository<Invoice>,
+    privateinvoiceRepository: Repository<Invoice>,
     @InjectRepository(ChartOfAccounts)
-    private chartOfAccountsRepository: Repository<ChartOfAccounts>,
+    privatechartOfAccountsRepository: Repository<ChartOfAccounts>,
     @InjectRepository(FinancialTransaction)
-    private financialTransactionRepository: Repository<FinancialTransaction>,
+    privatefinancialTransactionRepository: Repository<FinancialTransaction>,
   ) {}
 
   /**
@@ -460,9 +460,9 @@ export class PaymentService {
         relations: ['invoice'],
       });
 
-      const reconciledPayments: Payment[] = [];
-      const unreconciledPayments: Payment[] = [];
-      const errors: string[] = [];
+      constreconciledPayments: Payment[] = [];
+      constunreconciledPayments: Payment[] = [];
+      consterrors: string[] = [];
       let totalReconciled = new Decimal(0);
       let totalUnreconciled = new Decimal(0);
 

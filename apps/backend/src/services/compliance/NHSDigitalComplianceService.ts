@@ -30,7 +30,7 @@ export class NHSDigitalComplianceService {
    */
   async performComplianceCheck(tenantId: string): Promise<ComplianceCheck[]> {
     try {
-      const checks: ComplianceCheck[] = [];
+      constchecks: ComplianceCheck[] = [];
 
       // Data Security and Protection Toolkit (DSPT) check
       checks.push({

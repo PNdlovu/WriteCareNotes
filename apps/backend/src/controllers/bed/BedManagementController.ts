@@ -20,7 +20,7 @@ import { authenticate } from '../../middleware/auth-middleware';
 import { authorize } from '../../middleware/rbac-middleware';
 
 export class BedManagementController {
-  private bedManagementService: BedManagementService;
+  privatebedManagementService: BedManagementService;
 
   constructor() {
     this.bedManagementService = new BedManagementService();
@@ -39,7 +39,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve beds',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -65,14 +65,14 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve bed',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
 
   async getAvailableBeds(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: BedSearchCriteria = {
+      constcriteria: BedSearchCriteria = {
         careLevel: req.query['careLevel'] as any,
         roomType: req.query['roomType'] as string,
         floor: req.query['floor'] ? parseInt(req.query['floor'] as string) : undefined,
@@ -95,7 +95,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve available beds',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -131,7 +131,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to allocate bed',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -167,7 +167,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to deallocate bed',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -200,7 +200,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to add to waiting list',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -223,7 +223,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve waiting list',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -242,7 +242,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to match beds to waiting list',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -261,7 +261,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve occupancy analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -280,7 +280,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve revenue optimization suggestions',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -299,7 +299,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to generate capacity forecast',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -332,7 +332,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to schedule maintenance',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -360,7 +360,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to complete maintenance',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -379,7 +379,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to mark bed as clean',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -407,7 +407,7 @@ export class BedManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to update bed rate',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

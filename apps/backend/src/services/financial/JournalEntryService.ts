@@ -82,11 +82,11 @@ export interface JournalEntryReport {
 }
 
 export class JournalEntryService {
-  private journalEntryRepository: Repository<JournalEntry>;
-  private ledgerAccountRepository: Repository<LedgerAccount>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventEmitter: EventEmitter2;
+  privatejournalEntryRepository: Repository<JournalEntry>;
+  privateledgerAccountRepository: Repository<LedgerAccount>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventEmitter: EventEmitter2;
 
   constructor() {
     this.journalEntryRepository = AppDataSource.getRepository(JournalEntry);

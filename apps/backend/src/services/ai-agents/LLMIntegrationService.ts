@@ -60,7 +60,7 @@ export interface LLMResponse {
 
 export class LLMIntegrationService {
   // Logger removed
-  private providers: Map<string, LLMProvider> = new Map();
+  privateproviders: Map<string, LLMProvider> = new Map();
 
   constructor() {
     this.initializeProviders();
@@ -88,7 +88,7 @@ export class LLMIntegrationService {
       // Calculate confidence score
       const confidence = this.calculateConfidence(processedResponse, request);
       
-      const response: LLMResponse = {
+      constresponse: LLMResponse = {
         responseId: `llm_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         message: processedResponse.content,
         tokensUsed: processedResponse.tokensUsed,
@@ -115,8 +115,8 @@ export class LLMIntegrationService {
       console.error('Failed to generate LLM response', {
         provider: request.provider.name,
         tenantId: request.tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
-        stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+        error: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined
       });
 
       return {
@@ -187,7 +187,7 @@ export class LLMIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to initialize LLM providers', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -313,7 +313,7 @@ export class LLMIntegrationService {
 
     } catch (error: unknown) {
       console.error('OpenAI API call failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         status: error.response?.status,
         statusText: error.response?.statusText
       });
@@ -362,7 +362,7 @@ export class LLMIntegrationService {
 
     } catch (error: unknown) {
       console.error('Anthropic API call failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         status: error.response?.status
       });
       throw error;
@@ -412,7 +412,7 @@ export class LLMIntegrationService {
 
     } catch (error: unknown) {
       console.error('Azure OpenAI API call failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         status: error.response?.status
       });
       throw error;
@@ -430,7 +430,7 @@ export class LLMIntegrationService {
     tokensUsed: number;
     securityFlags: string[];
   }> {
-    const securityFlags: string[] = [];
+    constsecurityFlags: string[] = [];
     let content = rawResponse.content;
 
     // Check for potential data leaks in response
@@ -728,7 +728,7 @@ Remember: You are operating within a strictly isolated tenant environment. Any a
    * Get provider status
    */
   getProviderStatus(): { [key: string]: boolean } {
-    const status: { [key: string]: boolean } = {};
+    conststatus: { [key: string]: boolean } = {};
     
     for (const [name, provider] of this.providers) {
       status[name] = !!provider.apiKey;

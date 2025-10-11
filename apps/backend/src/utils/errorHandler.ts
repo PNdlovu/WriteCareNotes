@@ -13,11 +13,11 @@ export interface AppError extends Error {
 }
 
 export class CustomError extends Error implements AppError {
-  public code: ErrorCode;
-  public statusCode: HTTPStatusCode;
+  publiccode: ErrorCode;
+  publicstatusCode: HTTPStatusCode;
   public details?: any;
   public correlationId?: string;
-  public timestamp: string;
+  publictimestamp: string;
 
   constructor(
     code: ErrorCode,
@@ -48,7 +48,7 @@ export class ErrorHandler {
       success: false,
       error: {
         code: error.code,
-        message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        message: error instanceof Error ? error.message : "Unknown error",
         description: errorMapping?.description || 'No description available',
         category: errorMapping?.category || 'Unknown',
         timestamp: error.timestamp,
@@ -69,13 +69,13 @@ export class ErrorHandler {
     // Log error with context
     console.error('Application Error:', {
       code: error.code,
-      message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      message: error instanceof Error ? error.message : "Unknown error",
       correlationId: error.correlationId,
       path: req.path,
       method: req.method,
       userAgent: req.headers['user-agent'],
       ip: req.ip,
-      stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+      stack: error instanceof Error ? error.stack : undefined
     });
 
     res.status(error.statusCode).json(response);
@@ -89,13 +89,13 @@ export class ErrorHandler {
     
     // Log error with context
     console.error('Unknown Error:', {
-      message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      message: error instanceof Error ? error.message : "Unknown error",
       correlationId,
       path: req.path,
       method: req.method,
       userAgent: req.headers['user-agent'],
       ip: req.ip,
-      stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+      stack: error instanceof Error ? error.stack : undefined
     });
 
     const response = {
@@ -132,7 +132,7 @@ export class ErrorHandler {
         correlationId,
         path: req.path,
         method: req.method,
-        details: error.details || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        details: error.details || error instanceof Error ? error.message : "Unknown error"
       }
     };
 

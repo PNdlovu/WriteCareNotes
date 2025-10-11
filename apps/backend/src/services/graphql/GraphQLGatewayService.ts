@@ -184,12 +184,12 @@ export interface GraphQLMetrics {
 }
 
 export class GraphQLGatewayService {
-  private auditService: AuditService;
-  private encryptionService: FieldLevelEncryptionService;
-  private eventEmitter: EventEmitter2;
-  private schemas: Map<string, GraphQLSchema> = new Map();
-  private executions: Map<string, GraphQLExecution> = new Map();
-  private metrics: GraphQLMetrics = {
+  privateauditService: AuditService;
+  privateencryptionService: FieldLevelEncryptionService;
+  privateeventEmitter: EventEmitter2;
+  privateschemas: Map<string, GraphQLSchema> = new Map();
+  privateexecutions: Map<string, GraphQLExecution> = new Map();
+  privatemetrics: GraphQLMetrics = {
     totalQueries: 0,
     totalMutations: 0,
     totalSubscriptions: 0,
@@ -261,7 +261,7 @@ export class GraphQLGatewayService {
 
     try {
       // Create execution record
-      const execution: GraphQLExecution = {
+      constexecution: GraphQLExecution = {
         id: executionId,
         query,
         variables,
@@ -372,7 +372,7 @@ export class GraphQLGatewayService {
 
     try {
       // Create execution record
-      const execution: GraphQLExecution = {
+      constexecution: GraphQLExecution = {
         id: executionId,
         query: mutation,
         variables,
@@ -561,7 +561,7 @@ export class GraphQLGatewayService {
    */
   private initializeDefaultSchemas(): void {
     // Financial Schema
-    const financialSchema: GraphQLSchema = {
+    constfinancialSchema: GraphQLSchema = {
       id: 'financial_schema',
       name: 'Financial Schema',
       version: '1.0.0',

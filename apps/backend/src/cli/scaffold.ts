@@ -31,7 +31,7 @@ interface ScaffoldOptions {
 }
 
 class DomainScaffolder {
-  private templates: Map<string, DomainTemplate> = new Map();
+  privatetemplates: Map<string, DomainTemplate> = new Map();
 
   constructor() {
     this.initializeTemplates();
@@ -347,8 +347,8 @@ import { ${serviceName.replace('Service', '')} } from '../entities/${serviceName
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 export class ${serviceName} {
-  private repository: Repository<${serviceName.replace('Service', '')}>;
-  private auditService: AuditService;
+  privaterepository: Repository<${serviceName.replace('Service', '')}>;
+  privateauditService: AuditService;
 
   constructor() {
     this.repository = AppDataSource.getRepository(${serviceName.replace('Service', '')});
@@ -468,7 +468,7 @@ export default ${serviceName};
 import { ${controllerName.replace('Controller', 'Service')} } from '../services/${controllerName.replace('Controller', 'Service')}';
 
 export class ${controllerName} {
-  private service: ${controllerName.replace('Controller', 'Service')};
+  privateservice: ${controllerName.replace('Controller', 'Service')};
 
   constructor() {
     this.service = new ${controllerName.replace('Controller', 'Service')}();
@@ -837,8 +837,8 @@ jest.mock('../../config/database', () => ({
 }));
 
 describe('${testName.replace('.test', '')}', () => {
-  let service: ${testName.replace('.test', '')};
-  let mockRepository: jest.Mocked<Repository<any>>;
+  letservice: ${testName.replace('.test', '')};
+  letmockRepository: jest.Mocked<Repository<any>>;
 
   beforeEach(() => {
     mockRepository = {
@@ -1173,7 +1173,7 @@ program
   .action(async (options: any) => {
     const scaffolder = new DomainScaffolder();
     
-    const scaffoldOptions: ScaffoldOptions = {
+    constscaffoldOptions: ScaffoldOptions = {
       domain: options.domain,
       description: options.description,
       entities: options.entities ? options.entities.split(',') : undefined,

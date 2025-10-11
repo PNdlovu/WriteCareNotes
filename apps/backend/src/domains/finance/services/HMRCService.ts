@@ -30,15 +30,15 @@ export interface HMRCSubmissionResponse {
 
 @Injectable()
 export class HMRCService {
-  private config: HMRCConfig;
-  private accessToken: string | null = null;
-  private tokenExpiry: Date | null = null;
+  privateconfig: HMRCConfig;
+  privateaccessToken: string | null = null;
+  privatetokenExpiry: Date | null = null;
 
   constructor(
     @InjectRepository(HMRCSubmission)
-    private hmrcSubmissionRepository: Repository<HMRCSubmission>,
+    privatehmrcSubmissionRepository: Repository<HMRCSubmission>,
     @InjectRepository(PayrollRun)
-    private payrollRunRepository: Repository<PayrollRun>,
+    privatepayrollRunRepository: Repository<PayrollRun>,
   ) {
     this.config = {
       baseUrl: process.env.HMRC_BASE_URL || 'https://api.service.hmrc.gov.uk',
@@ -69,7 +69,7 @@ export class HMRCService {
         },
       });
 
-      const tokenData: HMRCTokenResponse = response.data;
+      consttokenData: HMRCTokenResponse = response.data;
       this.accessToken = tokenData.access_token;
       this.tokenExpiry = new Date(Date.now() + (tokenData.expires_in * 1000));
 
@@ -113,7 +113,7 @@ export class HMRCService {
         }
       );
 
-      const hmrcResponse: HMRCSubmissionResponse = {
+      consthmrcResponse: HMRCSubmissionResponse = {
         submissionId: response.data.submissionId,
         correlationId: response.data.correlationId,
         status: 'submitted',

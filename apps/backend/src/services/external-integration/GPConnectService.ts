@@ -162,12 +162,12 @@ export interface AsyncCallbackResponse {
 }
 
 export class GPConnectService {
-  private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private encryptionService: FieldLevelEncryptionService;
-  private eventEmitter: EventEmitter2;
-  private config: GPConnectConfig;
+  privatesystemRepository: Repository<ExternalSystem>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateencryptionService: FieldLevelEncryptionService;
+  privateeventEmitter: EventEmitter2;
+  privateconfig: GPConnectConfig;
 
   constructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
@@ -312,7 +312,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('POST', '/appointments', payload);
 
       // Process response
-      const appointmentResponse: AppointmentBookingResponse = {
+      constappointmentResponse: AppointmentBookingResponse = {
         appointmentId: response.data.appointmentId,
         status: response.data.status,
         appointmentDate: response.data.appointmentDate,
@@ -397,7 +397,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('GET', '/patient-record', payload);
 
       // Process response
-      const patientRecord: PatientRecordResponse = {
+      constpatientRecord: PatientRecordResponse = {
         patientId: request.patientId,
         nhsNumber: request.nhsNumber,
         demographics: response.data.demographics,
@@ -450,7 +450,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('POST', '/callbacks', payload);
 
       // Process response
-      const callbackResponse: AsyncCallbackResponse = {
+      constcallbackResponse: AsyncCallbackResponse = {
         callbackId: response.data.callbackId,
         status: response.data.status,
         webhookUrl: response.data.webhookUrl,

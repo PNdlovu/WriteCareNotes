@@ -554,7 +554,7 @@ export class EnterpriseEmergencyManagementService {
 
   // Helper methods
   private getImmediateActions(emergencyType: EmergencyType): string[] {
-    const actions: Record<EmergencyType, string[]> = {
+    constactions: Record<EmergencyType, string[]> = {
       [EmergencyType.MEDICAL]: ['Call 999', 'Provide first aid', 'Clear airway if needed', 'Monitor vital signs'],
       [EmergencyType.FIRE]: ['Evacuate area', 'Call fire service', 'Use fire extinguisher if safe', 'Account for all residents'],
       [EmergencyType.SECURITY]: ['Secure area', 'Call police if needed', 'Protect residents', 'Document incident'],
@@ -570,7 +570,7 @@ export class EnterpriseEmergencyManagementService {
   }
 
   private getResourceRequirements(severity: EmergencySeverity): string[] {
-    const resources: Record<EmergencySeverity, string[]> = {
+    constresources: Record<EmergencySeverity, string[]> = {
       [EmergencySeverity.LOW]: ['First aider', 'Basic equipment'],
       [EmergencySeverity.MEDIUM]: ['Qualified nurse', 'Emergency kit', 'Additional staff'],
       [EmergencySeverity.HIGH]: ['Senior nurse', 'Manager', 'Emergency equipment', 'External support'],
@@ -660,7 +660,7 @@ export class EnterpriseEmergencyManagementService {
 
   private predictIncidentDuration(incidentData: CreateEmergencyIncidentDTO): number {
     // AI prediction based on historical data and incident type
-    const baseDuration: Record<EmergencyType, number> = {
+    constbaseDuration: Record<EmergencyType, number> = {
       [EmergencyType.MEDICAL]: 45,
       [EmergencyType.FIRE]: 120,
       [EmergencyType.SECURITY]: 60,
@@ -678,7 +678,7 @@ export class EnterpriseEmergencyManagementService {
 
   private predictRecoveryTime(incidentData: CreateEmergencyIncidentDTO): number {
     // Recovery time prediction
-    const severityMultiplier: Record<EmergencySeverity, number> = {
+    constseverityMultiplier: Record<EmergencySeverity, number> = {
       [EmergencySeverity.LOW]: 1,
       [EmergencySeverity.MEDIUM]: 2,
       [EmergencySeverity.HIGH]: 4,

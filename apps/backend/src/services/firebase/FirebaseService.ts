@@ -146,7 +146,7 @@ export interface DeviceToken {
 @Injectable()
 export class FirebaseService {
   private readonly logger = new Logger(FirebaseService.name);
-  private app: admin.app.App;
+  privateapp: admin.app.App;
 
   constructor(private readonly configService: ConfigService) {
     this.initializeFirebase();
@@ -188,7 +188,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<string> {
     try {
-      const message: admin.messaging.Message = {
+      constmessage: admin.messaging.Message = {
         token,
         notification: {
           title: notification.title,
@@ -237,7 +237,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<admin.messaging.BatchResponse> {
     try {
-      const message: admin.messaging.MulticastMessage = {
+      constmessage: admin.messaging.MulticastMessage = {
         tokens,
         notification: {
           title: notification.title,
@@ -286,7 +286,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<string> {
     try {
-      const message: admin.messaging.Message = {
+      constmessage: admin.messaging.Message = {
         topic,
         notification: {
           title: notification.title,
@@ -335,7 +335,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<string> {
     try {
-      const message: admin.messaging.Message = {
+      constmessage: admin.messaging.Message = {
         condition,
         notification: {
           title: notification.title,
@@ -429,7 +429,7 @@ export class FirebaseService {
   async validateToken(token: string): Promise<boolean> {
     try {
       // Send a test message to validate the token
-      const message: admin.messaging.Message = {
+      constmessage: admin.messaging.Message = {
         token,
         data: {
           test: 'true',
@@ -456,7 +456,7 @@ export class FirebaseService {
     data: Record<string, string>
   ): Promise<string> {
     try {
-      const message: admin.messaging.Message = {
+      constmessage: admin.messaging.Message = {
         token,
         data,
         android: {
@@ -488,7 +488,7 @@ export class FirebaseService {
     payload: any
   ): Promise<string> {
     try {
-      const message: admin.messaging.Message = {
+      constmessage: admin.messaging.Message = {
         token,
         ...payload,
       };
@@ -582,7 +582,7 @@ export class FirebaseService {
     body: string,
     data: Record<string, string> = {}
   ): Promise<admin.messaging.BatchResponse> {
-    const notification: PushNotification = {
+    constnotification: PushNotification = {
       title: `🚨 URGENT: ${title}`,
       body,
       data: {
@@ -659,7 +659,7 @@ export class FirebaseService {
     updateType: string,
     data: Record<string, string> = {}
   ): Promise<admin.messaging.BatchResponse> {
-    const notification: PushNotification = {
+    constnotification: PushNotification = {
       title: `Care Update: ${residentName}`,
       body: `New ${updateType} update is available`,
       data: {
@@ -723,7 +723,7 @@ export class FirebaseService {
     photoCount: number,
     data: Record<string, string> = {}
   ): Promise<admin.messaging.BatchResponse> {
-    const notification: PushNotification = {
+    constnotification: PushNotification = {
       title: `New Photos: ${residentName}`,
       body: `${photoCount} new photo${photoCount > 1 ? 's' : ''} shared`,
       data: {
@@ -782,8 +782,8 @@ export class FirebaseService {
    * Clean up invalid tokens
    */
   async cleanupInvalidTokens(tokens: string[]): Promise<string[]> {
-    const validTokens: string[] = [];
-    const invalidTokens: string[] = [];
+    constvalidTokens: string[] = [];
+    constinvalidTokens: string[] = [];
 
     for (const token of tokens) {
       try {

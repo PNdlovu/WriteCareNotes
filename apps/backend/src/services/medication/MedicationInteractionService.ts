@@ -104,10 +104,10 @@ export interface InteractionCheckResult {
 }
 
 export class MedicationInteractionService extends EventEmitter2 {
-  private medicationRepository: Repository<Medication>;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
-  private interactionDatabase: Map<string, DrugInteraction[]>;
+  privatemedicationRepository: Repository<Medication>;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
+  privateinteractionDatabase: Map<string, DrugInteraction[]>;
 
   constructor() {
     super();
@@ -126,7 +126,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     const severity = this.calculateOverallSeverity(interactions, allergies, contraindications);
     const recommendations = this.generateRecommendations(interactions, allergies, contraindications);
 
-    const result: InteractionCheckResult = {
+    constresult: InteractionCheckResult = {
       safe: severity === 'safe',
       interactions,
       allergies,
@@ -159,7 +159,7 @@ export class MedicationInteractionService extends EventEmitter2 {
   }
 
   async findDrugInteractions(medicationIds: string[]): Promise<DrugInteraction[]> {
-    const interactions: DrugInteraction[] = [];
+    constinteractions: DrugInteraction[] = [];
 
     for (let i = 0; i < medicationIds.length; i++) {
       for (let j = i + 1; j < medicationIds.length; j++) {
@@ -181,7 +181,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     medicationIds: string[],
     knownAllergies: string[]
   ): Promise<AllergyAlert[]> {
-    const alerts: AllergyAlert[] = [];
+    constalerts: AllergyAlert[] = [];
 
     for (const medicationId of medicationIds) {
       const medication = await this.medicationRepository.findOne({
@@ -216,7 +216,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     medicationIds: string[],
     conditions: string[]
   ): Promise<ContraindicationCheck[]> {
-    const contraindications: ContraindicationCheck[] = [];
+    constcontraindications: ContraindicationCheck[] = [];
 
     for (const medicationId of medicationIds) {
       const medication = await this.medicationRepository.findOne({
@@ -321,7 +321,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     allergies: AllergyAlert[],
     contraindications: ContraindicationCheck[]
   ): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (interactions.length > 0) {
       recommendations.push('Review medication interactions with prescriber');

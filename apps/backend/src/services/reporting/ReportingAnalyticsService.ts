@@ -53,7 +53,7 @@ export class ReportingAnalyticsService {
     const { dataSource: tableName, filters, columns, dateRange } = dto;
 
     let query = `SELECT ${columns.join(', ')} FROM ${tableName} WHERE organizationId = ?`;
-    const params: any[] = [dto.organizationId];
+    constparams: any[] = [dto.organizationId];
 
     // Apply filters
     Object.entries(filters).forEach(([key, value]) => {
@@ -422,7 +422,7 @@ export class ReportingAnalyticsService {
   }
 
   private generateComplianceRecommendations(metrics: any): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (metrics.safeguardingIncidents > 5) {
       recommendations.push('Review safeguarding procedures and staff training');

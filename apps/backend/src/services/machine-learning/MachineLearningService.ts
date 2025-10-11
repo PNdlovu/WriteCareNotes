@@ -73,11 +73,11 @@ export interface ModelMetrics {
 
 
 export class MachineLearningService {
-  private models: Map<string, MLModel> = new Map();
-  private tensorflowModels: Map<string, tf.LayersModel> = new Map();
-  private predictionHistory: Map<string, PredictionResult[]> = new Map();
-  private openaiClient: OpenAI;
-  private anthropicClient: Anthropic;
+  privatemodels: Map<string, MLModel> = new Map();
+  privatetensorflowModels: Map<string, tf.LayersModel> = new Map();
+  privatepredictionHistory: Map<string, PredictionResult[]> = new Map();
+  privateopenaiClient: OpenAI;
+  privateanthropicClient: Anthropic;
 
   constructor(private readonly eventEmitter: EventEmitter2) {
     // Initialize real AI clients
@@ -119,7 +119,7 @@ export class MachineLearningService {
 
       return model;
     } catch (error: unknown) {
-      console.error(`Failed to load model ${modelType}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to load model ${modelType}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return null;
     }
   }
@@ -139,7 +139,7 @@ export class MachineLearningService {
       
       const processingTime = Date.now() - startTime;
       
-      const result: PredictionResult = {
+      constresult: PredictionResult = {
         predictionId: `pred_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         modelId: model.id,
         prediction: prediction.value,
@@ -171,7 +171,7 @@ export class MachineLearningService {
       
       return result;
     } catch (error: unknown) {
-      console.error(`Failed to make prediction with model ${model.name}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to make prediction with model ${model.name}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -195,7 +195,7 @@ export class MachineLearningService {
       const trainingTime = Date.now() - startTime;
       
       // Create model object
-      const model: MLModel = {
+      constmodel: MLModel = {
         id: `model_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         name: modelType,
         type: this.getModelType(modelType),
@@ -228,7 +228,7 @@ export class MachineLearningService {
       
       return model;
     } catch (error: unknown) {
-      console.error(`Failed to train model ${modelType}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to train model ${modelType}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -266,7 +266,7 @@ export class MachineLearningService {
       
       return metrics;
     } catch (error: unknown) {
-      console.error(`Failed to evaluate model ${modelId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to evaluate model ${modelId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -366,7 +366,7 @@ export class MachineLearningService {
       // Get model metadata
       const modelMetadata = await this.loadModelMetadata(modelPath);
       
-      const model: MLModel = {
+      constmodel: MLModel = {
         id: `real_model_${modelType}_${Date.now()}`,
         name: modelType,
         type: modelMetadata.type,
@@ -426,7 +426,7 @@ export class MachineLearningService {
    * Prepare features for TensorFlow model input
    */
   private prepareFeatures(features: Record<string, any>, expectedFeatures: string[]): number[] {
-    const featureArray: number[] = [];
+    constfeatureArray: number[] = [];
     
     for (const featureName of expectedFeatures) {
       const value = features[featureName];
@@ -482,7 +482,7 @@ export class MachineLearningService {
     features: Record<string, any>, 
     predictionData: Float32Array
   ): Promise<Record<string, any>> {
-    const factors: Record<string, any> = {};
+    constfactors: Record<string, any> = {};
     
     // Calculate feature importance (simplified SHAP-like analysis)
     const featureImportance = await this.calculateFeatureImportance(model, features);
@@ -515,7 +515,7 @@ export class MachineLearningService {
     model: MLModel, 
     features: Record<string, any>
   ): Promise<Record<string, number>> {
-    const importance: Record<string, number> = {};
+    constimportance: Record<string, number> = {};
     
     // This is a simplified feature importance calculation
     // In production, you'd use proper SHAP values or permutation importance
@@ -690,7 +690,7 @@ export class MachineLearningService {
    * Generate prediction factors
    */
   private generatePredictionFactors(model: MLModel, features: Record<string, any>, probability: number): Record<string, any> {
-    const factors: Record<string, any> = {};
+    constfactors: Record<string, any> = {};
     
     // Identify key contributing factors
     const sortedFeatures = Object.entries(features)

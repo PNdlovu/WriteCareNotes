@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { FinancialAnalyticsService } from '../../services/financial/FinancialAnalyticsService';
 
 export class FinancialController {
-  private financialService: FinancialAnalyticsService;
+  privatefinancialService: FinancialAnalyticsService;
 
   constructor() {
     this.financialService = new FinancialAnalyticsService();
@@ -35,7 +35,7 @@ export class FinancialController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve financial summary',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -58,7 +58,7 @@ export class FinancialController {
       res.status(500).json({
         success: false,
         message: 'Failed to generate financial report',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -77,7 +77,7 @@ export class FinancialController {
       res.status(500).json({
         success: false,
         message: 'Failed to generate forecast',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

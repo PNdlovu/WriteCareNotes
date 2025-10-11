@@ -336,12 +336,12 @@ type OptimizationType = 'process_optimization' | 'resource_optimization' | 'work
 
 export class CareQualityIntelligenceService {
   private router = express.Router();
-  private db: DatabaseService;
-  private logger: Logger;
-  private auditService: AuditService;
-  private aiService: AIService;
-  private notificationService: NotificationService;
-  private analyticsService: AnalyticsService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateauditService: AuditService;
+  privateaiService: AIService;
+  privatenotificationService: NotificationService;
+  privateanalyticsService: AnalyticsService;
 
   constructor() {
     this.db = DatabaseService.getInstance();
@@ -422,7 +422,7 @@ export class CareQualityIntelligenceService {
       } = req.body;
 
       const metricId = uuidv4();
-      const metric: QualityMetric = {
+      constmetric: QualityMetric = {
         id: metricId,
         tenantId,
         metricType,
@@ -484,7 +484,7 @@ export class CareQualityIntelligenceService {
         SELECT * FROM care_quality.metrics
         WHERE tenant_id = $1
       `;
-      const params: any[] = [tenantId];
+      constparams: any[] = [tenantId];
       let paramCount = 1;
 
       if (metricType) {
@@ -566,7 +566,7 @@ export class CareQualityIntelligenceService {
       const dataQuality = await this.calculateDataQuality(rawData, value, source);
 
       const measurementId = uuidv4();
-      const measurement: QualityMeasurement = {
+      constmeasurement: QualityMeasurement = {
         id: measurementId,
         tenantId,
         metricId,
@@ -664,7 +664,7 @@ export class CareQualityIntelligenceService {
       const userId = req.headers['x-user-id'] as string;
       const { modelIds, entityIds, timeHorizon = '7d' } = req.body;
 
-      const predictions: PredictiveAlert[] = [];
+      constpredictions: PredictiveAlert[] = [];
 
       for (const modelId of modelIds || await this.getActiveModelIds(tenantId)) {
         const model = await this.getPredictiveModelById(tenantId, modelId);
@@ -830,7 +830,7 @@ export class CareQualityIntelligenceService {
 
   private async analyzeQualityTrends(tenantId: string, measurements: any[], focus?: string): Promise<QualityInsight[]> {
     // Implement AI-powered trend analysis
-    const insights: QualityInsight[] = [];
+    constinsights: QualityInsight[] = [];
 
     // Use AI service to analyze patterns
     const aiAnalysis = await this.aiService.analyzeQualityData({
@@ -842,7 +842,7 @@ export class CareQualityIntelligenceService {
 
     // Convert AI analysis to structured insights
     for (const analysis of aiAnalysis.insights) {
-      const insight: QualityInsight = {
+      constinsight: QualityInsight = {
         id: uuidv4(),
         tenantId,
         insightType: analysis.type,

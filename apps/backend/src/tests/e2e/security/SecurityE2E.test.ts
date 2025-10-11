@@ -8,11 +8,11 @@ import { SecurityPolicy } from '../../../entities/security/SecurityPolicy';
 import { SecurityIncident } from '../../../entities/security/SecurityIncident';
 
 describe('Security E2E Tests', () => {
-  let app: INestApplication;
-  let service: SecurityService;
+  letapp: INestApplication;
+  letservice: SecurityService;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    constmoduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',

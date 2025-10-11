@@ -18,7 +18,7 @@ import { Menu, MenuType } from '../../entities/catering/Menu';
 import { ResidentDietaryProfile } from '../../entities/catering/ResidentDietaryProfile';
 
 export class CateringNutritionController {
-  private cateringService: CateringNutritionService;
+  privatecateringService: CateringNutritionService;
 
   constructor() {
     this.cateringService = new CateringNutritionService();
@@ -39,7 +39,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to create menu',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -57,7 +57,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve menus',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -83,7 +83,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve menu',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -103,7 +103,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to generate personalized menu',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -123,7 +123,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to create dietary profile',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -149,7 +149,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve dietary profile',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -169,7 +169,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to plan meals',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -187,7 +187,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to generate shopping list',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -216,7 +216,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to record weight',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -244,7 +244,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to record fluid intake',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -273,7 +273,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to conduct nutritional assessment',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -292,7 +292,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve nutritional analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -310,7 +310,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve dietary alerts',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -330,7 +330,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to report food safety issue',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -348,7 +348,7 @@ export class CateringNutritionController {
       res.status(500).json({
         success: false,
         message: 'Failed to check inventory',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

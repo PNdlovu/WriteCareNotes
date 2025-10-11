@@ -88,10 +88,10 @@ export interface LedgerAccountReport {
 }
 
 export class LedgerAccountService {
-  private ledgerAccountRepository: Repository<LedgerAccount>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventEmitter: EventEmitter2;
+  privateledgerAccountRepository: Repository<LedgerAccount>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventEmitter: EventEmitter2;
 
   constructor() {
     this.ledgerAccountRepository = AppDataSource.getRepository(LedgerAccount);
@@ -514,7 +514,7 @@ export class LedgerAccountService {
       throw new Error('Ledger account not found');
     }
 
-    const hierarchy: LedgerAccount[] = [];
+    consthierarchy: LedgerAccount[] = [];
     let current = account;
 
     // Build path to root
@@ -539,7 +539,7 @@ export class LedgerAccountService {
       throw new Error('Ledger account not found');
     }
 
-    const children: LedgerAccount[] = [];
+    constchildren: LedgerAccount[] = [];
     
     if (account.childAccounts) {
       for (const child of account.childAccounts) {

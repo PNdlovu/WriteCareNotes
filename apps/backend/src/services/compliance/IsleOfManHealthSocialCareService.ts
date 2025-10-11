@@ -158,7 +158,7 @@ export class IsleOfManHealthSocialCareService {
 
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get Isle of Man compliance assessment: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get Isle of Man compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -267,7 +267,7 @@ export class IsleOfManHealthSocialCareService {
           return 85;
       }
     } catch (error: unknown) {
-      console.error(`Failed to assess ${standard}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to assess ${standard}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return 70;
     }
   }
@@ -292,7 +292,7 @@ export class IsleOfManHealthSocialCareService {
           return 80;
       }
     } catch (error: unknown) {
-      console.error(`Failed to assess ${requirement}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to assess ${requirement}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return 70;
     }
   }
@@ -363,7 +363,7 @@ export class IsleOfManHealthSocialCareService {
   }
 
   private async identifyIsleOfManGaps(organizationId: string, assessment: any): Promise<string[]> {
-    const gaps: string[] = [];
+    constgaps: string[] = [];
     
     // Check standard scores
     for (const [domain, score] of Object.entries(assessment.domainScores)) {
@@ -383,7 +383,7 @@ export class IsleOfManHealthSocialCareService {
   }
 
   private async generateIsleOfManRecommendations(organizationId: string, assessment: any): Promise<string[]> {
-    const recommendations: string[] = [
+    constrecommendations: string[] = [
       'Enhance Manx Gaelic language support and awareness',
       'Strengthen participation in traditional Manx festivals',
       'Develop stronger links with Culture Vannin',

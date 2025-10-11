@@ -35,8 +35,8 @@ export interface GraphQLResponse {
 }
 
 export class GraphQLController {
-  private graphQLService: GraphQLGatewayService;
-  private auditService: AuditService;
+  privategraphQLService: GraphQLGatewayService;
+  privateauditService: AuditService;
 
   constructor() {
     this.graphQLService = new GraphQLGatewayService();
@@ -75,7 +75,7 @@ export class GraphQLController {
       );
 
       // Prepare response
-      const response: GraphQLResponse = {
+      constresponse: GraphQLResponse = {
         data: execution.result?.data,
         errors: execution.error ? [{
           message: execution.error,
@@ -98,7 +98,7 @@ export class GraphQLController {
     } catch (error) {
       console.error('GraphQL request failed:', error);
       
-      const response: GraphQLResponse = {
+      constresponse: GraphQLResponse = {
         errors: [{
           message: error instanceof Error ? error.message : 'Unknown error',
           extensions: {
@@ -143,7 +143,7 @@ export class GraphQLController {
       );
 
       // Prepare response
-      const response: GraphQLResponse = {
+      constresponse: GraphQLResponse = {
         data: execution.result?.data,
         errors: execution.error ? [{
           message: execution.error,
@@ -166,7 +166,7 @@ export class GraphQLController {
     } catch (error) {
       console.error('GraphQL mutation failed:', error);
       
-      const response: GraphQLResponse = {
+      constresponse: GraphQLResponse = {
         errors: [{
           message: error instanceof Error ? error.message : 'Unknown error',
           extensions: {
@@ -211,7 +211,7 @@ export class GraphQLController {
       );
 
       // Prepare response
-      const response: GraphQLResponse = {
+      constresponse: GraphQLResponse = {
         data: {
           subscriptionId,
           status: 'created'
@@ -226,7 +226,7 @@ export class GraphQLController {
     } catch (error) {
       console.error('GraphQL subscription failed:', error);
       
-      const response: GraphQLResponse = {
+      constresponse: GraphQLResponse = {
         errors: [{
           message: error instanceof Error ? error.message : 'Unknown error',
           extensions: {
@@ -294,7 +294,7 @@ export class GraphQLController {
         offset = 0
       } = req.query;
 
-      const filters: any = {};
+      constfilters: any = {};
       if (userId) filters.userId = userId as string;
       if (tenantId) filters.tenantId = tenantId as string;
       if (status) filters.status = status as string;

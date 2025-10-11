@@ -25,10 +25,10 @@ jest.mock('../../../utils/logger', () => ({
 }));
 
 describe('CacheService', () => {
-  let cacheService: CacheService;
-  let mockRedis: jest.Mocked<Redis.Cluster>;
-  let mockEncryptionService: jest.Mocked<EncryptionService>;
-  let mockAuditService: jest.Mocked<AuditService>;
+  letcacheService: CacheService;
+  letmockRedis: jest.Mocked<Redis.Cluster>;
+  letmockEncryptionService: jest.Mocked<EncryptionService>;
+  letmockAuditService: jest.Mocked<AuditService>;
 
   beforeEach(() => {
     // Reset all mocks
@@ -158,7 +158,7 @@ describe('CacheService', () => {
       const testKey = 'pii:key';
       const testValue = { firstName: 'John', lastName: 'Doe' };
       const ttl = 3600;
-      const options: CacheOptions = { containsPII: true };
+      constoptions: CacheOptions = { containsPII: true };
       
       mockEncryptionService.encrypt.mockResolvedValue('encrypted-data');
       mockRedis.setex.mockResolvedValue('OK');
@@ -178,7 +178,7 @@ describe('CacheService', () => {
       const testKey = 'tagged:key';
       const testValue = { id: '123' };
       const ttl = 3600;
-      const options: CacheOptions = { tags: ['resident', 'personal-data'] };
+      constoptions: CacheOptions = { tags: ['resident', 'personal-data'] };
       
       mockRedis.setex.mockResolvedValue('OK');
       mockRedis.sadd.mockResolvedValue(1);

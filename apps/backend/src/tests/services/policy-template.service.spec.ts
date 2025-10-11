@@ -181,13 +181,13 @@ Contact Number: {{contactNumber}}
 }
 
 describe('PolicyTemplateService', () => {
-  let service: PolicyTemplateService;
-  let module: TestingModule;
-  let policyTemplateRepository: Repository<PolicyTemplate>;
-  let policyInstanceRepository: Repository<PolicyInstance>;
-  let auditTrailService: AuditService;
-  let validationService: ValidationService;
-  let organizationService: OrganizationService;
+  letservice: PolicyTemplateService;
+  letmodule: TestingModule;
+  letpolicyTemplateRepository: Repository<PolicyTemplate>;
+  letpolicyInstanceRepository: Repository<PolicyInstance>;
+  letauditTrailService: AuditService;
+  letvalidationService: ValidationService;
+  letorganizationService: OrganizationService;
 
   // Mock implementations
   const mockPolicyTemplateRepository = {
@@ -235,7 +235,7 @@ describe('PolicyTemplateService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         PolicyTemplateService,
         {
@@ -898,8 +898,8 @@ describe('PolicyTemplateService', () => {
  * Tests the service with actual database connections and full workflow
  */
 describe('PolicyTemplateService Integration Tests', () => {
-  let app: any;
-  let service: PolicyTemplateService;
+  letapp: any;
+  letservice: PolicyTemplateService;
 
   beforeAll(async () => {
     // Set up test database and application context
@@ -924,10 +924,10 @@ describe('PolicyTemplateService Integration Tests', () => {
         description: 'End-to-end test policy',
         content: `# {{organization.name}} Safeguarding Policy
         
-        Safeguarding Lead: {{safeguardingLead}}
+        SafeguardingLead: {{safeguardingLead}}
         Contact: {{contactNumber}}
         
-        Total Staff: {{totalStaff}}`,
+        TotalStaff: {{totalStaff}}`,
         variables: [
           {
             name: 'safeguardingLead',
@@ -1007,7 +1007,7 @@ describe('PolicyTemplateService Integration Tests', () => {
  * Tests service performance under load conditions
  */
 describe('PolicyTemplateService Performance Tests', () => {
-  let service: PolicyTemplateService;
+  letservice: PolicyTemplateService;
 
   beforeEach(() => {
     // Set up performance test environment
@@ -1020,14 +1020,14 @@ describe('PolicyTemplateService Performance Tests', () => {
         content: `
           {{#each residents as resident}}
           Resident: {{resident.name}} ({{calculateAge(resident.dateOfBirth)}})
-          Care Plan: {{resident.carePlan}}
+          CarePlan: {{resident.carePlan}}
           {{#if resident.hasAllergies}}
           Allergies: {{resident.allergies}}
           {{/if}}
           {{/each}}
           
-          Total Residents: {{residents.length}}
-          Generated on: {{formatDate(currentDate, "DD/MM/YYYY HH:mm")}}
+          TotalResidents: {{residents.length}}
+          Generatedon: {{formatDate(currentDate, "DD/MM/YYYYHH:mm")}}
         `,
         variables: []
       });

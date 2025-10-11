@@ -96,8 +96,8 @@ export interface FinancialAnalyticsServiceInterface {
 export class FinancialAnalyticsError extends Error {
   constructor(
     message: string,
-    public code: string,
-    public correlationId: string
+    publiccode: string,
+    publiccorrelationId: string
   ) {
     super(message);
     this.name = 'FinancialAnalyticsError';

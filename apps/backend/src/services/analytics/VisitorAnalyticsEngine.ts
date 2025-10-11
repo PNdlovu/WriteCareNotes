@@ -169,12 +169,12 @@ export interface RealTimeDashboardData {
 }
 
 export class VisitorAnalyticsEngine {
-  private visitorRepository: Repository<VisitorManagement>;
-  private eventEmitter: EventEmitter2;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
-  private analyticsCache: Map<string, { data: any; timestamp: Date; ttl: number }>;
-  private realTimeSubscribers: Set<WebSocket>;
+  privatevisitorRepository: Repository<VisitorManagement>;
+  privateeventEmitter: EventEmitter2;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
+  privateanalyticsCache: Map<string, { data: any; timestamp: Date; ttl: number }>;
+  privaterealTimeSubscribers: Set<WebSocket>;
 
   constructor(
     eventEmitter: EventEmitter2,
@@ -249,7 +249,7 @@ export class VisitorAnalyticsEngine {
         ? visitDurations.reduce((sum, duration) => sum + duration, 0) / visitDurations.length 
         : 0;
 
-      const metrics: VisitorAnalyticsMetrics = {
+      constmetrics: VisitorAnalyticsMetrics = {
         totalVisitors,
         activeVisitors,
         visitorsOnSite,
@@ -289,7 +289,7 @@ export class VisitorAnalyticsEngine {
       const peakHoursAnalysis = await this.calculatePeakHoursAnalysis(visitors);
       const seasonalPatterns = await this.calculateSeasonalPatterns(visitors);
 
-      const analysis: VisitorTrendAnalysis = {
+      constanalysis: VisitorTrendAnalysis = {
         visitFrequencyTrends,
         visitorTypeTrends,
         peakHoursAnalysis,
@@ -327,7 +327,7 @@ export class VisitorAnalyticsEngine {
       const complianceMetrics = await this.calculateComplianceMetrics(visitors);
       const emergencyPreparedness = await this.calculateEmergencyPreparedness(visitors);
 
-      const analytics: VisitorSecurityAnalytics = {
+      constanalytics: VisitorSecurityAnalytics = {
         securityMetrics,
         riskAssessment,
         complianceMetrics,
@@ -365,7 +365,7 @@ export class VisitorAnalyticsEngine {
       const feedbackAnalysis = await this.analyzeFeedback(visitors);
       const actionableInsights = await this.generateActionableInsights(visitors);
 
-      const analytics: VisitorSatisfactionAnalytics = {
+      constanalytics: VisitorSatisfactionAnalytics = {
         satisfactionMetrics,
         satisfactionByCategory,
         feedbackAnalysis,
@@ -402,7 +402,7 @@ export class VisitorAnalyticsEngine {
       const diversity = await this.calculateDiversity(visitors);
       const engagementPatterns = await this.calculateEngagementPatterns(visitors);
 
-      const analytics: VisitorDemographicsAnalytics = {
+      constanalytics: VisitorDemographicsAnalytics = {
         demographics,
         diversity,
         engagementPatterns
@@ -700,7 +700,7 @@ export class VisitorAnalyticsEngine {
   }
 
   private async calculateVisitorTypeTrends(visitors: VisitorManagement[]): Promise<any> {
-    const trends: any = {};
+    consttrends: any = {};
     
     Object.values(VisitorType).forEach(type => {
       const typeVisitors = visitors.filter(v => v.visitorType === type);
@@ -740,7 +740,7 @@ export class VisitorAnalyticsEngine {
       avgDuration: 0
     }));
 
-    const hourlyData: { [hour: number]: { visits: number; durations: number[] } } = {};
+    consthourlyData: { [hour: number]: { visits: number; durations: number[] } } = {};
 
     visitors.forEach(visitor => {
       visitor.visitHistory.forEach(visit => {
@@ -805,8 +805,8 @@ export class VisitorAnalyticsEngine {
       sum + v.visitHistory.reduce((visitSum, visit) => visitSum + visit.incidentsReported.length, 0), 0
     );
 
-    const incidentTypes: { [type: string]: number } = {};
-    const riskDistribution: { [level: string]: number } = {};
+    constincidentTypes: { [type: string]: number } = {};
+    constriskDistribution: { [level: string]: number } = {};
 
     visitors.forEach(visitor => {
       const riskLevel = visitor.riskLevel;

@@ -15,7 +15,7 @@ import { DBSVerificationService, DBSVerificationRequest, DBSVerificationUpdate, 
 import { logger } from '../../utils/logger';
 
 export class DBSVerificationController {
-  private dbsVerificationService: DBSVerificationService;
+  privatedbsVerificationService: DBSVerificationService;
 
   constructor() {
     this.dbsVerificationService = new DBSVerificationService();
@@ -26,7 +26,7 @@ export class DBSVerificationController {
    */
   async createDBSVerification(req: Request, res: Response): Promise<void> {
     try {
-      const request: DBSVerificationRequest = req.body;
+      constrequest: DBSVerificationRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const verification = await this.dbsVerificationService.createDBSVerification(request, createdBy);
@@ -114,7 +114,7 @@ export class DBSVerificationController {
    */
   async searchDBSVerifications(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: DBSVerificationSearchCriteria = req.query;
+      constcriteria: DBSVerificationSearchCriteria = req.query;
 
       const verifications = await this.dbsVerificationService.searchDBSVerifications(criteria);
 
@@ -142,7 +142,7 @@ export class DBSVerificationController {
   async updateDBSVerification(req: Request, res: Response): Promise<void> {
     try {
       const { verificationId } = req.params;
-      const updates: DBSVerificationUpdate = req.body;
+      constupdates: DBSVerificationUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const verification = await this.dbsVerificationService.updateDBSVerification(

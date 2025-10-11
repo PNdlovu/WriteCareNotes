@@ -136,8 +136,8 @@ interface ConversationEntry {
 @Injectable()
 export class AIAgentSessionService {
   private readonly logger = new Logger(AIAgentSessionService.name);
-  private redis: Redis;
-  private config: SessionConfig;
+  privateredis: Redis;
+  privateconfig: SessionConfig;
 
   constructor(
     @InjectRepository(AIAgentSession)
@@ -303,7 +303,7 @@ export class AIAgentSessionService {
       }
 
       // Add conversation entry
-      const conversationEntry: ConversationEntry = {
+      constconversationEntry: ConversationEntry = {
         timestamp: new Date(),
         userMessage,
         agentResponse,
@@ -541,7 +541,7 @@ export class AIAgentSessionService {
         }
       });
 
-      const expiredSessionIds: string[] = [];
+      constexpiredSessionIds: string[] = [];
       const now = new Date();
 
       for (const session of expiredSessions) {
@@ -581,7 +581,7 @@ export class AIAgentSessionService {
     topUserRoles: { role: string; count: number }[];
   }> {
     try {
-      const whereConditions: any = {};
+      constwhereConditions: any = {};
       if (tenantId) {
         whereConditions.tenantId = tenantId;
       }
@@ -656,7 +656,7 @@ export class AIAgentSessionService {
     reason: string;
   }): Promise<number> {
     try {
-      const whereConditions: any = {
+      constwhereConditions: any = {
         isActive: true,
         status: 'ACTIVE'
       };

@@ -107,12 +107,12 @@ export interface DVLACheckComplianceReport {
 }
 
 export class DVLACheckService {
-  private dvlaCheckRepository: Repository<DVLACheck>;
-  private dvlaServiceRepository: Repository<DVLAService>;
-  private employeeRepository: Repository<Employee>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventEmitter: EventEmitter2;
+  privatedvlaCheckRepository: Repository<DVLACheck>;
+  privatedvlaServiceRepository: Repository<DVLAService>;
+  privateemployeeRepository: Repository<Employee>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventEmitter: EventEmitter2;
 
   constructor() {
     this.dvlaCheckRepository = AppDataSource.getRepository(DVLACheck);

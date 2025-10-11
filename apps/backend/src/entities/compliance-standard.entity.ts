@@ -288,7 +288,7 @@ export class ComplianceStandard {
    * Get human-readable jurisdiction list
    */
   getJurisdictionNames(): string[] {
-    const names: { [key in RegulatoryJurisdiction]: string } = {
+    constnames: { [key in RegulatoryJurisdiction]: string } = {
       [RegulatoryJurisdiction.ENGLAND_CQC]: 'England (CQC)',
       [RegulatoryJurisdiction.SCOTLAND_CARE_INSPECTORATE]: 'Scotland (Care Inspectorate)',
       [RegulatoryJurisdiction.WALES_CIW]: 'Wales (CIW)',

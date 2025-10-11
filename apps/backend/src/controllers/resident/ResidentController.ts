@@ -84,7 +84,7 @@ export class ResidentController { * @since 2025-01-01
 
       // Create DTOimport { ResidentService, CreateResidentRequest, UpdateResidentRequest, ResidentSearchFilters } from '@/services/resident/ResidentService';
 
-      const dto: CreateResidentDto = {import { AuthenticatedRequest } from '@/middleware/auth-middleware';
+      constdto: CreateResidentDto = {import { AuthenticatedRequest } from '@/middleware/auth-middleware';
 
         ...req.body,import { requirePermission, Permission } from '@/middleware/auth-middleware';
 
@@ -282,7 +282,7 @@ import { healthcareLogger } from '@/utils/logger';
 
         tenantContext.tenantId,          code: this.getErrorCode(error as Error),
 
-        filters          message: (error as Error).message,
+        filtersmessage: (error as Error).message,
 
       );          timestamp: new Date().toISOString(),
 
@@ -350,7 +350,7 @@ import { healthcareLogger } from '@/utils/logger';
 
       const { id } = req.params;    @Query('organizationId') organizationId: string,
 
-      const dto: UpdateResidentDto = req.body;    @Req() req: AuthenticatedRequest,
+      constdto: UpdateResidentDto = req.body;    @Req() req: AuthenticatedRequest,
 
     @Res() res: Response
 
@@ -968,31 +968,31 @@ export const searchValidation = [        }
    * Private helper methods for error handling
    */
   private getErrorStatusCode(error: Error): number {
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found') || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Not found')) {
+    if (error instanceof Error ? error.message : "Unknown error".includes('not found') || error instanceof Error ? error.message : "Unknown error".includes('Not found')) {
       return HttpStatus.NOT_FOUND;
     }
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already exists') || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('duplicate')) {
+    if (error instanceof Error ? error.message : "Unknown error".includes('already exists') || error instanceof Error ? error.message : "Unknown error".includes('duplicate')) {
       return HttpStatus.CONFLICT;
     }
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Validation failed') || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Invalid')) {
+    if (error instanceof Error ? error.message : "Unknown error".includes('Validation failed') || error instanceof Error ? error.message : "Unknown error".includes('Invalid')) {
       return HttpStatus.BAD_REQUEST;
     }
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Unauthorized') || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('authentication')) {
+    if (error instanceof Error ? error.message : "Unknown error".includes('Unauthorized') || error instanceof Error ? error.message : "Unknown error".includes('authentication')) {
       return HttpStatus.UNAUTHORIZED;
     }
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Forbidden') || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('permission')) {
+    if (error instanceof Error ? error.message : "Unknown error".includes('Forbidden') || error instanceof Error ? error.message : "Unknown error".includes('permission')) {
       return HttpStatus.FORBIDDEN;
     }
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 
   private getErrorCode(error: Error): string {
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) return 'RESIDENT_NOT_FOUND';
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already exists')) return 'RESIDENT_ALREADY_EXISTS';
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Validation failed')) return 'VALIDATION_ERROR';
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('NHS number')) return 'INVALID_NHS_NUMBER';
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Unauthorized')) return 'UNAUTHORIZED';
-    if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Forbidden')) return 'FORBIDDEN';
+    if (error instanceof Error ? error.message : "Unknown error".includes('not found')) return 'RESIDENT_NOT_FOUND';
+    if (error instanceof Error ? error.message : "Unknown error".includes('already exists')) return 'RESIDENT_ALREADY_EXISTS';
+    if (error instanceof Error ? error.message : "Unknown error".includes('Validation failed')) return 'VALIDATION_ERROR';
+    if (error instanceof Error ? error.message : "Unknown error".includes('NHS number')) return 'INVALID_NHS_NUMBER';
+    if (error instanceof Error ? error.message : "Unknown error".includes('Unauthorized')) return 'UNAUTHORIZED';
+    if (error instanceof Error ? error.message : "Unknown error".includes('Forbidden')) return 'FORBIDDEN';
     return 'INTERNAL_ERROR';
   }
 }

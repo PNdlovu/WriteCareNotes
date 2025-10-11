@@ -58,7 +58,7 @@ export interface CarePlanStatistics {
 }
 
 export class CarePlanRepository {
-  private repository: Repository<CarePlan>;
+  privaterepository: Repository<CarePlan>;
 
   constructor(private dataSource: DataSource) {
     this.repository = dataSource.getRepository(CarePlan);
@@ -340,7 +340,7 @@ export class CarePlanRepository {
       const carePlans = await queryBuilder.getMany();
 
       // Map to summaries
-      const summaries: CarePlanSummary[] = carePlans.map(plan => ({
+      constsummaries: CarePlanSummary[] = carePlans.map(plan => ({
         id: plan.id,
         residentId: plan.residentId,
         planName: plan.planName,
@@ -422,7 +422,7 @@ export class CarePlanRepository {
       // Calculate average review cycle (simplified)
       const averageReviewCycle = 30; // Default to 30 days, would need more complex calculation
 
-      const statistics: CarePlanStatistics = {
+      conststatistics: CarePlanStatistics = {
         totalPlans,
         activePlans,
         draftPlans,

@@ -375,11 +375,11 @@ interface AssessmentComparison {
 }
 
 export class QualityOfLifeAssessmentService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private audit: AuditService;
-  private ai: AIService;
-  private analytics: AnalyticsService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateaudit: AuditService;
+  privateai: AIService;
+  privateanalytics: AnalyticsService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -667,7 +667,7 @@ export class QualityOfLifeAssessmentService {
     domainData: any[],
     residentId: string
   ): Promise<QualityDomain[]> {
-    const domains: QualityDomain[] = [];
+    constdomains: QualityDomain[] = [];
 
     for (const domain of domainData) {
       // Process indicators for this domain
@@ -752,12 +752,12 @@ export class QualityOfLifeAssessmentService {
     recommendations: QualityRecommendation[],
     domains: QualityDomain[]
   ): ActionPlan {
-    const immediateActions: ActionItem[] = [];
-    const shortTermActions: ActionItem[] = [];
-    const longTermActions: ActionItem[] = [];
+    constimmediateActions: ActionItem[] = [];
+    constshortTermActions: ActionItem[] = [];
+    constlongTermActions: ActionItem[] = [];
 
     recommendations.forEach(rec => {
-      const action: ActionItem = {
+      constaction: ActionItem = {
         action: rec.recommendation,
         assignedTo: rec.responsibility,
         deadline: this.calculateActionDeadline(rec.timeframe),

@@ -250,7 +250,7 @@ export class ComprehensiveDataSeeder {
       },
     ];
 
-    const employees: Employee[] = [];
+    constemployees: Employee[] = [];
     let employeeCounter = 1;
 
     for (const data of employeeData) {
@@ -662,7 +662,7 @@ export class ComprehensiveDataSeeder {
       },
     ];
 
-    const serviceUsers: ServiceUser[] = [];
+    constserviceUsers: ServiceUser[] = [];
     let serviceUserCounter = 1;
 
     for (const data of serviceUserData) {
@@ -854,7 +854,7 @@ export class ComprehensiveDataSeeder {
       },
     ];
 
-    const universalUsers: UniversalUser[] = [];
+    constuniversalUsers: UniversalUser[] = [];
     let userCounter = 1;
 
     for (const data of universalUserData) {
@@ -882,7 +882,7 @@ export class ComprehensiveDataSeeder {
   private async seedTimeEntries(employees: Employee[], shifts: Shift[]): Promise<TimeEntry[]> {
     console.log('⏰ Seeding time entries...');
 
-    const timeEntries: TimeEntry[] = [];
+    consttimeEntries: TimeEntry[] = [];
     const today = new Date();
     const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
 
@@ -963,7 +963,7 @@ export class ComprehensiveDataSeeder {
   private async seedCareVisits(employees: Employee[], serviceUsers: ServiceUser[]): Promise<CareVisit[]> {
     console.log('🏠 Seeding care visits...');
 
-    const careVisits: CareVisit[] = [];
+    constcareVisits: CareVisit[] = [];
     const today = new Date();
 
     // Create visits for the past week and upcoming week
@@ -985,9 +985,9 @@ export class ComprehensiveDataSeeder {
             const duration = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
 
             let status = VisitStatus.SCHEDULED;
-            let actualStartTime: Date | undefined;
-            let actualEndTime: Date | undefined;
-            let actualDuration: number | undefined;
+            letactualStartTime: Date | undefined;
+            letactualEndTime: Date | undefined;
+            letactualDuration: number | undefined;
 
             // Set realistic statuses based on date
             if (visitDate < today) {
@@ -1050,7 +1050,7 @@ export class ComprehensiveDataSeeder {
   private async seedPayrollRecords(employees: Employee[]): Promise<PayrollRecord[]> {
     console.log('💰 Seeding payroll records...');
 
-    const payrollRecords: PayrollRecord[] = [];
+    constpayrollRecords: PayrollRecord[] = [];
     const currentDate = new Date();
 
     // Generate payroll for last 3 months
@@ -1146,7 +1146,7 @@ export class ComprehensiveDataSeeder {
   private async seedHolidays(employees: Employee[]): Promise<Holiday[]> {
     console.log('🏖️ Seeding holiday requests...');
 
-    const holidays: Holiday[] = [];
+    constholidays: Holiday[] = [];
     const currentDate = new Date();
 
     for (const employee of employees) {
@@ -1196,7 +1196,7 @@ export class ComprehensiveDataSeeder {
   private async seedShifts(employees: Employee[]): Promise<Shift[]> {
     console.log('📅 Seeding shifts...');
 
-    const shifts: Shift[] = [];
+    constshifts: Shift[] = [];
     const today = new Date();
 
     // Create shifts for next 14 days

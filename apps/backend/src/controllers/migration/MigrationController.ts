@@ -34,14 +34,14 @@ import { AuditService,  AuditTrailService } from '../audit';
 import { NotificationService } from '../notifications/NotificationService';
 
 export class MigrationController {
-  private migrationService: AdvancedOnboardingDataMigrationService;
-  private fileImportService: FileImportService;
-  private aiMappingService: AIDataMappingService;
-  private backupService: BackupRollbackService;
-  private legacyConnectors: LegacySystemConnectors;
-  private validationService: DataValidationService;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
+  privatemigrationService: AdvancedOnboardingDataMigrationService;
+  privatefileImportService: FileImportService;
+  privateaiMappingService: AIDataMappingService;
+  privatebackupService: BackupRollbackService;
+  privatelegacyConnectors: LegacySystemConnectors;
+  privatevalidationService: DataValidationService;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
 
   constructor() {
     this.migrationService = new AdvancedOnboardingDataMigrationService();
@@ -151,7 +151,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'PIPELINE_CREATION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -224,7 +224,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'MIGRATION_EXECUTION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -336,7 +336,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'FILE_PROCESSING_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -386,7 +386,7 @@ export class MigrationController {
           );
           sampleData = extractionResult.extractedData.slice(0, 5);
         } catch (error: unknown) {
-          console.warn('Sample data extraction failed:', error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error");
+          console.warn('Sample data extraction failed:', error instanceof Error ? error.message : "Unknown error");
         }
       }
 
@@ -422,7 +422,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'LEGACY_CONNECTION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -485,7 +485,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'ROLLBACK_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -586,7 +586,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'REPORT_GENERATION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -696,7 +696,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'ANALYTICS_FETCH_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -785,7 +785,7 @@ export class MigrationController {
         success: false,
         error: {
           code: 'CAPABILITIES_FETCH_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           timestamp: new Date()
         }
       });
@@ -795,7 +795,7 @@ export class MigrationController {
   // Helper methods
 
   private async generateMigrationRecommendations(pipeline: any): Promise<string[]> {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (pipeline.migrationStrategy.estimatedDuration > 60) {
       recommendations.push('Consider running during off-peak hours due to estimated duration');
@@ -821,7 +821,7 @@ export class MigrationController {
     qualityReport: any,
     aiMappings: any[]
   ): Promise<string[]> {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (qualityReport.overallScore < 80) {
       recommendations.push('Improve data quality before proceeding with migration');
@@ -846,7 +846,7 @@ export class MigrationController {
     connection: any,
     compatibilityReport: any
   ): string[] {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (compatibilityReport.migrationComplexity === 'high' || compatibilityReport.migrationComplexity === 'complex') {
       recommendations.push('Consider phased migration approach due to system complexity');
@@ -883,7 +883,7 @@ export class MigrationController {
   }
 
   private async generatePostMigrationRecommendations(progress: any): Promise<string[]> {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (progress.status === 'completed') {
       recommendations.push('Perform post-migration data validation checks');

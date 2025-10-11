@@ -66,7 +66,7 @@ export interface OrganizationHierarchy {
 
 export class OrganizationHierarchyService {
   private logger = logger;
-  private db: Pool;
+  privatedb: Pool;
 
   constructor(db: Pool) {
     this.db = db;
@@ -130,8 +130,8 @@ export class OrganizationHierarchyService {
       return organization;
 
     } catch (error: unknown) {
-      console.error('Failed to create organization', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to create organization: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to create organization', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to create organization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -163,8 +163,8 @@ export class OrganizationHierarchyService {
       return organization;
 
     } catch (error: unknown) {
-      console.error('Failed to retrieve organization', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to retrieve organization: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to retrieve organization', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to retrieve organization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -179,7 +179,7 @@ export class OrganizationHierarchyService {
       const children = await this.getChildOrganizations(organizationId, tenantId);
 
       // Build hierarchy recursively
-      const hierarchy: OrganizationHierarchy = {
+      consthierarchy: OrganizationHierarchy = {
         organization,
         children: await Promise.all(
           children.map(child => this.getOrganizationHierarchy(child.id, userId, tenantId))
@@ -197,11 +197,11 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to retrieve organization hierarchy', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         organizationId, 
         userId 
       });
-      throw new Error(`Failed to retrieve organization hierarchy: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to retrieve organization hierarchy: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -219,8 +219,8 @@ export class OrganizationHierarchyService {
       return result.rows.map(row => this.mapDbRowToOrganization(row));
 
     } catch (error: unknown) {
-      console.error('Failed to get child organizations', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to get child organizations: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to get child organizations', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to get child organizations: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -270,8 +270,8 @@ export class OrganizationHierarchyService {
       return metrics;
 
     } catch (error: unknown) {
-      console.error('Failed to get organization metrics', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to get organization metrics: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to get organization metrics', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to get organization metrics: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -283,8 +283,8 @@ export class OrganizationHierarchyService {
       const existingOrganization = await this.getOrganizationById(id, userId);
 
       // Build update query dynamically
-      const updateFields: string[] = [];
-      const values: any[] = [];
+      constupdateFields: string[] = [];
+      constvalues: any[] = [];
       let paramCount = 0;
 
       Object.entries(updates).forEach(([key, value]) => {
@@ -342,8 +342,8 @@ export class OrganizationHierarchyService {
       return updatedOrganization;
 
     } catch (error: unknown) {
-      console.error('Failed to update organization', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to update organization: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to update organization', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to update organization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -369,8 +369,8 @@ export class OrganizationHierarchyService {
       });
 
     } catch (error: unknown) {
-      console.error('Failed to delete organization', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to delete organization: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to delete organization', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to delete organization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

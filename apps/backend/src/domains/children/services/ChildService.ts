@@ -89,7 +89,7 @@ export interface ChildStatistics {
 export class ChildService {
   constructor(
     @InjectRepository(Child)
-    private childRepository: Repository<Child>,
+    privatechildRepository: Repository<Child>,
   ) {}
 
   /**
@@ -967,7 +967,7 @@ export class ChildService {
     newStatus: LegalStatus
   ): void {
     // Define allowed transitions
-    const allowedTransitions: Record<LegalStatus, LegalStatus[]> = {
+    constallowedTransitions: Record<LegalStatus, LegalStatus[]> = {
       [LegalStatus.SECTION_20]: [
         LegalStatus.SECTION_31,
         LegalStatus.SECTION_38,

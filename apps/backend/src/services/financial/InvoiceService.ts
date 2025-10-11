@@ -137,10 +137,10 @@ export interface AgedDebtorAnalysis {
 }
 
 export class InvoiceService extends EventEmitter2 {
-  private invoiceRepository: Repository<any>;
-  private paymentRepository: Repository<any>;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privateinvoiceRepository: Repository<any>;
+  privatepaymentRepository: Repository<any>;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
 
   constructor() {
     super();
@@ -154,7 +154,7 @@ export class InvoiceService extends EventEmitter2 {
     invoiceData: Omit<Invoice, 'id' | 'invoiceNumber' | 'createdAt' | 'updatedAt'>,
     userId: string
   ): Promise<Invoice> {
-    const invoice: Invoice = {
+    constinvoice: Invoice = {
       id: this.generateId(),
       invoiceNumber: await this.generateInvoiceNumber(invoiceData.careHomeId),
       ...invoiceData,
@@ -279,7 +279,7 @@ export class InvoiceService extends EventEmitter2 {
       throw new Error('Invoice not found');
     }
 
-    const payment: Payment = {
+    constpayment: Payment = {
       id: this.generateId(),
       ...paymentData,
       createdAt: new Date(),
@@ -326,7 +326,7 @@ export class InvoiceService extends EventEmitter2 {
       }
     });
 
-    const analysis: AgedDebtorAnalysis = {
+    constanalysis: AgedDebtorAnalysis = {
       current: { count: 0, amount: 0 },
       days30: { count: 0, amount: 0 },
       days60: { count: 0, amount: 0 },

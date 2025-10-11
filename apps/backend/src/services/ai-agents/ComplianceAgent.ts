@@ -51,7 +51,7 @@ export interface ComplianceMetrics {
 @Injectable()
 export class ComplianceAgent {
   private readonly logger = new Logger(ComplianceAgent.name);
-  private monitoringInterval: NodeJS.Timeout | null = null;
+  privatemonitoringInterval: NodeJS.Timeout | null = null;
   private isMonitoring = false;
 
   constructor(
@@ -105,7 +105,7 @@ export class ComplianceAgent {
    */
   async performComplianceCheck(): Promise<ComplianceAnomaly[]> {
     const startTime = Date.now();
-    const anomalies: ComplianceAnomaly[] = [];
+    constanomalies: ComplianceAnomaly[] = [];
 
     try {
       await this.auditService.log({
@@ -188,7 +188,7 @@ export class ComplianceAgent {
    * Check for data breaches
    */
   private async checkDataBreaches(): Promise<ComplianceAnomaly[]> {
-    const anomalies: ComplianceAnomaly[] = [];
+    constanomalies: ComplianceAnomaly[] = [];
     
     // Check for suspicious data access patterns
     const suspiciousAccess = await this.auditService.findSuspiciousAccess();
@@ -231,7 +231,7 @@ export class ComplianceAgent {
    * Check for unauthorized access
    */
   private async checkUnauthorizedAccess(): Promise<ComplianceAnomaly[]> {
-    const anomalies: ComplianceAnomaly[] = [];
+    constanomalies: ComplianceAnomaly[] = [];
     
     // Check for failed authentication attempts
     const failedAuth = await this.auditService.findFailedAuthentication();
@@ -274,7 +274,7 @@ export class ComplianceAgent {
    * Check for policy violations
    */
   private async checkPolicyViolations(): Promise<ComplianceAnomaly[]> {
-    const anomalies: ComplianceAnomaly[] = [];
+    constanomalies: ComplianceAnomaly[] = [];
     
     // Check for policy violations in audit logs
     const violations = await this.auditService.findPolicyViolations();
@@ -313,7 +313,7 @@ export class ComplianceAgent {
    * Check for audit gaps
    */
   private async checkAuditGaps(): Promise<ComplianceAnomaly[]> {
-    const anomalies: ComplianceAnomaly[] = [];
+    constanomalies: ComplianceAnomaly[] = [];
     
     // Check for missing audit entries
     const gaps = await this.auditService.findAuditGaps();
@@ -356,7 +356,7 @@ export class ComplianceAgent {
    * Check for consent issues
    */
   private async checkConsentIssues(): Promise<ComplianceAnomaly[]> {
-    const anomalies: ComplianceAnomaly[] = [];
+    constanomalies: ComplianceAnomaly[] = [];
     
     // Check for expired or missing consents
     const consentIssues = await this.complianceService.findConsentIssues();

@@ -111,9 +111,9 @@ export interface VisitFilters {
  * Compliance: GDPR, CQC, Mental Capacity Act 2005
  */
 export class FamilyCommunicationService {
-  private familyRepository: Repository<FamilyMember>;
-  private messageRepository: Repository<FamilyMessage>;
-  private visitRepository: Repository<VisitRequest>;
+  privatefamilyRepository: Repository<FamilyMember>;
+  privatemessageRepository: Repository<FamilyMessage>;
+  privatevisitRepository: Repository<VisitRequest>;
 
   constructor(private dataSource: DataSource) {
     this.familyRepository = this.dataSource.getRepository(FamilyMember);

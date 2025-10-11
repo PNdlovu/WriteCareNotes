@@ -35,7 +35,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 export class YoungPersonPortalController {
-  private portalService: YoungPersonPortalService;
+  privateportalService: YoungPersonPortalService;
 
   constructor() {
     this.portalService = new YoungPersonPortalService();

@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class FiveSMethodologyService {
-  private workplaceRepository: Repository<FiveSWorkplace>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateworkplaceRepository: Repository<FiveSWorkplace>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.workplaceRepository = AppDataSource.getRepository(FiveSWorkplace);

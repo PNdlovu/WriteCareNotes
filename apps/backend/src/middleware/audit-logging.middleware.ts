@@ -98,7 +98,7 @@ function extractEntityInfo(path: string): { entityType: string; entityId: string
  * Determine compliance requirements based on path and data
  */
 function determineComplianceRequirements(path: string, body: any): ComplianceFramework[] {
-  const requirements: ComplianceFramework[] = [ComplianceFramework.GDPR]; // GDPR applies to all
+  constrequirements: ComplianceFramework[] = [ComplianceFramework.GDPR]; // GDPR applies to all
 
   // Care-related operations
   if (path.includes('/residents') || path.includes('/care') || path.includes('/medication')) {
@@ -133,11 +133,11 @@ function classifyData(path: string, body: any): {
   encryptionRequired: boolean;
   accessRestrictions: string[];
 } {
-  let dataType: any = 'operational';
-  let sensitivityLevel: any = 'internal';
+  letdataType: any = 'operational';
+  letsensitivityLevel: any = 'internal';
   let retentionPeriod = 2555; // 7 years default (CQC requirement)
   let encryptionRequired = false;
-  const accessRestrictions: string[] = [];
+  constaccessRestrictions: string[] = [];
 
   // Medical/care data
   if (path.includes('/residents') || path.includes('/care') || path.includes('/medication')) {
@@ -196,8 +196,8 @@ export function createAuditMiddleware(dataSource: DataSource) {
 
     const startTime = Date.now();
     const originalJson = res.json.bind(res);
-    let responseBody: any;
-    let statusCode: number;
+    letresponseBody: any;
+    letstatusCode: number;
 
     // Intercept response
     res.json = function (body: any) {

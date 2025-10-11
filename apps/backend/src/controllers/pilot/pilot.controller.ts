@@ -16,7 +16,7 @@ import { CreatePilotDto, PilotFeedbackDto, PilotMetricsDto } from '../../dto/pil
 import { logger } from '../../utils/logger';
 
 export class PilotController {
-  private pilotService: PilotService;
+  privatepilotService: PilotService;
 
   constructor() {
     this.pilotService = new PilotService();
@@ -28,7 +28,7 @@ export class PilotController {
    */
   async registerPilot(req: Request, res: Response): Promise<void> {
     try {
-      const pilotData: CreatePilotDto = req.body;
+      constpilotData: CreatePilotDto = req.body;
       const result = await this.pilotService.registerPilot(pilotData);
       
       logger.info('Pilot registered successfully', { 
@@ -83,7 +83,7 @@ export class PilotController {
    */
   async submitFeedback(req: Request, res: Response): Promise<void> {
     try {
-      const feedbackData: PilotFeedbackDto = req.body;
+      constfeedbackData: PilotFeedbackDto = req.body;
       const result = await this.pilotService.submitFeedback(feedbackData);
       
       logger.info('Pilot feedback submitted', { 

@@ -51,11 +51,11 @@ import { ContactRiskAssessment, RiskAssessmentStatus, RiskLevel } from '../entit
 import { Child } from '../../children/entities/Child';
 
 export class FamilyContactService {
-  private familyMemberRepository: Repository<FamilyMember>;
-  private contactScheduleRepository: Repository<ContactSchedule>;
-  private contactSessionRepository: Repository<ContactSession>;
-  private contactRiskAssessmentRepository: Repository<ContactRiskAssessment>;
-  private childRepository: Repository<Child>;
+  privatefamilyMemberRepository: Repository<FamilyMember>;
+  privatecontactScheduleRepository: Repository<ContactSchedule>;
+  privatecontactSessionRepository: Repository<ContactSession>;
+  privatecontactRiskAssessmentRepository: Repository<ContactRiskAssessment>;
+  privatechildRepository: Repository<Child>;
 
   constructor() {
     this.familyMemberRepository = AppDataSource.getRepository(FamilyMember);
@@ -403,7 +403,7 @@ export class FamilyContactService {
       familyMemberId?: string;
     }
   ): Promise<ContactSession[]> {
-    const where: any = { childId };
+    constwhere: any = { childId };
 
     if (options?.familyMemberId) {
       where.familyMemberId = options.familyMemberId;

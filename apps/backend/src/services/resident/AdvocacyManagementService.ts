@@ -275,12 +275,12 @@ interface PerformanceIndicator {
 }
 
 export class AdvocacyManagementService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private audit: AuditService;
-  private notifications: NotificationService;
-  private email: EmailService;
-  private ai: AIService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateaudit: AuditService;
+  privatenotifications: NotificationService;
+  privateemail: EmailService;
+  privateai: AIService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -635,7 +635,7 @@ export class AdvocacyManagementService {
   }
 
   private mapStatusToEvent(status: AdvocacyStatus): TimelineEvent {
-    const statusEventMap: Record<AdvocacyStatus, TimelineEvent> = {
+    conststatusEventMap: Record<AdvocacyStatus, TimelineEvent> = {
       submitted: 'case_created',
       assigned: 'advocate_assigned',
       investigating: 'investigation_started',

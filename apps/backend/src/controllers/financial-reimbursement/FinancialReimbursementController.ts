@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { FinancialReimbursementService } from '../../services/financial-reimbursement/FinancialReimbursementService';
 
 export class FinancialReimbursementController {
-  private reimbursementService: FinancialReimbursementService;
+  privatereimbursementService: FinancialReimbursementService;
 
   constructor() {
     this.reimbursementService = new FinancialReimbursementService();
@@ -27,7 +27,7 @@ export class FinancialReimbursementController {
       const claim = await this.reimbursementService.createReimbursementClaim(req.body);
       res.status(201).json({ success: true, data: claim });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -37,7 +37,7 @@ export class FinancialReimbursementController {
       const result = await this.reimbursementService.submitClaim(claimId);
       res.json({ success: true, data: result });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -46,7 +46,7 @@ export class FinancialReimbursementController {
       const analytics = await this.reimbursementService.getReimbursementAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

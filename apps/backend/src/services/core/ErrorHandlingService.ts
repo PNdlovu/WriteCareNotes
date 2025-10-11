@@ -139,9 +139,9 @@ class AIServiceError extends AppError {
 
 class ErrorHandlingService {
   private static instance: ErrorHandlingService;
-  private healthChecks: Map<string, () => Promise<HealthCheckResult>> = new Map();
-  private lastHealthCheck: SystemHealth | null = null;
-  private healthCheckInterval: NodeJS.Timeout | null = null;
+  privatehealthChecks: Map<string, () => Promise<HealthCheckResult>> = new Map();
+  privatelastHealthCheck: SystemHealth | null = null;
+  privatehealthCheckInterval: NodeJS.Timeout | null = null;
 
   private constructor() {
     this.setupProcessHandlers();
@@ -221,7 +221,7 @@ class ErrorHandlingService {
       let statusCode = 500;
       let code = ErrorCode.INTERNAL_ERROR;
       let message = 'Internal server error';
-      let details: any = undefined;
+      letdetails: any = undefined;
 
       if (error instanceof AppError) {
         statusCode = error.statusCode;
@@ -242,7 +242,7 @@ class ErrorHandlingService {
         message = configService.isProduction() ? 'Database error occurred' : error.message;
       }
 
-      const errorResponse: ErrorResponse = {
+      consterrorResponse: ErrorResponse = {
         error: code,
         message,
         statusCode,
@@ -380,7 +380,7 @@ class ErrorHandlingService {
   // Comprehensive health check
   public async performHealthCheck(): Promise<SystemHealth> {
     const startTime = Date.now();
-    const services: HealthCheckResult[] = [];
+    constservices: HealthCheckResult[] = [];
 
     // Run built-in health checks
     services.push(await this.checkDatabase());
@@ -405,7 +405,7 @@ class ErrorHandlingService {
     const hasUnhealthy = services.some(s => s.status === 'unhealthy');
     const hasDegraded = services.some(s => s.status === 'degraded');
     
-    let overallStatus: 'healthy' | 'unhealthy' | 'degraded';
+    letoverallStatus: 'healthy' | 'unhealthy' | 'degraded';
     if (hasUnhealthy) {
       overallStatus = 'unhealthy';
     } else if (hasDegraded) {
@@ -414,7 +414,7 @@ class ErrorHandlingService {
       overallStatus = 'healthy';
     }
 
-    const health: SystemHealth = {
+    consthealth: SystemHealth = {
       status: overallStatus,
       services,
       timestamp: new Date().toISOString(),

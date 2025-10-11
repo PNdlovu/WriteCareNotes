@@ -516,7 +516,7 @@ export class AcademyTrainingService {
         throw new Error('Enrollment not found');
       }
 
-      const updateData: Partial<TrainingEnrollment> = {
+      constupdateData: Partial<TrainingEnrollment> = {
         progress,
         timeSpent: enrollment.timeSpent + timeSpent,
         currentContentId: contentId,
@@ -596,7 +596,7 @@ export class AcademyTrainingService {
       const passed = score >= assessment.passingScore;
 
       // Update enrollment
-      const updateData: Partial<TrainingEnrollment> = {
+      constupdateData: Partial<TrainingEnrollment> = {
         score: Math.max(enrollment.score || 0, score),
         attempts: enrollment.attempts + 1,
       };
@@ -668,7 +668,7 @@ export class AcademyTrainingService {
 
       // Determine record type and number based on training type
       const isExternal = course.trainingType === 'external_accredited';
-      const recordType: 'internal_completion' | 'external_certificate' = isExternal ? 'external_certificate' : 'internal_completion';
+      constrecordType: 'internal_completion' | 'external_certificate' = isExternal ? 'external_certificate' : 'internal_completion';
       const recordPrefix = isExternal ? 'EXTERNAL-CERT' : 'INTERNAL';
       
       const completionRecord = this.completionRecordRepository.create({
@@ -739,7 +739,7 @@ export class AcademyTrainingService {
         order: { createdAt: 'DESC' },
       });
 
-      const progressRecords: TrainingProgress[] = [];
+      constprogressRecords: TrainingProgress[] = [];
 
       for (const enrollment of enrollments) {
         const course = await this.courseRepository.findOne({ where: { id: enrollment.courseId } });
@@ -829,7 +829,7 @@ export class AcademyTrainingService {
         };
       });
 
-      const analytics: TrainingAnalytics = {
+      constanalytics: TrainingAnalytics = {
         courseId,
         totalEnrollments,
         completions,

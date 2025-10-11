@@ -21,10 +21,10 @@ import { DatabaseService } from '../database/database.service';
 import { AgentFeatureFlagsService } from './agent-feature-flags.service';
 
 export class AgentConfigurationService {
-  private db: DatabaseService;
-  private featureFlags: AgentFeatureFlagsService;
-  private configCache: Map<string, AgentConfiguration> = new Map();
-  private cacheExpiry: Map<string, number> = new Map();
+  privatedb: DatabaseService;
+  privatefeatureFlags: AgentFeatureFlagsService;
+  privateconfigCache: Map<string, AgentConfiguration> = new Map();
+  privatecacheExpiry: Map<string, number> = new Map();
   private readonly CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
   constructor() {
@@ -96,7 +96,7 @@ export class AgentConfigurationService {
    * Create rollout plan for agent deployment
    */
   async createRolloutPlan(plan: Omit<AgentRolloutPlan, 'status'>): Promise<AgentRolloutPlan> {
-    const rolloutPlan: AgentRolloutPlan = {
+    constrolloutPlan: AgentRolloutPlan = {
       ...plan,
       status: 'planned'
     };
@@ -282,8 +282,8 @@ export class AgentConfigurationService {
     errors: string[];
     warnings: string[];
   }> {
-    const errors: string[] = [];
-    const warnings: string[] = [];
+    consterrors: string[] = [];
+    constwarnings: string[] = [];
 
     // Validate autonomy level
     if (changes.autonomy && !['recommend-only', 'limited-autonomous', 'full-autonomous'].includes(changes.autonomy)) {

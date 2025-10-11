@@ -22,7 +22,7 @@ export const useToast = () => {
 
   const showToast = useCallback((options: ToastOptions) => {
     const id = (++toastCount).toString();
-    const newToast: Toast = {
+    constnewToast: Toast = {
       id,
       title: options.title,
       description: options.description,

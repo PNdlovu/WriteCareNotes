@@ -131,9 +131,9 @@ export interface RegulatoryComplianceStatus {
 }
 
 export class DataValidationService extends EventEmitter {
-  private validationRules: Map<string, ValidationRule[]> = new Map();
-  private clinicalValidators: Map<string, Function> = new Map();
-  private regulatoryCheckers: Map<string, Function> = new Map();
+  privatevalidationRules: Map<string, ValidationRule[]> = new Map();
+  privateclinicalValidators: Map<string, Function> = new Map();
+  privateregulatoryCheckers: Map<string, Function> = new Map();
 
   constructor() {
     super();
@@ -144,7 +144,7 @@ export class DataValidationService extends EventEmitter {
 
   private initializeValidationRules(): void {
     // Core healthcare validation rules
-    const coreRules: ValidationRule[] = [
+    constcoreRules: ValidationRule[] = [
       {
         ruleId: uuidv4(),
         fieldName: 'resident_id',
@@ -435,7 +435,7 @@ export class DataValidationService extends EventEmitter {
         clinicalSafetyIssues
       );
 
-      const report: DataQualityReport = {
+      constreport: DataQualityReport = {
         reportId,
         generatedAt: new Date(),
         datasetInfo,
@@ -457,7 +457,7 @@ export class DataValidationService extends EventEmitter {
       return report;
 
     } catch (error: unknown) {
-      this.emit('quality_assessment_failed', { reportId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('quality_assessment_failed', { reportId, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -500,7 +500,7 @@ export class DataValidationService extends EventEmitter {
   private async analyzeCompleteness(data: any[], fields: string[]): Promise<QualityMetric> {
     let totalFields = 0;
     let filledFields = 0;
-    const fieldCompleteness: { [field: string]: number } = {};
+    constfieldCompleteness: { [field: string]: number } = {};
     
     for (const field of fields) {
       let fieldFilledCount = 0;
@@ -538,8 +538,8 @@ export class DataValidationService extends EventEmitter {
 
   private async analyzeAccuracy(data: any[], fields: string[]): Promise<QualityMetric> {
     let accuracyScore = 100;
-    const issues: string[] = [];
-    const recommendations: any[] = [];
+    constissues: string[] = [];
+    constrecommendations: any[] = [];
     
     // Check for obvious data accuracy issues
     for (const record of data.slice(0, Math.min(100, data.length))) {
@@ -595,8 +595,8 @@ export class DataValidationService extends EventEmitter {
 
   private async analyzeConsistency(data: any[], fields: string[]): Promise<QualityMetric> {
     let consistencyScore = 100;
-    const issues: string[] = [];
-    const recommendations: any[] = [];
+    constissues: string[] = [];
+    constrecommendations: any[] = [];
     
     // Check format consistency within fields
     const dateFields = fields.filter(field => 
@@ -654,8 +654,8 @@ export class DataValidationService extends EventEmitter {
 
   private async analyzeValidity(data: any[], fields: string[]): Promise<QualityMetric> {
     let validityScore = 100;
-    const issues: string[] = [];
-    const recommendations: any[] = [];
+    constissues: string[] = [];
+    constrecommendations: any[] = [];
     
     const coreRules = this.validationRules.get('core') || [];
     let totalValidations = 0;
@@ -699,8 +699,8 @@ export class DataValidationService extends EventEmitter {
 
   private async analyzeUniqueness(data: any[], fields: string[]): Promise<QualityMetric> {
     let uniquenessScore = 100;
-    const issues: string[] = [];
-    const recommendations: any[] = [];
+    constissues: string[] = [];
+    constrecommendations: any[] = [];
     
     // Check for duplicate records based on key fields
     const keyFields = ['resident_id', 'nhs_number', 'patient_id'];
@@ -729,8 +729,8 @@ export class DataValidationService extends EventEmitter {
 
   private async analyzeTimeliness(data: any[], fields: string[]): Promise<QualityMetric> {
     let timelinessScore = 100;
-    const issues: string[] = [];
-    const recommendations: any[] = [];
+    constissues: string[] = [];
+    constrecommendations: any[] = [];
     
     // Check for outdated information
     const dateFields = fields.filter(field => 
@@ -776,7 +776,7 @@ export class DataValidationService extends EventEmitter {
     if (data.length === 0) return [];
     
     const fields = Object.keys(data[0]);
-    const analyses: FieldQualityAnalysis[] = [];
+    constanalyses: FieldQualityAnalysis[] = [];
     
     for (const field of fields) {
       const values = data.map(record => record[field]);
@@ -838,7 +838,7 @@ export class DataValidationService extends EventEmitter {
   }
 
   private async assessClinicalSafety(data: any[]): Promise<ClinicalSafetyIssue[]> {
-    const issues: ClinicalSafetyIssue[] = [];
+    constissues: ClinicalSafetyIssue[] = [];
     
     for (let i = 0; i < data.length; i++) {
       const record = data[i];
@@ -911,7 +911,7 @@ export class DataValidationService extends EventEmitter {
     let gdprScore = 100;
     let professionalScore = 100;
     let dataProtectionScore = 100;
-    const issues: any[] = [];
+    constissues: any[] = [];
     
     for (const record of data.slice(0, Math.min(50, data.length))) {
       // CQC compliance check
@@ -966,7 +966,7 @@ export class DataValidationService extends EventEmitter {
     validationResults: any,
     clinicalIssues: ClinicalSafetyIssue[]
   ): Promise<QualityRecommendation[]> {
-    const recommendations: QualityRecommendation[] = [];
+    constrecommendations: QualityRecommendation[] = [];
     
     // Data quality recommendations
     if (qualityMetrics.completeness.score < 80) {
@@ -1231,7 +1231,7 @@ export class DataValidationService extends EventEmitter {
   // Utility methods
 
   private detectFieldPatterns(values: any[]): string[] {
-    const patterns: string[] = [];
+    constpatterns: string[] = [];
     
     if (values.length === 0) return patterns;
     
@@ -1260,7 +1260,7 @@ export class DataValidationService extends EventEmitter {
   }
 
   private detectFieldAnomalies(values: any[], fieldName: string): string[] {
-    const anomalies: string[] = [];
+    constanomalies: string[] = [];
     
     // Detect outliers based on field type
     if (fieldName.toLowerCase().includes('age')) {
@@ -1486,9 +1486,9 @@ export class DataValidationService extends EventEmitter {
     fixedRecord?: any;
     clinicalFlags?: any[];
   }> {
-    const errors: any[] = [];
-    const warnings: any[] = [];
-    const clinicalFlags: any[] = [];
+    consterrors: any[] = [];
+    constwarnings: any[] = [];
+    constclinicalFlags: any[] = [];
     let fixedRecord = options.autoFix ? { ...record } : undefined;
     
     const coreRules = this.validationRules.get('core') || [];
@@ -1549,7 +1549,7 @@ export class DataValidationService extends EventEmitter {
   }
 
   private async performClinicalValidation(record: any, rowNumber: number): Promise<any[]> {
-    const flags: any[] = [];
+    constflags: any[] = [];
     
     // Age-medication appropriateness
     if (record.date_of_birth && record.current_medications) {

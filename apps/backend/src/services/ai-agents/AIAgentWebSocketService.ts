@@ -64,11 +64,11 @@ export interface RealTimeResponse {
 
 export class AIAgentWebSocketService {
   // Logger removed
-  private io: SocketIOServer;
-  private activeSessions: Map<string, SocketSession> = new Map();
-  private sessionService: AIAgentSessionService;
-  private publicAIService: PublicCustomerSupportAIService;
-  private tenantAIService: TenantCareAssistantAIService;
+  privateio: SocketIOServer;
+  privateactiveSessions: Map<string, SocketSession> = new Map();
+  privatesessionService: AIAgentSessionService;
+  privatepublicAIService: PublicCustomerSupportAIService;
+  privatetenantAIService: TenantCareAssistantAIService;
   private rateLimitWindow = 60000; // 1 minute
   private maxMessagesPerWindow = 20;
 
@@ -99,7 +99,7 @@ export class AIAgentWebSocketService {
         } catch (error: unknown) {
           console.warn('Socket authentication failed', {
             socketId: socket.id,
-            error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            error: error instanceof Error ? error.message : "Unknown error"
           });
           next(new Error('Authentication failed'));
         }
@@ -113,7 +113,7 @@ export class AIAgentWebSocketService {
         } catch (error: unknown) {
           console.warn('Socket rate limit exceeded', {
             socketId: socket.id,
-            error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            error: error instanceof Error ? error.message : "Unknown error"
           });
           next(new Error('Rate limit exceeded'));
         }
@@ -131,7 +131,7 @@ export class AIAgentWebSocketService {
       socket.on('error', (error) => {
         console.error('Socket error', {
           socketId: socket.id,
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          error: error instanceof Error ? error.message : "Unknown error"
         });
       });
     });
@@ -193,9 +193,9 @@ export class AIAgentWebSocketService {
   }): Promise<void> {
     try {
       let authenticated = false;
-      let userId: string | undefined;
-      let userRole: string | undefined;
-      let tenantId: string | undefined;
+      letuserId: string | undefined;
+      letuserRole: string | undefined;
+      lettenantId: string | undefined;
 
       // Authenticate for tenant sessions
       if (data.agentType === 'TENANT') {
@@ -241,7 +241,7 @@ export class AIAgentWebSocketService {
       }
 
       // Create socket session
-      const socketSession: SocketSession = {
+      constsocketSession: SocketSession = {
         socketId: socket.id,
         sessionId,
         agentType: data.agentType,
@@ -279,7 +279,7 @@ export class AIAgentWebSocketService {
     } catch (error: unknown) {
       console.error('Failed to join AI session', {
         socketId: socket.id,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       socket.emit('error', { 
@@ -320,7 +320,7 @@ export class AIAgentWebSocketService {
         .emit('agent_typing', { sessionId: sessionData.sessionId, typing: true });
 
       // Process message based on agent type
-      let response: any;
+      letresponse: any;
       
       if (sessionData.agentType === 'PUBLIC') {
         response = await this.processPublicMessage(data, sessionData);
@@ -360,7 +360,7 @@ export class AIAgentWebSocketService {
       console.error('Failed to process WebSocket message', {
         socketId: socket.id,
         sessionId: sessionData.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
 
       socket.emit('error', {
@@ -415,7 +415,7 @@ export class AIAgentWebSocketService {
       console.error('Failed to leave AI session', {
         socketId: socket.id,
         sessionId: data.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -577,7 +577,7 @@ export class AIAgentWebSocketService {
       console.error('Failed to terminate socket session', {
         socketId,
         reason,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -605,7 +605,7 @@ export class AIAgentWebSocketService {
       console.error('Failed to broadcast system message', {
         sessionId,
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -650,7 +650,7 @@ export class AIAgentWebSocketService {
     } catch (error: unknown) {
       console.error('Failed to broadcast emergency alert', {
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -666,7 +666,7 @@ export class AIAgentWebSocketService {
     avgMessageCount: number;
   } {
     const sessions = Array.from(this.activeSessions.values());
-    const tenantSessionCounts: { [tenantId: string]: number } = {};
+    consttenantSessionCounts: { [tenantId: string]: number } = {};
 
     sessions.forEach(session => {
       if (session.tenantId) {
@@ -705,7 +705,7 @@ export class AIAgentWebSocketService {
     try {
       const now = Date.now();
       const inactivityThreshold = 30 * 60 * 1000; // 30 minutes
-      const inactiveSessions: string[] = [];
+      constinactiveSessions: string[] = [];
 
       for (const [socketId, sessionData] of this.activeSessions) {
         const inactiveTime = now - sessionData.lastActivity.getTime();
@@ -727,7 +727,7 @@ export class AIAgentWebSocketService {
 
     } catch (error: unknown) {
       console.error('WebSocket session cleanup failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -756,7 +756,7 @@ export class AIAgentWebSocketService {
       console.error('Emergency tenant lockdown failed', {
         tenantId,
         reason,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -795,7 +795,7 @@ export class AIAgentWebSocketService {
       console.log('AI agent WebSocket service cleanup completed');
     } catch (error: unknown) {
       console.error('WebSocket service cleanup failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

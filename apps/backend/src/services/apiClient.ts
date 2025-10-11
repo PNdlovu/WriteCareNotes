@@ -20,7 +20,7 @@ interface ApiError {
 }
 
 class ApiClient {
-  private client: AxiosInstance;
+  privateclient: AxiosInstance;
 
   constructor() {
     this.client = axios.create({
@@ -98,8 +98,8 @@ class ApiClient {
         }
 
         // Handle other errors
-        const apiError: ApiError = {
-          message: error.response?.data?.message || error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" || 'An unexpected error occurred',
+        constapiError: ApiError = {
+          message: error.response?.data?.message || error instanceof Error ? error.message : "Unknown error" || 'An unexpected error occurred',
           code: error.response?.data?.code,
           details: error.response?.data?.details
         };

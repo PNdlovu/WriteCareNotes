@@ -16,7 +16,7 @@ import { AgentComplianceReport, AgentConfiguration } from '../../types/pilot-fee
 import { DatabaseService } from '../database/database.service';
 
 export class AgentComplianceService {
-  private db: DatabaseService;
+  privatedb: DatabaseService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -30,8 +30,8 @@ export class AgentComplianceService {
     violations: string[];
     recommendations: string[];
   }> {
-    const violations: string[] = [];
-    const recommendations: string[] = [];
+    constviolations: string[] = [];
+    constrecommendations: string[] = [];
 
     // Check autonomy level compliance
     if (config.autonomy !== 'recommend-only') {
@@ -75,7 +75,7 @@ export class AgentComplianceService {
     issues: string[];
     score: number;
   }> {
-    const issues: string[] = [];
+    constissues: string[] = [];
     let score = 100;
 
     // Check consent rates
@@ -169,7 +169,7 @@ export class AgentComplianceService {
       auditLogs: number;
     };
   }> {
-    const issues: string[] = [];
+    constissues: string[] = [];
 
     // Get retention statistics
     const retentionQuery = `
@@ -238,7 +238,7 @@ export class AgentComplianceService {
     issues: string[];
     securityScore: number;
   }> {
-    const issues: string[] = [];
+    constissues: string[] = [];
     let securityScore = 100;
 
     // Check for unauthorized access attempts
@@ -336,7 +336,7 @@ export class AgentComplianceService {
       (dataProcessing.score + security.securityScore) / 2
     );
 
-    const report: AgentComplianceReport = {
+    constreport: AgentComplianceReport = {
       tenantId,
       period: { from, to },
       dataProcessing: {
@@ -477,7 +477,7 @@ export class AgentComplianceService {
       WHERE tenant_id = ?
     `;
 
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
 
     if (filters.from) {
       query += ' AND created_at >= ?';

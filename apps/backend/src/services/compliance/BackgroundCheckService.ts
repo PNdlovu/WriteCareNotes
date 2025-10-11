@@ -203,7 +203,7 @@ export class BackgroundCheckService {
       const checkId = this.generateCheckId();
       
       // Initialize check result
-      const result: BackgroundCheckResult = {
+      constresult: BackgroundCheckResult = {
         checkId,
         status: 'pending',
         overallRisk: 'low',
@@ -313,7 +313,7 @@ export class BackgroundCheckService {
 
     try {
       // Simulate DBS check process
-      const dbsResult: DBSCheck = {
+      constdbsResult: DBSCheck = {
         level: request.level,
         certificateNumber: this.generateDBSCertificateNumber(),
         issueDate: new Date(),
@@ -384,7 +384,7 @@ export class BackgroundCheckService {
     try {
       const registrationBody = this.getRegistrationBody(request.profession);
       
-      const result: ProfessionalRegistrationCheck = {
+      constresult: ProfessionalRegistrationCheck = {
         profession: request.profession,
         registrationBody,
         registrationNumber: request.registrationNumber || this.generateRegistrationNumber(request.profession),
@@ -453,10 +453,10 @@ export class BackgroundCheckService {
     this.logger.log(`Checking Right to Work for: ${request.firstName} ${request.lastName} - ${request.nationality}`);
 
     try {
-      let status: 'valid' | 'expired' | 'invalid' | 'pending_verification' = 'valid';
-      let validUntil: Date | undefined;
-      let restrictions: string[] = [];
-      let workPermissions: string[] = ['full_time', 'part_time'];
+      letstatus: 'valid' | 'expired' | 'invalid' | 'pending_verification' = 'valid';
+      letvalidUntil: Date | undefined;
+      letrestrictions: string[] = [];
+      letworkPermissions: string[] = ['full_time', 'part_time'];
       let sponsorshipRequired = false;
 
       // Determine status based on nationality and document type
@@ -618,7 +618,7 @@ export class BackgroundCheckService {
     try {
       const provider = this.checkProviders.get(checkType) || 'UNKNOWN_PROVIDER';
       
-      let checkResult: any = {
+      letcheckResult: any = {
         status: 'pass',
         details: 'No adverse findings',
         warnings: [],
@@ -807,7 +807,7 @@ export class BackgroundCheckService {
   }
 
   private generateRiskFactors(result: BackgroundCheckResult): RiskFactor[] {
-    const riskFactors: RiskFactor[] = [];
+    constriskFactors: RiskFactor[] = [];
     
     // Analyze checks for risk factors
     Object.entries(result.checks).forEach(([checkType, check]) => {
@@ -838,7 +838,7 @@ export class BackgroundCheckService {
   }
 
   private generateRecommendations(result: BackgroundCheckResult): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (result.overallRisk === 'critical') {
       recommendations.push('Do not proceed without senior management approval');
@@ -866,7 +866,7 @@ export class BackgroundCheckService {
   }
 
   private async generateComplianceFlags(result: BackgroundCheckResult, request: BackgroundCheckRequest): Promise<ComplianceFlag[]> {
-    const flags: ComplianceFlag[] = [];
+    constflags: ComplianceFlag[] = [];
 
     // Check CQC compliance
     if (result.checks[BackgroundCheckType.DBS_ENHANCED]?.status !== 'pass') {
@@ -940,7 +940,7 @@ export class BackgroundCheckService {
   }
 
   private getCriticalAlerts(result: BackgroundCheckResult): BackgroundAlert[] {
-    const alerts: BackgroundAlert[] = [];
+    constalerts: BackgroundAlert[] = [];
     
     Object.values(result.checks).forEach(check => {
       alerts.push(...check.alerts.filter(alert => alert.severity === 'critical'));
@@ -956,7 +956,7 @@ export class BackgroundCheckService {
   }
 
   private getCategoryForCheckType(checkType: BackgroundCheckType): 'criminal' | 'financial' | 'professional' | 'identity' | 'regulatory' {
-    const categoryMap: { [key in BackgroundCheckType]: 'criminal' | 'financial' | 'professional' | 'identity' | 'regulatory' } = {
+    constcategoryMap: { [key in BackgroundCheckType]: 'criminal' | 'financial' | 'professional' | 'identity' | 'regulatory' } = {
       [BackgroundCheckType.DBS_BASIC]: 'criminal',
       [BackgroundCheckType.DBS_STANDARD]: 'criminal',
       [BackgroundCheckType.DBS_ENHANCED]: 'criminal',
@@ -983,7 +983,7 @@ export class BackgroundCheckService {
   }
 
   private getCategoryForAlertType(alertType: string): 'criminal' | 'financial' | 'professional' | 'identity' | 'regulatory' {
-    const categoryMap: { [key: string]: 'criminal' | 'financial' | 'professional' | 'identity' | 'regulatory' } = {
+    constcategoryMap: { [key: string]: 'criminal' | 'financial' | 'professional' | 'identity' | 'regulatory' } = {
       'criminal_record': 'criminal',
       'financial_issue': 'financial',
       'employment_gap': 'professional',
@@ -1001,7 +1001,7 @@ export class BackgroundCheckService {
   }
 
   private getRegistrationBody(profession: string): string {
-    const registrationBodies: { [key: string]: string } = {
+    constregistrationBodies: { [key: string]: string } = {
       'nurse': 'Nursing and Midwifery Council (NMC)',
       'social_worker': 'Social Work England',
       'doctor': 'General Medical Council (GMC)',
@@ -1016,7 +1016,7 @@ export class BackgroundCheckService {
   }
 
   private generateRegistrationNumber(profession: string): string {
-    const prefixes: { [key: string]: string } = {
+    constprefixes: { [key: string]: string } = {
       'nurse': 'NMC',
       'social_worker': 'SWE',
       'doctor': 'GMC',

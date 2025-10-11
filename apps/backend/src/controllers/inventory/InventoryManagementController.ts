@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { InventoryManagementService } from '../../services/inventory/InventoryManagementService';
 
 export class InventoryManagementController {
-  private inventoryService: InventoryManagementService;
+  privateinventoryService: InventoryManagementService;
 
   constructor() {
     this.inventoryService = new InventoryManagementService();
@@ -27,7 +27,7 @@ export class InventoryManagementController {
       const item = await this.inventoryService.createAdvancedInventoryItem(req.body);
       res.status(201).json({ success: true, data: item });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -37,7 +37,7 @@ export class InventoryManagementController {
       const result = await this.inventoryService.performRFIDScan(rfidTagId, readerId, location);
       res.json({ success: true, data: result });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -46,7 +46,7 @@ export class InventoryManagementController {
       const analytics = await this.inventoryService.getInventoryAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

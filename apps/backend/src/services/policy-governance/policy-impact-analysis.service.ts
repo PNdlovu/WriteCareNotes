@@ -288,7 +288,7 @@ export class PolicyImpactAnalysisService {
       riskAssessment
     );
 
-    const report: ImpactAnalysisReport = {
+    constreport: ImpactAnalysisReport = {
       policy: {
         id: policy.id,
         title: policy.title,
@@ -360,7 +360,7 @@ export class PolicyImpactAnalysisService {
     riskScore += Math.min(10, estimatedUserImpact / 10); // User impact: up to 10 points
 
     // Determine risk level
-    let riskLevel: ImpactRiskLevel;
+    letriskLevel: ImpactRiskLevel;
     if (riskScore >= 80) {
       riskLevel = ImpactRiskLevel.CRITICAL;
     } else if (riskScore >= 60) {
@@ -421,7 +421,7 @@ export class PolicyImpactAnalysisService {
       dep => dep.dependentType === DependentType.WORKFLOW
     );
 
-    const workflows: AffectedEntity[] = workflowDependencies.map(dep => ({
+    constworkflows: AffectedEntity[] = workflowDependencies.map(dep => ({
       id: dep.dependentId,
       type: DependentType.WORKFLOW,
       name: `Workflow ${dep.dependentId.substring(0, 8)}`, // TODO: Fetch actual workflow name
@@ -436,7 +436,7 @@ export class PolicyImpactAnalysisService {
       wf => wf.riskLevel === ImpactRiskLevel.CRITICAL || wf.riskLevel === ImpactRiskLevel.HIGH
     );
 
-    const byRiskLevel: Record<ImpactRiskLevel, number> = {
+    constbyRiskLevel: Record<ImpactRiskLevel, number> = {
       [ImpactRiskLevel.LOW]: workflows.filter(w => w.riskLevel === ImpactRiskLevel.LOW).length,
       [ImpactRiskLevel.MEDIUM]: workflows.filter(w => w.riskLevel === ImpactRiskLevel.MEDIUM).length,
       [ImpactRiskLevel.HIGH]: workflows.filter(w => w.riskLevel === ImpactRiskLevel.HIGH).length,
@@ -474,7 +474,7 @@ export class PolicyImpactAnalysisService {
       dep => dep.dependentType === DependentType.MODULE
     );
 
-    const modules: AffectedEntity[] = moduleDependencies.map(dep => ({
+    constmodules: AffectedEntity[] = moduleDependencies.map(dep => ({
       id: dep.dependentId,
       type: DependentType.MODULE,
       name: `Module ${dep.dependentId.substring(0, 8)}`, // TODO: Fetch actual module name
@@ -488,7 +488,7 @@ export class PolicyImpactAnalysisService {
       mod => mod.riskLevel === ImpactRiskLevel.CRITICAL || mod.riskLevel === ImpactRiskLevel.HIGH
     );
 
-    const byRiskLevel: Record<ImpactRiskLevel, number> = {
+    constbyRiskLevel: Record<ImpactRiskLevel, number> = {
       [ImpactRiskLevel.LOW]: modules.filter(m => m.riskLevel === ImpactRiskLevel.LOW).length,
       [ImpactRiskLevel.MEDIUM]: modules.filter(m => m.riskLevel === ImpactRiskLevel.MEDIUM).length,
       [ImpactRiskLevel.HIGH]: modules.filter(m => m.riskLevel === ImpactRiskLevel.HIGH).length,
@@ -527,7 +527,7 @@ export class PolicyImpactAnalysisService {
 
     const totalAffected = dependencyGraph.totalDependencies;
 
-    const byType: Record<DependentType, number> = {
+    constbyType: Record<DependentType, number> = {
       [DependentType.WORKFLOW]: 0,
       [DependentType.MODULE]: 0,
       [DependentType.TEMPLATE]: 0,
@@ -628,7 +628,7 @@ export class PolicyImpactAnalysisService {
    * Get recommended actions for a dependency
    */
   private getRecommendedActions(dependency: PolicyDependency): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
 
     if (dependency.dependencyStrength === DependencyStrength.STRONG) {
       actions.push('Test thoroughly before publishing');
@@ -659,7 +659,7 @@ export class PolicyImpactAnalysisService {
     criticalWorkflows: number,
     scope: ChangeScope
   ): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (riskLevel === ImpactRiskLevel.CRITICAL || riskLevel === ImpactRiskLevel.HIGH) {
       recommendations.push('Obtain approval from senior management before publishing');
@@ -697,7 +697,7 @@ export class PolicyImpactAnalysisService {
     workflows: AffectedWorkflowsSummary,
     modules: AffectedModulesSummary
   ): { item: string; completed: boolean; required: boolean }[] {
-    const checklist: { item: string; completed: boolean; required: boolean }[] = [];
+    constchecklist: { item: string; completed: boolean; required: boolean }[] = [];
 
     // Always required
     checklist.push({
@@ -775,7 +775,7 @@ export class PolicyImpactAnalysisService {
     modules: AffectedModulesSummary,
     risk: RiskAssessment
   ): { recipient: string; message: string; priority: 'low' | 'medium' | 'high' }[] {
-    const notifications: { recipient: string; message: string; priority: 'low' | 'medium' | 'high' }[] = [];
+    constnotifications: { recipient: string; message: string; priority: 'low' | 'medium' | 'high' }[] = [];
 
     if (risk.riskLevel === ImpactRiskLevel.CRITICAL) {
       notifications.push({

@@ -49,7 +49,7 @@ interface CarePlanFilters {
 }
 
 export class CarePlanningService {
-  private carePlanRepository: Repository<CarePlan>;
+  privatecarePlanRepository: Repository<CarePlan>;
 
   constructor(private dataSource: DataSource) {
     this.carePlanRepository = this.dataSource.getRepository(CarePlan);

@@ -378,7 +378,7 @@ export class Budget extends BaseEntity {
     const revenuePerf = this.revenueVariancePercentage.toNumber();
     const expensePerf = this.expenseVariancePercentage.toNumber();
     
-    let overallPerformance: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
+    letoverallPerformance: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
     
     if (revenuePerf >= 5 && expensePerf <= -5) {
       overallPerformance = 'EXCELLENT';
@@ -519,7 +519,7 @@ export class Budget extends BaseEntity {
                        revenueRisk === 'MEDIUM' || expenseRisk === 'MEDIUM' ? 'MEDIUM' : 'LOW';
     
     // Generate recommendations
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
     
     if (this.revenueVariancePercentage.lessThan(-10)) {
       recommendations.push('Revenue is significantly below budget. Consider reviewing pricing or increasing marketing efforts.');

@@ -243,7 +243,7 @@ export class SecurityPolicy extends BaseEntity {
     }
 
     // Determine actions based on policy
-    const actions: string[] = [];
+    constactions: string[] = [];
     
     if (this.actions.allow) actions.push('allow');
     if (this.actions.deny) actions.push('deny');

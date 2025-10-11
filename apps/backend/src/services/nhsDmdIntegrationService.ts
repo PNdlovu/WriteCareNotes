@@ -185,7 +185,7 @@ export class NHSDmdIntegrationService {
     snomedCodes: string[],
     newMedicationSnomedCode: string
   ): Promise<DrugInteractionResult[]> {
-    const interactions: DrugInteractionResult[] = [];
+    constinteractions: DrugInteractionResult[] = [];
 
     // Get the new medication being added
     const newMed = await this.getMedicationBySnomedCode(newMedicationSnomedCode);
@@ -688,7 +688,7 @@ export class NHSDmdIntegrationService {
    * Get SNOMED code for medication form
    */
   private getFormSnomedCode(form: DmdFormType): string {
-    const formCodes: Record<DmdFormType, string> = {
+    constformCodes: Record<DmdFormType, string> = {
       [DmdFormType.TABLET]: '385055001',
       [DmdFormType.CAPSULE]: '385049006',
       [DmdFormType.ORAL_SOLUTION]: '385023001',

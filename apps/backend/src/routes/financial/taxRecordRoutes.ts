@@ -18,8 +18,8 @@ import { logger } from '@/utils/logger';
  * Tax Record Routes with enterprise security and compliance
  */
 export class TaxRecordRoutes {
-  private router: Router;
-  private taxRecordController: TaxRecordController;
+  privaterouter: Router;
+  privatetaxRecordController: TaxRecordController;
 
   constructor(taxRecordController: TaxRecordController) {
     this.router = Router();

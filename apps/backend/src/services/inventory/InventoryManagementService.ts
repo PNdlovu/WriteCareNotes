@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class InventoryManagementService {
-  private inventoryRepository: Repository<InventoryItem>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateinventoryRepository: Repository<InventoryItem>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.inventoryRepository = AppDataSource.getRepository(InventoryItem);

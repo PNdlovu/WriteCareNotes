@@ -35,16 +35,16 @@ export interface AgentDeploymentConfig {
 
 @Injectable()
 export class AIAgentLifecycleService {
-  private eventListeners: Map<string, ((event: AgentLifecycleEvent) => void)[]> = new Map();
+  privateeventListeners: Map<string, ((event: AgentLifecycleEvent) => void)[]> = new Map();
 
   constructor(
     @InjectRepository(AIAgent)
-    private agentRepository: Repository<AIAgent>,
+    privateagentRepository: Repository<AIAgent>,
     @InjectRepository(AIAgentSession)
-    private sessionRepository: Repository<AIAgentSession>,
+    privatesessionRepository: Repository<AIAgentSession>,
     @InjectRepository(AIAgentConversation)
-    private conversationRepository: Repository<AIAgentConversation>,
-    private registryService: AIAgentRegistryService,
+    privateconversationRepository: Repository<AIAgentConversation>,
+    privateregistryService: AIAgentRegistryService,
   ) {}
 
   /**

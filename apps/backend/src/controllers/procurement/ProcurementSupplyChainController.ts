@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { ProcurementSupplyChainService } from '../../services/procurement/ProcurementSupplyChainService';
 
 export class ProcurementSupplyChainController {
-  private procurementService: ProcurementSupplyChainService;
+  privateprocurementService: ProcurementSupplyChainService;
 
   constructor() {
     this.procurementService = new ProcurementSupplyChainService();
@@ -27,7 +27,7 @@ export class ProcurementSupplyChainController {
       const request = await this.procurementService.createIntelligentPurchaseRequest(req.body);
       res.status(201).json({ success: true, data: request });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class ProcurementSupplyChainController {
       const supplier = await this.procurementService.registerAdvancedSupplier(req.body);
       res.status(201).json({ success: true, data: supplier });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -46,7 +46,7 @@ export class ProcurementSupplyChainController {
       const forecast = await this.procurementService.generateDemandForecast(category as any, parseInt(months as string) || 12);
       res.json({ success: true, data: forecast });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -55,7 +55,7 @@ export class ProcurementSupplyChainController {
       const analytics = await this.procurementService.getAdvancedSupplyChainAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -65,7 +65,7 @@ export class ProcurementSupplyChainController {
       const evaluation = await this.procurementService.performAdvancedSupplierEvaluation(supplierId);
       res.json({ success: true, data: evaluation });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -74,7 +74,7 @@ export class ProcurementSupplyChainController {
       const optimization = await this.procurementService.optimizeContractPortfolio();
       res.json({ success: true, data: optimization });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -83,7 +83,7 @@ export class ProcurementSupplyChainController {
       const riskAnalysis = await this.procurementService.performSupplyChainRiskAnalysis();
       res.json({ success: true, data: riskAnalysis });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class FinancialReimbursementService {
-  private claimRepository: Repository<ReimbursementClaim>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateclaimRepository: Repository<ReimbursementClaim>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.claimRepository = AppDataSource.getRepository(ReimbursementClaim);

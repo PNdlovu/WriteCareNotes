@@ -17,7 +17,7 @@ import { ActivitiesTherapyService, ActivitySearchCriteria } from '../../services
 import { Activity } from '../../entities/activities/Activity';
 
 export class ActivitiesTherapyController {
-  private activitiesService: ActivitiesTherapyService;
+  privateactivitiesService: ActivitiesTherapyService;
 
   constructor() {
     this.activitiesService = new ActivitiesTherapyService();
@@ -38,7 +38,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to create activity',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -56,7 +56,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve activities',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -75,14 +75,14 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve today\'s activities',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
 
   async searchActivities(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: ActivitySearchCriteria = {
+      constcriteria: ActivitySearchCriteria = {
         activityType: req.query['activityType'] as any,
         category: req.query['category'] as any,
         facilitator: req.query['facilitator'] as string,
@@ -103,7 +103,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to search activities',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -126,7 +126,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to start activity',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -150,7 +150,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to complete activity',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -182,7 +182,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to cancel activity',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -205,7 +205,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to add participant',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -227,7 +227,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to remove participant',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -251,7 +251,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to record participation outcome',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -270,7 +270,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve therapy analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -292,7 +292,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve resident activity profile',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -312,7 +312,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to plan activities for week',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -332,7 +332,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to check resource availability',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -352,7 +352,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to create therapy session',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -375,7 +375,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve therapy sessions',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -401,7 +401,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve therapist sessions',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -434,7 +434,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve therapy session',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -459,7 +459,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to start therapy session',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -486,7 +486,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to complete therapy session',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -513,7 +513,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to cancel therapy session',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -540,7 +540,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to update therapy goal progress',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -567,7 +567,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to record safety incident',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -594,7 +594,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve therapy progress report',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -622,7 +622,7 @@ export class ActivitiesTherapyController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve therapist workload',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

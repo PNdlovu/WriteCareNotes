@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class EnhancedBedRoomManagementService {
-  private roomRepository: Repository<EnhancedBedRoomManagement>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateroomRepository: Repository<EnhancedBedRoomManagement>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.roomRepository = AppDataSource.getRepository(EnhancedBedRoomManagement);

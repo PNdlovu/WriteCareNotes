@@ -94,10 +94,10 @@ export interface OfflineDataManager {
 }
 
 export class MobileSelfServiceService {
-  private sessionRepository: Repository<MobileSession>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
-  private encryptionService: FieldLevelEncryptionService;
+  privatesessionRepository: Repository<MobileSession>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
+  privateencryptionService: FieldLevelEncryptionService;
 
   constructor() {
     this.sessionRepository = AppDataSource.getRepository(MobileSession);
@@ -234,7 +234,7 @@ export class MobileSelfServiceService {
             syncResult.errors.push(syncItemResult.error);
           }
         } catch (error: unknown) {
-          syncResult.errors.push(`Error syncing ${syncItem.entityType}:${syncItem.entityId} - ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+          syncResult.errors.push(`Error syncing ${syncItem.entityType}:${syncItem.entityId} - ${error instanceof Error ? error.message : "Unknown error"}`);
         }
       }
 
@@ -603,7 +603,7 @@ export class MobileSelfServiceService {
       return {
         success: false,
         conflict: false,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       };
     }
   }

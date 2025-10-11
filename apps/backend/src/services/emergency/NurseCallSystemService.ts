@@ -583,7 +583,7 @@ export class NurseCallSystemService {
   }
 
   private getEscalationTime(priority: CallPriority): number {
-    const times: Record<CallPriority, number> = {
+    consttimes: Record<CallPriority, number> = {
       [CallPriority.EMERGENCY]: 60 * 1000, // 1 minute
       [CallPriority.URGENT]: 3 * 60 * 1000, // 3 minutes
       [CallPriority.HIGH]: 5 * 60 * 1000, // 5 minutes
@@ -594,7 +594,7 @@ export class NurseCallSystemService {
   }
 
   private async getEscalationStaff(level: number, tenantId: string, organizationId: string): Promise<OnCallRota[]> {
-    const rolesByLevel: Record<number, OnCallRole[]> = {
+    constrolesByLevel: Record<number, OnCallRole[]> = {
       1: [OnCallRole.REGISTERED_NURSE, OnCallRole.SENIOR_CARER],
       2: [OnCallRole.SENIOR_NURSE],
       3: [OnCallRole.MANAGER, OnCallRole.CLINICAL_LEAD],

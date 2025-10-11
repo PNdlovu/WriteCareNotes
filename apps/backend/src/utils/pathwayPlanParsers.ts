@@ -89,7 +89,7 @@ export interface RelationshipGoals {
  * Parse educationGoals field (stored as text JSON)
  */
 export function parseEducationGoals(jsonString: string | null): EducationGoals {
-  const defaultGoals: EducationGoals = {
+  constdefaultGoals: EducationGoals = {
     pepStatus: 'Not Started',
     pepReviewDate: null,
     goals: [],
@@ -131,7 +131,7 @@ export function parseEducationGoals(jsonString: string | null): EducationGoals {
  * Parse accommodationGoals field (stored as text JSON)
  */
 export function parseAccommodationGoals(jsonString: string | null): AccommodationGoals {
-  const defaultGoals: AccommodationGoals = {
+  constdefaultGoals: AccommodationGoals = {
     currentStatus: 'Planning',
     options: [],
     viewings: [],
@@ -175,7 +175,7 @@ export function parseAccommodationGoals(jsonString: string | null): Accommodatio
  * Parse personalAdvisor field (stored as text JSON)
  */
 export function parsePersonalAdvisor(jsonString: string | null): PersonalAdvisor {
-  const defaultAdvisor: PersonalAdvisor = {
+  constdefaultAdvisor: PersonalAdvisor = {
     name: 'Not assigned',
     email: '',
     phone: '',
@@ -208,7 +208,7 @@ export function parsePersonalAdvisor(jsonString: string | null): PersonalAdvisor
  * Parse relationshipGoals field (stored as text JSON)
  */
 export function parseRelationshipGoals(jsonString: string | null): RelationshipGoals {
-  const defaultGoals: RelationshipGoals = {
+  constdefaultGoals: RelationshipGoals = {
     familyContact: null,
     supportNetwork: [],
     mentoringScheme: false,

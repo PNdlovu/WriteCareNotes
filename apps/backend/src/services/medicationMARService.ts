@@ -228,7 +228,7 @@ export class MedicationMARService {
     }
 
     // Create administration record
-    const adminRecord: MedicationAdministrationRecord = {
+    constadminRecord: MedicationAdministrationRecord = {
       id: `admin_${Date.now()}_${medicationId}`,
       medicationId: medication.id,
       medicationName: medication.medicationName,
@@ -309,7 +309,7 @@ export class MedicationMARService {
       throw new BadRequestException(`Medication not found: ${medicationId}`);
     }
 
-    const refusalRecord: MedicationAdministrationRecord = {
+    constrefusalRecord: MedicationAdministrationRecord = {
       id: `refusal_${Date.now()}_${medicationId}`,
       medicationId: medication.id,
       medicationName: medication.medicationName,
@@ -369,7 +369,7 @@ export class MedicationMARService {
       throw new BadRequestException(`Medication not found: ${medicationId}`);
     }
 
-    const omissionRecord: MedicationAdministrationRecord = {
+    constomissionRecord: MedicationAdministrationRecord = {
       id: `omission_${Date.now()}_${medicationId}`,
       medicationId: medication.id,
       medicationName: medication.medicationName,
@@ -429,7 +429,7 @@ export class MedicationMARService {
     // TODO: Fetch administration record from database
     // For now, create report
 
-    const report: SideEffectReport = {
+    constreport: SideEffectReport = {
       medicationAdministrationId: administrationId,
       medicationName: 'Example Medication', // TODO: Get from admin record
       childId: 'child_123',
@@ -475,7 +475,7 @@ export class MedicationMARService {
     adminRecord: MedicationAdministrationRecord
   ): Promise<ControlledDrugRegisterEntry> {
     
-    const cdEntry: ControlledDrugRegisterEntry = {
+    constcdEntry: ControlledDrugRegisterEntry = {
       id: `cd_${Date.now()}`,
       medicationName: adminRecord.medicationName,
       schedule: this.getControlledDrugSchedule(adminRecord.medicationName),

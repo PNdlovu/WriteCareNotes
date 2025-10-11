@@ -66,7 +66,7 @@ export interface ApprovalDTO {
  * Compliance: GDPR, CQC, ISO 27001, Records Management Code of Practice
  */
 export class SimpleDocumentService {
-  private documentRepository: Repository<DocumentManagement>;
+  privatedocumentRepository: Repository<DocumentManagement>;
 
   constructor(private dataSource: DataSource) {
     this.documentRepository = this.dataSource.getRepository(DocumentManagement);
@@ -78,7 +78,7 @@ export class SimpleDocumentService {
   async create(dto: CreateDocumentDTO): Promise<DocumentManagement> {
     const documentId = await this.generateDocumentId(dto.documentType);
 
-    const versionControl: VersionControl = {
+    constversionControl: VersionControl = {
       versionNumber: '1.0',
       changeDescription: 'Initial version',
       changedBy: dto.metadata.author,
@@ -290,7 +290,7 @@ export class SimpleDocumentService {
     const [major, minor] = currentVersion.split('.').map(Number);
     const newVersion = dto.majorChange ? `${major + 1}.0` : `${major}.${minor + 1}`;
 
-    const versionControl: VersionControl = {
+    constversionControl: VersionControl = {
       versionNumber: newVersion,
       previousVersionId: previousDocument.id,
       changeDescription: dto.changeDescription,
@@ -545,7 +545,7 @@ export class SimpleDocumentService {
    * Get document prefix based on type
    */
   private getDocumentPrefix(type: DocumentType): string {
-    const prefixes: Record<DocumentType, string> = {
+    constprefixes: Record<DocumentType, string> = {
       [DocumentType.CARE_PLAN]: 'CP',
       [DocumentType.MEDICAL_RECORD]: 'MR',
       [DocumentType.POLICY]: 'POL',

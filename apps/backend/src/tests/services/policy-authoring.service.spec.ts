@@ -220,16 +220,16 @@ class PolicyAuthoringTestDataFactory {
 }
 
 describe('PolicyAuthoringService', () => {
-  let service: PolicyAuthoringService;
-  let module: TestingModule;
-  let policyDraftRepository: Repository<PolicyDraft>;
-  let policyTemplateRepository: Repository<PolicyTemplate>;
-  let policyImportRepository: Repository<PolicyImportJob>;
-  let acknowledgmentRepository: Repository<UserAcknowledgment>;
-  let auditEventRepository: Repository<AuditEvent>;
-  let auditTrailService: AuditService;
-  let notificationService: NotificationService;
-  let fileProcessingService: FileProcessingService;
+  letservice: PolicyAuthoringService;
+  letmodule: TestingModule;
+  letpolicyDraftRepository: Repository<PolicyDraft>;
+  letpolicyTemplateRepository: Repository<PolicyTemplate>;
+  letpolicyImportRepository: Repository<PolicyImportJob>;
+  letacknowledgmentRepository: Repository<UserAcknowledgment>;
+  letauditEventRepository: Repository<AuditEvent>;
+  letauditTrailService: AuditService;
+  letnotificationService: NotificationService;
+  letfileProcessingService: FileProcessingService;
 
   // Mock implementations
   const mockPolicyDraftRepository = {
@@ -288,7 +288,7 @@ describe('PolicyAuthoringService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         PolicyAuthoringService,
         {
@@ -933,7 +933,7 @@ describe('PolicyAuthoringService', () => {
         const user = PolicyAuthoringTestDataFactory.createUser();
         
         // Create large rich text content (simulating 10,000 word policy)
-        const largeContent: RichTextContent = {
+        constlargeContent: RichTextContent = {
           type: 'doc',
           content: Array.from({ length: 100 }, (_, i) => ({
             type: 'paragraph',
@@ -1061,8 +1061,8 @@ describe('PolicyAuthoringService', () => {
  * Tests complete workflows with actual database operations
  */
 describe('PolicyAuthoringService Integration Tests', () => {
-  let app: any;
-  let service: PolicyAuthoringService;
+  letapp: any;
+  letservice: PolicyAuthoringService;
 
   beforeAll(async () => {
     // Set up test database and application context

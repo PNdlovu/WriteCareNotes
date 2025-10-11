@@ -46,7 +46,7 @@ import { ReviewType } from '../entities/CarePlanReview';
 import { GoalDomain, GoalPriority } from '../entities/CarePlanGoal';
 
 export class CarePlanningController {
-  private carePlanningService: CarePlanningService;
+  privatecarePlanningService: CarePlanningService;
 
   constructor() {
     this.carePlanningService = new CarePlanningService();

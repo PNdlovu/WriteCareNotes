@@ -122,9 +122,9 @@ export interface DocumentCollaboration {
 }
 
 export class DocumentManagementService {
-  private documentRepository: Repository<DocumentManagement>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatedocumentRepository: Repository<DocumentManagement>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.documentRepository = AppDataSource.getRepository(DocumentManagement);
@@ -212,7 +212,7 @@ export class DocumentManagementService {
         throw new Error('Document not found');
       }
 
-      const review: DocumentReview = {
+      constreview: DocumentReview = {
         reviewId: `review_${Date.now()}`,
         documentId: documentId,
         reviewerId: reviewerId,
@@ -274,7 +274,7 @@ export class DocumentManagementService {
       const currentVersion = document.versionControl.versionNumber;
       const newVersion = this.calculateNextVersion(currentVersion, changeDescription);
 
-      const version: DocumentVersion = {
+      constversion: DocumentVersion = {
         versionId: `version_${Date.now()}`,
         documentId: documentId,
         versionNumber: newVersion,
@@ -330,7 +330,7 @@ export class DocumentManagementService {
         throw new Error('Document not found');
       }
 
-      const collaboration: DocumentCollaboration = {
+      constcollaboration: DocumentCollaboration = {
         collaborationId: `collab_${Date.now()}`,
         documentId: documentId,
         participants: participants.map(p => ({

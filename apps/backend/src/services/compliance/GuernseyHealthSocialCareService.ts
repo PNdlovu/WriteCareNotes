@@ -131,7 +131,7 @@ export class GuernseyHealthSocialCareService {
 
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get Guernsey compliance assessment: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get Guernsey compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -227,7 +227,7 @@ export class GuernseyHealthSocialCareService {
           return 85;
       }
     } catch (error: unknown) {
-      console.error(`Failed to assess ${standard}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to assess ${standard}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return 70;
     }
   }
@@ -276,7 +276,7 @@ export class GuernseyHealthSocialCareService {
   }
 
   private async identifyGuernseyGaps(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    const gaps: string[] = [];
+    constgaps: string[] = [];
     
     for (const [domain, score] of Object.entries(domainScores)) {
       if (score < 85) {
@@ -288,7 +288,7 @@ export class GuernseyHealthSocialCareService {
   }
 
   private async generateGuernseyRecommendations(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    const recommendations: string[] = [
+    constrecommendations: string[] = [
       'Strengthen community links with local Guernsey organizations',
       'Enhance cultural heritage programs',
       'Improve environmental sustainability practices',

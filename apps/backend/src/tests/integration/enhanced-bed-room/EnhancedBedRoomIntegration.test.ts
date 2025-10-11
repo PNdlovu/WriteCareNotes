@@ -7,8 +7,8 @@ import { BedRoom } from '../../../entities/enhanced-bed-room/BedRoom';
 import { RoomOccupancy } from '../../../entities/enhanced-bed-room/RoomOccupancy';
 
 describe('EnhancedBedRoomService Integration Tests', () => {
-  let service: EnhancedBedRoomService;
-  let module: TestingModule;
+  letservice: EnhancedBedRoomService;
+  letmodule: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({

@@ -93,7 +93,7 @@ export class AssistiveRoboticsController {
     @Request() req: any,
   ) {
     try {
-      let robots: AssistiveRobot[];
+      letrobots: AssistiveRobot[];
 
       if (type) {
         robots = await this.assistiveRoboticsService.getRobotsByType(type as any);

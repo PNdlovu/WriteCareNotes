@@ -103,7 +103,7 @@ export interface CarePlanVersionInfo {
 export class CarePlanValidationError extends Error {
   constructor(
     message: string,
-    public validationErrors: ValidationError[]
+    publicvalidationErrors: ValidationError[]
   ) {
     super(message);
     this.name = 'CarePlanValidationError';
@@ -125,16 +125,16 @@ export class CarePlanApprovalError extends Error {
 }
 
 export class CarePlanService {
-  private carePlanRepository: CarePlanRepository;
-  private careDomainRepository: Repository<CareDomain>;
-  private residentRepository: Repository<Resident>;
+  privatecarePlanRepository: CarePlanRepository;
+  privatecareDomainRepository: Repository<CareDomain>;
+  privateresidentRepository: Repository<Resident>;
 
   constructor(
-    private dataSource: DataSource,
-    private auditService: AuditService,
-    private encryptionService: FieldLevelEncryptionService,
-    private notificationService: NotificationService,
-    private eventPublisher: EventPublishingService
+    privatedataSource: DataSource,
+    privateauditService: AuditService,
+    privateencryptionService: FieldLevelEncryptionService,
+    privatenotificationService: NotificationService,
+    privateeventPublisher: EventPublishingService
   ) {
     this.carePlanRepository = new CarePlanRepository(dataSource);
     this.careDomainRepository = dataSource.getRepository(CareDomain);
@@ -258,7 +258,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to create care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: request.residentId,
         correlationId 
       });
@@ -268,7 +268,7 @@ export class CarePlanService {
         resourceType: 'CarePlan',
         userId: request.createdBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           residentId: request.residentId,
           correlationId
         },
@@ -298,7 +298,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to get care plan by ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId: id 
       });
       throw error;
@@ -358,7 +358,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to search care plans', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         filters 
       });
       throw error;
@@ -511,7 +511,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to update care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId: id,
         correlationId 
       });
@@ -522,7 +522,7 @@ export class CarePlanService {
         resourceId: id,
         userId: request.updatedBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           correlationId
         },
         correlationId
@@ -621,7 +621,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to approve care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId: id,
         correlationId 
       });
@@ -632,7 +632,7 @@ export class CarePlanService {
         resourceId: id,
         userId: request.approvedBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           correlationId
         },
         correlationId
@@ -699,7 +699,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to archive care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId: id,
         correlationId 
       });
@@ -724,7 +724,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to get care plans due for review', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         daysAhead 
       });
       throw error;
@@ -766,7 +766,7 @@ export class CarePlanService {
 
     } catch (error: unknown) {
       console.error('Failed to get care plan version history', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId: id 
       });
       throw error;
@@ -781,7 +781,7 @@ export class CarePlanService {
     try {
       return await this.carePlanRepository.countActive();
     } catch (error: unknown) {
-      console.error('Failed to get active care plans count', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      console.error('Failed to get active care plans count', { error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -808,7 +808,7 @@ export class CarePlanService {
       return await this.carePlanRepository.getCarePlanSummaries(searchCriteria, limit);
     } catch (error: unknown) {
       console.error('Failed to get care plan summaries', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         filters 
       });
       throw error;
@@ -824,7 +824,7 @@ export class CarePlanService {
       return await this.carePlanRepository.getStatistics(residentId);
     } catch (error: unknown) {
       console.error('Failed to get care plan statistics', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId 
       });
       throw error;
@@ -850,7 +850,7 @@ export class CarePlanService {
       return carePlans;
     } catch (error: unknown) {
       console.error('Failed to get care plans by resident ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId 
       });
       throw error;
@@ -873,7 +873,7 @@ export class CarePlanService {
       return carePlans;
     } catch (error: unknown) {
       console.error('Failed to get care plans requiring attention', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" 
+        error: error instanceof Error ? error.message : "Unknown error" 
       });
       throw error;
     }
@@ -896,7 +896,7 @@ export class CarePlanService {
       );
     } catch (error: unknown) {
       console.error('Failed to check for conflicting care plans', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId,
         effectiveFrom,
         effectiveTo 
@@ -921,7 +921,7 @@ export class CarePlanService {
       return carePlans;
     } catch (error: unknown) {
       console.error('Failed to get active care plans by resident ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId 
       });
       throw error;
@@ -944,7 +944,7 @@ export class CarePlanService {
       return carePlans;
     } catch (error: unknown) {
       console.error('Failed to get care plan history by resident ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId 
       });
       throw error;
@@ -1020,7 +1020,7 @@ export class CarePlanService {
 
   private async validateCarePlanCompleteness(carePlan: CarePlan): Promise<void> {
     logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!carePlan.planName || carePlan.planName.trim().length === 0) {
       errors.push('Plan name is required');
@@ -1053,7 +1053,7 @@ export class CarePlanService {
   }
 
   private extractChanges(current: CarePlan, previous?: CarePlan): string[] {
-    const changes: string[] = [];
+    constchanges: string[] = [];
 
     if (!previous) {
       changes.push('Initial version created');

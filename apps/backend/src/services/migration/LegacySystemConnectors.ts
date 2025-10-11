@@ -63,8 +63,8 @@ export interface SystemCapabilities {
 }
 
 export class LegacySystemConnectors extends EventEmitter {
-  private connections: Map<string, LegacySystemConnection> = new Map();
-  private connectorImplementations: Map<string, any> = new Map();
+  privateconnections: Map<string, LegacySystemConnection> = new Map();
+  privateconnectorImplementations: Map<string, any> = new Map();
 
   constructor() {
     super();
@@ -103,7 +103,7 @@ export class LegacySystemConnectors extends EventEmitter {
             }
           };
         } catch (error: unknown) {
-          return { success: false, details: { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" } };
+          return { success: false, details: { error: error instanceof Error ? error.message : "Unknown error" } };
         }
       },
       
@@ -954,7 +954,7 @@ export class LegacySystemConnectors extends EventEmitter {
       // Get system capabilities
       const capabilities = connector.getCapabilities();
       
-      const connection: LegacySystemConnection = {
+      constconnection: LegacySystemConnection = {
         connectionId,
         systemName: connector.name,
         systemType: this.determineSystemType(systemType),
@@ -986,7 +986,7 @@ export class LegacySystemConnectors extends EventEmitter {
       return connection;
 
     } catch (error: unknown) {
-      this.emit('connection_failed', { connectionId, systemType, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('connection_failed', { connectionId, systemType, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -1033,7 +1033,7 @@ export class LegacySystemConnectors extends EventEmitter {
       return result;
 
     } catch (error: unknown) {
-      this.emit('extraction_failed', { connectionId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('extraction_failed', { connectionId, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -1111,7 +1111,7 @@ export class LegacySystemConnectors extends EventEmitter {
       this.emit('connection_closed', { connectionId, systemName: connection.systemName });
       
     } catch (error: unknown) {
-      this.emit('disconnection_failed', { connectionId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('disconnection_failed', { connectionId, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -1161,7 +1161,7 @@ export class LegacySystemConnectors extends EventEmitter {
         responseTime: Date.now() - healthStart,
         dataAccessible: false,
         estimatedRecords: 0,
-        warnings: [error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"]
+        warnings: [error instanceof Error ? error.message : "Unknown error"]
       };
     }
   }
@@ -1220,7 +1220,7 @@ export class LegacySystemConnectors extends EventEmitter {
           systemType: config.systemType,
           success: false,
           responseTime: Date.now() - startTime,
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          error: error instanceof Error ? error.message : "Unknown error"
         });
       }
     }
@@ -1231,7 +1231,7 @@ export class LegacySystemConnectors extends EventEmitter {
   // Helper methods
 
   private determineSystemType(systemType: string): 'database' | 'file_based' | 'api' | 'proprietary' {
-    const typeMap: { [key: string]: any } = {
+    consttypeMap: { [key: string]: any } = {
       'person_centred_software': 'database',
       'care_systems_uk': 'database',
       'nhs_spine': 'api',
@@ -1306,7 +1306,7 @@ export class LegacySystemConnectors extends EventEmitter {
     if (capabilities.knownLimitations.length < 3) compatibilityScore += 5;
     
     // Determine complexity
-    let complexity: 'low' | 'medium' | 'high' | 'complex' = 'medium';
+    letcomplexity: 'low' | 'medium' | 'high' | 'complex' = 'medium';
     if (systemType === 'generic_file_import') complexity = 'low';
     else if (systemType === 'nhs_spine' || systemType === 'social_services') complexity = 'high';
     else if (capabilities.knownLimitations.length > 5) complexity = 'complex';
@@ -1388,7 +1388,7 @@ export class LegacySystemConnectors extends EventEmitter {
         connection.status = 'error';
         this.emit('connection_health_check_failed', {
           connectionId: connection.connectionId,
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          error: error instanceof Error ? error.message : "Unknown error"
         });
       }
     }

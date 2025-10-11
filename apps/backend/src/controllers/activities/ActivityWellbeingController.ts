@@ -81,7 +81,7 @@ export class ActivityWellbeingController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      const filters: any = {};
+      constfilters: any = {};
       if (req.query.activityType) filters.activityType = req.query.activityType;
       if (req.query.activityCategory) filters.activityCategory = req.query.activityCategory;
       if (req.query.startDate) filters.startDate = new Date(req.query.startDate as string);

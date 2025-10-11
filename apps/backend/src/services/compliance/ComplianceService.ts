@@ -42,7 +42,7 @@ export class ComplianceService {
       this.logger.log(`Checking compliance for tenant ${tenantId} with regulation ${regulation}`);
       
       // In a real implementation, this would perform actual compliance checks
-      const checks: ComplianceCheck[] = [
+      constchecks: ComplianceCheck[] = [
         {
           id: 'check_001',
           name: 'Data Protection Compliance',
@@ -80,7 +80,7 @@ export class ComplianceService {
       const totalCount = checks.length;
       const score = totalCount > 0 ? (compliantCount / totalCount) * 100 : 0;
       
-      let overallStatus: 'compliant' | 'non_compliant' | 'warning' = 'compliant';
+      letoverallStatus: 'compliant' | 'non_compliant' | 'warning' = 'compliant';
       if (score < 70) {
         overallStatus = 'non_compliant';
       } else if (score < 90) {

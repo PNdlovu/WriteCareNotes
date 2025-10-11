@@ -15,7 +15,7 @@ import { BudgetService, BudgetRequest, BudgetUpdate, BudgetSearchCriteria } from
 import { logger } from '../../utils/logger';
 
 export class BudgetController {
-  private budgetService: BudgetService;
+  privatebudgetService: BudgetService;
 
   constructor() {
     this.budgetService = new BudgetService();
@@ -26,7 +26,7 @@ export class BudgetController {
    */
   async createBudget(req: Request, res: Response): Promise<void> {
     try {
-      const request: BudgetRequest = req.body;
+      constrequest: BudgetRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const budget = await this.budgetService.createBudget(request, createdBy);
@@ -88,7 +88,7 @@ export class BudgetController {
    */
   async searchBudgets(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: BudgetSearchCriteria = req.query;
+      constcriteria: BudgetSearchCriteria = req.query;
 
       const budgets = await this.budgetService.searchBudgets(criteria);
 
@@ -116,7 +116,7 @@ export class BudgetController {
   async updateBudget(req: Request, res: Response): Promise<void> {
     try {
       const { budgetId } = req.params;
-      const updates: BudgetUpdate = req.body;
+      constupdates: BudgetUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const budget = await this.budgetService.updateBudget(

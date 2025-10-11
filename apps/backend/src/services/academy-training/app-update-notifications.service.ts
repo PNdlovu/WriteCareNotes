@@ -227,7 +227,7 @@ export class AppUpdateNotificationsService {
    * Extract learning objectives from features
    */
   private extractLearningObjectives(update: FeatureUpdate): string[] {
-    const objectives: string[] = [];
+    constobjectives: string[] = [];
 
     update.features.forEach(feature => {
       objectives.push(`Understand how to use the new ${feature.name} feature`);
@@ -248,7 +248,7 @@ export class AppUpdateNotificationsService {
    * Generate content sections from update details
    */
   private generateContentSections(update: FeatureUpdate): any[] {
-    const sections: any[] = [];
+    constsections: any[] = [];
     let order = 1;
 
     // Overview section

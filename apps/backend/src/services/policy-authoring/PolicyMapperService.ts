@@ -444,11 +444,11 @@ export class PolicyMapperService {
    * Generate enforcement rules from policy mappings
    */
   generateEnforcementRules(mappings: PolicyModuleMapping[]): PolicyEnforcementRule[] {
-    const rules: PolicyEnforcementRule[] = [];
+    construles: PolicyEnforcementRule[] = [];
 
     mappings.forEach(mapping => {
       mapping.triggers.forEach(trigger => {
-        const rule: PolicyEnforcementRule = {
+        construle: PolicyEnforcementRule = {
           policyId: mapping.policyId,
           workflowTypes: mapping.workflowTypes,
           enforcementAction: this.mapTriggerActionToEnforcementAction(trigger.action),
@@ -518,7 +518,7 @@ export class PolicyMapperService {
   createIntegrationHooks(
     mappings: PolicyModuleMapping[]
   ): Record<string, IntegrationPoint[]> {
-    const hooks: Record<string, IntegrationPoint[]> = {};
+    consthooks: Record<string, IntegrationPoint[]> = {};
 
     mappings.forEach(mapping => {
       const moduleKey = mapping.moduleType;
@@ -538,8 +538,8 @@ export class PolicyMapperService {
     policy: PolicyDraft,
     moduleTypes: ModuleType[]
   ): { compatible: boolean; issues: string[]; recommendations: string[] } {
-    const issues: string[] = [];
-    const recommendations: string[] = [];
+    constissues: string[] = [];
+    constrecommendations: string[] = [];
 
     // Check if policy category matches any module
     const compatibleModules = this.getCompatibleModules(policy.category);
@@ -590,7 +590,7 @@ export class PolicyMapperService {
 
   private generateConditionsFromTrigger(trigger: PolicyTrigger): EnforcementCondition[] {
     // Generate enforcement conditions based on trigger type and condition
-    const conditions: EnforcementCondition[] = [];
+    constconditions: EnforcementCondition[] = [];
 
     if (trigger.triggerType === 'workflow_start' || trigger.action === 'enforce') {
       conditions.push({
@@ -623,7 +623,7 @@ export class PolicyMapperService {
   }
 
   private getCompatibleModules(category: PolicyCategory): ModuleType[] {
-    const compatibility: Record<PolicyCategory, ModuleType[]> = {
+    constcompatibility: Record<PolicyCategory, ModuleType[]> = {
       [PolicyCategory.SAFEGUARDING]: [ModuleType.SAFEGUARDING, ModuleType.INCIDENT_MANAGEMENT, ModuleType.TRAINING_CPD],
       [PolicyCategory.DATA_PROTECTION]: [ModuleType.DATA_PROTECTION, ModuleType.STAFF_MANAGEMENT],
       [PolicyCategory.MEDICATION]: [ModuleType.MEDICATION_MANAGEMENT, ModuleType.CARE_PLANNING],
@@ -658,7 +658,7 @@ export class PolicyMapperService {
   }
 
   private generateRecommendations(metrics: any): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (metrics.acknowledgmentRate < 90) {
       recommendations.push('Improve policy acknowledgment rates through targeted training');

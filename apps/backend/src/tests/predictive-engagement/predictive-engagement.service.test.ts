@@ -6,10 +6,10 @@ import { PredictiveEngagementService } from '../../services/predictive-engagemen
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 describe('PredictiveEngagementService', () => {
-  let service: PredictiveEngagementService;
-  let mockRepository: jest.Mocked<Repository<any>>;
-  let mockEventEmitter: jest.Mocked<EventEmitter2>;
-  let mockAuditService: jest.Mocked<AuditTrailService>;
+  letservice: PredictiveEngagementService;
+  letmockRepository: jest.Mocked<Repository<any>>;
+  letmockEventEmitter: jest.Mocked<EventEmitter2>;
+  letmockAuditService: jest.Mocked<AuditTrailService>;
 
   beforeEach(async () => {
     const mockRepo = {
@@ -41,7 +41,7 @@ describe('PredictiveEngagementService', () => {
       logEvent: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         PredictiveEngagementService,
         {

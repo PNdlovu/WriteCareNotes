@@ -78,11 +78,11 @@ export interface CashTransactionReport {
 }
 
 export class CashTransactionService {
-  private cashTransactionRepository: Repository<CashTransaction>;
-  private ledgerAccountRepository: Repository<LedgerAccount>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventEmitter: EventEmitter2;
+  privatecashTransactionRepository: Repository<CashTransaction>;
+  privateledgerAccountRepository: Repository<LedgerAccount>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventEmitter: EventEmitter2;
 
   constructor() {
     this.cashTransactionRepository = AppDataSource.getRepository(CashTransaction);

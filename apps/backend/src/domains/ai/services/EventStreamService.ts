@@ -39,18 +39,18 @@ export interface EventStreamConfig {
 
 @Injectable()
 export class EventStreamService {
-  private eventHandlers: Map<string, ((event: CareEventData) => Promise<void>)[]> = new Map();
+  privateeventHandlers: Map<string, ((event: CareEventData) => Promise<void>)[]> = new Map();
 
   constructor(
     @InjectRepository(CareEvent)
-    private careEventRepository: Repository<CareEvent>,
+    privatecareEventRepository: Repository<CareEvent>,
     @InjectRepository(EventStream)
-    private eventStreamRepository: Repository<EventStream>,
+    privateeventStreamRepository: Repository<EventStream>,
     @InjectRepository(EventSubscription)
-    private eventSubscriptionRepository: Repository<EventSubscription>,
+    privateeventSubscriptionRepository: Repository<EventSubscription>,
     @InjectRepository(AIAgent)
-    private agentRepository: Repository<AIAgent>,
-    private registryService: AIAgentRegistryService,
+    privateagentRepository: Repository<AIAgent>,
+    privateregistryService: AIAgentRegistryService,
   ) {}
 
   /**

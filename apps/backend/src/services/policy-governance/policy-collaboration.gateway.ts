@@ -136,12 +136,12 @@ interface UserPresence {
  * Manages WebSocket connections for real-time policy collaboration
  */
 export class PolicyCollaborationGateway {
-  private io: SocketIOServer;
-  private activeSessions: Map<string, Map<string, UserPresence>>; // policyId → userId → presence
-  private userSockets: Map<string, string>; // userId → socketId
-  private sessionRepository: any; // Would be injected via DI
-  private commentRepository: any; // Would be injected via DI
-  private cleanupInterval: NodeJS.Timeout | null = null;
+  privateio: SocketIOServer;
+  privateactiveSessions: Map<string, Map<string, UserPresence>>; // policyId → userId → presence
+  privateuserSockets: Map<string, string>; // userId → socketId
+  privatesessionRepository: any; // Would be injected via DI
+  privatecommentRepository: any; // Would be injected via DI
+  privatecleanupInterval: NodeJS.Timeout | null = null;
 
   /**
    * Initialize WebSocket gateway
@@ -280,7 +280,7 @@ export class PolicyCollaborationGateway {
       }
 
       // Add user presence
-      const presence: UserPresence = {
+      constpresence: UserPresence = {
         userId,
         socketId: socket.id,
         isEditing: false,
@@ -485,7 +485,7 @@ export class PolicyCollaborationGateway {
    */
   private extractMentionedUsers(content: string): string[] {
     const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
-    const mentions: string[] = [];
+    constmentions: string[] = [];
     let match;
 
     while ((match = mentionRegex.exec(content)) !== null) {

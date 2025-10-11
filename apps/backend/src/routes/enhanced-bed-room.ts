@@ -18,7 +18,7 @@ router.post('/rooms', authorize(['facilities_manager', 'admin']), async (req, re
     const room = await bedRoomService.createEnhancedRoom(req.body);
     res.status(201).json({ success: true, data: room });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -27,7 +27,7 @@ router.get('/analytics', authorize(['facilities_manager', 'admin']), async (req,
     const analytics = await bedRoomService.getRoomAnalytics();
     res.json({ success: true, data: analytics });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

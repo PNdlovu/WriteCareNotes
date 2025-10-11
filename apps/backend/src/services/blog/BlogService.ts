@@ -22,13 +22,13 @@ import { CreateBlogPostDto, UpdateBlogPostDto, CreateBlogCategoryDto, UpdateBlog
 export class BlogService {
   constructor(
     
-    private blogPostRepository: Repository<BlogPost>,
+    privateblogPostRepository: Repository<BlogPost>,
     
-    private blogCategoryRepository: Repository<BlogCategory>,
+    privateblogCategoryRepository: Repository<BlogCategory>,
     
-    private blogTagRepository: Repository<BlogTag>,
+    privateblogTagRepository: Repository<BlogTag>,
     
-    private blogCommentRepository: Repository<BlogComment>,
+    privateblogCommentRepository: Repository<BlogComment>,
   ) {}
 
   // Blog Post Methods

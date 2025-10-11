@@ -107,7 +107,7 @@ export class IoTIntegrationService {
    */
   async registerDevice(deviceData: Omit<IoTDevice, 'id' | 'createdAt' | 'updatedAt' | 'lastSeen'>): Promise<IoTDevice> {
     try {
-      const device: IoTDevice = {
+      constdevice: IoTDevice = {
         ...deviceData,
         id: this.generateId(),
         lastSeen: new Date(),
@@ -150,7 +150,7 @@ export class IoTIntegrationService {
     roomId?: string
   ): Promise<IoTDataPoint> {
     try {
-      const dataPoint: IoTDataPoint = {
+      constdataPoint: IoTDataPoint = {
         id: this.generateId(),
         deviceId,
         timestamp: new Date(),
@@ -208,7 +208,7 @@ export class IoTIntegrationService {
    */
   async getIoTDashboard(careHomeId: string): Promise<IoTDashboard> {
     try {
-      const dashboard: IoTDashboard = {
+      constdashboard: IoTDashboard = {
         totalDevices: 45,
         onlineDevices: 42,
         offlineDevices: 3,
@@ -242,7 +242,7 @@ export class IoTIntegrationService {
   async getIoTDevices(careHomeId: string, category?: string): Promise<IoTDevice[]> {
     try {
       // In a real implementation, this would query the database
-      const devices: IoTDevice[] = [
+      constdevices: IoTDevice[] = [
         {
           id: 'iot_device_001',
           name: 'Temperature Sensor - Room 101',
@@ -309,7 +309,7 @@ export class IoTIntegrationService {
   async getIoTAlerts(careHomeId: string, status?: string): Promise<IoTAlert[]> {
     try {
       // In a real implementation, this would query the database
-      const alerts: IoTAlert[] = [
+      constalerts: IoTAlert[] = [
         {
           id: 'iot_alert_001',
           deviceId: 'iot_device_001',
@@ -434,7 +434,7 @@ export class IoTIntegrationService {
    * Create IoT alert
    */
   private async createAlert(alertData: Omit<IoTAlert, 'id' | 'createdAt' | 'updatedAt'>): Promise<IoTAlert> {
-    const alert: IoTAlert = {
+    constalert: IoTAlert = {
       ...alertData,
       id: this.generateId(),
       createdAt: new Date(),

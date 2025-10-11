@@ -220,7 +220,7 @@ export class EnterpriseFinancialPlanningService {
       // Calculate cash flow drivers
       const cashFlowDrivers = await this.calculateCashFlowDrivers(organizationId, historicalData);
 
-      const cashFlowManagement: CashFlowManagement = {
+      constcashFlowManagement: CashFlowManagement = {
         cashPosition,
         cashFlowForecasting: {
           dailyForecast,
@@ -248,7 +248,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to generate cash flow forecast', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId
       });
       throw error;
@@ -284,7 +284,7 @@ export class EnterpriseFinancialPlanningService {
 
       const scenarios = [baselineScenario, optimisticScenario, pessimisticScenario, customScenario];
 
-      const scenarioPlanning: ScenarioPlanning = {
+      constscenarioPlanning: ScenarioPlanning = {
         scenarios,
         baselineScenario: baselineScenario.scenarioId,
         optimisticScenario: optimisticScenario.scenarioId,
@@ -299,7 +299,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to create financial scenario', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId
       });
       throw error;
@@ -323,7 +323,7 @@ export class EnterpriseFinancialPlanningService {
       // Calculate cost drivers
       const costDrivers = await this.calculateCostDrivers(organizationId, operationalMetrics);
 
-      const driverBasedPlan: DriverBasedPlanning = {
+      constdriverBasedPlan: DriverBasedPlanning = {
         revenueDrivers,
         costDrivers
       };
@@ -335,7 +335,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to generate driver-based plan', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId
       });
       throw error;
@@ -388,7 +388,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to create budget spreadsheet', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         budgetId
       });
       throw error;
@@ -436,7 +436,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to import budget from spreadsheet', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         workbookId
       });
@@ -482,7 +482,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to generate rolling forecast', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId
       });
       throw error;
@@ -532,7 +532,7 @@ export class EnterpriseFinancialPlanningService {
 
     } catch (error: unknown) {
       console.error('Failed to automate financial close', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         closePeriod
       });
@@ -585,7 +585,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async generateDailyForecast(organizationId: string, days: number, historicalData: any[]): Promise<CashFlowForecast[]> {
-    const forecasts: CashFlowForecast[] = [];
+    constforecasts: CashFlowForecast[] = [];
     
     for (let i = 0; i < days; i++) {
       const forecastDate = new Date();
@@ -600,7 +600,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async generateMonthlyForecast(organizationId: string, months: number, historicalData: any[]): Promise<CashFlowForecast[]> {
-    const forecasts: CashFlowForecast[] = [];
+    constforecasts: CashFlowForecast[] = [];
     
     for (let i = 0; i < months; i++) {
       const forecastDate = new Date();
@@ -682,7 +682,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async generateWeeklyForecast(organizationId: string, weeks: number, historicalData: any[]): Promise<CashFlowForecast[]> { 
-    const forecasts: CashFlowForecast[] = [];
+    constforecasts: CashFlowForecast[] = [];
     
     for (let i = 0; i < weeks; i++) {
       const forecastDate = new Date();

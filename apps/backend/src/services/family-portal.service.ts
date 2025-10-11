@@ -219,8 +219,8 @@ export interface FamilyPreferences {
 
 export class FamilyPortalService {
   // Logger removed
-  private portalSessions: Map<string, any> = new Map();
-  private realTimeConnections: Map<string, any> = new Map();
+  privateportalSessions: Map<string, any> = new Map();
+  privaterealTimeConnections: Map<string, any> = new Map();
 
   constructor(
     
@@ -261,7 +261,7 @@ export class FamilyPortalService {
         this.getPendingSurvey(familyMemberId),
       ]);
 
-      const dashboard: FamilyPortalDashboard = {
+      constdashboard: FamilyPortalDashboard = {
         residentId,
         residentName: await this.getResidentName(residentId),
         lastUpdated: new Date(),
@@ -287,7 +287,7 @@ export class FamilyPortalService {
 
       return dashboard;
     } catch (error: unknown) {
-      console.error(`Failed to get family dashboard: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get family dashboard: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -301,7 +301,7 @@ export class FamilyPortalService {
     familyMemberIds: string[]
   ): Promise<boolean> {
     try {
-      const update: PortalUpdate = {
+      constupdate: PortalUpdate = {
         id: `care_update_${Date.now()}`,
         type: 'care',
         title: 'Care Plan Updated',
@@ -330,7 +330,7 @@ export class FamilyPortalService {
       console.log(`Care plan update shared with ${familyMemberIds.length} family members`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to share care plan update: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to share care plan update: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -345,10 +345,10 @@ export class FamilyPortalService {
     caption?: string
   ): Promise<PhotoUpdate[]> {
     try {
-      const photoUpdates: PhotoUpdate[] = [];
+      constphotoUpdates: PhotoUpdate[] = [];
 
       for (const photo of photos) {
-        const photoUpdate: PhotoUpdate = {
+        constphotoUpdate: PhotoUpdate = {
           id: `photo_${Date.now()}_${Math.random()}`,
           url: photo.url,
           thumbnail: photo.thumbnail || photo.url,
@@ -367,7 +367,7 @@ export class FamilyPortalService {
         const familyMembers = await this.getFamilyMembersForResident(residentId);
         for (const familyMember of familyMembers) {
           if (familyMember.preferences?.photoSharing) {
-            const update: PortalUpdate = {
+            constupdate: PortalUpdate = {
               id: `photo_share_${Date.now()}`,
               type: 'photo',
               title: 'New Photos Shared',
@@ -393,7 +393,7 @@ export class FamilyPortalService {
       console.log(`Shared ${photoUpdates.length} photos for resident ${residentId}`);
       return photoUpdates;
     } catch (error: unknown) {
-      console.error(`Failed to share photos: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to share photos: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -419,7 +419,7 @@ export class FamilyPortalService {
       console.log(`Real-time updates enabled for family member ${familyMemberId}`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to enable real-time updates: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to enable real-time updates: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -436,7 +436,7 @@ export class FamilyPortalService {
     try {
       const familyMembers = await this.getFamilyMembersForResident(residentId);
       
-      const emergencyUpdate: PortalUpdate = {
+      constemergencyUpdate: PortalUpdate = {
         id: `emergency_${Date.now()}`,
         type: 'health',
         title: `Emergency: ${emergencyType}`,
@@ -478,7 +478,7 @@ export class FamilyPortalService {
       console.log(`Emergency notification sent to ${familyMembers.length} family members`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to send emergency notification: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to send emergency notification: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -524,7 +524,7 @@ export class FamilyPortalService {
       console.log(`Feedback received from family member ${familyMemberId}: ${feedbackType}`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to collect feedback: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to collect feedback: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -582,7 +582,7 @@ export class FamilyPortalService {
       console.log(`Family meeting scheduled: ${meeting.id} with ${invitations.length} invitations`);
       return { meetingId: meeting.id, invitations };
     } catch (error: unknown) {
-      console.error(`Failed to schedule family meeting: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to schedule family meeting: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -601,7 +601,7 @@ export class FamilyPortalService {
       }
 
       // Update preferences
-      const updatedPreferences: FamilyPreferences = {
+      constupdatedPreferences: FamilyPreferences = {
         ...familyMember.preferences,
         ...preferences,
       };
@@ -618,7 +618,7 @@ export class FamilyPortalService {
       console.log(`Updated preferences for family member ${familyMemberId}`);
       return updatedPreferences;
     } catch (error: unknown) {
-      console.error(`Failed to update family preferences: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to update family preferences: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -630,7 +630,7 @@ export class FamilyPortalService {
       // Initialize portal services
       console.log('Family portal service initialized');
     } catch (error: unknown) {
-      console.error(`Failed to initialize family portal: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to initialize family portal: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 

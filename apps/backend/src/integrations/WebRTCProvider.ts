@@ -53,10 +53,10 @@ interface Recording {
 }
 
 export class WebRTCProvider {
-  private client: AxiosInstance;
-  private logger: Logger;
-  private apiKey: string;
-  private baseUrl: string;
+  privateclient: AxiosInstance;
+  privatelogger: Logger;
+  privateapiKey: string;
+  privatebaseUrl: string;
 
   constructor() {
     this.logger = new Logger('WebRTCProvider');
@@ -127,7 +127,7 @@ export class WebRTCProvider {
 
       const response = await this.client.post('/rooms', requestData);
       
-      const room: Room = response.data;
+      constroom: Room = response.data;
       
       this.logger.info('WebRTC room created successfully', {
         roomId: room.id,
@@ -277,7 +277,7 @@ export class WebRTCProvider {
 
       const response = await this.client.post(`/rooms/${roomName}/recordings`, requestData);
       
-      const recording: Recording = response.data;
+      constrecording: Recording = response.data;
       
       this.logger.info('Recording started successfully', {
         roomName,
@@ -310,7 +310,7 @@ export class WebRTCProvider {
 
       const response = await this.client.post(url);
       
-      const recording: Recording = response.data;
+      constrecording: Recording = response.data;
       
       this.logger.info('Recording stopped successfully', {
         roomName,
@@ -449,7 +449,7 @@ export class WebRTCProvider {
    */
   async getRoomAnalytics(roomName: string, from?: Date, to?: Date): Promise<any> {
     try {
-      const params: any = {};
+      constparams: any = {};
       if (from) params.from = from.toISOString();
       if (to) params.to = to.toISOString();
 

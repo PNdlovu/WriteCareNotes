@@ -108,9 +108,9 @@ export interface EngagementMetrics {
 }
 
 export class TransparencyDashboardService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private analytics: AnalyticsService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateanalytics: AnalyticsService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -147,7 +147,7 @@ export class TransparencyDashboardService {
         this.getFamilyEngagement(tenantId, familyMemberId, timeframe)
       ]);
 
-      const dashboardData: DashboardData = {
+      constdashboardData: DashboardData = {
         careOverview,
         recentActivities,
         communicationSummary,
@@ -465,7 +465,7 @@ export class TransparencyDashboardService {
   }
 
   private parseTimeframe(timeframe: string): number {
-    const timeframeMap: Record<string, number> = {
+    consttimeframeMap: Record<string, number> = {
       '7d': 7,
       '30d': 30,
       '90d': 90,

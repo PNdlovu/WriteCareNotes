@@ -121,7 +121,7 @@ export interface EnvironmentalData {
 
 export class DataAnalyticsService {
   // Logger removed
-  private cache: Map<string, any> = new Map();
+  privatecache: Map<string, any> = new Map();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   constructor(private readonly eventEmitter: EventEmitter2) {}
@@ -146,7 +146,7 @@ export class DataAnalyticsService {
       
       return vitalsData;
     } catch (error: unknown) {
-      console.error(`Failed to get vitals data for resident ${residentId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get vitals data for resident ${residentId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -171,7 +171,7 @@ export class DataAnalyticsService {
       
       return activitiesData;
     } catch (error: unknown) {
-      console.error(`Failed to get activities data for resident ${residentId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get activities data for resident ${residentId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -196,7 +196,7 @@ export class DataAnalyticsService {
       
       return medicationData;
     } catch (error: unknown) {
-      console.error(`Failed to get medication data for resident ${residentId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get medication data for resident ${residentId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -221,7 +221,7 @@ export class DataAnalyticsService {
       
       return behavioralData;
     } catch (error: unknown) {
-      console.error(`Failed to get behavioral data for resident ${residentId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get behavioral data for resident ${residentId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -246,7 +246,7 @@ export class DataAnalyticsService {
       
       return environmentalData;
     } catch (error: unknown) {
-      console.error(`Failed to get environmental data for resident ${residentId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get environmental data for resident ${residentId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -268,7 +268,7 @@ export class DataAnalyticsService {
       
       const queryTime = Date.now() - startTime;
       
-      const result: AnalyticsResult = {
+      constresult: AnalyticsResult = {
         query,
         data,
         summary,
@@ -291,7 +291,7 @@ export class DataAnalyticsService {
       
       return result;
     } catch (error: unknown) {
-      console.error(`Failed to execute analytics query: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to execute analytics query: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -317,7 +317,7 @@ export class DataAnalyticsService {
       
       return dashboardData;
     } catch (error: unknown) {
-      console.error(`Failed to get dashboard data: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get dashboard data: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -326,7 +326,7 @@ export class DataAnalyticsService {
    * Generate vitals data (simulated)
    */
   private async generateVitalsData(residentId: string, startDate: Date): Promise<VitalsData[]> {
-    const data: VitalsData[] = [];
+    constdata: VitalsData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -355,7 +355,7 @@ export class DataAnalyticsService {
    * Generate activities data (simulated)
    */
   private async generateActivitiesData(residentId: string, startDate: Date): Promise<ActivitiesData[]> {
-    const data: ActivitiesData[] = [];
+    constdata: ActivitiesData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -381,7 +381,7 @@ export class DataAnalyticsService {
    * Generate medication data (simulated)
    */
   private async generateMedicationData(residentId: string, startDate: Date): Promise<MedicationData[]> {
-    const data: MedicationData[] = [];
+    constdata: MedicationData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -405,7 +405,7 @@ export class DataAnalyticsService {
    * Generate behavioral data (simulated)
    */
   private async generateBehavioralData(residentId: string, startDate: Date): Promise<BehavioralData[]> {
-    const data: BehavioralData[] = [];
+    constdata: BehavioralData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -435,7 +435,7 @@ export class DataAnalyticsService {
    * Generate environmental data (simulated)
    */
   private async generateEnvironmentalData(residentId: string, startDate: Date): Promise<EnvironmentalData[]> {
-    const data: EnvironmentalData[] = [];
+    constdata: EnvironmentalData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -464,7 +464,7 @@ export class DataAnalyticsService {
    * Process analytics query
    */
   private async processQuery(query: AnalyticsQuery): Promise<TimeSeriesData[]> {
-    const data: TimeSeriesData[] = [];
+    constdata: TimeSeriesData[] = [];
     
     // Simulate query processing based on parameters
     if (query.metric) {
@@ -504,7 +504,7 @@ export class DataAnalyticsService {
     endDate: Date,
     aggregation: string
   ): Promise<TimeSeriesData> {
-    const dataPoints: AnalyticsDataPoint[] = [];
+    constdataPoints: AnalyticsDataPoint[] = [];
     const interval = this.getInterval(aggregation);
     
     let currentDate = new Date(startDate);
@@ -595,7 +595,7 @@ export class DataAnalyticsService {
     const secondHalfAvg = secondHalf.reduce((sum, val) => sum + val, 0) / secondHalf.length;
     
     const trendPercentage = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100;
-    let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
+    lettrend: 'increasing' | 'decreasing' | 'stable' = 'stable';
     
     if (Math.abs(trendPercentage) > 5) {
       trend = trendPercentage > 0 ? 'increasing' : 'decreasing';

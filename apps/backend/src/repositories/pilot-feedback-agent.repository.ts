@@ -11,7 +11,7 @@ import {
 } from '../types/pilot-feedback-agent.types';
 
 export class PilotFeedbackAgentRepository {
-  private db: DatabaseService;
+  privatedb: DatabaseService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -376,7 +376,7 @@ export class PilotFeedbackAgentRepository {
       WHERE tenant_id = ?
     `;
     
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
     
     if (from) {
       query += ' AND created_at >= ?';
@@ -425,7 +425,7 @@ export class PilotFeedbackAgentRepository {
       WHERE tenant_id = ?
     `;
     
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
     
     if (from) {
       query += ' AND created_at >= ?';
@@ -477,7 +477,7 @@ export class PilotFeedbackAgentRepository {
       WHERE tenant_id = ?
     `;
     
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
     
     if (from) {
       query += ' AND created_at >= ?';

@@ -71,10 +71,10 @@ export interface CertificationRenewalData {
 }
 
 export class CertificationService {
-  private certificationRepository: Repository<Certification>;
-  private employeeRepository: Repository<Employee>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatecertificationRepository: Repository<Certification>;
+  privateemployeeRepository: Repository<Employee>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.certificationRepository = AppDataSource.getRepository(Certification);

@@ -42,13 +42,13 @@ export class VerifiedRetrieverService {
 
   constructor(
     @InjectRepository(PolicyTemplate)
-    private policyTemplateRepository: Repository<PolicyTemplate>,
+    privatepolicyTemplateRepository: Repository<PolicyTemplate>,
     
     @InjectRepository(ComplianceStandard)
-    private complianceStandardRepository: Repository<ComplianceStandard>,
+    privatecomplianceStandardRepository: Repository<ComplianceStandard>,
     
     @InjectRepository(JurisdictionalRule)
-    private jurisdictionalRuleRepository: Repository<JurisdictionalRule>,
+    privatejurisdictionalRuleRepository: Repository<JurisdictionalRule>,
   ) {}
 
   /**
@@ -58,7 +58,7 @@ export class VerifiedRetrieverService {
    */
   async retrieve(query: KnowledgeBaseQuery): Promise<RetrievedDocument[]> {
     const startTime = Date.now();
-    const results: RetrievedDocument[] = [];
+    constresults: RetrievedDocument[] = [];
 
     try {
       this.logger.log(`Retrieving documents for keywords: ${query.keywords.join(', ')}`);

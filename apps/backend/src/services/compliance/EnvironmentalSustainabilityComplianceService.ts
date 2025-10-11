@@ -659,7 +659,7 @@ export class EnvironmentalSustainabilityComplianceService {
       // Create action plan
       const actionPlan = await this.createActionPlan(recommendations, request);
 
-      const result: EnvironmentalComplianceResult = {
+      constresult: EnvironmentalComplianceResult = {
         assessmentId,
         framework: request.framework,
         overallPerformance,
@@ -699,10 +699,10 @@ export class EnvironmentalSustainabilityComplianceService {
   private async assessSustainabilityAreas(
     request: EnvironmentalAssessmentRequest
   ): Promise<EnvironmentalAreaAssessment[]> {
-    const assessments: EnvironmentalAreaAssessment[] = [];
+    constassessments: EnvironmentalAreaAssessment[] = [];
 
     for (const area of request.assessmentAreas) {
-      let assessment: EnvironmentalAreaAssessment;
+      letassessment: EnvironmentalAreaAssessment;
 
       switch (area) {
         case SustainabilityAssessmentArea.CARBON_FOOTPRINT:
@@ -736,10 +736,10 @@ export class EnvironmentalSustainabilityComplianceService {
   private async assessCarbonFootprint(
     carbonData: CarbonFootprintData
   ): Promise<EnvironmentalAreaAssessment> {
-    const strengths: string[] = [];
-    const weaknesses: string[] = [];
-    const recommendations: any[] = [];
-    const metrics: EnvironmentalMetric[] = [];
+    conststrengths: string[] = [];
+    constweaknesses: string[] = [];
+    constrecommendations: any[] = [];
+    constmetrics: EnvironmentalMetric[] = [];
     
     let score = 0;
 
@@ -838,10 +838,10 @@ export class EnvironmentalSustainabilityComplianceService {
   private async assessEnergyManagement(
     energyData: EnergyManagementData
   ): Promise<EnvironmentalAreaAssessment> {
-    const strengths: string[] = [];
-    const weaknesses: string[] = [];
-    const recommendations: any[] = [];
-    const metrics: EnvironmentalMetric[] = [];
+    conststrengths: string[] = [];
+    constweaknesses: string[] = [];
+    constrecommendations: any[] = [];
+    constmetrics: EnvironmentalMetric[] = [];
     
     let score = 0;
 
@@ -957,10 +957,10 @@ export class EnvironmentalSustainabilityComplianceService {
   private async assessWasteManagement(
     wasteData: WasteManagementData
   ): Promise<EnvironmentalAreaAssessment> {
-    const strengths: string[] = [];
-    const weaknesses: string[] = [];
-    const recommendations: any[] = [];
-    const metrics: EnvironmentalMetric[] = [];
+    conststrengths: string[] = [];
+    constweaknesses: string[] = [];
+    constrecommendations: any[] = [];
+    constmetrics: EnvironmentalMetric[] = [];
     
     let score = 0;
 
@@ -1077,10 +1077,10 @@ export class EnvironmentalSustainabilityComplianceService {
   private async assessSustainableIT(
     itData: SustainableITData
   ): Promise<EnvironmentalAreaAssessment> {
-    const strengths: string[] = [];
-    const weaknesses: string[] = [];
-    const recommendations: any[] = [];
-    const metrics: EnvironmentalMetric[] = [];
+    conststrengths: string[] = [];
+    constweaknesses: string[] = [];
+    constrecommendations: any[] = [];
+    constmetrics: EnvironmentalMetric[] = [];
     
     let score = 0;
 
@@ -1224,10 +1224,10 @@ export class EnvironmentalSustainabilityComplianceService {
   private async assessGreenProcurement(
     request: EnvironmentalAssessmentRequest
   ): Promise<EnvironmentalAreaAssessment> {
-    const strengths: string[] = [];
-    const weaknesses: string[] = [];
-    const recommendations: any[] = [];
-    const metrics: EnvironmentalMetric[] = [];
+    conststrengths: string[] = [];
+    constweaknesses: string[] = [];
+    constrecommendations: any[] = [];
+    constmetrics: EnvironmentalMetric[] = [];
     
     let score = 60; // Base score for having some procurement practices
 
@@ -1296,7 +1296,7 @@ export class EnvironmentalSustainabilityComplianceService {
     if (areaAssessments.length === 0) return 0;
     
     // Weight different areas based on importance
-    const weights: Record<SustainabilityAssessmentArea, number> = {
+    constweights: Record<SustainabilityAssessmentArea, number> = {
       [SustainabilityAssessmentArea.CARBON_FOOTPRINT]: 0.25,
       [SustainabilityAssessmentArea.ENERGY_MANAGEMENT]: 0.20,
       [SustainabilityAssessmentArea.SUSTAINABLE_IT]: 0.20,
@@ -1362,7 +1362,7 @@ export class EnvironmentalSustainabilityComplianceService {
     const sizeBenchmark = request.organizationProfile.employeeCount < 100 ? 60 : 70;
     const regionBenchmark = 68; // Regional average
     
-    let performanceRanking: BenchmarkComparison['performanceRanking'];
+    letperformanceRanking: BenchmarkComparison['performanceRanking'];
     if (sustainabilityScore >= 85) performanceRanking = 'top_10_percent';
     else if (sustainabilityScore >= 75) performanceRanking = 'top_25_percent';
     else if (sustainabilityScore >= 60) performanceRanking = 'average';
@@ -1394,7 +1394,7 @@ export class EnvironmentalSustainabilityComplianceService {
     request: EnvironmentalAssessmentRequest,
     areaAssessments: EnvironmentalAreaAssessment[]
   ): Promise<EnvironmentalRiskAssessment> {
-    const climateRisks: ClimateRisk[] = [
+    constclimateRisks: ClimateRisk[] = [
       {
         riskId: uuidv4(),
         type: 'physical',
@@ -1415,7 +1415,7 @@ export class EnvironmentalSustainabilityComplianceService {
       }
     ];
 
-    const regulatoryRisks: RegulatoryRisk[] = [
+    constregulatoryRisks: RegulatoryRisk[] = [
       {
         riskId: uuidv4(),
         regulation: 'EU Taxonomy Regulation',
@@ -1427,7 +1427,7 @@ export class EnvironmentalSustainabilityComplianceService {
       }
     ];
 
-    const operationalRisks: OperationalRisk[] = [
+    constoperationalRisks: OperationalRisk[] = [
       {
         riskId: uuidv4(),
         category: 'Energy supply',
@@ -1438,7 +1438,7 @@ export class EnvironmentalSustainabilityComplianceService {
       }
     ];
 
-    const reputationalRisks: ReputationalRisk[] = [
+    constreputationalRisks: ReputationalRisk[] = [
       {
         riskId: uuidv4(),
         stakeholder: 'Customers and patients',
@@ -1470,7 +1470,7 @@ export class EnvironmentalSustainabilityComplianceService {
     areaAssessments: EnvironmentalAreaAssessment[],
     request: EnvironmentalAssessmentRequest
   ): Promise<EnvironmentalOpportunity[]> {
-    const opportunities: EnvironmentalOpportunity[] = [];
+    constopportunities: EnvironmentalOpportunity[] = [];
 
     // Energy efficiency opportunities
     if (request.energyManagement.renewableEnergyPercentage < 50) {
@@ -1537,7 +1537,7 @@ export class EnvironmentalSustainabilityComplianceService {
     riskAssessment: EnvironmentalRiskAssessment,
     opportunities: EnvironmentalOpportunity[]
   ): Promise<EnvironmentalRecommendation[]> {
-    const recommendations: EnvironmentalRecommendation[] = [];
+    constrecommendations: EnvironmentalRecommendation[] = [];
 
     // Generate recommendations from area assessments
     for (const assessment of areaAssessments) {
@@ -1589,9 +1589,9 @@ export class EnvironmentalSustainabilityComplianceService {
     recommendations: EnvironmentalRecommendation[],
     request: EnvironmentalAssessmentRequest
   ): Promise<EnvironmentalActionPlan> {
-    const initiatives: EnvironmentalInitiative[] = [];
-    const milestones: EnvironmentalMilestone[] = [];
-    const kpis: EnvironmentalKPI[] = [];
+    constinitiatives: EnvironmentalInitiative[] = [];
+    constmilestones: EnvironmentalMilestone[] = [];
+    constkpis: EnvironmentalKPI[] = [];
     
     // Group recommendations by area and create initiatives
     const recommendationsByArea = recommendations.reduce((acc, rec) => {
@@ -1601,7 +1601,7 @@ export class EnvironmentalSustainabilityComplianceService {
     }, {} as Record<SustainabilityAssessmentArea, EnvironmentalRecommendation[]>);
 
     for (const [area, recs] of Object.entries(recommendationsByArea)) {
-      const initiative: EnvironmentalInitiative = {
+      constinitiative: EnvironmentalInitiative = {
         initiativeId: uuidv4(),
         name: `Sustainability Initiative - ${area}`,
         description: `Implement sustainability improvements for ${area}`,
@@ -1773,7 +1773,7 @@ export class EnvironmentalSustainabilityComplianceService {
   }
 
   private calculateBudgetByArea(recommendations: EnvironmentalRecommendation[]): Record<SustainabilityAssessmentArea, number> {
-    const budget: Record<SustainabilityAssessmentArea, number> = {} as Record<SustainabilityAssessmentArea, number>;
+    constbudget: Record<SustainabilityAssessmentArea, number> = {} as Record<SustainabilityAssessmentArea, number>;
     
     for (const rec of recommendations) {
       if (!budget[rec.area]) budget[rec.area] = 0;

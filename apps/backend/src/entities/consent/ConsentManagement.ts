@@ -355,8 +355,8 @@ export class ConsentManagement extends BaseEntity {
     issues: string[];
     recommendations: string[];
   } {
-    const issues: string[] = [];
-    const recommendations: any[] = [];
+    constissues: string[] = [];
+    constrecommendations: any[] = [];
 
     // Check GDPR validity criteria
     if (!this.isInformed) {
@@ -414,15 +414,15 @@ export class ConsentManagement extends BaseEntity {
       formContent: `
         CONSENT WITHDRAWAL FORM
         
-        Consent Reference: ${this.consentReference}
-        Consent Type: ${this.consentType}
+        ConsentReference: ${this.consentReference}
+        ConsentType: ${this.consentType}
         Original Consent Date: ${this.consentGivenDate.toLocaleDateString()}
         
         I wish to withdraw my consent for: ${this.consentDescription}
         
-        Withdrawal Date: ___________
+        WithdrawalDate: ___________
         Signature: ___________
-        Print Name: ___________
+        PrintName: ___________
         Witness: ___________
         
         Note: Withdrawal will not affect processing that has already taken place based on your previous consent.
@@ -463,7 +463,7 @@ export class ConsentManagement extends BaseEntity {
                    factors.informationProvided + factors.voluntariness + 
                    factors.specificity) / 5;
 
-    let overallGrade: 'excellent' | 'good' | 'adequate' | 'weak' | 'invalid';
+    letoverallGrade: 'excellent' | 'good' | 'adequate' | 'weak' | 'invalid';
     if (score >= 90) overallGrade = 'excellent';
     else if (score >= 80) overallGrade = 'good';
     else if (score >= 70) overallGrade = 'adequate';
@@ -486,7 +486,7 @@ export class ConsentManagement extends BaseEntity {
       Math.ceil((this.expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 
       Infinity;
 
-    let urgencyLevel: 'low' | 'medium' | 'high' | 'critical';
+    leturgencyLevel: 'low' | 'medium' | 'high' | 'critical';
     if (daysUntilExpiry <= 7) urgencyLevel = 'critical';
     else if (daysUntilExpiry <= 30) urgencyLevel = 'high';
     else if (daysUntilExpiry <= 60) urgencyLevel = 'medium';

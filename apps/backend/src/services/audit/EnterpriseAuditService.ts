@@ -106,8 +106,8 @@ export interface AuditInvestigation {
 }
 
 export class EnterpriseAuditService {
-  private auditRepository: Repository<AuditEvent>;
-  private notificationService: NotificationService;
+  privateauditRepository: Repository<AuditEvent>;
+  privatenotificationService: NotificationService;
 
   constructor() {
     this.auditRepository = AppDataSource.getRepository(AuditEvent);
@@ -258,7 +258,7 @@ export class EnterpriseAuditService {
         anomalies
       );
 
-      const investigation: AuditInvestigation = {
+      constinvestigation: AuditInvestigation = {
         investigationId: crypto.randomUUID(),
         triggerEvent: investigationRequest.triggerEventId,
         investigationType: investigationRequest.investigationType,
@@ -331,7 +331,7 @@ export class EnterpriseAuditService {
         return new Date(event.createdAt) >= thirtyDaysAgo;
       });
 
-      const analytics: AuditAnalytics = {
+      constanalytics: AuditAnalytics = {
         volumeMetrics: {
           totalEvents: allEvents.length,
           eventsPerDay: recentEvents.length / 30,

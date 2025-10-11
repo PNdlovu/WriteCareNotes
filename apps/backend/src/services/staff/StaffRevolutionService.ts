@@ -305,12 +305,12 @@ interface ProgramOutcome {
 }
 
 export class StaffRevolutionService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private audit: AuditService;
-  private notifications: NotificationService;
-  private ai: AIService;
-  private analytics: AnalyticsService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateaudit: AuditService;
+  privatenotifications: NotificationService;
+  privateai: AIService;
+  privateanalytics: AnalyticsService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -339,7 +339,7 @@ export class StaffRevolutionService {
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
       const staffId = req.params.staffId;
-      const wellnessData: WellnessProfile = req.body;
+      constwellnessData: WellnessProfile = req.body;
 
       // Validate staff member exists and user has permission
       const staffAccess = await this.validateStaffAccess(tenantId, userId, staffId);
@@ -605,7 +605,7 @@ export class StaffRevolutionService {
           assessedBy: userId
         });
 
-        const response: BurnoutAssessment = {
+        constresponse: BurnoutAssessment = {
           id: assessment.id,
           staffId: assessment.staff_id,
           tenantId: assessment.tenant_id,
@@ -720,7 +720,7 @@ export class StaffRevolutionService {
         createdBy: userId
       });
 
-      const response: SupportNetwork = {
+      constresponse: SupportNetwork = {
         id: network.id,
         tenantId: network.tenant_id,
         networkType: network.network_type,
@@ -830,7 +830,7 @@ export class StaffRevolutionService {
         alertCount: alerts.length
       });
 
-      const response: WorkloadAnalysis = {
+      constresponse: WorkloadAnalysis = {
         id: analysis.id,
         staffId: analysis.staff_id,
         tenantId: analysis.tenant_id,
@@ -930,7 +930,7 @@ export class StaffRevolutionService {
         createdBy: userId
       });
 
-      const response: WellnessProgram = {
+      constresponse: WellnessProgram = {
         id: program.id,
         tenantId: program.tenant_id,
         programName: program.program_name,
@@ -1082,7 +1082,7 @@ export class StaffRevolutionService {
     riskLevel: RiskLevel,
     staffId: string
   ): Promise<Recommendation[]> {
-    const recommendations: Recommendation[] = [];
+    constrecommendations: Recommendation[] = [];
 
     if (scores.emotionalExhaustion >= 27) {
       recommendations.push({
@@ -1306,7 +1306,7 @@ export class StaffRevolutionService {
   }
 
   private generateWorkloadAlerts(metrics: WorkloadMetrics, trends: WorkloadTrend[]): WorkloadAlert[] {
-    const alerts: WorkloadAlert[] = [];
+    constalerts: WorkloadAlert[] = [];
 
     if (metrics.averageHoursPerWeek > 50) {
       alerts.push({

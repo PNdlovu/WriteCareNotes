@@ -75,7 +75,7 @@ interface AuditSearchFilters {
 }
 
 export class AuditService {
-  private auditRepository: Repository<AuditEvent>;
+  privateauditRepository: Repository<AuditEvent>;
 
   constructor(private dataSource: DataSource) {
     this.auditRepository = this.dataSource.getRepository(AuditEvent);
@@ -449,8 +449,8 @@ export class AuditService {
     const failedEvents = totalEvents - successfulEvents;
     const successRate = totalEvents > 0 ? (successfulEvents / totalEvents) * 100 : 100;
 
-    const eventsByType: Record<string, number> = {};
-    const eventsByRiskLevel: Record<string, number> = {};
+    consteventsByType: Record<string, number> = {};
+    consteventsByRiskLevel: Record<string, number> = {};
 
     for (const event of allEvents) {
       eventsByType[event.eventType] = (eventsByType[event.eventType] || 0) + 1;
@@ -563,7 +563,7 @@ export class AuditService {
     violationCount: number,
     violations: any[]
   ): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (complianceRate < 95) {
       recommendations.push('Compliance rate below target - immediate review required');

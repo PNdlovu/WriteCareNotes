@@ -37,8 +37,8 @@
     "rootDir": "./src"
   },
   "include": [
-    "src/**/*",
-    "src/types/**/*.d.ts"
+    "src/**/*.ts",
+    "src/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

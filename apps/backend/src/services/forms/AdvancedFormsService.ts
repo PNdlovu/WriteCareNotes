@@ -255,13 +255,13 @@ export interface FormAnalytics {
 
 export class AdvancedFormsService {
   // Logger removed
-  private notificationService: NotificationService;
-  private auditService: AuditService;
-  private encryptionService: FieldLevelEncryptionService;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
+  privateencryptionService: FieldLevelEncryptionService;
 
   // In-memory storage (would be replaced with proper database entities)
-  private forms: Map<string, FormDefinition> = new Map();
-  private submissions: Map<string, FormSubmission> = new Map();
+  privateforms: Map<string, FormDefinition> = new Map();
+  privatesubmissions: Map<string, FormSubmission> = new Map();
 
   constructor() {
     this.notificationService = new NotificationService(new EventEmitter2());
@@ -276,7 +276,7 @@ export class AdvancedFormsService {
    */
   async createForm(formData: Partial<FormDefinition>): Promise<FormDefinition> {
     try {
-      const form: FormDefinition = {
+      constform: FormDefinition = {
         formId: `form-${Date.now()}`,
         formName: formData.formName!,
         formTitle: formData.formTitle!,
@@ -327,7 +327,7 @@ export class AdvancedFormsService {
 
     } catch (error: unknown) {
       console.error('Failed to create form', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         formData
       });
       throw error;
@@ -363,7 +363,7 @@ export class AdvancedFormsService {
       const { encryptedData, encryptedFields } = await this.encryptSensitiveFormData(form, submissionData);
 
       // Create submission
-      const submission: FormSubmission = {
+      constsubmission: FormSubmission = {
         submissionId: `sub-${Date.now()}`,
         formId,
         formVersion: form.version,
@@ -408,7 +408,7 @@ export class AdvancedFormsService {
 
     } catch (error: unknown) {
       console.error('Failed to submit form', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         formId,
         submittedBy
       });
@@ -456,7 +456,7 @@ export class AdvancedFormsService {
 
     } catch (error: unknown) {
       console.error('Failed to generate form analytics', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         formId
       });
       throw error;
@@ -467,7 +467,7 @@ export class AdvancedFormsService {
    * Create care home specific form templates
    */
   async createCareHomeFormTemplates(): Promise<FormDefinition[]> {
-    const templates: FormDefinition[] = [];
+    consttemplates: FormDefinition[] = [];
 
     // Resident Admission Form
     templates.push(await this.createResidentAdmissionForm());
@@ -536,7 +536,7 @@ export class AdvancedFormsService {
 
     } catch (error: unknown) {
       console.error('Failed to process digital signature', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         submissionId
       });
       throw error;
@@ -575,7 +575,7 @@ export class AdvancedFormsService {
   }
 
   private async validateSubmission(form: FormDefinition, data: any): Promise<{ isValid: boolean; errors: string[] }> {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     for (const page of form.pages) {
       for (const field of page.fields) {
@@ -666,7 +666,7 @@ export class AdvancedFormsService {
 
   private async encryptSensitiveFormData(form: FormDefinition, data: any): Promise<{ encryptedData: any; encryptedFields: string[] }> {
     const encryptedData = { ...data };
-    const encryptedFields: string[] = [];
+    constencryptedFields: string[] = [];
 
     for (const page of form.pages) {
       for (const field of page.fields) {
@@ -1044,7 +1044,7 @@ export class AdvancedFormsService {
   }
 
   private async generateFieldAnalytics(form: FormDefinition, submissions: FormSubmission[]): Promise<any[]> {
-    const fieldAnalytics: any[] = [];
+    constfieldAnalytics: any[] = [];
 
     for (const page of form.pages) {
       for (const field of page.fields) {

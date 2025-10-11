@@ -253,7 +253,7 @@ export class CareInspectorateScotlandService {
         serviceId
       );
 
-      const assessment: ScotlandComplianceAssessment = {
+      constassessment: ScotlandComplianceAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         serviceId,
@@ -284,7 +284,7 @@ export class CareInspectorateScotlandService {
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Scotland assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Scotland assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -296,7 +296,7 @@ export class CareInspectorateScotlandService {
     serviceId: string,
     organizationId: string
   ): Promise<Record<ScotlandQualityIndicator, ScotlandGrade>> {
-    const grades: Record<ScotlandQualityIndicator, ScotlandGrade> = {} as any;
+    constgrades: Record<ScotlandQualityIndicator, ScotlandGrade> = {} as any;
 
     // Quality Indicator 1: How well do we support people's wellbeing?
     grades[ScotlandQualityIndicator.WELLBEING] = await this.assessWellbeingIndicator(serviceId, organizationId);
@@ -409,7 +409,7 @@ export class CareInspectorateScotlandService {
     organizationId: string
   ): Promise<HealthSocialCareStandardCompliance[]> {
     const standards = Object.values(HealthSocialCareStandard);
-    const compliance: HealthSocialCareStandardCompliance[] = [];
+    constcompliance: HealthSocialCareStandardCompliance[] = [];
 
     for (const standard of standards) {
       const standardCompliance = await this.assessHealthSocialCareStandard(standard, serviceId, organizationId);
@@ -449,7 +449,7 @@ export class CareInspectorateScotlandService {
     organizationId: string
   ): Promise<SSSSCRequirementsCompliance[]> {
     const requirements = Object.values(SSSSCRequirement);
-    const compliance: SSSSCRequirementsCompliance[] = [];
+    constcompliance: SSSSCRequirementsCompliance[] = [];
 
     for (const requirement of requirements) {
       const requirementCompliance = await this.assessSSSSCRequirement(requirement, serviceId, organizationId);
@@ -467,11 +467,11 @@ export class CareInspectorateScotlandService {
     serviceId: string,
     organizationId: string
   ): Promise<SSSSCRequirementsCompliance> {
-    let compliance: boolean;
-    let staffCompliance: number;
-    let evidence: string[];
-    let gaps: string[];
-    let actionRequired: string[];
+    letcompliance: boolean;
+    letstaffCompliance: number;
+    letevidence: string[];
+    letgaps: string[];
+    letactionRequired: string[];
 
     switch (requirement) {
       case SSSSCRequirement.REGISTRATION:
@@ -582,7 +582,7 @@ export class CareInspectorateScotlandService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess Scotland digital records: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to assess Scotland digital records: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -597,7 +597,7 @@ export class CareInspectorateScotlandService {
     try {
       console.log(`Registering service with Care Inspectorate Scotland: ${serviceDetails.serviceName}`);
 
-      const registration: ScotlandServiceRegistration = {
+      constregistration: ScotlandServiceRegistration = {
         id: this.generateRegistrationId(),
         organizationId,
         serviceType: serviceDetails.serviceType || 'care_home_adults',
@@ -631,7 +631,7 @@ export class CareInspectorateScotlandService {
       return savedRegistration;
 
     } catch (error: unknown) {
-      console.error(`Scotland service registration failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Scotland service registration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -665,7 +665,7 @@ export class CareInspectorateScotlandService {
       return readinessReport;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate Scotland readiness report: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to generate Scotland readiness report: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -720,7 +720,7 @@ export class CareInspectorateScotlandService {
       return complianceStatus;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor Scotland compliance: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to monitor Scotland compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -938,7 +938,7 @@ export class CareInspectorateScotlandService {
     digitalCompliance: ScotlandDigitalRecordsCompliance,
     serviceId: string
   ): Promise<ScotlandActionPlan> {
-    const actions: ScotlandAction[] = [];
+    constactions: ScotlandAction[] = [];
 
     // Generate actions for inadequate quality indicators
     for (const [indicator, grade] of Object.entries(qualityIndicatorGrades)) {
@@ -970,7 +970,7 @@ export class CareInspectorateScotlandService {
       actions.push(...digitalActions);
     }
 
-    const actionPlan: ScotlandActionPlan = {
+    constactionPlan: ScotlandActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,

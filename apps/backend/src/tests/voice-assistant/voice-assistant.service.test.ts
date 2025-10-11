@@ -5,16 +5,16 @@ import { IoTIntegrationService } from '../../services/iot-integration.service';
 import { SmartDeviceEntity, DeviceType } from '../../entities/smart-device.entity';
 
 describe('VoiceAssistantService', () => {
-  let service: VoiceAssistantService;
-  let iotService: IoTIntegrationService;
-  let eventEmitter: EventEmitter2;
+  letservice: VoiceAssistantService;
+  letiotService: IoTIntegrationService;
+  leteventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const mockIoTService = {
       sendDeviceCommand: jest.fn().mockResolvedValue(true),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         VoiceAssistantService,
         {
@@ -42,7 +42,7 @@ describe('VoiceAssistantService', () => {
 
   describe('initializeDevice', () => {
     it('should initialize a voice assistant device successfully', async () => {
-      const device: SmartDeviceEntity = {
+      constdevice: SmartDeviceEntity = {
         id: 'device_001',
         deviceName: 'Care Home Voice Assistant',
         deviceType: DeviceType.VOICE_ASSISTANT,
@@ -76,7 +76,7 @@ describe('VoiceAssistantService', () => {
     });
 
     it('should return false for non-voice assistant device', async () => {
-      const device: SmartDeviceEntity = {
+      constdevice: SmartDeviceEntity = {
         id: 'device_001',
         deviceName: 'Smart Light',
         deviceType: DeviceType.SMART_LIGHT,
@@ -97,7 +97,7 @@ describe('VoiceAssistantService', () => {
     });
 
     it('should handle initialization errors gracefully', async () => {
-      const device: SmartDeviceEntity = {
+      constdevice: SmartDeviceEntity = {
         id: 'device_001',
         deviceName: 'Care Home Voice Assistant',
         deviceType: DeviceType.VOICE_ASSISTANT,

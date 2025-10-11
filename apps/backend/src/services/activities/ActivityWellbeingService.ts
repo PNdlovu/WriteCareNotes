@@ -74,8 +74,8 @@ export interface ActivityFilters {
  * Compliance: CQC, person-centered care, therapeutic activity standards
  */
 export class ActivityWellbeingService {
-  private activityRepository: Repository<Activity>;
-  private attendanceRepository: Repository<AttendanceRecord>;
+  privateactivityRepository: Repository<Activity>;
+  privateattendanceRepository: Repository<AttendanceRecord>;
 
   constructor(private dataSource: DataSource) {
     this.activityRepository = this.dataSource.getRepository(Activity);

@@ -409,8 +409,8 @@ export class ProfessionalStandardsService {
       const staffRegistrations = this.groupRegistrationsByStaff(allRegistrations);
 
       // Assess each staff member
-      const staffAssessments: StaffProfessionalAssessment[] = [];
-      const complianceByBody: Record<ProfessionalBody, number> = {} as any;
+      conststaffAssessments: StaffProfessionalAssessment[] = [];
+      constcomplianceByBody: Record<ProfessionalBody, number> = {} as any;
 
       for (const [staffId, registrations] of staffRegistrations.entries()) {
         const staffAssessment = await this.assessStaffProfessionalCompliance(staffId, registrations);
@@ -426,7 +426,7 @@ export class ProfessionalStandardsService {
       }
 
       // Calculate averages by professional body
-      const bodyCounts: Record<ProfessionalBody, number> = {} as any;
+      constbodyCounts: Record<ProfessionalBody, number> = {} as any;
       for (const registration of allRegistrations) {
         bodyCounts[registration.professionalBody] = (bodyCounts[registration.professionalBody] || 0) + 1;
       }
@@ -449,7 +449,7 @@ export class ProfessionalStandardsService {
       // Generate action plan
       const actionPlan = await this.generateProfessionalStandardsActionPlan(staffAssessments, organizationId);
 
-      const assessment: ProfessionalStandardsAssessment = {
+      constassessment: ProfessionalStandardsAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentDate: new Date(),
@@ -477,7 +477,7 @@ export class ProfessionalStandardsService {
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Professional standards assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Professional standards assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -490,8 +490,8 @@ export class ProfessionalStandardsService {
     registrations: ProfessionalRegistration[]
   ): Promise<StaffProfessionalAssessment> {
     try {
-      const issues: string[] = [];
-      const recommendations: any[] = [];
+      constissues: string[] = [];
+      constrecommendations: any[] = [];
       let totalScore = 0;
 
       for (const registration of registrations) {
@@ -516,7 +516,7 @@ export class ProfessionalStandardsService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess staff professional compliance: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to assess staff professional compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -761,7 +761,7 @@ export class ProfessionalStandardsService {
       return monitoring;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor professional registrations: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to monitor professional registrations: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -806,7 +806,7 @@ export class ProfessionalStandardsService {
       return developmentPlan;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate professional development plan: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to generate professional development plan: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -844,7 +844,7 @@ export class ProfessionalStandardsService {
       return validation;
 
     } catch (error: unknown) {
-      console.error(`Failed to validate professional registration: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to validate professional registration: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -866,7 +866,7 @@ export class ProfessionalStandardsService {
   }
 
   private countRegistrationsByBody(registrations: ProfessionalRegistration[]): Record<ProfessionalBody, number> {
-    const counts: Record<ProfessionalBody, number> = {} as any;
+    constcounts: Record<ProfessionalBody, number> = {} as any;
     
     for (const registration of registrations) {
       counts[registration.professionalBody] = (counts[registration.professionalBody] || 0) + 1;
@@ -913,7 +913,7 @@ export class ProfessionalStandardsService {
     staffAssessments: StaffProfessionalAssessment[],
     organizationId: string
   ): Promise<ProfessionalStandardsActionPlan> {
-    const actions: ProfessionalStandardsAction[] = [];
+    constactions: ProfessionalStandardsAction[] = [];
 
     for (const staff of staffAssessments) {
       if (!staff.overallCompliance) {
@@ -934,7 +934,7 @@ export class ProfessionalStandardsService {
       }
     }
 
-    const actionPlan: ProfessionalStandardsActionPlan = {
+    constactionPlan: ProfessionalStandardsActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,

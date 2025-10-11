@@ -25,12 +25,12 @@ import * as request from 'supertest';
  */
 
 describe('System Accessibility Tests', () => {
-  let app: INestApplication;
-  let systemService: SystemService;
-  let systemController: SystemController;
+  letapp: INestApplication;
+  letsystemService: SystemService;
+  letsystemController: SystemController;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    constmoduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',

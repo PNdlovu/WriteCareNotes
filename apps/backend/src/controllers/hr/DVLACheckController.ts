@@ -15,7 +15,7 @@ import { DVLACheckService, DVLACheckRequest, DVLACheckUpdate, DVLACheckSearchCri
 import { logger } from '../../utils/logger';
 
 export class DVLACheckController {
-  private dvlaCheckService: DVLACheckService;
+  privatedvlaCheckService: DVLACheckService;
 
   constructor() {
     this.dvlaCheckService = new DVLACheckService();
@@ -26,7 +26,7 @@ export class DVLACheckController {
    */
   async createDVLACheck(req: Request, res: Response): Promise<void> {
     try {
-      const request: DVLACheckRequest = req.body;
+      constrequest: DVLACheckRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const check = await this.dvlaCheckService.createDVLACheck(request, createdBy);
@@ -114,7 +114,7 @@ export class DVLACheckController {
    */
   async searchDVLAChecks(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: DVLACheckSearchCriteria = req.query;
+      constcriteria: DVLACheckSearchCriteria = req.query;
 
       const checks = await this.dvlaCheckService.searchDVLAChecks(criteria);
 
@@ -142,7 +142,7 @@ export class DVLACheckController {
   async updateDVLACheck(req: Request, res: Response): Promise<void> {
     try {
       const { checkId } = req.params;
-      const updates: DVLACheckUpdate = req.body;
+      constupdates: DVLACheckUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const check = await this.dvlaCheckService.updateDVLACheck(

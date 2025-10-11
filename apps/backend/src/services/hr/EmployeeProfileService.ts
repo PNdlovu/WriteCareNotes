@@ -81,10 +81,10 @@ export interface ProfileUpdateData {
 }
 
 export class EmployeeProfileService {
-  private profileRepository: Repository<EmployeeProfile>;
-  private employeeRepository: Repository<Employee>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateprofileRepository: Repository<EmployeeProfile>;
+  privateemployeeRepository: Repository<Employee>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.profileRepository = AppDataSource.getRepository(EmployeeProfile);
@@ -254,7 +254,7 @@ export class EmployeeProfileService {
 
   // Onboarding
   async onBoardEmployee(onboardingData: OnboardingData): Promise<EmployeeProfile> {
-    const profileData: Partial<EmployeeProfile> = {
+    constprofileData: Partial<EmployeeProfile> = {
       employeeId: onboardingData.employeeId,
       status: ProfileStatus.PENDING_APPROVAL,
       profileType: ProfileType.BASIC,

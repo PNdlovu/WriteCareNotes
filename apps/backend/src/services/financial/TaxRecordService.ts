@@ -146,11 +146,11 @@ export class TaxRecordService {
 
   constructor(
     @InjectRepository(TaxRecord)
-    private taxRecordRepository: Repository<TaxRecord>,
+    privatetaxRecordRepository: Repository<TaxRecord>,
     @InjectRepository(ChartOfAccounts)
-    private chartOfAccountsRepository: Repository<ChartOfAccounts>,
+    privatechartOfAccountsRepository: Repository<ChartOfAccounts>,
     @InjectRepository(FinancialTransaction)
-    private financialTransactionRepository: Repository<FinancialTransaction>,
+    privatefinancialTransactionRepository: Repository<FinancialTransaction>,
   ) {}
 
   /**
@@ -529,7 +529,7 @@ export class TaxRecordService {
     let totalAmount = new Decimal(0);
     let paidAmount = new Decimal(0);
     let overdueAmount = new Decimal(0);
-    const typeTotals: Record<string, Decimal> = {};
+    consttypeTotals: Record<string, Decimal> = {};
 
     taxRecords.forEach(taxRecord => {
       totalAmount = totalAmount.plus(taxRecord.totalAmount);

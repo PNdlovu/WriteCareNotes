@@ -216,8 +216,8 @@ export class ComplianceCheckService {
       const rules = this.getApplicableRules(request.framework, request.checkType);
       
       // Execute compliance checks
-      const findings: ComplianceFinding[] = [];
-      const recommendations: ComplianceRecommendation[] = [];
+      constfindings: ComplianceFinding[] = [];
+      constrecommendations: ComplianceRecommendation[] = [];
       
       for (const rule of rules) {
         const ruleResult = await this.executeComplianceRule(rule, request);
@@ -234,7 +234,7 @@ export class ComplianceCheckService {
       // Determine severity
       const severity = this.determineSeverity(findings);
 
-      const result: ComplianceCheckResult = {
+      constresult: ComplianceCheckResult = {
         checkId: request.checkId,
         framework: request.framework,
         checkType: request.checkType,
@@ -277,7 +277,7 @@ export class ComplianceCheckService {
 
     } catch (error: unknown) {
       console.error('Compliance check failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         framework: request.framework,
         correlationId: request.correlationId
       });
@@ -296,7 +296,7 @@ export class ComplianceCheckService {
     correlationId?: string,
     organizationId?: string
   ): Promise<ComplianceCheckResult> {
-    const request: ComplianceCheckRequest = {
+    constrequest: ComplianceCheckRequest = {
       framework: ComplianceFramework.GDPR,
       checkType: ComplianceCheckType.DATA_PROCESSING,
       entityType: 'data_processing',
@@ -324,7 +324,7 @@ export class ComplianceCheckService {
     correlationId?: string,
     organizationId?: string
   ): Promise<ComplianceCheckResult> {
-    const request: ComplianceCheckRequest = {
+    constrequest: ComplianceCheckRequest = {
       framework: ComplianceFramework.CQC,
       checkType: ComplianceCheckType.CARE_QUALITY,
       entityType: 'care_home',
@@ -348,7 +348,7 @@ export class ComplianceCheckService {
     correlationId?: string,
     organizationId?: string
   ): Promise<ComplianceCheckResult> {
-    const request: ComplianceCheckRequest = {
+    constrequest: ComplianceCheckRequest = {
       framework: ComplianceFramework.PCI_DSS,
       checkType: ComplianceCheckType.DATA_PROCESSING,
       entityType: 'payment_transaction',
@@ -549,14 +549,14 @@ export class ComplianceCheckService {
     } catch (error: unknown) {
       console.error('Compliance rule execution failed', {
         ruleId: rule.ruleId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
         findings: [{
           findingId: `${rule.ruleId}_error`,
           rule: rule.ruleId,
-          description: `Rule execution failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`,
+          description: `Rule execution failed: ${error instanceof Error ? error.message : "Unknown error"}`,
           severity: ComplianceSeverity.HIGH,
           remediation: 'Review rule implementation and data quality',
           status: 'open'
@@ -644,7 +644,7 @@ export class ComplianceCheckService {
     const criticalFindings = result.findings.filter(f => f.severity === ComplianceSeverity.CRITICAL);
     
     for (const finding of criticalFindings) {
-      const violation: ComplianceViolation = {
+      constviolation: ComplianceViolation = {
         violationId: `${finding.findingId}_${Date.now()}`,
         framework: result.framework,
         rule: finding.rule,
@@ -675,10 +675,10 @@ export class ComplianceCheckService {
 
   // GDPR Data Minimization Helper Methods
   private checkUnnecessaryDataTypes(dataType: string, processingPurpose: string): string[] {
-    const unnecessaryTypes: string[] = [];
+    constunnecessaryTypes: string[] = [];
     
     // Define purpose-specific necessary data types
-    const purposeDataMap: Record<string, string[]> = {
+    constpurposeDataMap: Record<string, string[]> = {
       'care_planning': ['medical_history', 'current_medications', 'allergies', 'care_preferences'],
       'billing': ['financial_information', 'insurance_details', 'payment_methods'],
       'emergency_contact': ['contact_information', 'relationship_details'],
@@ -698,10 +698,10 @@ export class ComplianceCheckService {
   }
 
   private checkExcessiveDataFields(dataFields: string[], processingPurpose: string): string[] {
-    const excessiveFields: string[] = [];
+    constexcessiveFields: string[] = [];
     
     // Define purpose-specific field limits
-    const purposeFieldLimits: Record<string, { max: number; essential: string[] }> = {
+    constpurposeFieldLimits: Record<string, { max: number; essential: string[] }> = {
       'care_planning': { max: 20, essential: ['name', 'dob', 'medical_conditions', 'medications'] },
       'billing': { max: 15, essential: ['name', 'address', 'payment_method'] },
       'emergency_contact': { max: 8, essential: ['name', 'phone', 'relationship'] },
@@ -719,7 +719,7 @@ export class ComplianceCheckService {
 
   private isRetentionPeriodExcessive(retentionDays: number, processingPurpose: string): boolean {
     // Define purpose-specific retention limits (in days)
-    const retentionLimits: Record<string, number> = {
+    constretentionLimits: Record<string, number> = {
       'care_planning': 2555, // 7 years (healthcare records)
       'billing': 2190, // 6 years (financial records)
       'emergency_contact': 365, // 1 year after care ends
@@ -735,8 +735,8 @@ export class ComplianceCheckService {
 
   // CQC Safe Care Helper Methods
   private validateMedicationManagement(careData: any): { findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; } {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     // Check medication administration records
     if (!careData.medicationAdministrationRecords || careData.medicationAdministrationRecords.length === 0) {
@@ -766,8 +766,8 @@ export class ComplianceCheckService {
   }
 
   private validateInfectionControl(careData: any): { findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; } {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     // Check infection control policies
     if (!careData.infectionControlPolicies || careData.infectionControlPolicies.length === 0) {
@@ -797,8 +797,8 @@ export class ComplianceCheckService {
   }
 
   private validateSafeguarding(careData: any): { findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; } {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     // Check safeguarding training
     if (!careData.safeguardingTraining || careData.safeguardingTraining.completionRate < 95) {
@@ -816,8 +816,8 @@ export class ComplianceCheckService {
   }
 
   private validateStaffTraining(careData: any): { findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; } {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     // Check mandatory training completion
     const mandatoryTraining = careData.mandatoryTraining || {};
@@ -840,8 +840,8 @@ export class ComplianceCheckService {
   }
 
   private validateCarePlanning(careData: any): { findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; } {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     // Check care plan reviews
     if (!careData.carePlanReviews || careData.carePlanReviews.averageDaysSinceReview > 90) {
@@ -859,8 +859,8 @@ export class ComplianceCheckService {
   }
 
   private validateCQCFundamentalStandards(careData: any): { findings: ComplianceFinding[]; recommendations: ComplianceRecommendation[]; } {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     // Check person-centered care
     if (!careData.personCenteredCare || careData.personCenteredCare.score < 80) {
@@ -908,8 +908,8 @@ export class ComplianceCheckService {
 
   // Compliance rule validators
   private async validateGDPRLawfulBasis(request: ComplianceCheckRequest): Promise<any> {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     const lawfulBasis = request.data?.lawfulBasis;
     const validBases = ['consent', 'contract', 'legal_obligation', 'vital_interests', 'public_task', 'legitimate_interests'];
@@ -929,8 +929,8 @@ export class ComplianceCheckService {
   }
 
   private async validateGDPRDataMinimization(request: ComplianceCheckRequest): Promise<any> {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     const dataType = request.data?.dataType;
     const processingPurpose = request.data?.processingPurpose;
@@ -1012,8 +1012,8 @@ export class ComplianceCheckService {
   }
 
   private async validateCQCSafeCare(request: ComplianceCheckRequest): Promise<any> {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     const careData = request.data;
     const complianceArea = careData?.complianceArea;
@@ -1062,8 +1062,8 @@ export class ComplianceCheckService {
   }
 
   private async validatePCIDSSEncryption(request: ComplianceCheckRequest): Promise<any> {
-    const findings: ComplianceFinding[] = [];
-    const recommendations: ComplianceRecommendation[] = [];
+    constfindings: ComplianceFinding[] = [];
+    constrecommendations: ComplianceRecommendation[] = [];
 
     const transactionData = request.data;
     const cardData = transactionData?.cardData;

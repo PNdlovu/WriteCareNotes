@@ -18,8 +18,8 @@ import { logger } from '@/utils/logger';
  * Invoice Routes with enterprise security and compliance
  */
 export class InvoiceRoutes {
-  private router: Router;
-  private invoiceController: InvoiceController;
+  privaterouter: Router;
+  privateinvoiceController: InvoiceController;
 
   constructor(invoiceController: InvoiceController) {
     this.router = Router();

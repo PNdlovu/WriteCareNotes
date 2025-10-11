@@ -163,9 +163,9 @@ export interface CognitiveStimulatonProgram {
 }
 
 export class DementiaCareService {
-  private carePlanRepository: Repository<DementiaCarePlan>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatecarePlanRepository: Repository<DementiaCarePlan>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.carePlanRepository = AppDataSource.getRepository(DementiaCarePlan);
@@ -288,7 +288,7 @@ export class DementiaCareService {
   // Advanced Wandering Prevention with IoT Integration
   async implementAdvancedWanderingPrevention(residentId: string, riskLevel: WanderingRiskLevel): Promise<WanderingPreventionSystem> {
     try {
-      const preventionSystem: WanderingPreventionSystem = {
+      constpreventionSystem: WanderingPreventionSystem = {
         technologySolutions: {
           wearableDevices: await this.configureWearableDevices(riskLevel),
           environmentalSensors: await this.configureEnvironmentalSensors(riskLevel),
@@ -363,7 +363,7 @@ export class DementiaCareService {
   }): Promise<CognitiveStimulatonProgram> {
     try {
       // Evidence-based cognitive stimulation program creation
-      const program: CognitiveStimulatonProgram = {
+      constprogram: CognitiveStimulatonProgram = {
         programId: crypto.randomUUID(),
         programName: `Personalized Cognitive Stimulation - ${programData.personalInterests[0] || 'General'}`,
         evidenceBase: 'Cochrane Review 2023, NICE Guidelines CG42, Spector et al. 2003',
@@ -496,7 +496,7 @@ export class DementiaCareService {
 
     const riskScore = this.calculateWanderingRiskScore(riskFactors, planData.stage);
     
-    let riskLevel: WanderingRiskLevel;
+    letriskLevel: WanderingRiskLevel;
     if (riskScore >= 80) riskLevel = WanderingRiskLevel.EXTREME;
     else if (riskScore >= 60) riskLevel = WanderingRiskLevel.HIGH;
     else if (riskScore >= 40) riskLevel = WanderingRiskLevel.MODERATE;

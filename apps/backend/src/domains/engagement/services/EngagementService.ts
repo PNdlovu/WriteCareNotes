@@ -80,13 +80,13 @@ export interface EngagementMetrics {
 export class EngagementService {
   constructor(
     @InjectRepository(Activity)
-    private activityRepository: Repository<Activity>,
+    privateactivityRepository: Repository<Activity>,
     @InjectRepository(AttendanceRecord)
-    private attendanceRepository: Repository<AttendanceRecord>,
+    privateattendanceRepository: Repository<AttendanceRecord>,
     @InjectRepository(Resident)
-    private residentRepository: Repository<Resident>,
+    privateresidentRepository: Repository<Resident>,
     @InjectRepository(StaffMember)
-    private staffRepository: Repository<StaffMember>,
+    privatestaffRepository: Repository<StaffMember>,
   ) {}
 
   /**

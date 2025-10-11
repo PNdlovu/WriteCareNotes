@@ -5,10 +5,10 @@ import { FamilyPortalService } from '../../services/family-portal.service';
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 describe('FamilyPortalService', () => {
-  let service: FamilyPortalService;
-  let mockRepository: any;
-  let mockEventEmitter: any;
-  let mockAuditService: any;
+  letservice: FamilyPortalService;
+  letmockRepository: any;
+  letmockEventEmitter: any;
+  letmockAuditService: any;
 
   beforeEach(async () => {
     mockRepository = {
@@ -27,7 +27,7 @@ describe('FamilyPortalService', () => {
       logEvent: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         FamilyPortalService,
         {

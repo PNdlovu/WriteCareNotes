@@ -98,7 +98,7 @@ interface AvailabilityUpdateDTO {
 }
 
 export class StaffService {
-  private staffRepository: Repository<StaffMember>;
+  privatestaffRepository: Repository<StaffMember>;
 
   constructor(private dataSource: DataSource) {
     this.staffRepository = this.dataSource.getRepository(StaffMember);
@@ -438,7 +438,7 @@ export class StaffService {
 
     const staffMembers = await query.getMany();
 
-    const result: Array<{
+    constresult: Array<{
       staff: StaffMember;
       expiringCertifications: Array<{ name: string; expiryDate: Date }>;
     }> = [];

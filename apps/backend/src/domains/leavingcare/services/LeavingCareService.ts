@@ -41,8 +41,8 @@ import { PathwayPlan, PathwayPlanStatus } from '../entities/PathwayPlan';
 import { Child } from '../../children/entities/Child';
 
 export class LeavingCareService {
-  private pathwayPlanRepository: Repository<PathwayPlan>;
-  private childRepository: Repository<Child>;
+  privatepathwayPlanRepository: Repository<PathwayPlan>;
+  privatechildRepository: Repository<Child>;
 
   constructor() {
     this.pathwayPlanRepository = AppDataSource.getRepository(PathwayPlan);

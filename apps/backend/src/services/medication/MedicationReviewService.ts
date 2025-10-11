@@ -114,7 +114,7 @@ export interface CreateMedicationReviewRequest {
 
 export class MedicationReviewService {
   private logger = logger;
-  private db: Pool;
+  privatedb: Pool;
 
   constructor(db: Pool) {
     this.db = db;
@@ -147,7 +147,7 @@ export class MedicationReviewService {
       // Calculate next review date
       const nextReviewDate = this.calculateNextReviewDate(request.reviewType, overallAssessment.overallScore);
 
-      const review: MedicationReview = {
+      constreview: MedicationReview = {
         id: reviewId,
         residentId: request.residentId,
         reviewType: request.reviewType,
@@ -177,10 +177,10 @@ export class MedicationReviewService {
 
     } catch (error: unknown) {
       console.error('Failed to create medication review', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         residentId: request.residentId 
       });
-      throw new Error(`Failed to create medication review: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to create medication review: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -213,7 +213,7 @@ export class MedicationReviewService {
       `;
       const reviewsResult = await this.db.query(reviewsQuery, [residentId, organizationId, limit, offset]);
 
-      const reviews: MedicationReview[] = reviewsResult.rows.map(row => this.mapDbRowToReview(row));
+      constreviews: MedicationReview[] = reviewsResult.rows.map(row => this.mapDbRowToReview(row));
 
       const totalPages = Math.ceil(total / limit);
 
@@ -231,10 +231,10 @@ export class MedicationReviewService {
 
     } catch (error: unknown) {
       console.error('Failed to get medication reviews', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         residentId 
       });
-      throw new Error(`Failed to get medication reviews: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get medication reviews: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -260,10 +260,10 @@ export class MedicationReviewService {
 
     } catch (error: unknown) {
       console.error('Failed to get medication review', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         reviewId 
       });
-      throw new Error(`Failed to get medication review: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get medication review: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -293,15 +293,15 @@ export class MedicationReviewService {
 
     } catch (error: unknown) {
       console.error('Failed to update review status', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         reviewId 
       });
-      throw new Error(`Failed to update review status: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to update review status: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateCreateRequest(request: CreateMedicationReviewRequest): void {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!request.residentId?.trim()) errors.push('Resident ID is required');
     if (!request.reviewType) errors.push('Review type is required');
@@ -454,8 +454,8 @@ export class MedicationReviewService {
       return result.rows[0].id;
 
     } catch (error: unknown) {
-      console.error('Failed to store medication review', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to store medication review: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to store medication review', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to store medication review: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

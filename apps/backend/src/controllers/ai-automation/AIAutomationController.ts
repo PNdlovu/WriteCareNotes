@@ -17,8 +17,8 @@ import { AIAutomationService } from '../../services/ai-automation/AIAutomationSe
 import { AICopilotService } from '../../services/ai-automation/AICopilotService';
 
 export class AIAutomationController {
-  private aiService: AIAutomationService;
-  private copilotService: AICopilotService;
+  privateaiService: AIAutomationService;
+  privatecopilotService: AICopilotService;
 
   constructor() {
     this.aiService = new AIAutomationService();
@@ -30,7 +30,7 @@ export class AIAutomationController {
       const summary = await this.aiService.generateIntelligentCareSummary(req.body);
       res.status(201).json({ success: true, data: summary });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -39,7 +39,7 @@ export class AIAutomationController {
       const assistance = await this.copilotService.provideRealTimeCareNoteAssistance(req.body);
       res.json({ success: true, data: assistance });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -48,7 +48,7 @@ export class AIAutomationController {
       const result = await this.copilotService.processAdvancedVoiceToText(req.body);
       res.json({ success: true, data: result });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -57,7 +57,7 @@ export class AIAutomationController {
       const support = await this.aiService.provideClinicalDecisionSupport(req.body);
       res.json({ success: true, data: support });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -66,7 +66,7 @@ export class AIAutomationController {
       const automation = await this.aiService.executeIntelligentAutomation(req.body);
       res.json({ success: true, data: automation });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -75,7 +75,7 @@ export class AIAutomationController {
       const insights = await this.copilotService.generateAIInsightsDashboard();
       res.json({ success: true, data: insights });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

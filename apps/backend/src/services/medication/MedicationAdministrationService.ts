@@ -50,8 +50,8 @@ export class MedicationAdministrationService {
 
   constructor(
     
-    private administrationRepository: Repository<MedicationAdministration>,
-    private auditService: AuditService
+    privateadministrationRepository: Repository<MedicationAdministration>,
+    privateauditService: AuditService
   ) {}
 
   async administerMedication(request: AdministrationRequest): Promise<MedicationAdministration> {

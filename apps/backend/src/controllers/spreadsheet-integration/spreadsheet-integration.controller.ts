@@ -108,7 +108,7 @@ export class SpreadsheetIntegrationController {
     @Request() req: any,
   ) {
     try {
-      let templates: SpreadsheetTemplate[];
+      lettemplates: SpreadsheetTemplate[];
 
       if (category) {
         templates = await this.spreadsheetIntegrationService.getTemplatesByCategory(category as any);

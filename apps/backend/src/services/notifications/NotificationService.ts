@@ -107,9 +107,9 @@ export interface NotificationRequest {
 @Injectable()
 export class NotificationService {
   private readonly logger = new Logger(NotificationService.name);
-  private emailTransporter: nodemailer.Transporter;
-  private twilioClient: twilio.Twilio;
-  private firebaseApp: admin.app.App;
+  privateemailTransporter: nodemailer.Transporter;
+  privatetwilioClient: twilio.Twilio;
+  privatefirebaseApp: admin.app.App;
 
   constructor(
     @InjectRepository(NotificationEntity)
@@ -199,8 +199,8 @@ export class NotificationService {
   private async processNotification(notification: NotificationEntity): Promise<void> {
     try {
       let success = false;
-      let externalId: string | undefined;
-      let errorMessage: string | undefined;
+      letexternalId: string | undefined;
+      leterrorMessage: string | undefined;
 
       switch (notification.type.toLowerCase()) {
         case 'email':

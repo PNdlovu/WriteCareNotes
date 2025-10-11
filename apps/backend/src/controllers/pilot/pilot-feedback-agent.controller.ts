@@ -19,7 +19,7 @@ import {
 } from '../../types/pilot-feedback-agent.types';
 
 export class PilotFeedbackAgentController {
-  private agentService: PilotFeedbackAgentService;
+  privateagentService: PilotFeedbackAgentService;
 
   constructor() {
     this.agentService = new PilotFeedbackAgentService();
@@ -43,7 +43,7 @@ export class PilotFeedbackAgentController {
       }
 
       // Create feedback event
-      const event: PilotFeedbackEvent = {
+      constevent: PilotFeedbackEvent = {
         eventId: feedbackData.eventId || this.generateEventId(),
         tenantId: feedbackData.tenantId,
         submittedAt: feedbackData.submittedAt || new Date().toISOString(),

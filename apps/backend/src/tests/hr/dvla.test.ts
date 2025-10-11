@@ -18,10 +18,10 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('DVLA Service', () => {
-  let service: DVLAService;
-  let dvlaCheckRepository: Repository<DVLACheck>;
-  let dvlaServiceRepository: Repository<DVLAServiceEntity>;
-  let employeeRepository: Repository<Employee>;
+  letservice: DVLAService;
+  letdvlaCheckRepository: Repository<DVLACheck>;
+  letdvlaServiceRepository: Repository<DVLAServiceEntity>;
+  letemployeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -77,7 +77,7 @@ describe('DVLA Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         DVLAService,
         {
@@ -479,8 +479,8 @@ describe('DVLA Service', () => {
 });
 
 describe('DVLA Integration Tests', () => {
-  let app: any;
-  let dvlaService: DVLAService;
+  letapp: any;
+  letdvlaService: DVLAService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -544,7 +544,7 @@ describe('DVLA Integration Tests', () => {
 });
 
 describe('DVLA E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

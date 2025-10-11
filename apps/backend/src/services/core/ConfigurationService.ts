@@ -150,7 +150,7 @@ interface AppConfig {
 
 class ConfigurationService {
   private static instance: ConfigurationService;
-  private config: AppConfig;
+  privateconfig: AppConfig;
 
   private constructor() {
     this.config = this.loadConfiguration();
@@ -291,7 +291,7 @@ class ConfigurationService {
   }
 
   private validateConfiguration(): void {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (this.config.nodeEnv === 'production') {
       const requiredVars = [

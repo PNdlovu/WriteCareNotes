@@ -56,10 +56,10 @@ import { ChildProtectionPlan, CPPCategory, CPPStatus } from '../entities/ChildPr
 import { Child } from '../../children/entities/Child';
 
 export class SafeguardingService {
-  private incidentRepository: Repository<SafeguardingIncident>;
-  private concernRepository: Repository<SafeguardingConcern>;
-  private cppRepository: Repository<ChildProtectionPlan>;
-  private childRepository: Repository<Child>;
+  privateincidentRepository: Repository<SafeguardingIncident>;
+  privateconcernRepository: Repository<SafeguardingConcern>;
+  privatecppRepository: Repository<ChildProtectionPlan>;
+  privatechildRepository: Repository<Child>;
 
   constructor() {
     this.incidentRepository = AppDataSource.getRepository(SafeguardingIncident);

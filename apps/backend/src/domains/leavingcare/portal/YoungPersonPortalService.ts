@@ -106,10 +106,10 @@ interface LifeSkill {
 }
 
 export class YoungPersonPortalService {
-  private childRepository: Repository<Child>;
-  private pathwayPlanRepository: Repository<PathwayPlan>;
-  private financesRepository: Repository<LeavingCareFinances>;
-  private lifeSkillsRepository: Repository<LifeSkillsProgress>;
+  privatechildRepository: Repository<Child>;
+  privatepathwayPlanRepository: Repository<PathwayPlan>;
+  privatefinancesRepository: Repository<LeavingCareFinances>;
+  privatelifeSkillsRepository: Repository<LifeSkillsProgress>;
 
   constructor() {
     // Repositories will be injected via dependency injection

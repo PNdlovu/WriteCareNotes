@@ -112,9 +112,9 @@ interface ValidationResult {
 
 class SecurityService {
   private static instance: SecurityService;
-  private blacklistedTokens: Set<string> = new Set();
-  private failedLoginAttempts: Map<string, number> = new Map();
-  private lockedAccounts: Map<string, Date> = new Map();
+  privateblacklistedTokens: Set<string> = new Set();
+  privatefailedLoginAttempts: Map<string, number> = new Map();
+  privatelockedAccounts: Map<string, Date> = new Map();
 
   private constructor() {}
 
@@ -139,7 +139,7 @@ class SecurityService {
   public generateToken(user: User): string {
     const securityConfig = configService.getSecurity();
     
-    const payload: Omit<JWTPayload, 'iat' | 'exp'> = {
+    constpayload: Omit<JWTPayload, 'iat' | 'exp'> = {
       userId: user.id,
       email: user.email,
       role: user.role,
@@ -342,7 +342,7 @@ class SecurityService {
 
   // Input validation
   public validateInput(data: any, rules: ValidationRule[]): ValidationResult {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     for (const rule of rules) {
       const value = data[rule.field];
@@ -441,7 +441,7 @@ class SecurityService {
     }
 
     if (typeof data === 'object' && data !== null) {
-      const sanitized: any = Array.isArray(data) ? [] : {};
+      constsanitized: any = Array.isArray(data) ? [] : {};
       
       for (const key in data) {
         sanitized[key] = this.sanitizeInput(data[key]);

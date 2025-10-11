@@ -28,7 +28,7 @@ import { PublicCustomerSupportAIService, CustomerInquiry } from '../../services/
 
 export class PublicAIAgentController {
   // Logger removed
-  private aiService: PublicCustomerSupportAIService;
+  privateaiService: PublicCustomerSupportAIService;
 
   constructor() {
     this.aiService = new PublicCustomerSupportAIService();
@@ -48,7 +48,7 @@ export class PublicAIAgentController {
         });
       }
 
-      const inquiry: CustomerInquiry = {
+      constinquiry: CustomerInquiry = {
         sessionId: req.aiSecurity?.sessionId || `session_${Date.now()}`,
         inquiryType: inquiryType || 'GENERAL',
         message,
@@ -72,7 +72,7 @@ export class PublicAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to handle customer inquiry', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         path: req.path,
         ip: req.ip
       });
@@ -100,7 +100,7 @@ export class PublicAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to get knowledge base summary', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
 
       res.status(500).json({
@@ -124,7 +124,7 @@ export class PublicAIAgentController {
     } catch (error: unknown) {
       res.status(500).json({
         status: 'unhealthy',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

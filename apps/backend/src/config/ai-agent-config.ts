@@ -355,8 +355,8 @@ COMPLIANCE AWARENESS:
     errors: string[];
     warnings: string[];
   } {
-    const errors: string[] = [];
-    const warnings: string[] = [];
+    consterrors: string[] = [];
+    constwarnings: string[] = [];
 
     // Validate model configurations
     [this.publicAgentConfig, this.tenantAgentConfig].forEach((config, index) => {

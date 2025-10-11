@@ -316,7 +316,7 @@ export class SecurityIntegrationService {
       );
 
       // Create lockdown result
-      const result: EmergencyLockdownResult = {
+      constresult: EmergencyLockdownResult = {
         lockdownId: lockdownRequest.lockdownId,
         activated: true,
         evacuationRequired: lockdownConfig.evacuationRequired,
@@ -463,7 +463,7 @@ export class SecurityIntegrationService {
     ];
 
     for (const location of cameraLocations) {
-      const camera: CCTVMonitoring = {
+      constcamera: CCTVMonitoring = {
         cameraId: `CAM-${location.toUpperCase()}-001`,
         location,
         status: 'online',
@@ -807,7 +807,7 @@ export class SecurityIntegrationService {
   }
 
   private async generateSystemAlert(description: string, severity: 'low' | 'medium' | 'high' | 'critical'): Promise<void> {
-    const alert: SecurityAlert = {
+    constalert: SecurityAlert = {
       alertId: `ALERT-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
       type: 'system_failure',
       severity,

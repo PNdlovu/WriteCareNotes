@@ -49,7 +49,7 @@ import {
 import { logger } from '../../utils/logger';
 
 export class MedicationReconciliationController {
-  private reconciliationService: MedicationReconciliationService;
+  privatereconciliationService: MedicationReconciliationService;
 
   constructor() {
     this.reconciliationService = new MedicationReconciliationService();
@@ -202,7 +202,7 @@ export class MedicationReconciliationController {
         return;
       }
 
-      const reconciliationRequest: ReconciliationRequest = {
+      constreconciliationRequest: ReconciliationRequest = {
         ...value,
         organizationId: req.user.organizationId
       };
@@ -231,7 +231,7 @@ export class MedicationReconciliationController {
 
     } catch (error: unknown) {
       console.error('Error initiating medication reconciliation via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         organizationId: req.user?.organizationId,
         requestBody: req.body
@@ -369,14 +369,14 @@ export class MedicationReconciliationController {
 
     } catch (error: unknown) {
       console.error('Error resolving medication discrepancy via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         reconciliationId: req.params['reconciliationId'],
         discrepancyId: req.params['discrepancyId'],
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
         res.status(404).json({
           success: false,
           error: {
@@ -502,13 +502,13 @@ export class MedicationReconciliationController {
 
     } catch (error: unknown) {
       console.error('Error performing pharmacist review via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         reconciliationId: req.params['reconciliationId'],
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
         res.status(404).json({
           success: false,
           error: {
@@ -613,7 +613,7 @@ export class MedicationReconciliationController {
 
     } catch (error: unknown) {
       console.error('Error retrieving reconciliation history via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: req.params['residentId'],
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -742,7 +742,7 @@ export class MedicationReconciliationController {
 
     } catch (error: unknown) {
       console.error('Error retrieving reconciliation metrics via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         organizationId: req.user?.organizationId,
         query: req.query

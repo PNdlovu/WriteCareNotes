@@ -17,7 +17,7 @@ import AppDataSource from '../../config/database';
 import { WorkflowOrchestration, WorkflowStatus } from '../../entities/integration-orchestration/WorkflowOrchestration';
 
 export class IntegrationOrchestrationService {
-  private workflowRepository: Repository<WorkflowOrchestration>;
+  privateworkflowRepository: Repository<WorkflowOrchestration>;
 
   constructor() {
     this.workflowRepository = AppDataSource.getRepository(WorkflowOrchestration);

@@ -18,9 +18,9 @@ import { Decimal } from 'decimal.js';
  */
 
 describe('Ledger System Service', () => {
-  let service: LedgerSystemService;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
-  let journalEntryRepository: Repository<JournalEntry>;
+  letservice: LedgerSystemService;
+  letledgerAccountRepository: Repository<LedgerAccount>;
+  letjournalEntryRepository: Repository<JournalEntry>;
 
   const mockLedgerAccount = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -61,7 +61,7 @@ describe('Ledger System Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         LedgerSystemService,
         {
@@ -487,8 +487,8 @@ describe('Ledger System Service', () => {
 });
 
 describe('Ledger System Integration Tests', () => {
-  let app: any;
-  let ledgerSystemService: LedgerSystemService;
+  letapp: any;
+  letledgerSystemService: LedgerSystemService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -575,7 +575,7 @@ describe('Ledger System Integration Tests', () => {
 });
 
 describe('Ledger System E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

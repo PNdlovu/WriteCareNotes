@@ -119,9 +119,9 @@ export interface TherapeuticProgram {
 }
 
 export class MentalHealthService {
-  private assessmentRepository: Repository<MentalHealthAssessment>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateassessmentRepository: Repository<MentalHealthAssessment>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.assessmentRepository = AppDataSource.getRepository(MentalHealthAssessment);
@@ -273,7 +273,7 @@ export class MentalHealthService {
       // AI-powered program personalization
       const personalizedProgram = await this.generatePersonalizedProgram(programData);
       
-      const program: TherapeuticProgram = {
+      constprogram: TherapeuticProgram = {
         programId: crypto.randomUUID(),
         programName: personalizedProgram.name,
         programType: personalizedProgram.type,

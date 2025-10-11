@@ -54,14 +54,14 @@ export interface AgentStatus {
 }
 
 export class AgentManager {
-  private agents: Map<string, any> = new Map();
-  private agentConfigs: Map<string, AgentConfig> = new Map();
-  private eventEmitter: EventEmitter2;
-  private openAIAdapter: OpenAIAdapter;
-  private llmService: LLMIntegrationService;
-  private sessionService: AIAgentSessionService;
-  private processingQueue: AgentInvocation[] = [];
-  private isProcessing: boolean = false;
+  privateagents: Map<string, any> = new Map();
+  privateagentConfigs: Map<string, AgentConfig> = new Map();
+  privateeventEmitter: EventEmitter2;
+  privateopenAIAdapter: OpenAIAdapter;
+  privatellmService: LLMIntegrationService;
+  privatesessionService: AIAgentSessionService;
+  privateprocessingQueue: AgentInvocation[] = [];
+  privateisProcessing: boolean = false;
 
   constructor() {
     this.eventEmitter = new EventEmitter2();
@@ -142,7 +142,7 @@ export class AgentManager {
   async registerAgent(config: AgentConfig): Promise<void> {
     try {
       // Create agent instance based on type
-      let agent: any;
+      letagent: any;
       
       switch (config.type) {
         case 'voice_to_note':
@@ -245,7 +245,7 @@ export class AgentManager {
       const result = await this.processAgentInvocation(invocation);
       const processingTime = Date.now() - startTime;
 
-      const response: AgentResponse = {
+      constresponse: AgentResponse = {
         agentId: invocation.agentId,
         success: true,
         result,
@@ -267,7 +267,7 @@ export class AgentManager {
       const processingTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-      const response: AgentResponse = {
+      constresponse: AgentResponse = {
         agentId: invocation.agentId,
         success: false,
         error: errorMessage,
@@ -331,7 +331,7 @@ export class AgentManager {
     invocation: AgentInvocation,
     retryAttempts: number
   ): Promise<any> {
-    let lastError: Error | null = null;
+    letlastError: Error | null = null;
 
     for (let attempt = 0; attempt <= retryAttempts; attempt++) {
       try {

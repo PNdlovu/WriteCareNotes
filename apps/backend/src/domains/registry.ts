@@ -41,7 +41,7 @@ export type DomainName = keyof typeof DOMAIN_REGISTRY;
 
 export class DomainRegistry {
   private static instance: DomainRegistry;
-  private modules: Map<DomainName, DomainModule> = new Map();
+  privatemodules: Map<DomainName, DomainModule> = new Map();
 
   private constructor() {
     this.initializeDomains();

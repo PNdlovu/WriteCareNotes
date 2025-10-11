@@ -18,7 +18,7 @@ router.post('/assistance', authorize(['care_staff', 'nurses', 'admin']), async (
     const assistance = await copilotService.provideAdvancedRealTimeAssistance(req.body);
     res.status(201).json({ success: true, data: assistance });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -27,7 +27,7 @@ router.post('/voice-to-text', authorize(['care_staff', 'nurses', 'admin']), asyn
     const result = await copilotService.processAdvancedVoiceToText(req.body);
     res.json({ success: true, data: result });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -36,7 +36,7 @@ router.get('/analytics', authorize(['care_managers', 'admin']), async (req, res)
     const analytics = await copilotService.getAdvancedAICopilotAnalytics();
     res.json({ success: true, data: analytics });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

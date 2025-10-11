@@ -91,7 +91,7 @@ export class PilotFeedbackAgent {
       const evidence = await this.generateEvidence(recommendation, data);
 
       // Create feedback object
-      const feedback: PilotFeedback = {
+      constfeedback: PilotFeedback = {
         id: this.generateId(),
         pilotId: context.pilotId,
         careHomeId: context.careHomeId,
@@ -276,7 +276,7 @@ export class PilotFeedbackAgent {
    */
   private async generateEvidence(recommendation: any, data: any): Promise<string[]> {
     // Generate evidence based on available data
-    const evidence: string[] = [];
+    constevidence: string[] = [];
     
     if (data.medicationData) {
       evidence.push('Medication administration records');

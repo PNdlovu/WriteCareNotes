@@ -160,16 +160,16 @@ export class PolicyAuthoringAssistantService {
 
   constructor(
     @InjectRepository(AISuggestionLog)
-    private suggestionLogRepository: Repository<AISuggestionLog>,
+    privatesuggestionLogRepository: Repository<AISuggestionLog>,
     
     @InjectRepository(PolicyTemplate)
-    private policyTemplateRepository: Repository<PolicyTemplate>,
+    privatepolicyTemplateRepository: Repository<PolicyTemplate>,
     
     @InjectRepository(ComplianceStandard)
-    private complianceStandardRepository: Repository<ComplianceStandard>,
+    privatecomplianceStandardRepository: Repository<ComplianceStandard>,
     
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    privateuserRepository: Repository<User>,
     
     private readonly aiSafetyGuard: AISafetyGuardService,
     private readonly aiTransparency: AITransparencyService,
@@ -246,7 +246,7 @@ export class PolicyAuthoringAssistantService {
       }
 
       // ✅ SUCCESS: Build response with complete audit metadata
-      const response: AISuggestionResponse = {
+      constresponse: AISuggestionResponse = {
         id: suggestionId,
         suggestion: synthesizedSuggestion.content,
         sourceReferences: retrievedContent.map(doc => ({
@@ -321,7 +321,7 @@ export class PolicyAuthoringAssistantService {
 
     const fallback = await this.fallbackHandler.generateFallback(prompt, reason);
 
-    const response: AISuggestionResponse = {
+    constresponse: AISuggestionResponse = {
       id: suggestionId,
       suggestion: null,
       sourceReferences: [],
@@ -357,7 +357,7 @@ export class PolicyAuthoringAssistantService {
     errorMessage?: string,
   ): Promise<void> {
     // Map intent string to AIIntent enum
-    const intentMap: Record<string, AIIntent> = {
+    constintentMap: Record<string, AIIntent> = {
       'suggest_clause': AIIntent.SUGGEST_CLAUSE,
       'map_policy': AIIntent.MAP_POLICY,
       'review_policy': AIIntent.REVIEW_POLICY,
@@ -366,7 +366,7 @@ export class PolicyAuthoringAssistantService {
     };
     
     // Map status string to SuggestionStatus enum
-    const statusMap: Record<string, SuggestionStatus> = {
+    conststatusMap: Record<string, SuggestionStatus> = {
       'success': SuggestionStatus.SUCCESS,
       'fallback': SuggestionStatus.FALLBACK,
       'error': SuggestionStatus.ERROR,

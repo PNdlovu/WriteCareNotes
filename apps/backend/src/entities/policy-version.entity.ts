@@ -218,7 +218,7 @@ export class PolicyVersion {
    * Compare this version with another
    */
   getDifferencesWith(otherVersion: PolicyVersion): string[] {
-    const differences: string[] = [];
+    constdifferences: string[] = [];
 
     if (this.title !== otherVersion.title) {
       differences.push('title');

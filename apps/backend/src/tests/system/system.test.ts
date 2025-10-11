@@ -22,14 +22,14 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('System Service', () => {
-  let service: SystemService;
-  let dbsVerificationRepository: Repository<DBSVerification>;
-  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  let dvlaCheckRepository: Repository<DVLACheck>;
-  let cashTransactionRepository: Repository<CashTransaction>;
-  let budgetRepository: Repository<Budget>;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
-  let employeeRepository: Repository<Employee>;
+  letservice: SystemService;
+  letdbsVerificationRepository: Repository<DBSVerification>;
+  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  letdvlaCheckRepository: Repository<DVLACheck>;
+  letcashTransactionRepository: Repository<CashTransaction>;
+  letbudgetRepository: Repository<Budget>;
+  letledgerAccountRepository: Repository<LedgerAccount>;
+  letemployeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -180,7 +180,7 @@ describe('System Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         SystemService,
         {
@@ -825,8 +825,8 @@ describe('System Service', () => {
 });
 
 describe('System Integration Tests', () => {
-  let app: any;
-  let systemService: SystemService;
+  letapp: any;
+  letsystemService: SystemService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -882,7 +882,7 @@ describe('System Integration Tests', () => {
 });
 
 describe('System E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

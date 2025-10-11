@@ -58,17 +58,17 @@ export interface FinancialMetrics {
 export class FinancialService {
   constructor(
     @InjectRepository(Invoice)
-    private invoiceRepository: Repository<Invoice>,
+    privateinvoiceRepository: Repository<Invoice>,
     @InjectRepository(Payment)
-    private paymentRepository: Repository<Payment>,
+    privatepaymentRepository: Repository<Payment>,
     @InjectRepository(Expense)
-    private expenseRepository: Repository<Expense>,
+    privateexpenseRepository: Repository<Expense>,
     @InjectRepository(ResidentBilling)
-    private residentBillingRepository: Repository<ResidentBilling>,
+    privateresidentBillingRepository: Repository<ResidentBilling>,
     @InjectRepository(PayrollRun)
-    private payrollRunRepository: Repository<PayrollRun>,
+    privatepayrollRunRepository: Repository<PayrollRun>,
     @InjectRepository(Payslip)
-    private payslipRepository: Repository<Payslip>,
+    privatepayslipRepository: Repository<Payslip>,
   ) {}
 
   /**
@@ -367,11 +367,11 @@ export class FinancialService {
       .andWhere('billing.nextInvoiceDate <= :today', { today: new Date() })
       .getMany();
 
-    const generatedInvoices: Invoice[] = [];
+    constgeneratedInvoices: Invoice[] = [];
 
     for (const billing of residentBillings) {
       try {
-        const invoiceRequest: CreateInvoiceRequest = {
+        constinvoiceRequest: CreateInvoiceRequest = {
           type: InvoiceType.RESIDENT_BILLING,
           recipientName: billing.residentName,
           recipientAddress: billing.residentAddress,

@@ -118,7 +118,7 @@ export class GDPRComplianceService {
         requestType: 'financial'
       });
 
-      const processingRequest: GDPRDataProcessingRequest = {
+      constprocessingRequest: GDPRDataProcessingRequest = {
         dataSubject: request.residentId || 'organization',
         dataController: 'WriteCareNotes',
         processingPurpose: 'Financial management for healthcare services',
@@ -134,7 +134,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to validate financial data processing', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId
       });
       throw error;
@@ -154,7 +154,7 @@ export class GDPRComplianceService {
         requestType: 'organizational'
       });
 
-      const processingRequest: GDPRDataProcessingRequest = {
+      constprocessingRequest: GDPRDataProcessingRequest = {
         dataSubject: 'organization',
         dataController: 'WriteCareNotes',
         processingPurpose: 'Organizational hierarchy management',
@@ -169,7 +169,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to validate organizational data processing', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId
       });
       throw error;
@@ -229,7 +229,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to apply data minimization', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         queryType
       });
       throw error;
@@ -266,7 +266,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to apply hierarchy data minimization', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId
       });
       throw error;
@@ -312,7 +312,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to process data subject access request', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         dataSubjectId,
         requesterId
       });
@@ -367,7 +367,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to process right to erasure request', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         dataSubjectId,
         requesterId
       });
@@ -408,7 +408,7 @@ export class GDPRComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to generate GDPR compliance report', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         startDate,
         endDate
       });
@@ -458,8 +458,8 @@ export class GDPRComplianceService {
   private async performComplianceCheck(
     request: GDPRDataProcessingRequest
   ): Promise<GDPRComplianceCheck> {
-    const violations: GDPRViolation[] = [];
-    const recommendations: any[] = [];
+    constviolations: GDPRViolation[] = [];
+    constrecommendations: any[] = [];
 
     // Check lawful basis
     if (!request.lawfulBasis) {

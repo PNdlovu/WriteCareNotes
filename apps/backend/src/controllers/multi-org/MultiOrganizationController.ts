@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { MultiOrganizationService } from '../../services/multi-org/MultiOrganizationService';
 
 export class MultiOrganizationController {
-  private orgService: MultiOrganizationService;
+  privateorgService: MultiOrganizationService;
 
   constructor() {
     this.orgService = new MultiOrganizationService();
@@ -27,7 +27,7 @@ export class MultiOrganizationController {
       const organization = await this.orgService.createOrganization(req.body);
       res.status(201).json({ success: true, data: organization });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class MultiOrganizationController {
       const analytics = await this.orgService.getOrganizationAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

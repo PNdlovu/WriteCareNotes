@@ -7,8 +7,8 @@ import { DataMigration } from '../../../entities/onboarding/DataMigration';
 import { MigrationMapping } from '../../../entities/onboarding/MigrationMapping';
 
 describe('OnboardingDataMigrationService Integration Tests', () => {
-  let service: OnboardingDataMigrationService;
-  let module: TestingModule;
+  letservice: OnboardingDataMigrationService;
+  letmodule: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({

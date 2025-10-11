@@ -85,10 +85,10 @@ export interface HealthcareCachePattern {
 }
 
 export class CareHomeCacheManager {
-  private cacheService: CacheService;
-  private logger: Logger;
-  private auditService: AuditService;
-  private cachePatterns: Map<string, HealthcareCachePattern>;
+  privatecacheService: CacheService;
+  privatelogger: Logger;
+  privateauditService: AuditService;
+  privatecachePatterns: Map<string, HealthcareCachePattern>;
 
   constructor() {
     this.cacheService = new CacheService();
@@ -191,7 +191,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('resident')!;
     const key = `${pattern.keyPrefix}:${resident.id}`;
     
-    const options: CacheOptions = {
+    constoptions: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -251,7 +251,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('medication')!;
     const key = `${pattern.keyPrefix}:schedule:${residentId}`;
     
-    const options: CacheOptions = {
+    constoptions: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -288,7 +288,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('care-plan')!;
     const key = `${pattern.keyPrefix}:${residentId}`;
     
-    const options: CacheOptions = {
+    constoptions: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -325,7 +325,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('staff')!;
     const key = `${pattern.keyPrefix}:${staff.id}`;
     
-    const options: CacheOptions = {
+    constoptions: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -362,7 +362,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('report')!;
     const key = `${pattern.keyPrefix}:${reportId}`;
     
-    const options: CacheOptions = {
+    constoptions: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -522,7 +522,7 @@ export class CareHomeCacheManager {
     const baseStats = await this.cacheService.getStats();
     
     // Get pattern-specific statistics
-    const patternStats: any = {};
+    constpatternStats: any = {};
     
     for (const [patternName, pattern] of this.cachePatterns) {
       try {

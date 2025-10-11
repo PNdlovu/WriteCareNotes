@@ -52,7 +52,7 @@ import { PEPStatus, AcademicYear, Term } from '../entities/PersonalEducationPlan
 import { PlacementType } from '../entities/SchoolPlacement';
 
 export class EducationController {
-  private educationService: EducationService;
+  privateeducationService: EducationService;
 
   constructor() {
     this.educationService = new EducationService();

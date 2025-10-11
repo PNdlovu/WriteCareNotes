@@ -50,12 +50,12 @@ export interface MigrationSocketEvents {
 }
 
 export class MigrationWebSocketService {
-  private io: SocketIOServer;
-  private migrationService: AdvancedOnboardingDataMigrationService;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
-  private connectedClients: Map<string, Set<string>> = new Map(); // pipelineId -> socketIds
-  private clientPipelines: Map<string, string> = new Map(); // socketId -> pipelineId
+  privateio: SocketIOServer;
+  privatemigrationService: AdvancedOnboardingDataMigrationService;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
+  privateconnectedClients: Map<string, Set<string>> = new Map(); // pipelineId -> socketIds
+  privateclientPipelines: Map<string, string> = new Map(); // socketId -> pipelineId
 
   constructor(server: Server) {
     this.io = new SocketIOServer(server, {
@@ -110,7 +110,7 @@ export class MigrationWebSocketService {
         } catch (error: unknown) {
           socket.emit('error', {
             code: 'JOIN_FAILED',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            message: error instanceof Error ? error.message : "Unknown error"
           });
         }
       });
@@ -133,7 +133,7 @@ export class MigrationWebSocketService {
         } catch (error: unknown) {
           socket.emit('error', {
             code: 'LEAVE_FAILED',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            message: error instanceof Error ? error.message : "Unknown error"
           });
         }
       });
@@ -152,7 +152,7 @@ export class MigrationWebSocketService {
         } catch (error: unknown) {
           socket.emit('error', {
             code: 'PAUSE_FAILED',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            message: error instanceof Error ? error.message : "Unknown error"
           });
         }
       });
@@ -170,7 +170,7 @@ export class MigrationWebSocketService {
         } catch (error: unknown) {
           socket.emit('error', {
             code: 'RESUME_FAILED',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            message: error instanceof Error ? error.message : "Unknown error"
           });
         }
       });
@@ -189,7 +189,7 @@ export class MigrationWebSocketService {
         } catch (error: unknown) {
           socket.emit('error', {
             code: 'PROGRESS_REQUEST_FAILED',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+            message: error instanceof Error ? error.message : "Unknown error"
           });
         }
       });

@@ -397,7 +397,7 @@ export class PolicyDraft {
    * Get compliance requirements based on jurisdiction
    */
   getComplianceRequirements(): string[] {
-    const requirements: string[] = [];
+    constrequirements: string[] = [];
     
     this.jurisdiction.forEach(j => {
       switch (j) {

@@ -3,11 +3,11 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { VirtualRealityTrainingService, VRTrainingCategory } from '../../services/vr-training.service';
 
 describe('VirtualRealityTrainingService', () => {
-  let service: VirtualRealityTrainingService;
-  let eventEmitter: EventEmitter2;
+  letservice: VirtualRealityTrainingService;
+  leteventEmitter: EventEmitter2;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         VirtualRealityTrainingService,
         {

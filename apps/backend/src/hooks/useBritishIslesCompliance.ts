@@ -52,7 +52,7 @@ export const useBritishIslesCompliance = (options: UseBritishIslesComplianceOpti
 
     try {
       // Mock compliance data
-      const mockData: ComplianceData = {
+      constmockData: ComplianceData = {
         overallScore: 87,
         jurisdictions: [
           {

@@ -17,7 +17,7 @@ import { MaintenanceFacilitiesService } from '../../services/maintenance/Mainten
 import { Asset, AssetType } from '../../entities/maintenance/Asset';
 
 export class MaintenanceFacilitiesController {
-  private maintenanceService: MaintenanceFacilitiesService;
+  privatemaintenanceService: MaintenanceFacilitiesService;
 
   constructor() {
     this.maintenanceService = new MaintenanceFacilitiesService();
@@ -38,7 +38,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to create asset',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -56,7 +56,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve assets',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -76,7 +76,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve assets by type',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -96,7 +96,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve assets by location',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -116,7 +116,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to create work order',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -134,7 +134,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve work orders',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -154,7 +154,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to complete work order',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -173,7 +173,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to schedule preventive maintenance',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -192,7 +192,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve maintenance analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -213,7 +213,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve maintenance calendar',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -233,7 +233,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to report emergency issue',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -251,7 +251,7 @@ export class MaintenanceFacilitiesController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve compliance status',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

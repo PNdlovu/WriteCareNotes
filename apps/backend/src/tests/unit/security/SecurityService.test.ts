@@ -8,9 +8,9 @@ import { SecurityPolicy } from '../../../entities/security/SecurityPolicy';
 import { SecurityIncident } from '../../../entities/security/SecurityIncident';
 
 describe('SecurityService', () => {
-  let service: SecurityService;
-  let securityPolicyRepository: Repository<SecurityPolicy>;
-  let securityIncidentRepository: Repository<SecurityIncident>;
+  letservice: SecurityService;
+  letsecurityPolicyRepository: Repository<SecurityPolicy>;
+  letsecurityIncidentRepository: Repository<SecurityIncident>;
 
   const mockSecurityPolicyRepository = {
     find: jest.fn(),
@@ -31,7 +31,7 @@ describe('SecurityService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         SecurityService,
         {

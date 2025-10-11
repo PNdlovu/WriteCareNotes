@@ -159,9 +159,9 @@ export class TemplateEngineService {
     requiredVariables: string[];
     foundVariables: string[];
   }> {
-    const errors: string[] = [];
-    const warnings: string[] = [];
-    const foundVariables: string[] = [];
+    consterrors: string[] = [];
+    constwarnings: string[] = [];
+    constfoundVariables: string[] = [];
 
     try {
       // Extract all variable references
@@ -423,7 +423,7 @@ export class TemplateEngineService {
 
   private resolveVariablePath(path: string, context: TemplateContext): any {
     const parts = path.split('.');
-    let current: any = context;
+    letcurrent: any = context;
     
     for (const part of parts) {
       if (current === null || current === undefined) {

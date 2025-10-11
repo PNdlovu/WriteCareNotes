@@ -20,8 +20,8 @@ import { Request, Response } from 'express';
  */
 export class StructuredLoggingService {
   private static instance: StructuredLoggingService;
-  private logger: winston.Logger;
-  private correlationId: string | null = null;
+  privatelogger: winston.Logger;
+  privatecorrelationId: string | null = null;
 
   private constructor() {
     this.initializeLogger();

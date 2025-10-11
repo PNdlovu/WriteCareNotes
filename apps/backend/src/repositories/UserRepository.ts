@@ -57,7 +57,7 @@ export interface UpdateUserData {
 }
 
 export class UserRepository {
-  private repository: Repository<User>;
+  privaterepository: Repository<User>;
 
   constructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(User);
@@ -127,7 +127,7 @@ export class UserRepository {
    */
   async findByOrganization(organizationId: string, includeInactive: boolean = false): Promise<User[]> {
     try {
-      const where: FindOptionsWhere<User> = { 
+      constwhere: FindOptionsWhere<User> = { 
         organizationId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -152,7 +152,7 @@ export class UserRepository {
    */
   async findByTenant(tenantId: string, includeInactive: boolean = false): Promise<User[]> {
     try {
-      const where: FindOptionsWhere<User> = { 
+      constwhere: FindOptionsWhere<User> = { 
         tenantId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -455,7 +455,7 @@ export class UserRepository {
    */
   async countByOrganization(organizationId: string, activeOnly: boolean = true): Promise<number> {
     try {
-      const where: FindOptionsWhere<User> = { 
+      constwhere: FindOptionsWhere<User> = { 
         organizationId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -480,7 +480,7 @@ export class UserRepository {
    */
   async countByTenant(tenantId: string, activeOnly: boolean = true): Promise<number> {
     try {
-      const where: FindOptionsWhere<User> = { 
+      constwhere: FindOptionsWhere<User> = { 
         tenantId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -505,7 +505,7 @@ export class UserRepository {
    */
   async isEmailTaken(email: string, excludeUserId?: string): Promise<boolean> {
     try {
-      const where: FindOptionsWhere<User> = { 
+      constwhere: FindOptionsWhere<User> = { 
         email,
         deletedAt: null
       } as FindOptionsWhere<User>;

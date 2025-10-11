@@ -154,7 +154,7 @@ export class Menu extends BaseEntity {
   }
 
   getItemsWithTextureModification(modification: TextureModification): MenuItem[] {
-    const items: MenuItem[] = [];
+    constitems: MenuItem[] = [];
     Object.values(this.menuItems).forEach(mealItems => {
       mealItems.forEach(item => {
         if (item.textureModifications.includes(modification)) {

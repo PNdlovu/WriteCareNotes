@@ -84,7 +84,7 @@ export interface IncidentFollowUp {
 
 export class MedicationIncidentService {
   private logger = logger;
-  private db: Pool;
+  privatedb: Pool;
 
   constructor(db: Pool) {
     this.db = db;
@@ -106,7 +106,7 @@ export class MedicationIncidentService {
       const incidentId = uuidv4();
       const now = new Date();
 
-      const incident: MedicationIncident = {
+      constincident: MedicationIncident = {
         id: incidentId,
         residentId: request.residentId,
         medicationId: request.medicationId,
@@ -148,10 +148,10 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to create medication incident', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         residentId: request.residentId 
       });
-      throw new Error(`Failed to create medication incident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to create medication incident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -174,7 +174,7 @@ export class MedicationIncidentService {
 
       // Build query with filters
       let whereClause = 'WHERE organization_id = $1 AND deleted_at IS NULL';
-      const queryParams: any[] = [organizationId];
+      constqueryParams: any[] = [organizationId];
       let paramCount = 1;
 
       if (filters?.residentId) {
@@ -226,7 +226,7 @@ export class MedicationIncidentService {
       `;
       const incidentsResult = await this.db.query(incidentsQuery, queryParams);
 
-      const incidents: MedicationIncident[] = incidentsResult.rows.map(row => this.mapDbRowToIncident(row));
+      constincidents: MedicationIncident[] = incidentsResult.rows.map(row => this.mapDbRowToIncident(row));
 
       const totalPages = Math.ceil(total / limit);
 
@@ -244,10 +244,10 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to get medication incidents', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get medication incidents: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get medication incidents: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -273,10 +273,10 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to get medication incident', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to get medication incident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get medication incident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -304,10 +304,10 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to update incident status', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to update incident status: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to update incident status: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -353,15 +353,15 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to get incident statistics', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get incident statistics: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get incident statistics: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateIncidentRequest(request: CreateMedicationIncidentRequest): void {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!request.residentId?.trim()) errors.push('Resident ID is required');
     if (!request.medicationId?.trim()) errors.push('Medication ID is required');
@@ -423,7 +423,7 @@ export class MedicationIncidentService {
       const investigationId = uuidv4();
       const now = new Date();
 
-      const investigation: IncidentInvestigation = {
+      constinvestigation: IncidentInvestigation = {
         id: investigationId,
         incidentId,
         investigatorId,
@@ -466,10 +466,10 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to create incident investigation', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to create incident investigation: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to create incident investigation: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -478,7 +478,7 @@ export class MedicationIncidentService {
       const followUpId = uuidv4();
       const now = new Date();
 
-      const followUp: IncidentFollowUp = {
+      constfollowUp: IncidentFollowUp = {
         id: followUpId,
         incidentId,
         followUpDate,
@@ -519,10 +519,10 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to create incident follow-up', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to create incident follow-up: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to create incident follow-up: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -561,8 +561,8 @@ export class MedicationIncidentService {
       await this.db.query(query, values);
 
     } catch (error: unknown) {
-      console.error('Failed to store medication incident', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to store medication incident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to store medication incident', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to store medication incident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

@@ -92,17 +92,17 @@ export interface FinancialReportFilter {
 export class ChildFinanceIntegrationService {
   constructor(
     @InjectRepository(ChildBilling)
-    private childBillingRepository: Repository<ChildBilling>,
+    privatechildBillingRepository: Repository<ChildBilling>,
     @InjectRepository(Child)
-    private childRepository: Repository<Child>,
+    privatechildRepository: Repository<Child>,
     @InjectRepository(Invoice)
-    private invoiceRepository: Repository<Invoice>,
+    privateinvoiceRepository: Repository<Invoice>,
     @InjectRepository(InvoiceLineItem)
-    private invoiceLineItemRepository: Repository<InvoiceLineItem>,
+    privateinvoiceLineItemRepository: Repository<InvoiceLineItem>,
     @InjectRepository(LeavingCareFinances)
-    private leavingCareFinancesRepository: Repository<LeavingCareFinances>,
-    private invoiceService: InvoiceService, // REUSE existing service
-    private eventEmitter: EventEmitter2,
+    privateleavingCareFinancesRepository: Repository<LeavingCareFinances>,
+    privateinvoiceService: InvoiceService, // REUSE existing service
+    privateeventEmitter: EventEmitter2,
   ) {}
 
   // ============================================
@@ -283,7 +283,7 @@ export class ChildFinanceIntegrationService {
 
     // Calculate invoice amount based on billing frequency
     let invoiceAmount = 0;
-    const lineItems: any[] = [];
+    constlineItems: any[] = [];
 
     switch (billing.billingFrequency) {
       case BillingFrequency.WEEKLY:
@@ -425,7 +425,7 @@ export class ChildFinanceIntegrationService {
 
     console.log(`Found ${billings.length} billings ready for invoicing`);
 
-    const generatedInvoices: Invoice[] = [];
+    constgeneratedInvoices: Invoice[] = [];
 
     for (const billing of billings) {
       try {

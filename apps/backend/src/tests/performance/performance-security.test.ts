@@ -21,16 +21,16 @@ import { LedgerAccount } from '../../entities/financial/LedgerAccount';
  */
 
 describe('Performance Security Service', () => {
-  let service: PerformanceSecurityService;
-  let dbsVerificationRepository: Repository<DBSVerification>;
-  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  let dvlaCheckRepository: Repository<DVLACheck>;
-  let cashTransactionRepository: Repository<CashTransaction>;
-  let budgetRepository: Repository<Budget>;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
+  letservice: PerformanceSecurityService;
+  letdbsVerificationRepository: Repository<DBSVerification>;
+  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  letdvlaCheckRepository: Repository<DVLACheck>;
+  letcashTransactionRepository: Repository<CashTransaction>;
+  letbudgetRepository: Repository<Budget>;
+  letledgerAccountRepository: Repository<LedgerAccount>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         PerformanceSecurityService,
         {
@@ -650,8 +650,8 @@ describe('Performance Security Service', () => {
 });
 
 describe('Performance Security Integration Tests', () => {
-  let app: any;
-  let performanceSecurityService: PerformanceSecurityService;
+  letapp: any;
+  letperformanceSecurityService: PerformanceSecurityService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -710,7 +710,7 @@ describe('Performance Security Integration Tests', () => {
 });
 
 describe('Performance Security E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

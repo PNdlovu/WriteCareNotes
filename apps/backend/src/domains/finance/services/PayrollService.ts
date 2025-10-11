@@ -33,19 +33,19 @@ export interface PayslipData {
 export class PayrollService {
   constructor(
     @InjectRepository(PayrollRun)
-    private payrollRunRepository: Repository<PayrollRun>,
+    privatepayrollRunRepository: Repository<PayrollRun>,
     @InjectRepository(Payslip)
-    private payslipRepository: Repository<Payslip>,
+    privatepayslipRepository: Repository<Payslip>,
     @InjectRepository(HMRCSubmission)
-    private hmrcSubmissionRepository: Repository<HMRCSubmission>,
+    privatehmrcSubmissionRepository: Repository<HMRCSubmission>,
     @InjectRepository(TaxCalculation)
-    private taxCalculationRepository: Repository<TaxCalculation>,
+    privatetaxCalculationRepository: Repository<TaxCalculation>,
     @InjectRepository(NationalInsurance)
-    private nationalInsuranceRepository: Repository<NationalInsurance>,
+    privatenationalInsuranceRepository: Repository<NationalInsurance>,
     @InjectRepository(PensionContribution)
-    private pensionContributionRepository: Repository<PensionContribution>,
+    privatepensionContributionRepository: Repository<PensionContribution>,
     @InjectRepository(StaffMember)
-    private staffMemberRepository: Repository<StaffMember>,
+    privatestaffMemberRepository: Repository<StaffMember>,
   ) {}
 
   /**

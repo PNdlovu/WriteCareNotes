@@ -137,8 +137,8 @@ function validateDataProcessing(context: GDPRContext, req: AuthenticatedRequest)
   violations: string[];
   remediation: string[];
 } {
-  const violations: string[] = [];
-  const remediation: string[] = [];
+  constviolations: string[] = [];
+  constremediation: string[] = [];
 
   // Check if lawful basis is appropriate for the purpose
   if (context.consentRequired && !context.lawfulBasis.includes('consent')) {

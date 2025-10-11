@@ -19,12 +19,12 @@ export interface CircuitBreakerOptions {
 }
 
 export class CircuitBreaker {
-  private state: CircuitState = CircuitState.CLOSED;
-  private failureCount: number = 0;
-  private successCount: number = 0;
-  private nextAttempt: number = Date.now();
-  private options: CircuitBreakerOptions;
-  private name: string;
+  privatestate: CircuitState = CircuitState.CLOSED;
+  privatefailureCount: number = 0;
+  privatesuccessCount: number = 0;
+  privatenextAttempt: number = Date.now();
+  privateoptions: CircuitBreakerOptions;
+  privatename: string;
 
   constructor(name: string, options?: Partial<CircuitBreakerOptions>) {
     this.name = name;
@@ -168,7 +168,7 @@ export class CircuitBreaker {
  * Example: Protect external API calls
  */
 export class ExternalAPIService {
-  private circuitBreaker: CircuitBreaker;
+  privatecircuitBreaker: CircuitBreaker;
 
   constructor() {
     this.circuitBreaker = new CircuitBreaker('ExternalAPI', {
@@ -200,7 +200,7 @@ export class ExternalAPIService {
  * Example: Protect database queries
  */
 export class DatabaseService {
-  private circuitBreaker: CircuitBreaker;
+  privatecircuitBreaker: CircuitBreaker;
 
   constructor() {
     this.circuitBreaker = new CircuitBreaker('Database', {
@@ -224,7 +224,7 @@ export class DatabaseService {
  * Example: Protect email sending
  */
 export class EmailService {
-  private circuitBreaker: CircuitBreaker;
+  privatecircuitBreaker: CircuitBreaker;
 
   constructor() {
     this.circuitBreaker = new CircuitBreaker('EmailService', {

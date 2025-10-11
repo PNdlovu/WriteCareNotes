@@ -18,7 +18,7 @@ router.post('/incidents', authorize(['staff', 'care_manager', 'admin']), async (
     const incident = await incidentService.createAdvancedIncidentReport(req.body);
     res.status(201).json({ success: true, data: incident });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -27,7 +27,7 @@ router.get('/analytics', authorize(['quality_manager', 'care_manager', 'admin'])
     const analytics = await incidentService.getIncidentAnalytics();
     res.json({ success: true, data: analytics });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

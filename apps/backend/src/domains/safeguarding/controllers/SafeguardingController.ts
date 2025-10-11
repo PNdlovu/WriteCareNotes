@@ -55,7 +55,7 @@ import { ConcernType, ConcernSeverity } from '../entities/SafeguardingConcern';
 import { CPPCategory } from '../entities/ChildProtectionPlan';
 
 export class SafeguardingController {
-  private safeguardingService: SafeguardingService;
+  privatesafeguardingService: SafeguardingService;
 
   constructor() {
     this.safeguardingService = new SafeguardingService();
@@ -334,7 +334,7 @@ export class SafeguardingController {
         limit = 20
       } = req.query;
 
-      const where: any = { organizationId };
+      constwhere: any = { organizationId };
 
       if (childId) where.childId = childId;
       if (type) where.type = type;
@@ -642,7 +642,7 @@ export class SafeguardingController {
       const organizationId = (req as any).user?.organizationId;
       const { startDate, endDate } = req.query;
 
-      const where: any = { organizationId };
+      constwhere: any = { organizationId };
 
       const [
         totalIncidents,

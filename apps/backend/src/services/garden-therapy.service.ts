@@ -103,8 +103,8 @@ export interface PlantCareSchedule {
 
 export class GardenTherapyService {
   // Logger removed
-  private activeSessions: Map<string, GardenTherapySession> = new Map();
-  private plantCareSchedules: Map<string, PlantCareSchedule> = new Map();
+  privateactiveSessions: Map<string, GardenTherapySession> = new Map();
+  privateplantCareSchedules: Map<string, PlantCareSchedule> = new Map();
   private weatherMonitoring = true;
 
   constructor(
@@ -120,7 +120,7 @@ export class GardenTherapyService {
    */
   async scheduleGardenTherapy(sessionData: Partial<GardenTherapySession>): Promise<GardenTherapySession> {
     try {
-      const session: GardenTherapySession = {
+      constsession: GardenTherapySession = {
         id: `garden_session_${Date.now()}`,
         residentId: sessionData.residentId,
         gardenAreaId: sessionData.gardenAreaId,
@@ -160,7 +160,7 @@ export class GardenTherapyService {
 
       return session;
     } catch (error: unknown) {
-      console.error(`Failed to schedule garden therapy session: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to schedule garden therapy session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -199,7 +199,7 @@ export class GardenTherapyService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to start garden therapy session: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to start garden therapy session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -249,7 +249,7 @@ export class GardenTherapyService {
 
       return session;
     } catch (error: unknown) {
-      console.error(`Failed to complete garden therapy session: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to complete garden therapy session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -334,7 +334,7 @@ export class GardenTherapyService {
         plantCareSchedules: this.plantCareSchedules,
       };
     } catch (error: unknown) {
-      console.error(`Failed to create seasonal program: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to create seasonal program: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -396,7 +396,7 @@ export class GardenTherapyService {
 
       return { design, implementationPlan };
     } catch (error: unknown) {
-      console.error(`Failed to design sensory garden: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to design sensory garden: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -480,7 +480,7 @@ export class GardenTherapyService {
 
       return outcomes;
     } catch (error: unknown) {
-      console.error(`Failed to monitor therapy outcomes: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to monitor therapy outcomes: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -491,7 +491,7 @@ export class GardenTherapyService {
   async managePlantCareSchedule(): Promise<PlantCareSchedule[]> {
     try {
       const today = new Date();
-      const upcomingTasks: PlantCareSchedule[] = [];
+      constupcomingTasks: PlantCareSchedule[] = [];
 
       for (const [plantId, schedule] of this.plantCareSchedules) {
         const dueTasks = schedule.careActivities.filter(activity => 
@@ -519,7 +519,7 @@ export class GardenTherapyService {
 
       return upcomingTasks;
     } catch (error: unknown) {
-      console.error(`Failed to manage plant care schedule: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to manage plant care schedule: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -540,13 +540,13 @@ export class GardenTherapyService {
 
       console.log('Garden therapy service initialized');
     } catch (error: unknown) {
-      console.error(`Failed to initialize garden therapy: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to initialize garden therapy: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
   private async checkWeatherConditions(): Promise<WeatherCondition> {
     // In a real implementation, this would call a weather API
-    const weather: WeatherCondition = {
+    constweather: WeatherCondition = {
       temperature: 18 + Math.random() * 12, // 18-30°C
       humidity: 40 + Math.random() * 40, // 40-80%
       windSpeed: Math.random() * 20, // 0-20 km/h
@@ -661,7 +661,7 @@ export class GardenTherapyService {
 
   private async initializePlantCareSchedules(): Promise<void> {
     // Initialize with sample plant care schedules
-    const sampleSchedule: PlantCareSchedule = {
+    constsampleSchedule: PlantCareSchedule = {
       plantId: 'herb_garden_01',
       plantName: 'Mixed Herb Garden',
       gardenAreaId: 'sensory_garden',

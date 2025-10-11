@@ -151,9 +151,9 @@ export interface RosterMetadata {
 }
 
 export class SmartRosterAgent {
-  private openAIAdapter: OpenAIAdapter;
-  private llmService: LLMIntegrationService;
-  private sessionService: AIAgentSessionService;
+  privateopenAIAdapter: OpenAIAdapter;
+  privatellmService: LLMIntegrationService;
+  privatesessionService: AIAgentSessionService;
 
   constructor() {
     this.openAIAdapter = new OpenAIAdapter();
@@ -397,7 +397,7 @@ export class SmartRosterAgent {
    * Count roles in roster
    */
   private countRoles(roster: OptimizedRosterEntry[]): Record<string, number> {
-    const counts: Record<string, number> = {};
+    constcounts: Record<string, number> = {};
     roster.forEach(entry => {
       counts[entry.role] = (counts[entry.role] || 0) + 1;
     });
@@ -411,7 +411,7 @@ export class SmartRosterAgent {
     roster: OptimizedRosterEntry[],
     request: RosterOptimizationRequest
   ): RosterRecommendation[] {
-    const recommendations: RosterRecommendation[] = [];
+    constrecommendations: RosterRecommendation[] = [];
 
     // Cost optimization recommendations
     if (request.budgetConstraints.maxWeeklyCost > 0) {
@@ -476,7 +476,7 @@ export class SmartRosterAgent {
     roster: OptimizedRosterEntry[],
     request: RosterOptimizationRequest
   ): RosterWarning[] {
-    const warnings: RosterWarning[] = [];
+    constwarnings: RosterWarning[] = [];
 
     // Check for overtime warnings
     const overtimeEntries = roster.filter(entry => entry.isOvertime);
@@ -594,7 +594,7 @@ export class SmartRosterAgent {
    * Analyze skill distribution
    */
   private analyzeSkillDistribution(roster: OptimizedRosterEntry[]): Record<string, number> {
-    const skillCounts: Record<string, number> = {};
+    constskillCounts: Record<string, number> = {};
     roster.forEach(entry => {
       entry.skills.forEach(skill => {
         skillCounts[skill] = (skillCounts[skill] || 0) + 1;

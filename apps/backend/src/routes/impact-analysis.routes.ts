@@ -28,7 +28,7 @@ router.get(
   '/policy/:policyId/dependencies',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dependencyService: PolicyDependencyService = req.app.get('dependencyService');
+      constdependencyService: PolicyDependencyService = req.app.get('dependencyService');
       const { policyId } = req.params;
       const maxDepth = req.query.maxDepth ? parseInt(req.query.maxDepth as string) : 5;
 
@@ -53,7 +53,7 @@ router.get(
   '/policy/:policyId/impact-analysis',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
 
       if (!isUUID(policyId)) {
@@ -77,7 +77,7 @@ router.get(
   '/policy/:policyId/affected-workflows',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
 
       if (!isUUID(policyId)) {
@@ -101,7 +101,7 @@ router.get(
   '/policy/:policyId/affected-modules',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
 
       if (!isUUID(policyId)) {
@@ -125,7 +125,7 @@ router.post(
   '/policy/:policyId/analyze-changes',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
       const { changes } = req.body;
 
@@ -135,7 +135,7 @@ router.post(
 
       const analysis = await impactService.analyzeImpact(policyId);
 
-      let recommendation: 'proceed' | 'review' | 'block';
+      letrecommendation: 'proceed' | 'review' | 'block';
       if (analysis.riskAssessment.riskLevel === 'critical') {
         recommendation = 'block';
       } else if (analysis.riskAssessment.riskLevel === 'high') {
@@ -172,7 +172,7 @@ router.get(
   '/policy/:policyId/risk-assessment',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
 
       if (!isUUID(policyId)) {
@@ -196,7 +196,7 @@ router.get(
   '/policy/:policyId/change-scope',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
 
       if (!isUUID(policyId)) {
@@ -220,7 +220,7 @@ router.get(
   '/policy/:policyId/impact-report',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const impactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
+      constimpactService: PolicyImpactAnalysisService = req.app.get('impactAnalysisService');
       const { policyId } = req.params;
       const format = (req.query.format as 'json' | 'html' | 'pdf') || 'json';
 
@@ -257,7 +257,7 @@ router.post(
   '/policy/:policyId/dependencies',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dependencyService: PolicyDependencyService = req.app.get('dependencyService');
+      constdependencyService: PolicyDependencyService = req.app.get('dependencyService');
       const { policyId } = req.params;
       const { dependentType, dependentId, dependencyStrength, metadata, notes } = req.body;
 
@@ -293,7 +293,7 @@ router.put(
   '/dependencies/:dependencyId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dependencyService: PolicyDependencyService = req.app.get('dependencyService');
+      constdependencyService: PolicyDependencyService = req.app.get('dependencyService');
       const { dependencyId } = req.params;
       const updates = req.body;
 
@@ -322,7 +322,7 @@ router.delete(
   '/dependencies/:dependencyId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dependencyService: PolicyDependencyService = req.app.get('dependencyService');
+      constdependencyService: PolicyDependencyService = req.app.get('dependencyService');
       const { dependencyId } = req.params;
       const hardDelete = req.query.hardDelete === 'true';
 
@@ -350,7 +350,7 @@ router.post(
   '/dependencies/bulk',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dependencyService: PolicyDependencyService = req.app.get('dependencyService');
+      constdependencyService: PolicyDependencyService = req.app.get('dependencyService');
       const { dependencies } = req.body;
 
       if (!Array.isArray(dependencies)) {

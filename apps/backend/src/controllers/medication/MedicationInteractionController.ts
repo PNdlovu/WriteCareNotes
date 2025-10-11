@@ -44,8 +44,8 @@ import { logger } from '../../utils/logger';
 import Joi from 'joi';
 
 export class MedicationInteractionController {
-  private interactionService: MedicationInteractionService;
-  private auditService: AuditService;
+  privateinteractionService: MedicationInteractionService;
+  privateauditService: AuditService;
 
   constructor() {
     this.interactionService = new MedicationInteractionService();
@@ -74,7 +74,7 @@ export class MedicationInteractionController {
         return;
       }
 
-      const request: InteractionCheckRequest = {
+      constrequest: InteractionCheckRequest = {
         residentId,
         medications: req.body['medications'] || [],
         newMedication: req.body['newMedication'],
@@ -103,7 +103,7 @@ export class MedicationInteractionController {
       });
     } catch (error: unknown) {
       console.error('Error in medication interaction check API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: req.params['residentId'],
         organizationId: req.user?.organizationId
       });
@@ -178,7 +178,7 @@ export class MedicationInteractionController {
       });
     } catch (error: unknown) {
       console.error('Error adding allergy alert via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: req.params['residentId'],
         organizationId: req.user?.organizationId
       });
@@ -238,7 +238,7 @@ export class MedicationInteractionController {
       });
     } catch (error: unknown) {
       console.error('Error updating interaction database via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         source: req.params['source'],
         organizationId: req.user?.organizationId
       });
@@ -290,7 +290,7 @@ export class MedicationInteractionController {
       });
     } catch (error: unknown) {
       console.error('Error getting interaction history via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: req.params['residentId'],
         organizationId: req.user?.organizationId
       });
@@ -356,7 +356,7 @@ export class MedicationInteractionController {
       });
     } catch (error: unknown) {
       console.error('Error generating interaction report via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId: req.user?.organizationId
       });
 

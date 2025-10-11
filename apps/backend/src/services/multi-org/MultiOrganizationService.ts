@@ -17,7 +17,7 @@ import AppDataSource from '../../config/database';
 import { MultiOrganization, OrganizationType } from '../../entities/multi-org/MultiOrganization';
 
 export class MultiOrganizationService {
-  private organizationRepository: Repository<MultiOrganization>;
+  privateorganizationRepository: Repository<MultiOrganization>;
 
   constructor() {
     this.organizationRepository = AppDataSource.getRepository(MultiOrganization);

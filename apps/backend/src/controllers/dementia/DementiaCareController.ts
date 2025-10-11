@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { DementiaCareService } from '../../services/dementia/DementiaCareService';
 
 export class DementiaCareController {
-  private dementiaCareService: DementiaCareService;
+  privatedementiaCareService: DementiaCareService;
 
   constructor() {
     this.dementiaCareService = new DementiaCareService();
@@ -27,7 +27,7 @@ export class DementiaCareController {
       const carePlan = await this.dementiaCareService.createAdvancedDementiaCarePlan(req.body);
       res.status(201).json({ success: true, data: carePlan });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -37,7 +37,7 @@ export class DementiaCareController {
       const prediction = await this.dementiaCareService.predictCognitiveDeclineTrajectory(residentId);
       res.json({ success: true, data: prediction });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -47,7 +47,7 @@ export class DementiaCareController {
       const preventionSystem = await this.dementiaCareService.implementAdvancedWanderingPrevention(residentId, riskLevel);
       res.status(201).json({ success: true, data: preventionSystem });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -56,7 +56,7 @@ export class DementiaCareController {
       const analytics = await this.dementiaCareService.getAdvancedDementiaAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -65,7 +65,7 @@ export class DementiaCareController {
       const program = await this.dementiaCareService.createAdvancedCognitiveStimulatonProgram(req.body);
       res.status(201).json({ success: true, data: program });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

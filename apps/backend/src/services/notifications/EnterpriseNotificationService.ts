@@ -82,8 +82,8 @@ export interface NotificationCampaign {
 }
 
 export class EnterpriseNotificationService {
-  private channelRepository: Repository<NotificationChannel>;
-  private auditService: AuditService;
+  privatechannelRepository: Repository<NotificationChannel>;
+  privateauditService: AuditService;
 
   constructor() {
     this.channelRepository = AppDataSource.getRepository(NotificationChannel);
@@ -209,7 +209,7 @@ export class EnterpriseNotificationService {
     try {
       const campaignId = crypto.randomUUID();
       
-      const campaign: NotificationCampaign = {
+      constcampaign: NotificationCampaign = {
         campaignId,
         campaignName: campaignData.campaignName || 'Untitled Campaign',
         campaignType: campaignData.campaignType || 'routine',
@@ -371,7 +371,7 @@ export class EnterpriseNotificationService {
         channelId: channel.channelId,
         channelType: channel.channelType,
         success: false,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         status: DeliveryStatus.FAILED
       };
     }

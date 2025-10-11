@@ -105,17 +105,17 @@ export interface RobotMaintenance {
 export class AssistiveRoboticsService {
   constructor(
     @InjectRepository(AssistiveRobot)
-    private robotRepository: Repository<AssistiveRobot>,
+    privaterobotRepository: Repository<AssistiveRobot>,
     @InjectRepository(RobotTask)
-    private taskRepository: Repository<RobotTask>,
+    privatetaskRepository: Repository<RobotTask>,
     @InjectRepository(RobotCommand)
-    private commandRepository: Repository<RobotCommand>,
+    privatecommandRepository: Repository<RobotCommand>,
     @InjectRepository(RobotPerformance)
-    private performanceRepository: Repository<RobotPerformance>,
+    privateperformanceRepository: Repository<RobotPerformance>,
     @InjectRepository(RobotMaintenance)
-    private maintenanceRepository: Repository<RobotMaintenance>,
-    private eventEmitter: EventEmitter2,
-    private auditService: AuditService,
+    privatemaintenanceRepository: Repository<RobotMaintenance>,
+    privateeventEmitter: EventEmitter2,
+    privateauditService: AuditService,
   ) {}
 
   /**
@@ -123,7 +123,7 @@ export class AssistiveRoboticsService {
    */
   async registerRobot(robotData: Omit<AssistiveRobot, 'id' | 'createdAt' | 'updatedAt'>): Promise<AssistiveRobot> {
     try {
-      const robot: AssistiveRobot = {
+      constrobot: AssistiveRobot = {
         id: `robot_${Date.now()}`,
         ...robotData,
         createdAt: new Date(),
@@ -167,7 +167,7 @@ export class AssistiveRoboticsService {
    */
   async assignTask(taskData: Omit<RobotTask, 'id' | 'createdAt' | 'updatedAt'>): Promise<RobotTask> {
     try {
-      const task: RobotTask = {
+      consttask: RobotTask = {
         id: `task_${Date.now()}`,
         ...taskData,
         createdAt: new Date(),
@@ -219,7 +219,7 @@ export class AssistiveRoboticsService {
    */
   async executeCommand(commandData: Omit<RobotCommand, 'id' | 'timestamp'>): Promise<RobotCommand> {
     try {
-      const command: RobotCommand = {
+      constcommand: RobotCommand = {
         id: `cmd_${Date.now()}`,
         ...commandData,
         timestamp: new Date(),
@@ -265,7 +265,7 @@ export class AssistiveRoboticsService {
    */
   async updateTaskStatus(taskId: string, status: RobotTask['status'], result?: string, errorMessage?: string): Promise<boolean> {
     try {
-      const updateData: Partial<RobotTask> = {
+      constupdateData: Partial<RobotTask> = {
         status,
         updatedAt: new Date(),
       };
@@ -357,7 +357,7 @@ export class AssistiveRoboticsService {
       const uptime = totalTasks > 0 ? (completedTasks.length / totalTasks) * 100 : 100;
       const errorRate = totalTasks > 0 ? (failedTasks.length / totalTasks) * 100 : 0;
 
-      const performance: RobotPerformance = {
+      constperformance: RobotPerformance = {
         robotId,
         period,
         tasksCompleted: completedTasks.length,
@@ -400,7 +400,7 @@ export class AssistiveRoboticsService {
    */
   async scheduleMaintenance(maintenanceData: Omit<RobotMaintenance, 'id' | 'createdAt' | 'updatedAt'>): Promise<RobotMaintenance> {
     try {
-      const maintenance: RobotMaintenance = {
+      constmaintenance: RobotMaintenance = {
         id: `maint_${Date.now()}`,
         ...maintenanceData,
         createdAt: new Date(),
@@ -500,7 +500,7 @@ export class AssistiveRoboticsService {
    */
   async getRobotTasks(robotId: string, status?: RobotTask['status']): Promise<RobotTask[]> {
     try {
-      const whereCondition: any = { robotId };
+      constwhereCondition: any = { robotId };
       if (status) {
         whereCondition.status = status;
       }

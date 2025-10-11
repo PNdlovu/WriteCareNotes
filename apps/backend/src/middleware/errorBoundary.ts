@@ -128,7 +128,7 @@ export const errorHandler = (
   });
 
   // Send error response
-  const errorResponse: any = {
+  consterrorResponse: any = {
     success: false,
     error: {
       code,

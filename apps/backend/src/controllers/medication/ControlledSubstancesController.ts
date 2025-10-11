@@ -59,7 +59,7 @@ import { logger } from '../../utils/logger';
  * comprehensive regulatory compliance across all British Isles jurisdictions.
  */
 export class ControlledSubstancesController {
-  private controlledSubstancesService: ControlledSubstancesService;
+  privatecontrolledSubstancesService: ControlledSubstancesService;
 
   constructor() {
     this.controlledSubstancesService = new ControlledSubstancesService();
@@ -136,7 +136,7 @@ export class ControlledSubstancesController {
       }
 
       // Validate witness verifications
-      const primaryWitnessVerification: WitnessVerification = {
+      constprimaryWitnessVerification: WitnessVerification = {
         witnessId: primaryWitness.witnessId,
         witnessName: primaryWitness.witnessName,
         witnessRole: primaryWitness.witnessRole,
@@ -147,7 +147,7 @@ export class ControlledSubstancesController {
         ipAddress: req.ip
       };
 
-      const secondaryWitnessVerification: WitnessVerification = {
+      constsecondaryWitnessVerification: WitnessVerification = {
         witnessId: secondaryWitness.witnessId,
         witnessName: secondaryWitness.witnessName,
         witnessRole: secondaryWitness.witnessRole,
@@ -187,20 +187,20 @@ export class ControlledSubstancesController {
       });
     } catch (error: unknown) {
       console.error('Error in registerControlledDrug controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not a controlled substance')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('witnesses must be different')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Invalid supplier license')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('not a controlled substance')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('witnesses must be different')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Invalid supplier license')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to register controlled drug' });
       }
@@ -260,7 +260,7 @@ export class ControlledSubstancesController {
       }
 
       // Validate witness verifications
-      const primaryWitnessVerification: WitnessVerification = {
+      constprimaryWitnessVerification: WitnessVerification = {
         witnessId: primaryWitness.witnessId,
         witnessName: primaryWitness.witnessName,
         witnessRole: primaryWitness.witnessRole,
@@ -271,7 +271,7 @@ export class ControlledSubstancesController {
         ipAddress: req.ip
       };
 
-      const secondaryWitnessVerification: WitnessVerification = {
+      constsecondaryWitnessVerification: WitnessVerification = {
         witnessId: secondaryWitness.witnessId,
         witnessName: secondaryWitness.witnessName,
         witnessRole: secondaryWitness.witnessRole,
@@ -306,21 +306,21 @@ export class ControlledSubstancesController {
       });
     } catch (error: unknown) {
       console.error('Error in recordAdministration controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Insufficient stock')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('does not match')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('witnesses must be different')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Insufficient stock')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('does not match')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('witnesses must be different')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to record controlled drug administration' });
       }
@@ -389,15 +389,15 @@ export class ControlledSubstancesController {
       });
     } catch (error: unknown) {
       console.error('Error in performReconciliation controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to perform stock reconciliation' });
       }
@@ -467,7 +467,7 @@ export class ControlledSubstancesController {
       }
 
       // Validate witness verifications
-      const witness1Verification: WitnessVerification = {
+      constwitness1Verification: WitnessVerification = {
         witnessId: witness1.witnessId,
         witnessName: witness1.witnessName,
         witnessRole: witness1.witnessRole,
@@ -478,7 +478,7 @@ export class ControlledSubstancesController {
         ipAddress: req.ip
       };
 
-      const witness2Verification: WitnessVerification = {
+      constwitness2Verification: WitnessVerification = {
         witnessId: witness2.witnessId,
         witnessName: witness2.witnessName,
         witnessRole: witness2.witnessRole,
@@ -514,19 +514,19 @@ export class ControlledSubstancesController {
       });
     } catch (error: unknown) {
       console.error('Error in recordDestruction controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Insufficient stock')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('witnesses must be different')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Insufficient stock')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('witnesses must be different')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to record controlled drug destruction' });
       }
@@ -548,7 +548,7 @@ export class ControlledSubstancesController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      const filters: ControlledDrugFilters = {};
+      constfilters: ControlledDrugFilters = {};
 
       // Apply filters from query parameters
       if (req.query['schedule']) {
@@ -596,7 +596,7 @@ export class ControlledSubstancesController {
       });
     } catch (error: unknown) {
       console.error('Error in getRegister controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -626,7 +626,7 @@ export class ControlledSubstancesController {
       });
     } catch (error: unknown) {
       console.error('Error in getStats controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });

@@ -518,7 +518,7 @@ export class LedgerAccount extends BaseEntity {
    * Get all child accounts recursively
    */
   getAllChildAccounts(): LedgerAccount[] {
-    const children: LedgerAccount[] = [];
+    constchildren: LedgerAccount[] = [];
     
     if (this.childAccounts) {
       for (const child of this.childAccounts) {

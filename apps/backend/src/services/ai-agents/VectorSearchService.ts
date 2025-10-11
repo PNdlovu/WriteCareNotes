@@ -60,9 +60,9 @@ export interface EmbeddingResponse {
 
 export class VectorSearchService {
   // Logger removed
-  private knowledgeRepository: Repository<KnowledgeArticle>;
-  private embeddingModel: string;
-  private embeddingProvider: 'OPENAI' | 'AZURE_OPENAI' | 'LOCAL';
+  privateknowledgeRepository: Repository<KnowledgeArticle>;
+  privateembeddingModel: string;
+  privateembeddingProvider: 'OPENAI' | 'AZURE_OPENAI' | 'LOCAL';
 
   constructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);
@@ -106,7 +106,7 @@ export class VectorSearchService {
       console.error('Semantic search failed', {
         query: query.query.substring(0, 100),
         tenantId: query.tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
 
       // Fallback to text search if vector search fails
@@ -133,7 +133,7 @@ export class VectorSearchService {
       console.error('Failed to generate embedding', {
         provider: this.embeddingProvider,
         textLength: request.text.length,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }
@@ -234,7 +234,7 @@ export class VectorSearchService {
           AND (1 - (ka.embedding_vector <=> $1::vector)) > $2
       `;
 
-      const queryParams: any[] = [
+      constqueryParams: any[] = [
         `[${queryEmbedding.embedding.join(',')}]`, // Vector as string
         query.threshold || 0.5 // Similarity threshold
       ];
@@ -295,7 +295,7 @@ export class VectorSearchService {
 
     } catch (error: unknown) {
       console.error('Vector search query failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId: query.tenantId
       });
       throw error;
@@ -398,7 +398,7 @@ export class VectorSearchService {
         tenantId: query.tenantId
       });
 
-      const whereConditions: any = {
+      constwhereConditions: any = {
         aiSearchable: true
       };
 
@@ -442,7 +442,7 @@ export class VectorSearchService {
     } catch (error: unknown) {
       console.error('Fallback text search failed', {
         query: query.query.substring(0, 100),
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return [];
     }
@@ -472,7 +472,7 @@ export class VectorSearchService {
     } catch (error: unknown) {
       console.error('Failed to index article', {
         articleId: article.id,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -482,7 +482,7 @@ export class VectorSearchService {
    */
   async reindexAllArticles(tenantId?: string): Promise<void> {
     try {
-      const whereConditions: any = { aiSearchable: true };
+      constwhereConditions: any = { aiSearchable: true };
       if (tenantId) {
         whereConditions.tenantId = tenantId;
       }
@@ -517,7 +517,7 @@ export class VectorSearchService {
     } catch (error: unknown) {
       console.error('Article reindexing failed', {
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -541,7 +541,7 @@ export class VectorSearchService {
       }
 
       // Find similar articles using vector similarity
-      const query: VectorSearchQuery = {
+      constquery: VectorSearchQuery = {
         query: article.title + ' ' + article.content.substring(0, 500),
         tenantId,
         limit: limit + 1, // +1 to exclude the original article
@@ -557,7 +557,7 @@ export class VectorSearchService {
       console.error('Failed to find similar articles', {
         articleId,
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return [];
     }
@@ -587,7 +587,7 @@ export class VectorSearchService {
     } catch (error: unknown) {
       console.error('Failed to get trending queries', {
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return [];
     }
@@ -618,7 +618,7 @@ export class VectorSearchService {
     } catch (error: unknown) {
       console.error('Failed to optimize vector index', {
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -633,7 +633,7 @@ export class VectorSearchService {
     lastIndexUpdate: Date;
   }> {
     try {
-      const whereConditions: any = { aiSearchable: true };
+      constwhereConditions: any = { aiSearchable: true };
       if (tenantId) {
         whereConditions.tenantId = tenantId;
       } else {
@@ -661,7 +661,7 @@ export class VectorSearchService {
     } catch (error: unknown) {
       console.error('Failed to get search statistics', {
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
@@ -689,7 +689,7 @@ export class VectorSearchService {
 
     } catch (error: unknown) {
       console.error('Failed to check vector search availability', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return false;
     }
@@ -715,7 +715,7 @@ export class VectorSearchService {
 
     } catch (error: unknown) {
       console.error('Vector database setup failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }

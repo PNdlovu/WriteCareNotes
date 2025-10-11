@@ -17,7 +17,7 @@ import { HRManagementService, EmployeeSearchCriteria } from '../../services/hr/H
 import { Employee } from '../../entities/hr/Employee';
 
 export class HRManagementController {
-  private hrService: HRManagementService;
+  privatehrService: HRManagementService;
 
   constructor() {
     this.hrService = new HRManagementService();
@@ -38,7 +38,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to create employee',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -56,7 +56,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve employees',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -82,14 +82,14 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve employee',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
 
   async searchEmployees(req: Request, res: Response): Promise<void> {
     try {
-      const criteria: EmployeeSearchCriteria = {
+      constcriteria: EmployeeSearchCriteria = {
         department: req.query['department'] as string,
         jobTitle: req.query['jobTitle'] as string,
         employmentStatus: req.query['employmentStatus'] as any,
@@ -110,7 +110,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to search employees',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -131,7 +131,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to update employee',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -159,7 +159,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to terminate employee',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -178,7 +178,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve performance analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -206,7 +206,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to schedule performance review',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -235,7 +235,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to assign training',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -253,7 +253,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to generate training plan',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -286,7 +286,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to record training completion',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -305,7 +305,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve compliance alerts',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -323,7 +323,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to check employee compliance',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -342,7 +342,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve workforce analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -360,7 +360,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve recruitment metrics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -378,7 +378,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve disciplinary history',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -399,7 +399,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve employees by department',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -419,7 +419,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve employees with expiring documents',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -448,7 +448,7 @@ export class HRManagementController {
       res.status(500).json({
         success: false,
         message: 'Failed to bulk update training status',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

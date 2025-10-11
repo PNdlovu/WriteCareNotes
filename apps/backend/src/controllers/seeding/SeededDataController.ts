@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { SeededDataService } from '../../services/seeding/SeededDataService';
 
 export class SeededDataController {
-  private seededDataService: SeededDataService;
+  privateseededDataService: SeededDataService;
 
   constructor() {
     this.seededDataService = new SeededDataService();
@@ -37,7 +37,7 @@ export class SeededDataController {
       res.status(500).json({
         success: false,
         message: 'Failed to seed data',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -54,7 +54,7 @@ export class SeededDataController {
       res.status(500).json({
         success: false,
         message: 'Failed to clear data',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -71,7 +71,7 @@ export class SeededDataController {
       res.status(500).json({
         success: false,
         message: 'Failed to get seeded data summary',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

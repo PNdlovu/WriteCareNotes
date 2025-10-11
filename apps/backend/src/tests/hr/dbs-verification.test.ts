@@ -19,11 +19,11 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('DBS Verification Service', () => {
-  let service: DBSVerificationService;
-  let dbsVerificationRepository: Repository<DBSVerification>;
-  let dbsDocumentRepository: Repository<DBSDocument>;
-  let dbsNotificationRepository: Repository<DBSNotification>;
-  let employeeRepository: Repository<Employee>;
+  letservice: DBSVerificationService;
+  letdbsVerificationRepository: Repository<DBSVerification>;
+  letdbsDocumentRepository: Repository<DBSDocument>;
+  letdbsNotificationRepository: Repository<DBSNotification>;
+  letemployeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -96,7 +96,7 @@ describe('DBS Verification Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         DBSVerificationService,
         {
@@ -480,8 +480,8 @@ describe('DBS Verification Service', () => {
 });
 
 describe('DBS Verification Integration Tests', () => {
-  let app: any;
-  let dbsVerificationService: DBSVerificationService;
+  letapp: any;
+  letdbsVerificationService: DBSVerificationService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -563,7 +563,7 @@ describe('DBS Verification Integration Tests', () => {
 });
 
 describe('DBS Verification E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

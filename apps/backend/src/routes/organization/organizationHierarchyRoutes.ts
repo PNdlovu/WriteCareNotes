@@ -47,8 +47,8 @@ import { logger } from '@/utils/logger';
  * Organization Hierarchy Routes with enterprise multi-tenancy
  */
 export class OrganizationHierarchyRoutes {
-  private router: Router;
-  private organizationService: OrganizationHierarchyService;
+  privaterouter: Router;
+  privateorganizationService: OrganizationHierarchyService;
 
   constructor(organizationService: OrganizationHierarchyService) {
     this.router = Router();
@@ -414,7 +414,7 @@ export class OrganizationHierarchyRoutes {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      const queryParams: HierarchyQueryParams = {
+      constqueryParams: HierarchyQueryParams = {
         tenantId: req.query['tenantId'] as string,
         rootOrganizationId: req.query['rootOrganizationId'] as string,
         maxDepth: req.query['maxDepth'] ? parseInt(req.query['maxDepth'] as string) : undefined,
@@ -550,7 +550,7 @@ export class OrganizationHierarchyRoutes {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      const configRequest: OrganizationConfigurationRequest = {
+      constconfigRequest: OrganizationConfigurationRequest = {
         organizationId: req.params['id'],
         category: req.body["category"],
         configurationData: req.body['configurationData'],

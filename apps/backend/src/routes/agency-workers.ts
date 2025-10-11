@@ -17,7 +17,7 @@ router.post('/workers', authorize(['hr_manager', 'admin']), async (req, res) => 
     const worker = await agencyService.createAgencyWorker(req.body);
     res.status(201).json({ success: true, data: worker });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -26,7 +26,7 @@ router.get('/analytics', authorize(['hr_manager', 'admin']), async (req, res) =>
     const analytics = await agencyService.getAgencyAnalytics();
     res.json({ success: true, data: analytics });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

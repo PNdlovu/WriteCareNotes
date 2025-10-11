@@ -47,7 +47,7 @@ export class ComplianceService {
    */
   async performComplianceCheck(tenantId: string): Promise<ComplianceReport> {
     try {
-      const checks: ComplianceCheck[] = [];
+      constchecks: ComplianceCheck[] = [];
 
       // NHS Digital Compliance
       const nhsChecks = await this.nhsComplianceService.performComplianceCheck(tenantId);
@@ -64,7 +64,7 @@ export class ComplianceService {
       // Determine overall status
       const overallStatus = this.determineOverallStatus(checks);
 
-      const report: ComplianceReport = {
+      constreport: ComplianceReport = {
         id: this.generateId(),
         tenantId,
         checks,

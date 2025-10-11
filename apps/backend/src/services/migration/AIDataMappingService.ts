@@ -79,10 +79,10 @@ export interface DataRelationship {
 }
 
 export class AIDataMappingService extends EventEmitter {
-  private healthcareFieldPatterns: FieldPattern[];
-  private semanticRules: Map<string, SemanticAnalysis>;
-  private transformationLibrary: Map<string, Function>;
-  private learningCache: Map<string, MappingRecommendation[]> = new Map();
+  privatehealthcareFieldPatterns: FieldPattern[];
+  privatesemanticRules: Map<string, SemanticAnalysis>;
+  privatetransformationLibrary: Map<string, Function>;
+  privatelearningCache: Map<string, MappingRecommendation[]> = new Map();
 
   constructor() {
     super();
@@ -424,7 +424,7 @@ export class AIDataMappingService extends EventEmitter {
       return [];
     }
 
-    const recommendations: MappingRecommendation[] = [];
+    constrecommendations: MappingRecommendation[] = [];
     const sampleRecord = sourceData[0];
     const sourceFields = Object.keys(sampleRecord);
     
@@ -503,7 +503,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private findBestPatternMatch(sourceField: string): FieldPattern | null {
-    let bestMatch: FieldPattern | null = null;
+    letbestMatch: FieldPattern | null = null;
     let highestConfidence = 0;
 
     for (const pattern of this.healthcareFieldPatterns) {
@@ -536,7 +536,7 @@ export class AIDataMappingService extends EventEmitter {
         sampleOutput = transformationFunction(sampleValue);
         transformationExplanation = `Transformed using ${pattern.transformationHint}`;
       } catch (error: unknown) {
-        transformationExplanation = `Transformation needed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`;
+        transformationExplanation = `Transformation needed: ${error instanceof Error ? error.message : "Unknown error"}`;
       }
     }
 
@@ -636,7 +636,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private getTransformationFunction(targetField: string): Function | null {
-    const transformationMap: { [key: string]: string } = {
+    consttransformationMap: { [key: string]: string } = {
       'full_name': 'normalize_name',
       'first_name': 'normalize_name',
       'last_name': 'normalize_name',
@@ -685,7 +685,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private generateAlternativeTargets(sourceField: string, primaryTarget: string): Array<{ field: string; confidence: number; reasoning: string }> {
-    const alternatives: Array<{ field: string; confidence: number; reasoning: string }> = [];
+    constalternatives: Array<{ field: string; confidence: number; reasoning: string }> = [];
     
     // Generate contextual alternatives based on source field
     const fieldLower = sourceField.toLowerCase();
@@ -721,7 +721,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private generateValidationRules(targetField: string): string[] {
-    const validationMap: { [key: string]: string[] } = {
+    constvalidationMap: { [key: string]: string[] } = {
       'resident_id': ['Not null', 'Unique', 'Alphanumeric', 'Max 20 characters'],
       'nhs_number': ['Exactly 10 digits', 'Valid check digit', 'Unique'],
       'date_of_birth': ['Valid date', 'Age 18-120', 'Not future date'],
@@ -749,7 +749,7 @@ export class AIDataMappingService extends EventEmitter {
     sourceData: any[], 
     recommendations: MappingRecommendation[]
   ): Promise<DataRelationship[]> {
-    const relationships: DataRelationship[] = [];
+    constrelationships: DataRelationship[] = [];
     
     // Detect hierarchical relationships
     const idFields = recommendations.filter(r => r.targetField.includes('id'));
@@ -857,7 +857,7 @@ export class AIDataMappingService extends EventEmitter {
 
   private async learnNewMapping(sourceField: string, targetField: string, reasoning: string): Promise<void> {
     // Create new pattern based on user feedback
-    const newPattern: FieldPattern = {
+    constnewPattern: FieldPattern = {
       pattern: new RegExp(`^${sourceField.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'),
       targetField,
       confidence: 0.7, // Start with moderate confidence
@@ -878,7 +878,7 @@ export class AIDataMappingService extends EventEmitter {
       context?: any;
     }>
   ): Promise<{ [datasetName: string]: MappingRecommendation[] }> {
-    const results: { [datasetName: string]: MappingRecommendation[] } = {};
+    constresults: { [datasetName: string]: MappingRecommendation[] } = {};
     
     for (const dataset of datasets) {
       this.emit('batch_processing', { 
@@ -927,7 +927,7 @@ export class AIDataMappingService extends EventEmitter {
    * Import mapping template with user modifications
    */
   async importMappingTemplate(template: any): Promise<MappingRecommendation[]> {
-    const recommendations: MappingRecommendation[] = [];
+    constrecommendations: MappingRecommendation[] = [];
     
     for (const mapping of template.mappings) {
       if (mapping.userApproved) {
@@ -1012,7 +1012,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private generateMappingRecommendations(stats: any): string[] {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (stats.lowConfidenceMappings > stats.totalMappings * 0.3) {
       recommendations.push('Consider manual review of low-confidence mappings');

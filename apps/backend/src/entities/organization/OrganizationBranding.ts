@@ -534,7 +534,7 @@ export class OrganizationBranding extends BaseEntity {
    * Generate CSS variables from brand colors
    */
   generateCSSVariables(): Record<string, string> {
-    const cssVars: Record<string, string> = {};
+    constcssVars: Record<string, string> = {};
     
     // Primary colors
     cssVars['--color-primary'] = this.colors.primary;

@@ -18,8 +18,8 @@ import { logger } from '@/utils/logger';
  * Expense Routes with enterprise security and compliance
  */
 export class ExpenseRoutes {
-  private router: Router;
-  private expenseController: ExpenseController;
+  privaterouter: Router;
+  privateexpenseController: ExpenseController;
 
   constructor(expenseController: ExpenseController) {
     this.router = Router();

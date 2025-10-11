@@ -16,7 +16,7 @@ import { logger } from '../../utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 
 export class PilotService {
-  private pilotRepository: PilotRepository;
+  privatepilotRepository: PilotRepository;
 
   constructor() {
     this.pilotRepository = new PilotRepository();

@@ -85,7 +85,7 @@ export class PolicyTemplateService {
    * Create pre-built system templates
    */
   private async createSystemTemplates(): Promise<void> {
-    const systemTemplates: CreateTemplateDto[] = [
+    constsystemTemplates: CreateTemplateDto[] = [
       // Safeguarding Policy Template
       {
         title: 'Adult Safeguarding Policy',
@@ -416,7 +416,7 @@ export class PolicyTemplateService {
     await this.templateRepository.save(template);
 
     // Create policy draft structure
-    const policyDraft: Partial<PolicyDraft> = {
+    constpolicyDraft: Partial<PolicyDraft> = {
       title,
       content: customizedContent,
       category: template.category,
@@ -451,7 +451,7 @@ export class PolicyTemplateService {
     organizationModules: string[]
   ): Promise<TemplateRecommendation[]> {
     const allTemplates = await this.getTemplates({}, organizationId);
-    const recommendations: TemplateRecommendation[] = [];
+    constrecommendations: TemplateRecommendation[] = [];
 
     for (const template of allTemplates) {
       const score = this.calculateRecommendationScore(

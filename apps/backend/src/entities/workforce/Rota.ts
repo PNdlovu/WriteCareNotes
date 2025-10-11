@@ -304,7 +304,7 @@ export class Rota extends BaseEntity {
   }
 
   calculateMetrics(): RotaMetrics {
-    const metrics: RotaMetrics = {
+    constmetrics: RotaMetrics = {
       totalShifts: this.getTotalShifts(),
       totalHours: this.getTotalHours(),
       totalCost: this.getTotalCost(),

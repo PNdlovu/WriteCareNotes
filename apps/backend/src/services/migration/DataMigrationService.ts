@@ -115,15 +115,15 @@ export interface MigrationProgress {
 }
 
 export class DataMigrationService {
-  private logger: Logger;
-  private encryptionService: EncryptionService;
-  private auditService: AuditService;
-  private eventStoreService: EventStoreService;
-  private healthCheckService: HealthCheckService;
-  private sourcePool: Pool;
-  private targetPools: Map<string, Pool>;
-  private migrationPlans: MigrationPlan[];
-  private progress: MigrationProgress;
+  privatelogger: Logger;
+  privateencryptionService: EncryptionService;
+  privateauditService: AuditService;
+  privateeventStoreService: EventStoreService;
+  privatehealthCheckService: HealthCheckService;
+  privatesourcePool: Pool;
+  privatetargetPools: Map<string, Pool>;
+  privatemigrationPlans: MigrationPlan[];
+  privateprogress: MigrationProgress;
 
   constructor(private config: MigrationConfig) {
     this.logger = createLogger('DataMigrationService');
@@ -533,7 +533,7 @@ export class DataMigrationService {
     this.progress.status = 'in_progress';
     this.progress.startTime = new Date();
 
-    const results: MigrationResult[] = [];
+    constresults: MigrationResult[] = [];
 
     try {
       await this.auditService.log({
@@ -623,7 +623,7 @@ export class DataMigrationService {
       throw new Error(`Target database pool not found for service: ${plan.serviceName}`);
     }
 
-    const results: MigrationResult[] = [];
+    constresults: MigrationResult[] = [];
 
     for (const tableConfig of plan.tables) {
       const result = await this.migrateTable(tableConfig, targetPool, plan.serviceName);
@@ -645,7 +645,7 @@ export class DataMigrationService {
     const startTime = Date.now();
     this.logger.info(`Migrating table: ${tableConfig.sourceTable} -> ${tableConfig.targetTable}`);
 
-    const result: MigrationResult = {
+    constresult: MigrationResult = {
       serviceName,
       tableName: tableConfig.targetTable,
       totalRecords: 0,
@@ -656,8 +656,8 @@ export class DataMigrationService {
       status: 'failed'
     };
 
-    let sourceClient: PoolClient | null = null;
-    let targetClient: PoolClient | null = null;
+    letsourceClient: PoolClient | null = null;
+    lettargetClient: PoolClient | null = null;
 
     try {
       sourceClient = await this.sourcePool.connect();
@@ -809,7 +809,7 @@ export class DataMigrationService {
    * Transform record according to transformation rules
    */
   private transformRecord(sourceRecord: any, transformationRules: TransformationRule[]): any {
-    const transformedRecord: any = {};
+    consttransformedRecord: any = {};
 
     for (const rule of transformationRules) {
       const sourceValue = sourceRecord[rule.sourceColumn];
@@ -834,7 +834,7 @@ export class DataMigrationService {
    * Validate record according to validation rules
    */
   private validateRecord(record: any, validationRules: ValidationRule[]): { isValid: boolean; errors: string[] } {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     for (const rule of validationRules) {
       const value = record[rule.column];

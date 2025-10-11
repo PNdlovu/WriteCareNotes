@@ -379,7 +379,7 @@ export class PolicyVersionService {
     oldVersion: PolicyVersion,
     newVersion: PolicyVersion
   ): ContentDiff[] {
-    const diffs: ContentDiff[] = [];
+    constdiffs: ContentDiff[] = [];
 
     // Compare title
     if (oldVersion.title !== newVersion.title) {
@@ -469,7 +469,7 @@ export class PolicyVersionService {
    * Private helper: Compare rich text content
    */
   private compareRichTextContent(oldContent: any, newContent: any): ContentDiff[] {
-    const diffs: ContentDiff[] = [];
+    constdiffs: ContentDiff[] = [];
 
     // Extract text from rich content
     const oldText = this.extractTextFromRichContent(oldContent);

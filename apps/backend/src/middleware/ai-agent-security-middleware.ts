@@ -104,10 +104,10 @@ export function aiAgentSecurityMiddleware(agentType: 'PUBLIC' | 'TENANT') {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const sessionId = generateSessionId();
-      const violations: SecurityViolation[] = [];
+      constviolations: SecurityViolation[] = [];
       
       // Initialize security context
-      const securityContext: AIAgentSecurityContext = {
+      constsecurityContext: AIAgentSecurityContext = {
         agentType,
         sessionId,
         securityLevel: agentType === 'TENANT' ? 'MAXIMUM' : 'ENHANCED',
@@ -171,10 +171,10 @@ export function aiAgentSecurityMiddleware(agentType: 'PUBLIC' | 'TENANT') {
     } catch (error: unknown) {
       console.error('AI agent security middleware error', {
         agentType,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         path: req.path,
         method: req.method,
-        stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+        stack: error instanceof Error ? error.stack : undefined
       });
 
       res.status(500).json({
@@ -214,14 +214,14 @@ async function performSecurityValidations(
   } catch (error: unknown) {
     console.error('Security validation error', {
       sessionId: context.sessionId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     
     violations.push({
       type: 'MALICIOUS_CONTENT',
       severity: 'HIGH',
       description: 'Security validation failed',
-      evidence: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      evidence: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date(),
       blocked: true
     });
@@ -399,7 +399,7 @@ async function validateRequestStructure(req: Request, violations: SecurityViolat
       type: 'MALICIOUS_CONTENT',
       severity: 'HIGH',
       description: 'Request structure validation failed',
-      evidence: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      evidence: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date(),
       blocked: true
     });
@@ -451,7 +451,7 @@ export function sanitizeTenantAIInput(req: Request, res: Response, next: NextFun
 
   } catch (error: unknown) {
     console.error('AI input sanitization failed', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       path: req.path
     });
 
@@ -574,7 +574,7 @@ export function validateTenantAIIsolation(req: Request, res: Response, next: Nex
 
   } catch (error: unknown) {
     console.error('Tenant AI isolation validation error', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       path: req.path,
       tenantId: req.tenant?.tenantId
     });
@@ -598,7 +598,7 @@ function isValidTenantUserRelationship(tenantId: string, userId: string): boolea
     console.error('Failed to validate tenant-user relationship', {
       tenantId,
       userId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     return false;
   }
@@ -615,7 +615,7 @@ function isValidResidentAccess(residentId: string, tenantId: string): boolean {
     console.error('Failed to validate resident access', {
       residentId,
       tenantId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     return false;
   }
@@ -637,7 +637,7 @@ export function encryptAIResponse(req: Request, res: Response, next: NextFunctio
         console.error('AI response encryption failed', {
           sessionId: req.aiSecurity.sessionId,
           tenantId: req.aiSecurity.tenantId,
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          error: error instanceof Error ? error.message : "Unknown error"
         });
         
         return originalSend.call(this, {
@@ -671,7 +671,7 @@ function encryptResponseData(data: any, tenantId: string): any {
   } catch (error: unknown) {
     console.error('Failed to encrypt response data', {
       tenantId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     throw error;
   }
@@ -731,7 +731,7 @@ function logAIInteraction(req: Request, res: Response, responseData: any, respon
   } catch (error: unknown) {
     console.error('Failed to log AI interaction', {
       sessionId: req.aiSecurity?.sessionId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
   }
 }

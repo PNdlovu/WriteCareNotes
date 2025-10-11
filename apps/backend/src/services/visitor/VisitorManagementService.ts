@@ -103,7 +103,7 @@ export interface VisitorAnalytics {
 @Injectable()
 export class VisitorManagementService {
   private readonly logger = new Logger(VisitorManagementService.name);
-  private visitorRepository: Repository<VisitorManagement>;
+  privatevisitorRepository: Repository<VisitorManagement>;
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
@@ -465,7 +465,7 @@ export class VisitorManagementService {
       // Compliance metrics
       const complianceMetrics = await this.calculateComplianceMetrics(visitors);
 
-      const analytics: VisitorAnalytics = {
+      constanalytics: VisitorAnalytics = {
         totalRegistrations,
         activeVisitors,
         averageVisitDuration,
@@ -690,7 +690,7 @@ export class VisitorManagementService {
       riskFactors.push('background_check_alerts');
     }
 
-    let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    letriskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
     
     if (riskFactors.length === 0) {
       riskLevel = 'low';

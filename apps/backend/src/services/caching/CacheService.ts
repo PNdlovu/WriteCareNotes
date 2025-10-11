@@ -72,13 +72,13 @@ export interface CacheInvalidationRule {
 }
 
 export class CacheService {
-  private redis: Redis.Cluster;
-  private logger: Logger;
-  private encryptionService: EncryptionService;
-  private auditService: AuditService;
-  private healthCheckService: HealthCheckService;
-  private stats: CacheStats;
-  private invalidationRules: Map<string, CacheInvalidationRule>;
+  privateredis: Redis.Cluster;
+  privatelogger: Logger;
+  privateencryptionService: EncryptionService;
+  privateauditService: AuditService;
+  privatehealthCheckService: HealthCheckService;
+  privatestats: CacheStats;
+  privateinvalidationRules: Map<string, CacheInvalidationRule>;
 
   constructor() {
     this.logger = createLogger('CacheService');
@@ -233,7 +233,7 @@ export class CacheService {
       this.stats.hits++;
       this.updateStats();
 
-      let parsedValue: any;
+      letparsedValue: any;
       
       try {
         parsedValue = JSON.parse(cachedValue);
@@ -421,7 +421,7 @@ export class CacheService {
    */
   async invalidateByTags(tags: string[], healthcareContext?: string): Promise<number> {
     try {
-      let allKeys: string[] = [];
+      letallKeys: string[] = [];
       
       for (const tag of tags) {
         const keys = await this.redis.smembers(`tag:${tag}`);
@@ -516,7 +516,7 @@ export class CacheService {
       const clientLines = clients.split('\r\n');
 
       const parseInfo = (lines: string[]) => {
-        const result: any = {};
+        constresult: any = {};
         lines.forEach(line => {
           if (line.includes(':')) {
             const [key, value] = line.split(':');

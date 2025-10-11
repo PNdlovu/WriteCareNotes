@@ -169,10 +169,10 @@ interface PricingTier {
 
 export class PublicCustomerSupportAIService {
   // Logger removed
-  private knowledgeRepository: Repository<KnowledgeArticle>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
-  private publicKnowledgeBase: PublicKnowledgeBase;
+  privateknowledgeRepository: Repository<KnowledgeArticle>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
+  privatepublicKnowledgeBase: PublicKnowledgeBase;
 
   constructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);
@@ -230,8 +230,8 @@ export class PublicCustomerSupportAIService {
     } catch (error: unknown) {
       console.error('Failed to process customer inquiry', {
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
-        stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+        error: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined
       });
 
       return {
@@ -260,8 +260,8 @@ export class PublicCustomerSupportAIService {
       const message = inquiry.message.toLowerCase();
       
       let primaryIntent = 'GENERAL_INQUIRY';
-      const secondaryIntents: string[] = [];
-      const entities: Record<string, any> = {};
+      constsecondaryIntents: string[] = [];
+      constentities: Record<string, any> = {};
       
       // Intent classification
       if (message.includes('price') || message.includes('cost') || message.includes('subscription')) {
@@ -285,7 +285,7 @@ export class PublicCustomerSupportAIService {
       }
       
       // Urgency detection
-      let urgency: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
+      leturgency: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
       if (message.includes('urgent') || message.includes('asap') || message.includes('immediately')) {
         urgency = 'HIGH';
       } else if (message.includes('soon') || message.includes('quickly')) {
@@ -310,7 +310,7 @@ export class PublicCustomerSupportAIService {
     } catch (error: unknown) {
       console.error('Failed to analyze inquiry intent', {
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
@@ -381,7 +381,7 @@ export class PublicCustomerSupportAIService {
     } catch (error: unknown) {
       console.error('Failed to retrieve relevant knowledge', {
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
@@ -404,9 +404,9 @@ export class PublicCustomerSupportAIService {
   ): Promise<AIResponse> {
     try {
       let message = '';
-      const knowledgeSources: string[] = [];
-      const suggestedActions: SuggestedAction[] = [];
-      const followUpQuestions: string[] = [];
+      constknowledgeSources: string[] = [];
+      constsuggestedActions: SuggestedAction[] = [];
+      constfollowUpQuestions: string[] = [];
       let escalationRequired = false;
 
       // Generate response based on intent
@@ -494,7 +494,7 @@ export class PublicCustomerSupportAIService {
     } catch (error: unknown) {
       console.error('Failed to generate intelligent response', {
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
@@ -784,7 +784,7 @@ export class PublicCustomerSupportAIService {
    * Generate follow-up questions
    */
   private generateFollowUpQuestions(intentAnalysis: any, inquiry: CustomerInquiry): string[] {
-    const questions: string[] = [];
+    constquestions: string[] = [];
     
     switch (intentAnalysis.primaryIntent) {
       case 'PRICING_INQUIRY':
@@ -874,7 +874,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
     } catch (error: unknown) {
       console.error('Failed to handle escalation', {
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -905,7 +905,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
     } catch (error: unknown) {
       console.error('Failed to log public interaction', {
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -932,7 +932,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
 
     } catch (error: unknown) {
       console.error('Failed to initialize public knowledge base', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -1155,7 +1155,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
 
     } catch (error: unknown) {
       console.error('Failed to get knowledge base summary', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {

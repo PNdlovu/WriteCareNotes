@@ -21,16 +21,16 @@ import { LedgerAccount } from '../../entities/financial/LedgerAccount';
  */
 
 describe('Documentation Service', () => {
-  let service: DocumentationService;
-  let dbsVerificationRepository: Repository<DBSVerification>;
-  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  let dvlaCheckRepository: Repository<DVLACheck>;
-  let cashTransactionRepository: Repository<CashTransaction>;
-  let budgetRepository: Repository<Budget>;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
+  letservice: DocumentationService;
+  letdbsVerificationRepository: Repository<DBSVerification>;
+  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  letdvlaCheckRepository: Repository<DVLACheck>;
+  letcashTransactionRepository: Repository<CashTransaction>;
+  letbudgetRepository: Repository<Budget>;
+  letledgerAccountRepository: Repository<LedgerAccount>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         DocumentationService,
         {
@@ -755,8 +755,8 @@ describe('Documentation Service', () => {
 });
 
 describe('Documentation Integration Tests', () => {
-  let app: any;
-  let documentationService: DocumentationService;
+  letapp: any;
+  letdocumentationService: DocumentationService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -816,7 +816,7 @@ describe('Documentation Integration Tests', () => {
 });
 
 describe('Documentation E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

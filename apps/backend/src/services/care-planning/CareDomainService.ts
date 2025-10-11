@@ -97,7 +97,7 @@ export interface DomainRiskAnalysis {
 export class CareDomainValidationError extends Error {
   constructor(
     message: string,
-    public validationErrors: ValidationError[]
+    publicvalidationErrors: ValidationError[]
   ) {
     super(message);
     this.name = 'CareDomainValidationError';
@@ -112,15 +112,15 @@ export class CareDomainNotFoundError extends Error {
 }
 
 export class CareDomainService {
-  private careDomainRepository: Repository<CareDomain>;
-  private carePlanRepository: Repository<CarePlan>;
+  privatecareDomainRepository: Repository<CareDomain>;
+  privatecarePlanRepository: Repository<CarePlan>;
 
   constructor(
-    private dataSource: DataSource,
-    private auditService: AuditService,
-    private encryptionService: FieldLevelEncryptionService,
-    private notificationService: NotificationService,
-    private eventPublisher: EventPublishingService
+    privatedataSource: DataSource,
+    privateauditService: AuditService,
+    privateencryptionService: FieldLevelEncryptionService,
+    privatenotificationService: NotificationService,
+    privateeventPublisher: EventPublishingService
   ) {
     this.careDomainRepository = dataSource.getRepository(CareDomain);
     this.carePlanRepository = dataSource.getRepository(CarePlan);
@@ -252,7 +252,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to create care domain', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId: request.carePlanId,
         correlationId 
       });
@@ -262,7 +262,7 @@ export class CareDomainService {
         resourceType: 'CareDomain',
         userId: request.createdBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           carePlanId: request.carePlanId,
           correlationId
         },
@@ -296,7 +296,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to get care domain by ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId: id 
       });
       throw error;
@@ -331,7 +331,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to get care domains by care plan ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         carePlanId 
       });
       throw error;
@@ -472,7 +472,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to update care domain', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId: id,
         correlationId 
       });
@@ -483,7 +483,7 @@ export class CareDomainService {
         resourceId: id,
         userId: request.updatedBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           correlationId
         },
         correlationId
@@ -557,7 +557,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to conduct care domain assessment', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId: id,
         correlationId 
       });
@@ -598,7 +598,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to analyze domain risks', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId: id 
       });
       throw error;
@@ -632,7 +632,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to get domains due for assessment', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         daysAhead 
       });
       throw error;
@@ -689,7 +689,7 @@ export class CareDomainService {
 
     } catch (error: unknown) {
       console.error('Failed to deactivate care domain', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId: id,
         correlationId 
       });
@@ -743,7 +743,7 @@ export class CareDomainService {
   }
 
   private generateMitigationStrategies(careDomain: CareDomain): string[] {
-    const strategies: string[] = [];
+    conststrategies: string[] = [];
 
     // Base strategies by domain type
     switch (careDomain.domainType) {
@@ -778,7 +778,7 @@ export class CareDomainService {
   }
 
   private generateRecommendedActions(careDomain: CareDomain): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
 
     // Actions based on risk level
     switch (careDomain.riskLevel) {

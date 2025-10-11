@@ -161,15 +161,15 @@ interface ConversationResponse {
 }
 
 export class RealtimeMessagingService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private fileStorage: FileStorageService;
-  private audit: AuditService;
-  private search: SearchService;
-  private consent: ConsentService;
-  private io: SocketIOServer;
-  private upload: multer.Multer;
-  private connectedUsers: Map<string, Set<string>> = new Map(); // tenantId -> Set of socketIds
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privatefileStorage: FileStorageService;
+  privateaudit: AuditService;
+  privatesearch: SearchService;
+  privateconsent: ConsentService;
+  privateio: SocketIOServer;
+  privateupload: multer.Multer;
+  privateconnectedUsers: Map<string, Set<string>> = new Map(); // tenantId -> Set of socketIds
 
   constructor(io: SocketIOServer) {
     this.db = new DatabaseService();
@@ -366,7 +366,7 @@ export class RealtimeMessagingService {
 
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
-      const conversationData: CreateConversationRequest = req.body;
+      constconversationData: CreateConversationRequest = req.body;
 
       const client = await this.db.getClient();
       await client.query('BEGIN');
@@ -382,7 +382,7 @@ export class RealtimeMessagingService {
           RETURNING *
         `;
 
-        const defaultSettings: ConversationSettings = {
+        constdefaultSettings: ConversationSettings = {
           notificationsEnabled: true,
           retentionDays: 365,
           allowFileAttachments: true,
@@ -443,7 +443,7 @@ export class RealtimeMessagingService {
         await client.query('COMMIT');
 
         // Prepare response
-        const response: ConversationResponse = {
+        constresponse: ConversationResponse = {
           id: conversation.id,
           tenantId: conversation.tenant_id,
           conversationType: conversation.conversation_type,
@@ -530,7 +530,7 @@ export class RealtimeMessagingService {
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
       const conversationId = req.params.conversationId;
-      const messageData: SendMessageRequest = req.body;
+      constmessageData: SendMessageRequest = req.body;
 
       // Validate conversation access
       const hasAccess = await this.validateConversationAccess(tenantId, userId, conversationId);
@@ -557,7 +557,7 @@ export class RealtimeMessagingService {
 
       try {
         // Process file attachments
-        let attachments: FileAttachment[] = [];
+        letattachments: FileAttachment[] = [];
         if (messageData.attachments && messageData.attachments.length > 0) {
           attachments = await this.processAttachments(messageData.attachments, tenantId);
         }
@@ -610,7 +610,7 @@ export class RealtimeMessagingService {
         });
 
         // Prepare response
-        const response: MessageResponse = {
+        constresponse: MessageResponse = {
           id: message.id,
           conversationId: message.conversation_id,
           senderId: message.sender_id,
@@ -703,7 +703,7 @@ export class RealtimeMessagingService {
 
       // Build query conditions
       let whereClause = 'WHERE m.conversation_id = $1 AND m.is_deleted = false';
-      const params: any[] = [conversationId];
+      constparams: any[] = [conversationId];
       let paramIndex = 2;
 
       if (before) {
@@ -747,7 +747,7 @@ export class RealtimeMessagingService {
       params.push(limit, offset);
       const messagesResult = await this.db.query(messagesQuery, params);
 
-      const messages: MessageResponse[] = messagesResult.rows.map(row => ({
+      constmessages: MessageResponse[] = messagesResult.rows.map(row => ({
         id: row.id,
         conversationId: row.conversation_id,
         senderId: row.sender_id,
@@ -812,12 +812,12 @@ export class RealtimeMessagingService {
         });
 
         // Generate thumbnail for images
-        let thumbnail: string | undefined;
+        letthumbnail: string | undefined;
         if (file.mimetype.startsWith('image/')) {
           thumbnail = await this.fileStorage.generateThumbnail(filePath, 300, 300);
         }
 
-        const attachment: FileAttachment = {
+        constattachment: FileAttachment = {
           fileName: file.originalname,
           fileSize: file.size,
           mimeType: file.mimetype,
@@ -910,7 +910,7 @@ export class RealtimeMessagingService {
 
       // Get user info for the reaction
       const userInfo = await this.getUserInfo(userId);
-      const reactionResponse: MessageReaction = {
+      constreactionResponse: MessageReaction = {
         id: reaction.id,
         userId: reaction.user_id,
         userName: `${userInfo.first_name} ${userInfo.last_name}`,
@@ -1107,7 +1107,7 @@ export class RealtimeMessagingService {
       // Default to in-app delivery if not specified
       const deliveryMethods = messageData.deliveryMethod ? [messageData.deliveryMethod] : ['in_app'];
       
-      const deliveryResults: any = {
+      constdeliveryResults: any = {
         inApp: { success: false, error: '' }
       };
 
@@ -1287,7 +1287,7 @@ export class RealtimeMessagingService {
     try {
       const campaignId = uuidv4();
       
-      const campaign: BulkMessagingCampaign = {
+      constcampaign: BulkMessagingCampaign = {
         campaignId,
         campaignName: campaignData.campaignName || 'Untitled Campaign',
         templateId: campaignData.templateId,
@@ -1333,7 +1333,7 @@ export class RealtimeMessagingService {
    */
   async getChannelHealth(tenantId: string): Promise<ChannelHealthStatus[]> {
     try {
-      const healthChecks: ChannelHealthStatus[] = [];
+      consthealthChecks: ChannelHealthStatus[] = [];
 
       // Check in-app messaging health
       const startTime = Date.now();
@@ -1470,7 +1470,7 @@ export class RealtimeMessagingService {
       const { conversationId } = req.params;
       const tenantId = req.headers['x-tenant-id'] as string;
       const senderId = req.headers['x-user-id'] as string;
-      const messageData: SendMessageRequest = req.body;
+      constmessageData: SendMessageRequest = req.body;
 
       const result = await this.sendMultiChannelMessage(conversationId, messageData, tenantId, senderId);
 
@@ -1496,7 +1496,7 @@ export class RealtimeMessagingService {
     try {
       const tenantId = req.headers['x-tenant-id'] as string;
       const createdBy = req.headers['x-user-id'] as string;
-      const campaignData: Partial<BulkMessagingCampaign> = req.body;
+      constcampaignData: Partial<BulkMessagingCampaign> = req.body;
 
       const campaign = await this.createBulkCampaign(campaignData, tenantId, createdBy);
 

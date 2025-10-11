@@ -63,8 +63,8 @@ export interface EventReplayOptions {
 }
 
 export class EventStoreService {
-  private client: EventStoreDBClient;
-  private logger: Logger;
+  privateclient: EventStoreDBClient;
+  privatelogger: Logger;
 
   constructor() {
     this.client = EventStoreDBClient.connectionString(
@@ -147,9 +147,9 @@ export class EventStoreService {
     options: EventReplayOptions = {}
   ): Promise<HealthcareEvent[]> {
     try {
-      const events: HealthcareEvent[] = [];
+      constevents: HealthcareEvent[] = [];
       
-      const readOptions: any = {
+      constreadOptions: any = {
         direction: 'forwards',
         fromRevision: options.fromVersion ? BigInt(options.fromVersion) : 'start',
         maxCount: 1000
@@ -291,7 +291,7 @@ export class EventStoreService {
     regulatoryFramework?: string
   ): Promise<HealthcareEvent[]> {
     try {
-      const events: HealthcareEvent[] = [];
+      constevents: HealthcareEvent[] = [];
       
       // Read from all healthcare streams
       const healthcareStreams = [
@@ -470,7 +470,7 @@ export class EventStoreService {
     try {
       const analyticsStreamName = `healthcare-analytics-${event.tenantId}`;
       
-      const analyticsEvent: HealthcareEvent = {
+      constanalyticsEvent: HealthcareEvent = {
         ...event,
         eventId: uuidv4(),
         eventType: `${event.eventType}Analytics`,

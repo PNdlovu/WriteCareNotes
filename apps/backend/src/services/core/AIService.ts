@@ -62,9 +62,9 @@ interface MedicalInsight {
 
 class AIService {
   private static instance: AIService;
-  private openai: OpenAI | null = null;
-  private azureOpenAI: OpenAI | null = null;
-  private isEnabled: boolean = false;
+  privateopenai: OpenAI | null = null;
+  privateazureOpenAI: OpenAI | null = null;
+  privateisEnabled: boolean = false;
 
   private constructor() {
     this.initializeServices();

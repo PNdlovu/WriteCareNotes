@@ -18,8 +18,8 @@ import { ExternalSystem, SystemType, IntegrationStatus } from '../../entities/ex
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class ExternalIntegrationService {
-  private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditService;
+  privatesystemRepository: Repository<ExternalSystem>;
+  privateauditService: AuditService;
 
   constructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);

@@ -56,7 +56,7 @@ export class AuditController {    this.auditService = new EnterpriseAuditService
 
   async getById(req: Request, res: Response): Promise<void> {    } catch (error: unknown) {
 
-    try {      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    try {      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
 
       const event = await this.auditService.findById(req.params.id);    }
 
@@ -74,7 +74,7 @@ export class AuditController {    this.auditService = new EnterpriseAuditService
 
         return;    } catch (error: unknown) {
 
-      }      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      }      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
 
     }
 
@@ -92,7 +92,7 @@ export class AuditController {    this.auditService = new EnterpriseAuditService
 
         status: 'error',    } catch (error: unknown) {
 
-        message: error.message || 'Failed to retrieve audit event',      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+        message: error.message || 'Failed to retrieve audit event',      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
 
       });    }
 

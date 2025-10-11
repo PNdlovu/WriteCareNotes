@@ -145,7 +145,7 @@ export interface ProductionConfig {
 
 class ConfigurationService {
   private static instance: ConfigurationService;
-  private config: ProductionConfig;
+  privateconfig: ProductionConfig;
 
   private constructor() {
     this.config = this.loadConfiguration();
@@ -309,7 +309,7 @@ class ConfigurationService {
   }
 
   private validateConfiguration(): void {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     // Validate required environment variables
     const requiredVars = [

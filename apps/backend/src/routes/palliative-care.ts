@@ -18,7 +18,7 @@ router.post('/care-plans', authorize(['palliative_specialist', 'doctor', 'admin'
     const carePlan = await palliativeService.createAdvancedPalliativeCare(req.body);
     res.status(201).json({ success: true, data: carePlan });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -27,7 +27,7 @@ router.get('/analytics', authorize(['palliative_specialist', 'care_manager', 'ad
     const analytics = await palliativeService.getPalliativeAnalytics();
     res.json({ success: true, data: analytics });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

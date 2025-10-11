@@ -21,10 +21,10 @@ import { DatabaseService } from '../database/database.service';
 import { NotificationService } from '../notifications/notification.service';
 
 export class AgentMonitoringService {
-  private db: DatabaseService;
-  private notifications: NotificationService;
-  private healthChecks: Map<string, AgentHealthCheck> = new Map();
-  private alertThresholds: Map<string, any> = new Map();
+  privatedb: DatabaseService;
+  privatenotifications: NotificationService;
+  privatehealthChecks: Map<string, AgentHealthCheck> = new Map();
+  privatealertThresholds: Map<string, any> = new Map();
 
   constructor() {
     this.db = new DatabaseService();
@@ -37,7 +37,7 @@ export class AgentMonitoringService {
    */
   async performHealthCheck(): Promise<AgentHealthCheck> {
     const startTime = Date.now();
-    const healthCheck: AgentHealthCheck = {
+    consthealthCheck: AgentHealthCheck = {
       service: 'pilot-feedback-agent',
       status: 'healthy',
       checks: {
@@ -481,7 +481,7 @@ export class AgentMonitoringService {
   }
 
   private async detectAlerts(tenantId?: string): Promise<any[]> {
-    const alerts: any[] = [];
+    constalerts: any[] = [];
     
     // Check error rate
     const errorRate = await this.getErrorRate();
@@ -535,7 +535,7 @@ export class AgentMonitoringService {
     await this.db.query(query, values);
 
     // Send notification
-    const notification: AgentNotification = {
+    constnotification: AgentNotification = {
       notificationId: uuidv4(),
       tenantId: alert.tenantId || 'system',
       type: 'processing_error',
@@ -569,7 +569,7 @@ export class AgentMonitoringService {
       WHERE status IN ('open', 'acknowledged')
     `;
 
-    const params: any[] = [];
+    constparams: any[] = [];
     if (tenantId) {
       query += ' AND tenant_id = ?';
       params.push(tenantId);

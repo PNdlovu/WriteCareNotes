@@ -27,8 +27,8 @@ export class ErrorHandler {
    */
   static handleError = (error: Error, req: Request, res: Response, next: NextFunction): void => {
     console.error('Error occurred', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
-      stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined,
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
       path: req.path,
       method: req.method,
       ip: req.ip
@@ -37,7 +37,7 @@ export class ErrorHandler {
     // Default error response
     let statusCode = 500;
     let message = 'Internal server error';
-    let details: any = undefined;
+    letdetails: any = undefined;
 
     // Handle specific error types
     if (error.name === 'ValidationError') {
@@ -60,7 +60,7 @@ export class ErrorHandler {
       message = 'Internal server error';
       details = undefined;
     } else if (process.env['NODE_ENV'] === 'development') {
-      details = error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error";
+      details = error instanceof Error ? error.message : "Unknown error";
     }
 
     res.status(statusCode).json({

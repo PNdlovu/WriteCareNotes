@@ -59,11 +59,11 @@ export interface RevenueOptimizationSuggestion {
 }
 
 export class BedManagementService {
-  private bedRepository: Repository<Bed>;
-  private roomRepository: Repository<Room>;
-  private waitingListRepository: Repository<WaitingListEntry>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatebedRepository: Repository<Bed>;
+  privateroomRepository: Repository<Room>;
+  privatewaitingListRepository: Repository<WaitingListEntry>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.bedRepository = AppDataSource.getRepository(Bed);
@@ -282,7 +282,7 @@ export class BedManagementService {
   async matchBedToWaitingList(): Promise<BedAllocationResult[]> {
     const availableBeds = await this.getAvailableBeds();
     const waitingList = await this.getPrioritizedWaitingList();
-    const results: BedAllocationResult[] = [];
+    constresults: BedAllocationResult[] = [];
 
     for (const entry of waitingList) {
       const suitableBed = availableBeds.find(bed => entry.canBeAccommodatedBy(bed));
@@ -335,7 +335,7 @@ export class BedManagementService {
 
   async getRevenueOptimizationSuggestions(): Promise<RevenueOptimizationSuggestion[]> {
     const beds = await this.getAllBeds();
-    const suggestions: RevenueOptimizationSuggestion[] = [];
+    constsuggestions: RevenueOptimizationSuggestion[] = [];
 
     for (const bed of beds) {
       // Simple revenue optimization logic

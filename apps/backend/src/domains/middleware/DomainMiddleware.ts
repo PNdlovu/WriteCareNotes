@@ -14,7 +14,7 @@ export interface DomainRequest extends Request {
 
 export class DomainMiddleware {
   private static instance: DomainMiddleware;
-  private domainRegistry: DomainRegistry;
+  privatedomainRegistry: DomainRegistry;
 
   private constructor() {
     this.domainRegistry = DomainRegistry.getInstance();

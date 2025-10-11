@@ -30,7 +30,7 @@ export interface UpdateTenantDto {
 }
 
 export class TenantService {
-  private tenantRepository: Repository<Tenant>;
+  privatetenantRepository: Repository<Tenant>;
 
   constructor(dataSource: DataSource) {
     this.tenantRepository = dataSource.getRepository(Tenant);
@@ -99,7 +99,7 @@ export class TenantService {
    * Find all tenants
    */
   async findAll(includeInactive: boolean = false): Promise<Tenant[]> {
-    const where: any = {};
+    constwhere: any = {};
     
     if (!includeInactive) {
       where.isActive = true;

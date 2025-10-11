@@ -14,7 +14,7 @@ import { Request, Response } from 'express';
 import { HealthCheckService } from '../../services/monitoring/HealthCheckService';
 
 export class MonitoringController {
-  private healthCheckService: HealthCheckService;
+  privatehealthCheckService: HealthCheckService;
 
   constructor() {
     this.healthCheckService = new HealthCheckService();

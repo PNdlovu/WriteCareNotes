@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { EnterpriseNotificationService } from '../../services/notifications/EnterpriseNotificationService';
 
 export class NotificationController {
-  private notificationService: EnterpriseNotificationService;
+  privatenotificationService: EnterpriseNotificationService;
 
   constructor() {
     this.notificationService = new EnterpriseNotificationService();
@@ -27,7 +27,7 @@ export class NotificationController {
       const result = await this.notificationService.sendEnterpriseNotification(req.body);
       res.status(201).json({ success: true, data: result });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class NotificationController {
       const campaign = await this.notificationService.createNotificationCampaign(req.body);
       res.status(201).json({ success: true, data: campaign });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -45,7 +45,7 @@ export class NotificationController {
       const analytics = await this.notificationService.getNotificationAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

@@ -75,7 +75,7 @@ export interface ConversationIntent {
 @Injectable()
 export class AIPolicyChatService {
   private readonly logger = new Logger(AIPolicyChatService.name);
-  private openai: OpenAI;
+  privateopenai: OpenAI;
   private activeSessions = new Map<string, ChatSession>();
 
   constructor(
@@ -95,7 +95,7 @@ export class AIPolicyChatService {
   async startChatSession(data: { userId: string; organizationId: string }): Promise<{ sessionId: string; welcomeMessage: ChatMessage }> {
     const sessionId = this.generateSessionId();
     
-    const session: ChatSession = {
+    constsession: ChatSession = {
       id: sessionId,
       userId: data.userId,
       organizationId: data.organizationId,
@@ -111,7 +111,7 @@ export class AIPolicyChatService {
 
     this.activeSessions.set(sessionId, session);
 
-    const welcomeMessage: ChatMessage = {
+    constwelcomeMessage: ChatMessage = {
       id: this.generateMessageId(),
       type: 'assistant',
       content: `Hello! I'm your AI policy assistant, specializing in healthcare compliance across all British Isles jurisdictions. I can help you with:
@@ -177,7 +177,7 @@ How can I help you today?`,
     }
 
     // Add user message to session
-    const userMessage: ChatMessage = {
+    constuserMessage: ChatMessage = {
       id: this.generateMessageId(),
       type: 'user',
       content: message,
@@ -214,7 +214,7 @@ How can I help you today?`,
     } catch (error) {
       this.logger.error(`Error processing message: ${error.message}`);
       
-      const errorResponse: ChatMessage = {
+      consterrorResponse: ChatMessage = {
         id: this.generateMessageId(),
         type: 'assistant',
         content: 'I apologize, but I encountered an error processing your message. Could you please try rephrasing your request?',
@@ -240,7 +240,7 @@ How can I help you today?`,
     }
 
     try {
-      let response: ChatMessage;
+      letresponse: ChatMessage;
 
       switch (actionId) {
         case 'action_create_policy':
@@ -278,7 +278,7 @@ How can I help you today?`,
     } catch (error) {
       this.logger.error(`Error executing action ${actionId}: ${error.message}`);
       
-      const errorResponse: ChatMessage = {
+      consterrorResponse: ChatMessage = {
         id: this.generateMessageId(),
         type: 'assistant',
         content: 'I encountered an error executing that action. Please try again or contact support if the issue persists.',
@@ -341,7 +341,7 @@ How can I help you today?`,
             content: `Analyze this message and return JSON with intent, confidence (0-1), entities, and requirements:
             
             Message: "${message}"
-            Session context: ${JSON.stringify(session.context)}`
+            Sessioncontext: ${JSON.stringify(session.context)}`
           }
         ],
         temperature: 0.3,

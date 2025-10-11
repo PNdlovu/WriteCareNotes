@@ -17,8 +17,8 @@ import { Decimal } from 'decimal.js';
  */
 
 describe('Budget Service', () => {
-  let service: BudgetService;
-  let budgetRepository: Repository<Budget>;
+  letservice: BudgetService;
+  letbudgetRepository: Repository<Budget>;
 
   const mockBudget = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -55,7 +55,7 @@ describe('Budget Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         BudgetService,
         {
@@ -445,8 +445,8 @@ describe('Budget Service', () => {
 });
 
 describe('Budget Integration Tests', () => {
-  let app: any;
-  let budgetService: BudgetService;
+  letapp: any;
+  letbudgetService: BudgetService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -514,7 +514,7 @@ describe('Budget Integration Tests', () => {
 });
 
 describe('Budget E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

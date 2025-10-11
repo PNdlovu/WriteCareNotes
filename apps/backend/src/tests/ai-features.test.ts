@@ -5,10 +5,10 @@ import { AdvancedPredictiveHealthController } from '../controllers/analytics/Adv
 import { EmotionWellnessTrackingController } from '../controllers/wellness/EmotionWellnessTrackingController';
 
 describe('AI Features Integration Tests', () => {
-  let agentConsoleController: AgentConsoleController;
-  let voiceAssistantController: EnhancedVoiceAssistantController;
-  let predictiveHealthController: AdvancedPredictiveHealthController;
-  let wellnessController: EmotionWellnessTrackingController;
+  letagentConsoleController: AgentConsoleController;
+  letvoiceAssistantController: EnhancedVoiceAssistantController;
+  letpredictiveHealthController: AdvancedPredictiveHealthController;
+  letwellnessController: EmotionWellnessTrackingController;
 
   beforeEach(() => {
     agentConsoleController = new AgentConsoleController();

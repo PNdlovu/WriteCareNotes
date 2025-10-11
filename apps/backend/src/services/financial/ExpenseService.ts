@@ -157,11 +157,11 @@ export class ExpenseService {
 
   constructor(
     @InjectRepository(Expense)
-    private expenseRepository: Repository<Expense>,
+    privateexpenseRepository: Repository<Expense>,
     @InjectRepository(ChartOfAccounts)
-    private chartOfAccountsRepository: Repository<ChartOfAccounts>,
+    privatechartOfAccountsRepository: Repository<ChartOfAccounts>,
     @InjectRepository(FinancialTransaction)
-    private financialTransactionRepository: Repository<FinancialTransaction>,
+    privatefinancialTransactionRepository: Repository<FinancialTransaction>,
   ) {}
 
   /**
@@ -585,7 +585,7 @@ export class ExpenseService {
     let totalAmount = new Decimal(0);
     let reimbursedAmount = new Decimal(0);
     let vatAmount = new Decimal(0);
-    const categoryTotals: Record<string, Decimal> = {};
+    constcategoryTotals: Record<string, Decimal> = {};
 
     expenses.forEach(expense => {
       totalAmount = totalAmount.plus(expense.totalAmount);

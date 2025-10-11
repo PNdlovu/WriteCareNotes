@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class FacilitiesManagementService {
-  private assetRepository: Repository<FacilityAsset>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateassetRepository: Repository<FacilityAsset>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.assetRepository = AppDataSource.getRepository(FacilityAsset);

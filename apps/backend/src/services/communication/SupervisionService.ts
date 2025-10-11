@@ -178,12 +178,12 @@ interface ComplaintContext {
 // =====================================================
 
 export class SupervisionService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private audit: AuditService;
-  private communicationSession: CommunicationSessionService;
-  private messaging: RealtimeMessagingService;
-  private consent: ConsentService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateaudit: AuditService;
+  privatecommunicationSession: CommunicationSessionService;
+  privatemessaging: RealtimeMessagingService;
+  privateconsent: ConsentService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -211,7 +211,7 @@ export class SupervisionService {
 
       const careHomeId = req.headers['x-care-home-id'] as string;
       const createdBy = req.headers['x-user-id'] as string;
-      const supervisionData: CreateSupervisionRequest = req.body;
+      constsupervisionData: CreateSupervisionRequest = req.body;
 
       // Start transaction
       const client = await this.db.getClient();
@@ -297,7 +297,7 @@ export class SupervisionService {
 
         // Create supervision record
         const supervisionId = uuidv4();
-        const supervision: SupervisionSession = {
+        constsupervision: SupervisionSession = {
           id: supervisionId,
           sessionId,
           supervisionNumber,
@@ -477,9 +477,9 @@ export class SupervisionService {
       } as Request, res);
 
       // Generate AI summary if enabled
-      let aiSummary: AISummary | undefined;
-      let sentimentAnalysis: SentimentAnalysis | undefined;
-      let complianceRating: ComplianceRating | undefined;
+      letaiSummary: AISummary | undefined;
+      letsentimentAnalysis: SentimentAnalysis | undefined;
+      letcomplianceRating: ComplianceRating | undefined;
 
       if (supervision.aiSummarizationEnabled) {
         aiSummary = await this.generateAISummary(supervisionId, supervision.sessionId, discussionPoints);
@@ -574,7 +574,7 @@ export class SupervisionService {
       const aiResponse = await this.callAIService(prompt);
       
       // Parse and structure the response
-      const summary: AISummary = {
+      constsummary: AISummary = {
         executiveSummary: aiResponse.executiveSummary,
         keyPoints: aiResponse.keyPoints || [],
         concernsIdentified: aiResponse.concerns || [],
@@ -611,7 +611,7 @@ export class SupervisionService {
       // Call AI sentiment analysis
       const sentimentResponse = await this.callSentimentAnalysis(transcriptData);
       
-      const analysis: SentimentAnalysis = {
+      constanalysis: SentimentAnalysis = {
         overallSentiment: sentimentResponse.sentiment || 'neutral',
         emotionalTone: sentimentResponse.emotions || [],
         stressIndicators: sentimentResponse.stressIndicators || [],
@@ -648,7 +648,7 @@ export class SupervisionService {
 
       const overallScore = Object.values(complianceAreas).reduce((sum, area) => sum + area.score, 0) / Object.keys(complianceAreas).length;
       
-      const rating: ComplianceRating = {
+      constrating: ComplianceRating = {
         overallScore,
         areas: complianceAreas,
         riskLevel: this.determineRiskLevel(overallScore, complianceAreas),
@@ -688,7 +688,7 @@ export class SupervisionService {
       await this.db.query(updateQuery, [supervisionId, careHomeId]);
 
       // Create discussion point for complaint
-      const complaintDiscussionPoint: DiscussionPoint = {
+      constcomplaintDiscussionPoint: DiscussionPoint = {
         id: uuidv4(),
         category: 'concerns',
         topic: `Complaint Investigation: ${complaint.complaintType}`,
@@ -782,7 +782,7 @@ export class SupervisionService {
       const { staffId, startDate, endDate, supervisionType } = req.query;
 
       let whereClause = 'WHERE care_home_id = $1';
-      const params: any[] = [careHomeId];
+      constparams: any[] = [careHomeId];
       let paramCount = 1;
 
       if (staffId) {
@@ -1068,7 +1068,7 @@ Ensure all recommendations are specific, measurable, and time-bound where approp
         transcriptData.toLowerCase().includes(word)
       ).length;
       
-      let overallSentiment: 'positive' | 'neutral' | 'negative' | 'mixed';
+      letoverallSentiment: 'positive' | 'neutral' | 'negative' | 'mixed';
       if (positiveCount > negativeCount * 1.5) {
         overallSentiment = 'positive';
       } else if (negativeCount > positiveCount * 1.5) {
@@ -1235,10 +1235,10 @@ Ensure all recommendations are specific, measurable, and time-bound where approp
         
         const title = `Compliance Report - Risk Level: ${report.riskLevel.toUpperCase()}`;
         const message = `A supervision compliance report has been generated requiring attention. 
-          Report ID: ${report.reportId}
-          Supervision ID: ${report.supervisionId}
-          Risk Level: ${report.riskLevel}
-          Action Required: ${report.actionRequired ? 'Yes' : 'No'}`;
+          ReportID: ${report.reportId}
+          SupervisionID: ${report.supervisionId}
+          RiskLevel: ${report.riskLevel}
+          ActionRequired: ${report.actionRequired ? 'Yes' : 'No'}`;
         
         await this.db.query(notificationQuery, [
           report.supervisionId,
@@ -1671,7 +1671,7 @@ Ensure all recommendations are specific, measurable, and time-bound where approp
   }
 
   private calculateRetentionPeriod(supervisionType: string): number {
-    const periods: Record<string, number> = {
+    constperiods: Record<string, number> = {
       annual_appraisal: 2555, disciplinary: 2555, capability: 2555, 
       grievance: 2555, monthly_supervision: 1825, return_to_work: 1825, probation_review: 1825
     };

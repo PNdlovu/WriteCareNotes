@@ -585,7 +585,7 @@ export class DORAComplianceService {
       // Map regulatory requirements
       const regulatoryRequirements = await this.mapRegulatoryRequirements(request.organizationType, areaAssessments);
 
-      const result: DORAComplianceAssessmentResult = {
+      constresult: DORAComplianceAssessmentResult = {
         assessmentId,
         organizationType: request.organizationType,
         overallCompliance: this.determineOverallCompliance(complianceScore, areaAssessments),
@@ -624,10 +624,10 @@ export class DORAComplianceService {
   private async assessComplianceAreas(
     request: DORAAssessmentRequest
   ): Promise<DORAAreaAssessmentResult[]> {
-    const assessments: DORAAreaAssessmentResult[] = [];
+    constassessments: DORAAreaAssessmentResult[] = [];
 
     for (const area of request.complianceAreas) {
-      let assessment: DORAAreaAssessmentResult;
+      letassessment: DORAAreaAssessmentResult;
 
       switch (area) {
         case DORAComplianceArea.ICT_RISK_MANAGEMENT:
@@ -661,9 +661,9 @@ export class DORAComplianceService {
   private async assessICTRiskManagement(
     framework: ICTRiskFramework
   ): Promise<DORAAreaAssessmentResult> {
-    const gaps: string[] = [];
-    const strengths: string[] = [];
-    const recommendations: any[] = [];
+    constgaps: string[] = [];
+    conststrengths: string[] = [];
+    constrecommendations: any[] = [];
     
     let maturityScore = 0;
 
@@ -732,9 +732,9 @@ export class DORAComplianceService {
   private async assessIncidentReporting(
     framework: IncidentManagementFramework
   ): Promise<DORAAreaAssessmentResult> {
-    const gaps: string[] = [];
-    const strengths: string[] = [];
-    const recommendations: any[] = [];
+    constgaps: string[] = [];
+    conststrengths: string[] = [];
+    constrecommendations: any[] = [];
     
     let maturityScore = 0;
 
@@ -803,9 +803,9 @@ export class DORAComplianceService {
   private async assessResilienceTesting(
     framework: ResilienceTestingFramework
   ): Promise<DORAAreaAssessmentResult> {
-    const gaps: string[] = [];
-    const strengths: string[] = [];
-    const recommendations: any[] = [];
+    constgaps: string[] = [];
+    conststrengths: string[] = [];
+    constrecommendations: any[] = [];
     
     let maturityScore = 0;
 
@@ -876,9 +876,9 @@ export class DORAComplianceService {
   private async assessThirdPartyRisk(
     framework: ThirdPartyRiskFramework
   ): Promise<DORAAreaAssessmentResult> {
-    const gaps: string[] = [];
-    const strengths: string[] = [];
-    const recommendations: any[] = [];
+    constgaps: string[] = [];
+    conststrengths: string[] = [];
+    constrecommendations: any[] = [];
     
     let maturityScore = 0;
 
@@ -947,9 +947,9 @@ export class DORAComplianceService {
   private async assessInformationSharing(
     request: DORAAssessmentRequest
   ): Promise<DORAAreaAssessmentResult> {
-    const gaps: string[] = [];
-    const strengths: string[] = [];
-    const recommendations: any[] = [];
+    constgaps: string[] = [];
+    conststrengths: string[] = [];
+    constrecommendations: any[] = [];
     
     let maturityScore = 60; // Base score for basic information sharing
 
@@ -1040,7 +1040,7 @@ export class DORAComplianceService {
     if (areaAssessments.length === 0) return 0;
     
     // Weight different areas based on importance
-    const weights: Record<DORAComplianceArea, number> = {
+    constweights: Record<DORAComplianceArea, number> = {
       [DORAComplianceArea.ICT_RISK_MANAGEMENT]: 0.3,
       [DORAComplianceArea.ICT_INCIDENT_REPORTING]: 0.25,
       [DORAComplianceArea.OPERATIONAL_RESILIENCE_TESTING]: 0.2,
@@ -1084,7 +1084,7 @@ export class DORAComplianceService {
     const criticalAreas = areaAssessments.filter(a => a.priority === 'critical').length;
     const highRiskAreas = areaAssessments.filter(a => a.priority === 'high').length;
 
-    let overallRiskLevel: 'low' | 'medium' | 'high' | 'critical';
+    letoverallRiskLevel: 'low' | 'medium' | 'high' | 'critical';
     if (criticalAreas > 0) {
       overallRiskLevel = 'critical';
     } else if (highRiskAreas >= 2) {
@@ -1121,7 +1121,7 @@ export class DORAComplianceService {
   }
 
   private identifyRiskFactors(areaAssessments: DORAAreaAssessmentResult[]): string[] {
-    const riskFactors: string[] = [];
+    constriskFactors: string[] = [];
     
     for (const assessment of areaAssessments) {
       if (assessment.priority === 'critical') {
@@ -1136,7 +1136,7 @@ export class DORAComplianceService {
   }
 
   private identifyMitigatingControls(areaAssessments: DORAAreaAssessmentResult[]): string[] {
-    const controls: string[] = [];
+    constcontrols: string[] = [];
     
     for (const assessment of areaAssessments) {
       controls.push(...assessment.strengths);
@@ -1152,7 +1152,7 @@ export class DORAComplianceService {
     areaAssessments: DORAAreaAssessmentResult[],
     riskProfile: DORARiskProfile
   ): Promise<DORAComplianceRecommendation[]> {
-    const recommendations: DORAComplianceRecommendation[] = [];
+    constrecommendations: DORAComplianceRecommendation[] = [];
 
     for (const assessment of areaAssessments) {
       for (const recommendation of assessment.recommendations) {
@@ -1345,8 +1345,8 @@ export class DORAComplianceService {
     recommendations: DORAComplianceRecommendation[],
     request: DORAAssessmentRequest
   ): Promise<DORAActionPlan> {
-    const initiatives: DORAInitiative[] = [];
-    const milestones: DORAMilestone[] = [];
+    constinitiatives: DORAInitiative[] = [];
+    constmilestones: DORAMilestone[] = [];
     
     // Group recommendations by area and create initiatives
     const recommendationsByArea = recommendations.reduce((acc, rec) => {
@@ -1356,7 +1356,7 @@ export class DORAComplianceService {
     }, {} as Record<DORAComplianceArea, DORAComplianceRecommendation[]>);
 
     for (const [area, recs] of Object.entries(recommendationsByArea)) {
-      const initiative: DORAInitiative = {
+      constinitiative: DORAInitiative = {
         initiativeId: uuidv4(),
         name: `DORA Compliance - ${area}`,
         description: `Implement DORA compliance requirements for ${area}`,
@@ -1462,7 +1462,7 @@ export class DORAComplianceService {
   }
 
   private calculateBudgetByArea(recommendations: DORAComplianceRecommendation[]): Record<DORAComplianceArea, number> {
-    const budget: Record<DORAComplianceArea, number> = {} as Record<DORAComplianceArea, number>;
+    constbudget: Record<DORAComplianceArea, number> = {} as Record<DORAComplianceArea, number>;
     
     for (const rec of recommendations) {
       if (!budget[rec.area]) budget[rec.area] = 0;
@@ -1487,7 +1487,7 @@ export class DORAComplianceService {
     organizationType: DORAOrganizationType,
     areaAssessments: DORAAreaAssessmentResult[]
   ): Promise<DORARegulatoryRequirement[]> {
-    const requirements: DORARegulatoryRequirement[] = [];
+    constrequirements: DORARegulatoryRequirement[] = [];
 
     // Basic DORA requirements applicable to all organizations
     requirements.push({

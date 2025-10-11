@@ -57,7 +57,7 @@ export interface PrescriptionStatistics {
  * Prescription Repository with healthcare-optimized queries
  */
 export class PrescriptionRepository {
-  private repository: Repository<Prescription>;
+  privaterepository: Repository<Prescription>;
 
   constructor(private dataSource: DataSource) {
     this.repository = dataSource.getRepository(Prescription);
@@ -88,7 +88,7 @@ export class PrescriptionRepository {
       return await queryBuilder.getOne();
 
     } catch (error: unknown) {
-      console.error('Failed to find prescription by ID', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      console.error('Failed to find prescription by ID', { error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -119,7 +119,7 @@ export class PrescriptionRepository {
       return { prescriptions, total };
 
     } catch (error: unknown) {
-      console.error('Failed to search prescriptions', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      console.error('Failed to search prescriptions', { error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -147,7 +147,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to get active prescriptions by residents', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         residentIds 
       });
       throw error;
@@ -220,7 +220,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to get prescriptions by medication', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         medicationId 
       });
       throw error;
@@ -253,7 +253,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to get prescriptions due for review', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         tenantId,
         daysAhead
@@ -285,7 +285,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to get expired prescriptions', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         tenantId
       });
@@ -339,7 +339,7 @@ export class PrescriptionRepository {
       const requiresMonitoring = prescriptions.filter(p => p.requiresMonitoring).length;
 
       // Group by therapeutic class
-      const byTherapeuticClass: Record<string, number> = {};
+      constbyTherapeuticClass: Record<string, number> = {};
       prescriptions.forEach(p => {
         if (p.medication?.therapeuticClass) {
           const className = p.medication.therapeuticClass;
@@ -348,7 +348,7 @@ export class PrescriptionRepository {
       });
 
       // Group by prescription type
-      const byPrescriptionType: Record<string, number> = {};
+      constbyPrescriptionType: Record<string, number> = {};
       prescriptions.forEach(p => {
         const type = p.prescriptionType;
         byPrescriptionType[type] = (byPrescriptionType[type] || 0) + 1;
@@ -375,7 +375,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to get prescription statistics', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         tenantId
       });
@@ -411,7 +411,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to bulk update prescription statuses', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         prescriptionIds,
         newStatus
       });
@@ -508,7 +508,7 @@ export class PrescriptionRepository {
     try {
       return await this.repository.save(prescription);
     } catch (error: unknown) {
-      console.error('Failed to save prescription', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      console.error('Failed to save prescription', { error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -532,7 +532,7 @@ export class PrescriptionRepository {
 
     } catch (error: unknown) {
       console.error('Failed to soft delete prescription', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         prescriptionId
       });
       throw error;

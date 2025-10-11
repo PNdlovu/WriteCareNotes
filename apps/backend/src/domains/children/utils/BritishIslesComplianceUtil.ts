@@ -252,7 +252,7 @@ export class BritishIslesComplianceUtil {
     reviewNumber: number
   ): Date {
     const timescales = this.getReviewTimescales(jurisdiction);
-    let daysToAdd: number;
+    letdaysToAdd: number;
 
     if (reviewNumber === 1) {
       daysToAdd = timescales.first;
@@ -328,7 +328,7 @@ export class BritishIslesComplianceUtil {
     isCompliant: boolean;
     violations: string[];
   } {
-    const violations: string[] = [];
+    constviolations: string[] = [];
 
     // Check legal status validity
     if (!this.isLegalStatusValidForJurisdiction(data.legalStatus, data.jurisdiction)) {

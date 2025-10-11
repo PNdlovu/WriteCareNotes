@@ -19,11 +19,11 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('Right to Work Service', () => {
-  let service: RightToWorkService;
-  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  let rightToWorkDocumentRepository: Repository<RightToWorkDocument>;
-  let rightToWorkNotificationRepository: Repository<RightToWorkNotification>;
-  let employeeRepository: Repository<Employee>;
+  letservice: RightToWorkService;
+  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  letrightToWorkDocumentRepository: Repository<RightToWorkDocument>;
+  letrightToWorkNotificationRepository: Repository<RightToWorkNotification>;
+  letemployeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -94,7 +94,7 @@ describe('Right to Work Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         RightToWorkService,
         {
@@ -473,8 +473,8 @@ describe('Right to Work Service', () => {
 });
 
 describe('Right to Work Integration Tests', () => {
-  let app: any;
-  let rightToWorkService: RightToWorkService;
+  letapp: any;
+  letrightToWorkService: RightToWorkService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -542,7 +542,7 @@ describe('Right to Work Integration Tests', () => {
 });
 
 describe('Right to Work E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

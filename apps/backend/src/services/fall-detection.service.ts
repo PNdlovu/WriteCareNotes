@@ -72,9 +72,9 @@ export interface MovementPattern {
 
 export class FallDetectionService {
   // Logger removed
-  private fallDetectors: Map<string, SmartDeviceEntity> = new Map();
-  private recentFallEvents: Map<string, FallEvent> = new Map();
-  private movementBaselines: Map<string, MovementPattern[]> = new Map();
+  privatefallDetectors: Map<string, SmartDeviceEntity> = new Map();
+  privaterecentFallEvents: Map<string, FallEvent> = new Map();
+  privatemovementBaselines: Map<string, MovementPattern[]> = new Map();
   private alertThresholds = {
     fallConfidence: 0.75,
     noMovementMinutes: 120,
@@ -119,7 +119,7 @@ export class FallDetectionService {
       console.log(`Fall detection device ${device.deviceName} initialized successfully`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to initialize fall detection device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to initialize fall detection device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -144,7 +144,7 @@ export class FallDetectionService {
       }
 
       // Create fall event
-      const fallEvent: FallEvent = {
+      constfallEvent: FallEvent = {
         id: `fall_${Date.now()}_${deviceId}`,
         deviceId,
         residentId: device.residentId,
@@ -166,7 +166,7 @@ export class FallDetectionService {
       console.log(`Fall detected: ${fallEvent.id} with confidence ${fallEvent.confidence}`);
       return fallEvent;
     } catch (error: unknown) {
-      console.error(`Failed to process fall detection: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to process fall detection: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return null;
     }
   }
@@ -181,7 +181,7 @@ export class FallDetectionService {
         throw new Error(`Emergency button device ${deviceId} not found`);
       }
 
-      const alert: EmergencyAlert = {
+      constalert: EmergencyAlert = {
         id: `emergency_${Date.now()}_${deviceId}`,
         type: 'emergency_button',
         deviceId,
@@ -200,7 +200,7 @@ export class FallDetectionService {
       console.log(`Emergency button pressed: ${alert.id}`);
       return alert;
     } catch (error: unknown) {
-      console.error(`Failed to handle emergency button: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to handle emergency button: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -215,7 +215,7 @@ export class FallDetectionService {
         return null;
       }
 
-      const pattern: MovementPattern = {
+      constpattern: MovementPattern = {
         residentId: device.residentId,
         deviceId,
         timestamp: new Date(),
@@ -245,7 +245,7 @@ export class FallDetectionService {
 
       return pattern;
     } catch (error: unknown) {
-      console.error(`Failed to monitor movement patterns: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to monitor movement patterns: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return null;
     }
   }
@@ -255,7 +255,7 @@ export class FallDetectionService {
    */
   async checkNoMovementAlerts(): Promise<EmergencyAlert[]> {
     try {
-      const alerts: EmergencyAlert[] = [];
+      constalerts: EmergencyAlert[] = [];
       const now = new Date();
       const timeoutMs = this.alertThresholds.noMovementMinutes * 60 * 1000;
 
@@ -267,7 +267,7 @@ export class FallDetectionService {
         const timeSinceLastMovement = now.getTime() - device.lastSeen.getTime();
         
         if (timeSinceLastMovement > timeoutMs) {
-          const alert: EmergencyAlert = {
+          constalert: EmergencyAlert = {
             id: `no_movement_${Date.now()}_${deviceId}`,
             type: 'no_movement',
             deviceId,
@@ -287,7 +287,7 @@ export class FallDetectionService {
 
       return alerts;
     } catch (error: unknown) {
-      console.error(`Failed to check no movement alerts: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to check no movement alerts: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -326,7 +326,7 @@ export class FallDetectionService {
       console.log(`Fall event ${eventId} status updated to ${status}`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to update fall event status: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to update fall event status: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -337,7 +337,7 @@ export class FallDetectionService {
   async getFallDetectionStats(timeRange: 'day' | 'week' | 'month' = 'week'): Promise<any> {
     try {
       const now = new Date();
-      let startDate: Date;
+      letstartDate: Date;
 
       switch (timeRange) {
         case 'day':
@@ -372,7 +372,7 @@ export class FallDetectionService {
 
       return stats;
     } catch (error: unknown) {
-      console.error(`Failed to get fall detection stats: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get fall detection stats: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -395,7 +395,7 @@ export class FallDetectionService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to start fall monitoring for device ${deviceId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to start fall monitoring for device ${deviceId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -436,7 +436,7 @@ export class FallDetectionService {
 
       return { confidence: Math.min(confidence, 1.0), type: fallType };
     } catch (error: unknown) {
-      console.error(`Failed to analyze fall pattern: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to analyze fall pattern: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return { confidence: 0, type: 'unknown' };
     }
   }
@@ -483,7 +483,7 @@ export class FallDetectionService {
       }
 
     } catch (error: unknown) {
-      console.error(`Failed to trigger fall response: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to trigger fall response: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -502,7 +502,7 @@ export class FallDetectionService {
       }
 
     } catch (error: unknown) {
-      console.error(`Failed to trigger emergency response: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to trigger emergency response: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -566,7 +566,7 @@ export class FallDetectionService {
    * Handle abnormal movement patterns
    */
   private async handleAbnormalMovement(pattern: MovementPattern): Promise<void> {
-    const alert: EmergencyAlert = {
+    constalert: EmergencyAlert = {
       id: `abnormal_movement_${Date.now()}_${pattern.deviceId}`,
       type: 'no_movement',
       deviceId: pattern.deviceId,
@@ -611,7 +611,7 @@ export class FallDetectionService {
    * Calculate device performance metrics
    */
   private calculateDevicePerformance(): Record<string, any> {
-    const performance: Record<string, any> = {};
+    constperformance: Record<string, any> = {};
     
     for (const [deviceId, device] of this.fallDetectors) {
       const deviceEvents = Array.from(this.recentFallEvents.values())

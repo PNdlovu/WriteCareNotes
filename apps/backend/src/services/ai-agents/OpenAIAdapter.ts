@@ -41,9 +41,9 @@ export interface AgentCapabilities {
 }
 
 export class OpenAIAdapter {
-  private llmService: LLMIntegrationService;
-  private promptTemplates: Map<string, PromptTemplate>;
-  private capabilities: AgentCapabilities;
+  privatellmService: LLMIntegrationService;
+  privatepromptTemplates: Map<string, PromptTemplate>;
+  privatecapabilities: AgentCapabilities;
 
   constructor() {
     this.llmService = new LLMIntegrationService();
@@ -287,7 +287,7 @@ Entity Extraction:`,
     const systemPrompt = this.getSystemPrompt(template.category);
 
     // Create LLM request
-    const llmRequest: LLMRequest = {
+    constllmRequest: LLMRequest = {
       provider: this.llmService.getDefaultProvider(options.securityLevel === 'TENANT' ? 'TENANT' : 'PUBLIC'),
       systemPrompt,
       userMessage: renderedPrompt,
@@ -300,7 +300,7 @@ Entity Extraction:`,
 
     // Execute the request
     const startTime = Date.now();
-    const response: LLMResponse = await this.llmService.generateResponse(llmRequest);
+    constresponse: LLMResponse = await this.llmService.generateResponse(llmRequest);
     const processingTime = Date.now() - startTime;
 
     return {

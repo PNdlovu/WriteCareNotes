@@ -35,10 +35,10 @@ export interface DeviceProtocol {
 
 export class IoTIntegrationService {
   // Logger removed
-  private mqttClient: mqtt.MqttClient;
-  private websocketConnections: Map<string, WebSocket> = new Map();
-  private deviceProtocols: Map<ConnectivityType, DeviceProtocol> = new Map();
-  private connectedDevices: Set<string> = new Set();
+  privatemqttClient: mqtt.MqttClient;
+  privatewebsocketConnections: Map<string, WebSocket> = new Map();
+  privatedeviceProtocols: Map<ConnectivityType, DeviceProtocol> = new Map();
+  privateconnectedDevices: Set<string> = new Set();
 
   constructor(private readonly eventEmitter: EventEmitter2) {
     this.initializeProtocols();
@@ -71,7 +71,7 @@ export class IoTIntegrationService {
 
       return connected;
     } catch (error: unknown) {
-      console.error(`Failed to connect to device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to connect to device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -95,7 +95,7 @@ export class IoTIntegrationService {
 
       return disconnected;
     } catch (error: unknown) {
-      console.error(`Failed to disconnect from device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to disconnect from device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -129,7 +129,7 @@ export class IoTIntegrationService {
 
       return success;
     } catch (error: unknown) {
-      console.error(`Failed to send command to device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to send command to device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -177,7 +177,7 @@ export class IoTIntegrationService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to sync device state for ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to sync device state for ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -186,7 +186,7 @@ export class IoTIntegrationService {
    * Get connection status for all devices
    */
   getConnectionStatus(): Record<string, boolean> {
-    const status: Record<string, boolean> = {};
+    conststatus: Record<string, boolean> = {};
     this.connectedDevices.forEach(deviceId => {
       status[deviceId] = true;
     });
@@ -198,7 +198,7 @@ export class IoTIntegrationService {
    */
   private handleDeviceTelemetry(deviceId: string, data: any): void {
     try {
-      const message: IoTMessage = {
+      constmessage: IoTMessage = {
         deviceId,
         messageType: 'telemetry',
         payload: data,
@@ -225,7 +225,7 @@ export class IoTIntegrationService {
       }
 
     } catch (error: unknown) {
-      console.error(`Error processing telemetry from device ${deviceId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Error processing telemetry from device ${deviceId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -258,11 +258,11 @@ export class IoTIntegrationService {
       });
 
       this.mqttClient.on('error', (error) => {
-        console.error(`MQTT error: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+        console.error(`MQTT error: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       });
 
     } catch (error: unknown) {
-      console.error(`Failed to initialize MQTT: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to initialize MQTT: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -290,7 +290,7 @@ export class IoTIntegrationService {
         }
       }
     } catch (error: unknown) {
-      console.error(`Error processing MQTT message: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Error processing MQTT message: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -337,7 +337,7 @@ class WiFiProtocol implements DeviceProtocol {
 
       return response.ok;
     } catch (error: unknown) {
-      console.error(`WiFi connection failed for device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`WiFi connection failed for device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`);
       return false;
     }
   }
@@ -358,7 +358,7 @@ class WiFiProtocol implements DeviceProtocol {
 
       return response.ok;
     } catch (error: unknown) {
-      console.error(`Failed to send command to device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to send command to device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`);
       return false;
     }
   }
@@ -374,13 +374,13 @@ class WiFiProtocol implements DeviceProtocol {
           const telemetry = JSON.parse(data.toString());
           callback(telemetry);
         } catch (error: unknown) {
-          console.error(`Error parsing telemetry data: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+          console.error(`Error parsing telemetry data: ${error instanceof Error ? error.message : "Unknown error"}`);
         }
       });
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to subscribe to telemetry for device ${device.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to subscribe to telemetry for device ${device.id}: ${error instanceof Error ? error.message : "Unknown error"}`);
       return false;
     }
   }

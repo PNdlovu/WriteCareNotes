@@ -21,9 +21,9 @@ export * from './types/DomainModule';
 // Domain initialization helper
 export class DomainSystem {
   private static instance: DomainSystem;
-  private factory: DomainFactory;
-  private registry: DomainRegistry;
-  private configManager: DomainConfigManager;
+  privatefactory: DomainFactory;
+  privateregistry: DomainRegistry;
+  privateconfigManager: DomainConfigManager;
 
   private constructor() {
     this.factory = DomainFactory.getInstance();

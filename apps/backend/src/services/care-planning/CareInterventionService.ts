@@ -120,7 +120,7 @@ export interface InterventionComplexityAnalysis {
 export class CareInterventionValidationError extends Error {
   constructor(
     message: string,
-    public validationErrors: ValidationError[]
+    publicvalidationErrors: ValidationError[]
   ) {
     super(message);
     this.name = 'CareInterventionValidationError';
@@ -142,15 +142,15 @@ export class CareInterventionSafetyError extends Error {
 }
 
 export class CareInterventionService {
-  private careInterventionRepository: Repository<CareIntervention>;
-  private careDomainRepository: Repository<CareDomain>;
+  privatecareInterventionRepository: Repository<CareIntervention>;
+  privatecareDomainRepository: Repository<CareDomain>;
 
   constructor(
-    private dataSource: DataSource,
-    private auditService: AuditService,
-    private encryptionService: FieldLevelEncryptionService,
-    private notificationService: NotificationService,
-    private eventPublisher: EventPublishingService
+    privatedataSource: DataSource,
+    privateauditService: AuditService,
+    privateencryptionService: FieldLevelEncryptionService,
+    privatenotificationService: NotificationService,
+    privateeventPublisher: EventPublishingService
   ) {
     this.careInterventionRepository = dataSource.getRepository(CareIntervention);
     this.careDomainRepository = dataSource.getRepository(CareDomain);
@@ -299,7 +299,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to create care intervention', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId: request.careDomainId,
         correlationId 
       });
@@ -309,7 +309,7 @@ export class CareInterventionService {
         resourceType: 'CareIntervention',
         userId: request.createdBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           careDomainId: request.careDomainId,
           correlationId
         },
@@ -343,7 +343,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to get care intervention by ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careInterventionId: id 
       });
       throw error;
@@ -379,7 +379,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to get care interventions by care domain ID', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careDomainId 
       });
       throw error;
@@ -518,7 +518,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to update care intervention', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careInterventionId: id,
         correlationId 
       });
@@ -529,7 +529,7 @@ export class CareInterventionService {
         resourceId: id,
         userId: request.updatedBy,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           correlationId
         },
         correlationId
@@ -581,7 +581,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to perform safety check', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         interventionId: request.interventionId 
       });
       throw error;
@@ -617,7 +617,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to analyze intervention complexity', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careInterventionId: id 
       });
       throw error;
@@ -654,7 +654,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to get interventions by priority', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         priority 
       });
       throw error;
@@ -711,7 +711,7 @@ export class CareInterventionService {
 
     } catch (error: unknown) {
       console.error('Failed to deactivate care intervention', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         careInterventionId: id,
         correlationId 
       });
@@ -749,7 +749,7 @@ export class CareInterventionService {
     missingSkills: RequiredSkill[],
     safetyWarnings: SafetyConsideration[]
   ): string[] {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
 
     if (contraindications.length > 0) {
       recommendations.push('Review contraindications before proceeding');
@@ -789,7 +789,7 @@ export class CareInterventionService {
   }
 
   private extractRiskFactors(intervention: CareIntervention): string[] {
-    const riskFactors: string[] = [];
+    constriskFactors: string[] = [];
 
     if (intervention.hasHighRiskSafetyConsiderations) {
       riskFactors.push('High-risk safety considerations');
@@ -811,7 +811,7 @@ export class CareInterventionService {
   }
 
   private extractResourceRequirements(intervention: CareIntervention): string[] {
-    const requirements: string[] = [];
+    constrequirements: string[] = [];
 
     if (intervention.equipmentNeeded && intervention.equipmentNeeded.length > 0) {
       requirements.push(`Equipment needed: ${intervention.equipmentNeeded.length} items`);

@@ -71,9 +71,9 @@ export interface CareNoteIntelligence {
 }
 
 export class AICopilotService {
-  private summaryRepository: Repository<AISummary>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatesummaryRepository: Repository<AISummary>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.summaryRepository = AppDataSource.getRepository(AISummary);

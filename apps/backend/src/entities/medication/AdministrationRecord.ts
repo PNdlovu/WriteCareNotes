@@ -478,7 +478,7 @@ export class AdministrationRecord {
    * Generate administration report summary
    */
   generateAdministrationReport(): string {
-    const lines: string[] = [];
+    constlines: string[] = [];
     
     lines.push(`Medication: ${this.medication?.fullName}`);
     lines.push(`Resident: ${this.resident?.fullName}`);

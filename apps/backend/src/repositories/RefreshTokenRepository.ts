@@ -28,7 +28,7 @@ export interface CreateRefreshTokenData {
 }
 
 export class RefreshTokenRepository {
-  private repository: Repository<RefreshToken>;
+  privaterepository: Repository<RefreshToken>;
 
   constructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(RefreshToken);

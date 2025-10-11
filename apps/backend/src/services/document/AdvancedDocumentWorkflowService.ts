@@ -109,7 +109,7 @@ export class AdvancedDocumentWorkflowService {
       const workflowId = uuidv4();
       const steps = this.generateWorkflowSteps(workflowType, document.documentType, assignedTo, deadline);
 
-      const workflow: DocumentWorkflow = {
+      constworkflow: DocumentWorkflow = {
         id: workflowId,
         documentId,
         workflowType,
@@ -161,7 +161,7 @@ export class AdvancedDocumentWorkflowService {
 
     } catch (error: unknown) {
       console.error('Failed to initiate document workflow', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         documentId,
         workflowType,
         userId
@@ -229,7 +229,7 @@ export class AdvancedDocumentWorkflowService {
 
     } catch (error: unknown) {
       console.error('Failed to progress workflow step', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         workflowId,
         stepNumber,
         action,
@@ -249,7 +249,7 @@ export class AdvancedDocumentWorkflowService {
     deadline: Date
   ): WorkflowStep[] {
     const baseDeadline = new Date(deadline);
-    const steps: WorkflowStep[] = [];
+    conststeps: WorkflowStep[] = [];
 
     switch (workflowType) {
       case 'approval':
@@ -325,7 +325,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private getRoleFromAssignee(assignee: string): string {
-    const roleMap: Record<string, string> = {
+    constroleMap: Record<string, string> = {
       'reviewer': 'Document Reviewer',
       'technical_reviewer': 'Technical Specialist',
       'manager': 'Department Manager',
@@ -347,7 +347,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private getStepRequirements(stepName: string): string[] {
-    const requirements: Record<string, string[]> = {
+    constrequirements: Record<string, string[]> = {
       'Initial Review': ['Review document content', 'Check formatting standards', 'Validate metadata'],
       'Technical Review': ['Verify technical accuracy', 'Check references', 'Validate data'],
       'Management Approval': ['Review business impact', 'Approve resource allocation', 'Sign off on publication'],
@@ -365,7 +365,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private getStepDeliverables(stepName: string): string[] {
-    const deliverables: Record<string, string[]> = {
+    constdeliverables: Record<string, string[]> = {
       'Initial Review': ['Review report', 'Formatting corrections', 'Metadata validation'],
       'Technical Review': ['Technical validation report', 'Reference verification', 'Data accuracy confirmation'],
       'Management Approval': ['Management sign-off', 'Business approval', 'Publication authorization'],
@@ -395,7 +395,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private calculateEstimatedDuration(workflowType: string, stepCount: number): number {
-    const baseDuration: Record<string, number> = {
+    constbaseDuration: Record<string, number> = {
       'approval': 24,
       'review': 16,
       'compliance_check': 48,

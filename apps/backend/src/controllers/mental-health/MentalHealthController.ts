@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { MentalHealthService } from '../../services/mental-health/MentalHealthService';
 
 export class MentalHealthController {
-  private mentalHealthService: MentalHealthService;
+  privatementalHealthService: MentalHealthService;
 
   constructor() {
     this.mentalHealthService = new MentalHealthService();
@@ -27,7 +27,7 @@ export class MentalHealthController {
       const assessment = await this.mentalHealthService.conductComprehensiveMentalHealthAssessment(req.body);
       res.status(201).json({ success: true, data: assessment });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class MentalHealthController {
       const crisisAnalysis = await this.mentalHealthService.performAICrisisDetection(req.body);
       res.json({ success: true, data: crisisAnalysis });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -45,7 +45,7 @@ export class MentalHealthController {
       const program = await this.mentalHealthService.createPersonalizedTherapeuticProgram(req.body);
       res.status(201).json({ success: true, data: program });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -54,7 +54,7 @@ export class MentalHealthController {
       const analytics = await this.mentalHealthService.getAdvancedMentalHealthAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -63,7 +63,7 @@ export class MentalHealthController {
       const intervention = await this.mentalHealthService.manageCrisisIntervention(req.body);
       res.json({ success: true, data: intervention });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

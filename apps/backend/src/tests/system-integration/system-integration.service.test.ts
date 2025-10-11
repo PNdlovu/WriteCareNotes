@@ -5,10 +5,10 @@ import { SystemIntegrationService } from '../../services/system-integration.serv
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 describe('SystemIntegrationService', () => {
-  let service: SystemIntegrationService;
-  let mockRepository: any;
-  let mockEventEmitter: any;
-  let mockAuditService: any;
+  letservice: SystemIntegrationService;
+  letmockRepository: any;
+  letmockEventEmitter: any;
+  letmockAuditService: any;
 
   beforeEach(async () => {
     mockRepository = {
@@ -27,7 +27,7 @@ describe('SystemIntegrationService', () => {
       logEvent: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         SystemIntegrationService,
         {

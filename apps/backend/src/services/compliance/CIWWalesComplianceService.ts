@@ -282,7 +282,7 @@ export class CIWWalesComplianceService {
         serviceId
       );
 
-      const assessment: WalesComplianceAssessment = {
+      constassessment: WalesComplianceAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         serviceId,
@@ -315,7 +315,7 @@ export class CIWWalesComplianceService {
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Wales assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Wales assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -327,7 +327,7 @@ export class CIWWalesComplianceService {
     serviceId: string,
     organizationId: string
   ): Promise<Record<CIWQualityArea, CIWJudgement>> {
-    const judgements: Record<CIWQualityArea, CIWJudgement> = {} as any;
+    constjudgements: Record<CIWQualityArea, CIWJudgement> = {} as any;
 
     // Quality Area 1: Wellbeing
     judgements[CIWQualityArea.WELLBEING] = await this.assessWellbeingArea(serviceId, organizationId);
@@ -470,7 +470,7 @@ export class CIWWalesComplianceService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess Welsh language compliance: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to assess Welsh language compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -483,7 +483,7 @@ export class CIWWalesComplianceService {
     organizationId: string
   ): Promise<SCWRequirementsCompliance[]> {
     const requirements = Object.values(SCWRequirement);
-    const compliance: SCWRequirementsCompliance[] = [];
+    constcompliance: SCWRequirementsCompliance[] = [];
 
     for (const requirement of requirements) {
       const requirementCompliance = await this.assessSCWRequirement(requirement, serviceId, organizationId);
@@ -501,11 +501,11 @@ export class CIWWalesComplianceService {
     serviceId: string,
     organizationId: string
   ): Promise<SCWRequirementsCompliance> {
-    let compliance: boolean;
-    let staffCompliance: number;
-    let evidence: string[];
-    let gaps: string[];
-    let actionRequired: string[];
+    letcompliance: boolean;
+    letstaffCompliance: number;
+    letevidence: string[];
+    letgaps: string[];
+    letactionRequired: string[];
 
     switch (requirement) {
       case SCWRequirement.REGISTRATION:
@@ -566,7 +566,7 @@ export class CIWWalesComplianceService {
     organizationId: string
   ): Promise<RISCAWRequirementsCompliance[]> {
     const requirements = Object.values(RISCAWRequirement);
-    const compliance: RISCAWRequirementsCompliance[] = [];
+    constcompliance: RISCAWRequirementsCompliance[] = [];
 
     for (const requirement of requirements) {
       const requirementCompliance = await this.assessRISCAWRequirement(requirement, serviceId, organizationId);
@@ -661,7 +661,7 @@ export class CIWWalesComplianceService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess Wales digital records: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to assess Wales digital records: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -676,7 +676,7 @@ export class CIWWalesComplianceService {
     try {
       console.log(`Registering service with CIW: ${serviceDetails.serviceName}`);
 
-      const registration: CIWServiceRegistration = {
+      constregistration: CIWServiceRegistration = {
         id: this.generateRegistrationId(),
         organizationId,
         serviceType: serviceDetails.serviceType || 'care_home_adults',
@@ -712,7 +712,7 @@ export class CIWWalesComplianceService {
       return savedRegistration;
 
     } catch (error: unknown) {
-      console.error(`Wales service registration failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Wales service registration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -774,7 +774,7 @@ export class CIWWalesComplianceService {
       return activeOfferImplementation;
 
     } catch (error: unknown) {
-      console.error(`Failed to implement Active Offer: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to implement Active Offer: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -809,7 +809,7 @@ export class CIWWalesComplianceService {
       return readinessReport;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate Wales readiness report: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to generate Wales readiness report: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -976,7 +976,7 @@ export class CIWWalesComplianceService {
     digitalCompliance: WalesDigitalRecordsCompliance,
     serviceId: string
   ): Promise<WalesActionPlan> {
-    const actions: WalesAction[] = [];
+    constactions: WalesAction[] = [];
 
     // Generate actions for poor quality areas
     for (const [area, judgement] of Object.entries(qualityAreaJudgements)) {
@@ -1014,7 +1014,7 @@ export class CIWWalesComplianceService {
       actions.push(...digitalActions);
     }
 
-    const actionPlan: WalesActionPlan = {
+    constactionPlan: WalesActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,

@@ -204,7 +204,7 @@ export class PolicyCommentService {
    */
   async getPolicyComments(policyId: string, includeResolved: boolean = true): Promise<PolicyComment[]> {
     try {
-      const whereConditions: any = { policyId };
+      constwhereConditions: any = { policyId };
       
       if (!includeResolved) {
         whereConditions.status = CommentStatus.ACTIVE;
@@ -232,7 +232,7 @@ export class PolicyCommentService {
    */
   async getTopLevelComments(policyId: string, includeResolved: boolean = true): Promise<PolicyComment[]> {
     try {
-      const whereConditions: any = {
+      constwhereConditions: any = {
         policyId,
         parentCommentId: null
       };
@@ -284,7 +284,7 @@ export class PolicyCommentService {
     try {
       const topLevel = await this.getTopLevelComments(policyId, true);
       
-      const threads: CommentThread[] = [];
+      constthreads: CommentThread[] = [];
 
       for (const parent of topLevel) {
         const replies = await this.getReplies(parent.id);

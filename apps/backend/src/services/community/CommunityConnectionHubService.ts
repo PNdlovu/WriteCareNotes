@@ -503,12 +503,12 @@ type MaterialType = 'flyer' | 'poster' | 'email' | 'social_post' | 'press_releas
 
 export class CommunityConnectionHubService {
   private router = express.Router();
-  private db: DatabaseService;
-  private logger: Logger;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private aiService: AIService;
-  private eventService: EventService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateaiService: AIService;
+  privateeventService: EventService;
 
   constructor() {
     this.db = DatabaseService.getInstance();
@@ -612,7 +612,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const groupId = uuidv4();
-      const group: CommunityGroup = {
+      constgroup: CommunityGroup = {
         id: groupId,
         tenantId,
         name,
@@ -698,7 +698,7 @@ export class CommunityConnectionHubService {
         LEFT JOIN residents r ON gm.resident_id = r.id
         WHERE g.tenant_id = $1
       `;
-      const params: any[] = [tenantId];
+      constparams: any[] = [tenantId];
       let paramCount = 1;
 
       if (groupType) {
@@ -794,7 +794,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const activityId = uuidv4();
-      const activity: CommunityActivity = {
+      constactivity: CommunityActivity = {
         id: activityId,
         tenantId,
         groupId,
@@ -893,7 +893,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const volunteerId = uuidv4();
-      const volunteer: Volunteer = {
+      constvolunteer: Volunteer = {
         id: volunteerId,
         tenantId,
         firstName,
@@ -1009,7 +1009,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const eventId = uuidv4();
-      const event: CommunityEvent = {
+      constevent: CommunityEvent = {
         id: eventId,
         tenantId,
         title,
@@ -1222,7 +1222,7 @@ export class CommunityConnectionHubService {
     recurringGroupId: string,
     weeksAhead: number = 12
   ): CommunityActivity[] {
-    const activities: CommunityActivity[] = [];
+    constactivities: CommunityActivity[] = [];
     const startDate = new Date();
     
     for (let week = 0; week < weeksAhead; week++) {

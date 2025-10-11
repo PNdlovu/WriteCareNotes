@@ -139,9 +139,9 @@ export interface StockAlert {
 }
 
 export class MedicationInventoryService extends EventEmitter2 {
-  private inventoryRepository: Repository<any>;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privateinventoryRepository: Repository<any>;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
 
   constructor() {
     super();
@@ -342,7 +342,7 @@ export class MedicationInventoryService extends EventEmitter2 {
         item.minimumStockLevel * settings.reorderQuantityMultiplier
       );
 
-      const orderItem: StockOrderItem = {
+      constorderItem: StockOrderItem = {
         id: this.generateId(),
         orderId: '',
         medicationId: item.medicationId,
@@ -358,12 +358,12 @@ export class MedicationInventoryService extends EventEmitter2 {
       ordersBySupplier.get(item.supplierId)!.push(orderItem);
     }
 
-    const orders: StockOrder[] = [];
+    constorders: StockOrder[] = [];
     
     for (const [supplierId, items] of ordersBySupplier) {
       const totalCost = items.reduce((sum, item) => sum + item.totalCost, 0);
       
-      const order: StockOrder = {
+      constorder: StockOrder = {
         id: this.generateId(),
         orderNumber: this.generateOrderNumber(),
         supplierId,
@@ -408,7 +408,7 @@ export class MedicationInventoryService extends EventEmitter2 {
     startDate?: Date,
     endDate?: Date
   ): Promise<StockMovement[]> {
-    const query: any = {};
+    constquery: any = {};
     
     if (medicationId) query.medicationId = medicationId;
     if (organizationId) query.organizationId = organizationId;
@@ -423,7 +423,7 @@ export class MedicationInventoryService extends EventEmitter2 {
   }
 
   async createStockAlert(alert: Omit<StockAlert, 'id' | 'acknowledged' | 'createdAt'>): Promise<StockAlert> {
-    const stockAlert: StockAlert = {
+    conststockAlert: StockAlert = {
       id: this.generateId(),
       acknowledged: false,
       createdAt: new Date(),

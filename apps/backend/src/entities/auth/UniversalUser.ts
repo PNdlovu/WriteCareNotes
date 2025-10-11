@@ -372,7 +372,7 @@ export class UniversalUser extends BaseEntity {
   }
 
   getAccessibleFeatures(): string[] {
-    const features: string[] = [];
+    constfeatures: string[] = [];
 
     if (this.isStaffMember()) {
       features.push('workforce_management', 'time_tracking', 'payroll');

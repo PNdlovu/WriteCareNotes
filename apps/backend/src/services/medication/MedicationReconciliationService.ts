@@ -189,9 +189,9 @@ export interface ReconciliationMetrics {
 }
 
 export class MedicationReconciliationService {
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventService: EventPublishingService;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventService: EventPublishingService;
 
   constructor() {
     this.auditService = new AuditTrailService();
@@ -230,7 +230,7 @@ export class MedicationReconciliationService {
       // Determine if pharmacist review is required
       const requiresPharmacistReview = this.requiresPharmacistReview(discrepancies);
 
-      const reconciliationRecord: MedicationReconciliationRecord = {
+      constreconciliationRecord: MedicationReconciliationRecord = {
         id: reconciliationId,
         residentId: request.residentId,
         reconciliationType: request.reconciliationType,
@@ -285,7 +285,7 @@ export class MedicationReconciliationService {
       return reconciliationRecord;
     } catch (error: unknown) {
       console.error('Error initiating medication reconciliation', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: request.residentId,
         reconciliationType: request.reconciliationType,
         organizationId: request.organizationId,
@@ -309,7 +309,7 @@ export class MedicationReconciliationService {
       const resolutionId = this.generateUniqueId();
       const resolvedDate = new Date();
 
-      const discrepancyResolution: DiscrepancyResolution = {
+      constdiscrepancyResolution: DiscrepancyResolution = {
         id: resolutionId,
         discrepancyId,
         resolvedDate,
@@ -366,7 +366,7 @@ export class MedicationReconciliationService {
       return discrepancyResolution;
     } catch (error: unknown) {
       console.error('Error resolving medication discrepancy', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         reconciliationId,
         discrepancyId,
         organizationId,
@@ -388,7 +388,7 @@ export class MedicationReconciliationService {
     try {
       const reviewDate = new Date();
 
-      const pharmacistReview: PharmacistReview = {
+      constpharmacistReview: PharmacistReview = {
         ...review,
         reviewDate,
         pharmacistId: userId
@@ -435,7 +435,7 @@ export class MedicationReconciliationService {
       return pharmacistReview;
     } catch (error: unknown) {
       console.error('Error performing pharmacist review', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         reconciliationId,
         organizationId,
         userId
@@ -494,7 +494,7 @@ export class MedicationReconciliationService {
       });
     } catch (error: unknown) {
       console.error('Error getting reconciliation history', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId,
         organizationId
       });
@@ -526,9 +526,9 @@ export class MedicationReconciliationService {
       let pharmacistReviews = 0;
       let criticalIssues = 0;
 
-      const discrepancyTypes: { [key: string]: number } = {};
-      const resolutionTypes: { [key: string]: number } = {};
-      const completionTimes: number[] = [];
+      constdiscrepancyTypes: { [key: string]: number } = {};
+      constresolutionTypes: { [key: string]: number } = {};
+      constcompletionTimes: number[] = [];
 
       reconciliations.forEach((rec: any) => {
         const discrepancies = JSON.parse(rec.discrepancies || '[]');
@@ -582,7 +582,7 @@ export class MedicationReconciliationService {
       };
     } catch (error: unknown) {
       console.error('Error generating reconciliation metrics', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId,
         dateRange
       });
@@ -631,7 +631,7 @@ export class MedicationReconciliationService {
       ORDER BY p.created_at DESC
     `, [residentId, organizationId]);
 
-    const medications: ReconciliationMedication[] = currentMedications.map((med: any) => ({
+    constmedications: ReconciliationMedication[] = currentMedications.map((med: any) => ({
       id: med.id,
       name: med.name,
       genericName: med.generic_name,
@@ -663,7 +663,7 @@ export class MedicationReconciliationService {
     reconciliationId: string,
     userId: string
   ): Promise<MedicationDiscrepancy[]> {
-    const discrepancies: MedicationDiscrepancy[] = [];
+    constdiscrepancies: MedicationDiscrepancy[] = [];
 
     // Create maps for easier comparison
     const sourceMap = new Map(sourceList.medications.map(med => [med.activeIngredient.toLowerCase(), med]));

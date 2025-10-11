@@ -33,7 +33,7 @@ router.post('/prescriptions',
       res.status(500).json({
         success: false,
         message: 'Failed to create prescription',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -48,7 +48,7 @@ router.get('/prescriptions',
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve prescriptions',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -63,7 +63,7 @@ router.get('/prescriptions/:prescriptionId',
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve prescription',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -78,7 +78,7 @@ router.put('/prescriptions/:prescriptionId',
       res.status(500).json({
         success: false,
         message: 'Failed to update prescription',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -93,7 +93,7 @@ router.post('/prescriptions/:prescriptionId/dispense',
       res.status(500).json({
         success: false,
         message: 'Failed to dispense prescription',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

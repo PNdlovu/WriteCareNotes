@@ -367,7 +367,7 @@ export class CyberResilienceActComplianceService {
       const certificationRequired = this.checkCertificationRequirements(request.productCategory);
       const ceMarkingEligible = this.checkCEMarkingEligibility(complianceScore, essentialRequirements);
 
-      const result: CRAComplianceAssessmentResult = {
+      constresult: CRAComplianceAssessmentResult = {
         assessmentId,
         productName: request.productName,
         productCategory: request.productCategory,
@@ -407,7 +407,7 @@ export class CyberResilienceActComplianceService {
   private async assessEssentialRequirements(
     request: CRAAssessmentRequest
   ): Promise<CRARequirementResult[]> {
-    const requirements: CRARequirementResult[] = [];
+    constrequirements: CRARequirementResult[] = [];
 
     // Requirement 1: Secure by design and by default
     requirements.push({
@@ -685,7 +685,7 @@ export class CyberResilienceActComplianceService {
     vulnerabilityAssessment: CRAVulnerabilityAssessmentResult,
     incidentResponseAssessment: CRAIncidentResponseAssessmentResult
   ): Promise<CRAComplianceRecommendation[]> {
-    const recommendations: CRAComplianceRecommendation[] = [];
+    constrecommendations: CRAComplianceRecommendation[] = [];
 
     // Recommendations for non-compliant requirements
     const nonCompliantRequirements = essentialRequirements.filter(req => req.status === 'non_compliant');

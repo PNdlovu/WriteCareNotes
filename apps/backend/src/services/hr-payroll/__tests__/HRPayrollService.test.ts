@@ -50,12 +50,12 @@ import {
 } from '@/services/hr-payroll/interfaces/HRPayrollInterfaces';
 
 describe('HRPayrollService', () => {
-  let service: HRPayrollService;
-  let mockRepository: jest.Mocked<HRPayrollRepository>;
-  let mockAuditService: jest.Mocked<AuditService>;
-  let mockEncryptionService: jest.Mocked<EncryptionService>;
-  let mockNotificationService: jest.Mocked<NotificationService>;
-  let mockCacheService: jest.Mocked<CacheService>;
+  letservice: HRPayrollService;
+  letmockRepository: jest.Mocked<HRPayrollRepository>;
+  letmockAuditService: jest.Mocked<AuditService>;
+  letmockEncryptionService: jest.Mocked<EncryptionService>;
+  letmockNotificationService: jest.Mocked<NotificationService>;
+  letmockCacheService: jest.Mocked<CacheService>;
 
   const mockEmployeeId = 'employee-123';
   const mockCareHomeId = 'care-home-456';
@@ -125,7 +125,7 @@ describe('HRPayrollService', () => {
       }
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         HRPayrollService,
         mockRepositoryProvider,
@@ -150,7 +150,7 @@ describe('HRPayrollService', () => {
 
   describe('Employee Management', () => {
     describe('createEmployee', () => {
-      const validEmployeeRequest: CreateEmployeeRequest = {
+      constvalidEmployeeRequest: CreateEmployeeRequest = {
         employeeNumber: 'EMP001',
         firstName: 'John',
         lastName: 'Doe',
@@ -186,7 +186,7 @@ describe('HRPayrollService', () => {
         createdBy: mockUserId
       };
 
-      const expectedEmployee: Employee = {
+      constexpectedEmployee: Employee = {
         id: mockEmployeeId,
         ...validEmployeeRequest,
         nationalInsuranceNumber: 'encrypted_ni_number',
@@ -309,7 +309,7 @@ describe('HRPayrollService', () => {
 
     describe('getEmployee', () => {
       it('should retrieve employee by ID', async () => {
-        const expectedEmployee: Employee = {
+        constexpectedEmployee: Employee = {
           id: mockEmployeeId,
           employeeNumber: 'EMP001',
           firstName: 'John',
@@ -367,14 +367,14 @@ describe('HRPayrollService', () => {
 
   describe('Payroll Processing', () => {
     describe('processPayroll', () => {
-      const validPayrollRequest: ProcessPayrollRequest = {
+      constvalidPayrollRequest: ProcessPayrollRequest = {
         payrollPeriod: '2024-01',
         payrollType: 'monthly',
         careHomeId: mockCareHomeId,
         processedBy: mockUserId
       };
 
-      const mockEmployee: Employee = {
+      constmockEmployee: Employee = {
         id: mockEmployeeId,
         employeeNumber: 'EMP001',
         firstName: 'John',
@@ -414,7 +414,7 @@ describe('HRPayrollService', () => {
         version: 1
       };
 
-      const expectedPayrollSummary: PayrollSummary = {
+      constexpectedPayrollSummary: PayrollSummary = {
         id: 'payroll-summary-123',
         payrollPeriod: '2024-01',
         processedDate: new Date(),
@@ -560,7 +560,7 @@ describe('HRPayrollService', () => {
 
   describe('Training Management', () => {
     describe('createTrainingRecord', () => {
-      const validTrainingRequest: CreateTrainingRecordRequest = {
+      constvalidTrainingRequest: CreateTrainingRecordRequest = {
         employeeId: mockEmployeeId,
         trainingType: 'first_aid',
         trainingName: 'First Aid at Work',
@@ -574,7 +574,7 @@ describe('HRPayrollService', () => {
         recordedBy: mockUserId
       };
 
-      const expectedTrainingRecord: TrainingRecord = {
+      constexpectedTrainingRecord: TrainingRecord = {
         id: 'training-record-123',
         ...validTrainingRequest,
         expiryDate: new Date('2027-01-15'), // 3 years for first aid
@@ -588,7 +588,7 @@ describe('HRPayrollService', () => {
       };
 
       it('should create training record successfully', async () => {
-        const mockEmployee: Employee = {
+        constmockEmployee: Employee = {
           id: mockEmployeeId,
           careHomeId: mockCareHomeId
         } as Employee;
@@ -623,7 +623,7 @@ describe('HRPayrollService', () => {
       });
 
       it('should calculate correct expiry dates for different training types', async () => {
-        const mockEmployee: Employee = { id: mockEmployeeId, careHomeId: mockCareHomeId } as Employee;
+        constmockEmployee: Employee = { id: mockEmployeeId, careHomeId: mockCareHomeId } as Employee;
         mockRepository.getEmployee.mockResolvedValue(mockEmployee);
 
         // Test different training types
@@ -654,7 +654,7 @@ describe('HRPayrollService', () => {
       });
 
       it('should handle training compliance validation', async () => {
-        const mockEmployee: Employee = { id: mockEmployeeId, careHomeId: mockCareHomeId } as Employee;
+        constmockEmployee: Employee = { id: mockEmployeeId, careHomeId: mockCareHomeId } as Employee;
         mockRepository.getEmployee.mockResolvedValue(mockEmployee);
 
         const invalidRequest = {
@@ -671,7 +671,7 @@ describe('HRPayrollService', () => {
 
   describe('Shift Management', () => {
     describe('createShift', () => {
-      const validShiftRequest: CreateShiftRequest = {
+      constvalidShiftRequest: CreateShiftRequest = {
         employeeId: mockEmployeeId,
         shiftType: 'day',
         startTime: new Date('2024-01-15T08:00:00Z'),
@@ -687,7 +687,7 @@ describe('HRPayrollService', () => {
         createdBy: mockUserId
       };
 
-      const expectedShift: Shift = {
+      constexpectedShift: Shift = {
         id: 'shift-123',
         ...validShiftRequest,
         shiftDate: new Date('2024-01-15'),
@@ -700,7 +700,7 @@ describe('HRPayrollService', () => {
       };
 
       it('should create shift successfully', async () => {
-        const mockEmployee: Employee = {
+        constmockEmployee: Employee = {
           id: mockEmployeeId,
           status: 'active',
           email: 'john.doe@example.com'
@@ -735,7 +735,7 @@ describe('HRPayrollService', () => {
       });
 
       it('should validate employee is active', async () => {
-        const inactiveEmployee: Employee = {
+        constinactiveEmployee: Employee = {
           id: mockEmployeeId,
           status: 'inactive'
         } as Employee;
@@ -758,7 +758,7 @@ describe('HRPayrollService', () => {
       });
 
       it('should validate Working Time Regulations compliance', async () => {
-        const mockEmployee: Employee = { id: mockEmployeeId, status: 'active' } as Employee;
+        constmockEmployee: Employee = { id: mockEmployeeId, status: 'active' } as Employee;
         mockRepository.getEmployee.mockResolvedValue(mockEmployee);
 
         // Test shift longer than 12 hours (violates Working Time Regulations)
@@ -785,12 +785,12 @@ describe('HRPayrollService', () => {
 
   describe('HR Metrics', () => {
     describe('getHRMetrics', () => {
-      const validMetricsRequest: HRMetricsRequest = {
+      constvalidMetricsRequest: HRMetricsRequest = {
         careHomeId: mockCareHomeId,
         period: 'current_month'
       };
 
-      const expectedMetrics: HRMetrics = {
+      constexpectedMetrics: HRMetrics = {
         careHomeId: mockCareHomeId,
         period: 'current_month',
         generatedAt: new Date(),
@@ -948,7 +948,7 @@ describe('HRPayrollService', () => {
     });
 
     it('should handle encryption errors gracefully', async () => {
-      const validEmployeeRequest: CreateEmployeeRequest = {
+      constvalidEmployeeRequest: CreateEmployeeRequest = {
         employeeNumber: 'EMP001',
         firstName: 'John',
         lastName: 'Doe',
@@ -987,7 +987,7 @@ describe('HRPayrollService', () => {
     });
 
     it('should audit all sensitive operations', async () => {
-      const validEmployeeRequest: CreateEmployeeRequest = {
+      constvalidEmployeeRequest: CreateEmployeeRequest = {
         employeeNumber: 'EMP001',
         firstName: 'John',
         lastName: 'Doe',
@@ -1017,7 +1017,7 @@ describe('HRPayrollService', () => {
         createdBy: mockUserId
       };
 
-      const expectedEmployee: Employee = {
+      constexpectedEmployee: Employee = {
         id: mockEmployeeId,
         ...validEmployeeRequest,
         nationalInsuranceNumber: 'encrypted_ni_number',
@@ -1087,7 +1087,7 @@ describe('HRPayrollService', () => {
     });
 
     it('should handle network timeouts gracefully', async () => {
-      const validEmployeeRequest: CreateEmployeeRequest = {
+      constvalidEmployeeRequest: CreateEmployeeRequest = {
         employeeNumber: 'EMP001',
         firstName: 'John',
         lastName: 'Doe',
@@ -1125,7 +1125,7 @@ describe('HRPayrollService', () => {
       mockNotificationService.sendEmployeeWelcomeNotification.mockRejectedValue(timeoutError);
 
       // Should still create employee even if notification fails
-      const expectedEmployee: Employee = {
+      constexpectedEmployee: Employee = {
         id: mockEmployeeId,
         ...validEmployeeRequest,
         nationalInsuranceNumber: 'encrypted_ni_number',

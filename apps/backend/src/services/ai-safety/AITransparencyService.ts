@@ -407,7 +407,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
   }
 
   private identifyUncertainties(response: string, confidence: ConfidenceScore): UncertaintyIndicator[] {
-    const uncertainties: UncertaintyIndicator[] = [];
+    constuncertainties: UncertaintyIndicator[] = [];
     
     if (confidence.overallConfidence < 0.7) {
       uncertainties.push({
@@ -441,7 +441,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
   }
 
   private identifyRisks(response: string, context: PolicyContext): RiskWarning[] {
-    const risks: RiskWarning[] = [];
+    constrisks: RiskWarning[] = [];
     
     // High-risk policy categories
     const highRiskCategories = ['safeguarding', 'medication', 'infection_control', 'mental_capacity'];
@@ -476,7 +476,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
   }
 
   private async runComplianceChecks(response: string, context: PolicyContext): Promise<ComplianceCheck[]> {
-    const checks: ComplianceCheck[] = [];
+    constchecks: ComplianceCheck[] = [];
     
     for (const jurisdiction of context.jurisdiction) {
       checks.push({

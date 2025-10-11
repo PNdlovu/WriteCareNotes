@@ -222,7 +222,7 @@ export class AIGovernanceComplianceService {
       // Check if certification is required
       const certificationRequired = await this.checkCertificationRequirements(request);
 
-      const result: AIComplianceAssessmentResult = {
+      constresult: AIComplianceAssessmentResult = {
         assessmentId,
         systemName: request.systemName,
         framework: request.framework,
@@ -259,7 +259,7 @@ export class AIGovernanceComplianceService {
   private async performComplianceChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    const checks: AIComplianceCheck[] = [];
+    constchecks: AIComplianceCheck[] = [];
 
     switch (request.framework) {
       case AIComplianceFramework.EU_AI_ACT:
@@ -287,7 +287,7 @@ export class AIGovernanceComplianceService {
   private async performEUAIActChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    const checks: AIComplianceCheck[] = [];
+    constchecks: AIComplianceCheck[] = [];
 
     // Risk management system
     checks.push({
@@ -366,7 +366,7 @@ export class AIGovernanceComplianceService {
   private async performUKAIWhitePaperChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    const checks: AIComplianceCheck[] = [];
+    constchecks: AIComplianceCheck[] = [];
 
     // Innovation-friendly approach
     checks.push({
@@ -404,7 +404,7 @@ export class AIGovernanceComplianceService {
   private async performNHSAILabChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    const checks: AIComplianceCheck[] = [];
+    constchecks: AIComplianceCheck[] = [];
 
     // Clinical safety
     checks.push({
@@ -442,7 +442,7 @@ export class AIGovernanceComplianceService {
   private async performMHRASoftwareMedicalDeviceChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    const checks: AIComplianceCheck[] = [];
+    constchecks: AIComplianceCheck[] = [];
 
     // Medical device classification
     checks.push({
@@ -480,7 +480,7 @@ export class AIGovernanceComplianceService {
   private async performGeneralAIGovernanceChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    const checks: AIComplianceCheck[] = [];
+    constchecks: AIComplianceCheck[] = [];
 
     // Ethical AI principles
     checks.push({
@@ -586,7 +586,7 @@ export class AIGovernanceComplianceService {
     request: AIGovernanceAssessmentRequest,
     checks: AIComplianceCheck[]
   ): Promise<AIComplianceRecommendation[]> {
-    const recommendations: AIComplianceRecommendation[] = [];
+    constrecommendations: AIComplianceRecommendation[] = [];
 
     const failedChecks = checks.filter(check => check.status === 'failed');
     const warningChecks = checks.filter(check => check.status === 'warning');
@@ -643,7 +643,7 @@ export class AIGovernanceComplianceService {
   private async determineMonitoringRequirements(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIMonitoringRequirement[]> {
-    const requirements: AIMonitoringRequirement[] = [];
+    constrequirements: AIMonitoringRequirement[] = [];
 
     // Performance monitoring
     requirements.push({

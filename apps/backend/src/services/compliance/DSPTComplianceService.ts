@@ -198,7 +198,7 @@ export class DSPTComplianceService {
       const standards = await this.getDSPTStandards();
 
       // Assess each standard
-      const standardResults: DSPTStandardAssessment[] = [];
+      conststandardResults: DSPTStandardAssessment[] = [];
       let totalScore = 0;
 
       for (const standard of standards) {
@@ -222,7 +222,7 @@ export class DSPTComplianceService {
       // Generate action plan
       const actionPlan = await this.generateActionPlan(standardResults, organizationId);
 
-      const assessment: DSPTAssessmentResult = {
+      constassessment: DSPTAssessmentResult = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentDate: new Date(),
@@ -251,8 +251,8 @@ export class DSPTComplianceService {
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`DSPT assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
-      throw new Error(`DSPT assessment failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`DSPT assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`DSPT assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -487,7 +487,7 @@ export class DSPTComplianceService {
       // Determine status
       const status = this.determineStandardStatus(score, standard.category);
 
-      const assessment: DSPTStandardAssessment = {
+      constassessment: DSPTStandardAssessment = {
         standardId: standard.id,
         status,
         score,
@@ -502,7 +502,7 @@ export class DSPTComplianceService {
       return assessment;
 
     } catch (error: unknown) {
-      console.error(`Failed to assess standard ${standard.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to assess standard ${standard.id}: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -514,7 +514,7 @@ export class DSPTComplianceService {
     standardId: string,
     organizationId: string
   ): Promise<string[]> {
-    const evidence: string[] = [];
+    constevidence: string[] = [];
 
     try {
       // Evidence collection based on standard ID
@@ -616,7 +616,7 @@ export class DSPTComplianceService {
       return evidence;
 
     } catch (error: unknown) {
-      console.error(`Failed to collect evidence for standard ${standardId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to collect evidence for standard ${standardId}: ${error instanceof Error ? error.message : "Unknown error"}`);
       return [];
     }
   }
@@ -628,7 +628,7 @@ export class DSPTComplianceService {
     standard: DSPTStandard,
     organizationId: string
   ): Promise<string[]> {
-    const gaps: string[] = [];
+    constgaps: string[] = [];
 
     try {
       // Gap identification based on standard requirements
@@ -647,8 +647,8 @@ export class DSPTComplianceService {
       return gaps;
 
     } catch (error: unknown) {
-      console.error(`Failed to identify gaps for standard ${standard.id}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
-      return [`Gap analysis failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`];
+      console.error(`Failed to identify gaps for standard ${standard.id}: ${error instanceof Error ? error.message : "Unknown error"}`);
+      return [`Gap analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`];
     }
   }
 
@@ -712,7 +712,7 @@ export class DSPTComplianceService {
     standardResults: DSPTStandardAssessment[],
     organizationId: string
   ): Promise<DSPTActionPlan> {
-    const actions: DSPTAction[] = [];
+    constactions: DSPTAction[] = [];
 
     for (const result of standardResults) {
       if (result.status !== DSPTStandardStatus.MET) {
@@ -732,7 +732,7 @@ export class DSPTComplianceService {
       }
     }
 
-    const actionPlan: DSPTActionPlan = {
+    constactionPlan: DSPTActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,
@@ -772,7 +772,7 @@ export class DSPTComplianceService {
       console.log('DSPT compliance monitoring completed');
 
     } catch (error: unknown) {
-      console.error(`DSPT compliance monitoring failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`DSPT compliance monitoring failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -821,7 +821,7 @@ export class DSPTComplianceService {
       return submissionPackage;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate DSPT submission: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error(`Failed to generate DSPT submission: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }

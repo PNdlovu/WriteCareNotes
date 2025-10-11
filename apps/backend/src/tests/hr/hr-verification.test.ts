@@ -19,11 +19,11 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('HR Verification Service', () => {
-  let service: HRVerificationService;
-  let dbsVerificationRepository: Repository<DBSVerification>;
-  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  let dvlaCheckRepository: Repository<DVLACheck>;
-  let employeeRepository: Repository<Employee>;
+  letservice: HRVerificationService;
+  letdbsVerificationRepository: Repository<DBSVerification>;
+  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  letdvlaCheckRepository: Repository<DVLACheck>;
+  letemployeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -99,7 +99,7 @@ describe('HR Verification Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         HRVerificationService,
         {
@@ -374,8 +374,8 @@ describe('HR Verification Service', () => {
 });
 
 describe('HR Verification Integration Tests', () => {
-  let app: any;
-  let hrVerificationService: HRVerificationService;
+  letapp: any;
+  lethrVerificationService: HRVerificationService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -439,7 +439,7 @@ describe('HR Verification Integration Tests', () => {
 });
 
 describe('HR Verification E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

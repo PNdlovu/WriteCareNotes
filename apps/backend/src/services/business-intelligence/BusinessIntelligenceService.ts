@@ -149,9 +149,9 @@ export interface PredictiveHealthcareModels {
 }
 
 export class BusinessIntelligenceService {
-  private warehouseRepository: Repository<DataWarehouse>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatewarehouseRepository: Repository<DataWarehouse>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.warehouseRepository = AppDataSource.getRepository(DataWarehouse);
@@ -219,7 +219,7 @@ export class BusinessIntelligenceService {
   }): Promise<any> {
     try {
       // Enterprise ML model deployment with MLOps
-      const mlPipeline: AdvancedMLPipeline = {
+      constmlPipeline: AdvancedMLPipeline = {
         pipelineId: crypto.randomUUID(),
         pipelineName: modelConfig.name,
         modelType: modelConfig.type,
@@ -278,7 +278,7 @@ export class BusinessIntelligenceService {
   // Real-Time Executive Dashboard
   async generateExecutiveDashboard(): Promise<ExecutiveDashboard> {
     try {
-      const dashboard: ExecutiveDashboard = {
+      constdashboard: ExecutiveDashboard = {
         dashboardId: crypto.randomUUID(),
         executiveKPIs: {
           financial: {
@@ -318,7 +318,7 @@ export class BusinessIntelligenceService {
   // Advanced Predictive Healthcare Analytics
   async deployPredictiveHealthcareModels(): Promise<PredictiveHealthcareModels> {
     try {
-      const models: PredictiveHealthcareModels = {
+      constmodels: PredictiveHealthcareModels = {
         healthDeteriorationModel: {
           modelId: 'health_deterioration_v3_1',
           accuracy: 0.89,

@@ -664,7 +664,7 @@ export class EnterpriseSecurityService {
     level: ThreatLevel;
     factors: string[];
   }> {
-    const riskFactors: string[] = [];
+    constriskFactors: string[] = [];
     let riskScore = 0;
 
     // Check for unusual location
@@ -697,7 +697,7 @@ export class EnterpriseSecurityService {
     }
 
     // Determine threat level
-    let level: ThreatLevel;
+    letlevel: ThreatLevel;
     if (riskScore >= 70) level = ThreatLevel.CRITICAL;
     else if (riskScore >= 50) level = ThreatLevel.HIGH;
     else if (riskScore >= 25) level = ThreatLevel.MEDIUM;
@@ -890,7 +890,7 @@ export class EnterpriseSecurityService {
   }
 
   private generateBackupCodes(): string[] {
-    const codes: string[] = [];
+    constcodes: string[] = [];
     for (let i = 0; i < 10; i++) {
       codes.push(require('crypto').randomBytes(4).toString('hex').toUpperCase());
     }
@@ -931,7 +931,7 @@ export class EnterpriseSecurityService {
     if (!user) return;
 
     const failedAttempts = (user.failedLoginAttempts || 0) + 1;
-    const updateData: any = { failedLoginAttempts: failedAttempts };
+    constupdateData: any = { failedLoginAttempts: failedAttempts };
 
     if (failedAttempts >= this.maxLoginAttempts) {
       updateData.lockedUntil = new Date(Date.now() + this.lockoutDuration);
@@ -952,7 +952,7 @@ export class EnterpriseSecurityService {
   }
 
   private async updateUserLogin(user: User, authContext: Partial<AuthContext>): Promise<void> {
-    const updateData: any = {
+    constupdateData: any = {
       lastLoginAt: new Date(),
       lastLoginIp: authContext.ipAddress,
       failedLoginAttempts: 0,

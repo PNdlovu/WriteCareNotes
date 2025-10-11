@@ -162,7 +162,7 @@ export class CarePlanController {
       // Validate request body
       const { error, value } = createCarePlanSchema.validate(req.body, { abortEarly: false });
       if (error) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -184,7 +184,7 @@ export class CarePlanController {
       }
 
       // Create care plan request
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         ...value,
         createdBy: req.user!.id
       };
@@ -192,7 +192,7 @@ export class CarePlanController {
       // Create care plan
       const carePlan = await this.carePlanService.createCarePlan(createRequest);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -205,17 +205,17 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to create care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         userId: req.user?.id,
         correlationId 
       });
 
       if (error instanceof CarePlanValidationError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_VALIDATION_ERROR',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             details: error.validationErrors,
             correlationId
           },
@@ -244,7 +244,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -263,7 +263,7 @@ export class CarePlanController {
       const carePlan = await this.carePlanService.getCarePlanById(id, includeRelations);
 
       if (!carePlan) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
@@ -279,7 +279,7 @@ export class CarePlanController {
         return;
       }
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -292,7 +292,7 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to get care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         carePlanId: req.params['id'],
         userId: req.user?.id,
         correlationId 
@@ -311,7 +311,7 @@ export class CarePlanController {
       // Validate query parameters
       const { error, value } = searchCarePlansSchema.validate(req.query, { abortEarly: false });
       if (error) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -337,7 +337,7 @@ export class CarePlanController {
       // Search care plans
       const result = await this.carePlanService.searchCarePlans(filters, page, limit);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: result.carePlans.map(plan => plan.toJSON()),
         meta: {
@@ -356,7 +356,7 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to search care plans', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         userId: req.user?.id,
         correlationId 
       });
@@ -375,7 +375,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -394,7 +394,7 @@ export class CarePlanController {
       // Validate request body
       const { error, value } = updateCarePlanSchema.validate(req.body, { abortEarly: false });
       if (error) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -416,7 +416,7 @@ export class CarePlanController {
       }
 
       // Create update request
-      const updateRequest: UpdateCarePlanRequest = {
+      constupdateRequest: UpdateCarePlanRequest = {
         ...value,
         updatedBy: req.user!.id
       };
@@ -424,7 +424,7 @@ export class CarePlanController {
       // Update care plan
       const carePlan = await this.carePlanService.updateCarePlan(id, updateRequest);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -437,18 +437,18 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to update care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         carePlanId: req.params['id'],
         userId: req.user?.id,
         correlationId 
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             correlationId
           },
           meta: {
@@ -461,11 +461,11 @@ export class CarePlanController {
       }
 
       if (error instanceof CarePlanValidationError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_VALIDATION_ERROR',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             details: error.validationErrors,
             correlationId
           },
@@ -493,7 +493,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -512,7 +512,7 @@ export class CarePlanController {
       // Validate request body
       const { error, value } = approveCarePlanSchema.validate(req.body, { abortEarly: false });
       if (error) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -534,7 +534,7 @@ export class CarePlanController {
       }
 
       // Create approval request
-      const approvalRequest: CarePlanApprovalRequest = {
+      constapprovalRequest: CarePlanApprovalRequest = {
         ...value,
         approvedBy: req.user!.id
       };
@@ -542,7 +542,7 @@ export class CarePlanController {
       // Approve care plan
       const carePlan = await this.carePlanService.approveCarePlan(id, approvalRequest);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -555,18 +555,18 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to approve care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         carePlanId: req.params['id'],
         userId: req.user?.id,
         correlationId 
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             correlationId
           },
           meta: {
@@ -579,11 +579,11 @@ export class CarePlanController {
       }
 
       if (error instanceof CarePlanApprovalError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_APPROVAL_ERROR',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             correlationId
           },
           meta: {
@@ -611,7 +611,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -630,7 +630,7 @@ export class CarePlanController {
       // Archive care plan
       const carePlan = await this.carePlanService.archiveCarePlan(id, req.user!.id, reason);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -643,18 +643,18 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to archive care plan', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         carePlanId: req.params['id'],
         userId: req.user?.id,
         correlationId 
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             correlationId
           },
           meta: {
@@ -680,7 +680,7 @@ export class CarePlanController {
       const daysAhead = parseInt(req.query['daysAhead'] as string) || 7;
 
       if (daysAhead < 0 || daysAhead > 365) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_PARAMETER',
@@ -698,7 +698,7 @@ export class CarePlanController {
 
       const carePlans = await this.carePlanService.getCarePlansDueForReview(daysAhead);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: carePlans.map(plan => plan.toJSON()),
         meta: {
@@ -711,7 +711,7 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to get care plans due for review', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         userId: req.user?.id,
         correlationId 
       });
@@ -730,7 +730,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -748,7 +748,7 @@ export class CarePlanController {
 
       const versionHistory = await this.carePlanService.getCarePlanVersionHistory(id);
 
-      const response: CarePlanResponse = {
+      constresponse: CarePlanResponse = {
         success: true,
         data: {
           currentVersion: versionHistory.currentVersion.toJSON(),
@@ -765,18 +765,18 @@ export class CarePlanController {
 
     } catch (error: unknown) {
       console.error('Failed to get care plan version history', { 
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error',
         carePlanId: req.params['id'],
         userId: req.user?.id,
         correlationId 
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        const response: CarePlanResponse = {
+        constresponse: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
-            message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+            message: error instanceof Error ? error.message : "Unknown error",
             correlationId
           },
           meta: {

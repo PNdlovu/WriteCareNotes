@@ -19,10 +19,10 @@ import { Decimal } from 'decimal.js';
  */
 
 describe('Financial Reporting Service', () => {
-  let service: FinancialReportingService;
-  let budgetRepository: Repository<Budget>;
-  let cashTransactionRepository: Repository<CashTransaction>;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
+  letservice: FinancialReportingService;
+  letbudgetRepository: Repository<Budget>;
+  letcashTransactionRepository: Repository<CashTransaction>;
+  letledgerAccountRepository: Repository<LedgerAccount>;
 
   const mockBudget = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -100,7 +100,7 @@ describe('Financial Reporting Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         FinancialReportingService,
         {
@@ -452,8 +452,8 @@ describe('Financial Reporting Service', () => {
 });
 
 describe('Financial Reporting Integration Tests', () => {
-  let app: any;
-  let financialReportingService: FinancialReportingService;
+  letapp: any;
+  letfinancialReportingService: FinancialReportingService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -507,7 +507,7 @@ describe('Financial Reporting Integration Tests', () => {
 });
 
 describe('Financial Reporting E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

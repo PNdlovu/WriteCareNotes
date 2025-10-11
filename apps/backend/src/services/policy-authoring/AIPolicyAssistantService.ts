@@ -120,7 +120,7 @@ export interface QueryAction {
 @Injectable()
 export class AIPolicyAssistantService {
   private readonly logger = new Logger(AIPolicyAssistantService.name);
-  private openai: OpenAI;
+  privateopenai: OpenAI;
 
   constructor(
     private readonly configService: ConfigService,
@@ -142,7 +142,7 @@ export class AIPolicyAssistantService {
 
     try {
       // Extract policy context for safety validation
-      const context: PolicyContext = {
+      constcontext: PolicyContext = {
         jurisdiction: policy.jurisdiction,
         category: policy.category,
         criticalCompliance: AIPolicyAssistantHelpers.isCriticalComplianceArea(policy.category),

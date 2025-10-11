@@ -15,7 +15,7 @@ import { AgentRBACService } from '../services/security/agent-rbac.service';
 import { logger } from '../utils/logger';
 
 export class AgentRBACMiddleware {
-  private rbacService: AgentRBACService;
+  privaterbacService: AgentRBACService;
 
   constructor() {
     this.rbacService = new AgentRBACService();

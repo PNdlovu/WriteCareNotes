@@ -19,10 +19,10 @@ import { Decimal } from 'decimal.js';
  */
 
 describe('Cash Transaction Service', () => {
-  let service: CashTransactionService;
-  let cashTransactionRepository: Repository<CashTransaction>;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
-  let journalEntryRepository: Repository<JournalEntry>;
+  letservice: CashTransactionService;
+  letcashTransactionRepository: Repository<CashTransaction>;
+  letledgerAccountRepository: Repository<LedgerAccount>;
+  letjournalEntryRepository: Repository<JournalEntry>;
 
   const mockCashTransaction = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -66,7 +66,7 @@ describe('Cash Transaction Service', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         CashTransactionService,
         {
@@ -411,8 +411,8 @@ describe('Cash Transaction Service', () => {
 });
 
 describe('Cash Transaction Integration Tests', () => {
-  let app: any;
-  let cashTransactionService: CashTransactionService;
+  letapp: any;
+  letcashTransactionService: CashTransactionService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -466,7 +466,7 @@ describe('Cash Transaction Integration Tests', () => {
 });
 
 describe('Cash Transaction E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

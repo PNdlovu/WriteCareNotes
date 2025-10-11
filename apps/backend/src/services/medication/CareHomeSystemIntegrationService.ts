@@ -58,7 +58,7 @@ export interface CreateNHSIntegrationRequest {
 
 export class CareHomeSystemIntegrationService {
   private logger = logger;
-  private db: Pool;
+  privatedb: Pool;
 
   constructor(db: Pool) {
     this.db = db;
@@ -117,10 +117,10 @@ export class CareHomeSystemIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to create NHS integration', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         userId 
       });
-      throw new Error(`Failed to create NHS integration: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to create NHS integration: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -151,10 +151,10 @@ export class CareHomeSystemIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to get NHS integration', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         residentId 
       });
-      throw new Error(`Failed to get NHS integration: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get NHS integration: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -187,10 +187,10 @@ export class CareHomeSystemIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to sync NHS data', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         integrationId 
       });
-      throw new Error(`Failed to sync NHS data: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to sync NHS data: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -199,7 +199,7 @@ export class CareHomeSystemIntegrationService {
       this.logger.debug('Getting GP Connect data', { nhsNumber });
 
       // Simulate GP Connect API call
-      const gpData: GPConnectData = {
+      constgpData: GPConnectData = {
         patientId: uuidv4(),
         nhsNumber,
         medications: [
@@ -238,10 +238,10 @@ export class CareHomeSystemIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to get GP Connect data', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         nhsNumber 
       });
-      throw new Error(`Failed to get GP Connect data: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get GP Connect data: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -250,7 +250,7 @@ export class CareHomeSystemIntegrationService {
       this.logger.debug('Getting Summary Care Record', { nhsNumber });
 
       // Simulate Summary Care Record API call
-      const summaryData: SummaryCareRecord = {
+      constsummaryData: SummaryCareRecord = {
         patientId: uuidv4(),
         nhsNumber,
         summary: {
@@ -297,10 +297,10 @@ export class CareHomeSystemIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to get Summary Care Record', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         nhsNumber 
       });
-      throw new Error(`Failed to get Summary Care Record: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to get Summary Care Record: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -327,15 +327,15 @@ export class CareHomeSystemIntegrationService {
 
     } catch (error: unknown) {
       console.error('Failed to update integration status', { 
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", 
+        error: error instanceof Error ? error.message : "Unknown error", 
         integrationId 
       });
-      throw new Error(`Failed to update integration status: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Failed to update integration status: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateCreateRequest(request: CreateNHSIntegrationRequest): void {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!request.residentId?.trim()) errors.push('Resident ID is required');
     if (!request.nhsNumber?.trim()) errors.push('NHS number is required');
@@ -391,8 +391,8 @@ export class CareHomeSystemIntegrationService {
       return this.mapDbRowToIntegration(result.rows[0]);
 
     } catch (error: unknown) {
-      console.error('Failed to get integration by ID', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to get integration by ID: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to get integration by ID', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to get integration by ID: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -420,8 +420,8 @@ export class CareHomeSystemIntegrationService {
       }
 
     } catch (error: unknown) {
-      console.error('Failed to perform NHS sync', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to perform NHS sync: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to perform NHS sync', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to perform NHS sync: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -447,8 +447,8 @@ export class CareHomeSystemIntegrationService {
       ]);
 
     } catch (error: unknown) {
-      console.error('Failed to update integration data', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to update integration data: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to update integration data', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to update integration data: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

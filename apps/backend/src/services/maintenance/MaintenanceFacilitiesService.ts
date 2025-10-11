@@ -84,10 +84,10 @@ export interface EnergyConsumption {
 }
 
 export class MaintenanceFacilitiesService {
-  private assetRepository: Repository<Asset>;
-  private workOrderRepository: Repository<WorkOrder>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateassetRepository: Repository<Asset>;
+  privateworkOrderRepository: Repository<WorkOrder>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.assetRepository = AppDataSource.getRepository(Asset);
@@ -246,7 +246,7 @@ export class MaintenanceFacilitiesService {
 
   async schedulePreventiveMaintenance(): Promise<WorkOrder[]> {
     const overdueAssets = await this.getOverdueMaintenanceAssets();
-    const workOrders: WorkOrder[] = [];
+    constworkOrders: WorkOrder[] = [];
 
     for (const asset of overdueAssets) {
       const workOrder = await this.createWorkOrder({
@@ -326,7 +326,7 @@ export class MaintenanceFacilitiesService {
   // Facility Monitoring
   async getFacilityMonitoring(): Promise<FacilityMonitoring[]> {
     const locations = await this.getFacilityLocations();
-    const monitoringData: FacilityMonitoring[] = [];
+    constmonitoringData: FacilityMonitoring[] = [];
     
     for (const location of locations) {
       const environmentalData = await this.getEnvironmentalReadings(location.name);

@@ -53,9 +53,9 @@ import { MedicalConsent, ConsentType, ConsentStatus, ConsentGivenBy } from '../e
 import { Child } from '../../children/entities/Child';
 
 export class HealthService {
-  private healthAssessmentRepository: Repository<HealthAssessment>;
-  private medicalConsentRepository: Repository<MedicalConsent>;
-  private childRepository: Repository<Child>;
+  privatehealthAssessmentRepository: Repository<HealthAssessment>;
+  privatemedicalConsentRepository: Repository<MedicalConsent>;
+  privatechildRepository: Repository<Child>;
 
   constructor() {
     this.healthAssessmentRepository = AppDataSource.getRepository(HealthAssessment);
@@ -202,7 +202,7 @@ export class HealthService {
     }
 
     // Calculate BMI if height and weight provided
-    let bmi: number | undefined;
+    letbmi: number | undefined;
     if (assessmentData.heightCm && assessmentData.weightKg) {
       const heightM = assessmentData.heightCm / 100;
       bmi = Number((assessmentData.weightKg / (heightM * heightM)).toFixed(2));

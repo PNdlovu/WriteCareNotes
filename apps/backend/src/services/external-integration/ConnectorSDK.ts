@@ -215,13 +215,13 @@ export interface ConnectorExecution {
 }
 
 export class ConnectorSDK {
-  private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditService;
-  private encryptionService: FieldLevelEncryptionService;
-  private eventEmitter: EventEmitter2;
-  private connectors: Map<string, ConnectorConfig> = new Map();
-  private instances: Map<string, ConnectorInstance> = new Map();
-  private executions: Map<string, ConnectorExecution> = new Map();
+  privatesystemRepository: Repository<ExternalSystem>;
+  privateauditService: AuditService;
+  privateencryptionService: FieldLevelEncryptionService;
+  privateeventEmitter: EventEmitter2;
+  privateconnectors: Map<string, ConnectorConfig> = new Map();
+  privateinstances: Map<string, ConnectorInstance> = new Map();
+  privateexecutions: Map<string, ConnectorExecution> = new Map();
 
   constructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
@@ -296,7 +296,7 @@ export class ConnectorSDK {
       const encryptedCredentials = await this.encryptCredentials(credentials);
 
       // Create instance
-      const instance: ConnectorInstance = {
+      constinstance: ConnectorInstance = {
         id: `instance_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         connectorId,
         name,
@@ -367,7 +367,7 @@ export class ConnectorSDK {
       }
 
       // Create execution record
-      const execution: ConnectorExecution = {
+      constexecution: ConnectorExecution = {
         id: executionId,
         instanceId,
         endpointId,
@@ -584,7 +584,7 @@ export class ConnectorSDK {
    */
   private initializeDefaultConnectors(): void {
     // NHS GP Connect Connector
-    const nhsConnector: ConnectorConfig = {
+    constnhsConnector: ConnectorConfig = {
       id: 'nhs_gp_connect',
       name: 'NHS GP Connect',
       description: 'Connect to NHS GP systems for patient data and appointments',
@@ -756,7 +756,7 @@ export class ConnectorSDK {
     this.connectors.set(nhsConnector.id, nhsConnector);
 
     // IoT Wearables Connector
-    const iotConnector: ConnectorConfig = {
+    constiotConnector: ConnectorConfig = {
       id: 'iot_wearables',
       name: 'IoT Wearables',
       description: 'Connect to IoT devices and wearables for health monitoring',
@@ -973,7 +973,7 @@ export class ConnectorSDK {
    * Encrypt credentials
    */
   private async encryptCredentials(credentials: Record<string, any>): Promise<Record<string, any>> {
-    const encrypted: Record<string, any> = {};
+    constencrypted: Record<string, any> = {};
     
     for (const [key, value] of Object.entries(credentials)) {
       if (typeof value === 'string') {

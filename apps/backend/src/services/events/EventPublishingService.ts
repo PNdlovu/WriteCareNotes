@@ -136,8 +136,8 @@ export interface EventDeliveryResult {
 @Injectable()
 export class EventPublishingService {
   private readonly logger = new Logger(EventPublishingService.name);
-  private subscriptions: Map<string, EventSubscription> = new Map();
-  private eventHistory: Map<string, any> = new Map();
+  privatesubscriptions: Map<string, EventSubscription> = new Map();
+  privateeventHistory: Map<string, any> = new Map();
 
   constructor(private readonly eventEmitter: EventEmitter2) {
     console.log('Event Publishing Service initialized');
@@ -174,7 +174,7 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       console.error('Failed to publish financial event', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         eventType: event.eventType,
         correlationId: event.correlationId
       });
@@ -212,7 +212,7 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       console.error('Failed to publish organization event', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         eventType: event.eventType,
         correlationId: event.correlationId
       });
@@ -255,7 +255,7 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       console.error('Failed to publish system event', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         eventType: event.eventType,
         correlationId: event.correlationId
       });
@@ -273,7 +273,7 @@ export class EventPublishingService {
     filters?: EventFilter[]
   ): Promise<EventSubscription> {
     try {
-      const subscription: EventSubscription = {
+      constsubscription: EventSubscription = {
         subscriptionId: uuidv4(),
         eventTypes,
         subscriberId,
@@ -296,7 +296,7 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       console.error('Failed to create event subscription', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         subscriberId,
         eventTypes
       });
@@ -325,7 +325,7 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       console.error('Failed to remove event subscription', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         subscriptionId
       });
       throw error;
@@ -373,7 +373,7 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       console.error('Failed to retrieve event history', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         eventTypes,
         startDate,
         endDate
@@ -436,7 +436,7 @@ export class EventPublishingService {
         await this.deliverEventToSubscriber(event, subscription);
       } catch (error: unknown) {
         console.error('Failed to deliver event to subscriber', {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           subscriptionId: subscription.subscriptionId,
           eventId: event.eventId
         });
@@ -485,7 +485,7 @@ export class EventPublishingService {
     event: any,
     subscription: EventSubscription
   ): Promise<EventDeliveryResult> {
-    const deliveryResult: EventDeliveryResult = {
+    constdeliveryResult: EventDeliveryResult = {
       eventId: event.eventId,
       subscriptionId: subscription.subscriptionId,
       deliveryStatus: 'SUCCESS',
@@ -513,10 +513,10 @@ export class EventPublishingService {
 
     } catch (error: unknown) {
       deliveryResult.deliveryStatus = 'FAILED';
-      deliveryResult.errorMessage = error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error";
+      deliveryResult.errorMessage = error instanceof Error ? error.message : "Unknown error";
 
       console.error('Failed to deliver event to subscriber', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         eventId: event.eventId,
         subscriptionId: subscription.subscriptionId
       });
@@ -744,7 +744,7 @@ export class EventPublishingService {
 
   // Critical Event Helper Methods
   private generateCriticalEventDescription(event: any): string {
-    const descriptions: Record<string, string> = {
+    constdescriptions: Record<string, string> = {
       'security.violation': 'Security breach detected - immediate investigation required',
       'compliance.alert': 'Compliance violation detected - regulatory action may be required',
       'system.error': 'Critical system error - service availability may be impacted',
@@ -756,7 +756,7 @@ export class EventPublishingService {
   }
 
   private determineCriticalEventActions(event: any): string[] {
-    const actionMap: Record<string, string[]> = {
+    constactionMap: Record<string, string[]> = {
       'security.violation': [
         'Immediately review security logs',
         'Check for unauthorized access attempts',
@@ -871,7 +871,7 @@ export class EventPublishingService {
   private async triggerAutomatedResponse(event: any): Promise<void> {
     try {
       // Implement automated response procedures based on event type
-      const automatedActions: Record<string, () => Promise<void>> = {
+      constautomatedActions: Record<string, () => Promise<void>> = {
         'security.violation': async () => {
           console.warn('Triggering security lockdown procedures');
           this.eventEmitter.emit('security.lockdown.initiated', { eventId: event.eventId });

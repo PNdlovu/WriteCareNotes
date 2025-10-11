@@ -164,14 +164,14 @@ export interface IoTIntegrationConfig {
 }
 
 export class IoTWearablesService {
-  private systemRepository: Repository<ExternalSystem>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private encryptionService: FieldLevelEncryptionService;
-  private eventEmitter: EventEmitter2;
-  private config: IoTIntegrationConfig;
-  private devices: Map<string, IoTDevice> = new Map();
-  private transformationRules: Map<string, DataTransformationRule> = new Map();
+  privatesystemRepository: Repository<ExternalSystem>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateencryptionService: FieldLevelEncryptionService;
+  privateeventEmitter: EventEmitter2;
+  privateconfig: IoTIntegrationConfig;
+  privatedevices: Map<string, IoTDevice> = new Map();
+  privatetransformationRules: Map<string, DataTransformationRule> = new Map();
 
   constructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
@@ -567,7 +567,7 @@ export class IoTWearablesService {
    * Detect anomalies
    */
   private async detectAnomalies(data: WearableData): Promise<AnomalyDetectionResult[]> {
-    const anomalies: AnomalyDetectionResult[] = [];
+    constanomalies: AnomalyDetectionResult[] = [];
 
     try {
       // Check heart rate anomalies
@@ -869,7 +869,7 @@ export class IoTWearablesService {
    */
   private initializeTransformationRules(): void {
     // Add default transformation rules
-    const defaultRule: DataTransformationRule = {
+    constdefaultRule: DataTransformationRule = {
       id: 'default_rule',
       name: 'Default IoT Data Transformation',
       sourceDevice: 'all',

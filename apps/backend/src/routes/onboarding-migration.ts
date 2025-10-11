@@ -86,7 +86,7 @@ router.post('/pipelines',
         success: false, 
         error: {
           code: 'PIPELINE_CREATION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -116,7 +116,7 @@ router.post('/pipelines/:pipelineId/execute',
         success: false, 
         error: {
           code: 'MIGRATION_EXECUTION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -153,7 +153,7 @@ router.get('/pipelines/:pipelineId/progress',
         success: false, 
         error: {
           code: 'PROGRESS_FETCH_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -180,7 +180,7 @@ router.post('/pipelines/:pipelineId/pause',
         success: false, 
         error: {
           code: 'MIGRATION_PAUSE_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -207,7 +207,7 @@ router.post('/pipelines/:pipelineId/resume',
         success: false, 
         error: {
           code: 'MIGRATION_RESUME_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -234,7 +234,7 @@ router.post('/pipelines/:pipelineId/rollback',
         success: false, 
         error: {
           code: 'MIGRATION_ROLLBACK_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -293,7 +293,7 @@ router.post('/import/files',
         success: false,
         error: {
           code: 'FILE_IMPORT_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -332,7 +332,7 @@ router.post('/ai/mappings',
         success: false,
         error: {
           code: 'AI_MAPPING_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -359,7 +359,7 @@ router.get('/legacy-connectors',
         success: false,
         error: {
           code: 'CONNECTORS_FETCH_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -393,7 +393,7 @@ router.post('/legacy-connectors/:systemName/test',
         success: false,
         error: {
           code: 'CONNECTION_TEST_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -451,7 +451,7 @@ router.get('/analytics/dashboard',
         success: false,
         error: {
           code: 'ANALYTICS_FETCH_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -509,7 +509,7 @@ router.get('/pipelines/:pipelineId/stream',
         success: false,
         error: {
           code: 'STREAM_SETUP_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -564,7 +564,7 @@ router.get('/templates',
         success: false,
         error: {
           code: 'TEMPLATES_FETCH_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }
@@ -630,7 +630,7 @@ router.post('/validation/data',
         success: false,
         error: {
           code: 'DATA_VALIDATION_FAILED',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          message: error instanceof Error ? error.message : "Unknown error"
         }
       });
     }

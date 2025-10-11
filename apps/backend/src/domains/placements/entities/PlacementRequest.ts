@@ -157,7 +157,7 @@ export class PlacementRequest {
     riskFactors: string[];
     safeguardingConcerns: string[];
     managementStrategies: string[];
-    specialistSupport Required: boolean;
+    specialistSupportRequired: boolean;
   };
 
   // Behavioral Profile

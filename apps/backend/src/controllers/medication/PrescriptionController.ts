@@ -77,7 +77,7 @@ export class PrescriptionController {
         return;
       }
 
-      const prescriptionData: CreatePrescriptionRequest = {
+      constprescriptionData: CreatePrescriptionRequest = {
         ...req.body,
         organizationId,
         tenantId
@@ -107,14 +107,14 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to create prescription via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         correlationId: req.correlationId
       });
 
-      const statusCode = error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found') ? 404 :
-                        error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('validation') ? 400 :
-                        error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('duplicate') ? 409 : 500;
+      const statusCode = error instanceof Error ? error.message : "Unknown error".includes('not found') ? 404 :
+                        error instanceof Error ? error.message : "Unknown error".includes('validation') ? 400 :
+                        error instanceof Error ? error.message : "Unknown error".includes('duplicate') ? 409 : 500;
 
       res.status(statusCode).json({
         success: false,
@@ -122,7 +122,7 @@ export class PrescriptionController {
           code: statusCode === 404 ? 'NOT_FOUND' :
                 statusCode === 400 ? 'VALIDATION_ERROR' :
                 statusCode === 409 ? 'CONFLICT' : 'INTERNAL_ERROR',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           correlationId: req.correlationId
         }
       });
@@ -195,7 +195,7 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to get prescription by ID via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         prescriptionId: req.params['id'],
         userId: req.user?.id,
         correlationId: req.correlationId
@@ -261,7 +261,7 @@ export class PrescriptionController {
         limit = 50
       } = req.query;
 
-      const filters: PrescriptionSearchFilters = {
+      constfilters: PrescriptionSearchFilters = {
         organizationId,
         tenantId
       };
@@ -313,7 +313,7 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to search prescriptions via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         correlationId: req.correlationId
       });
@@ -366,7 +366,7 @@ export class PrescriptionController {
         return;
       }
 
-      const updates: UpdatePrescriptionRequest = req.body;
+      constupdates: UpdatePrescriptionRequest = req.body;
 
       const updatedPrescription = await this.prescriptionService.updatePrescription(
         id,
@@ -394,19 +394,19 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to update prescription via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         prescriptionId: req.params['id'],
         userId: req.user?.id,
         correlationId: req.correlationId
       });
 
-      const statusCode = error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found') ? 404 : 500;
+      const statusCode = error instanceof Error ? error.message : "Unknown error".includes('not found') ? 404 : 500;
 
       res.status(statusCode).json({
         success: false,
         error: {
           code: statusCode === 404 ? 'NOT_FOUND' : 'INTERNAL_ERROR',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           correlationId: req.correlationId
         }
       });
@@ -478,21 +478,21 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to discontinue prescription via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         prescriptionId: req.params['id'],
         userId: req.user?.id,
         correlationId: req.correlationId
       });
 
-      const statusCode = error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found') ? 404 :
-                        error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Only active') ? 400 : 500;
+      const statusCode = error instanceof Error ? error.message : "Unknown error".includes('not found') ? 404 :
+                        error instanceof Error ? error.message : "Unknown error".includes('Only active') ? 400 : 500;
 
       res.status(statusCode).json({
         success: false,
         error: {
           code: statusCode === 404 ? 'NOT_FOUND' :
                 statusCode === 400 ? 'INVALID_STATUS' : 'INTERNAL_ERROR',
-          message: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          message: error instanceof Error ? error.message : "Unknown error",
           correlationId: req.correlationId
         }
       });
@@ -554,7 +554,7 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to get active prescriptions for resident via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: req.params['residentId'],
         userId: req.user?.id,
         correlationId: req.correlationId
@@ -629,7 +629,7 @@ export class PrescriptionController {
 
     } catch (error: unknown) {
       console.error('Failed to get prescriptions due for review via API', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         correlationId: req.correlationId
       });

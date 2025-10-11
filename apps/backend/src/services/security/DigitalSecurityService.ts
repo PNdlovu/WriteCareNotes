@@ -46,7 +46,7 @@ export interface DigitalSecurityFramework {
 }
 
 export class DigitalSecurityService {
-  private auditService: AuditService;
+  privateauditService: AuditService;
 
   constructor() {
     this.auditService = new AuditTrailService();
@@ -59,7 +59,7 @@ export class DigitalSecurityService {
     organizationSize: 'small' | 'medium' | 'large' | 'enterprise';
   }): Promise<DigitalSecurityFramework> {
     try {
-      const framework: DigitalSecurityFramework = {
+      constframework: DigitalSecurityFramework = {
         identityAndAccessManagement: {
           userLifecycleManagement: true,
           identityFederation: securityConfig.securityLevel !== 'standard',

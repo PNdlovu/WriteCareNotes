@@ -46,7 +46,7 @@ import { HealthService } from '../services/HealthService';
 import { ConsentType, ConsentGivenBy } from '../entities/MedicalConsent';
 
 export class HealthController {
-  private healthService: HealthService;
+  privatehealthService: HealthService;
 
   constructor() {
     this.healthService = new HealthService();

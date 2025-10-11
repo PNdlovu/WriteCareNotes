@@ -896,7 +896,7 @@ export class ChildFinanceController {
     @Query('hasDispute') hasDispute?: boolean,
   ) {
     try {
-      const filters: FinancialReportFilter = {
+      constfilters: FinancialReportFilter = {
         jurisdiction,
         fundingSource,
         hasArrears,

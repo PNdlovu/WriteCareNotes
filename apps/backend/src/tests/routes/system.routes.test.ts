@@ -14,7 +14,7 @@ import systemRoutes from '../../routes/system/system.routes';
  */
 
 describe('System Routes', () => {
-  let app: express.Application;
+  letapp: express.Application;
 
   beforeAll(() => {
     app = express();

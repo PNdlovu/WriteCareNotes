@@ -195,9 +195,9 @@ export interface RiskMetadata {
 }
 
 export class RiskFlagAgent {
-  private openAIAdapter: OpenAIAdapter;
-  private llmService: LLMIntegrationService;
-  private sessionService: AIAgentSessionService;
+  privateopenAIAdapter: OpenAIAdapter;
+  privatellmService: LLMIntegrationService;
+  privatesessionService: AIAgentSessionService;
 
   constructor() {
     this.openAIAdapter = new OpenAIAdapter();
@@ -449,7 +449,7 @@ export class RiskFlagAgent {
     assessment: { riskFactors: RiskFactor[] },
     request: RiskAssessmentRequest
   ): RiskAlert[] {
-    const alerts: RiskAlert[] = [];
+    constalerts: RiskAlert[] = [];
 
     // Check for critical risk factors
     const criticalFactors = assessment.riskFactors.filter(f => f.severity === 'critical');
@@ -510,7 +510,7 @@ export class RiskFlagAgent {
     assessment: { riskFactors: RiskFactor[] },
     request: RiskAssessmentRequest
   ): RiskRecommendation[] {
-    const recommendations: RiskRecommendation[] = [];
+    constrecommendations: RiskRecommendation[] = [];
 
     // Blood pressure management
     if (request.vitalSigns.bloodPressure.systolic > 140) {
@@ -630,7 +630,7 @@ export class RiskFlagAgent {
    * Identify confidence factors
    */
   private identifyConfidenceFactors(request: RiskAssessmentRequest): string[] {
-    const factors: string[] = [];
+    constfactors: string[] = [];
 
     if (request.vitalSigns.bloodPressure.systolic > 0) {
       factors.push('Complete vital signs data');

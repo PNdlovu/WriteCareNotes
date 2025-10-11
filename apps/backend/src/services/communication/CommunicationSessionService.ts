@@ -154,12 +154,12 @@ interface SessionResponse {
 }
 
 export class CommunicationSessionService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private webrtc: WebRTCProvider;
-  private socket: SocketService;
-  private consent: ConsentService;
-  private audit: AuditService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privatewebrtc: WebRTCProvider;
+  privatesocket: SocketService;
+  privateconsent: ConsentService;
+  privateaudit: AuditService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -187,7 +187,7 @@ export class CommunicationSessionService {
 
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
-      const sessionData: CreateSessionRequest = req.body;
+      constsessionData: CreateSessionRequest = req.body;
 
       // Validate tenant and user permissions
       const hasPermission = await this.validateSessionCreationPermission(tenantId, userId, sessionData.sessionType);
@@ -205,7 +205,7 @@ export class CommunicationSessionService {
 
       try {
         // Create WebRTC room if needed
-        let dailyRoomId: string | null = null;
+        letdailyRoomId: string | null = null;
         if (sessionData.sessionType !== 'team_huddle') {
           const roomConfig = {
             name: `session-${uuidv4()}`,
@@ -289,7 +289,7 @@ export class CommunicationSessionService {
         await client.query('COMMIT');
 
         // Emit real-time events
-        const sessionResponse: SessionResponse = {
+        constsessionResponse: SessionResponse = {
           id: session.id,
           tenantId: session.tenant_id,
           sessionType: session.session_type,
@@ -422,7 +422,7 @@ export class CommunicationSessionService {
         return;
       }
 
-      const response: SessionResponse = {
+      constresponse: SessionResponse = {
         id: session.id,
         tenantId: session.tenant_id,
         sessionType: session.session_type,
@@ -652,7 +652,7 @@ export class CommunicationSessionService {
 
       // Build query conditions
       const conditions = ['s.tenant_id = $1'];
-      const params: any[] = [tenantId];
+      constparams: any[] = [tenantId];
       let paramIndex = 2;
 
       if (status) {
@@ -1062,7 +1062,7 @@ export class CommunicationSessionService {
 
       await this.webrtc.startRecording(session.dailyRoomId);
 
-      const recording: CallRecording = {
+      constrecording: CallRecording = {
         recordingId: uuidv4(),
         recordingUrl: `recordings/${sessionId}_${Date.now()}.mp4`,
         recordingSize: 0,
@@ -1211,7 +1211,7 @@ export class CommunicationSessionService {
    * Calculate retention period based on call type
    */
   private calculateRetentionPeriod(callType?: string): number {
-    const retentionPeriods: Record<string, number> = {
+    constretentionPeriods: Record<string, number> = {
       medical_consultation: 2555, // 7 years (medical records)
       telemedicine: 2555,
       therapy_session: 1825, // 5 years
@@ -1308,7 +1308,7 @@ export class CommunicationSessionService {
   async enhanceWithMedicalContext(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      const medicalContext: MedicalCallContext = req.body;
+      constmedicalContext: MedicalCallContext = req.body;
 
       await this.enhanceSessionWithMedicalContext(sessionId, medicalContext);
 
@@ -1333,7 +1333,7 @@ export class CommunicationSessionService {
   async configureAccessibility(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      const features: AccessibilityFeatures = req.body;
+      constfeatures: AccessibilityFeatures = req.body;
 
       await this.configureAccessibilityFeatures(sessionId, features);
 
@@ -1383,7 +1383,7 @@ export class CommunicationSessionService {
   async addParticipantEndpoint(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      const participant: SessionParticipant = req.body;
+      constparticipant: SessionParticipant = req.body;
 
       await this.addParticipantWithDeviceInfo(sessionId, participant);
 
@@ -1408,7 +1408,7 @@ export class CommunicationSessionService {
   async updateAnalyticsEndpoint(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      const analytics: Partial<CallAnalytics> = req.body;
+      constanalytics: Partial<CallAnalytics> = req.body;
 
       await this.updateCallAnalytics(sessionId, analytics);
 

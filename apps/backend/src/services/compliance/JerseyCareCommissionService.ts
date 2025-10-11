@@ -131,7 +131,7 @@ export class JerseyCareCommissionService {
 
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get Jersey compliance assessment: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get Jersey compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -278,7 +278,7 @@ export class JerseyCareCommissionService {
           return 85; // Default good score
       }
     } catch (error: unknown) {
-      console.error(`Failed to assess ${standard}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to assess ${standard}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return 60; // Default adequate score on error
     }
   }
@@ -336,7 +336,7 @@ export class JerseyCareCommissionService {
   }
 
   private async identifyComplianceGaps(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    const gaps: string[] = [];
+    constgaps: string[] = [];
     
     for (const [domain, score] of Object.entries(domainScores)) {
       if (score < 85) {
@@ -348,7 +348,7 @@ export class JerseyCareCommissionService {
   }
 
   private async generateRecommendations(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     for (const [domain, score] of Object.entries(domainScores)) {
       if (score < 95) {

@@ -437,7 +437,7 @@ export class SecurityIncident extends BaseEntity {
   }
 
   validateIncident(): { isValid: boolean; errors: string[] } {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!this.title || this.title.trim().length === 0) {
       errors.push('Incident title is required');

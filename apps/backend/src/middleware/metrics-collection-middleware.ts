@@ -76,7 +76,7 @@ function extractModuleFromPath(path: string): string {
   if (segments.length === 0) return 'root';
   
   // Map common paths to modules
-  const moduleMap: Record<string, string> = {
+  constmoduleMap: Record<string, string> = {
     'residents': 'resident_management',
     'medications': 'medication_management',
     'care-plans': 'care_planning',

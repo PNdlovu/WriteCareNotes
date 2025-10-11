@@ -18,7 +18,7 @@ router.post('/integrations', authorize(['admin', 'it_manager']), async (req, res
     const integration = await integrationService.createAdvancedIntegration(req.body);
     res.status(201).json({ success: true, data: integration });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -27,7 +27,7 @@ router.get('/health', authorize(['admin', 'it_manager']), async (req, res) => {
     const health = await integrationService.getIntegrationHealth();
     res.json({ success: true, data: health });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

@@ -68,17 +68,17 @@ export interface PayrollTrends {
 export class FinancialAnalyticsService {
   constructor(
     @InjectRepository(PayrollRun)
-    private payrollRunRepository: Repository<PayrollRun>,
+    privatepayrollRunRepository: Repository<PayrollRun>,
     @InjectRepository(Payslip)
-    private payslipRepository: Repository<Payslip>,
+    privatepayslipRepository: Repository<Payslip>,
     @InjectRepository(Invoice)
-    private invoiceRepository: Repository<Invoice>,
+    privateinvoiceRepository: Repository<Invoice>,
     @InjectRepository(Payment)
-    private paymentRepository: Repository<Payment>,
+    privatepaymentRepository: Repository<Payment>,
     @InjectRepository(Expense)
-    private expenseRepository: Repository<Expense>,
+    privateexpenseRepository: Repository<Expense>,
     @InjectRepository(Budget)
-    private budgetRepository: Repository<Budget>,
+    privatebudgetRepository: Repository<Budget>,
   ) {}
 
   /**
@@ -307,14 +307,14 @@ export class FinancialAnalyticsService {
       .where('budget.period = :period', { period })
       .getMany();
 
-    const analysis: BudgetAnalysis[] = [];
+    constanalysis: BudgetAnalysis[] = [];
 
     for (const budget of budgets) {
       const actual = await this.getActualSpending(budget.category, budget.period);
       const variance = actual - budget.amount;
       const variancePercentage = budget.amount > 0 ? (variance / budget.amount) * 100 : 0;
       
-      let status: 'over' | 'under' | 'on_track' = 'on_track';
+      letstatus: 'over' | 'under' | 'on_track' = 'on_track';
       if (variancePercentage > 10) status = 'over';
       else if (variancePercentage < -10) status = 'under';
 
@@ -335,7 +335,7 @@ export class FinancialAnalyticsService {
    * Get payroll trends
    */
   async getPayrollTrends(months: number = 12): Promise<PayrollTrends[]> {
-    const trends: PayrollTrends[] = [];
+    consttrends: PayrollTrends[] = [];
     const endDate = new Date();
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - months);

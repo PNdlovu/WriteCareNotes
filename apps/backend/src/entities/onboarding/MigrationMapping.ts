@@ -270,7 +270,7 @@ export class MigrationMapping extends BaseEntity {
         };
       }
     } catch (error: unknown) {
-      return { isValid: false, error: `Business rule evaluation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}` };
+      return { isValid: false, error: `Business rule evaluation failed: ${error instanceof Error ? error.message : "Unknown error"}` };
     }
 
     return { isValid: true };
@@ -288,7 +288,7 @@ export class MigrationMapping extends BaseEntity {
       // Evaluate the expression
       return Boolean(eval(evalExpression));
     } catch (error: unknown) {
-      throw new Error(`Expression evaluation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Expression evaluation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -353,7 +353,7 @@ export class MigrationMapping extends BaseEntity {
 
       return { transformedValue };
     } catch (error: unknown) {
-      return { transformedValue: null, error: `Transformation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}` };
+      return { transformedValue: null, error: `Transformation failed: ${error instanceof Error ? error.message : "Unknown error"}` };
     }
   }
 
@@ -368,7 +368,7 @@ export class MigrationMapping extends BaseEntity {
       // Evaluate the formula
       return eval(evalFormula);
     } catch (error: unknown) {
-      throw new Error(`Formula evaluation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Formula evaluation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

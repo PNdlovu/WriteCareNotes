@@ -158,7 +158,7 @@ export class PolicyReviewSchedulerService {
    * Schedule a new reminder
    */
   async scheduleReminder(reminder: Omit<ScheduledReminder, 'id'>): Promise<ScheduledReminder> {
-    const newReminder: ScheduledReminder = {
+    constnewReminder: ScheduledReminder = {
       ...reminder,
       id: this.generateReminderId(),
       isActive: true,
@@ -184,7 +184,7 @@ export class PolicyReviewSchedulerService {
   ): Promise<ReviewSchedule> {
     const nextReviewDue = this.calculateNextReviewDate(new Date(), reviewFrequency);
     
-    const reviewSchedule: ReviewSchedule = {
+    constreviewSchedule: ReviewSchedule = {
       policyId: policy.id,
       policyTitle: policy.title,
       currentVersion: policy.version,
@@ -238,7 +238,7 @@ export class PolicyReviewSchedulerService {
         (policy.reviewDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
       );
 
-      let priority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
+      letpriority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
       if (daysUntilDue <= 0) priority = 'critical';
       else if (daysUntilDue <= 7) priority = 'high';
       else if (daysUntilDue <= 14) priority = 'medium';
@@ -281,7 +281,7 @@ export class PolicyReviewSchedulerService {
         (policy.expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
       );
 
-      let priority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
+      letpriority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
       if (daysUntilExpiry <= 0) priority = 'critical';
       else if (daysUntilExpiry <= 7) priority = 'high';
       else if (daysUntilExpiry <= 30) priority = 'medium';

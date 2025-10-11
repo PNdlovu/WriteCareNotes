@@ -128,7 +128,7 @@ export interface ResidentSearchResult {
 }
 
 export class ResidentService {
-  private repository: Repository<Resident>;
+  privaterepository: Repository<Resident>;
 
   constructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(Resident);
@@ -239,7 +239,7 @@ export class ResidentService {
       });
 
       // Build where clause
-      const where: FindOptionsWhere<Resident> = {
+      constwhere: FindOptionsWhere<Resident> = {
         organizationId,
         tenantId,
         deletedAt: undefined as any,
@@ -266,8 +266,8 @@ export class ResidentService {
       const skip = (page - 1) * limit;
 
       // Search term (firstName, lastName, preferredName)
-      let residents: Resident[];
-      let total: number;
+      letresidents: Resident[];
+      lettotal: number;
 
       if (filters.searchTerm) {
         const searchWhere = [

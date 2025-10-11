@@ -56,10 +56,10 @@ export interface ComplianceFinding {
 }
 
 export class ComplianceService {
-  private auditService: AuditService;
-  private eventEmitter: EventEmitter2;
-  private config: ComplianceConfig;
-  private reports: Map<string, ComplianceReport> = new Map();
+  privateauditService: AuditService;
+  privateeventEmitter: EventEmitter2;
+  privateconfig: ComplianceConfig;
+  privatereports: Map<string, ComplianceReport> = new Map();
 
   constructor() {
     this.auditService = new AuditTrailService();
@@ -95,7 +95,7 @@ export class ComplianceService {
     tenantId: string
   ): Promise<ComplianceReport> {
     try {
-      const findings: ComplianceFinding[] = [];
+      constfindings: ComplianceFinding[] = [];
       let score = 100;
 
       if (type === 'gdpr' && this.config.gdpr.enabled) {
@@ -116,7 +116,7 @@ export class ComplianceService {
         score -= soxFindings.length * 10;
       }
 
-      const report: ComplianceReport = {
+      constreport: ComplianceReport = {
         id: `report_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         type,
         status: score >= 80 ? 'compliant' : score >= 60 ? 'partial' : 'non_compliant',
@@ -151,7 +151,7 @@ export class ComplianceService {
    * Check GDPR compliance
    */
   private async checkGDPRCompliance(tenantId: string): Promise<ComplianceFinding[]> {
-    const findings: ComplianceFinding[] = [];
+    constfindings: ComplianceFinding[] = [];
 
     if (!this.config.gdpr.dataRetentionDays) {
       findings.push({
@@ -184,7 +184,7 @@ export class ComplianceService {
    * Check HIPAA compliance
    */
   private async checkHIPAACompliance(tenantId: string): Promise<ComplianceFinding[]> {
-    const findings: ComplianceFinding[] = [];
+    constfindings: ComplianceFinding[] = [];
 
     if (!this.config.hipaa.encryptionRequired) {
       findings.push({
@@ -217,7 +217,7 @@ export class ComplianceService {
    * Check SOX compliance
    */
   private async checkSOXCompliance(tenantId: string): Promise<ComplianceFinding[]> {
-    const findings: ComplianceFinding[] = [];
+    constfindings: ComplianceFinding[] = [];
 
     if (!this.config.sox.financialControls) {
       findings.push({
@@ -250,7 +250,7 @@ export class ComplianceService {
    * Generate recommendations
    */
   private generateRecommendations(findings: ComplianceFinding[]): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (findings.some(f => f.type === 'violation')) {
       recommendations.push('Address all compliance violations immediately');

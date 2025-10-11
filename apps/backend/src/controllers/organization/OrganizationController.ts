@@ -22,7 +22,7 @@ import { body, param, validationResult } from 'express-validator';
 import { OrganizationType } from '../../entities/Organization';
 
 export class OrganizationController {
-  private organizationService: OrganizationService;
+  privateorganizationService: OrganizationService;
 
   constructor(dataSource: DataSource) {
     this.organizationService = new OrganizationService(dataSource);
@@ -56,7 +56,7 @@ export class OrganizationController {
         return;
       }
 
-      const dto: CreateOrganizationDto = {
+      constdto: CreateOrganizationDto = {
         ...req.body,
         tenantId: tenantContext.tenantId,
         createdBy: tenantContext.userId,
@@ -171,7 +171,7 @@ export class OrganizationController {
       const tenantContext = getTenantContext(req);
       const { id } = req.params;
 
-      const dto: UpdateOrganizationDto = {
+      constdto: UpdateOrganizationDto = {
         ...req.body,
         updatedBy: tenantContext?.userId,
       };

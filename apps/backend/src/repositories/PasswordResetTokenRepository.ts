@@ -29,7 +29,7 @@ export interface CreatePasswordResetTokenData {
 }
 
 export class PasswordResetTokenRepository {
-  private repository: Repository<PasswordResetToken>;
+  privaterepository: Repository<PasswordResetToken>;
 
   constructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(PasswordResetToken);

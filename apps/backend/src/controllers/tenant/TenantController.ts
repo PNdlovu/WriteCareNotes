@@ -20,7 +20,7 @@ import {
 import { body, param, validationResult } from 'express-validator';
 
 export class TenantController {
-  private tenantService: TenantService;
+  privatetenantService: TenantService;
 
   constructor(dataSource: DataSource) {
     this.tenantService = new TenantService(dataSource);
@@ -45,7 +45,7 @@ export class TenantController {
         return;
       }
 
-      const dto: CreateTenantDto = req.body;
+      constdto: CreateTenantDto = req.body;
       const tenant = await this.tenantService.create(dto);
 
       res.status(201).json({
@@ -187,7 +187,7 @@ export class TenantController {
       }
 
       const { id } = req.params;
-      const dto: UpdateTenantDto = req.body;
+      constdto: UpdateTenantDto = req.body;
 
       const tenant = await this.tenantService.update(id, dto);
 

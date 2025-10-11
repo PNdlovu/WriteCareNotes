@@ -89,13 +89,13 @@ export interface DBSComplianceReport {
 }
 
 export class DBSVerificationService {
-  private dbsVerificationRepository: Repository<DBSVerification>;
-  private dbsDocumentRepository: Repository<DBSDocument>;
-  private dbsNotificationRepository: Repository<DBSNotification>;
-  private employeeRepository: Repository<Employee>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventEmitter: EventEmitter2;
+  privatedbsVerificationRepository: Repository<DBSVerification>;
+  privatedbsDocumentRepository: Repository<DBSDocument>;
+  privatedbsNotificationRepository: Repository<DBSNotification>;
+  privateemployeeRepository: Repository<Employee>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventEmitter: EventEmitter2;
 
   constructor() {
     this.dbsVerificationRepository = AppDataSource.getRepository(DBSVerification);

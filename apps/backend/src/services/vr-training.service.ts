@@ -139,9 +139,9 @@ export interface ErrorDetail {
 
 export class VirtualRealityTrainingService {
   // Logger removed
-  private vrScenarios: Map<string, VRTrainingScenario> = new Map();
-  private activeSessions: Map<string, VRTrainingSession> = new Map();
-  private vrHardware: Map<string, VRHardwareSpec> = new Map();
+  privatevrScenarios: Map<string, VRTrainingScenario> = new Map();
+  privateactiveSessions: Map<string, VRTrainingSession> = new Map();
+  privatevrHardware: Map<string, VRHardwareSpec> = new Map();
 
   constructor(private readonly eventEmitter: EventEmitter2) {
     this.initializeVRTraining();
@@ -167,7 +167,7 @@ export class VirtualRealityTrainingService {
         throw new Error(`Required VR hardware not available: ${hardwareCheck.missingComponents.join(', ')}`);
       }
 
-      const session: VRTrainingSession = {
+      constsession: VRTrainingSession = {
         id: `vr_session_${Date.now()}`,
         staffMemberId,
         scenarioId,
@@ -215,7 +215,7 @@ export class VirtualRealityTrainingService {
 
       return session;
     } catch (error: unknown) {
-      console.error(`Failed to start VR training session: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to start VR training session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -248,7 +248,7 @@ export class VirtualRealityTrainingService {
       this.activeSessions.set(sessionId, session);
 
     } catch (error: unknown) {
-      console.error(`Failed to process VR training data: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to process VR training data: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -298,7 +298,7 @@ export class VirtualRealityTrainingService {
 
       return session;
     } catch (error: unknown) {
-      console.error(`Failed to complete VR training session: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to complete VR training session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -308,7 +308,7 @@ export class VirtualRealityTrainingService {
    */
   async createCustomScenario(scenarioData: Partial<VRTrainingScenario>): Promise<VRTrainingScenario> {
     try {
-      const scenario: VRTrainingScenario = {
+      constscenario: VRTrainingScenario = {
         id: `custom_scenario_${Date.now()}`,
         title: scenarioData.title || 'Custom Training Scenario',
         description: scenarioData.description || '',
@@ -349,7 +349,7 @@ export class VirtualRealityTrainingService {
 
       return scenario;
     } catch (error: unknown) {
-      console.error(`Failed to create custom VR scenario: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to create custom VR scenario: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -399,7 +399,7 @@ export class VirtualRealityTrainingService {
 
       return analytics;
     } catch (error: unknown) {
-      console.error(`Failed to get VR training analytics: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get VR training analytics: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -433,7 +433,7 @@ export class VirtualRealityTrainingService {
 
       return hardwareStatus;
     } catch (error: unknown) {
-      console.error(`Failed to manage VR hardware: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to manage VR hardware: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -450,12 +450,12 @@ export class VirtualRealityTrainingService {
 
       console.log(`VR Training initialized with ${this.vrScenarios.size} scenarios`);
     } catch (error: unknown) {
-      console.error(`Failed to initialize VR training: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to initialize VR training: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
   private async loadPreBuiltScenarios(): Promise<void> {
-    const scenarios: VRTrainingScenario[] = [
+    constscenarios: VRTrainingScenario[] = [
       {
         id: 'emergency_fire_response',
         title: 'Fire Emergency Response',
@@ -669,7 +669,7 @@ export class VirtualRealityTrainingService {
   }
 
   private async calculateAssessmentResults(session: VRTrainingSession, scenario: VRTrainingScenario): Promise<AssessmentResult[]> {
-    const results: AssessmentResult[] = [];
+    constresults: AssessmentResult[] = [];
 
     for (const criteria of scenario.assessmentCriteria) {
       // Calculate score based on performance metrics
@@ -726,7 +726,7 @@ export class VirtualRealityTrainingService {
   }
 
   private async validateScenario(scenario: VRTrainingScenario): Promise<{ valid: boolean; errors: string[] }> {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!scenario.title) errors.push('Title is required');
     if (!scenario.learningObjectives.length) errors.push('Learning objectives are required');

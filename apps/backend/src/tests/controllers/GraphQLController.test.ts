@@ -6,10 +6,10 @@ import { GraphQLGatewayService } from '../../services/graphql/GraphQLGatewayServ
 jest.mock('../../services/graphql/GraphQLGatewayService');
 
 describe('GraphQLController', () => {
-  let controller: GraphQLController;
-  let mockGraphQLService: jest.Mocked<GraphQLGatewayService>;
-  let mockRequest: Partial<Request>;
-  let mockResponse: Partial<Response>;
+  letcontroller: GraphQLController;
+  letmockGraphQLService: jest.Mocked<GraphQLGatewayService>;
+  letmockRequest: Partial<Request>;
+  letmockResponse: Partial<Response>;
 
   beforeEach(() => {
     mockGraphQLService = {

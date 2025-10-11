@@ -74,7 +74,7 @@ export interface IncidentFilters {
  * Compliance: CQC, RIDDOR, Health & Safety at Work Act 1974
  */
 export class IncidentManagementService {
-  private incidentRepository: Repository<IncidentReport>;
+  privateincidentRepository: Repository<IncidentReport>;
 
   constructor(private dataSource: DataSource) {
     this.incidentRepository = this.dataSource.getRepository(IncidentReport);
@@ -108,7 +108,7 @@ export class IncidentManagementService {
     };
 
     // Initialize root cause analysis placeholder
-    const rootCauseAnalysis: RootCauseAnalysis = {
+    constrootCauseAnalysis: RootCauseAnalysis = {
       primaryCause: '',
       contributingFactors: [],
       systemicIssues: [],
@@ -485,7 +485,7 @@ export class IncidentManagementService {
       where: { organizationId },
     });
 
-    const overdueActions: any[] = [];
+    constoverdueActions: any[] = [];
     incidents.forEach(incident => {
       incident.correctiveActions.forEach(action => {
         if (new Date() > action.deadline && action.status !== 'completed') {
@@ -630,7 +630,7 @@ export class IncidentManagementService {
   }
 
   private getIncidentPrefix(type: IncidentType): string {
-    const prefixes: Record<IncidentType, string> = {
+    constprefixes: Record<IncidentType, string> = {
       [IncidentType.CLINICAL]: 'CLI',
       [IncidentType.MEDICATION_ERROR]: 'MED',
       [IncidentType.FALL]: 'FALL',
@@ -679,7 +679,7 @@ export class IncidentManagementService {
   }
 
   private getRecommendedActions(type: IncidentType, severity: IncidentSeverity): string[] {
-    const actions: string[] = ['Document incident thoroughly', 'Notify management'];
+    constactions: string[] = ['Document incident thoroughly', 'Notify management'];
 
     if (severity === IncidentSeverity.SEVERE || severity === IncidentSeverity.CATASTROPHIC) {
       actions.push('Immediate safety review', 'CQC notification required');

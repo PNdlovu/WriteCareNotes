@@ -18,7 +18,7 @@ router.post('/5s/implement', authorize(['methodology_manager', 'admin']), async 
     const implementation = await methodologyService.implementAdvanced5SMethodology(req.body);
     res.status(201).json({ success: true, data: implementation });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 
@@ -27,7 +27,7 @@ router.get('/5s/analytics', authorize(['methodology_manager', 'admin']), async (
     const analytics = await methodologyService.getAdvanced5SAnalytics();
     res.json({ success: true, data: analytics });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

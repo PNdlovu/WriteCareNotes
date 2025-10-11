@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class PalliativeCareService {
-  private palliativeRepository: Repository<PalliativeCare>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatepalliativeRepository: Repository<PalliativeCare>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.palliativeRepository = AppDataSource.getRepository(PalliativeCare);

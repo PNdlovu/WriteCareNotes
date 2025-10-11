@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { RehabilitationService } from '../../services/rehabilitation/RehabilitationService';
 
 export class RehabilitationController {
-  private rehabilitationService: RehabilitationService;
+  privaterehabilitationService: RehabilitationService;
 
   constructor() {
     this.rehabilitationService = new RehabilitationService();
@@ -27,7 +27,7 @@ export class RehabilitationController {
       const plan = await this.rehabilitationService.createRehabilitationPlan(req.body);
       res.status(201).json({ success: true, data: plan });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class RehabilitationController {
       const analytics = await this.rehabilitationService.getRehabilitationAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

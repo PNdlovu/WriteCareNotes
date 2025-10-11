@@ -27,15 +27,15 @@ jest.mock('../../../utils/logger', () => ({
 }));
 
 describe('DataMigrationService', () => {
-  let migrationService: DataMigrationService;
-  let mockConfig: MigrationConfig;
-  let mockSourcePool: jest.Mocked<Pool>;
-  let mockTargetPool: jest.Mocked<Pool>;
-  let mockSourceClient: jest.Mocked<PoolClient>;
-  let mockTargetClient: jest.Mocked<PoolClient>;
-  let mockEncryptionService: jest.Mocked<EncryptionService>;
-  let mockAuditService: jest.Mocked<AuditService>;
-  let mockEventStoreService: jest.Mocked<EventStoreService>;
+  letmigrationService: DataMigrationService;
+  letmockConfig: MigrationConfig;
+  letmockSourcePool: jest.Mocked<Pool>;
+  letmockTargetPool: jest.Mocked<Pool>;
+  letmockSourceClient: jest.Mocked<PoolClient>;
+  letmockTargetClient: jest.Mocked<PoolClient>;
+  letmockEncryptionService: jest.Mocked<EncryptionService>;
+  letmockAuditService: jest.Mocked<AuditService>;
+  letmockEventStoreService: jest.Mocked<EventStoreService>;
 
   beforeEach(() => {
     jest.clearAllMocks();

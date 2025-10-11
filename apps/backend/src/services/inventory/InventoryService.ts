@@ -568,7 +568,7 @@ export class InventoryService {
       // Generate report data based on type
       const reportData = await this.generateReportData(request);
 
-      const inventoryReport: InventoryReport = {
+      constinventoryReport: InventoryReport = {
         id: uuidv4(),
         reportType: request.reportType,
         careHomeId: request.careHomeId,
@@ -675,7 +675,7 @@ export class InventoryService {
   }
 
   private getCategoryCode(category: string): string {
-    const categoryMap: Record<string, string> = {
+    constcategoryMap: Record<string, string> = {
       'medical_supplies': '01',
       'medications': '02',
       'equipment': '03',

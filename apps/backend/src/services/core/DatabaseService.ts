@@ -32,8 +32,8 @@ interface ConnectionStats {
 
 class DatabaseService {
   private static instance: DatabaseService;
-  private pool: Pool;
-  private isConnected: boolean = false;
+  privatepool: Pool;
+  privateisConnected: boolean = false;
 
   private constructor() {
     this.pool = this.createPool();
@@ -127,7 +127,7 @@ class DatabaseService {
         paramCount: params?.length || 0 
       });
 
-      let result: QueryResult<T>;
+      letresult: QueryResult<T>;
       
       if (options?.retries && options.retries > 0) {
         result = await this.queryWithRetry(text, params, options);

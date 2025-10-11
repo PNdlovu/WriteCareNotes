@@ -258,7 +258,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to create consent record', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         consentData,
         userId
       });
@@ -349,7 +349,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to withdraw consent', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         consentId,
         userId
       });
@@ -398,7 +398,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to get consent dashboard', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId,
         organizationId
       });
@@ -442,9 +442,9 @@ export class EnterpriseConsentManagementService {
       );
 
       // Generate renewal reminders
-      const renewalReminders: string[] = [];
-      const complianceIssues: string[] = [];
-      const recommendedActions: string[] = [];
+      constrenewalReminders: string[] = [];
+      constcomplianceIssues: string[] = [];
+      constrecommendedActions: string[] = [];
 
       for (const consent of filteredExpiringConsents) {
         const daysUntilExpiry = Math.ceil(
@@ -484,7 +484,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to perform consent monitoring', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId,
         organizationId
       });
@@ -577,7 +577,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to generate consent compliance report', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId,
         organizationId
       });
@@ -662,7 +662,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to process consent renewal', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         consentId,
         userId
       });
@@ -701,8 +701,8 @@ export class EnterpriseConsentManagementService {
       );
 
       const permitted = applicableConsents.length > 0;
-      const missingConsents: string[] = [];
-      const recommendations: any[] = [];
+      constmissingConsents: string[] = [];
+      constrecommendations: any[] = [];
 
       if (!permitted) {
         // Identify missing consent types
@@ -738,7 +738,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to validate data processing consent', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId,
         processingPurpose,
         tenantId
@@ -823,7 +823,7 @@ export class EnterpriseConsentManagementService {
 
     } catch (error: unknown) {
       console.error('Failed to generate consent analytics', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId,
         organizationId
       });
@@ -851,7 +851,7 @@ export class EnterpriseConsentManagementService {
       freelyGiven: boolean;
     };
   }> {
-    const issues: string[] = [];
+    constissues: string[] = [];
     
     // Check if consent is informed
     const informed = consentData.consentDescription.length > 50 && 

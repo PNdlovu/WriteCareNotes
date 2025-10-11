@@ -18,8 +18,8 @@ import { logger } from '@/utils/logger';
  * Payment Routes with enterprise security and compliance
  */
 export class PaymentRoutes {
-  private router: Router;
-  private paymentController: PaymentController;
+  privaterouter: Router;
+  privatepaymentController: PaymentController;
 
   constructor(paymentController: PaymentController) {
     this.router = Router();

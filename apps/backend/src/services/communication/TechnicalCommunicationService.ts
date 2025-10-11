@@ -47,8 +47,8 @@ export interface TechnicalMessagingInfrastructure {
 }
 
 export class TechnicalCommunicationService {
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.notificationService = new NotificationService(new EventEmitter2());
@@ -62,7 +62,7 @@ export class TechnicalCommunicationService {
     internalMessagingConfiguration: any;
   }): Promise<TechnicalMessagingInfrastructure> {
     try {
-      const infrastructure: TechnicalMessagingInfrastructure = {
+      constinfrastructure: TechnicalMessagingInfrastructure = {
         smsServices: {
           bulkSMSSupport: true,
           deliveryReports: true,

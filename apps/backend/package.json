@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "echo 'Backend build - TypeScript compilation skipped (large codebase, will be addressed separately)'",
+        "build": "tsc",
         "dev": "nodemon src/server.ts",
         "start": "node dist/server.js",
         "test": "jest",

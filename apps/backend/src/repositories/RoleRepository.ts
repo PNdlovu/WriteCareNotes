@@ -11,7 +11,7 @@ import { Role } from '../entities/Role';
 import { logger } from '../utils/logger';
 
 export class RoleRepository {
-  private repository: Repository<Role>;
+  privaterepository: Repository<Role>;
 
   constructor(private dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(Role);

@@ -76,9 +76,9 @@ interface Refund {
  */
 export class PaymentGatewayService {
   private static instance: PaymentGatewayService;
-  private stripe: Stripe;
-  private prometheusService: PrometheusService;
-  private sentryService: SentryService;
+  privatestripe: Stripe;
+  privateprometheusService: PrometheusService;
+  privatesentryService: SentryService;
 
   private constructor() {
     this.prometheusService = PrometheusService.getInstance();

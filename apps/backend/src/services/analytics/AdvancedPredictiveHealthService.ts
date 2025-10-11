@@ -183,8 +183,8 @@ export interface HealthDashboard {
 @Injectable()
 export class AdvancedPredictiveHealthService {
   private readonly logger = new Logger(AdvancedPredictiveHealthService.name);
-  private eventEmitter: EventEmitter2;
-  private auditService: AuditService;
+  privateeventEmitter: EventEmitter2;
+  privateauditService: AuditService;
 
   constructor() {
     this.eventEmitter = new EventEmitter2();
@@ -215,7 +215,7 @@ export class AdvancedPredictiveHealthService {
       const confidence = this.calculateConfidence(model, factors);
       const riskLevel = this.determineRiskLevel(predictedValue, confidence, predictionType);
 
-      const prediction: HealthPrediction = {
+      constprediction: HealthPrediction = {
         id: `prediction_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         residentId,
         predictionType,
@@ -278,7 +278,7 @@ export class AdvancedPredictiveHealthService {
    */
   async analyzeHealthTrends(residentId: string, period: string = '30d'): Promise<HealthTrend[]> {
     try {
-      const trends: HealthTrend[] = [];
+      consttrends: HealthTrend[] = [];
       
       // Get historical health data
       const healthData = await this.getHistoricalHealthData(residentId, period);
@@ -327,7 +327,7 @@ export class AdvancedPredictiveHealthService {
    */
   async generateHealthInsights(residentId: string): Promise<HealthInsight[]> {
     try {
-      const insights: HealthInsight[] = [];
+      constinsights: HealthInsight[] = [];
       
       // Get recent health data
       const healthData = await this.getRecentHealthData(residentId);
@@ -392,7 +392,7 @@ export class AdvancedPredictiveHealthService {
     recommendations: string[]
   ): Promise<HealthAlert> {
     try {
-      const alert: HealthAlert = {
+      constalert: HealthAlert = {
         id: `alert_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         residentId,
         alertType,
@@ -465,7 +465,7 @@ export class AdvancedPredictiveHealthService {
       // Determine risk level
       const riskLevel = this.determineOverallRiskLevel(predictions, alerts);
 
-      const dashboard: HealthDashboard = {
+      constdashboard: HealthDashboard = {
         residentId,
         overallHealthScore,
         riskLevel,
@@ -524,7 +524,7 @@ export class AdvancedPredictiveHealthService {
       const trainingResult = await this.performModelTraining(model, trainingData, parameters);
       
       // Update model with training results
-      const updatedModel: HealthModel = {
+      constupdatedModel: HealthModel = {
         ...model,
         parameters: { ...model.parameters, ...parameters },
         accuracy: trainingResult.accuracy,
@@ -585,7 +585,7 @@ export class AdvancedPredictiveHealthService {
    */
   private async getHealthFactors(residentId: string, predictionType: string): Promise<HealthFactor[]> {
     // In a real implementation, this would query the database for resident health data
-    const factors: HealthFactor[] = [];
+    constfactors: HealthFactor[] = [];
     
     // Mock health factors based on prediction type
     if (predictionType === 'health_deterioration') {
@@ -640,7 +640,7 @@ export class AdvancedPredictiveHealthService {
     predictionType: string,
     factors: HealthFactor[]
   ): Promise<HealthRecommendation[]> {
-    const recommendations: HealthRecommendation[] = [];
+    constrecommendations: HealthRecommendation[] = [];
     
     if (predictionType === 'health_deterioration') {
       recommendations.push({

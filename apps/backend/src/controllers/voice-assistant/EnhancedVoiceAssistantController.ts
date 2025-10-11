@@ -15,8 +15,8 @@ import { EnhancedVoiceAssistantService } from '../../services/voice-assistant/En
 import { Logger } from '@nestjs/common';
 
 export class EnhancedVoiceAssistantController {
-  private voiceAssistantService: EnhancedVoiceAssistantService;
-  private logger: Logger;
+  privatevoiceAssistantService: EnhancedVoiceAssistantService;
+  privatelogger: Logger;
 
   constructor() {
     this.voiceAssistantService = new EnhancedVoiceAssistantService();

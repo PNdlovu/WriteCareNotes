@@ -17,7 +17,7 @@ import AppDataSource from '../../config/database';
 import { KnowledgeArticle, ArticleType, PublicationStatus } from '../../entities/knowledge-base/KnowledgeArticle';
 
 export class KnowledgeBaseService {
-  private articleRepository: Repository<KnowledgeArticle>;
+  privatearticleRepository: Repository<KnowledgeArticle>;
 
   constructor() {
     this.articleRepository = AppDataSource.getRepository(KnowledgeArticle);

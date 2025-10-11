@@ -108,13 +108,13 @@ export interface RightToWorkComplianceReport {
 }
 
 export class RightToWorkCheckService {
-  private rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  private rightToWorkDocumentRepository: Repository<RightToWorkDocument>;
-  private rightToWorkNotificationRepository: Repository<RightToWorkNotification>;
-  private employeeRepository: Repository<Employee>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
-  private eventEmitter: EventEmitter2;
+  privaterightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  privaterightToWorkDocumentRepository: Repository<RightToWorkDocument>;
+  privaterightToWorkNotificationRepository: Repository<RightToWorkNotification>;
+  privateemployeeRepository: Repository<Employee>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
+  privateeventEmitter: EventEmitter2;
 
   constructor() {
     this.rightToWorkCheckRepository = AppDataSource.getRepository(RightToWorkCheck);

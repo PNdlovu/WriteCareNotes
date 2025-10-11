@@ -792,7 +792,7 @@ export class PolicyAuthoringService {
   }
 
   private async validatePolicyCompleteness(policy: PolicyDraft): Promise<void> {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!policy.title || policy.title.trim().length === 0) {
       errors.push('Policy title is required');

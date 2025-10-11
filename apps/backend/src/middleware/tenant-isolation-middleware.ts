@@ -136,10 +136,10 @@ export function tenantIsolationMiddleware(options: {
 
     } catch (error: unknown) {
       console.error('Tenant isolation middleware error', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         path: req.path,
         method: req.method,
-        stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+        stack: error instanceof Error ? error.stack : undefined
       });
 
       res.status(500).json({
@@ -167,7 +167,7 @@ async function extractTenantContext(req: Request): Promise<TenantContext | null>
         }
       } catch (error: unknown) {
         console.warn('Failed to decode JWT for tenant extraction', {
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+          error: error instanceof Error ? error.message : "Unknown error"
         });
       }
     }
@@ -197,7 +197,7 @@ async function extractTenantContext(req: Request): Promise<TenantContext | null>
 
   } catch (error: unknown) {
     console.error('Failed to extract tenant context', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       path: req.path
     });
     return null;
@@ -226,7 +226,7 @@ async function resolveTenantContext(tenantId: string): Promise<TenantContext | n
 
   } catch (error: unknown) {
     console.error('Failed to resolve tenant context', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       tenantId
     });
     return null;
@@ -256,7 +256,7 @@ async function resolveTenantBySubdomain(subdomain: string): Promise<TenantContex
 
   } catch (error: unknown) {
     console.error('Failed to resolve tenant by subdomain', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       subdomain
     });
     return null;
@@ -275,8 +275,8 @@ async function validateTenantIsolation(
   violations: string[];
   allowedResources: string[];
 }> {
-  const violations: string[] = [];
-  const allowedResources: string[] = [];
+  constviolations: string[] = [];
+  constallowedResources: string[] = [];
 
   try {
     // Check user tenant alignment
@@ -325,13 +325,13 @@ async function validateTenantIsolation(
 
   } catch (error: unknown) {
     console.error('Failed to validate tenant isolation', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       tenantId: tenantContext.tenantId
     });
 
     return {
       valid: false,
-      violations: [`Validation error: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`],
+      violations: [`Validation error: ${error instanceof Error ? error.message : "Unknown error"}`],
       allowedResources: []
     };
   }
@@ -365,7 +365,7 @@ function extractResourceTenantId(req: Request): string | null {
 
   } catch (error: unknown) {
     console.error('Failed to extract resource tenant ID', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       path: req.path
     });
     return null;
@@ -403,7 +403,7 @@ function isDataResidencyCompliant(requestOrigin: string, dataResidency: string):
 
   } catch (error: unknown) {
     console.error('Failed to check data residency compliance', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       requestOrigin,
       dataResidency
     });
@@ -424,7 +424,7 @@ function isJurisdictionCompliant(req: Request, jurisdiction: string): boolean {
 
   } catch (error: unknown) {
     console.error('Failed to check jurisdiction compliance', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       jurisdiction
     });
     return false;
@@ -464,7 +464,7 @@ export function validateTenantResourceAccess(resourceType: string) {
 
     } catch (error: unknown) {
       console.error('Tenant resource access validation error', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         resourceType,
         path: req.path
       });
@@ -497,7 +497,7 @@ function isResourceAccessAllowed(
 
   } catch (error: unknown) {
     console.error('Failed to check resource access', {
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
       resourceId,
       tenantId,
       resourceType
@@ -556,7 +556,7 @@ async function queryTenantDatabase(tenantId: string): Promise<TenantContext | nu
   } catch (error: unknown) {
     console.error('Failed to query tenant database', {
       tenantId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     return null;
   }
@@ -573,7 +573,7 @@ async function getCachedTenantContext(cacheKey: string): Promise<TenantContext |
   } catch (error: unknown) {
     console.error('Failed to get cached tenant context', {
       cacheKey,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     return null;
   }
@@ -593,7 +593,7 @@ async function cacheTenantContext(cacheKey: string, context: TenantContext, ttlS
   } catch (error: unknown) {
     console.error('Failed to cache tenant context', {
       cacheKey,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
   }
 }
@@ -635,7 +635,7 @@ async function validateTenantDataAccess(
       requestedTenantId,
       resource,
       action,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     return false; // Deny access on error
   }
@@ -670,7 +670,7 @@ async function getCrossTenantPermissions(tenantId: string): Promise<CrossTenantP
   } catch (error: unknown) {
     console.error('Failed to get cross-tenant permissions', {
       tenantId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
     return [];
   }
@@ -715,7 +715,7 @@ async function logTenantIsolationViolation(
       userId,
       userTenantId,
       requestedTenantId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
   }
 }
@@ -734,7 +734,7 @@ async function sendSecurityAlert(violation: any): Promise<void> {
   } catch (error: unknown) {
     console.error('Failed to send security alert', {
       violationId: violation.violationId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
   }
 }
@@ -752,7 +752,7 @@ async function storeTenantViolation(violation: any): Promise<void> {
   } catch (error: unknown) {
     console.error('Failed to store tenant violation', {
       violationId: violation.violationId,
-      error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error"
     });
   }
 }

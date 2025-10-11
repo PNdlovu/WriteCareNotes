@@ -44,19 +44,19 @@ jest.mock('../../events/EventPublishingService');
 jest.mock('../../caching/HealthcareCacheManager');
 
 describe('MedicationService', () => {
-  let service: MedicationService;
-  let mockDataSource: jest.Mocked<DataSource>;
-  let mockMedicationRepository: jest.Mocked<MedicationRepository>;
-  let mockPrescriptionRepository: jest.Mocked<PrescriptionRepository>;
-  let mockAdministrationRepository: jest.Mocked<MedicationAdministrationRepository>;
-  let mockResidentRepository: jest.Mocked<Repository<Resident>>;
-  let mockDrugInteractionRepository: jest.Mocked<Repository<DrugInteraction>>;
-  let mockControlledSubstanceRepository: jest.Mocked<Repository<ControlledSubstance>>;
-  let mockAuditService: jest.Mocked<AuditTrailService>;
-  let mockEncryptionService: jest.Mocked<FieldLevelEncryptionService>;
-  let mockNotificationService: jest.Mocked<NotificationService>;
-  let mockEventPublisher: jest.Mocked<EventPublishingService>;
-  let mockCacheManager: jest.Mocked<HealthcareCacheManager>;
+  letservice: MedicationService;
+  letmockDataSource: jest.Mocked<DataSource>;
+  letmockMedicationRepository: jest.Mocked<MedicationRepository>;
+  letmockPrescriptionRepository: jest.Mocked<PrescriptionRepository>;
+  letmockAdministrationRepository: jest.Mocked<MedicationAdministrationRepository>;
+  letmockResidentRepository: jest.Mocked<Repository<Resident>>;
+  letmockDrugInteractionRepository: jest.Mocked<Repository<DrugInteraction>>;
+  letmockControlledSubstanceRepository: jest.Mocked<Repository<ControlledSubstance>>;
+  letmockAuditService: jest.Mocked<AuditTrailService>;
+  letmockEncryptionService: jest.Mocked<FieldLevelEncryptionService>;
+  letmockNotificationService: jest.Mocked<NotificationService>;
+  letmockEventPublisher: jest.Mocked<EventPublishingService>;
+  letmockCacheManager: jest.Mocked<HealthcareCacheManager>;
 
   const mockResident = {
     id: 'resident-123',
@@ -233,7 +233,7 @@ describe('MedicationService', () => {
   });
 
   describe('createMedication', () => {
-    const createRequest: CreateMedicationRequest = {
+    constcreateRequest: CreateMedicationRequest = {
       name: 'Paracetamol',
       genericName: 'Acetaminophen',
       strength: '500mg',
@@ -339,7 +339,7 @@ describe('MedicationService', () => {
   });
 
   describe('createPrescription', () => {
-    const createRequest: CreatePrescriptionRequest = {
+    constcreateRequest: CreatePrescriptionRequest = {
       residentId: 'resident-123',
       medicationId: 'medication-123',
       prescriberId: 'prescriber-123',
@@ -490,7 +490,7 @@ describe('MedicationService', () => {
   });
 
   describe('administerMedication', () => {
-    const adminRequest: MedicationAdministrationRequest = {
+    constadminRequest: MedicationAdministrationRequest = {
       prescriptionId: 'prescription-123',
       residentId: 'resident-123',
       scheduledTime: new Date('2025-01-01T08:00:00Z'),
@@ -981,7 +981,7 @@ describe('MedicationService', () => {
       const dbError = new Error('Database connection failed');
       mockMedicationRepository.create.mockRejectedValue(dbError);
 
-      const createRequest: CreateMedicationRequest = {
+      constcreateRequest: CreateMedicationRequest = {
         name: 'Test Medication',
         strength: '100mg',
         form: MedicationForm.TABLET,
@@ -1006,7 +1006,7 @@ describe('MedicationService', () => {
       const encryptionError = new Error('Encryption failed');
       mockEncryptionService.encrypt.mockRejectedValue(encryptionError);
 
-      const createRequest: CreateMedicationRequest = {
+      constcreateRequest: CreateMedicationRequest = {
         name: 'Test Medication',
         strength: '100mg',
         form: MedicationForm.TABLET,
@@ -1047,7 +1047,7 @@ describe('MedicationService', () => {
       // Arrange
       mockMedicationRepository.create.mockResolvedValue(mockMedication);
 
-      const createRequest: CreateMedicationRequest = {
+      constcreateRequest: CreateMedicationRequest = {
         name: 'Compliance Test Medication',
         strength: '100mg',
         form: MedicationForm.TABLET,
@@ -1080,7 +1080,7 @@ describe('MedicationService', () => {
       // Arrange
       mockMedicationRepository.create.mockResolvedValue(mockMedication);
 
-      const createRequest: CreateMedicationRequest = {
+      constcreateRequest: CreateMedicationRequest = {
         name: 'Event Test Medication',
         strength: '100mg',
         form: MedicationForm.TABLET,
@@ -1108,7 +1108,7 @@ describe('MedicationService', () => {
 
     it('should enforce controlled substance regulations', async () => {
       // Arrange
-      const controlledRequest: CreateMedicationRequest = {
+      constcontrolledRequest: CreateMedicationRequest = {
         name: 'Morphine',
         strength: '10mg',
         form: MedicationForm.TABLET,
@@ -1136,7 +1136,7 @@ describe('MedicationService', () => {
 
     it('should validate witness requirements for controlled substances', async () => {
       // Arrange
-      const adminRequest: MedicationAdministrationRequest = {
+      constadminRequest: MedicationAdministrationRequest = {
         prescriptionId: 'prescription-123',
         residentId: 'resident-123',
         scheduledTime: new Date(),
@@ -1182,7 +1182,7 @@ describe('MedicationService', () => {
       // Arrange
       mockMedicationRepository.create.mockResolvedValue(mockMedication);
 
-      const createRequest: CreateMedicationRequest = {
+      constcreateRequest: CreateMedicationRequest = {
         name: 'Cache Test Medication',
         strength: '100mg',
         form: MedicationForm.TABLET,

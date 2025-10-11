@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class PainManagementService {
-  private painAssessmentRepository: Repository<PainAssessment>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatepainAssessmentRepository: Repository<PainAssessment>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.painAssessmentRepository = AppDataSource.getRepository(PainAssessment);

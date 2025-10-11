@@ -30,7 +30,7 @@ export class CQCDigitalStandardsService {
    */
   async performComplianceCheck(tenantId: string): Promise<ComplianceCheck[]> {
     try {
-      const checks: ComplianceCheck[] = [];
+      constchecks: ComplianceCheck[] = [];
 
       // Person-centered care tracking
       checks.push({

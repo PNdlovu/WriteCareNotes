@@ -147,7 +147,7 @@ export class DatabaseConnection {
         status: 'unhealthy',
         latency: Date.now() - start,
         details: {
-          error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown database error'
+          error: error instanceof Error ? error.message : 'Unknown database error'
         }
       };
     }

@@ -131,7 +131,7 @@ export class FileImportService extends EventEmitter {
       this.validateFile(buffer, fileName);
       
       // Parse file based on format
-      let rawData: any[] = [];
+      letrawData: any[] = [];
       
       switch (fileExtension) {
         case '.csv':
@@ -165,8 +165,8 @@ export class FileImportService extends EventEmitter {
       );
       
       // Validate data if requested
-      let validationErrors: ImportError[] = [];
-      let validationWarnings: ImportWarning[] = [];
+      letvalidationErrors: ImportError[] = [];
+      letvalidationWarnings: ImportWarning[] = [];
       
       if (options.validateOnImport) {
         const validation = await this.validateImportedData(transformedData);
@@ -183,7 +183,7 @@ export class FileImportService extends EventEmitter {
       
       const processingTime = Date.now() - startTime;
       
-      const result: FileImportResult = {
+      constresult: FileImportResult = {
         importId,
         fileName,
         fileSize: buffer.length,
@@ -203,7 +203,7 @@ export class FileImportService extends EventEmitter {
       return result;
       
     } catch (error: unknown) {
-      this.emit('import_failed', { importId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('import_failed', { importId, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -213,12 +213,12 @@ export class FileImportService extends EventEmitter {
    */
   private async parseCSV(buffer: Buffer, options: FileImportOptions): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      const results: any[] = [];
+      constresults: any[] = [];
       const stream = require('stream');
       const bufferStream = new stream.PassThrough();
       bufferStream.end(buffer);
       
-      const csvOptions: any = {
+      constcsvOptions: any = {
         separator: options.delimiter || (path.extname('file').toLowerCase() === '.tsv' ? '\t' : ','),
         headers: options.headers !== false,
         skipEmptyLines: true,
@@ -269,7 +269,7 @@ export class FileImportService extends EventEmitter {
       return options.maxRows ? jsonData.slice(0, options.maxRows) : jsonData;
       
     } catch (error: unknown) {
-      throw new Error(`Excel parsing failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Excel parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -294,7 +294,7 @@ export class FileImportService extends EventEmitter {
       }
       
     } catch (error: unknown) {
-      throw new Error(`JSON parsing failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`JSON parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -327,12 +327,12 @@ export class FileImportService extends EventEmitter {
       }
       
     } catch (error: unknown) {
-      throw new Error(`XML parsing failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`XML parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private extractRecordsFromXML(xmlObj: any): any[] {
-    const records: any[] = [];
+    constrecords: any[] = [];
     
     function traverse(obj: any) {
       if (typeof obj === 'object' && obj !== null) {
@@ -373,7 +373,7 @@ export class FileImportService extends EventEmitter {
   async analyzeDataTypes(data: any[]): Promise<DataTypeAnalysis[]> {
     if (!data || data.length === 0) return [];
     
-    const fieldAnalysis: { [field: string]: DataTypeAnalysis } = {};
+    constfieldAnalysis: { [field: string]: DataTypeAnalysis } = {};
     const sampleSize = Math.min(data.length, 100);
     
     // Get all unique field names
@@ -401,8 +401,8 @@ export class FileImportService extends EventEmitter {
     const nullCount = values.length - values.filter(v => v !== null && v !== undefined && v !== '').length;
     
     // Pattern analysis
-    const patterns: string[] = [];
-    let detectedType: DataTypeAnalysis['detectedType'] = 'string';
+    constpatterns: string[] = [];
+    letdetectedType: DataTypeAnalysis['detectedType'] = 'string';
     let confidence = 0.5;
     
     // NHS Number detection
@@ -507,13 +507,13 @@ export class FileImportService extends EventEmitter {
     rules: TransformationRule[], 
     dataTypes: DataTypeAnalysis[]
   ): Promise<{ transformedData: any[]; errors: ImportError[]; warnings: ImportWarning[] }> {
-    const transformedData: any[] = [];
-    const errors: ImportError[] = [];
-    const warnings: ImportWarning[] = [];
+    consttransformedData: any[] = [];
+    consterrors: ImportError[] = [];
+    constwarnings: ImportWarning[] = [];
     
     for (let i = 0; i < data.length; i++) {
       const record = data[i];
-      const transformedRecord: any = { ...record };
+      consttransformedRecord: any = { ...record };
       
       // Apply transformation rules
       for (const rule of rules) {
@@ -525,7 +525,7 @@ export class FileImportService extends EventEmitter {
               row: i + 1,
               column: rule.field,
               value: record[rule.field],
-              error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+              error: error instanceof Error ? error.message : "Unknown error",
               severity: 'medium',
               suggestion: `Check ${rule.type} format for field ${rule.field}`,
               autoFixable: rule.type !== 'custom'
@@ -560,7 +560,7 @@ export class FileImportService extends EventEmitter {
               row: i + 1,
               column: typeAnalysis.field,
               value: record[typeAnalysis.field],
-              warning: `Auto-transformation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`,
+              warning: `Auto-transformation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
               suggestion: 'Manual review recommended',
               autoFixed: false
             });
@@ -774,8 +774,8 @@ export class FileImportService extends EventEmitter {
    * Validate imported data against healthcare standards
    */
   private async validateImportedData(data: any[]): Promise<{ errors: ImportError[]; warnings: ImportWarning[] }> {
-    const errors: ImportError[] = [];
-    const warnings: ImportWarning[] = [];
+    consterrors: ImportError[] = [];
+    constwarnings: ImportWarning[] = [];
     
     for (let i = 0; i < data.length; i++) {
       const record = data[i];
@@ -910,7 +910,7 @@ export class FileImportService extends EventEmitter {
   }
 
   private simplifyDataTypes(dataTypes: DataTypeAnalysis[]): { [field: string]: string } {
-    const simplified: { [field: string]: string } = {};
+    constsimplified: { [field: string]: string } = {};
     
     for (const analysis of dataTypes) {
       simplified[analysis.field] = analysis.detectedType;

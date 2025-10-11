@@ -241,7 +241,7 @@ export class PolicyTrackerService {
       this.validateStatusTransition(oldStatus, newStatus);
 
       // Record the transition
-      const transition: StatusTransition = {
+      consttransition: StatusTransition = {
         id: this.generateId(),
         policyId,
         fromStatus: oldStatus,
@@ -518,7 +518,7 @@ export class PolicyTrackerService {
   }
 
   private validateStatusTransition(from: PolicyStatus, to: PolicyStatus): void {
-    const validTransitions: Record<PolicyStatus, PolicyStatus[]> = {
+    constvalidTransitions: Record<PolicyStatus, PolicyStatus[]> = {
       [PolicyStatus.DRAFT]: [PolicyStatus.UNDER_REVIEW, PolicyStatus.ARCHIVED],
       [PolicyStatus.UNDER_REVIEW]: [PolicyStatus.APPROVED, PolicyStatus.REJECTED, PolicyStatus.DRAFT],
       [PolicyStatus.APPROVED]: [PolicyStatus.PUBLISHED, PolicyStatus.REQUIRES_UPDATE],
@@ -590,7 +590,7 @@ export class PolicyTrackerService {
       // Calculate estimation based on historical data and current progress
       if (statusHistory.length === 0) return undefined;
 
-      const statusTimes: Record<PolicyStatus, number[]> = {
+      conststatusTimes: Record<PolicyStatus, number[]> = {
         [PolicyStatus.DRAFT]: [],
         [PolicyStatus.UNDER_REVIEW]: [],
         [PolicyStatus.APPROVED]: [],
@@ -618,7 +618,7 @@ export class PolicyTrackerService {
       const now = new Date();
       
       // Default time estimates (in days) if no historical data
-      const defaultEstimates: Record<PolicyStatus, number> = {
+      constdefaultEstimates: Record<PolicyStatus, number> = {
         [PolicyStatus.DRAFT]: 7,
         [PolicyStatus.UNDER_REVIEW]: 14,
         [PolicyStatus.APPROVED]: 3,

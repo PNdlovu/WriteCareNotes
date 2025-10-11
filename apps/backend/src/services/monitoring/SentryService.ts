@@ -20,7 +20,7 @@ import { logger } from '../../utils/logger';
  */
 export class SentryService {
   private static instance: SentryService;
-  private isInitialized: boolean = false;
+  privateisInitialized: boolean = false;
 
   private constructor() {
     this.initializeSentry();

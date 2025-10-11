@@ -127,10 +127,10 @@ export class PolicyEnforcerService {
   ): Promise<EnforcementResult> {
     this.logger.log(`Enforcing policies for workflow ${context.workflowType} by user ${context.userId}`);
 
-    const violations: PolicyViolation[] = [];
-    const warnings: PolicyWarning[] = [];
-    const requiredActions: RequiredAction[] = [];
-    let blockingAction: EnforcementAction | null = null;
+    constviolations: PolicyViolation[] = [];
+    constwarnings: PolicyWarning[] = [];
+    constrequiredActions: RequiredAction[] = [];
+    letblockingAction: EnforcementAction | null = null;
     let resultMessage = '';
 
     // Find applicable enforcement rules for this workflow
@@ -167,7 +167,7 @@ export class PolicyEnforcerService {
       if (failedConditions.length > 0) {
         // Policy violation detected
         for (const failed of failedConditions) {
-          const violation: PolicyViolation = {
+          constviolation: PolicyViolation = {
             policy,
             rule,
             condition: failed.condition,
@@ -242,7 +242,7 @@ export class PolicyEnforcerService {
     // Send notifications for violations and escalations
     await this.handleEnforcementNotifications(context, violations, requiredActions);
 
-    const result: EnforcementResult = {
+    constresult: EnforcementResult = {
       allowed,
       enforcementAction: finalAction,
       violatedPolicies: violations,

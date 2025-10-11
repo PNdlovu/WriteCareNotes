@@ -20,10 +20,10 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class EmergencyOnCallService {
-  private incidentRepository: Repository<EmergencyIncident>;
-  private onCallRepository: Repository<OnCallRota>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateincidentRepository: Repository<EmergencyIncident>;
+  privateonCallRepository: Repository<OnCallRota>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.incidentRepository = AppDataSource.getRepository(EmergencyIncident);
@@ -493,7 +493,7 @@ export class EmergencyOnCallService {
   }
 
   private mapEmergencyTypeToCallType(emergencyType: EmergencyType): CallType {
-    const mapping: Record<EmergencyType, CallType> = {
+    constmapping: Record<EmergencyType, CallType> = {
       [EmergencyType.MEDICAL]: CallType.MEDICAL_EMERGENCY,
       [EmergencyType.FIRE]: CallType.SAFETY_CONCERN,
       [EmergencyType.SECURITY]: CallType.SAFETY_CONCERN,

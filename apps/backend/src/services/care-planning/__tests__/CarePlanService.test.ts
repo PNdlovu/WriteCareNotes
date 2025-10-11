@@ -33,15 +33,15 @@ jest.mock('../../notifications/NotificationService');
 jest.mock('../../events/EventPublishingService');
 
 describe('CarePlanService', () => {
-  let service: CarePlanService;
-  let mockDataSource: jest.Mocked<DataSource>;
-  let mockCarePlanRepository: jest.Mocked<CarePlanRepository>;
-  let mockCareDomainRepository: jest.Mocked<Repository<CareDomain>>;
-  let mockResidentRepository: jest.Mocked<Repository<Resident>>;
-  let mockAuditService: jest.Mocked<AuditTrailService>;
-  let mockEncryptionService: jest.Mocked<FieldLevelEncryptionService>;
-  let mockNotificationService: jest.Mocked<NotificationService>;
-  let mockEventPublisher: jest.Mocked<EventPublishingService>;
+  letservice: CarePlanService;
+  letmockDataSource: jest.Mocked<DataSource>;
+  letmockCarePlanRepository: jest.Mocked<CarePlanRepository>;
+  letmockCareDomainRepository: jest.Mocked<Repository<CareDomain>>;
+  letmockResidentRepository: jest.Mocked<Repository<Resident>>;
+  letmockAuditService: jest.Mocked<AuditTrailService>;
+  letmockEncryptionService: jest.Mocked<FieldLevelEncryptionService>;
+  letmockNotificationService: jest.Mocked<NotificationService>;
+  letmockEventPublisher: jest.Mocked<EventPublishingService>;
 
   const mockResident = {
     id: 'resident-123',
@@ -151,7 +151,7 @@ describe('CarePlanService', () => {
   });
 
   describe('createCarePlan', () => {
-    const createRequest: CreateCarePlanRequest = {
+    constcreateRequest: CreateCarePlanRequest = {
       residentId: 'resident-123',
       planName: 'Initial Care Plan',
       planType: CarePlanType.INITIAL,
@@ -298,7 +298,7 @@ describe('CarePlanService', () => {
   });
 
   describe('searchCarePlans', () => {
-    const searchFilters: CarePlanSearchFilters = {
+    constsearchFilters: CarePlanSearchFilters = {
       residentId: 'resident-123',
       status: CarePlanStatus.ACTIVE,
       planType: CarePlanType.INITIAL
@@ -357,7 +357,7 @@ describe('CarePlanService', () => {
   });
 
   describe('updateCarePlan', () => {
-    const updateRequest: UpdateCarePlanRequest = {
+    constupdateRequest: UpdateCarePlanRequest = {
       planName: 'Updated Care Plan',
       reviewFrequency: ReviewFrequency.QUARTERLY,
       updatedBy: 'user-456'
@@ -446,7 +446,7 @@ describe('CarePlanService', () => {
   });
 
   describe('approveCarePlan', () => {
-    const approvalRequest: CarePlanApprovalRequest = {
+    constapprovalRequest: CarePlanApprovalRequest = {
       approvedBy: 'approver-123',
       approvalNotes: 'Plan approved after review',
       effectiveFrom: new Date('2025-01-15')
@@ -743,7 +743,7 @@ describe('CarePlanService', () => {
     it('should retrieve care plan summaries', async () => {
       // Arrange
       const summaries = [{ id: 'care-plan-123', planName: 'Initial Care Plan' }];
-      const filters: CarePlanSearchFilters = { residentId: 'resident-123' };
+      constfilters: CarePlanSearchFilters = { residentId: 'resident-123' };
       mockCarePlanRepository.getCarePlanSummaries.mockResolvedValue(summaries);
 
       // Act
@@ -792,7 +792,7 @@ describe('CarePlanService', () => {
       const dbError = new Error('Database connection failed');
       mockResidentRepository.findOne.mockRejectedValue(dbError);
 
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         residentId: 'resident-123',
         planName: 'Test Plan',
         planType: CarePlanType.INITIAL,
@@ -816,7 +816,7 @@ describe('CarePlanService', () => {
       mockEncryptionService.encrypt.mockRejectedValue(encryptionError);
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
 
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         residentId: 'resident-123',
         planName: 'Test Plan',
         planType: CarePlanType.INITIAL,
@@ -836,7 +836,7 @@ describe('CarePlanService', () => {
       mockCarePlanRepository.create.mockResolvedValue(mockCarePlan);
       mockNotificationService.sendNotification.mockRejectedValue(new Error('Notification failed'));
 
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         residentId: 'resident-123',
         planName: 'Test Plan',
         planType: CarePlanType.INITIAL,
@@ -858,7 +858,7 @@ describe('CarePlanService', () => {
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
       mockCarePlanRepository.create.mockResolvedValue(mockCarePlan);
 
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         residentId: 'resident-123',
         planName: 'Compliance Test Plan',
         planType: CarePlanType.INITIAL,
@@ -922,7 +922,7 @@ describe('CarePlanService', () => {
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
       mockCarePlanRepository.create.mockResolvedValue(mockCarePlan);
 
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         residentId: 'resident-123',
         planName: 'Event Test Plan',
         planType: CarePlanType.INITIAL,
@@ -950,7 +950,7 @@ describe('CarePlanService', () => {
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
       mockCarePlanRepository.create.mockResolvedValue(mockCarePlan);
 
-      const createRequest: CreateCarePlanRequest = {
+      constcreateRequest: CreateCarePlanRequest = {
         residentId: 'resident-123',
         planName: 'Notification Test Plan',
         planType: CarePlanType.INITIAL,

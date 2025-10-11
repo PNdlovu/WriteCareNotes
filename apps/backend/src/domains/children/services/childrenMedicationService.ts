@@ -264,8 +264,8 @@ export class ChildrenMedicationService {
     patientWeightKg?: number,
     patientHeightCm?: number
   ): Promise<DosingValidation> {
-    const warnings: string[] = [];
-    const errors: string[] = [];
+    constwarnings: string[] = [];
+    consterrors: string[] = [];
 
     // For children, weight is REQUIRED for dosing calculations
     if (patientType !== PatientType.ADULT && patientType !== PatientType.CARE_LEAVER_18_25) {
@@ -577,7 +577,7 @@ export class ChildrenMedicationService {
       order: { prescribedDate: 'DESC' }
     });
 
-    const safetyAlerts: string[] = [];
+    constsafetyAlerts: string[] = [];
 
     // Check for safety issues
     for (const med of medications) {

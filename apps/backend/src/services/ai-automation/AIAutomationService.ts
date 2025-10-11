@@ -161,10 +161,10 @@ export interface IntelligentAutomation {
 }
 
 export class AIAutomationService {
-  private summaryRepository: Repository<AISummary>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
-  private encryptionService: FieldLevelEncryptionService;
+  privatesummaryRepository: Repository<AISummary>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
+  privateencryptionService: FieldLevelEncryptionService;
 
   constructor() {
     this.summaryRepository = AppDataSource.getRepository(AISummary);
@@ -302,7 +302,7 @@ export class AIAutomationService {
         clinicalAnalysis
       );
 
-      const decisionSupport: ClinicalDecisionSupport = {
+      constdecisionSupport: ClinicalDecisionSupport = {
         evidenceBasedRecommendations,
         riskAssessments,
         treatmentOptimization
@@ -338,7 +338,7 @@ export class AIAutomationService {
     approvalRequired: boolean;
   }): Promise<IntelligentAutomation> {
     try {
-      const automation: IntelligentAutomation = {
+      constautomation: IntelligentAutomation = {
         careTaskAutomation: {
           routineTaskIdentification: await this.identifyRoutineTasks(automationRequest.context),
           automationRules: await this.generateAutomationRules(automationRequest),
@@ -996,7 +996,7 @@ FOLLOW-UP ACTIONS:
       
       return { sentiment, entities, clinicalTermCount: clinicalCount, wordCount: words.length };
     } catch (error: unknown) {
-      return { sentiment: 'neutral', entities: [], error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" };
+      return { sentiment: 'neutral', entities: [], error: error instanceof Error ? error.message : "Unknown error" };
     }
   }
   private async analyzeVoice(voiceData: Buffer): Promise<any> { return { transcription: '', emotion: 'calm' }; }

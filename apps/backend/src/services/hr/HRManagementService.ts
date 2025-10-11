@@ -69,9 +69,9 @@ export interface TrainingPlan {
 }
 
 export class HRManagementService {
-  private employeeRepository: Repository<Employee>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateemployeeRepository: Repository<Employee>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);
@@ -360,7 +360,7 @@ export class HRManagementService {
   // Compliance Management
   async getComplianceAlerts(): Promise<ComplianceAlert[]> {
     const employees = await this.getAllEmployees();
-    const alerts: ComplianceAlert[] = [];
+    constalerts: ComplianceAlert[] = [];
 
     for (const employee of employees) {
       if (!employee.isActive()) continue;
@@ -569,7 +569,7 @@ export class HRManagementService {
   private calculateSourceEffectiveness(newHires: Employee[]): { [source: string]: number } {
     // Simulate recruitment source tracking
     const sources = ['Job Boards', 'Referrals', 'Recruitment Agencies', 'Direct Applications', 'Social Media'];
-    const effectiveness: { [source: string]: number } = {};
+    consteffectiveness: { [source: string]: number } = {};
     
     sources.forEach((source, index) => {
       // Distribute new hires across sources with realistic percentages
@@ -625,7 +625,7 @@ export class HRManagementService {
       throw new Error('Employee not found');
     }
 
-    const issues: string[] = [];
+    constissues: string[] = [];
 
     // Check right to work
     if (!employee.isRightToWorkValid()) {

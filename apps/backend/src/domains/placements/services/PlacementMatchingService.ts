@@ -38,13 +38,13 @@ export interface MatchScore {
 export class PlacementMatchingService {
   constructor(
     @InjectRepository(PlacementRequest)
-    private placementRequestRepository: Repository<PlacementRequest>,
+    privateplacementRequestRepository: Repository<PlacementRequest>,
     
     @InjectRepository(Organization)
-    private organizationRepository: Repository<Organization>,
+    privateorganizationRepository: Repository<Organization>,
     
     @InjectRepository(Placement)
-    private placementRepository: Repository<Placement>,
+    privateplacementRepository: Repository<Placement>,
   ) {}
 
   /**
@@ -80,7 +80,7 @@ export class PlacementMatchingService {
     }
 
     // Score each organization
-    const matchScores: MatchScore[] = [];
+    constmatchScores: MatchScore[] = [];
 
     for (const org of organizations) {
       const score = await this.calculateMatchScore(request, org);
@@ -230,7 +230,7 @@ export class PlacementMatchingService {
     request: PlacementRequest,
     organization: Organization
   ): { score: number; max: number; matched: string[] } {
-    const matched: string[] = [];
+    constmatched: string[] = [];
     let score = 0;
     const max = 10;
 
@@ -452,7 +452,7 @@ export class PlacementMatchingService {
    * Generate recommendations based on score breakdown
    */
   private generateRecommendations(breakdown: any): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     if (breakdown.specialisms.matched.length > 0) {
       recommendations.push(`Matched specialisms: ${breakdown.specialisms.matched.join(', ')}`);
@@ -473,7 +473,7 @@ export class PlacementMatchingService {
    * Generate concerns based on score breakdown
    */
   private generateConcerns(breakdown: any): string[] {
-    const concerns: string[] = [];
+    constconcerns: string[] = [];
 
     if (!breakdown.capacity.available) {
       concerns.push('No capacity currently available');

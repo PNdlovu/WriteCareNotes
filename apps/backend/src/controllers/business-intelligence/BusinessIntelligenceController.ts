@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { BusinessIntelligenceService } from '../../services/business-intelligence/BusinessIntelligenceService';
 
 export class BusinessIntelligenceController {
-  private biService: BusinessIntelligenceService;
+  privatebiService: BusinessIntelligenceService;
 
   constructor() {
     this.biService = new BusinessIntelligenceService();
@@ -27,7 +27,7 @@ export class BusinessIntelligenceController {
       const warehouse = await this.biService.createEnterpriseDataWarehouse(req.body);
       res.status(201).json({ success: true, data: warehouse });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class BusinessIntelligenceController {
       const deployment = await this.biService.deployAdvancedMLModel(req.body);
       res.status(201).json({ success: true, data: deployment });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -45,7 +45,7 @@ export class BusinessIntelligenceController {
       const dashboard = await this.biService.generateExecutiveDashboard();
       res.json({ success: true, data: dashboard });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -54,7 +54,7 @@ export class BusinessIntelligenceController {
       const models = await this.biService.deployPredictiveHealthcareModels();
       res.status(201).json({ success: true, data: models });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -63,7 +63,7 @@ export class BusinessIntelligenceController {
       const result = await this.biService.processRealTimeBusinessIntelligence(req.body);
       res.json({ success: true, data: result });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -72,7 +72,7 @@ export class BusinessIntelligenceController {
       const queryResult = await this.biService.executeAdvancedAnalyticsQuery(req.body);
       res.json({ success: true, data: queryResult });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

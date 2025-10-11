@@ -113,7 +113,7 @@ export class HealthCheckService {
         service: 'database',
         status: 'unhealthy',
         responseTime: Date.now() - startTime,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown database error',
+        error: error instanceof Error ? error.message : 'Unknown database error',
         timestamp: new Date().toISOString()
       };
     }
@@ -152,7 +152,7 @@ export class HealthCheckService {
         service: 'redis',
         status: 'unhealthy',
         responseTime: Date.now() - startTime,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown Redis error',
+        error: error instanceof Error ? error.message : 'Unknown Redis error',
         timestamp: new Date().toISOString()
       };
     }
@@ -184,7 +184,7 @@ export class HealthCheckService {
         service: 'filesystem',
         status: 'unhealthy',
         responseTime: Date.now() - startTime,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'Unknown filesystem error',
+        error: error instanceof Error ? error.message : 'Unknown filesystem error',
         timestamp: new Date().toISOString()
       };
     }
@@ -232,7 +232,7 @@ export class HealthCheckService {
         service: 'external_apis',
         status: 'unhealthy',
         responseTime: Date.now() - startTime,
-        error: error instanceof Error ? error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" : 'External API error',
+        error: error instanceof Error ? error.message : 'External API error',
         timestamp: new Date().toISOString()
       };
     }
@@ -287,7 +287,7 @@ export class HealthCheckService {
    */
   private static parseRedisInfo(info: string): any {
     const lines = info.split('\r\n');
-    const result: any = {};
+    constresult: any = {};
     
     for (const line of lines) {
       if (line.includes(':')) {
@@ -328,7 +328,7 @@ export class HealthCheckService {
     const unhealthyServices = services.filter(s => s.status === 'unhealthy');
     const degradedServices = services.filter(s => s.status === 'degraded');
     
-    let overall: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
+    letoverall: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
     if (unhealthyServices.length > 0) {
       overall = 'unhealthy';
     } else if (degradedServices.length > 0) {

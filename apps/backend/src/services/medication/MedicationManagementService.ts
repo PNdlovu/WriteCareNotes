@@ -46,7 +46,7 @@ interface MedicationFilters {
 }
 
 export class MedicationManagementService {
-  private medicationRepository: Repository<MedicationRecord>;
+  privatemedicationRepository: Repository<MedicationRecord>;
 
   constructor(private dataSource: DataSource) {
     this.medicationRepository = this.dataSource.getRepository(MedicationRecord);

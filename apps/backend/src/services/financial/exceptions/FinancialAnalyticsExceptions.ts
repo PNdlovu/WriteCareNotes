@@ -77,7 +77,7 @@ export class TransactionValidationError extends FinancialAnalyticsError {
    */
   getFormattedErrors(): string {
     return this.validationErrors
-      .map(error => `${error.field}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`)
+      .map(error => `${error.field}: ${error instanceof Error ? error.message : "Unknown error"}`)
       .join(', ');
   }
 }

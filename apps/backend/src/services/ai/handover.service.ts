@@ -197,7 +197,7 @@ export class HandoverSummarizerService {
   private readonly logger = new Logger(HandoverSummarizerService.name);
 
   // In-memory storage (would be replaced with proper database entities)
-  private summaries: Map<string, HandoverSummary> = new Map();
+  privatesummaries: Map<string, HandoverSummary> = new Map();
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
@@ -237,7 +237,7 @@ export class HandoverSummarizerService {
       const aiSummary = await this.generateAISummary(processedData, request);
       
       // Create structured summary
-      const summary: HandoverSummary = {
+      constsummary: HandoverSummary = {
         summaryId: `handover-summary-${Date.now()}`,
         handoverDate: request.handoverDate,
         shiftType: request.shiftType,

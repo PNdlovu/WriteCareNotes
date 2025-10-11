@@ -28,7 +28,7 @@ import { TenantCareAssistantAIService, TenantCareInquiry } from '../../services/
 
 export class TenantAIAgentController {
   // Logger removed
-  private aiService: TenantCareAssistantAIService;
+  privateaiService: TenantCareAssistantAIService;
 
   constructor() {
     this.aiService = new TenantCareAssistantAIService();
@@ -55,7 +55,7 @@ export class TenantAIAgentController {
         });
       }
 
-      const inquiry: TenantCareInquiry = {
+      constinquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `tenant_session_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -85,7 +85,7 @@ export class TenantAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to handle tenant care inquiry', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         path: req.path,
         tenantId: req.tenant?.tenantId,
         userId: req.user?.id
@@ -121,7 +121,7 @@ export class TenantAIAgentController {
         });
       }
 
-      const inquiry: TenantCareInquiry = {
+      constinquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `care_rec_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -153,7 +153,7 @@ export class TenantAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to get care recommendations', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         residentId: req.params['residentId'],
         tenantId: req.tenant?.tenantId
       });
@@ -170,7 +170,7 @@ export class TenantAIAgentController {
    */
   async getComplianceAlerts(req: Request, res: Response): Promise<void> {
     try {
-      const inquiry: TenantCareInquiry = {
+      constinquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `compliance_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -200,7 +200,7 @@ export class TenantAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to get compliance alerts', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId: req.tenant?.tenantId
       });
 
@@ -218,7 +218,7 @@ export class TenantAIAgentController {
     try {
       const { documentType, currentContent, residentId } = req.body;
 
-      const inquiry: TenantCareInquiry = {
+      constinquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `doc_assist_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -250,7 +250,7 @@ export class TenantAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to provide documentation assistance', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId: req.tenant?.tenantId
       });
 
@@ -268,7 +268,7 @@ export class TenantAIAgentController {
     try {
       const { message, residentId, emergencyType } = req.body;
 
-      const inquiry: TenantCareInquiry = {
+      constinquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `emergency_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -297,7 +297,7 @@ export class TenantAIAgentController {
 
     } catch (error: unknown) {
       console.error('Failed to handle emergency inquiry', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         tenantId: req.tenant?.tenantId,
         emergencyType: req.body['emergencyType']
       });
@@ -326,7 +326,7 @@ export class TenantAIAgentController {
     } catch (error: unknown) {
       res.status(500).json({
         status: 'unhealthy',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

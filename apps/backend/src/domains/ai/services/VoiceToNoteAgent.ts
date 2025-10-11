@@ -58,8 +58,8 @@ export interface AgentCapabilities {
 
 @Injectable()
 export class VoiceToNoteAgent {
-  private eventStream: EventStreamService;
-  private capabilities: AgentCapabilities = {
+  privateeventStream: EventStreamService;
+  privatecapabilities: AgentCapabilities = {
     transcription: true,
     noteGeneration: true,
     sentimentAnalysis: true,
@@ -100,7 +100,7 @@ export class VoiceToNoteAgent {
       const transcription = await this.transcribeAudio(request);
       
       // Step 2: Generate care note
-      const noteRequest: NoteGenerationRequest = {
+      constnoteRequest: NoteGenerationRequest = {
         transcription: transcription.transcription,
         residentId: request.residentId,
         staffMemberId: request.staffMemberId,
@@ -182,7 +182,7 @@ export class VoiceToNoteAgent {
     // Determine if review is required
     const requiresReview = this.requiresReview(priority, riskAssessment, analysis);
     
-    const note: NoteGenerationResponse = {
+    constnote: NoteGenerationResponse = {
       noteId: this.generateNoteId(),
       title: this.generateNoteTitle(request.transcription, analysis),
       content: noteContent,
@@ -231,7 +231,7 @@ export class VoiceToNoteAgent {
     const positiveCount = words.filter(word => positiveWords.includes(word)).length;
     const negativeCount = words.filter(word => negativeWords.includes(word)).length;
     
-    let sentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
+    letsentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
     if (positiveCount > negativeCount) sentiment = 'positive';
     else if (negativeCount > positiveCount) sentiment = 'negative';
     
@@ -374,9 +374,9 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
     factors: string[];
     recommendations: string[];
   } {
-    const factors: string[] = [];
-    const recommendations: string[] = [];
-    let level: 'low' | 'medium' | 'high' = 'low';
+    constfactors: string[] = [];
+    constrecommendations: string[] = [];
+    letlevel: 'low' | 'medium' | 'high' = 'low';
     
     // Check for risk indicators
     if (analysis.sentiment === 'negative') {
@@ -409,7 +409,7 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
    * Generate suggested actions
    */
   private generateSuggestedActions(transcription: string, analysis: any, riskAssessment: any): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
     
     // Medical actions
     if (analysis.medicalTerms.includes('medication')) {

@@ -44,10 +44,10 @@ import { CarePlanGoal, GoalStatus } from '../entities/CarePlanGoal';
 import { Child } from '../../children/entities/Child';
 
 export class CarePlanningService {
-  private carePlanRepository: Repository<CarePlan>;
-  private carePlanReviewRepository: Repository<CarePlanReview>;
-  private carePlanGoalRepository: Repository<CarePlanGoal>;
-  private childRepository: Repository<Child>;
+  privatecarePlanRepository: Repository<CarePlan>;
+  privatecarePlanReviewRepository: Repository<CarePlanReview>;
+  privatecarePlanGoalRepository: Repository<CarePlanGoal>;
+  privatechildRepository: Repository<Child>;
 
   constructor() {
     this.carePlanRepository = AppDataSource.getRepository(CarePlan);

@@ -147,7 +147,7 @@ export class ObservationSchedule {
   }
 
   get nextScheduledTime(): Date | null {
-    const frequencyHours: { [key in ObservationFrequency]: number } = {
+    constfrequencyHours: { [key in ObservationFrequency]: number } = {
       [ObservationFrequency.HOURLY]: 1,
       [ObservationFrequency.TWO_HOURLY]: 2,
       [ObservationFrequency.FOUR_HOURLY]: 4,

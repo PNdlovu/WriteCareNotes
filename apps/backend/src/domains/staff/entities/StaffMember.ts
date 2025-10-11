@@ -290,7 +290,7 @@ export class StaffMember {
    * Validate before save
    */
   validate(): { valid: boolean; errors: string[] } {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!this.firstName || this.firstName.trim() === '') {
       errors.push('First name is required');

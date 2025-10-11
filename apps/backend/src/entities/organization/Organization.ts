@@ -373,7 +373,7 @@ export const ORGANIZATION_ROLES = {
  * TODO: Add proper documentation
  */
 export function validateOrganization(organization: Partial<Organization>): string[] {
-  const errors: string[] = [];
+  consterrors: string[] = [];
 
   if (!organization.name?.trim()) {
     errors.push('Organization name is required');
@@ -418,7 +418,7 @@ export function validateOrganization(organization: Partial<Organization>): strin
  * TODO: Add proper documentation
  */
 export function validateAddress(address: Address): string[] {
-  const errors: string[] = [];
+  consterrors: string[] = [];
 
   if (!address.street?.trim()) {
     errors.push('Street address is required');
@@ -455,7 +455,7 @@ export function validateAddress(address: Address): string[] {
  * TODO: Add proper documentation
  */
 export function validateContactInfo(contactInfo: ContactInfo): string[] {
-  const errors: string[] = [];
+  consterrors: string[] = [];
 
   if (contactInfo.email && !isValidEmail(contactInfo.email)) {
     errors.push('Invalid email format');

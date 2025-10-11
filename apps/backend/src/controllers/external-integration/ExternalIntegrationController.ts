@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { ExternalIntegrationService } from '../../services/external-integration/ExternalIntegrationService';
 
 export class ExternalIntegrationController {
-  private integrationService: ExternalIntegrationService;
+  privateintegrationService: ExternalIntegrationService;
 
   constructor() {
     this.integrationService = new ExternalIntegrationService();
@@ -27,7 +27,7 @@ export class ExternalIntegrationController {
       const system = await this.integrationService.createExternalSystem(req.body);
       res.status(201).json({ success: true, data: system });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class ExternalIntegrationController {
       const analytics = await this.integrationService.getIntegrationAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

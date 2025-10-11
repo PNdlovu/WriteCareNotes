@@ -192,11 +192,11 @@ export interface PensionCalculation {
 }
 
 export class PayrollService extends EventEmitter2 {
-  private employeeRepository: Repository<any>;
-  private payrollRunRepository: Repository<any>;
-  private payslipRepository: Repository<any>;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privateemployeeRepository: Repository<any>;
+  privatepayrollRunRepository: Repository<any>;
+  privatepayslipRepository: Repository<any>;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
 
   // HMRC tax rates and thresholds for 2025/26 tax year
   private readonly TAX_YEAR = '2025/26';
@@ -242,7 +242,7 @@ export class PayrollService extends EventEmitter2 {
   ): Promise<PayrollRun> {
     const runNumber = await this.generateRunNumber(organizationId);
     
-    const payrollRun: PayrollRun = {
+    constpayrollRun: PayrollRun = {
       id: this.generateId(),
       runNumber,
       payPeriod: `${payPeriodStart.toISOString().slice(0, 10)} to ${payPeriodEnd.toISOString().slice(0, 10)}`,
@@ -312,7 +312,7 @@ export class PayrollService extends EventEmitter2 {
         where: { organizationId, isActive: true }
       });
 
-      const payslips: Payslip[] = [];
+      constpayslips: Payslip[] = [];
       let totalGross = 0;
       let totalNet = 0;
       let totalTax = 0;
@@ -408,7 +408,7 @@ export class PayrollService extends EventEmitter2 {
     // Get year-to-date figures
     const ytdFigures = await this.getYearToDateFigures(employee.id, payrollRun.payPeriodEnd);
 
-    const payslip: Payslip = {
+    constpayslip: Payslip = {
       id: this.generateId(),
       payrollRunId: payrollRun.id,
       employeeId: employee.id,
@@ -482,7 +482,7 @@ export class PayrollService extends EventEmitter2 {
     const personalAllowance = this.PERSONAL_ALLOWANCE;
     const taxableIncome = Math.max(0, annualizedPay - personalAllowance);
     
-    const taxBands: TaxBand[] = [];
+    consttaxBands: TaxBand[] = [];
     let totalTax = 0;
 
     // Basic rate (20%)

@@ -15,8 +15,8 @@ import { EmotionWellnessTrackingService } from '../../services/wellness/EmotionW
 import { Logger } from '@nestjs/common';
 
 export class EmotionWellnessTrackingController {
-  private wellnessService: EmotionWellnessTrackingService;
-  private logger: Logger;
+  privatewellnessService: EmotionWellnessTrackingService;
+  privatelogger: Logger;
 
   constructor() {
     this.wellnessService = new EmotionWellnessTrackingService();

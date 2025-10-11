@@ -23,9 +23,9 @@ jest.mock('../../../utils/logger', () => ({
 }));
 
 describe('HealthcareCacheManager', () => {
-  let healthcareCacheManager: HealthcareCacheManager;
-  let mockCacheService: jest.Mocked<CacheService>;
-  let mockAuditService: jest.Mocked<AuditService>;
+  lethealthcareCacheManager: HealthcareCacheManager;
+  letmockCacheService: jest.Mocked<CacheService>;
+  letmockAuditService: jest.Mocked<AuditService>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -57,7 +57,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('cacheResident', () => {
     it('should cache resident data with PII encryption', async () => {
-      const residentData: ResidentCacheData = {
+      constresidentData: ResidentCacheData = {
         id: 'resident-123',
         firstName: 'John',
         lastName: 'Doe',
@@ -101,7 +101,7 @@ describe('HealthcareCacheManager', () => {
     });
 
     it('should handle caching failures gracefully', async () => {
-      const residentData: ResidentCacheData = {
+      constresidentData: ResidentCacheData = {
         id: 'resident-123',
         firstName: 'John',
         lastName: 'Doe',
@@ -125,7 +125,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('getResident', () => {
     it('should retrieve resident data from cache', async () => {
-      const residentData: ResidentCacheData = {
+      constresidentData: ResidentCacheData = {
         id: 'resident-123',
         firstName: 'John',
         lastName: 'Doe',
@@ -164,7 +164,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('getResidentByNHSNumber', () => {
     it('should retrieve resident by NHS number', async () => {
-      const residentData: ResidentCacheData = {
+      constresidentData: ResidentCacheData = {
         id: 'resident-123',
         firstName: 'John',
         lastName: 'Doe',
@@ -205,7 +205,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('cacheMedicationSchedule', () => {
     it('should cache medication schedule with encryption', async () => {
-      const medicationData: MedicationCacheData = {
+      constmedicationData: MedicationCacheData = {
         residentId: 'resident-123',
         prescriptions: [],
         administrationRecords: [],
@@ -235,7 +235,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('getMedicationSchedule', () => {
     it('should retrieve medication schedule from cache', async () => {
-      const medicationData: MedicationCacheData = {
+      constmedicationData: MedicationCacheData = {
         residentId: 'resident-123',
         prescriptions: [],
         administrationRecords: [],
@@ -261,7 +261,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('cacheCarePlan', () => {
     it('should cache care plan with encryption', async () => {
-      const carePlanData: CarePlanCacheData = {
+      constcarePlanData: CarePlanCacheData = {
         residentId: 'resident-123',
         carePlan: {},
         goals: [],
@@ -291,7 +291,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('cacheStaff', () => {
     it('should cache staff data with encryption', async () => {
-      const staffData: StaffCacheData = {
+      conststaffData: StaffCacheData = {
         id: 'staff-123',
         name: 'Jane Smith',
         role: 'nurse',
@@ -390,7 +390,7 @@ describe('HealthcareCacheManager', () => {
 
   describe('warmHealthcareCache', () => {
     it('should warm cache with healthcare data', async () => {
-      const residents: ResidentCacheData[] = [{
+      constresidents: ResidentCacheData[] = [{
         id: 'resident-123',
         firstName: 'John',
         lastName: 'Doe',
@@ -404,7 +404,7 @@ describe('HealthcareCacheManager', () => {
         lastUpdated: '2025-01-01T10:00:00Z'
       }];
 
-      const staff: StaffCacheData[] = [{
+      conststaff: StaffCacheData[] = [{
         id: 'staff-123',
         name: 'Jane Smith',
         role: 'nurse',
@@ -426,7 +426,7 @@ describe('HealthcareCacheManager', () => {
     });
 
     it('should handle partial failures during cache warming', async () => {
-      const residents: ResidentCacheData[] = [{
+      constresidents: ResidentCacheData[] = [{
         id: 'resident-123',
         firstName: 'John',
         lastName: 'Doe',

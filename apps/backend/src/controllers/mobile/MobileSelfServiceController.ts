@@ -17,7 +17,7 @@ import { MobileSelfServiceService } from '../../services/mobile/MobileSelfServic
 import { DeviceType } from '../../entities/mobile/MobileSession';
 
 export class MobileSelfServiceController {
-  private mobileService: MobileSelfServiceService;
+  privatemobileService: MobileSelfServiceService;
 
   constructor() {
     this.mobileService = new MobileSelfServiceService();
@@ -28,7 +28,7 @@ export class MobileSelfServiceController {
       const session = await this.mobileService.createAdvancedMobileSession(req.body);
       res.status(201).json({ success: true, data: session });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -38,7 +38,7 @@ export class MobileSelfServiceController {
       const syncResult = await this.mobileService.performIntelligentSync(sessionId);
       res.json({ success: true, data: syncResult });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -48,7 +48,7 @@ export class MobileSelfServiceController {
       const assistance = await this.mobileService.provideContextualAssistance(sessionId, req.body);
       res.json({ success: true, data: assistance });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -58,7 +58,7 @@ export class MobileSelfServiceController {
       const authResult = await this.mobileService.performAdvancedBiometricAuth(sessionId, req.body);
       res.json({ success: true, data: authResult });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -67,7 +67,7 @@ export class MobileSelfServiceController {
       const analytics = await this.mobileService.getAdvancedMobileAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -76,7 +76,7 @@ export class MobileSelfServiceController {
       const deployment = await this.mobileService.deployProgressiveWebApp(req.body);
       res.status(201).json({ success: true, data: deployment });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class IntegrationService {
-  private integrationRepository: Repository<SystemIntegration>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateintegrationRepository: Repository<SystemIntegration>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.integrationRepository = AppDataSource.getRepository(SystemIntegration);

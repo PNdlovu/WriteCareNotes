@@ -58,7 +58,7 @@ import {
 } from '../entities/HomeOfficeCorrespondence';
 
 export class UASCController {
-  private uascService: UASCService;
+  privateuascService: UASCService;
 
   constructor() {
     this.uascService = new UASCService();

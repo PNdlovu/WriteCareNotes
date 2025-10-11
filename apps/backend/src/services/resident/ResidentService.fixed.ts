@@ -94,7 +94,7 @@ export interface ResidentSearchResult {
 
 export class ResidentService {
   private logger = logger;
-  private db: Pool;
+  privatedb: Pool;
 
   constructor(db: Pool) {
     this.db = db;
@@ -167,8 +167,8 @@ export class ResidentService {
       return resident;
 
     } catch (error: unknown) {
-      console.error('Failed to create resident', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to create resident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to create resident', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to create resident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -200,8 +200,8 @@ export class ResidentService {
       return resident;
 
     } catch (error: unknown) {
-      console.error('Failed to retrieve resident', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to retrieve resident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to retrieve resident', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to retrieve resident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -211,7 +211,7 @@ export class ResidentService {
 
       // Build base query
       let query = 'SELECT * FROM residents WHERE deleted_at IS NULL';
-      const values: any[] = [];
+      constvalues: any[] = [];
       let paramCount = 0;
 
       // Add organization filter
@@ -277,7 +277,7 @@ export class ResidentService {
       const hasNext = page < totalPages;
       const hasPrevious = page > 1;
 
-      const searchResult: ResidentSearchResult = {
+      constsearchResult: ResidentSearchResult = {
         residents,
         pagination: {
           page,
@@ -297,8 +297,8 @@ export class ResidentService {
       return searchResult;
 
     } catch (error: unknown) {
-      console.error('Failed to search residents', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to search residents: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to search residents', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to search residents: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -310,8 +310,8 @@ export class ResidentService {
       const existingResident = await this.getResidentById(id, userId);
 
       // Build update query dynamically
-      const updateFields: string[] = [];
-      const values: any[] = [];
+      constupdateFields: string[] = [];
+      constvalues: any[] = [];
       let paramCount = 0;
 
       Object.entries(updates).forEach(([key, value]) => {
@@ -369,8 +369,8 @@ export class ResidentService {
       return updatedResident;
 
     } catch (error: unknown) {
-      console.error('Failed to update resident', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to update resident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to update resident', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to update resident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -401,8 +401,8 @@ export class ResidentService {
       return dischargedResident;
 
     } catch (error: unknown) {
-      console.error('Failed to discharge resident', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to discharge resident: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to discharge resident', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to discharge resident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -443,13 +443,13 @@ export class ResidentService {
       };
 
     } catch (error: unknown) {
-      console.error('Failed to get resident statistics', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      throw new Error(`Failed to get resident statistics: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      console.error('Failed to get resident statistics', { error: error instanceof Error ? error.message : "Unknown error" });
+      throw new Error(`Failed to get resident statistics: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateCreateResidentRequest(request: CreateResidentRequest): void {
-    const errors: string[] = [];
+    consterrors: string[] = [];
 
     if (!request.firstName?.trim()) errors.push('First name is required');
     if (!request.lastName?.trim()) errors.push('Last name is required');

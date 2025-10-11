@@ -17,7 +17,7 @@ import AppDataSource from '../../config/database';
 import { AgencyWorker, WorkerStatus } from '../../entities/agency/AgencyWorker';
 
 export class AgencyWorkerService {
-  private workerRepository: Repository<AgencyWorker>;
+  privateworkerRepository: Repository<AgencyWorker>;
 
   constructor() {
     this.workerRepository = AppDataSource.getRepository(AgencyWorker);

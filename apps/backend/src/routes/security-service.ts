@@ -18,7 +18,7 @@ router.post('/framework/implement', authorize(['security_admin', 'admin']), asyn
     const framework = await securityService.implementDigitalSecurityFramework(req.body);
     res.status(201).json({ success: true, data: framework });
   } catch (error: unknown) {
-    res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
   }
 });
 

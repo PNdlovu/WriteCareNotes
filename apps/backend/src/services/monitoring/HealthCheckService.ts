@@ -73,11 +73,11 @@ export interface PrometheusMetrics {
 }
 
 export class HealthCheckService {
-  private auditService: AuditService;
-  private eventEmitter: EventEmitter2;
-  private healthChecks: Map<string, HealthCheckResult> = new Map();
-  private metrics: SystemMetrics[] = [];
-  private startTime: Date;
+  privateauditService: AuditService;
+  privateeventEmitter: EventEmitter2;
+  privatehealthChecks: Map<string, HealthCheckResult> = new Map();
+  privatemetrics: SystemMetrics[] = [];
+  privatestartTime: Date;
 
   constructor() {
     this.auditService = new AuditTrailService();
@@ -96,7 +96,7 @@ export class HealthCheckService {
     checks: HealthCheckResult[];
     timestamp: Date;
   }> {
-    const checks: HealthCheckResult[] = [];
+    constchecks: HealthCheckResult[] = [];
 
     // Database health check
     checks.push(await this.checkDatabase());

@@ -80,7 +80,7 @@ export class FamilyPortalController {
     @Request() req: any,
   ) {
     try {
-      const update: PortalUpdate = {
+      constupdate: PortalUpdate = {
         id: `update_${Date.now()}`,
         residentId: updateData.residentId,
         updateType: updateData.updateType,
@@ -144,7 +144,7 @@ export class FamilyPortalController {
     @Request() req: any,
   ) {
     try {
-      const photoUpdate: PhotoUpdate = {
+      constphotoUpdate: PhotoUpdate = {
         id: `photo_update_${Date.now()}`,
         residentId: photoData.residentId,
         photos: photoData.photos,
@@ -444,7 +444,7 @@ export class FamilyPortalController {
     @Request() req: any,
   ) {
     try {
-      const preferences: FamilyPreferences = {
+      constpreferences: FamilyPreferences = {
         residentId,
         communicationPreferences: preferencesData.communicationPreferences,
         notificationSettings: preferencesData.notificationSettings,

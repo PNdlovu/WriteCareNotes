@@ -176,15 +176,15 @@ export interface ComplianceReport {
 }
 
 export class ComplianceAutomationEngine {
-  private visitorRepository: Repository<VisitorManagement>;
-  private eventEmitter: EventEmitter2;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privatevisitorRepository: Repository<VisitorManagement>;
+  privateeventEmitter: EventEmitter2;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
   
-  private complianceChecks: Map<string, ComplianceCheck>;
-  private complianceRules: Map<ComplianceStandard, any>;
-  private scheduledChecks: Map<string, NodeJS.Timeout>;
-  private facilityLocation: RegulatoryAuthority;
+  privatecomplianceChecks: Map<string, ComplianceCheck>;
+  privatecomplianceRules: Map<ComplianceStandard, any>;
+  privatescheduledChecks: Map<string, NodeJS.Timeout>;
+  privatefacilityLocation: RegulatoryAuthority;
 
   constructor(
     eventEmitter: EventEmitter2,
@@ -315,7 +315,7 @@ export class ComplianceAutomationEngine {
         throw new Error(`No compliance rules defined for standard: ${standard}`);
       }
 
-      const check: ComplianceCheck = {
+      constcheck: ComplianceCheck = {
         checkId,
         authority,
         standard,
@@ -385,7 +385,7 @@ export class ComplianceAutomationEngine {
       };
 
       // Gather compliance data
-      const standardsAssessment: any = {};
+      conststandardsAssessment: any = {};
       let totalChecks = 0;
       let compliant = 0;
       let nonCompliant = 0;
@@ -449,7 +449,7 @@ export class ComplianceAutomationEngine {
       // Generate recommendations
       const recommendations = await this.generateRecommendations(standardsAssessment, keyFindings);
 
-      const report: ComplianceReport = {
+      constreport: ComplianceReport = {
         reportId,
         authority,
         reportType,
@@ -531,7 +531,7 @@ export class ComplianceAutomationEngine {
       };
 
       // Identify critical issues
-      const criticalIssues: string[] = [];
+      constcriticalIssues: string[] = [];
       Object.entries(complianceAreas).forEach(([area, status]) => {
         if (status === ComplianceStatus.NON_COMPLIANT) {
           criticalIssues.push(`Non-compliant ${area.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
@@ -791,7 +791,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async collectEvidence(standard: ComplianceStandard, authority: RegulatoryAuthority): Promise<any[]> {
-    const evidence: any[] = [];
+    constevidence: any[] = [];
 
     switch (standard) {
       case ComplianceStandard.SAFEGUARDING:
@@ -835,7 +835,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async analyzeCompliance(standard: ComplianceStandard, evidence: any[], rules: any): Promise<any[]> {
-    const findings: any[] = [];
+    constfindings: any[] = [];
 
     switch (standard) {
       case ComplianceStandard.SAFEGUARDING:
@@ -923,7 +923,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async generateCorrectiveActions(findings: any[], standard: ComplianceStandard): Promise<any[]> {
-    const actions: any[] = [];
+    constactions: any[] = [];
 
     for (const finding of findings) {
       if (finding.type === 'non_compliance' || finding.severity === 'critical' || finding.severity === 'major') {
@@ -954,7 +954,7 @@ export class ComplianceAutomationEngine {
   }
 
   private getRequiredResources(finding: any, standard: ComplianceStandard): string[] {
-    const resources: string[] = [];
+    constresources: string[] = [];
 
     if (finding.description.includes('training')) {
       resources.push('staff_training', 'training_materials');
@@ -1093,7 +1093,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async generateVisitorManagementRecommendations(complianceAreas: any): Promise<string[]> {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
 
     Object.entries(complianceAreas).forEach(([area, status]) => {
       if (status !== ComplianceStatus.COMPLIANT) {

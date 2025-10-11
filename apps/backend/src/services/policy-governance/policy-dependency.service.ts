@@ -242,7 +242,7 @@ export class PolicyDependencyService {
     policyId: string,
     includeInactive: boolean = false
   ): Promise<PolicyDependency[]> {
-    const whereClause: any = { policyId };
+    constwhereClause: any = { policyId };
     
     if (!includeInactive) {
       whereClause.isActive = true;
@@ -282,7 +282,7 @@ export class PolicyDependencyService {
     const allDependencies = await this.getPolicyDependencies(policyId, false);
 
     // Initialize counters
-    const byType: Record<DependentType, number> = {
+    constbyType: Record<DependentType, number> = {
       [DependentType.WORKFLOW]: 0,
       [DependentType.MODULE]: 0,
       [DependentType.TEMPLATE]: 0,
@@ -291,7 +291,7 @@ export class PolicyDependencyService {
       [DependentType.DOCUMENT]: 0
     };
 
-    const byStrength: Record<DependencyStrength, number> = {
+    constbyStrength: Record<DependencyStrength, number> = {
       [DependencyStrength.STRONG]: 0,
       [DependencyStrength.MEDIUM]: 0,
       [DependencyStrength.WEAK]: 0
@@ -363,15 +363,15 @@ export class PolicyDependencyService {
     }
 
     // Initialize graph structures
-    const nodes: DependencyNode[] = [];
-    const edges: DependencyEdge[] = [];
+    constnodes: DependencyNode[] = [];
+    constedges: DependencyEdge[] = [];
     const visited = new Set<string>();
     const strengthBreakdown = { strong: 0, medium: 0, weak: 0 };
-    const typeBreakdown: Record<string, number> = {};
+    consttypeBreakdown: Record<string, number> = {};
     let actualMaxDepth = 0;
 
     // Create root node
-    const rootNode: DependencyNode = {
+    constrootNode: DependencyNode = {
       id: rootPolicy.id,
       type: 'policy',
       label: rootPolicy.title,
@@ -421,7 +421,7 @@ export class PolicyDependencyService {
         if (!visited.has(childId)) {
           visited.add(childId);
 
-          const childNode: DependencyNode = {
+          constchildNode: DependencyNode = {
             id: childId,
             type: childType,
             label: `${childType.charAt(0).toUpperCase()}${childType.slice(1)} ${childId.substring(0, 8)}`,
@@ -490,7 +490,7 @@ export class PolicyDependencyService {
     // - Assessments that check policies: MEDIUM
     // - Training modules about policies: WEAK
 
-    const strengthMap: Record<DependentType, DependencyStrength> = {
+    conststrengthMap: Record<DependentType, DependencyStrength> = {
       [DependentType.WORKFLOW]: DependencyStrength.STRONG,
       [DependentType.MODULE]: DependencyStrength.MEDIUM,
       [DependentType.TEMPLATE]: DependencyStrength.MEDIUM,
@@ -598,7 +598,7 @@ export class PolicyDependencyService {
   ): Promise<PolicyDependency[]> {
     this.logger.log(`Bulk creating ${dependencies.length} dependencies`);
 
-    const created: PolicyDependency[] = [];
+    constcreated: PolicyDependency[] = [];
 
     for (const dto of dependencies) {
       try {

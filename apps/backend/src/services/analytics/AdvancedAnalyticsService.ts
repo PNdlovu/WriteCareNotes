@@ -19,9 +19,9 @@ import { NotificationService } from '../notifications/NotificationService';
 import { AuditService,  AuditTrailService } from '../audit';
 
 export class AdvancedAnalyticsService {
-  private datasetRepository: Repository<AnalyticsDataset>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatedatasetRepository: Repository<AnalyticsDataset>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.datasetRepository = AppDataSource.getRepository(AnalyticsDataset);

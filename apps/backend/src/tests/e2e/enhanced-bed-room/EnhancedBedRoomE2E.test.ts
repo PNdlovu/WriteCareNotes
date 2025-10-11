@@ -8,11 +8,11 @@ import { BedRoom } from '../../../entities/enhanced-bed-room/BedRoom';
 import { RoomOccupancy } from '../../../entities/enhanced-bed-room/RoomOccupancy';
 
 describe('Enhanced Bed Room E2E Tests', () => {
-  let app: INestApplication;
-  let service: EnhancedBedRoomService;
+  letapp: INestApplication;
+  letservice: EnhancedBedRoomService;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    constmoduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',

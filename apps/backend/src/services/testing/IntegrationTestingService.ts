@@ -167,19 +167,19 @@ type ComplianceStatus = 'compliant' | 'non_compliant' | 'partially_compliant' | 
 
 export class IntegrationTestingService {
   private router = express.Router();
-  private db: DatabaseService;
-  private logger: Logger;
-  private app: express.Application;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateapp: express.Application;
   
   // Service instances for testing
-  private communicationService: CommunicationSessionService;
-  private messagingService: RealtimeMessagingService;
-  private consentService: ConsentService;
-  private staffService: StaffRevolutionService;
-  private familyService: FamilyTrustEngineService;
-  private residentService: ResidentVoiceService;
-  private qualityService: CareQualityIntelligenceService;
-  private communityService: CommunityConnectionHubService;
+  privatecommunicationService: CommunicationSessionService;
+  privatemessagingService: RealtimeMessagingService;
+  privateconsentService: ConsentService;
+  privatestaffService: StaffRevolutionService;
+  privatefamilyService: FamilyTrustEngineService;
+  privateresidentService: ResidentVoiceService;
+  privatequalityService: CareQualityIntelligenceService;
+  privatecommunityService: CommunityConnectionHubService;
 
   constructor() {
     this.db = DatabaseService.getInstance();
@@ -266,7 +266,7 @@ export class IntegrationTestingService {
       await this.updateTestSuiteStatus(tenantId, suiteId, 'running');
 
       const startTime = Date.now();
-      const results: TestResults = {
+      constresults: TestResults = {
         totalTests: suite.tests.length,
         passed: 0,
         failed: 0,
@@ -284,8 +284,8 @@ export class IntegrationTestingService {
         }
       };
 
-      const responseTimes: number[] = [];
-      const endpointMetrics: Map<string, EndpointMetric> = new Map();
+      constresponseTimes: number[] = [];
+      constendpointMetrics: Map<string, EndpointMetric> = new Map();
 
       // Execute tests sequentially or in parallel based on dependencies
       for (const test of suite.tests) {
@@ -499,7 +499,7 @@ export class IntegrationTestingService {
 
       this.logger.info('Running security tests', { tenantId });
 
-      const securityResults: SecurityTestResult = {
+      constsecurityResults: SecurityTestResult = {
         vulnerabilities: [],
         authenticationTests: [],
         authorizationTests: [],
@@ -718,7 +718,7 @@ export class IntegrationTestingService {
   }
 
   private async runAuthenticationTests(tenantId: string): Promise<AuthTest[]> {
-    const tests: AuthTest[] = [];
+    consttests: AuthTest[] = [];
     
     // Test endpoints without authentication
     const endpoints = [
@@ -754,7 +754,7 @@ export class IntegrationTestingService {
   }
 
   private async runAuthorizationTests(tenantId: string): Promise<AuthTest[]> {
-    const tests: AuthTest[] = [];
+    consttests: AuthTest[] = [];
     
     // Test role-based access control
     const roleTests = [
@@ -794,7 +794,7 @@ export class IntegrationTestingService {
   }
 
   private async runDataProtectionTests(tenantId: string): Promise<DataProtectionTest[]> {
-    const tests: DataProtectionTest[] = [];
+    consttests: DataProtectionTest[] = [];
     
     const dataTypes = ['resident_data', 'staff_data', 'family_data', 'health_records'];
     
@@ -813,7 +813,7 @@ export class IntegrationTestingService {
   }
 
   private async runVulnerabilityScans(tenantId: string): Promise<SecurityVulnerability[]> {
-    const vulnerabilities: SecurityVulnerability[] = [];
+    constvulnerabilities: SecurityVulnerability[] = [];
     
     // Check for common vulnerabilities
     const endpoints = [
@@ -849,7 +849,7 @@ export class IntegrationTestingService {
   }
 
   private async runComplianceChecks(tenantId: string): Promise<ComplianceCheck[]> {
-    const checks: ComplianceCheck[] = [
+    constchecks: ComplianceCheck[] = [
       {
         standard: 'GDPR',
         requirement: 'Data retention policies',
@@ -982,7 +982,7 @@ export class IntegrationTestingService {
     
     try {
       // Execute tests here (simplified for this implementation)
-      const results: TestResults = {
+      constresults: TestResults = {
         totalTests: suite.tests.length,
         passed: suite.tests.length,
         failed: 0,

@@ -21,16 +21,16 @@ import { LedgerAccount } from '../../entities/financial/LedgerAccount';
  */
 
 describe('Performance Service', () => {
-  let service: PerformanceService;
-  let dbsVerificationRepository: Repository<DBSVerification>;
-  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  let dvlaCheckRepository: Repository<DVLACheck>;
-  let cashTransactionRepository: Repository<CashTransaction>;
-  let budgetRepository: Repository<Budget>;
-  let ledgerAccountRepository: Repository<LedgerAccount>;
+  letservice: PerformanceService;
+  letdbsVerificationRepository: Repository<DBSVerification>;
+  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  letdvlaCheckRepository: Repository<DVLACheck>;
+  letcashTransactionRepository: Repository<CashTransaction>;
+  letbudgetRepository: Repository<Budget>;
+  letledgerAccountRepository: Repository<LedgerAccount>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         PerformanceService,
         {
@@ -289,8 +289,8 @@ describe('Performance Service', () => {
 });
 
 describe('Performance Integration Tests', () => {
-  let app: any;
-  let performanceService: PerformanceService;
+  letapp: any;
+  letperformanceService: PerformanceService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -357,7 +357,7 @@ describe('Performance Integration Tests', () => {
 });
 
 describe('Performance E2E Tests', () => {
-  let app: any;
+  letapp: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

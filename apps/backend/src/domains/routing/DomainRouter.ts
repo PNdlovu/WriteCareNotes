@@ -9,8 +9,8 @@ import { DomainRequest } from '../middleware/DomainMiddleware';
 
 export class DomainRouter {
   private static instance: DomainRouter;
-  private domainRegistry: DomainRegistry;
-  private router: Router;
+  privatedomainRegistry: DomainRegistry;
+  privaterouter: Router;
 
   private constructor() {
     this.domainRegistry = DomainRegistry.getInstance();

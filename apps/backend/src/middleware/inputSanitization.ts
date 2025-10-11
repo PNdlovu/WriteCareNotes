@@ -53,7 +53,7 @@ export class InputSanitizationMiddleware {
     }
 
     if (typeof obj === 'object') {
-      const sanitized: any = {};
+      constsanitized: any = {};
       for (const [key, value] of Object.entries(obj)) {
         // Sanitize both key and value
         const sanitizedKey = this.sanitizeString(key);

@@ -224,7 +224,7 @@ export class TrainingComplianceError extends HRPayrollBaseError {
    * Gets compliance remediation steps
    */
   public getRemediationSteps(): string[] {
-    const steps: string[] = [];
+    conststeps: string[] = [];
     
     if (this.complianceViolations) {
       this.complianceViolations.forEach(violation => {
@@ -274,7 +274,7 @@ export class ShiftSchedulingError extends HRPayrollBaseError {
    * Gets conflict resolution suggestions
    */
   public getConflictResolution(): string[] {
-    const resolutions: string[] = [];
+    constresolutions: string[] = [];
     
     switch (this.conflictType) {
       case 'DOUBLE_BOOKING':
@@ -349,7 +349,7 @@ export class EmploymentLawComplianceError extends HRPayrollBaseError {
    * Gets legal compliance actions required
    */
   public getComplianceActions(): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
     
     if (this.legalRequirements) {
       this.legalRequirements.forEach(requirement => {
@@ -403,7 +403,7 @@ export class HMRCSubmissionError extends HRPayrollBaseError {
    * Gets HMRC error resolution steps
    */
   public getHMRCResolutionSteps(): string[] {
-    const steps: string[] = [];
+    conststeps: string[] = [];
     
     switch (this.hmrcErrorCode) {
       case 'INVALID_PAYE_REFERENCE':
@@ -454,7 +454,7 @@ export class DataProtectionError extends HRPayrollBaseError {
    * Gets GDPR compliance remediation steps
    */
   public getGDPRRemediationSteps(): string[] {
-    const steps: string[] = [];
+    conststeps: string[] = [];
     
     switch (this.gdprViolationType) {
       case 'UNAUTHORIZED_ACCESS':
@@ -508,7 +508,7 @@ export class AuditComplianceError extends HRPayrollBaseError {
    * Gets audit preparation checklist
    */
   public getAuditPreparationChecklist(): string[] {
-    const checklist: string[] = [];
+    constchecklist: string[] = [];
     
     if (this.missingDocuments) {
       this.missingDocuments.forEach(document => {
@@ -562,7 +562,7 @@ export class HRSystemIntegrationError extends HRPayrollBaseError {
    * Gets integration recovery steps
    */
   public getIntegrationRecoverySteps(): string[] {
-    const steps: string[] = [];
+    conststeps: string[] = [];
     
     switch (this.systemName) {
       case 'HMRC_GATEWAY':

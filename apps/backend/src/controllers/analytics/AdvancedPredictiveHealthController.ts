@@ -15,8 +15,8 @@ import { AdvancedPredictiveHealthService } from '../../services/analytics/Advanc
 import { Logger } from '@nestjs/common';
 
 export class AdvancedPredictiveHealthController {
-  private predictiveHealthService: AdvancedPredictiveHealthService;
-  private logger: Logger;
+  privatepredictiveHealthService: AdvancedPredictiveHealthService;
+  privatelogger: Logger;
 
   constructor() {
     this.predictiveHealthService = new AdvancedPredictiveHealthService();

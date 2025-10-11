@@ -36,7 +36,7 @@ import { LeavingCareService } from '../services/LeavingCareService';
 import { LeavingCareStatus } from '../entities/PathwayPlan';
 
 export class LeavingCareController {
-  private leavingCareService: LeavingCareService;
+  privateleavingCareService: LeavingCareService;
 
   constructor() {
     this.leavingCareService = new LeavingCareService();

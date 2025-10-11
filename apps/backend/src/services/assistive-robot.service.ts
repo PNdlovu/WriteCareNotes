@@ -60,9 +60,9 @@ export interface RobotCapabilities {
 
 export class AssistiveRobotService {
   // Logger removed
-  private assistiveRobots: Map<string, RobotEntity> = new Map();
-  private activeRequests: Map<string, AssistanceRequest> = new Map();
-  private robotCapabilities: Map<string, RobotCapabilities> = new Map();
+  privateassistiveRobots: Map<string, RobotEntity> = new Map();
+  privateactiveRequests: Map<string, AssistanceRequest> = new Map();
+  privaterobotCapabilities: Map<string, RobotCapabilities> = new Map();
 
   constructor(
     
@@ -126,7 +126,7 @@ export class AssistiveRobotService {
         estimatedArrival,
       };
     } catch (error: unknown) {
-      console.error(`Failed to process assistance request: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to process assistance request: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return { success: false };
     }
   }
@@ -173,7 +173,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to provide mobility support: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to provide mobility support: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -230,7 +230,7 @@ export class AssistiveRobotService {
 
       return transferSuccess;
     } catch (error: unknown) {
-      console.error(`Failed to assist with transfer: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to assist with transfer: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -293,7 +293,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to respond to fall emergency: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to respond to fall emergency: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -341,7 +341,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to assist with physical therapy: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to assist with physical therapy: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -397,7 +397,7 @@ export class AssistiveRobotService {
 
       return retrievalSuccess;
     } catch (error: unknown) {
-      console.error(`Failed to retrieve object: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to retrieve object: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -431,7 +431,7 @@ export class AssistiveRobotService {
 
       return statusList;
     } catch (error: unknown) {
-      console.error(`Failed to get robot status: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to get robot status: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -452,7 +452,7 @@ export class AssistiveRobotService {
         }
       }
     } catch (error: unknown) {
-      console.error(`Failed to process queued requests: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to process queued requests: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -482,7 +482,7 @@ export class AssistiveRobotService {
 
       console.log(`Initialized ${robots.length} assistive robots`);
     } catch (error: unknown) {
-      console.error(`Failed to initialize assistive robots: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to initialize assistive robots: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -604,7 +604,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to navigate robot ${robotId}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`, error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined);
+      console.error(`Failed to navigate robot ${robotId}: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }

@@ -85,7 +85,7 @@ export interface HealthMonitoringFilters {
  * Compliance: CQC, NHS, NICE Guidelines
  */
 export class HealthMonitoringService {
-  private assessmentRepository: Repository<ResidentAssessment>;
+  privateassessmentRepository: Repository<ResidentAssessment>;
 
   constructor(private dataSource: DataSource) {
     this.assessmentRepository = this.dataSource.getRepository(ResidentAssessment);
@@ -445,7 +445,7 @@ export class HealthMonitoringService {
   }
 
   private getAssessmentPrefix(type: AssessmentType): string {
-    const prefixes: Record<AssessmentType, string> = {
+    constprefixes: Record<AssessmentType, string> = {
       [AssessmentType.INITIAL_ASSESSMENT]: 'INIT',
       [AssessmentType.COMPREHENSIVE_GERIATRIC_ASSESSMENT]: 'CGA',
       [AssessmentType.FALLS_RISK_ASSESSMENT]: 'FALL',

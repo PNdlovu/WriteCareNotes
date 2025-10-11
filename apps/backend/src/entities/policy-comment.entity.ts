@@ -447,7 +447,7 @@ export class PolicyComment {
    */
   extractMentions(): string[] {
     const mentionPattern = /@\[([a-f0-9-]{36})\]/g;
-    const mentions: string[] = [];
+    constmentions: string[] = [];
     let match;
     
     while ((match = mentionPattern.exec(this.content)) !== null) {

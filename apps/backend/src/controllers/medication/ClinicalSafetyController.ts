@@ -236,7 +236,7 @@ export class ClinicalSafetyController {
       }
 
       // Convert DTO to service request
-      const safetyCheckRequest: SafetyCheckRequest = {
+      constsafetyCheckRequest: SafetyCheckRequest = {
         prescriptionId: safetyCheckDto.prescriptionId,
         residentId: safetyCheckDto.residentId,
         medicationId: safetyCheckDto.medicationId,
@@ -280,8 +280,8 @@ export class ClinicalSafetyController {
 
       console.error('Safety check failed', {
         correlationId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
-        stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined,
+        error: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined,
         responseTime,
         request: safetyCheckDto
       });
@@ -290,7 +290,7 @@ export class ClinicalSafetyController {
         throw error;
       }
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
         throw new HttpException(
           'Resident or medication not found',
           HttpStatus.NOT_FOUND
@@ -398,7 +398,7 @@ export class ClinicalSafetyController {
 
       console.error('Drug interaction check failed', {
         correlationId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         responseTime
       });
 
@@ -502,7 +502,7 @@ export class ClinicalSafetyController {
 
       console.error('Allergy check failed', {
         correlationId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         responseTime
       });
 
@@ -607,7 +607,7 @@ export class ClinicalSafetyController {
 
       console.error('Contraindication check failed', {
         correlationId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         responseTime
       });
 
@@ -720,7 +720,7 @@ export class ClinicalSafetyController {
 
       console.error('Safety alert generation failed', {
         correlationId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         responseTime
       });
 
@@ -728,7 +728,7 @@ export class ClinicalSafetyController {
         throw error;
       }
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
         throw new HttpException(
           'Resident not found',
           HttpStatus.NOT_FOUND
@@ -782,7 +782,7 @@ export class ClinicalSafetyController {
         }
       };
     } catch (error: unknown) {
-      console.error('Health check failed', { error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      console.error('Health check failed', { error: error instanceof Error ? error.message : "Unknown error" });
       throw new HttpException(
         'Service unhealthy',
         HttpStatus.SERVICE_UNAVAILABLE

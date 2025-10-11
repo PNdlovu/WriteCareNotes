@@ -62,7 +62,7 @@ import { logger } from '../../utils/logger';
  * and automated compliance across all British Isles jurisdictions.
  */
 export class MedicationSchedulingController {
-  private schedulingService: MedicationSchedulingService;
+  privateschedulingService: MedicationSchedulingService;
 
   constructor() {
     this.schedulingService = new MedicationSchedulingService();
@@ -209,16 +209,16 @@ export class MedicationSchedulingController {
       });
     } catch (error: unknown) {
       console.error('Error in createSchedule controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('require')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('require')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to create medication schedule' });
       }
@@ -238,7 +238,7 @@ export class MedicationSchedulingController {
       }
 
       const alertTypes = req.query['alertTypes'] as string;
-      let alertTypeArray: MedicationAlert['alertType'][] | undefined;
+      letalertTypeArray: MedicationAlert['alertType'][] | undefined;
 
       if (alertTypes) {
         alertTypeArray = alertTypes.split(',') as MedicationAlert['alertType'][];
@@ -272,7 +272,7 @@ export class MedicationSchedulingController {
       });
     } catch (error: unknown) {
       console.error('Error in generateAlerts controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -304,7 +304,7 @@ export class MedicationSchedulingController {
       const { optimizationRules } = req.body;
 
       // Validate optimization rules if provided
-      let rules: OptimizationRule[] = [];
+      letrules: OptimizationRule[] = [];
       if (optimizationRules) {
         if (!Array.isArray(optimizationRules)) {
           res.status(400).json({ error: 'Optimization rules must be an array' });
@@ -383,15 +383,15 @@ export class MedicationSchedulingController {
       });
     } catch (error: unknown) {
       console.error('Error in optimizeSchedules controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to optimize medication schedules' });
       }
@@ -499,17 +499,17 @@ export class MedicationSchedulingController {
       }
     } catch (error: unknown) {
       console.error('Error in handlePrnRequest controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not PRN type')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('not PRN type')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to handle PRN medication request' });
       }
@@ -623,15 +623,15 @@ export class MedicationSchedulingController {
       });
     } catch (error: unknown) {
       console.error('Error in updateSchedule controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to update medication schedule' });
       }
@@ -653,7 +653,7 @@ export class MedicationSchedulingController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      const filters: ScheduleFilters = {};
+      constfilters: ScheduleFilters = {};
 
       // Apply filters from query parameters
       if (req.query['residentId']) {
@@ -702,7 +702,7 @@ export class MedicationSchedulingController {
       });
     } catch (error: unknown) {
       console.error('Error in getSchedules controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -732,7 +732,7 @@ export class MedicationSchedulingController {
       });
     } catch (error: unknown) {
       console.error('Error in getStats controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });

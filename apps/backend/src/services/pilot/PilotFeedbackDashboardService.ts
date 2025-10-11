@@ -159,7 +159,7 @@ export class PilotFeedbackDashboardService {
         timestamp: new Date()
       });
 
-      const dashboardData: DashboardData = {
+      constdashboardData: DashboardData = {
         overview: {
           totalPilots: 12,
           activePilots: 8,
@@ -266,7 +266,7 @@ export class PilotFeedbackDashboardService {
   async getPilotMetrics(pilotId: string): Promise<PilotMetrics> {
     try {
       // In a real implementation, this would query the database
-      const metrics: PilotMetrics = {
+      constmetrics: PilotMetrics = {
         pilotId,
         careHomeId: 'carehome_001',
         startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
@@ -336,7 +336,7 @@ export class PilotFeedbackDashboardService {
    */
   async submitFeedback(feedback: Omit<PilotFeedback, 'id' | 'submittedAt'>): Promise<PilotFeedback> {
     try {
-      const newFeedback: PilotFeedback = {
+      constnewFeedback: PilotFeedback = {
         ...feedback,
         id: this.generateId(),
         submittedAt: new Date()
@@ -369,7 +369,7 @@ export class PilotFeedbackDashboardService {
    */
   async generateCaseStudy(pilotId: string, careHomeId: string): Promise<CaseStudy> {
     try {
-      const caseStudy: CaseStudy = {
+      constcaseStudy: CaseStudy = {
         id: this.generateId(),
         pilotId,
         careHomeId,
@@ -482,7 +482,7 @@ export class PilotFeedbackDashboardService {
   }): Promise<CaseStudy[]> {
     try {
       // In a real implementation, this would query the database
-      const caseStudies: CaseStudy[] = [];
+      constcaseStudies: CaseStudy[] = [];
 
       await this.auditService.log({
         action: 'case_studies_requested',

@@ -25,13 +25,13 @@ import {
 } from '../../types/pilot-feedback-agent.types';
 
 export class PilotFeedbackAgentService {
-  private repository: PilotFeedbackAgentRepository;
-  private piiMasking: any;
-  private compliance: any;
-  private audit: AgentAuditService;
-  private notifications: any;
-  private isProcessing: boolean = false;
-  private processingQueue: string[] = [];
+  privaterepository: PilotFeedbackAgentRepository;
+  privatepiiMasking: any;
+  privatecompliance: any;
+  privateaudit: AgentAuditService;
+  privatenotifications: any;
+  privateisProcessing: boolean = false;
+  privateprocessingQueue: string[] = [];
 
   constructor() {
     this.repository = new PilotFeedbackAgentRepository();
@@ -214,7 +214,7 @@ export class PilotFeedbackAgentService {
    * Generate clusters from feedback events
    */
   private async generateClusters(tenantId: string, events: PilotFeedbackEvent[]): Promise<AgentCluster[]> {
-    const clusters: AgentCluster[] = [];
+    constclusters: AgentCluster[] = [];
     
     // Group events by module and severity
     const moduleGroups = this.groupByModule(events);
@@ -224,7 +224,7 @@ export class PilotFeedbackAgentService {
       
       for (const [severity, severityEvents] of Object.entries(severityGroups)) {
         if (severityEvents.length >= 2) { // Only create clusters with 2+ events
-          const cluster: AgentCluster = {
+          constcluster: AgentCluster = {
             clusterId: uuidv4(),
             tenantId,
             module,
@@ -251,7 +251,7 @@ export class PilotFeedbackAgentService {
     const window = this.calculateTimeWindow(events);
     const topThemes = this.extractTopThemes(clusters);
     
-    const summary: AgentSummary = {
+    constsummary: AgentSummary = {
       summaryId: uuidv4(),
       tenantId,
       window,
@@ -268,11 +268,11 @@ export class PilotFeedbackAgentService {
    * Generate recommendations from events and clusters
    */
   private async generateRecommendations(tenantId: string, events: PilotFeedbackEvent[], clusters: AgentCluster[]): Promise<AgentRecommendation[]> {
-    const recommendations: AgentRecommendation[] = [];
+    constrecommendations: AgentRecommendation[] = [];
     
     for (const cluster of clusters) {
       if (cluster.eventCount >= 3) { // Only recommend for clusters with 3+ events
-        const recommendation: AgentRecommendation = {
+        constrecommendation: AgentRecommendation = {
           recommendationId: uuidv4(),
           tenantId,
           theme: cluster.theme,
@@ -521,7 +521,7 @@ export class PilotFeedbackAgentService {
   }
 
   private generateProposedActions(cluster: AgentCluster): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
     
     if (cluster.theme.includes('performance')) {
       actions.push('Profile API endpoint performance');

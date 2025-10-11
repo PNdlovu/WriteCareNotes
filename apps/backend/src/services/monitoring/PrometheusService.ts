@@ -59,40 +59,40 @@ import { logger } from '../../utils/logger';
  */
 export class PrometheusService {
   private static instance: PrometheusService;
-  private register: any;
-  private metrics: Map<string, any> = new Map();
+  privateregister: any;
+  privatemetrics: Map<string, any> = new Map();
 
   // Application Metrics
-  private requestCounter: Counter<string>;
-  private requestDuration: Histogram<string>;
-  private responseSize: Histogram<string>;
-  private activeConnections: Gauge<string>;
+  privaterequestCounter: Counter<string>;
+  privaterequestDuration: Histogram<string>;
+  privateresponseSize: Histogram<string>;
+  privateactiveConnections: Gauge<string>;
 
   // Business Metrics
-  private residentCounter: Counter<string>;
-  private medicationCounter: Counter<string>;
-  private carePlanCounter: Counter<string>;
-  private incidentCounter: Counter<string>;
-  private userActivityCounter: Counter<string>;
+  privateresidentCounter: Counter<string>;
+  privatemedicationCounter: Counter<string>;
+  privatecarePlanCounter: Counter<string>;
+  privateincidentCounter: Counter<string>;
+  privateuserActivityCounter: Counter<string>;
 
   // System Metrics
-  private systemMemory: Gauge<string>;
-  private systemCPU: Gauge<string>;
-  private databaseConnections: Gauge<string>;
-  private redisConnections: Gauge<string>;
-  private cacheHitRate: Gauge<string>;
+  privatesystemMemory: Gauge<string>;
+  privatesystemCPU: Gauge<string>;
+  privatedatabaseConnections: Gauge<string>;
+  privateredisConnections: Gauge<string>;
+  privatecacheHitRate: Gauge<string>;
 
   // Compliance Metrics
-  private complianceScore: Gauge<string>;
-  private auditEvents: Counter<string>;
-  private securityIncidents: Counter<string>;
-  private dataBreaches: Counter<string>;
+  privatecomplianceScore: Gauge<string>;
+  privateauditEvents: Counter<string>;
+  privatesecurityIncidents: Counter<string>;
+  privatedataBreaches: Counter<string>;
 
   // AI Agent Metrics
-  private aiRequests: Counter<string>;
-  private aiResponseTime: Histogram<string>;
-  private aiAccuracy: Gauge<string>;
-  private aiErrorRate: Gauge<string>;
+  privateaiRequests: Counter<string>;
+  privateaiResponseTime: Histogram<string>;
+  privateaiAccuracy: Gauge<string>;
+  privateaiErrorRate: Gauge<string>;
 
   private constructor() {
     this.register = mockRegister;

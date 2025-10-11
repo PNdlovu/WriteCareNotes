@@ -60,7 +60,7 @@ import {
 } from '../validators/FamilyContactValidators';
 
 export class FamilyContactController {
-  private familyContactService: FamilyContactService;
+  privatefamilyContactService: FamilyContactService;
 
   constructor() {
     this.familyContactService = new FamilyContactService();

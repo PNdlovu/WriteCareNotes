@@ -57,7 +57,7 @@ export class AuditService {
    */
   async logEvent(event: AuditEventRequest): Promise<void> {
     try {
-      const auditEvent: AuditEvent = {
+      constauditEvent: AuditEvent = {
         id: this.generateId(),
         userId: event.userId,
         action: event.action,

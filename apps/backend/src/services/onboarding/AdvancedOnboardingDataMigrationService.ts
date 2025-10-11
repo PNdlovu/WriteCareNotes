@@ -183,14 +183,14 @@ export interface FileImportResult {
 }
 
 export class AdvancedOnboardingDataMigrationService extends EventEmitter {
-  private notificationService: NotificationService;
-  private auditService: AuditService;
-  private migrationProgress: Map<string, MigrationProgress> = new Map();
-  private legacyConnectors: Map<string, LegacySystemConnector> = new Map();
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
+  privatemigrationProgress: Map<string, MigrationProgress> = new Map();
+  privatelegacyConnectors: Map<string, LegacySystemConnector> = new Map();
 
-  private backupStorage: string = process.env['BACKUP_STORAGE_PATH'] || './backups';
+  privatebackupStorage: string = process.env['BACKUP_STORAGE_PATH'] || './backups';
 
-  private activeMigrations: Set<string> = new Set();
+  privateactiveMigrations: Set<string> = new Set();
 
   constructor() {
     super();
@@ -318,7 +318,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
         pipelineConfig.migrationRequirements.userPreferences || this.getDefaultNotificationPreferences()
       );
 
-      const pipeline: DataMigrationPipeline = {
+      constpipeline: DataMigrationPipeline = {
         pipelineId,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -342,7 +342,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
       
       return pipeline;
     } catch (error: unknown) {
-      this.emit('pipeline_creation_failed', { pipelineId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('pipeline_creation_failed', { pipelineId, error: error instanceof Error ? error.message : "Unknown error" });
       console.error('Error creating data migration pipeline:', error);
       throw error;
     }
@@ -410,11 +410,11 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
       const progress = this.migrationProgress.get(pipelineId);
       if (progress) {
         progress.status = 'failed';
-        progress.detailedLog.push(`Migration failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+        progress.detailedLog.push(`Migration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
         this.updateProgress(pipelineId, progress);
       }
       
-      this.emit('migration_failed', { pipelineId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('migration_failed', { pipelineId, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     } finally {
       this.activeMigrations.delete(pipelineId);
@@ -430,7 +430,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
     userGuidance?: any;
   }): Promise<FileImportResult> {
     const fileExtension = path.extname(fileName).toLowerCase();
-    let data: any[] = [];
+    letdata: any[] = [];
     
     try {
       // Parse file based on format
@@ -479,7 +479,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
         success: false,
         recordsImported: 0,
         recordsSkipped: data.length,
-        errors: [{ row: 0, field: 'file', error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error", suggestion: 'Check file format and content' }],
+        errors: [{ row: 0, field: 'file', error: error instanceof Error ? error.message : "Unknown error", suggestion: 'Check file format and content' }],
         warnings: [],
         dataQualityScore: 0,
         recommendedActions: ['Fix file format issues', 'Validate data structure']
@@ -542,7 +542,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
       this.emit('migration_rolled_back', { pipelineId });
       
     } catch (error: unknown) {
-      this.emit('rollback_failed', { pipelineId, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      this.emit('rollback_failed', { pipelineId, error: error instanceof Error ? error.message : "Unknown error" });
       throw error;
     }
   }
@@ -551,7 +551,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
    * Generate AI-assisted data mappings
    */
   async generateAIMappings(sourceData: any[], targetEntity?: string): Promise<AIDataMapping[]> {
-    const mappings: AIDataMapping[] = [];
+    constmappings: AIDataMapping[] = [];
     
     if (!sourceData || sourceData.length === 0) {
       return mappings;
@@ -634,7 +634,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private async createAIAssistedTransformationRules(config: any, analysis: any): Promise<any[]> {
-    const rules: any[] = [];
+    construles: any[] = [];
     
     // Healthcare-specific transformation rules with real seeded data patterns
     const healthcareRules = [
@@ -730,7 +730,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private async initializeProgressTracking(pipelineId: string, pipeline: DataMigrationPipeline): Promise<void> {
-    const progress: MigrationProgress = {
+    constprogress: MigrationProgress = {
       pipelineId,
       currentStep: 'Pipeline created',
       totalSteps: 5,
@@ -788,7 +788,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
         channels: ['in_app']
       });
     } catch (error: unknown) {
-      console.warn('Failed to send progress notification:', error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error");
+      console.warn('Failed to send progress notification:', error instanceof Error ? error.message : "Unknown error");
     }
   }
 
@@ -1010,7 +1010,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
 
   private async mapGenericFileData(data: any[], mappingRules: any[]): Promise<any[]> {
     return data.map(record => {
-      const mappedRecord: any = {};
+      constmappedRecord: any = {};
       
       for (const rule of mappingRules) {
         if (record[rule.sourceField] !== undefined) {
@@ -1158,7 +1158,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
 
   private async parseCSVFile(buffer: Buffer): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      const results: any[] = [];
+      constresults: any[] = [];
       const stream = require('stream');
       const bufferStream = new stream.PassThrough();
       bufferStream.end(buffer);
@@ -1312,7 +1312,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private async generateDynamicTransformationRules(entity: string, config: any): Promise<any[]> {
-    const entityRules: { [key: string]: any[] } = {
+    constentityRules: { [key: string]: any[] } = {
       'residents': [
         {
           ruleId: uuidv4(),
@@ -1448,7 +1448,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private generateValidationSuggestions(targetField: string): string[] {
-    const validationMap: { [key: string]: string[] } = {
+    constvalidationMap: { [key: string]: string[] } = {
       'resident_id': ['Not null', 'Unique', 'Alphanumeric', 'Max 20 characters'],
       'date_of_birth': ['Valid date', 'Age > 0', 'Age < 120', 'Not future date'],
       'phone_number': ['UK phone format', 'Not empty', 'Valid digits only'],
@@ -1470,7 +1470,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
     }
 
     let score = 100;
-    const issues: string[] = [];
+    constissues: string[] = [];
     
     // Check completeness
     const firstRecord = data[0];
@@ -1533,11 +1533,11 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private async applyTransformationsWithValidation(data: any[], aiMappings: AIDataMapping[]): Promise<any[]> {
-    const transformedData: any[] = [];
+    consttransformedData: any[] = [];
     
     for (let i = 0; i < data.length; i++) {
       const record = data[i];
-      const transformedRecord: any = {};
+      consttransformedRecord: any = {};
       
       for (const mapping of aiMappings) {
         const sourceValue = record[mapping.sourceField];
@@ -1550,7 +1550,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
             );
           } catch (error: unknown) {
             // Log transformation error but continue
-            console.warn(`Transformation error for ${mapping.sourceField} at row ${i + 1}: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+            console.warn(`Transformation error for ${mapping.sourceField} at row ${i + 1}: ${error instanceof Error ? error.message : "Unknown error"}`);
             transformedRecord[mapping.suggestedTargetField] = sourceValue; // Fallback to original value
           }
         }
@@ -1619,7 +1619,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
         results.errors.push({
           row: i + 1,
           field: 'record',
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           suggestion: 'Check data format and required fields'
         });
         results.recordsSkipped++;
@@ -1630,7 +1630,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private generateRecommendedActions(importResult: any, qualityAssessment: any): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
     
     if (qualityAssessment.score < 80) {
       actions.push('Improve data quality before full migration');
@@ -1695,7 +1695,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
       
       return backupId;
     } catch (error: unknown) {
-      throw new Error(`Backup creation failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Backup creation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -1727,7 +1727,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
       });
       
     } catch (error: unknown) {
-      throw new Error(`Backup restore failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Backup restore failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -1870,8 +1870,8 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
   }
 
   private async validateRecord(record: any, rowNumber: number): Promise<{ errors: any[]; warnings: any[] }> {
-    const errors: any[] = [];
-    const warnings: any[] = [];
+    consterrors: any[] = [];
+    constwarnings: any[] = [];
     
     // Required field validation
     if (!record.resident_id && !record.patient_id && !record.client_id) {
@@ -1921,7 +1921,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
         errors.push({
           row: rowNumber,
           field: 'nhs_number',
-          error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
           suggestion: 'Provide a valid 10-digit NHS number'
         });
       }
@@ -2087,7 +2087,7 @@ export class AdvancedOnboardingDataMigrationService extends EventEmitter {
 
   private applyLookupTransformation(value: any, rule: any): any {
     // Example: medication name lookup
-    const medicationLookup: { [key: string]: string } = {
+    constmedicationLookup: { [key: string]: string } = {
       'paracetamol': 'Paracetamol',
       'aspirin': 'Aspirin',
       'ibuprofen': 'Ibuprofen'

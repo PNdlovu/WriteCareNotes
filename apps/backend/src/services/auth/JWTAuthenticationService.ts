@@ -66,12 +66,12 @@ export class JWTAuthenticationService {
   private readonly ACCOUNT_LOCK_DURATION_MINUTES = parseInt(process.env['ACCOUNT_LOCK_DURATION_MINUTES'] || '30');
   private readonly PASSWORD_RESET_TOKEN_EXPIRY_HOURS = parseInt(process.env['PASSWORD_RESET_TOKEN_EXPIRY_HOURS'] || '1');
 
-  private rateLimitService: RateLimitService;
-  private userRepository: UserRepository;
-  private refreshTokenRepository: RefreshTokenRepository;
-  private passwordResetTokenRepository: PasswordResetTokenRepository;
-  private roleRepository: RoleRepository;
-  private emailService: EmailService;
+  privaterateLimitService: RateLimitService;
+  privateuserRepository: UserRepository;
+  privaterefreshTokenRepository: RefreshTokenRepository;
+  privatepasswordResetTokenRepository: PasswordResetTokenRepository;
+  privateroleRepository: RoleRepository;
+  privateemailService: EmailService;
 
   constructor(dataSource: DataSource) {
     this.rateLimitService = new RateLimitService();
@@ -158,8 +158,8 @@ export class JWTAuthenticationService {
       await this.userRepository.updateLastLogin(user.id);
 
       // 7. Fetch role and permissions from database
-      let roles: string[] = [];
-      let permissions: string[] = [];
+      letroles: string[] = [];
+      letpermissions: string[] = [];
       let dataAccessLevel = 0;
       let complianceLevel = 0;
 
@@ -176,7 +176,7 @@ export class JWTAuthenticationService {
       }
 
       // 8. Build authenticated user object
-      const authenticatedUser: AuthenticatedUser = {
+      constauthenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
@@ -216,7 +216,7 @@ export class JWTAuthenticationService {
    * Generate access and refresh tokens
    */
   private async generateTokens(user: AuthenticatedUser): Promise<{ accessToken: string; refreshToken: string }> {
-    const payload: JWTPayload = {
+    constpayload: JWTPayload = {
       userId: user.id,
       email: user.email,
       tenantId: user.tenantId,
@@ -330,8 +330,8 @@ export class JWTAuthenticationService {
       }
 
       // Fetch role and permissions from database
-      let roles: string[] = [];
-      let permissions: string[] = [];
+      letroles: string[] = [];
+      letpermissions: string[] = [];
       let dataAccessLevel = 0;
       let complianceLevel = 0;
 
@@ -346,7 +346,7 @@ export class JWTAuthenticationService {
       }
 
       // Build authenticated user object
-      const authenticatedUser: AuthenticatedUser = {
+      constauthenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
@@ -465,7 +465,7 @@ export class JWTAuthenticationService {
       await this.refreshTokenRepository.revoke(storedToken.id, user.id, 'Token rotated');
 
       // 6. Build authenticated user
-      const authenticatedUser: AuthenticatedUser = {
+      constauthenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,

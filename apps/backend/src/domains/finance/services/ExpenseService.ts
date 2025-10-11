@@ -49,9 +49,9 @@ export interface ExpenseRejectionData {
 export class ExpenseService {
   constructor(
     @InjectRepository(Expense)
-    private expenseRepository: Repository<Expense>,
+    privateexpenseRepository: Repository<Expense>,
     @InjectRepository(StaffMember)
-    private staffMemberRepository: Repository<StaffMember>,
+    privatestaffMemberRepository: Repository<StaffMember>,
   ) {}
 
   /**

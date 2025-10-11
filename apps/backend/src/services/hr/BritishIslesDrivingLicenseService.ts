@@ -166,12 +166,12 @@ export interface DVLAAPIResponse {
 
 export class BritishIslesDrivingLicenseService {
   // Logger removed
-  private employeeRepository: Repository<Employee>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateemployeeRepository: Repository<Employee>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   // In-memory license storage (would be replaced with proper database entity)
-  private licenses: Map<string, DrivingLicense> = new Map();
+  privatelicenses: Map<string, DrivingLicense> = new Map();
 
   constructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);
@@ -224,7 +224,7 @@ export class BritishIslesDrivingLicenseService {
       }
 
       // Check with appropriate authority
-      let apiResponse: DVLAAPIResponse;
+      letapiResponse: DVLAAPIResponse;
       switch (jurisdiction) {
         case BritishIslesJurisdiction.ENGLAND:
         case BritishIslesJurisdiction.SCOTLAND:
@@ -310,7 +310,7 @@ export class BritishIslesDrivingLicenseService {
 
     } catch (error: unknown) {
       console.error('Failed to validate driving license', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         employeeId,
         jurisdiction
       });
@@ -351,7 +351,7 @@ export class BritishIslesDrivingLicenseService {
 
     } catch (error: unknown) {
       console.error('Failed to check license expiries', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -372,7 +372,7 @@ export class BritishIslesDrivingLicenseService {
       }
 
       const license = this.licenses.get(`${employeeId}-license`);
-      const issues: string[] = [];
+      constissues: string[] = [];
 
       if (!license) {
         issues.push('No driving license on file');
@@ -412,7 +412,7 @@ export class BritishIslesDrivingLicenseService {
 
     } catch (error: unknown) {
       console.error('Failed to validate license for role', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         employeeId,
         jobRole
       });
@@ -512,7 +512,7 @@ export class BritishIslesDrivingLicenseService {
 
     } catch (error: unknown) {
       console.error('Failed to generate license compliance report', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         organizationId
       });
       throw error;
@@ -579,7 +579,7 @@ export class BritishIslesDrivingLicenseService {
 
     } catch (error: unknown) {
       console.error('DVLA API check failed', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         licenseNumber: this.maskLicenseNumber(licenseNumber)
       });
       
@@ -695,7 +695,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private generateWarnings(licenseData: any): string[] {
-    const warnings: string[] = [];
+    constwarnings: string[] = [];
     
     // Check expiry within 90 days
     const expiryDate = new Date(licenseData.expiryDate);
@@ -715,7 +715,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private generateErrors(licenseData: any, validationDetails: any): string[] {
-    const errors: string[] = [];
+    consterrors: string[] = [];
     
     if (!validationDetails.licenseActive) {
       errors.push('License is not active');
@@ -733,7 +733,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private generateRecommendations(licenseData: any, validationDetails: any): string[] {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
     
     if (!validationDetails.isValid) {
       recommendations.push('Suspend driving duties until license issues are resolved');
@@ -781,7 +781,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private async storeLicenseInformation(employeeId: string, licenseData: any, jurisdiction: BritishIslesJurisdiction): Promise<void> {
-    const license: DrivingLicense = {
+    constlicense: DrivingLicense = {
       licenseId: `${employeeId}-license`,
       employeeId,
       licenseNumber: licenseData.licenseNumber,

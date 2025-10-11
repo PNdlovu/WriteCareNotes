@@ -164,7 +164,7 @@ export class PolicyIntelligenceService {
       // Category breakdown
       const categoryBreakdown = this.calculateCategoryBreakdown(requiredPolicies, implementedPolicies);
 
-      const result: GapAnalysisResult = {
+      constresult: GapAnalysisResult = {
         totalRequired,
         implemented,
         missing: gaps.length,
@@ -290,7 +290,7 @@ export class PolicyIntelligenceService {
       const policies = await this.getOrganizationPolicies(organizationId);
       
       // Calculate risk for each policy
-      const risks: PolicyRisk[] = [];
+      constrisks: PolicyRisk[] = [];
       
       for (const policy of policies) {
         const risk = await this.calculatePolicyRisk(policy);
@@ -458,7 +458,7 @@ export class PolicyIntelligenceService {
     overallRisk: number,
     factors: { ageScore: number; acknowledgmentScore: number; violationScore: number; updateFrequencyScore: number }
   ): string[] {
-    const recommendations: string[] = [];
+    constrecommendations: string[] = [];
     
     if (factors.ageScore > 60) {
       recommendations.push('Policy is outdated - schedule immediate review');
@@ -495,7 +495,7 @@ export class PolicyIntelligenceService {
       // SELECT * FROM risk_alerts WHERE organizationId = ? AND (includeAcknowledged OR acknowledged = false)
       
       // For now, return mock data structure
-      const alerts: RiskAlert[] = [];
+      constalerts: RiskAlert[] = [];
       
       return alerts;
     } catch (error) {
@@ -959,7 +959,7 @@ export class PolicyIntelligenceService {
    * Get jurisdiction-specific policy requirements
    */
   private getJurisdictionSpecificPolicies(jurisdiction: Jurisdiction): string[] {
-    const policies: Record<Jurisdiction, string[]> = {
+    constpolicies: Record<Jurisdiction, string[]> = {
       'england': ['CQC Fundamental Standards Compliance'],
       'wales': ['CIW Quality Standards Compliance'],
       'scotland': ['Care Inspectorate Standards'],
@@ -990,7 +990,7 @@ export class PolicyIntelligenceService {
     jurisdiction: string,
     serviceType: string
   ): PolicyGap[] {
-    const gaps: PolicyGap[] = [];
+    constgaps: PolicyGap[] = [];
     
     // This is a simplified version - in production, would use sophisticated matching
     for (const requiredPolicy of required) {
@@ -1092,7 +1092,7 @@ export class PolicyIntelligenceService {
   private categorizePolicyName(name: string): string { return 'General'; }
   private determinePriority(name: string): GapPriority { return name.includes('Safeguard') ? 'critical' : 'medium'; }
   private getRegulatorName(jurisdiction: string): string { 
-    const regulators: Record<string, string> = {
+    constregulators: Record<string, string> = {
       'england': 'CQC', 'wales': 'CIW', 'scotland': 'Care Inspectorate',
       'northern-ireland': 'RQIA', 'ireland': 'HIQA',
       'jersey': 'Jersey Care Commission', 'isle-of-man': 'Isle of Man Care'

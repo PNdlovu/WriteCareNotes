@@ -87,11 +87,11 @@ export interface MaintenanceSchedule {
 
 
 export class EnhancedBedRoomService {
-  private bedRoomRepository: Repository<BedRoom>;
-  private occupancyRepository: Repository<RoomOccupancy>;
-  private residentRepository: Repository<Resident>;
-  private auditService: AuditService;
-  private notificationService: NotificationService;
+  privatebedRoomRepository: Repository<BedRoom>;
+  privateoccupancyRepository: Repository<RoomOccupancy>;
+  privateresidentRepository: Repository<Resident>;
+  privateauditService: AuditService;
+  privatenotificationService: NotificationService;
 
   constructor() {
     this.bedRoomRepository = AppDataSource.getRepository(BedRoom);

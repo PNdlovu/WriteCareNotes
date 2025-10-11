@@ -107,19 +107,19 @@ export interface CreatePlacementRequestDto {
 export class PlacementService {
   constructor(
     @InjectRepository(Placement)
-    private placementRepository: Repository<Placement>,
+    privateplacementRepository: Repository<Placement>,
     
     @InjectRepository(PlacementRequest)
-    private placementRequestRepository: Repository<PlacementRequest>,
+    privateplacementRequestRepository: Repository<PlacementRequest>,
     
     @InjectRepository(PlacementAgreement)
-    private placementAgreementRepository: Repository<PlacementAgreement>,
+    privateplacementAgreementRepository: Repository<PlacementAgreement>,
     
     @InjectRepository(PlacementReview)
-    private placementReviewRepository: Repository<PlacementReview>,
+    privateplacementReviewRepository: Repository<PlacementReview>,
     
     @InjectRepository(Child)
-    private childRepository: Repository<Child>,
+    privatechildRepository: Repository<Child>,
   ) {}
 
   /**

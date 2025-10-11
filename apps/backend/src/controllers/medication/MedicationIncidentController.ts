@@ -60,7 +60,7 @@ import { logger } from '../../utils/logger';
  * and automated regulatory compliance across all British Isles jurisdictions.
  */
 export class MedicationIncidentController {
-  private incidentService: MedicationIncidentService;
+  privateincidentService: MedicationIncidentService;
 
   constructor() {
     this.incidentService = new MedicationIncidentService();
@@ -178,8 +178,8 @@ export class MedicationIncidentController {
       }
 
       // Validate intended/actual times if provided
-      let intendedDateTime: Date | undefined;
-      let actualDateTime: Date | undefined;
+      letintendedDateTime: Date | undefined;
+      letactualDateTime: Date | undefined;
 
       if (intendedTime) {
         intendedDateTime = new Date(intendedTime);
@@ -240,14 +240,14 @@ export class MedicationIncidentController {
       });
     } catch (error: unknown) {
       console.error('Error in reportIncident controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to report medication incident' });
       }
@@ -350,17 +350,17 @@ export class MedicationIncidentController {
       });
     } catch (error: unknown) {
       console.error('Error in performRootCauseAnalysis controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('closed incident')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('closed incident')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to perform root cause analysis' });
       }
@@ -444,17 +444,17 @@ export class MedicationIncidentController {
       });
     } catch (error: unknown) {
       console.error('Error in submitRegulatoryNotification controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not valid for jurisdiction')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('not valid for jurisdiction')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to submit regulatory notification' });
       }
@@ -513,7 +513,7 @@ export class MedicationIncidentController {
       });
     } catch (error: unknown) {
       console.error('Error in getIncidentTrends controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -575,7 +575,7 @@ export class MedicationIncidentController {
       });
     } catch (error: unknown) {
       console.error('Error in getIncidentStats controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -600,7 +600,7 @@ export class MedicationIncidentController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 20, 100);
 
-      const filters: IncidentFilters = {};
+      constfilters: IncidentFilters = {};
 
       // Apply filters from query parameters
       if (req.query['incidentType']) {
@@ -664,7 +664,7 @@ export class MedicationIncidentController {
       });
     } catch (error: unknown) {
       console.error('Error in getIncidents controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId

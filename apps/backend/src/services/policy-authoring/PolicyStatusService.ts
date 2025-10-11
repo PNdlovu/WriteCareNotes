@@ -211,7 +211,7 @@ export class PolicyStatusService {
       const reviewDate = policy.reviewDue;
       const daysUntilReview = reviewDate ? Math.ceil((reviewDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 999;
 
-      const dashboardItem: PolicyDashboardItem = {
+      constdashboardItem: PolicyDashboardItem = {
         policy,
         status,
         acknowledgmentStats: {

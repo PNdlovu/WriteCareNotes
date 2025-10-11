@@ -114,9 +114,9 @@ export interface LoneWorkerSafetySystem {
 }
 
 export class DomiciliaryCareService {
-  private clientRepository: Repository<DomiciliaryClient>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateclientRepository: Repository<DomiciliaryClient>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.clientRepository = AppDataSource.getRepository(DomiciliaryClient);
@@ -196,7 +196,7 @@ export class DomiciliaryCareService {
       // Calculate optimization metrics
       const metrics = await this.calculateOptimizationMetrics(originalRoute, optimizedRoute);
 
-      const optimization: RouteOptimization = {
+      constoptimization: RouteOptimization = {
         optimizationId: crypto.randomUUID(),
         careWorkerId: optimizationRequest.careWorkerId,
         optimizationDate: optimizationRequest.date,
@@ -242,7 +242,7 @@ export class DomiciliaryCareService {
     safetyRequirements: string[];
   }): Promise<LoneWorkerSafetySystem> {
     try {
-      const safetySystem: LoneWorkerSafetySystem = {
+      constsafetySystem: LoneWorkerSafetySystem = {
         safetyProtocols: {
           checkInFrequency: this.calculateCheckInFrequency(safetyRequest.riskLevel),
           automaticAlerts: true,

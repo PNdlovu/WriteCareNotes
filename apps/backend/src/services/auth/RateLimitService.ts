@@ -15,7 +15,7 @@ import { EventEmitter2 } from "eventemitter2";
 import { logger } from '../../utils/logger';
 
 export class RateLimitService {
-  private attempts: Map<string, { count: number; lastAttempt: Date }> = new Map();
+  privateattempts: Map<string, { count: number; lastAttempt: Date }> = new Map();
   private readonly maxAttempts: number = 5;
   private readonly windowMs: number = 15 * 60 * 1000; // 15 minutes
 

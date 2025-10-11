@@ -55,7 +55,7 @@ export class EncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to encrypt sensitive data', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         dataLength: data.length
       });
       throw error;
@@ -81,7 +81,7 @@ export class EncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to decrypt sensitive data', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }

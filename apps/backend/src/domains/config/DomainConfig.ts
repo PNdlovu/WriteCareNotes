@@ -41,7 +41,7 @@ export interface DomainConfiguration {
 
 export class DomainConfigManager {
   private static instance: DomainConfigManager;
-  private configurations: Map<string, DomainConfiguration> = new Map();
+  privateconfigurations: Map<string, DomainConfiguration> = new Map();
 
   private constructor() {
     this.loadDefaultConfigurations();

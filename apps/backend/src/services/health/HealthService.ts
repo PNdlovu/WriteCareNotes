@@ -121,9 +121,9 @@ export interface HealthSearchFilters {
  * assessment tracking, vital signs monitoring, and alert management.
  */
 export class HealthService extends EventEmitter {
-  private healthRecords: Map<string, HealthRecord> = new Map();
-  private healthAlerts: Map<string, HealthAlert> = new Map();
-  private healthTrends: Map<string, HealthTrend[]> = new Map();
+  privatehealthRecords: Map<string, HealthRecord> = new Map();
+  privatehealthAlerts: Map<string, HealthAlert> = new Map();
+  privatehealthTrends: Map<string, HealthTrend[]> = new Map();
 
   constructor() {
     super();
@@ -152,7 +152,7 @@ export class HealthService extends EventEmitter {
    * Validate vital signs ranges
    */
   private validateVitalSigns(vitalSigns: VitalSigns): { isValid: boolean; alerts: string[] } {
-    const alerts: string[] = [];
+    constalerts: string[] = [];
 
     // Blood pressure validation
     if (vitalSigns.bloodPressureSystolic && vitalSigns.bloodPressureDiastolic) {
@@ -209,14 +209,14 @@ export class HealthService extends EventEmitter {
       }
 
       // Validate vital signs if present
-      let vitalSignsAlerts: string[] = [];
+      letvitalSignsAlerts: string[] = [];
       if (recordData.vitalSigns) {
         const validation = this.validateVitalSigns(recordData.vitalSigns);
         vitalSignsAlerts = validation.alerts;
       }
 
       // Create health record
-      const healthRecord: HealthRecord = {
+      consthealthRecord: HealthRecord = {
         id: uuidv4(),
         residentId: recordData.residentId,
         type: recordData.type,
@@ -285,7 +285,7 @@ export class HealthService extends EventEmitter {
    */
   public async createHealthAlert(alertData: Partial<HealthAlert>): Promise<HealthAlert> {
     try {
-      const alert: HealthAlert = {
+      constalert: HealthAlert = {
         id: uuidv4(),
         residentId: alertData.residentId!,
         type: alertData.type || 'warning',
@@ -461,13 +461,13 @@ export class HealthService extends EventEmitter {
       const criticalAlerts = allAlerts.filter(a => a.type === 'critical' && a.status === 'active').length;
 
       // Records by category
-      const recordsByCategory: Record<string, number> = {};
+      constrecordsByCategory: Record<string, number> = {};
       allRecords.forEach(record => {
         recordsByCategory[record.category] = (recordsByCategory[record.category] || 0) + 1;
       });
 
       // Alerts by urgency
-      const alertsByUrgency: Record<string, number> = {};
+      constalertsByUrgency: Record<string, number> = {};
       allAlerts.filter(a => a.status === 'active').forEach(alert => {
         alertsByUrgency[alert.urgency] = (alertsByUrgency[alert.urgency] || 0) + 1;
       });

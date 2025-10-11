@@ -15,7 +15,7 @@ import { AgentReviewService } from '../../services/pilot/agent-review.service';
 import { logger } from '../../utils/logger';
 
 export class AgentReviewController {
-  private reviewService: AgentReviewService;
+  privatereviewService: AgentReviewService;
 
   constructor() {
     this.reviewService = new AgentReviewService();

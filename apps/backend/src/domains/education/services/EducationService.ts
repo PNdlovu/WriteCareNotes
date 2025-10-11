@@ -54,9 +54,9 @@ import { SchoolPlacement, PlacementType, PlacementStatus, OfstedRating } from '.
 import { Child } from '../../children/entities/Child';
 
 export class EducationService {
-  private pepRepository: Repository<PersonalEducationPlan>;
-  private placementRepository: Repository<SchoolPlacement>;
-  private childRepository: Repository<Child>;
+  privatepepRepository: Repository<PersonalEducationPlan>;
+  privateplacementRepository: Repository<SchoolPlacement>;
+  privatechildRepository: Repository<Child>;
 
   constructor() {
     this.pepRepository = AppDataSource.getRepository(PersonalEducationPlan);
@@ -467,7 +467,7 @@ export class EducationService {
       where: { organizationId }
     });
 
-    const neetChildren: Child[] = [];
+    constneetChildren: Child[] = [];
 
     for (const child of allChildren) {
       const activePlacement = await this.placementRepository.findOne({

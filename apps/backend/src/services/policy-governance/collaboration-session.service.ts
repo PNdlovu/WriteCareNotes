@@ -554,7 +554,7 @@ export class CollaborationSessionService {
    */
   async getUserSessions(userId: string, includeEnded: boolean = false): Promise<CollaborationSession[]> {
     try {
-      const whereConditions: any = { userId };
+      constwhereConditions: any = { userId };
       
       if (!includeEnded) {
         whereConditions.status = SessionStatus.ACTIVE;

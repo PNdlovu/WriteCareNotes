@@ -47,8 +47,8 @@ import { logger } from '@/utils/logger';
  * Financial Analytics Routes with enterprise security and compliance
  */
 export class FinancialAnalyticsRoutes {
-  private router: Router;
-  private financialService: FinancialAnalyticsService;
+  privaterouter: Router;
+  privatefinancialService: FinancialAnalyticsService;
 
   constructor(financialService: FinancialAnalyticsService) {
     this.router = Router();
@@ -509,7 +509,7 @@ export class FinancialAnalyticsRoutes {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      const queryParams: TransactionQueryParams = {
+      constqueryParams: TransactionQueryParams = {
         accountId: req.query['accountId'] as string,
         category: req.query['category'] as TransactionCategory,
         status: req.query['status'] as TransactionStatus,

@@ -11,15 +11,15 @@ import { TrainingProgress } from '../../entities/training/TrainingProgress';
 import { TrainingAnalytics } from '../../entities/training/TrainingAnalytics';
 
 describe('AcademyTrainingService', () => {
-  let service: AcademyTrainingService;
-  let mockCourseRepository: any;
-  let mockEnrollmentRepository: any;
-  let mockSessionRepository: any;
-  let mockCertificateRepository: any;
-  let mockProgressRepository: any;
-  let mockAnalyticsRepository: any;
-  let mockEventEmitter: any;
-  let mockAuditService: any;
+  letservice: AcademyTrainingService;
+  letmockCourseRepository: any;
+  letmockEnrollmentRepository: any;
+  letmockSessionRepository: any;
+  letmockCertificateRepository: any;
+  letmockProgressRepository: any;
+  letmockAnalyticsRepository: any;
+  letmockEventEmitter: any;
+  letmockAuditService: any;
 
   beforeEach(async () => {
     mockCourseRepository = {
@@ -78,7 +78,7 @@ describe('AcademyTrainingService', () => {
       logEvent: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    constmodule: TestingModule = await Test.createTestingModule({
       providers: [
         AcademyTrainingService,
         {

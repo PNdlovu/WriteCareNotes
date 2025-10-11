@@ -23,7 +23,7 @@ import { DocumentType, DocumentStatus } from '../../entities/document/DocumentMa
  * - Statistics
  */
 export class SimpleDocumentController {
-  private documentService: SimpleDocumentService;
+  privatedocumentService: SimpleDocumentService;
 
   constructor(private dataSource: DataSource) {
     this.documentService = new SimpleDocumentService(dataSource);
@@ -45,7 +45,7 @@ export class SimpleDocumentController {
         return res.status(400).json({ success: false, error: 'Organization ID is required' });
       }
 
-      const dto: CreateDocumentDTO = {
+      constdto: CreateDocumentDTO = {
         ...req.body,
         organizationId,
       };
@@ -98,7 +98,7 @@ export class SimpleDocumentController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      const filters: DocumentFilters = {};
+      constfilters: DocumentFilters = {};
 
       if (req.query.documentType) {
         filters.documentType = req.query.documentType as DocumentType;
@@ -155,7 +155,7 @@ export class SimpleDocumentController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      const dto: UpdateDocumentDTO = req.body;
+      constdto: UpdateDocumentDTO = req.body;
 
       const document = await this.documentService.update(id, organizationId, dto);
 
@@ -204,7 +204,7 @@ export class SimpleDocumentController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      const dto: CreateVersionDTO = req.body;
+      constdto: CreateVersionDTO = req.body;
 
       const document = await this.documentService.createNewVersion(id, organizationId, dto);
 
@@ -254,7 +254,7 @@ export class SimpleDocumentController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      const dto: ApprovalDTO = req.body;
+      constdto: ApprovalDTO = req.body;
 
       const document = await this.documentService.approve(id, organizationId, dto);
 

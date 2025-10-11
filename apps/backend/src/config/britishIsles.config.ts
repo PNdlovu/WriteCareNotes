@@ -701,7 +701,7 @@ export function getAvailableJurisdictions(): Jurisdiction[] {
  * Validate jurisdiction name
  */
 export function isValidJurisdiction(jurisdiction: string): jurisdiction is Jurisdiction {
-  const valid: Jurisdiction[] = [
+  constvalid: Jurisdiction[] = [
     'England', 
     'Scotland', 
     'Wales', 

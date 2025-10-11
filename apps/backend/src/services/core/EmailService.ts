@@ -25,9 +25,9 @@ export interface PasswordResetEmailData {
 }
 
 export class EmailService {
-  private transporter: Transporter;
-  private fromAddress: string;
-  private fromName: string;
+  privatetransporter: Transporter;
+  privatefromAddress: string;
+  privatefromName: string;
 
   constructor() {
     this.fromAddress = process.env.EMAIL_FROM_ADDRESS || 'noreply@writecarenotes.com';

@@ -149,7 +149,7 @@ export const useAnalytics = (options: UseAnalyticsOptions): UseAnalyticsReturn =
         throw new Error(`Analytics API error: ${response.status} ${response.statusText}`);
       }
 
-      const analyticsData: AnalyticsData = await response.json();
+      constanalyticsData: AnalyticsData = await response.json();
       
       // Enterprise validation
       if (!analyticsData.metrics || !analyticsData.trends || !analyticsData.insights || !analyticsData.kpiMetrics) {

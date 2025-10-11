@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { AssessmentService } from '../../services/assessment/AssessmentService';
 
 export class AssessmentController {
-  private assessmentService: AssessmentService;
+  privateassessmentService: AssessmentService;
 
   constructor() {
     this.assessmentService = new AssessmentService();
@@ -27,7 +27,7 @@ export class AssessmentController {
       const assessment = await this.assessmentService.createAssessment(req.body);
       res.status(201).json({ success: true, data: assessment });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 
@@ -36,7 +36,7 @@ export class AssessmentController {
       const analytics = await this.assessmentService.getAssessmentAnalytics();
       res.json({ success: true, data: analytics });
     } catch (error: unknown) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Unknown error" });
     }
   }
 }

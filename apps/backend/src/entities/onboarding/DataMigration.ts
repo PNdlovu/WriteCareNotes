@@ -380,7 +380,7 @@ export class DataMigration extends BaseEntity {
   }
 
   private generateRecommendations(issue: string): string[] {
-    const recommendations: any[] = [];
+    constrecommendations: any[] = [];
 
     if (issue.includes('missing')) {
       recommendations.push('Implement data validation to ensure required fields are populated');

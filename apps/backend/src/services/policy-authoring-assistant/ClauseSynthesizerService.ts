@@ -242,7 +242,7 @@ export class ClauseSynthesizerService {
       /-\s+([^\n]+)/g,       // Dash list
     ];
 
-    const clauses: string[] = [];
+    constclauses: string[] = [];
 
     for (const pattern of clausePatterns) {
       const matches = content.matchAll(pattern);
@@ -360,7 +360,7 @@ export class ClauseSynthesizerService {
    * ⚠️ GENERATE WARNINGS
    */
   private generateWarnings(documents: RetrievedDocument[], confidence: number): string[] {
-    const warnings: string[] = [];
+    constwarnings: string[] = [];
 
     if (confidence < 0.7) {
       warnings.push('Low confidence - human review strongly recommended');

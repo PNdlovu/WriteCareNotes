@@ -113,9 +113,9 @@ export interface HousekeepingOperations {
 }
 
 export class LaundryHousekeepingService {
-  private laundryRepository: Repository<LaundryItem>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privatelaundryRepository: Repository<LaundryItem>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.laundryRepository = AppDataSource.getRepository(LaundryItem);
@@ -285,7 +285,7 @@ export class LaundryHousekeepingService {
   // Advanced Housekeeping Operations
   async scheduleHousekeepingTasks(): Promise<HousekeepingOperations> {
     try {
-      const housekeepingOps: HousekeepingOperations = {
+      consthousekeepingOps: HousekeepingOperations = {
         roomCleaning: {
           standardCleaningProtocol: [
             'Remove and replace bed linen',
@@ -426,7 +426,7 @@ export class LaundryHousekeepingService {
         return new Date(item.createdAt) >= thirtyDaysAgo;
       });
 
-      const analytics: LaundryAnalytics = {
+      constanalytics: LaundryAnalytics = {
         operationalMetrics: {
           dailyThroughput: this.calculateDailyThroughput(recentItems),
           averageProcessingTime: this.calculateAverageProcessingTime(recentItems),

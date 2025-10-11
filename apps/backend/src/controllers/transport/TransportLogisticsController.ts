@@ -17,7 +17,7 @@ import { TransportLogisticsService } from '../../services/transport/TransportLog
 import { Vehicle, VehicleType } from '../../entities/transport/Vehicle';
 
 export class TransportLogisticsController {
-  private transportService: TransportLogisticsService;
+  privatetransportService: TransportLogisticsService;
 
   constructor() {
     this.transportService = new TransportLogisticsService();
@@ -38,7 +38,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to add vehicle',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -56,7 +56,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve vehicles',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -74,7 +74,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve available vehicles',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -94,7 +94,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve vehicles by type',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -114,7 +114,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to create transport request',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -132,7 +132,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve transport requests',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -160,7 +160,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to approve transport request',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -180,7 +180,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to request emergency transport',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -201,7 +201,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to start journey',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -221,7 +221,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to complete journey',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -240,7 +240,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to optimize routes',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -259,7 +259,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve fleet analytics',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -277,7 +277,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve maintenance alerts',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -310,7 +310,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to schedule vehicle maintenance',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -330,7 +330,7 @@ export class TransportLogisticsController {
       res.status(500).json({
         success: false,
         message: 'Failed to complete vehicle maintenance',
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }

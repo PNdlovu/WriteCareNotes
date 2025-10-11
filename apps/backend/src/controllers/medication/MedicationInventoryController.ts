@@ -60,7 +60,7 @@ import { logger } from '../../utils/logger';
  * automated reordering capabilities across all British Isles jurisdictions.
  */
 export class MedicationInventoryController {
-  private inventoryService: MedicationInventoryService;
+  privateinventoryService: MedicationInventoryService;
 
   constructor() {
     this.inventoryService = new MedicationInventoryService();
@@ -175,20 +175,20 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in addInventoryItem controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('expired medication')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('cannot be negative') || 
-                 error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('must be less than') ||
-                 error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('should be at or above')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('expired medication')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('cannot be negative') || 
+                 error instanceof Error ? error.message : "Unknown error".includes('must be less than') ||
+                 error instanceof Error ? error.message : "Unknown error".includes('should be at or above')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to add inventory item' });
       }
@@ -274,20 +274,20 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in recordStockMovement controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Insufficient stock') || 
-                 error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('negative stock')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Invalid movement type')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Insufficient stock') || 
+                 error instanceof Error ? error.message : "Unknown error".includes('negative stock')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Invalid movement type')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to record stock movement' });
       }
@@ -396,19 +396,19 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in createPurchaseOrder controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Supplier not found') || 
-          error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not active')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Medication') && error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('minimum order value')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('Supplier not found') || 
+          error instanceof Error ? error.message : "Unknown error".includes('not active')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Medication') && error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('minimum order value')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to create purchase order' });
       }
@@ -430,7 +430,7 @@ export class MedicationInventoryController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      const filters: InventoryFilters = {};
+      constfilters: InventoryFilters = {};
 
       // Apply filters from query parameters
       if (req.query['medicationName']) {
@@ -492,7 +492,7 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in getInventoryItems controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -522,7 +522,7 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in getInventoryStats controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
@@ -567,7 +567,7 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in getExpiringMedications controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -673,20 +673,20 @@ export class MedicationInventoryController {
       });
     } catch (error: unknown) {
       console.error('Error in processDeliveryReceipt controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already completed') || 
-                 error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('cancelled')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('exceeds ordered quantity')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('already completed') || 
+                 error instanceof Error ? error.message : "Unknown error".includes('cancelled')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('exceeds ordered quantity')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to process delivery receipt' });
       }

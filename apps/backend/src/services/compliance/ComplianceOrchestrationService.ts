@@ -496,7 +496,7 @@ export class ComplianceOrchestrationService {
       // Create risk heatmap
       const riskHeatmap = await this.createRiskHeatmap(frameworkResults, crossFrameworkAnalysis);
 
-      const result: MasterComplianceAssessmentResult = {
+      constresult: MasterComplianceAssessmentResult = {
         assessmentId,
         organizationName: request.organizationName,
         overallComplianceScore,
@@ -535,7 +535,7 @@ export class ComplianceOrchestrationService {
   private async assessFrameworks(
     request: MasterComplianceAssessmentRequest
   ): Promise<FrameworkAssessmentResult[]> {
-    const results: FrameworkAssessmentResult[] = [];
+    constresults: FrameworkAssessmentResult[] = [];
 
     for (const framework of request.frameworks) {
       if (framework === ComprehensiveComplianceFramework.ALL_FRAMEWORKS) {
@@ -564,14 +564,14 @@ export class ComplianceOrchestrationService {
     request: MasterComplianceAssessmentRequest
   ): Promise<FrameworkAssessmentResult | null> {
     try {
-      let rawResult: any = null;
+      letrawResult: any = null;
       let complianceScore = 0;
       let maturityLevel = ComplianceMaturityLevel.INITIAL;
-      let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'medium';
-      let status: 'compliant' | 'non_compliant' | 'conditional_compliant' = 'non_compliant';
-      let keyFindings: string[] = [];
-      let criticalGaps: string[] = [];
-      let recommendations: string[] = [];
+      letriskLevel: 'low' | 'medium' | 'high' | 'critical' = 'medium';
+      letstatus: 'compliant' | 'non_compliant' | 'conditional_compliant' = 'non_compliant';
+      letkeyFindings: string[] = [];
+      letcriticalGaps: string[] = [];
+      letrecommendations: string[] = [];
 
       switch (framework) {
         case ComprehensiveComplianceFramework.AI_GOVERNANCE:
@@ -693,7 +693,7 @@ export class ComplianceOrchestrationService {
     if (results.length === 0) return 0;
 
     // Weight frameworks by importance
-    const weights: Record<ComprehensiveComplianceFramework, number> = {
+    constweights: Record<ComprehensiveComplianceFramework, number> = {
       [ComprehensiveComplianceFramework.BRITISH_ISLES_HEALTHCARE]: 0.25,
       [ComprehensiveComplianceFramework.GDPR]: 0.20,
       [ComprehensiveComplianceFramework.AI_GOVERNANCE]: 0.15,
@@ -764,11 +764,11 @@ export class ComplianceOrchestrationService {
   private async performCrossFrameworkAnalysis(
     results: FrameworkAssessmentResult[]
   ): Promise<CrossFrameworkAnalysis> {
-    const synergies: ComplianceSynergy[] = [];
-    const conflicts: ComplianceConflict[] = [];
-    const gaps: ComplianceGap[] = [];
-    const overlaps: ComplianceOverlap[] = [];
-    const efficiencyOpportunities: EfficiencyOpportunity[] = [];
+    constsynergies: ComplianceSynergy[] = [];
+    constconflicts: ComplianceConflict[] = [];
+    constgaps: ComplianceGap[] = [];
+    constoverlaps: ComplianceOverlap[] = [];
+    constefficiencyOpportunities: EfficiencyOpportunity[] = [];
 
     // Identify synergies
     synergies.push({
@@ -867,7 +867,7 @@ export class ComplianceOrchestrationService {
     results: FrameworkAssessmentResult[],
     analysis: CrossFrameworkAnalysis
   ): Promise<PrioritizedRecommendation[]> {
-    const recommendations: PrioritizedRecommendation[] = [];
+    constrecommendations: PrioritizedRecommendation[] = [];
 
     // Critical gaps first
     for (const gap of analysis.gaps.filter(g => g.riskLevel === 'critical')) {
@@ -941,8 +941,8 @@ export class ComplianceOrchestrationService {
     recommendations: PrioritizedRecommendation[],
     request: MasterComplianceAssessmentRequest
   ): Promise<IntegratedActionPlan> {
-    const phases: ActionPlanPhase[] = [];
-    const milestones: ActionPlanMilestone[] = [];
+    constphases: ActionPlanPhase[] = [];
+    constmilestones: ActionPlanMilestone[] = [];
 
     // Phase 1: Critical and High Priority (0-6 months)
     const phase1Recs = recommendations.filter(r => r.priority === 'critical' || r.priority === 'high');
@@ -1075,7 +1075,7 @@ export class ComplianceOrchestrationService {
     results: FrameworkAssessmentResult[],
     request: MasterComplianceAssessmentRequest
   ): Promise<ComplianceDashboard> {
-    const overviewMetrics: DashboardMetric[] = [
+    constoverviewMetrics: DashboardMetric[] = [
       {
         metricId: uuidv4(),
         name: 'Overall Compliance Score',
@@ -1105,7 +1105,7 @@ export class ComplianceOrchestrationService {
       }
     ];
 
-    const frameworkStatus: FrameworkStatus[] = results.map(result => ({
+    constframeworkStatus: FrameworkStatus[] = results.map(result => ({
       framework: result.framework,
       status: result.status,
       score: result.complianceScore,
@@ -1114,7 +1114,7 @@ export class ComplianceOrchestrationService {
       criticalIssues: result.criticalGaps.length
     }));
 
-    const trendAnalysis: TrendAnalysis[] = results.map(result => ({
+    consttrendAnalysis: TrendAnalysis[] = results.map(result => ({
       framework: result.framework,
       metric: 'Compliance Score',
       trend: 'improving',
@@ -1123,7 +1123,7 @@ export class ComplianceOrchestrationService {
       forecast: 'Continued improvement expected'
     }));
 
-    const alerts: ComplianceAlert[] = results
+    constalerts: ComplianceAlert[] = results
       .filter(r => r.riskLevel === 'critical' || r.status === 'non_compliant')
       .map(result => ({
         alertId: uuidv4(),
@@ -1135,7 +1135,7 @@ export class ComplianceOrchestrationService {
         deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       }));
 
-    const upcomingDeadlines: UpcomingDeadline[] = [
+    constupcomingDeadlines: UpcomingDeadline[] = [
       {
         deadlineId: uuidv4(),
         framework: ComprehensiveComplianceFramework.CYBER_RESILIENCE_ACT,
@@ -1170,7 +1170,7 @@ export class ComplianceOrchestrationService {
     results: FrameworkAssessmentResult[],
     analysis: CrossFrameworkAnalysis
   ): Promise<RiskHeatmap> {
-    const riskCategories: RiskCategory[] = [
+    constriskCategories: RiskCategory[] = [
       {
         category: 'Regulatory Compliance',
         riskLevel: results.some(r => r.status === 'non_compliant') ? 'critical' : 'medium',
@@ -1194,14 +1194,14 @@ export class ComplianceOrchestrationService {
       }
     ];
 
-    const frameworkRisks: FrameworkRisk[] = results.map(result => ({
+    constframeworkRisks: FrameworkRisk[] = results.map(result => ({
       framework: result.framework,
       riskLevel: result.riskLevel,
       keyRisks: result.criticalGaps,
       mitigation: result.recommendations
     }));
 
-    const topRisks: TopRisk[] = analysis.gaps
+    consttopRisks: TopRisk[] = analysis.gaps
       .filter(gap => gap.riskLevel === 'critical' || gap.riskLevel === 'high')
       .map(gap => ({
         riskId: gap.gapId,
@@ -1298,7 +1298,7 @@ export class ComplianceOrchestrationService {
   }
 
   private calculateBudgetByFramework(recommendations: PrioritizedRecommendation[]): Record<ComprehensiveComplianceFramework, number> {
-    const budget: Record<ComprehensiveComplianceFramework, number> = {} as Record<ComprehensiveComplianceFramework, number>;
+    constbudget: Record<ComprehensiveComplianceFramework, number> = {} as Record<ComprehensiveComplianceFramework, number>;
     
     for (const rec of recommendations) {
       for (const framework of rec.frameworks) {
@@ -1311,7 +1311,7 @@ export class ComplianceOrchestrationService {
   }
 
   private calculateBudgetByPhase(recommendations: PrioritizedRecommendation[], phases: ActionPlanPhase[]): Record<string, number> {
-    const budget: Record<string, number> = {};
+    constbudget: Record<string, number> = {};
     
     for (const phase of phases) {
       budget[phase.name] = recommendations

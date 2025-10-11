@@ -52,7 +52,7 @@ import { logger } from '../../utils/logger';
  * and inventory management with comprehensive validation and error handling.
  */
 export class MedicationController {
-  private medicationService: MedicationService;
+  privatemedicationService: MedicationService;
 
   constructor() {
     this.medicationService = new MedicationService();
@@ -71,7 +71,7 @@ export class MedicationController {
         return;
       }
 
-      const medicationData: MedicationData = {
+      constmedicationData: MedicationData = {
         name: req.body['name'],
         genericName: req.body['genericName'],
         brandName: req.body['brandName'],
@@ -148,16 +148,16 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in createMedication controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already exists')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Invalid')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('already exists')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Invalid')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to create medication' });
       }
@@ -179,7 +179,7 @@ export class MedicationController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      const filters: MedicationFilters = {};
+      constfilters: MedicationFilters = {};
 
       // Apply filters from query parameters
       if (req.query['name']) {
@@ -227,7 +227,7 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in getMedications controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -268,7 +268,7 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in getMedicationById controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -297,7 +297,7 @@ export class MedicationController {
         return;
       }
 
-      const updates: Partial<MedicationData> = {};
+      constupdates: Partial<MedicationData> = {};
 
       // Only include provided fields in updates
       if (req.body['name'] !== undefined) updates.name = req.body['name'];
@@ -371,19 +371,19 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in updateMedication controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already exists')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Invalid')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('already exists')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Invalid')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to update medication' });
       }
@@ -406,7 +406,7 @@ export class MedicationController {
         return;
       }
 
-      const updates: Partial<MedicationData> = {};
+      constupdates: Partial<MedicationData> = {};
 
       // Only include provided fields in updates
       if (req.body['name'] !== undefined) updates.name = req.body['name'];
@@ -480,19 +480,19 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in updateMedication controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already exists')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('Invalid')) {
-        res.status(400).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('already exists')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('Invalid')) {
+        res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to update medication' });
       }
@@ -533,17 +533,17 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in deactivateMedication controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });
 
-      if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('not found')) {
-        res.status(404).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
-      } else if (error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error".includes('already inactive')) {
-        res.status(409).json({ error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error" });
+      if (error instanceof Error ? error.message : "Unknown error".includes('not found')) {
+        res.status(404).json({ error: error instanceof Error ? error.message : "Unknown error" });
+      } else if (error instanceof Error ? error.message : "Unknown error".includes('already inactive')) {
+        res.status(409).json({ error: error instanceof Error ? error.message : "Unknown error" });
       } else {
         res.status(500).json({ error: 'Failed to deactivate medication' });
       }
@@ -594,7 +594,7 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in checkMedicationInteractions controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         body: req.body,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -640,7 +640,7 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in getExpiringMedications controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         query: req.query,
         userId: req.user?.id,
         organizationId: req.user?.organizationId
@@ -687,7 +687,7 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in searchMedications controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         params: req.params,
         query: req.query,
         userId: req.user?.id,
@@ -718,7 +718,7 @@ export class MedicationController {
       });
     } catch (error: unknown) {
       console.error('Error in getMedicationStatistics controller', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         userId: req.user?.id,
         organizationId: req.user?.organizationId
       });

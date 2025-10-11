@@ -23,9 +23,9 @@ import { NotificationService } from '../notifications/notification.service';
 import { AuditService } from '../audit/agent-audit.service';
 
 export class AgentReviewService {
-  private repository: PilotFeedbackAgentRepository;
-  private notifications: NotificationService;
-  private audit: AuditService;
+  privaterepository: PilotFeedbackAgentRepository;
+  privatenotifications: NotificationService;
+  privateaudit: AuditService;
 
   constructor() {
     this.repository = new PilotFeedbackAgentRepository();
@@ -62,7 +62,7 @@ export class AgentReviewService {
       AND r.requires_approval = true
     `;
 
-    const params: any[] = [tenantId];
+    constparams: any[] = [tenantId];
 
     if (filters.priority) {
       query += ' AND r.priority = ?';
@@ -131,7 +131,7 @@ export class AgentReviewService {
       );
 
       // Create approval action record
-      const approvalAction: AgentApprovalAction = {
+      constapprovalAction: AgentApprovalAction = {
         recommendationId,
         tenantId: recommendation.tenantId,
         action,
@@ -317,7 +317,7 @@ export class AgentReviewService {
     action: 'create_ticket' | 'dismiss',
     notes?: string
   ): Promise<AgentApprovalAction[]> {
-    const results: AgentApprovalAction[] = [];
+    constresults: AgentApprovalAction[] = [];
 
     for (const recommendationId of recommendationIds) {
       try {
@@ -470,7 +470,7 @@ export class AgentReviewService {
     action: AgentApprovalAction, 
     recommendation: AgentRecommendation
   ): Promise<void> {
-    const notification: AgentNotification = {
+    constnotification: AgentNotification = {
       notificationId: uuidv4(),
       tenantId: action.tenantId,
       type: 'recommendation_approved',

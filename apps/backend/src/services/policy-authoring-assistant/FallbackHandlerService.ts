@@ -123,7 +123,7 @@ export class FallbackHandlerService {
    * 💡 GET SUGGESTED ACTIONS
    */
   private getSuggestedActions(prompt: AISuggestionPrompt, reason: string): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
 
     // Always include consultation option
     actions.push('📞 Consult your compliance officer or manager');
@@ -190,7 +190,7 @@ export class FallbackHandlerService {
     jurisdictions: RegulatoryJurisdiction[],
     intent: string,
   ): AlternativeResource[] {
-    const resources: AlternativeResource[] = [];
+    constresources: AlternativeResource[] = [];
 
     // Add help center
     resources.push({

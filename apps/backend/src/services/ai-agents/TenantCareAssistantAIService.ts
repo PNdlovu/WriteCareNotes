@@ -128,9 +128,9 @@ interface ActionItem {
 
 export class TenantCareAssistantAIService {
   // Logger removed
-  private knowledgeRepository: Repository<KnowledgeArticle>;
-  private notificationService: NotificationService;
-  private auditService: AuditService;
+  privateknowledgeRepository: Repository<KnowledgeArticle>;
+  privatenotificationService: NotificationService;
+  privateauditService: AuditService;
 
   constructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);
@@ -197,8 +197,8 @@ export class TenantCareAssistantAIService {
       console.error('Failed to process tenant care inquiry', {
         sessionId: inquiry.sessionId,
         tenantId: inquiry.tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
-        stack: error instanceof Error ? error instanceof Error ? error.stack : undefined : undefined
+        error: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined
       });
 
       // Return encrypted error response
@@ -289,7 +289,7 @@ export class TenantCareAssistantAIService {
     } catch (error: unknown) {
       console.error('Failed to retrieve tenant knowledge', {
         tenantId: inquiry.tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
@@ -315,11 +315,11 @@ export class TenantCareAssistantAIService {
     urgentActions: string[];
   }> {
     try {
-      const careNeeds: string[] = [];
-      const riskFactors: string[] = [];
-      const complianceGaps: string[] = [];
-      const improvementOpportunities: string[] = [];
-      const urgentActions: string[] = [];
+      constcareNeeds: string[] = [];
+      constriskFactors: string[] = [];
+      constcomplianceGaps: string[] = [];
+      constimprovementOpportunities: string[] = [];
+      consturgentActions: string[] = [];
 
       // Analyze resident data for care needs
       if (knowledge.residentData) {
@@ -351,7 +351,7 @@ export class TenantCareAssistantAIService {
     } catch (error: unknown) {
       console.error('Failed to analyze care context', {
         tenantId: inquiry.tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       return {
@@ -374,10 +374,10 @@ export class TenantCareAssistantAIService {
   ): Promise<TenantAIResponse> {
     try {
       let message = '';
-      const careRecommendations: CareRecommendation[] = [];
-      const complianceAlerts: ComplianceAlert[] = [];
-      const actionItems: ActionItem[] = [];
-      const knowledgeSources: string[] = [];
+      constcareRecommendations: CareRecommendation[] = [];
+      constcomplianceAlerts: ComplianceAlert[] = [];
+      constactionItems: ActionItem[] = [];
+      constknowledgeSources: string[] = [];
       let escalationRequired = false;
 
       // Generate response based on inquiry type
@@ -444,7 +444,7 @@ export class TenantCareAssistantAIService {
     } catch (error: unknown) {
       console.error('Failed to generate tenant care response', {
         tenantId: inquiry.tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       
       throw error;
@@ -477,7 +477,7 @@ export class TenantCareAssistantAIService {
     } catch (error: unknown) {
       console.error('Failed to encrypt tenant response', {
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }
@@ -517,7 +517,7 @@ export class TenantCareAssistantAIService {
       console.error('Failed to log tenant interaction', {
         tenantId: inquiry.tenantId,
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -563,7 +563,7 @@ Please review and take appropriate action.`,
       console.error('Failed to handle tenant escalation', {
         tenantId: inquiry.tenantId,
         sessionId: inquiry.sessionId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   }
@@ -583,7 +583,7 @@ Please review and take appropriate action.`,
       console.error('Failed to verify tenant access', {
         tenantId,
         userId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return false;
     }
@@ -623,7 +623,7 @@ Please review and take appropriate action.`,
       console.error('Failed to get resident data', {
         residentId,
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return null;
     }
@@ -652,7 +652,7 @@ Please review and take appropriate action.`,
       console.error('Failed to get care history', {
         residentId,
         tenantId,
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       return [];
     }
@@ -782,7 +782,7 @@ Please review and take appropriate action.`,
    * Generate care recommendations
    */
   private generateCareRecommendations(careAnalysis: any): CareRecommendation[] {
-    const recommendations: CareRecommendation[] = [];
+    constrecommendations: CareRecommendation[] = [];
     
     if (careAnalysis.careNeeds.includes('Mobility assistance')) {
       recommendations.push({
@@ -837,7 +837,7 @@ Please review and take appropriate action.`,
    * Identify urgent actions
    */
   private identifyUrgentActions(inquiry: TenantCareInquiry, knowledge: any): string[] {
-    const actions: string[] = [];
+    constactions: string[] = [];
     
     if (inquiry.urgencyLevel === 'CRITICAL') {
       actions.push('Immediate clinical review required');

@@ -46,7 +46,7 @@ import { logger } from '@/utils/logger';
  * Financial Service Controller with comprehensive healthcare compliance
  */
 export class FinancialServiceController {
-  private financialService: FinancialService;
+  privatefinancialService: FinancialService;
 
   constructor() {
     // Initialize dependencies
@@ -138,7 +138,7 @@ export class FinancialServiceController {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      const filters: BillQueryFilters = {
+      constfilters: BillQueryFilters = {
         residentId: req.query.residentId as string,
         careHomeId: req.query.careHomeId as string,
         status: req.query.status as any,
@@ -285,7 +285,7 @@ export class FinancialServiceController {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      const filters: PaymentQueryFilters = {
+      constfilters: PaymentQueryFilters = {
         residentId: req.query.residentId as string,
         careHomeId: req.query.careHomeId as string,
         billId: req.query.billId as string,
@@ -391,7 +391,7 @@ export class FinancialServiceController {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      const filters: ClaimQueryFilters = {
+      constfilters: ClaimQueryFilters = {
         residentId: req.query.residentId as string,
         careHomeId: req.query.careHomeId as string,
         insuranceProvider: req.query.insuranceProvider as string,

@@ -645,7 +645,7 @@ router.post('/:id/admit',
       const userId = req.user?.id;
       const residentId = req.params.id;
 
-      const admissionData: AdmissionData = {
+      constadmissionData: AdmissionData = {
         ...req.body,
         admittedBy: userId
       };
@@ -769,7 +769,7 @@ router.post('/:id/discharge',
       const userId = req.user?.id;
       const residentId = req.params.id;
 
-      const dischargeData: DischargeData = {
+      constdischargeData: DischargeData = {
         ...req.body,
         dischargedBy: userId
       };
@@ -894,7 +894,7 @@ router.post('/:id/transfer',
       const userId = req.user?.id;
       const residentId = req.params.id;
 
-      const transferData: TransferData = {
+      consttransferData: TransferData = {
         ...req.body,
         transferredBy: userId
       };

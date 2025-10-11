@@ -81,12 +81,12 @@ export type FamilyMemberType =
   | 'power_of_attorney';
 
 export class FamilyTrustEngineService {
-  private db: DatabaseService;
-  private logger: Logger;
-  private audit: AuditService;
-  private notifications: NotificationService;
-  private dashboardService: TransparencyDashboardService;
-  private analyticsService: CommunicationAnalyticsService;
+  privatedb: DatabaseService;
+  privatelogger: Logger;
+  privateaudit: AuditService;
+  privatenotifications: NotificationService;
+  privatedashboardService: TransparencyDashboardService;
+  privateanalyticsService: CommunicationAnalyticsService;
 
   constructor() {
     this.db = new DatabaseService();
@@ -132,7 +132,7 @@ export class FamilyTrustEngineService {
           ) RETURNING *
         `;
 
-        const defaultPreferences: CommunicationPreferences = {
+        constdefaultPreferences: CommunicationPreferences = {
           preferredMethod: 'email',
           frequency: 'weekly',
           updateTypes: ['care_updates', 'incidents', 'activities'],
@@ -188,7 +188,7 @@ export class FamilyTrustEngineService {
           registeredBy: userId
         });
 
-        const response: FamilyMember = {
+        constresponse: FamilyMember = {
           id: familyMember.id,
           tenantId: familyMember.tenant_id,
           residentId: familyMember.resident_id,
@@ -341,7 +341,7 @@ export class FamilyTrustEngineService {
           updatedBy: userId
         });
 
-        const updatedMetrics: TrustMetrics = {
+        constupdatedMetrics: TrustMetrics = {
           overallTrustScore,
           communicationSatisfaction: metricsData.communicationSatisfaction,
           transparencyRating: metricsData.transparencyRating,
@@ -422,7 +422,7 @@ export class FamilyTrustEngineService {
   }
 
   private calculateTrustTrends(current: TrustMetrics, updated: any): TrustTrend[] {
-    const trends: TrustTrend[] = [];
+    consttrends: TrustTrend[] = [];
     const metrics = [
       { key: 'communicationSatisfaction', name: 'Communication Satisfaction' },
       { key: 'transparencyRating', name: 'Transparency Rating' },
@@ -435,7 +435,7 @@ export class FamilyTrustEngineService {
       const currentValue = updated[metric.key];
       const changePercentage = ((currentValue - previousValue) / previousValue) * 100;
       
-      let trend: 'improving' | 'declining' | 'stable' = 'stable';
+      lettrend: 'improving' | 'declining' | 'stable' = 'stable';
       if (Math.abs(changePercentage) > 10) {
         trend = changePercentage > 0 ? 'improving' : 'declining';
       }
@@ -727,7 +727,7 @@ export class FamilyTrustEngineService {
   }
 
   private parseTimeframe(timeframe: string): number {
-    const timeframeMap: Record<string, number> = {
+    consttimeframeMap: Record<string, number> = {
       '7d': 7, '30d': 30, '90d': 90, '6m': 180, '1y': 365
     };
     return timeframeMap[timeframe] || 90;

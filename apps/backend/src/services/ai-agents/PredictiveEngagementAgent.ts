@@ -120,7 +120,7 @@ export class PredictiveEngagementAgent {
       const intervention = await this.generateIntervention(prediction, evidence);
 
       // Create prediction object
-      const engagementPrediction: EngagementPrediction = {
+      constengagementPrediction: EngagementPrediction = {
         id: this.generateId(),
         residentId,
         careHomeId,
@@ -277,7 +277,7 @@ export class PredictiveEngagementAgent {
     predictionType: EngagementPrediction['predictionType'],
     context: any
   ): Promise<EngagementEvidence[]> {
-    const evidence: EngagementEvidence[] = [];
+    constevidence: EngagementEvidence[] = [];
 
     // Add historical data evidence
     if (context.historicalData) {

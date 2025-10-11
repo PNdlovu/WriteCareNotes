@@ -130,12 +130,12 @@ export interface GPCommunication {
 }
 
 export class GPConnectService extends EventEmitter2 {
-  private gpRecordRepository: Repository<any>;
-  private healthSummaryRepository: Repository<any>;
-  private consultationRepository: Repository<any>;
-  private communicationRepository: Repository<any>;
-  private auditTrailService: AuditService;
-  private notificationService: NotificationService;
+  privategpRecordRepository: Repository<any>;
+  privatehealthSummaryRepository: Repository<any>;
+  privateconsultationRepository: Repository<any>;
+  privatecommunicationRepository: Repository<any>;
+  privateauditTrailService: AuditService;
+  privatenotificationService: NotificationService;
 
   constructor() {
     super();
@@ -151,7 +151,7 @@ export class GPConnectService extends EventEmitter2 {
     residentData: Omit<ResidentGPRecord, 'id' | 'createdAt' | 'updatedAt'>,
     userId: string
   ): Promise<ResidentGPRecord> {
-    const gpRecord: ResidentGPRecord = {
+    constgpRecord: ResidentGPRecord = {
       id: this.generateId(),
       ...residentData,
       registrationStatus: 'active',
@@ -182,7 +182,7 @@ export class GPConnectService extends EventEmitter2 {
     healthSummaryData: Omit<HealthSummary, 'id' | 'createdAt' | 'sentToGP' | 'gpAcknowledged'>,
     userId: string
   ): Promise<HealthSummary> {
-    const healthSummary: HealthSummary = {
+    consthealthSummary: HealthSummary = {
       id: this.generateId(),
       ...healthSummaryData,
       createdAt: new Date(),
@@ -246,7 +246,7 @@ export class GPConnectService extends EventEmitter2 {
     consultationData: Omit<GPConsultationRequest, 'id' | 'requestedDate' | 'status'>,
     userId: string
   ): Promise<GPConsultationRequest> {
-    const consultation: GPConsultationRequest = {
+    constconsultation: GPConsultationRequest = {
       id: this.generateId(),
       ...consultationData,
       requestedDate: new Date(),
@@ -305,7 +305,7 @@ export class GPConnectService extends EventEmitter2 {
   private async createGPCommunication(
     communicationData: Omit<GPCommunication, 'id' | 'sentAt' | 'deliveryStatus'>
   ): Promise<GPCommunication> {
-    const communication: GPCommunication = {
+    constcommunication: GPCommunication = {
       id: this.generateId(),
       ...communicationData,
       sentAt: new Date(),

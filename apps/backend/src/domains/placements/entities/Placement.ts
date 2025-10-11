@@ -184,7 +184,7 @@ export class Placement {
   @Column({ name: 'admission_checklist', type: 'jsonb', nullable: true })
   admissionChecklist?: {
     personalBelongingsRecorded: boolean;
-    roomOrientation Completed: boolean;
+    roomOrientationCompleted: boolean;
     houseRulesExplained: boolean;
     emergencyProceduresExplained: boolean;
     consentFormsCompleted: boolean;
@@ -278,7 +278,7 @@ export class Placement {
     education?: {
       type: string; // e.g., "Mainstream", "Alternative Provision", "Tutoring"
       provider: string;
-      hours PerWeek: number;
+      hoursPerWeek: number;
     };
     health?: Array<{
       service: string; // e.g., "CAMHS", "Speech Therapy", "Physiotherapy"
@@ -321,7 +321,7 @@ export class Placement {
   outcomes?: {
     education: { status: string; progress: string };
     health: { status: string; progress: string };
-    emotional Wellbeing: { status: string; progress: string };
+    emotionalWellbeing: { status: string; progress: string };
     relationships: { status: string; progress: string };
     identity: { status: string; progress: string };
     social: { status: string; progress: string };

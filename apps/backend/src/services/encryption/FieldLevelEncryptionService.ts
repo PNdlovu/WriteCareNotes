@@ -60,8 +60,8 @@ export class FieldLevelEncryptionService {
   private readonly algorithm = 'aes-256-gcm';
   private readonly keyLength = 32; // 256 bits
   private readonly ivLength = 16; // 128 bits
-  private encryptionKeys: Map<string, EncryptionKey> = new Map();
-  private currentKeyId: string;
+  privateencryptionKeys: Map<string, EncryptionKey> = new Map();
+  privatecurrentKeyId: string;
 
   constructor(private readonly configService: ConfigService) {
     this.initializeEncryptionKeys();
@@ -88,7 +88,7 @@ export class FieldLevelEncryptionService {
       
       const authTag = cipher.getAuthTag();
 
-      const result: EncryptionResult = {
+      constresult: EncryptionResult = {
         encryptedData: encrypted,
         keyId: key.keyId,
         algorithm: this.algorithm,
@@ -102,10 +102,10 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to encrypt field', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         purpose
       });
-      throw new Error(`Encryption failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Encryption failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -123,7 +123,7 @@ export class FieldLevelEncryptionService {
         return encryptedValue;
       }
 
-      const decryptionRequest: DecryptionRequest = JSON.parse(
+      constdecryptionRequest: DecryptionRequest = JSON.parse(
         Buffer.from(encryptedValue, 'base64').toString('utf8')
       );
 
@@ -143,10 +143,10 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to decrypt field', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         encryptedValueLength: encryptedValue?.length
       });
-      throw new Error(`Decryption failed: ${error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"}`);
+      throw new Error(`Decryption failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -175,7 +175,7 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to encrypt fields', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         fieldsToEncrypt,
         purpose
       });
@@ -203,7 +203,7 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to decrypt fields', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         fieldsToDecrypt
       });
       throw error;
@@ -218,7 +218,7 @@ export class FieldLevelEncryptionService {
       const keyId = `key_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
       const key = crypto.randomBytes(this.keyLength);
       
-      const encryptionKey: EncryptionKey = {
+      constencryptionKey: EncryptionKey = {
         keyId,
         key,
         algorithm: this.algorithm,
@@ -240,7 +240,7 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to generate new encryption key', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
         purpose
       });
       throw error;
@@ -284,7 +284,7 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to rotate encryption keys', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }
@@ -328,7 +328,7 @@ export class FieldLevelEncryptionService {
       const keyId = `initial_${purpose}_${Date.now()}`;
       const key = crypto.scryptSync(masterKey, `salt_${purpose}`, this.keyLength);
       
-      const encryptionKey: EncryptionKey = {
+      constencryptionKey: EncryptionKey = {
         keyId,
         key,
         algorithm: this.algorithm,
@@ -413,7 +413,7 @@ export class FieldLevelEncryptionService {
 
     } catch (error: unknown) {
       console.error('Failed to cleanup expired keys', {
-        error: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error"
       });
       throw error;
     }

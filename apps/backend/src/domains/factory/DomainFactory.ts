@@ -15,9 +15,9 @@ export interface DomainFactoryOptions {
 
 export class DomainFactory {
   private static instance: DomainFactory;
-  private domainRegistry: DomainRegistry;
-  private configManager: DomainConfigManager;
-  private initializedDomains: Set<string> = new Set();
+  privatedomainRegistry: DomainRegistry;
+  privateconfigManager: DomainConfigManager;
+  privateinitializedDomains: Set<string> = new Set();
 
   private constructor() {
     this.domainRegistry = DomainRegistry.getInstance();
@@ -212,7 +212,7 @@ export class DomainFactory {
    * Get all domains health status
    */
   public async getAllDomainsHealth(): Promise<Record<string, any>> {
-    const healthStatus: Record<string, any> = {};
+    consthealthStatus: Record<string, any> = {};
     const domainNames = this.domainRegistry.getDomainNames();
 
     for (const domainName of domainNames) {
