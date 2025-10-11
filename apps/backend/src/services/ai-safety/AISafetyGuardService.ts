@@ -58,11 +58,11 @@ export interface PolicyContext {
 
 @Injectable()
 export class AISafetyGuardService {
-  private readonly logger = new Logger(AISafetyGuardService.name);
-  private readonly openai: OpenAI;
+  private readonlylogger = new Logger(AISafetyGuardService.name);
+  private readonlyopenai: OpenAI;
 
   // Regulatory knowledge base for validation
-  private readonly regulatoryKnowledge = new Map<string, any>([
+  private readonlyregulatoryKnowledge = new Map<string, any>([
     ['cqc_england', {
       fundamentalStandards: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
       kloes: ['safe', 'effective', 'caring', 'responsive', 'well_led'],
@@ -86,7 +86,7 @@ export class AISafetyGuardService {
   ]);
 
   // Dangerous patterns that should never appear in healthcare policy advice
-  private readonly dangerousPatterns = [
+  private readonlydangerousPatterns = [
     /diagnose|diagnosis/i,
     /prescribe|prescription/i,
     /medical treatment/i,
@@ -96,13 +96,13 @@ export class AISafetyGuardService {
   ];
 
   // Bias detection patterns
-  private readonly biasPatterns = [
+  private readonlybiasPatterns = [
     /all \w+ (people|patients|residents)/i,
     /(always|never) (trust|believe)/i,
     /typical \w+ (behavior|attitude)/i
   ];
 
-  constructor(private readonly configService: ConfigService) {
+  const ructor(private readonlyconfigService: ConfigService) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
@@ -172,7 +172,7 @@ export class AISafetyGuardService {
     validationResults: ValidationResult[]
   ): ConfidenceScore {
     
-    constfactors: ConfidenceFactors = {
+    const factors: ConfidenceFactors = {
       knowledgeBaseMatch: this.assessKnowledgeBaseMatch(response, context),
       regulatoryAlignment: this.assessRegulatoryAlignment(response, context),
       responseSpecificity: this.assessResponseSpecificity(response),
@@ -275,8 +275,8 @@ export class AISafetyGuardService {
       const flagged = moderation.results[0].flagged;
       const categories = moderation.results[0].categories;
 
-      constwarnings: SafetyWarning[] = [];
-      constflags: SafetyFlag[] = [];
+      const warnings: SafetyWarning[] = [];
+      const flags: SafetyFlag[] = [];
 
       if (flagged) {
         const flaggedCategories = Object.entries(categories)
@@ -286,13 +286,13 @@ export class AISafetyGuardService {
         warnings.push({
           type: 'inappropriate_content',
           severity: 'high',
-          message: `Content flagged for: ${flaggedCategories.join(', ')}`,
+          message: `Content flaggedfor: ${flaggedCategories.join(', ')}`,
           suggestion: 'Please provide appropriate policy-related content only'
         });
 
         flags.push({
           type: 'content_moderation',
-          description: `Inappropriate content detected: ${flaggedCategories.join(', ')}`,
+          description: `Inappropriate contentdetected: ${flaggedCategories.join(', ')}`,
           requiresHumanReview: true
         });
       }
@@ -305,7 +305,7 @@ export class AISafetyGuardService {
       };
 
     } catch (error) {
-      this.logger.error(`Content moderation failed: ${error.message}`);
+      this.logger.error(`Content moderationfailed: ${error.message}`);
       return {
         safe: true,
         confidence: 0.5,
@@ -363,15 +363,15 @@ export class AISafetyGuardService {
     const regulatoryClaimsPattern = /(regulation|standard|requirement)\s+(\d+)/gi;
     const claims = response.match(regulatoryClaimsPattern) || [];
 
-    constwarnings: SafetyWarning[] = [];
-    constflags: SafetyFlag[] = [];
+    const warnings: SafetyWarning[] = [];
+    const flags: SafetyFlag[] = [];
 
     for (const claim of claims) {
       if (!this.validateRegulatoryClaim(claim, context)) {
         warnings.push({
           type: 'hallucination',
           severity: 'high',
-          message: `Unverified regulatory claim: "${claim}"`,
+          message: `Unverified regulatoryclaim: "${claim}"`,
           suggestion: 'Please verify this regulatory reference with official sources'
         });
       }
@@ -401,7 +401,7 @@ export class AISafetyGuardService {
   }
 
   private validateRegulatoryReferences(response: string, context: PolicyContext): { safe: boolean; confidence: number; warnings: SafetyWarning[]; flags: SafetyFlag[] } {
-    constwarnings: SafetyWarning[] = [];
+    const warnings: SafetyWarning[] = [];
     
     // Check jurisdiction-specific references
     for (const jurisdiction of context.jurisdiction) {
@@ -410,7 +410,7 @@ export class AISafetyGuardService {
         warnings.push({
           type: 'unverified_claim',
           severity: 'medium',
-          message: `Unknown jurisdiction referenced: ${jurisdiction}`,
+          message: `Unknown jurisdictionreferenced: ${jurisdiction}`,
           suggestion: 'Verify jurisdiction information with official sources'
         });
       }
@@ -486,7 +486,7 @@ export class AISafetyGuardService {
 
   private async validateFactualClaims(response: string, context: PolicyContext): Promise<{ safe: boolean; confidence: number; warnings: SafetyWarning[]; flags: SafetyFlag[] }> {
     // Basic fact checking - would be enhanced with real fact-checking service
-    constwarnings: SafetyWarning[] = [];
+    const warnings: SafetyWarning[] = [];
     
     // Check for absolute statements that may be overgeneralizations
     const absolutePatterns = [
@@ -598,7 +598,7 @@ export class AISafetyGuardService {
       return count + (response.match(pattern) || []).length;
     }, 0);
 
-    // More uncertainty indicators = lower confidence
+    // More uncertaintyindicators = lower confidence
     return Math.max(0.9 - (uncertaintyCount * 0.1), 0.3);
   }
 
@@ -683,7 +683,7 @@ export class AISafetyGuardService {
     const uncertaintyIndicators = [
       /uncertain/gi,
       /unclear/gi,
-      /may\s+vary/gi,
+      /may\s+var y/gi,
       /depends\s+on/gi,
       /consult\s+expert/gi,
       /seek\s+advice/gi

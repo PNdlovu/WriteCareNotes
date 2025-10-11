@@ -10,7 +10,7 @@ export class TrainingSession extends BaseEntity {
   @Column({ type: 'uuid' })
   instructorId!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   title!: string;
 
   @Column({ type: 'text' })
@@ -25,7 +25,7 @@ export class TrainingSession extends BaseEntity {
   @Column({ type: 'int' })
   maxParticipants!: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   location!: string;
 
   @Column({ 

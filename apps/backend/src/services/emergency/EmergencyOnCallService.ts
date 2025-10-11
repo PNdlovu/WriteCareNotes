@@ -25,7 +25,7 @@ export class EmergencyOnCallService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.incidentRepository = AppDataSource.getRepository(EmergencyIncident);
     this.onCallRepository = AppDataSource.getRepository(OnCallRota);
     this.notificationService = new NotificationService(new EventEmitter2());
@@ -67,7 +67,7 @@ export class EmergencyOnCallService {
       
       return savedIncident;
     } catch (error: unknown) {
-      console.error('Error reporting emergency incident:', error);
+      console.error('Error reporting emergencyincident:', error);
       throw error;
     }
   }
@@ -90,7 +90,7 @@ export class EmergencyOnCallService {
       
       return null;
     } catch (error: unknown) {
-      console.error('Error in AI incident detection:', error);
+      console.error('Error in AI incidentdetection:', error);
       throw error;
     }
   }
@@ -221,7 +221,7 @@ export class EmergencyOnCallService {
 
       return suitableStaff[0] || null;
     } catch (error: unknown) {
-      console.error('Error finding best available staff:', error);
+      console.error('Error finding best availablestaff:', error);
       throw error;
     }
   }
@@ -268,7 +268,7 @@ export class EmergencyOnCallService {
 
       return assigned;
     } catch (error: unknown) {
-      console.error('Error assigning emergency to staff:', error);
+      console.error('Error assigning emergency tostaff:', error);
       throw error;
     }
   }
@@ -299,7 +299,7 @@ export class EmergencyOnCallService {
         userId: staffId
       });
     } catch (error: unknown) {
-      console.error('Error completing emergency assignment:', error);
+      console.error('Error completing emergencyassignment:', error);
       throw error;
     }
   }
@@ -353,7 +353,7 @@ export class EmergencyOnCallService {
 
       return null;
     } catch (error: unknown) {
-      console.error('Error escalating emergency:', error);
+      console.error('Error escalatingemergency:', error);
       throw error;
     }
   }
@@ -371,7 +371,7 @@ export class EmergencyOnCallService {
       staff.updateLocation(location, onSite);
       await this.onCallRepository.save(staff);
     } catch (error: unknown) {
-      console.error('Error updating staff location:', error);
+      console.error('Error updating stafflocation:', error);
       throw error;
     }
   }
@@ -389,7 +389,7 @@ export class EmergencyOnCallService {
       staff.startBreak(reason);
       await this.onCallRepository.save(staff);
     } catch (error: unknown) {
-      console.error('Error starting staff break:', error);
+      console.error('Error starting staffbreak:', error);
       throw error;
     }
   }
@@ -407,7 +407,7 @@ export class EmergencyOnCallService {
       staff.endBreak();
       await this.onCallRepository.save(staff);
     } catch (error: unknown) {
-      console.error('Error ending staff break:', error);
+      console.error('Error ending staffbreak:', error);
       throw error;
     }
   }
@@ -487,13 +487,13 @@ export class EmergencyOnCallService {
         }
       };
     } catch (error: unknown) {
-      console.error('Error getting staff performance report:', error);
+      console.error('Error getting staff performancereport:', error);
       throw error;
     }
   }
 
   private mapEmergencyTypeToCallType(emergencyType: EmergencyType): CallType {
-    constmapping: Record<EmergencyType, CallType> = {
+    const mapping: Record<EmergencyType, CallType> = {
       [EmergencyType.MEDICAL]: CallType.MEDICAL_EMERGENCY,
       [EmergencyType.FIRE]: CallType.SAFETY_CONCERN,
       [EmergencyType.SECURITY]: CallType.SAFETY_CONCERN,

@@ -99,7 +99,7 @@ export class Rota extends BaseEntity {
   requirements?: RotaRequirements;
 
   @Column('jsonb', { nullable: true })
-  constraints?: RotaConstraints;
+  const raints?: RotaConstraints;
 
   @Column('jsonb', { nullable: true })
   metrics?: RotaMetrics;
@@ -304,7 +304,7 @@ export class Rota extends BaseEntity {
   }
 
   calculateMetrics(): RotaMetrics {
-    constmetrics: RotaMetrics = {
+    const metrics: RotaMetrics = {
       totalShifts: this.getTotalShifts(),
       totalHours: this.getTotalHours(),
       totalCost: this.getTotalCost(),
@@ -342,7 +342,7 @@ export class Rota extends BaseEntity {
       department: this.department,
       description: this.description,
       requirements: this.requirements,
-      constraints: this.constraints,
+      const raints: this.const raints,
       isTemplate: false,
       templateId: this.isTemplate ? this.id : this.templateId
     };

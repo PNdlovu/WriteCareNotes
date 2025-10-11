@@ -19,7 +19,7 @@ import { Asset, AssetType } from '../../entities/maintenance/Asset';
 export class MaintenanceFacilitiesController {
   privatemaintenanceService: MaintenanceFacilitiesService;
 
-  constructor() {
+  const ructor() {
     this.maintenanceService = new MaintenanceFacilitiesService();
   }
 

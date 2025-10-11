@@ -30,7 +30,7 @@ import { PerformanceTrackingService } from '../services/performance-tracking.ser
 /**
  * Staff Training & Support Module
  * 
- * Provides comprehensive staff training and professional development:
+ * Provides comprehensive staff training and professionaldevelopment:
  * - Learning Management System (LMS) with interactive courses
  * - Competency-based training and assessment
  * - Virtual Reality training simulations

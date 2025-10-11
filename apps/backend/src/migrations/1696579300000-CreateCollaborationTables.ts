@@ -8,14 +8,14 @@
  * @since 2.0.0 - Phase 2 Feature 2: Real-Time Collaboration
  * @license Proprietary - WriteCareNotes Platform
  * 
- * Migration Details:
+ * MigrationDetails:
  * - Creates collaboration_sessions table (18 columns, 5 indexes)
  * - Creates policy_comments table (22 columns, 6 indexes)
- * - Adds foreign key constraints with CASCADE/SET NULL behaviors
+ * - Adds foreign key const raints with CASCADE/SET NULL behaviors
  * - Creates performance indexes for common query patterns
  * - Enables JSONB support for cursor positions and metadata
  * 
- * Tables Created:
+ * TablesCreated:
  * 1. collaboration_sessions
  *    - Tracks active real-time editing sessions
  *    - Stores cursor positions and selection ranges
@@ -28,24 +28,24 @@
  *    - Enables position-based annotations
  *    - Tracks comment resolution and editing
  * 
- * Indexes Created:
+ * IndexesCreated:
  * - collaboration_sessions: policy_id, user_id, policy_id+user_id, last_activity, status
  * - policy_comments: policy_id, user_id, parent_comment_id, status, created_at, policy_id+status
  * 
- * Foreign Keys:
+ * ForeignKeys:
  * - Sessions: policy_id → policy_drafts, user_id → users
  * - Comments: policy_id → policy_drafts, user_id → users, parent_comment_id → policy_comments
  * 
- * Data Types:
+ * DataTypes:
  * - UUID: All primary keys and foreign keys
  * - JSONB: Cursor positions, selection ranges, metadata, position selectors
  * - TIMESTAMP: All datetime fields
- * - VARCHAR: Status enums, tokens, device info
+ * - VAR CHAR: Status enums, tokens, device info
  * - TEXT: Comment content
  * - INTEGER: Counters (edits, comments, likes)
  * - BOOLEAN: Flags (is_editing, is_pinned)
  * 
- * Performance Considerations:
+ * PerformanceConsiderations:
  * - Composite indexes for multi-column queries
  * - JSONB indexes for metadata queries (can be added later if needed)
  * - Foreign key indexes for join performance
@@ -59,10 +59,10 @@
  * @example
  * ```bash
  * # Run migration
- * npm run typeorm migration:run
+ * npm run typeormmigration:run
  * 
  * # Revert migration
- * npm run typeorm migration:revert
+ * npm run typeormmigration:revert
  * ```
  */
 
@@ -72,7 +72,7 @@ export class CreateCollaborationTables1696579300000 implements MigrationInterfac
   name = 'CreateCollaborationTables1696579300000';
 
   /**
-   * Execute migration - Create tables and constraints
+   * Execute migration - Create tables and const raints
    * @param queryRunner - TypeORM query runner
    */
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -102,7 +102,7 @@ export class CreateCollaborationTables1696579300000 implements MigrationInterfac
           },
           {
             name: 'session_token',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false,
             isUnique: true
@@ -131,7 +131,7 @@ export class CreateCollaborationTables1696579300000 implements MigrationInterfac
           },
           {
             name: 'status',
-            type: 'varchar',
+            type: 'var char',
             length: '20',
             default: "'active'",
             isNullable: false
@@ -143,19 +143,19 @@ export class CreateCollaborationTables1696579300000 implements MigrationInterfac
           },
           {
             name: 'device_type',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             isNullable: true
           },
           {
             name: 'browser',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
           {
             name: 'socket_id',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
@@ -301,14 +301,14 @@ export class CreateCollaborationTables1696579300000 implements MigrationInterfac
           },
           {
             name: 'status',
-            type: 'varchar',
+            type: 'var char',
             length: '20',
             default: "'active'",
             isNullable: false
           },
           {
             name: 'comment_type',
-            type: 'varchar',
+            type: 'var char',
             length: '20',
             default: "'general'",
             isNullable: false
@@ -492,12 +492,12 @@ export class CreateCollaborationTables1696579300000 implements MigrationInterfac
 
     console.log('✅ Created collaboration_sessions table with 5 indexes');
     console.log('✅ Created policy_comments table with 6 indexes');
-    console.log('✅ Created all foreign key constraints');
-    console.log('📊 Real-Time Collaboration database schema ready!');
+    console.log('✅ Created all foreign key const raints');
+    console.log('📊 Real-Time Collaboration database schemaready!');
   }
 
   /**
-   * Revert migration - Drop tables and constraints
+   * Revert migration - Drop tables and const raints
    * @param queryRunner - TypeORM query runner
    */
   public async down(queryRunner: QueryRunner): Promise<void> {

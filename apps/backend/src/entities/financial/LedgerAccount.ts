@@ -87,12 +87,12 @@ export enum LedgerAccountStatus {
 export class LedgerAccount extends BaseEntity {
 
   // Account Identification
-  @Column({ type: 'varchar', length: 20, unique: true })
+  @Column({ type: 'var char', length: 20, unique: true })
   @IsString()
   @Length(1, 20)
   accountCode!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   accountName!: string;
@@ -132,7 +132,7 @@ export class LedgerAccount extends BaseEntity {
   @IsNumber()
   level!: number;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 500)
@@ -204,13 +204,13 @@ export class LedgerAccount extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   department?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -518,7 +518,7 @@ export class LedgerAccount extends BaseEntity {
    * Get all child accounts recursively
    */
   getAllChildAccounts(): LedgerAccount[] {
-    constchildren: LedgerAccount[] = [];
+    const children: LedgerAccount[] = [];
     
     if (this.childAccounts) {
       for (const child of this.childAccounts) {

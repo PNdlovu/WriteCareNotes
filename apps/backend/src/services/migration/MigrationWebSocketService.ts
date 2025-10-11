@@ -57,7 +57,7 @@ export class MigrationWebSocketService {
   privateconnectedClients: Map<string, Set<string>> = new Map(); // pipelineId -> socketIds
   privateclientPipelines: Map<string, string> = new Map(); // socketId -> pipelineId
 
-  constructor(server: Server) {
+  const ructor(server: Server) {
     this.io = new SocketIOServer(server, {
       cors: {
 
@@ -79,7 +79,7 @@ export class MigrationWebSocketService {
 
   private setupEventListeners(): void {
     this.io.on('connection', (socket) => {
-      console.log(`Migration client connected: ${socket.id}`);
+      console.log(`Migration clientconnected: ${socket.id}`);
 
       // Handle joining a migration room
       socket.on('join_migration', async (pipelineId: string) => {
@@ -196,7 +196,7 @@ export class MigrationWebSocketService {
 
       // Handle disconnection
       socket.on('disconnect', async () => {
-        console.log(`Migration client disconnected: ${socket.id}`);
+        console.log(`Migration clientdisconnected: ${socket.id}`);
         
         // Clean up client tracking
         const pipelineId = this.clientPipelines.get(socket.id);
@@ -236,7 +236,7 @@ export class MigrationWebSocketService {
       this.broadcastToMigrationRoom(event.pipelineId, 'migration_completed', {
         pipelineId: event.pipelineId,
         completedAt: new Date(),
-        message: 'Migration completed successfully! 🎉',
+        message: 'Migration completedsuccessfully! 🎉',
         finalStats: this.migrationService.getMigrationProgress(event.pipelineId)
       });
     });

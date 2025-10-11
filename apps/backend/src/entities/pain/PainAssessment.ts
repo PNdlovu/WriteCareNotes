@@ -50,7 +50,7 @@ export interface BodyMapLocation {
   };
   painIntensity: number; // 0-10 scale
   painQuality: PainQuality[];
-  painFrequency: 'constant' | 'intermittent' | 'occasional' | 'rare';
+  painFrequency: 'const ant' | 'intermittent' | 'occasional' | 'rare';
   triggeringFactors: string[];
   relievingFactors: string[];
   radiationPattern?: {

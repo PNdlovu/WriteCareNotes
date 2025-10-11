@@ -11,7 +11,7 @@ import { EventEmitter2 } from "eventemitter2";
 export { default as MigrationWizard } from './MigrationWizard';
 export { default as MigrationDashboard } from './MigrationDashboard';
 
-// Export types for external use
+// export type s for external use
 export type {
   MigrationStep,
   SourceSystem,

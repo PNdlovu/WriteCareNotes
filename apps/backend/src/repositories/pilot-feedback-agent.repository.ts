@@ -13,7 +13,7 @@ import {
 export class PilotFeedbackAgentRepository {
   privatedb: DatabaseService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
   }
 
@@ -376,7 +376,7 @@ export class PilotFeedbackAgentRepository {
       WHERE tenant_id = ?
     `;
     
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
     
     if (from) {
       query += ' AND created_at >= ?';
@@ -425,7 +425,7 @@ export class PilotFeedbackAgentRepository {
       WHERE tenant_id = ?
     `;
     
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
     
     if (from) {
       query += ' AND created_at >= ?';
@@ -477,7 +477,7 @@ export class PilotFeedbackAgentRepository {
       WHERE tenant_id = ?
     `;
     
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
     
     if (from) {
       query += ' AND created_at >= ?';
@@ -566,7 +566,7 @@ export class PilotFeedbackAgentRepository {
     const status = action === 'create_ticket' ? 'approved' : 'dismissed';
     const query = `
       UPDATE agent_recommendations 
-      SET status = ?, approved_at = ?, notes = ?
+      SETstatus = ?, approved_at = ?, notes = ?
       WHERE recommendation_id = ?
     `;
     

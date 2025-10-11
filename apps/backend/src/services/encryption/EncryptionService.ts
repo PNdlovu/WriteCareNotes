@@ -30,8 +30,8 @@ import { FieldLevelEncryptionService } from './FieldLevelEncryptionService';
 export class EncryptionService {
   // Logger removed
 
-  constructor(
-    private readonly fieldEncryptionService: FieldLevelEncryptionService
+  const ructor(
+    private readonlyfieldEncryptionService: FieldLevelEncryptionService
   ) {
     console.log('Enterprise Encryption Service initialized');
   }

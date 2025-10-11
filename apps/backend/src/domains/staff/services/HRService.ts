@@ -74,7 +74,7 @@ export interface OnboardingChecklist {
 
 @Injectable()
 export class HRService {
-  constructor(
+  const ructor(
     @InjectRepository(EmployeeProfile)
     privateemployeeProfileRepository: Repository<EmployeeProfile>,
     @InjectRepository(TimeOffRequest)

@@ -117,7 +117,7 @@ export class Expense extends BaseEntity {
   id!: string;
 
   // Expense Identification
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   @IsString()
   @Length(1, 50)
   expenseNumber!: string;
@@ -155,7 +155,7 @@ export class Expense extends BaseEntity {
   @Transform(({ value }) => new Decimal(value))
   totalAmount!: Decimal;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;
@@ -165,7 +165,7 @@ export class Expense extends BaseEntity {
   @IsDate()
   expenseDate!: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   description!: string;
@@ -175,17 +175,17 @@ export class Expense extends BaseEntity {
   @IsString()
   detailedDescription?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   @IsString()
   supplier?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   invoiceNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   receiptNumber?: string;
@@ -196,12 +196,12 @@ export class Expense extends BaseEntity {
   @IsUUID()
   departmentId?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   @IsString()
   location?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   @IsString()
   projectCode?: string;
@@ -262,7 +262,7 @@ export class Expense extends BaseEntity {
   @IsUUID()
   correlationId!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   regulatoryCode?: string;
@@ -271,7 +271,7 @@ export class Expense extends BaseEntity {
   @IsBoolean()
   isVATApplicable!: boolean;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   vatNumber?: string;
@@ -298,7 +298,7 @@ export class Expense extends BaseEntity {
   @IsUUID()
   budgetId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   costCenter?: string;

@@ -61,8 +61,8 @@ import { TenantGuard } from '../../guards/tenant.guard';
 @Controller('api/v1/safeguarding')
 @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
 export class SafeguardingController {
-  constructor(
-    private readonly safeguardingService: EnterpriseSafeguardingService
+  const ructor(
+    private readonlysafeguardingService: EnterpriseSafeguardingService
   ) {}
 
   @Post('alerts')
@@ -156,7 +156,7 @@ export class SafeguardingController {
 
     const alert = alerts.find(a => a.id === alertId);
     if (!alert) {
-      throw new Error(`Safeguarding alert not found: ${alertId}`);
+      throw new Error(`Safeguarding alert notfound: ${alertId}`);
     }
 
     return alert;

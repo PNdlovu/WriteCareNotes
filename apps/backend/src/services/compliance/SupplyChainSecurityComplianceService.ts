@@ -434,8 +434,8 @@ export interface RiskMitigationPlan {
 export class SupplyChainSecurityComplianceService {
   // Logger removed
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -447,7 +447,7 @@ export class SupplyChainSecurityComplianceService {
     const assessmentId = request.assessmentId || uuidv4();
     
     try {
-      console.log(`Starting supply chain security assessment: ${assessmentId}`);
+      console.log(`Starting supply chain securityassessment: ${assessmentId}`);
 
       // Assess components
       const componentAssessments = await this.assessComponents(request.components);
@@ -471,7 +471,7 @@ export class SupplyChainSecurityComplianceService {
       // Create risk mitigation plans
       const riskMitigation = await this.createRiskMitigationPlans(componentAssessments, supplierAssessments);
 
-      constresult: SupplyChainComplianceResult = {
+      const result: SupplyChainComplianceResult = {
         assessmentId,
         framework: request.framework,
         overallCompliance: this.determineOverallCompliance(complianceScore, riskScore),
@@ -495,11 +495,11 @@ export class SupplyChainSecurityComplianceService {
         organizationId: request.organizationId
       });
 
-      console.log(`Supply chain security assessment completed: ${assessmentId}`);
+      console.log(`Supply chain security assessmentcompleted: ${assessmentId}`);
       return result;
 
     } catch (error: unknown) {
-      console.error(`Supply chain security assessment failed: ${assessmentId}`, error);
+      console.error(`Supply chain security assessmentfailed: ${assessmentId}`, error);
       throw error;
     }
   }
@@ -508,7 +508,7 @@ export class SupplyChainSecurityComplianceService {
    * Assess supply chain components
    */
   private async assessComponents(components: SupplyChainComponent[]): Promise<ComponentAssessmentResult[]> {
-    constassessments: ComponentAssessmentResult[] = [];
+    const assessments: ComponentAssessmentResult[] = [];
 
     for (const component of components) {
       const vulnerabilityCount = component.vulnerabilities.length;
@@ -516,7 +516,7 @@ export class SupplyChainSecurityComplianceService {
       const highVulns = component.vulnerabilities.filter(v => v.severity === 'high').length;
 
       // Calculate risk level based on vulnerabilities and criticality
-      letriskLevel: SupplyChainRiskLevel;
+      let riskLevel: SupplyChainRiskLevel;
       if (criticalVulns > 0 || (component.criticality === SupplyChainRiskLevel.CRITICAL && highVulns > 0)) {
         riskLevel = SupplyChainRiskLevel.CRITICAL;
       } else if (highVulns > 0 || component.criticality === SupplyChainRiskLevel.HIGH) {
@@ -552,7 +552,7 @@ export class SupplyChainSecurityComplianceService {
    * Assess suppliers
    */
   private async assessSuppliers(suppliers: SupplierProfile[]): Promise<SupplierAssessmentResult[]> {
-    constassessments: SupplierAssessmentResult[] = [];
+    const assessments: SupplierAssessmentResult[] = [];
 
     for (const supplier of suppliers) {
       // Calculate security score
@@ -589,7 +589,7 @@ export class SupplyChainSecurityComplianceService {
    * Assess development practices
    */
   private async assessDevelopmentPractices(practices: DevelopmentPractices): Promise<PracticeAssessmentResult[]> {
-    constassessments: PracticeAssessmentResult[] = [];
+    const assessments: PracticeAssessmentResult[] = [];
 
     // Assess secure code practices
     const secureCodeScore = this.calculateSecureCodeScore(practices.secureCodePractices);
@@ -814,7 +814,7 @@ export class SupplyChainSecurityComplianceService {
 
   // Additional helper methods for generating recommendations and gap analysis
   private generateComponentRecommendations(component: SupplyChainComponent, riskLevel: SupplyChainRiskLevel): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (component.vulnerabilities.length > 0) {
       recommendations.push('Update component to latest secure version');
@@ -833,7 +833,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private generateSupplierRecommendations(supplier: SupplierProfile, securityScore: number): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (securityScore < 80) {
       recommendations.push('Conduct supplier security assessment');
@@ -852,7 +852,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private identifySecureCodeGaps(practices: SecureCodePractices): string[] {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
     
     if (!practices.codeReviewRequired) gaps.push('Code review process not mandatory');
     if (practices.staticAnalysisTools.length === 0) gaps.push('No static analysis tools implemented');
@@ -864,7 +864,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private generateSecureCodeRecommendations(practices: SecureCodePractices): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (!practices.codeReviewRequired) recommendations.push('Implement mandatory code review process');
     if (practices.staticAnalysisTools.length === 0) recommendations.push('Deploy static analysis security testing tools');
@@ -875,7 +875,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private identifyTestingGaps(practices: TestingPractices): string[] {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
     
     if (practices.unitTestCoverage < 80) gaps.push('Unit test coverage below recommended 80%');
     if (!practices.securityTesting) gaps.push('Security testing not implemented');
@@ -886,7 +886,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private generateTestingRecommendations(practices: TestingPractices): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (practices.unitTestCoverage < 80) recommendations.push('Increase unit test coverage to at least 80%');
     if (!practices.securityTesting) recommendations.push('Implement security testing in CI/CD pipeline');
@@ -897,7 +897,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private identifyBuildGaps(practices: BuildAndDeploymentPractices): string[] {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
     
     if (!practices.reproducibleBuilds) gaps.push('Builds are not reproducible');
     if (!practices.containerSecurity) gaps.push('Container security scanning not implemented');
@@ -908,7 +908,7 @@ export class SupplyChainSecurityComplianceService {
   }
 
   private generateBuildRecommendations(practices: BuildAndDeploymentPractices): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (!practices.reproducibleBuilds) recommendations.push('Implement reproducible build processes');
     if (!practices.containerSecurity) recommendations.push('Deploy container security scanning');
@@ -924,7 +924,7 @@ export class SupplyChainSecurityComplianceService {
     practiceAssessments: PracticeAssessmentResult[],
     vulnerabilityReport: VulnerabilityReport
   ): Promise<SupplyChainRecommendation[]> {
-    constrecommendations: SupplyChainRecommendation[] = [];
+    const recommendations: SupplyChainRecommendation[] = [];
 
     // Critical vulnerability recommendations
     if (vulnerabilityReport.criticalVulnerabilities > 0) {
@@ -976,7 +976,7 @@ export class SupplyChainSecurityComplianceService {
     componentAssessments: ComponentAssessmentResult[],
     supplierAssessments: SupplierAssessmentResult[]
   ): Promise<RiskMitigationPlan[]> {
-    constplans: RiskMitigationPlan[] = [];
+    const plans: RiskMitigationPlan[] = [];
 
     // Create plans for high-risk components
     const highRiskComponents = componentAssessments.filter(c => 
@@ -1011,7 +1011,7 @@ export class SupplyChainSecurityComplianceService {
     organizationId: string
   ): Promise<SupplyChainComplianceResult | null> {
     // Implementation would retrieve from database
-    console.log(`Retrieving supply chain compliance status for organization: ${organizationId}`);
+    console.log(`Retrieving supply chain compliance status fororganization: ${organizationId}`);
     return null;
   }
 
@@ -1023,7 +1023,7 @@ export class SupplyChainSecurityComplianceService {
     updates: Partial<SupplyChainComplianceResult>
   ): Promise<void> {
     // Implementation would update database
-    console.log(`Updating supply chain compliance assessment: ${assessmentId}`);
+    console.log(`Updating supply chain complianceassessment: ${assessmentId}`);
   }
 
   /**
@@ -1034,7 +1034,7 @@ export class SupplyChainSecurityComplianceService {
     framework?: SupplyChainSecurityFramework
   ): Promise<any> {
     // Implementation would generate comprehensive compliance report
-    console.log(`Generating supply chain compliance report for organization: ${organizationId}`);
+    console.log(`Generating supply chain compliance report fororganization: ${organizationId}`);
     return {
       organizationId,
       framework,

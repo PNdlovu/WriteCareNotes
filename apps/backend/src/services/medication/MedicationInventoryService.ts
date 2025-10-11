@@ -143,7 +143,7 @@ export class MedicationInventoryService extends EventEmitter2 {
   privateauditTrailService: AuditService;
   privatenotificationService: NotificationService;
 
-  constructor() {
+  const ructor() {
     super();
     this.inventoryRepository = AppDataSource.getRepository('InventoryItem');
     this.auditTrailService = new AuditTrailService();
@@ -234,7 +234,7 @@ export class MedicationInventoryService extends EventEmitter2 {
         type: 'low_stock',
         medicationId: inventoryItem.medicationId,
         medicationName: inventoryItem.medicationName,
-        message: `Stock level is low: ${inventoryItem.currentStock} units remaining`,
+        message: `Stock level islow: ${inventoryItem.currentStock} units remaining`,
         severity: 'medium',
         organizationId,
         data: { currentStock: inventoryItem.currentStock, minimumLevel: inventoryItem.minimumStockLevel }
@@ -342,7 +342,7 @@ export class MedicationInventoryService extends EventEmitter2 {
         item.minimumStockLevel * settings.reorderQuantityMultiplier
       );
 
-      constorderItem: StockOrderItem = {
+      const orderItem: StockOrderItem = {
         id: this.generateId(),
         orderId: '',
         medicationId: item.medicationId,
@@ -358,12 +358,12 @@ export class MedicationInventoryService extends EventEmitter2 {
       ordersBySupplier.get(item.supplierId)!.push(orderItem);
     }
 
-    constorders: StockOrder[] = [];
+    const orders: StockOrder[] = [];
     
     for (const [supplierId, items] of ordersBySupplier) {
       const totalCost = items.reduce((sum, item) => sum + item.totalCost, 0);
       
-      constorder: StockOrder = {
+      const order: StockOrder = {
         id: this.generateId(),
         orderNumber: this.generateOrderNumber(),
         supplierId,
@@ -408,7 +408,7 @@ export class MedicationInventoryService extends EventEmitter2 {
     startDate?: Date,
     endDate?: Date
   ): Promise<StockMovement[]> {
-    constquery: any = {};
+    const query: any = {};
     
     if (medicationId) query.medicationId = medicationId;
     if (organizationId) query.organizationId = organizationId;
@@ -423,7 +423,7 @@ export class MedicationInventoryService extends EventEmitter2 {
   }
 
   async createStockAlert(alert: Omit<StockAlert, 'id' | 'acknowledged' | 'createdAt'>): Promise<StockAlert> {
-    conststockAlert: StockAlert = {
+    const stockAlert: StockAlert = {
       id: this.generateId(),
       acknowledged: false,
       createdAt: new Date(),

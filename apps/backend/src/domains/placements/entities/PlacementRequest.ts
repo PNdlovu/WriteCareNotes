@@ -9,7 +9,7 @@
  * @since 2024
  *
  * @description
- * Core entity for placement request management tracking:
+ * Core entity for placement request managementtracking:
  * - Unique request numbering (PR-YYYY-NNNN format)
  * - Request status workflow (PENDING → UNDER_REVIEW → MATCHED → PLACED)
  * - Urgency levels (EMERGENCY, URGENT, ROUTINE, PLANNED) with escalation
@@ -179,7 +179,7 @@ export class PlacementRequest {
     allergies?: string[];
     mobilityNeeds?: string;
     sensoryNeeds?: string;
-    nursingCare Required?: boolean;
+    nursingCareRequired?: boolean;
   };
 
   // Education Needs
@@ -190,7 +190,7 @@ export class PlacementRequest {
     senSupport?: string;
     educationLevel?: string;
     isNEET?: boolean;
-    alternativeEducation Required?: boolean;
+    alternativeEducationRequired?: boolean;
   };
 
   // Funding Information

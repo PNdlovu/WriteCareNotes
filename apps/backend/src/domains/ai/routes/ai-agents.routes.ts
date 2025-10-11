@@ -83,12 +83,12 @@ router.get('/health', async (req: Request, res: Response) => {
 // Mock chat handler for voice-note agent
 async function handleVoiceNoteChat(message: string, context: any): Promise<any> {
   const responses = {
-    greeting: "Hello! I'm the Voice-to-Note Agent. I can help you transcribe voice recordings into structured care notes. How can I assist you?",
-    help: "I can help you with:\n- Transcribing voice recordings\n- Generating structured care notes\n- Analyzing sentiment and extracting key information\n- Suggesting follow-up actions\n\nJust send me an audio file or describe what you need!",
+    greeting: "Hello! I'm the Voice-to-Note Agent. I can help you transcribe voice recordings into structured care notes. How can I assistyou?",
+    help: "I can help youwith:\n- Transcribing voice recordings\n- Generating structured care notes\n- Analyzing sentiment and extracting key information\n- Suggesting follow-up actions\n\nJust send me an audio file or describe what youneed!",
     transcription: "I can transcribe your voice recordings. Please provide the audio file in WAV, MP3, M4A, or WebM format.",
     note_generation: "I can generate structured care notes from your transcriptions. I'll analyze the content for medical terms, sentiment, and action items.",
     status: "I'm currently active and ready to process voice recordings and generate care notes.",
-    capabilities: "My capabilities include:\n- Voice transcription\n- Note generation\n- Sentiment analysis\n- Keyword extraction\n- Action item detection\n- Risk assessment\n- Language detection\n- Summarization",
+    capabilities: "My capabilitiesinclude:\n- Voice transcription\n- Note generation\n- Sentiment analysis\n- Keyword extraction\n- Action item detection\n- Risk assessment\n- Language detection\n- Summarization",
     error: "I'm sorry, I didn't understand that. Please try asking about transcription, note generation, or my capabilities."
   };
 

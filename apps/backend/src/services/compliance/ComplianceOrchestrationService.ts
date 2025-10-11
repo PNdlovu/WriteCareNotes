@@ -449,17 +449,17 @@ export interface TopRisk {
 export class ComplianceOrchestrationService {
   // Logger removed
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2,
-    private readonly aiGovernanceService: AIGovernanceComplianceService,
-    private readonly cyberResilienceService: CyberResilienceActComplianceService,
-    private readonly supplyChainService: SupplyChainSecurityComplianceService,
-    private readonly doraService: DORAComplianceService,
-    private readonly environmentalService: EnvironmentalSustainabilityComplianceService,
-    private readonly complianceCheckService: ComplianceCheckService,
-    private readonly cqcService: CQCDigitalStandardsService,
-    private readonly nhsDigitalService: NHSDigitalComplianceService,
-    private readonly gdprService: GDPRComplianceService
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlyaiGovernanceService: AIGovernanceComplianceService,
+    private readonlycyberResilienceService: CyberResilienceActComplianceService,
+    private readonlysupplyChainService: SupplyChainSecurityComplianceService,
+    private readonlydoraService: DORAComplianceService,
+    private readonlyenvironmentalService: EnvironmentalSustainabilityComplianceService,
+    private readonlycomplianceCheckService: ComplianceCheckService,
+    private readonlycqcService: CQCDigitalStandardsService,
+    private readonlynhsDigitalService: NHSDigitalComplianceService,
+    private readonlygdprService: GDPRComplianceService
   ) {}
 
   /**
@@ -471,7 +471,7 @@ export class ComplianceOrchestrationService {
     const assessmentId = request.assessmentId || uuidv4();
     
     try {
-      console.log(`Starting master compliance assessment: ${assessmentId}`);
+      console.log(`Starting master complianceassessment: ${assessmentId}`);
 
       // Conduct assessments for each requested framework
       const frameworkResults = await this.assessFrameworks(request);
@@ -496,7 +496,7 @@ export class ComplianceOrchestrationService {
       // Create risk heatmap
       const riskHeatmap = await this.createRiskHeatmap(frameworkResults, crossFrameworkAnalysis);
 
-      constresult: MasterComplianceAssessmentResult = {
+      const result: MasterComplianceAssessmentResult = {
         assessmentId,
         organizationName: request.organizationName,
         overallComplianceScore,
@@ -520,11 +520,11 @@ export class ComplianceOrchestrationService {
         organizationId: request.organizationId
       });
 
-      console.log(`Master compliance assessment completed: ${assessmentId}`);
+      console.log(`Master compliance assessmentcompleted: ${assessmentId}`);
       return result;
 
     } catch (error: unknown) {
-      console.error(`Master compliance assessment failed: ${assessmentId}`, error);
+      console.error(`Master compliance assessmentfailed: ${assessmentId}`, error);
       throw error;
     }
   }
@@ -535,7 +535,7 @@ export class ComplianceOrchestrationService {
   private async assessFrameworks(
     request: MasterComplianceAssessmentRequest
   ): Promise<FrameworkAssessmentResult[]> {
-    constresults: FrameworkAssessmentResult[] = [];
+    const results: FrameworkAssessmentResult[] = [];
 
     for (const framework of request.frameworks) {
       if (framework === ComprehensiveComplianceFramework.ALL_FRAMEWORKS) {
@@ -564,14 +564,14 @@ export class ComplianceOrchestrationService {
     request: MasterComplianceAssessmentRequest
   ): Promise<FrameworkAssessmentResult | null> {
     try {
-      letrawResult: any = null;
+      let rawResult: any = null;
       let complianceScore = 0;
       let maturityLevel = ComplianceMaturityLevel.INITIAL;
-      letriskLevel: 'low' | 'medium' | 'high' | 'critical' = 'medium';
-      letstatus: 'compliant' | 'non_compliant' | 'conditional_compliant' = 'non_compliant';
-      letkeyFindings: string[] = [];
-      letcriticalGaps: string[] = [];
-      letrecommendations: string[] = [];
+      let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'medium';
+      let status: 'compliant' | 'non_compliant' | 'conditional_compliant' = 'non_compliant';
+      let keyFindings: string[] = [];
+      let criticalGaps: string[] = [];
+      let recommendations: string[] = [];
 
       switch (framework) {
         case ComprehensiveComplianceFramework.AI_GOVERNANCE:
@@ -645,7 +645,7 @@ export class ComplianceOrchestrationService {
           break;
 
         default:
-          console.warn(`Framework not implemented: ${framework}`);
+          console.warn(`Framework notimplemented: ${framework}`);
           return null;
       }
 
@@ -693,7 +693,7 @@ export class ComplianceOrchestrationService {
     if (results.length === 0) return 0;
 
     // Weight frameworks by importance
-    constweights: Record<ComprehensiveComplianceFramework, number> = {
+    const weights: Record<ComprehensiveComplianceFramework, number> = {
       [ComprehensiveComplianceFramework.BRITISH_ISLES_HEALTHCARE]: 0.25,
       [ComprehensiveComplianceFramework.GDPR]: 0.20,
       [ComprehensiveComplianceFramework.AI_GOVERNANCE]: 0.15,
@@ -764,11 +764,11 @@ export class ComplianceOrchestrationService {
   private async performCrossFrameworkAnalysis(
     results: FrameworkAssessmentResult[]
   ): Promise<CrossFrameworkAnalysis> {
-    constsynergies: ComplianceSynergy[] = [];
-    constconflicts: ComplianceConflict[] = [];
-    constgaps: ComplianceGap[] = [];
-    constoverlaps: ComplianceOverlap[] = [];
-    constefficiencyOpportunities: EfficiencyOpportunity[] = [];
+    const synergies: ComplianceSynergy[] = [];
+    const conflicts: ComplianceConflict[] = [];
+    const gaps: ComplianceGap[] = [];
+    const overlaps: ComplianceOverlap[] = [];
+    const efficiencyOpportunities: EfficiencyOpportunity[] = [];
 
     // Identify synergies
     synergies.push({
@@ -867,7 +867,7 @@ export class ComplianceOrchestrationService {
     results: FrameworkAssessmentResult[],
     analysis: CrossFrameworkAnalysis
   ): Promise<PrioritizedRecommendation[]> {
-    constrecommendations: PrioritizedRecommendation[] = [];
+    const recommendations: PrioritizedRecommendation[] = [];
 
     // Critical gaps first
     for (const gap of analysis.gaps.filter(g => g.riskLevel === 'critical')) {
@@ -875,7 +875,7 @@ export class ComplianceOrchestrationService {
         recommendationId: uuidv4(),
         priority: 'critical',
         frameworks: [gap.framework],
-        title: `Address Critical Gap: ${gap.category}`,
+        title: `Address CriticalGap: ${gap.category}`,
         description: gap.description,
         actionItems: gap.remediation,
         timeline: gap.timeline,
@@ -941,8 +941,8 @@ export class ComplianceOrchestrationService {
     recommendations: PrioritizedRecommendation[],
     request: MasterComplianceAssessmentRequest
   ): Promise<IntegratedActionPlan> {
-    constphases: ActionPlanPhase[] = [];
-    constmilestones: ActionPlanMilestone[] = [];
+    const phases: ActionPlanPhase[] = [];
+    const milestones: ActionPlanMilestone[] = [];
 
     // Phase 1: Critical and High Priority (0-6 months)
     const phase1Recs = recommendations.filter(r => r.priority === 'critical' || r.priority === 'high');
@@ -1038,7 +1038,7 @@ export class ComplianceOrchestrationService {
         identifiedRisks: [
           {
             riskId: uuidv4(),
-            description: 'Resource constraints affecting implementation timeline',
+            description: 'Resource const raints affecting implementation timeline',
             probability: 'medium',
             impact: 'high',
             mitigation: ['Resource planning', 'Phased approach', 'External support'],
@@ -1075,7 +1075,7 @@ export class ComplianceOrchestrationService {
     results: FrameworkAssessmentResult[],
     request: MasterComplianceAssessmentRequest
   ): Promise<ComplianceDashboard> {
-    constoverviewMetrics: DashboardMetric[] = [
+    const overviewMetrics: DashboardMetric[] = [
       {
         metricId: uuidv4(),
         name: 'Overall Compliance Score',
@@ -1105,7 +1105,7 @@ export class ComplianceOrchestrationService {
       }
     ];
 
-    constframeworkStatus: FrameworkStatus[] = results.map(result => ({
+    const frameworkStatus: FrameworkStatus[] = results.map(result => ({
       framework: result.framework,
       status: result.status,
       score: result.complianceScore,
@@ -1114,7 +1114,7 @@ export class ComplianceOrchestrationService {
       criticalIssues: result.criticalGaps.length
     }));
 
-    consttrendAnalysis: TrendAnalysis[] = results.map(result => ({
+    const trendAnalysis: TrendAnalysis[] = results.map(result => ({
       framework: result.framework,
       metric: 'Compliance Score',
       trend: 'improving',
@@ -1123,7 +1123,7 @@ export class ComplianceOrchestrationService {
       forecast: 'Continued improvement expected'
     }));
 
-    constalerts: ComplianceAlert[] = results
+    const alerts: ComplianceAlert[] = results
       .filter(r => r.riskLevel === 'critical' || r.status === 'non_compliant')
       .map(result => ({
         alertId: uuidv4(),
@@ -1135,7 +1135,7 @@ export class ComplianceOrchestrationService {
         deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       }));
 
-    constupcomingDeadlines: UpcomingDeadline[] = [
+    const upcomingDeadlines: UpcomingDeadline[] = [
       {
         deadlineId: uuidv4(),
         framework: ComprehensiveComplianceFramework.CYBER_RESILIENCE_ACT,
@@ -1170,7 +1170,7 @@ export class ComplianceOrchestrationService {
     results: FrameworkAssessmentResult[],
     analysis: CrossFrameworkAnalysis
   ): Promise<RiskHeatmap> {
-    constriskCategories: RiskCategory[] = [
+    const riskCategories: RiskCategory[] = [
       {
         category: 'Regulatory Compliance',
         riskLevel: results.some(r => r.status === 'non_compliant') ? 'critical' : 'medium',
@@ -1194,14 +1194,14 @@ export class ComplianceOrchestrationService {
       }
     ];
 
-    constframeworkRisks: FrameworkRisk[] = results.map(result => ({
+    const frameworkRisks: FrameworkRisk[] = results.map(result => ({
       framework: result.framework,
       riskLevel: result.riskLevel,
       keyRisks: result.criticalGaps,
       mitigation: result.recommendations
     }));
 
-    consttopRisks: TopRisk[] = analysis.gaps
+    const topRisks: TopRisk[] = analysis.gaps
       .filter(gap => gap.riskLevel === 'critical' || gap.riskLevel === 'high')
       .map(gap => ({
         riskId: gap.gapId,
@@ -1298,7 +1298,7 @@ export class ComplianceOrchestrationService {
   }
 
   private calculateBudgetByFramework(recommendations: PrioritizedRecommendation[]): Record<ComprehensiveComplianceFramework, number> {
-    constbudget: Record<ComprehensiveComplianceFramework, number> = {} as Record<ComprehensiveComplianceFramework, number>;
+    const budget: Record<ComprehensiveComplianceFramework, number> = {} as Record<ComprehensiveComplianceFramework, number>;
     
     for (const rec of recommendations) {
       for (const framework of rec.frameworks) {
@@ -1311,7 +1311,7 @@ export class ComplianceOrchestrationService {
   }
 
   private calculateBudgetByPhase(recommendations: PrioritizedRecommendation[], phases: ActionPlanPhase[]): Record<string, number> {
-    constbudget: Record<string, number> = {};
+    const budget: Record<string, number> = {};
     
     for (const phase of phases) {
       budget[phase.name] = recommendations
@@ -1344,7 +1344,7 @@ export class ComplianceOrchestrationService {
     organizationId: string
   ): Promise<MasterComplianceAssessmentResult | null> {
     // Implementation would retrieve from database
-    console.log(`Retrieving comprehensive compliance status for organization: ${organizationId}`);
+    console.log(`Retrieving comprehensive compliance status fororganization: ${organizationId}`);
     return null;
   }
 
@@ -1356,7 +1356,7 @@ export class ComplianceOrchestrationService {
     updates: Partial<MasterComplianceAssessmentResult>
   ): Promise<void> {
     // Implementation would update database
-    console.log(`Updating comprehensive compliance assessment: ${assessmentId}`);
+    console.log(`Updating comprehensive complianceassessment: ${assessmentId}`);
   }
 
   /**
@@ -1367,7 +1367,7 @@ export class ComplianceOrchestrationService {
     frameworks?: ComprehensiveComplianceFramework[]
   ): Promise<any> {
     // Implementation would generate comprehensive compliance report
-    console.log(`Generating comprehensive compliance report for organization: ${organizationId}`);
+    console.log(`Generating comprehensive compliance report fororganization: ${organizationId}`);
     return {
       organizationId,
       frameworks,

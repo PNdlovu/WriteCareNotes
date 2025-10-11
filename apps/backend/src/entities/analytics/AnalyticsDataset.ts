@@ -355,12 +355,12 @@ export class AnalyticsDataset extends BaseEntity {
     
     const overallScore = (completeness + accuracy + consistency + timeliness + validity + uniqueness) / 6;
     
-    letqualityStatus: DataQualityStatus;
+    let qualityStatus: DataQualityStatus;
     if (overallScore >= 95) qualityStatus = DataQualityStatus.EXCELLENT;
     else if (overallScore >= 85) qualityStatus = DataQualityStatus.GOOD;
     else if (overallScore >= 75) qualityStatus = DataQualityStatus.FAIR;
     else if (overallScore >= 60) qualityStatus = DataQualityStatus.POOR;
-    else qualityStatus = DataQualityStatus.CRITICAL;
+    elsequalityStatus = DataQualityStatus.CRITICAL;
     
     this.dataQuality = {
       completeness: Math.round(completeness * 100) / 100,

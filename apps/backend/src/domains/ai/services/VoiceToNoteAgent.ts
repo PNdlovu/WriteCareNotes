@@ -70,7 +70,7 @@ export class VoiceToNoteAgent {
     summarization: true,
   };
 
-  constructor() {
+  const ructor() {
     this.eventStream = EventStreamService.getInstance();
     this.initializeAgent();
   }
@@ -100,7 +100,7 @@ export class VoiceToNoteAgent {
       const transcription = await this.transcribeAudio(request);
       
       // Step 2: Generate care note
-      constnoteRequest: NoteGenerationRequest = {
+      const noteRequest: NoteGenerationRequest = {
         transcription: transcription.transcription,
         residentId: request.residentId,
         staffMemberId: request.staffMemberId,
@@ -127,7 +127,7 @@ export class VoiceToNoteAgent {
 
       return { transcription, note };
     } catch (error) {
-      console.error('❌ Voice-to-note processing failed:', error);
+      console.error('❌ Voice-to-note processingfailed:', error);
       throw error;
     }
   }
@@ -182,7 +182,7 @@ export class VoiceToNoteAgent {
     // Determine if review is required
     const requiresReview = this.requiresReview(priority, riskAssessment, analysis);
     
-    constnote: NoteGenerationResponse = {
+    const note: NoteGenerationResponse = {
       noteId: this.generateNoteId(),
       title: this.generateNoteTitle(request.transcription, analysis),
       content: noteContent,
@@ -231,7 +231,7 @@ export class VoiceToNoteAgent {
     const positiveCount = words.filter(word => positiveWords.includes(word)).length;
     const negativeCount = words.filter(word => negativeWords.includes(word)).length;
     
-    letsentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
+    let sentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
     if (positiveCount > negativeCount) sentiment = 'positive';
     else if (negativeCount > positiveCount) sentiment = 'negative';
     
@@ -273,7 +273,7 @@ export class VoiceToNoteAgent {
    */
   private generateStructuredNote(request: NoteGenerationRequest, analysis: any): string {
     const timestamp = new Date().toLocaleString();
-    const residentInfo = request.residentId ? `Resident ID: ${request.residentId}` : 'General Note';
+    const residentInfo = request.residentId ? `ResidentID: ${request.residentId}` : 'General Note';
     
     return `**Care Note - ${timestamp}**
 ${residentInfo}
@@ -284,9 +284,9 @@ ${request.transcription}
 
 **Analysis:**
 - Sentiment: ${analysis.sentiment}
-- Key Topics: ${analysis.keywords.join(', ')}
-- Medical Terms: ${analysis.medicalTerms.join(', ')}
-- Action Items: ${analysis.actionItems.join(', ')}
+- KeyTopics: ${analysis.keywords.join(', ')}
+- MedicalTerms: ${analysis.medicalTerms.join(', ')}
+- ActionItems: ${analysis.actionItems.join(', ')}
 
 **Context:**
 ${request.context || 'No additional context provided'}
@@ -374,9 +374,9 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
     factors: string[];
     recommendations: string[];
   } {
-    constfactors: string[] = [];
-    constrecommendations: string[] = [];
-    letlevel: 'low' | 'medium' | 'high' = 'low';
+    const factors: string[] = [];
+    const recommendations: string[] = [];
+    let level: 'low' | 'medium' | 'high' = 'low';
     
     // Check for risk indicators
     if (analysis.sentiment === 'negative') {
@@ -409,7 +409,7 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
    * Generate suggested actions
    */
   private generateSuggestedActions(transcription: string, analysis: any, riskAssessment: any): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
     
     // Medical actions
     if (analysis.medicalTerms.includes('medication')) {
@@ -446,7 +446,7 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
    * Determine if note requires review
    */
   private requiresReview(priority: string, riskAssessment: any, analysis: any): boolean {
-    return priority === 'urgent' || 
+    returnpriority === 'urgent' || 
            priority === 'high' || 
            riskAssessment.level === 'high' || 
            analysis.confidence < 0.8 ||
@@ -500,7 +500,7 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
    * Handle voice audio events
    */
   private async handleVoiceAudio(event: any): Promise<void> {
-    console.log('🎤 Received voice audio event:', event.type);
+    console.log('🎤 Received voice audioevent:', event.type);
     // Process voice audio event
   }
 
@@ -508,7 +508,7 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
    * Handle note request events
    */
   private async handleNoteRequest(event: any): Promise<void> {
-    console.log('📝 Received note request event:', event.type);
+    console.log('📝 Received note requestevent:', event.type);
     // Process note request event
   }
 
@@ -516,7 +516,7 @@ Confidence: ${(analysis.confidence * 100).toFixed(1)}%`;
    * Handle transcription complete events
    */
   private async handleTranscriptionComplete(event: any): Promise<void> {
-    console.log('✅ Transcription completed:', event.type);
+    console.log('✅ Transcriptioncompleted:', event.type);
     // Process transcription complete event
   }
 

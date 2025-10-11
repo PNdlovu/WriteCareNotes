@@ -23,14 +23,14 @@ export interface ComplianceCheck {
 
 @Injectable()
 export class NHSDigitalComplianceService {
-  private readonly logger = new Logger(NHSDigitalComplianceService.name);
+  private readonlylogger = new Logger(NHSDigitalComplianceService.name);
 
   /**
    * Perform NHS Digital compliance check
    */
   async performComplianceCheck(tenantId: string): Promise<ComplianceCheck[]> {
     try {
-      constchecks: ComplianceCheck[] = [];
+      const checks: ComplianceCheck[] = [];
 
       // Data Security and Protection Toolkit (DSPT) check
       checks.push({
@@ -67,8 +67,8 @@ export class NHSDigitalComplianceService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to perform NHS Digital compliance check: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to perform NHS Digital compliance check: ${errorMessage}`);
+      this.logger.error(`Failed to perform NHS Digital compliancecheck: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to perform NHS Digital compliancecheck: ${errorMessage}`);
     }
   }
 
@@ -93,11 +93,11 @@ export class NHSDigitalComplianceService {
       const remainder = sum % 11;
       const calculatedCheckDigit = 11 - remainder;
       
-      return calculatedCheckDigit === checkDigit || 
+      returncalculatedCheckDigit === checkDigit || 
              (calculatedCheckDigit === 11 && checkDigit === 0);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`NHS Number validation failed: ${errorMessage}`);
+      this.logger.error(`NHS Number validationfailed: ${errorMessage}`);
       return false;
     }
   }
@@ -113,7 +113,7 @@ export class NHSDigitalComplianceService {
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`DSPT compliance check failed: ${errorMessage}`);
+      this.logger.error(`DSPT compliance checkfailed: ${errorMessage}`);
       return false;
     }
   }

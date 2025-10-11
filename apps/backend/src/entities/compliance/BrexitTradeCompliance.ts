@@ -26,7 +26,7 @@ export class BrexitTradeDocumentation {
   @IsEnum(['eori_number', 'customs_declaration', 'certificate_of_origin', 'commercial_invoice', 'packing_list', 'export_licence', 'import_licence', 'health_certificate', 'ukca_marking', 'ce_marking'])
   documentationType: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   documentNumber: string;
 
@@ -37,7 +37,7 @@ export class BrexitTradeDocumentation {
   @Column({ type: 'timestamp', nullable: true })
   expiryDate?: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   issuingAuthority: string;
 
@@ -48,7 +48,7 @@ export class BrexitTradeDocumentation {
   @Column({ type: 'timestamp', nullable: true })
   validationDate?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   documentPath?: string;
 
   @Column({ type: 'json' })
@@ -78,7 +78,7 @@ export class EORIRegistration {
   @IsString()
   organizationId: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   eoriNumber: string;
 
@@ -86,7 +86,7 @@ export class EORIRegistration {
   @IsDate()
   registrationDate: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   organizationName: string;
 
@@ -94,7 +94,7 @@ export class EORIRegistration {
   @IsString()
   businessAddress: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   businessType: string;
 
@@ -110,7 +110,7 @@ export class EORIRegistration {
   @IsDate()
   validationDate: Date;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   hmrcReference: string;
 
@@ -133,11 +133,11 @@ export class UKConformityAssessment {
   @IsString()
   organizationId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   productName: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   productCategory: string;
 
@@ -168,7 +168,7 @@ export class UKConformityAssessment {
   @Column({ type: 'json' })
   deadlines: Date[];
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   certificationBody?: string;
 
   @Column({ type: 'boolean' })
@@ -202,7 +202,7 @@ export class CustomsDeclaration {
   @IsEnum(['import', 'export'])
   declarationType: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   commodityCode: string;
 
@@ -214,15 +214,15 @@ export class CustomsDeclaration {
   @IsNumber()
   value: number;
 
-  @Column({ type: 'varchar', length: 3 })
+  @Column({ type: 'var char', length: 3 })
   @IsString()
   currency: string;
 
-  @Column({ type: 'varchar', length: 2 })
+  @Column({ type: 'var char', length: 2 })
   @IsString()
   originCountry: string;
 
-  @Column({ type: 'varchar', length: 2 })
+  @Column({ type: 'var char', length: 2 })
   @IsString()
   destinationCountry: string;
 
@@ -249,7 +249,7 @@ export class CustomsDeclaration {
   @IsEnum(['submitted', 'cleared', 'held', 'rejected'])
   status: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   referenceNumber: string;
 
@@ -307,7 +307,7 @@ export class BrexitComplianceAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 

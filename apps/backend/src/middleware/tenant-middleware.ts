@@ -67,7 +67,7 @@ export const tenantMiddleware = (req: AuthenticatedRequest, res: Response, next:
 
     next();
   } catch (error: unknown) {
-    console.error('Tenant middleware error:', error);
+    console.error('Tenant middlewareerror:', error);
     res.status(500).json({
       success: false,
       error: 'Internal server error during tenant validation',

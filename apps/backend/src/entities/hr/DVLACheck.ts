@@ -123,18 +123,18 @@ export class DVLACheck extends BaseEntity {
   priority!: DVLACheckPriority;
 
   // License Information
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   @Length(1, 20)
   licenseNumber!: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   referenceNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -167,13 +167,13 @@ export class DVLACheck extends BaseEntity {
   lastCheckedDate?: Date;
 
   // Verification Details
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   issuingAuthority?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -212,7 +212,7 @@ export class DVLACheck extends BaseEntity {
   checkCount!: number;
 
   // Risk Assessment
-  @Column({ type: 'varchar', length: 20, default: 'low' })
+  @Column({ type: 'var char', length: 20, default: 'low' })
   @IsString()
   @Length(1, 20)
   riskLevel!: string;
@@ -232,13 +232,13 @@ export class DVLACheck extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   department?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -262,7 +262,7 @@ export class DVLACheck extends BaseEntity {
   @Transform(({ value }) => value ? parseFloat(value) : null)
   verificationCost?: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;

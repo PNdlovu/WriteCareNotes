@@ -137,7 +137,7 @@ export class GPConnectService extends EventEmitter2 {
   privateauditTrailService: AuditService;
   privatenotificationService: NotificationService;
 
-  constructor() {
+  const ructor() {
     super();
     this.gpRecordRepository = AppDataSource.getRepository('ResidentGPRecord');
     this.healthSummaryRepository = AppDataSource.getRepository('HealthSummary');
@@ -151,7 +151,7 @@ export class GPConnectService extends EventEmitter2 {
     residentData: Omit<ResidentGPRecord, 'id' | 'createdAt' | 'updatedAt'>,
     userId: string
   ): Promise<ResidentGPRecord> {
-    constgpRecord: ResidentGPRecord = {
+    const gpRecord: ResidentGPRecord = {
       id: this.generateId(),
       ...residentData,
       registrationStatus: 'active',
@@ -182,7 +182,7 @@ export class GPConnectService extends EventEmitter2 {
     healthSummaryData: Omit<HealthSummary, 'id' | 'createdAt' | 'sentToGP' | 'gpAcknowledged'>,
     userId: string
   ): Promise<HealthSummary> {
-    consthealthSummary: HealthSummary = {
+    const healthSummary: HealthSummary = {
       id: this.generateId(),
       ...healthSummaryData,
       createdAt: new Date(),
@@ -246,7 +246,7 @@ export class GPConnectService extends EventEmitter2 {
     consultationData: Omit<GPConsultationRequest, 'id' | 'requestedDate' | 'status'>,
     userId: string
   ): Promise<GPConsultationRequest> {
-    constconsultation: GPConsultationRequest = {
+    const consultation: GPConsultationRequest = {
       id: this.generateId(),
       ...consultationData,
       requestedDate: new Date(),
@@ -262,7 +262,7 @@ export class GPConnectService extends EventEmitter2 {
       gpPracticeId: consultation.gpPracticeId,
       communicationType: 'consultation_request',
       subject: `Consultation Request - ${consultation.residentName} (${consultation.priority.toUpperCase()})`,
-      message: `Consultation requested for resident: ${consultation.residentName}\n\nReason: ${consultation.reasonForConsultation}\n\nPriority: ${consultation.priority}\n\nSymptoms: ${consultation.symptoms?.join(', ') || 'None specified'}\n\nPreferred visit date: ${consultation.preferredVisitDate?.toDateString() || 'Flexible'}`,
+      message: `Consultation requested forresident: ${consultation.residentName}\n\nReason: ${consultation.reasonForConsultation}\n\nPriority: ${consultation.priority}\n\nSymptoms: ${consultation.symptoms?.join(', ') || 'None specified'}\n\nPreferred visitdate: ${consultation.preferredVisitDate?.toDateString() || 'Flexible'}`,
       sentBy: userId,
       organizationId: consultation.organizationId
     });
@@ -305,7 +305,7 @@ export class GPConnectService extends EventEmitter2 {
   private async createGPCommunication(
     communicationData: Omit<GPCommunication, 'id' | 'sentAt' | 'deliveryStatus'>
   ): Promise<GPCommunication> {
-    constcommunication: GPCommunication = {
+    const communication: GPCommunication = {
       id: this.generateId(),
       ...communicationData,
       sentAt: new Date(),

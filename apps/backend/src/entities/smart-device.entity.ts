@@ -48,7 +48,7 @@ export class SmartDeviceEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   deviceName: string;
 
@@ -56,23 +56,23 @@ export class SmartDeviceEntity {
   @IsEnum(DeviceType)
   deviceType: DeviceType;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsNotEmpty()
   manufacturer: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsNotEmpty()
   model: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'var char', length: 255, unique: true })
   @IsNotEmpty()
   serialNumber: string;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   @IsOptional()
   ipAddress: string;
 
-  @Column({ type: 'varchar', length: 17, nullable: true })
+  @Column({ type: 'var char', length: 17, nullable: true })
   @IsOptional()
   macAddress: string;
 
@@ -104,11 +104,11 @@ export class SmartDeviceEntity {
   @IsJSON()
   automationRules: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   firmwareVersion: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   softwareVersion: string;
 
@@ -149,15 +149,15 @@ export class SmartDeviceEntity {
   @IsJSON()
   privacySettings: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   roomId: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   residentId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   installedBy: string;
 

@@ -57,7 +57,7 @@ const PUBLISHING_ROLES = [
 
 @Injectable()
 export class RoleGuardService {
-  private readonly logger = new Logger(RoleGuardService.name);
+  private readonlylogger = new Logger(RoleGuardService.name);
 
   /**
    * ✅ VALIDATE USER ACCESS TO AI INTENT
@@ -71,12 +71,12 @@ export class RoleGuardService {
     const authorizedRoles = PERMISSION_MATRIX[intent];
     
     if (!authorizedRoles) {
-      throw new UnauthorizedException(`Unknown AI assistant intent: ${intent}`);
+      throw new UnauthorizedException(`Unknown AI assistantintent: ${intent}`);
     }
 
     if (!authorizedRoles.includes(user.role)) {
       this.logger.warn(
-        `Access denied: User ${user.id} (${user.role}) attempted unauthorized AI intent: ${intent}`
+        `Accessdenied: User ${user.id} (${user.role}) attempted unauthorized AIintent: ${intent}`
       );
       
       throw new UnauthorizedException(
@@ -103,7 +103,7 @@ export class RoleGuardService {
       );
     }
 
-    this.logger.log(`Publishing access granted: User ${user.id} (${user.role})`);
+    this.logger.log(`Publishing accessgranted: User ${user.id} (${user.role})`);
   }
 
   /**

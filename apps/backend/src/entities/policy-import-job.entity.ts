@@ -54,13 +54,13 @@ export class PolicyImportJob {
   /**
    * Path to uploaded file
    */
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   filePath: string;
 
   /**
    * Original filename
    */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   fileName: string;
 
   /**
@@ -72,7 +72,7 @@ export class PolicyImportJob {
   /**
    * File MIME type
    */
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   mimeType?: string;
 
   /**

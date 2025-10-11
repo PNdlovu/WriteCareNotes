@@ -64,7 +64,7 @@ export interface IntegrationTest {
 export interface TestSetup {
   createTestData?: boolean;
   mockServices?: string[];
-  environmentVariables?: Record<string, string>;
+  environment variables?: Record<string, string>;
   databaseSeeds?: string[];
 }
 
@@ -166,7 +166,7 @@ type ComplianceStandard = 'GDPR' | 'HIPAA' | 'CQC' | 'NHS_STANDARDS' | 'ISO_2700
 type ComplianceStatus = 'compliant' | 'non_compliant' | 'partially_compliant' | 'not_applicable';
 
 export class IntegrationTestingService {
-  private router = express.Router();
+  privaterouter = express.Router();
   privatedb: DatabaseService;
   privatelogger: Logger;
   privateapp: express.Application;
@@ -181,7 +181,7 @@ export class IntegrationTestingService {
   privatequalityService: CareQualityIntelligenceService;
   privatecommunityService: CommunityConnectionHubService;
 
-  constructor() {
+  const ructor() {
     this.db = DatabaseService.getInstance();
     this.logger = Logger.getInstance();
     this.initializeServices();
@@ -266,7 +266,7 @@ export class IntegrationTestingService {
       await this.updateTestSuiteStatus(tenantId, suiteId, 'running');
 
       const startTime = Date.now();
-      constresults: TestResults = {
+      const results: TestResults = {
         totalTests: suite.tests.length,
         passed: 0,
         failed: 0,
@@ -284,8 +284,8 @@ export class IntegrationTestingService {
         }
       };
 
-      constresponseTimes: number[] = [];
-      constendpointMetrics: Map<string, EndpointMetric> = new Map();
+      const responseTimes: number[] = [];
+      const endpointMetrics: Map<string, EndpointMetric> = new Map();
 
       // Execute tests sequentially or in parallel based on dependencies
       for (const test of suite.tests) {
@@ -499,7 +499,7 @@ export class IntegrationTestingService {
 
       this.logger.info('Running security tests', { tenantId });
 
-      constsecurityResults: SecurityTestResult = {
+      const securityResults: SecurityTestResult = {
         vulnerabilities: [],
         authenticationTests: [],
         authorizationTests: [],
@@ -530,7 +530,7 @@ export class IntegrationTestingService {
         type: 'security_tests',
         results: securityResults,
         executedAt: new Date().toISOString(),
-        message: `Security assessment completed with score: ${securityResults.overallScore}/100`
+        message: `Security assessment completed withscore: ${securityResults.overallScore}/100`
       });
     } catch (error) {
       this.logger.error('Error running security tests', { error });
@@ -718,7 +718,7 @@ export class IntegrationTestingService {
   }
 
   private async runAuthenticationTests(tenantId: string): Promise<AuthTest[]> {
-    consttests: AuthTest[] = [];
+    const tests: AuthTest[] = [];
     
     // Test endpoints without authentication
     const endpoints = [
@@ -754,7 +754,7 @@ export class IntegrationTestingService {
   }
 
   private async runAuthorizationTests(tenantId: string): Promise<AuthTest[]> {
-    consttests: AuthTest[] = [];
+    const tests: AuthTest[] = [];
     
     // Test role-based access control
     const roleTests = [
@@ -794,7 +794,7 @@ export class IntegrationTestingService {
   }
 
   private async runDataProtectionTests(tenantId: string): Promise<DataProtectionTest[]> {
-    consttests: DataProtectionTest[] = [];
+    const tests: DataProtectionTest[] = [];
     
     const dataTypes = ['resident_data', 'staff_data', 'family_data', 'health_records'];
     
@@ -813,7 +813,7 @@ export class IntegrationTestingService {
   }
 
   private async runVulnerabilityScans(tenantId: string): Promise<SecurityVulnerability[]> {
-    constvulnerabilities: SecurityVulnerability[] = [];
+    const vulnerabilities: SecurityVulnerability[] = [];
     
     // Check for common vulnerabilities
     const endpoints = [
@@ -849,7 +849,7 @@ export class IntegrationTestingService {
   }
 
   private async runComplianceChecks(tenantId: string): Promise<ComplianceCheck[]> {
-    constchecks: ComplianceCheck[] = [
+    const checks: ComplianceCheck[] = [
       {
         standard: 'GDPR',
         requirement: 'Data retention policies',
@@ -905,7 +905,7 @@ export class IntegrationTestingService {
   private async getTestSuiteById(tenantId: string, suiteId: string): Promise<IntegrationTestSuite | null> {
     try {
       const result = await this.db.query(
-        'SELECT * FROM testing.test_suites WHERE tenant_id = $1 AND id = $2',
+        'SELECT * FROM testing.test_suites WHERE tenant_id = $1 ANDid = $2',
         [tenantId, suiteId]
       );
       
@@ -951,7 +951,7 @@ export class IntegrationTestingService {
   private async updateTestSuiteStatus(tenantId: string, suiteId: string, status: TestSuiteStatus): Promise<void> {
     try {
       await this.db.query(
-        'UPDATE testing.test_suites SET status = $1 WHERE tenant_id = $2 AND id = $3',
+        'UPDATE testing.test_suites SETstatus = $1 WHERE tenant_id = $2 ANDid = $3',
         [status, tenantId, suiteId]
       );
     } catch (error) {
@@ -964,8 +964,8 @@ export class IntegrationTestingService {
     try {
       await this.db.query(
         `UPDATE testing.test_suites 
-         SET results = $1, execution_time = $2, executed_at = $3 
-         WHERE tenant_id = $4 AND id = $5`,
+         SETresults = $1, execution_time = $2, executed_at = $3 
+         WHERE tenant_id = $4 ANDid = $5`,
         [JSON.stringify(results), results.executionTime, new Date().toISOString(), tenantId, suiteId]
       );
     } catch (error) {
@@ -982,7 +982,7 @@ export class IntegrationTestingService {
     
     try {
       // Execute tests here (simplified for this implementation)
-      constresults: TestResults = {
+      const results: TestResults = {
         totalTests: suite.tests.length,
         passed: suite.tests.length,
         failed: 0,

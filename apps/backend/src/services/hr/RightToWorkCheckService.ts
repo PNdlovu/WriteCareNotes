@@ -116,7 +116,7 @@ export class RightToWorkCheckService {
   privatenotificationService: NotificationService;
   privateeventEmitter: EventEmitter2;
 
-  constructor() {
+  const ructor() {
     this.rightToWorkCheckRepository = AppDataSource.getRepository(RightToWorkCheck);
     this.rightToWorkDocumentRepository = AppDataSource.getRepository(RightToWorkDocument);
     this.rightToWorkNotificationRepository = AppDataSource.getRepository(RightToWorkNotification);

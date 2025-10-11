@@ -156,13 +156,13 @@ export class MedicationRecord extends BaseEntity {
   // MEDICATION DETAILS
   // ==========================================
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   medicationName!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   genericName?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   formulation?: string; // Tablet, Capsule, Liquid, Injection, etc.
 
   @Column({ type: 'text' })
@@ -193,20 +193,20 @@ export class MedicationRecord extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isControlledDrug!: boolean; // Controlled Drugs Act compliance
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   controlledDrugSchedule?: string; // Schedule 2, 3, 4, etc.
 
   // ==========================================
   // PRESCRIPTION DETAILS
   // ==========================================
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   prescriberId!: string; // Doctor/prescriber ID
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   prescriberName!: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   prescriberGMCNumber?: string; // General Medical Council number
 
   @Column({ type: 'timestamp' })
@@ -242,7 +242,7 @@ export class MedicationRecord extends BaseEntity {
   /**
    * Consent Given By - Who gave consent (parent name, court reference, etc.)
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   consentGivenBy?: string;
 
   /**
@@ -260,7 +260,7 @@ export class MedicationRecord extends BaseEntity {
   /**
    * Parental Authority Holder - Person with parental responsibility
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   parentalAuthorityHolder?: string;
 
   /**
@@ -274,7 +274,7 @@ export class MedicationRecord extends BaseEntity {
   // ==========================================
 
   /**
-   * Gillick Competence Required - Does this medication require Gillick assessment?
+   * Gillick Competence Required - Does this medication require Gillickassessment?
    */
   @Column({ type: 'boolean', default: false })
   gillickCompetenceRequired!: boolean;
@@ -298,7 +298,7 @@ export class MedicationRecord extends BaseEntity {
   /**
    * Gillick Assessed By - Professional who conducted assessment
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   gillickAssessedBy?: string;
 
   /**
@@ -327,7 +327,7 @@ export class MedicationRecord extends BaseEntity {
    * Age-Appropriate Dosing Verified - Has dosing been checked against age/weight?
    */
   @Column({ type: 'boolean', default: false })
-  ageAppropriateDosing Verified!: boolean;
+  ageAppropriateDosingVerified!: boolean;
 
   /**
    * Maximum Daily Dose - Pediatric maximum daily dose
@@ -336,7 +336,7 @@ export class MedicationRecord extends BaseEntity {
   maxDailyDose?: string;
 
   /**
-   * Contraindicated for Age - Is this medication contraindicated for patient age?
+   * Contraindicated for Age - Is this medication contraindicated for patientage?
    */
   @Column({ type: 'boolean', default: false })
   contraindicatedForAge!: boolean;
@@ -384,7 +384,7 @@ export class MedicationRecord extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   lastAdministeredDate?: Date;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   lastAdministeredBy?: string;
 
   @Column({ type: 'int', default: 0 })
@@ -440,7 +440,7 @@ export class MedicationRecord extends BaseEntity {
   // AUDIT TRAIL
   // ==========================================
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   discontinuedBy?: string;
 
   @Column({ type: 'text', nullable: true })

@@ -126,7 +126,7 @@ export class DocumentManagementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.documentRepository = AppDataSource.getRepository(DocumentManagement);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -158,7 +158,7 @@ export class DocumentManagementService {
       
       return savedDocument;
     } catch (error: unknown) {
-      console.error('Error creating advanced document:', error);
+      console.error('Error creating advanceddocument:', error);
       throw error;
     }
   }
@@ -197,7 +197,7 @@ export class DocumentManagementService {
 
       return workflow;
     } catch (error: unknown) {
-      console.error('Error initiating document workflow:', error);
+      console.error('Error initiating documentworkflow:', error);
       throw error;
     }
   }
@@ -212,7 +212,7 @@ export class DocumentManagementService {
         throw new Error('Document not found');
       }
 
-      constreview: DocumentReview = {
+      const review: DocumentReview = {
         reviewId: `review_${Date.now()}`,
         documentId: documentId,
         reviewerId: reviewerId,
@@ -255,7 +255,7 @@ export class DocumentManagementService {
 
       return review;
     } catch (error: unknown) {
-      console.error('Error submitting document for review:', error);
+      console.error('Error submitting document forreview:', error);
       throw error;
     }
   }
@@ -274,7 +274,7 @@ export class DocumentManagementService {
       const currentVersion = document.versionControl.versionNumber;
       const newVersion = this.calculateNextVersion(currentVersion, changeDescription);
 
-      constversion: DocumentVersion = {
+      const version: DocumentVersion = {
         versionId: `version_${Date.now()}`,
         documentId: documentId,
         versionNumber: newVersion,
@@ -315,7 +315,7 @@ export class DocumentManagementService {
 
       return version;
     } catch (error: unknown) {
-      console.error('Error creating document version:', error);
+      console.error('Error creating documentversion:', error);
       throw error;
     }
   }
@@ -330,7 +330,7 @@ export class DocumentManagementService {
         throw new Error('Document not found');
       }
 
-      constcollaboration: DocumentCollaboration = {
+      const collaboration: DocumentCollaboration = {
         collaborationId: `collab_${Date.now()}`,
         documentId: documentId,
         participants: participants.map(p => ({
@@ -374,7 +374,7 @@ export class DocumentManagementService {
 
       return collaboration;
     } catch (error: unknown) {
-      console.error('Error starting document collaboration:', error);
+      console.error('Error starting documentcollaboration:', error);
       throw error;
     }
   }
@@ -425,7 +425,7 @@ export class DocumentManagementService {
         userId: approverId
       });
     } catch (error: unknown) {
-      console.error('Error approving document:', error);
+      console.error('Error approvingdocument:', error);
       throw error;
     }
   }
@@ -473,7 +473,7 @@ export class DocumentManagementService {
         userId: rejectorId
       });
     } catch (error: unknown) {
-      console.error('Error rejecting document:', error);
+      console.error('Error rejectingdocument:', error);
       throw error;
     }
   }
@@ -583,7 +583,7 @@ export class DocumentManagementService {
         ]
       };
     } catch (error: unknown) {
-      console.error('Error getting document workflow:', error);
+      console.error('Error getting documentworkflow:', error);
       throw error;
     }
   }
@@ -601,7 +601,7 @@ export class DocumentManagementService {
         expiredDocuments: documents.filter(doc => doc.isExpired()).length
       };
     } catch (error: unknown) {
-      console.error('Error getting document analytics:', error);
+      console.error('Error getting documentanalytics:', error);
       throw error;
     }
   }

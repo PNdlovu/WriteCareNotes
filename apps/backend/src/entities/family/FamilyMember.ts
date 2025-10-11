@@ -98,19 +98,19 @@ export class FamilyMember {
   @JoinColumn({ name: 'residentId' })
   resident!: Resident;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   firstName!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   lastName!: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'var char', length: 255, unique: true })
   email!: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   phone?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   mobile?: string;
 
   @Column({ type: 'enum', enum: RelationshipType })
@@ -149,31 +149,31 @@ export class FamilyMember {
   @Column({ type: 'jsonb', nullable: true })
   preferences?: FamilyPreferences;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   address?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   city?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   postcode?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   country?: string;
 
   @Column({ type: 'date', nullable: true })
   dateOfBirth?: Date;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   gender?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   occupation?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   profilePicture?: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -182,22 +182,22 @@ export class FamilyMember {
   @Column({ type: 'timestamp', nullable: true })
   lastActivityAt?: Date;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   lastLoginIp?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   lastLoginUserAgent?: string;
 
   @Column({ type: 'boolean', default: false })
   twoFactorEnabled!: boolean;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   twoFactorSecret?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   preferredLanguage?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   timezone?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -218,7 +218,7 @@ export class FamilyMember {
     other?: string;
   };
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   verificationToken?: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -227,7 +227,7 @@ export class FamilyMember {
   @Column({ type: 'timestamp', nullable: true })
   verifiedAt?: Date;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   passwordResetToken?: string;
 
   @Column({ type: 'timestamp', nullable: true })

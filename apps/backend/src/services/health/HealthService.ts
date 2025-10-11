@@ -125,7 +125,7 @@ export class HealthService extends EventEmitter {
   privatehealthAlerts: Map<string, HealthAlert> = new Map();
   privatehealthTrends: Map<string, HealthTrend[]> = new Map();
 
-  constructor() {
+  const ructor() {
     super();
     this.initialize();
   }
@@ -143,7 +143,7 @@ export class HealthService extends EventEmitter {
 
       console.info('Enterprise HealthService initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize HealthService:', error);
+      console.error('Failed to initializeHealthService:', error);
       throw error;
     }
   }
@@ -152,7 +152,7 @@ export class HealthService extends EventEmitter {
    * Validate vital signs ranges
    */
   private validateVitalSigns(vitalSigns: VitalSigns): { isValid: boolean; alerts: string[] } {
-    constalerts: string[] = [];
+    const alerts: string[] = [];
 
     // Blood pressure validation
     if (vitalSigns.bloodPressureSystolic && vitalSigns.bloodPressureDiastolic) {
@@ -209,14 +209,14 @@ export class HealthService extends EventEmitter {
       }
 
       // Validate vital signs if present
-      letvitalSignsAlerts: string[] = [];
+      let vitalSignsAlerts: string[] = [];
       if (recordData.vitalSigns) {
         const validation = this.validateVitalSigns(recordData.vitalSigns);
         vitalSignsAlerts = validation.alerts;
       }
 
       // Create health record
-      consthealthRecord: HealthRecord = {
+      const healthRecord: HealthRecord = {
         id: uuidv4(),
         residentId: recordData.residentId,
         type: recordData.type,
@@ -260,7 +260,7 @@ export class HealthService extends EventEmitter {
         timestamp: new Date().toISOString()
       });
 
-      console.info('Health record created successfully:', {
+      console.info('Health record createdsuccessfully:', {
         recordId: healthRecord.id,
         residentId: healthRecord.residentId,
         type: healthRecord.type,
@@ -270,7 +270,7 @@ export class HealthService extends EventEmitter {
 
       return healthRecord;
     } catch (error) {
-      console.error('Failed to create health record:', error);
+      console.error('Failed to create healthrecord:', error);
       this.emit('health-record:creation-failed', {
         error: error instanceof Error ? error.message : 'Unknown error',
         recordedBy,
@@ -285,7 +285,7 @@ export class HealthService extends EventEmitter {
    */
   public async createHealthAlert(alertData: Partial<HealthAlert>): Promise<HealthAlert> {
     try {
-      constalert: HealthAlert = {
+      const alert: HealthAlert = {
         id: uuidv4(),
         residentId: alertData.residentId!,
         type: alertData.type || 'warning',
@@ -312,7 +312,7 @@ export class HealthService extends EventEmitter {
 
       return alert;
     } catch (error) {
-      console.error('Failed to create health alert:', error);
+      console.error('Failed to create healthalert:', error);
       throw error;
     }
   }
@@ -374,7 +374,7 @@ export class HealthService extends EventEmitter {
 
       return { records, total, hasMore };
     } catch (error) {
-      console.error('Failed to get health records:', error);
+      console.error('Failed to get healthrecords:', error);
       throw error;
     }
   }
@@ -402,7 +402,7 @@ export class HealthService extends EventEmitter {
 
       return alerts;
     } catch (error) {
-      console.error('Failed to get active health alerts:', error);
+      console.error('Failed to get active healthalerts:', error);
       throw error;
     }
   }
@@ -436,7 +436,7 @@ export class HealthService extends EventEmitter {
 
       return alert;
     } catch (error) {
-      console.error('Failed to acknowledge health alert:', error);
+      console.error('Failed to acknowledge healthalert:', error);
       throw error;
     }
   }
@@ -461,13 +461,13 @@ export class HealthService extends EventEmitter {
       const criticalAlerts = allAlerts.filter(a => a.type === 'critical' && a.status === 'active').length;
 
       // Records by category
-      constrecordsByCategory: Record<string, number> = {};
+      const recordsByCategory: Record<string, number> = {};
       allRecords.forEach(record => {
         recordsByCategory[record.category] = (recordsByCategory[record.category] || 0) + 1;
       });
 
       // Alerts by urgency
-      constalertsByUrgency: Record<string, number> = {};
+      const alertsByUrgency: Record<string, number> = {};
       allAlerts.filter(a => a.status === 'active').forEach(alert => {
         alertsByUrgency[alert.urgency] = (alertsByUrgency[alert.urgency] || 0) + 1;
       });
@@ -483,7 +483,7 @@ export class HealthService extends EventEmitter {
         trendsAnalyzed
       };
     } catch (error) {
-      console.error('Failed to get health statistics:', error);
+      console.error('Failed to get healthstatistics:', error);
       throw error;
     }
   }

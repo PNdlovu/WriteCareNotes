@@ -137,18 +137,18 @@ export interface GeneratePolicyDto {
  */
 @Injectable()
 export class PolicyTemplateService {
-  private readonly logger = new Logger(PolicyTemplateService.name);
+  private readonlylogger = new Logger(PolicyTemplateService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyTemplate)
-    private readonly policyTemplateRepository: Repository<PolicyTemplate>,
+    private readonlypolicyTemplateRepository: Repository<PolicyTemplate>,
     
     @InjectRepository(PolicyInstance)
-    private readonly policyInstanceRepository: Repository<PolicyInstance>,
+    private readonlypolicyInstanceRepository: Repository<PolicyInstance>,
     
-    private readonly auditTrailService: AuditService,
-    private readonly validationService: ValidationService,
-    private readonly organizationService: OrganizationService
+    private readonlyauditTrailService: AuditService,
+    private readonlyvalidationService: ValidationService,
+    private readonlyorganizationService: OrganizationService
   ) {}
 
   /**
@@ -158,7 +158,7 @@ export class PolicyTemplateService {
     createDto: CreatePolicyTemplateDto,
     createdBy: User
   ): Promise<PolicyTemplate> {
-    this.logger.log(`Creating policy template: ${createDto.title}`);
+    this.logger.log(`Creating policytemplate: ${createDto.title}`);
 
     try {
       // Validate template content and variables
@@ -205,11 +205,11 @@ export class PolicyTemplateService {
         userAgent: 'Policy Management System'
       });
 
-      this.logger.log(`Policy template created successfully: ${savedTemplate.id}`);
+      this.logger.log(`Policy template createdsuccessfully: ${savedTemplate.id}`);
       return savedTemplate;
 
     } catch (error) {
-      this.logger.error(`Failed to create policy template: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create policytemplate: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -221,7 +221,7 @@ export class PolicyTemplateService {
     updateDto: UpdatePolicyTemplateDto,
     updatedBy: User
   ): Promise<PolicyTemplate> {
-    this.logger.log(`Updating policy template: ${updateDto.id}`);
+    this.logger.log(`Updating policytemplate: ${updateDto.id}`);
 
     try {
       const existingTemplate = await this.policyTemplateRepository.findOne({
@@ -268,11 +268,11 @@ export class PolicyTemplateService {
         userAgent: 'Policy Management System'
       });
 
-      this.logger.log(`Policy template updated successfully: ${updateDto.id}`);
-      return updatedTemplate!;
+      this.logger.log(`Policy template updatedsuccessfully: ${updateDto.id}`);
+      returnupdatedTemplate!;
 
     } catch (error) {
-      this.logger.error(`Failed to update policy template: ${error.message}`, error.stack);
+      this.logger.error(`Failed to update policytemplate: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -284,7 +284,7 @@ export class PolicyTemplateService {
     generateDto: GeneratePolicyDto,
     generatedBy: User
   ): Promise<PolicyInstance> {
-    this.logger.log(`Generating policy from template: ${generateDto.templateId}`);
+    this.logger.log(`Generating policy fromtemplate: ${generateDto.templateId}`);
 
     try {
       // Get template
@@ -352,11 +352,11 @@ export class PolicyTemplateService {
         userAgent: 'Policy Management System'
       });
 
-      this.logger.log(`Policy generated successfully: ${savedPolicy.id}`);
+      this.logger.log(`Policy generatedsuccessfully: ${savedPolicy.id}`);
       return savedPolicy;
 
     } catch (error) {
-      this.logger.error(`Failed to generate policy: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generatepolicy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -523,11 +523,11 @@ export class PolicyTemplateService {
         userAgent: 'Policy Management System'
       });
 
-      this.logger.log(`Policy approved successfully: ${policyId}`);
-      return approvedPolicy!;
+      this.logger.log(`Policy approvedsuccessfully: ${policyId}`);
+      returnapprovedPolicy!;
 
     } catch (error) {
-      this.logger.error(`Failed to approve policy: ${error.message}`, error.stack);
+      this.logger.error(`Failed to approvepolicy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -568,7 +568,7 @@ export class PolicyTemplateService {
     const undefinedVariables = contentVariables.filter(v => !variableNames.includes(v));
     if (undefinedVariables.length > 0) {
       throw new BadRequestException(
-        `Template content references undefined variables: ${undefinedVariables.join(', ')}`
+        `Template content references undefinedvariables: ${undefinedVariables.join(', ')}`
       );
     }
 
@@ -581,7 +581,7 @@ export class PolicyTemplateService {
       if (variable.type === 'select' || variable.type === 'multiselect') {
         if (!variable.options || variable.options.length === 0) {
           throw new BadRequestException(
-            `Variable "${variable.name}" of type "${variable.type}" must have options`
+            `variable "${variable.name}" of type "${variable.type}" must have options`
           );
         }
       }
@@ -617,26 +617,26 @@ export class PolicyTemplateService {
         switch (variable.type) {
           case 'number':
             if (isNaN(Number(value))) {
-              throw new BadRequestException(`Variable "${variable.name}" must be a number`);
+              throw new BadRequestException(`variable "${variable.name}" must be a number`);
             }
             break;
           
           case 'date':
             if (!Date.parse(value)) {
-              throw new BadRequestException(`Variable "${variable.name}" must be a valid date`);
+              throw new BadRequestException(`variable "${variable.name}" must be a valid date`);
             }
             break;
           
           case 'boolean':
             if (typeof value !== 'boolean') {
-              throw new BadRequestException(`Variable "${variable.name}" must be a boolean`);
+              throw new BadRequestException(`variable "${variable.name}" must be a boolean`);
             }
             break;
           
           case 'select':
             if (!variable.options?.includes(value)) {
               throw new BadRequestException(
-                `Variable "${variable.name}" must be one of: ${variable.options?.join(', ')}`
+                `variable "${variable.name}" must be oneof: ${variable.options?.join(', ')}`
               );
             }
             break;
@@ -644,7 +644,7 @@ export class PolicyTemplateService {
           case 'multiselect':
             if (!Array.isArray(value) || !value.every(v => variable.options?.includes(v))) {
               throw new BadRequestException(
-                `Variable "${variable.name}" must be an array of values from: ${variable.options?.join(', ')}`
+                `variable "${variable.name}" must be an array of valuesfrom: ${variable.options?.join(', ')}`
               );
             }
             break;
@@ -655,15 +655,15 @@ export class PolicyTemplateService {
           const validation = variable.validation;
           
           if (validation.min !== undefined && Number(value) < validation.min) {
-            throw new BadRequestException(`Variable "${variable.name}" must be at least ${validation.min}`);
+            throw new BadRequestException(`variable "${variable.name}" must be at least ${validation.min}`);
           }
           
           if (validation.max !== undefined && Number(value) > validation.max) {
-            throw new BadRequestException(`Variable "${variable.name}" must be at most ${validation.max}`);
+            throw new BadRequestException(`variable "${variable.name}" must be at most ${validation.max}`);
           }
           
           if (validation.pattern && !new RegExp(validation.pattern).test(String(value))) {
-            throw new BadRequestException(`Variable "${variable.name}" does not match required pattern`);
+            throw new BadRequestException(`variable "${variable.name}" does not match required pattern`);
           }
         }
       }

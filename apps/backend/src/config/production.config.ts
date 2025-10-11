@@ -147,7 +147,7 @@ class ConfigurationService {
   private static instance: ConfigurationService;
   privateconfig: ProductionConfig;
 
-  private constructor() {
+  private const ructor() {
     this.config = this.loadConfiguration();
     this.validateConfiguration();
   }
@@ -309,7 +309,7 @@ class ConfigurationService {
   }
 
   private validateConfiguration(): void {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     // Validate required environment variables
     const requiredVars = [
@@ -360,7 +360,7 @@ class ConfigurationService {
     }
 
     if (errors.length > 0) {
-      console.error('❌ Configuration validation failed:');
+      console.error('❌ Configuration validationfailed:');
       errors.forEach(error => console.error(`  - ${error}`));
       
 

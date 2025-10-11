@@ -220,14 +220,14 @@ export interface CyberEssentialsAction {
 export class UKCyberEssentialsService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly assessmentRepository: Repository<CyberEssentialsAssessment>,
+    private readonlyassessmentRepository: Repository<CyberEssentialsAssessment>,
     
-    private readonly vulnerabilityRepository: Repository<VulnerabilityFinding>,
+    private readonlyvulnerabilityRepository: Repository<VulnerabilityFinding>,
     
-    private readonly pentestRepository: Repository<PenetrationTestResult>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlypentestRepository: Repository<PenetrationTestResult>,
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -239,7 +239,7 @@ export class UKCyberEssentialsService {
     assessedBy: string
   ): Promise<CyberEssentialsAssessment> {
     try {
-      console.log(`Starting Cyber Essentials ${certificationLevel} assessment for: ${organizationId}`);
+      console.log(`Starting Cyber Essentials ${certificationLevel} assessmentfor: ${organizationId}`);
 
       // Assess all five core controls
       const controlAssessments = await this.assessAllControls(organizationId);
@@ -254,8 +254,8 @@ export class UKCyberEssentialsService {
       const vulnerabilityFindings = await this.conductVulnerabilityAssessment(organizationId);
 
       // Conduct Cyber Essentials Plus assessments if required
-      letplusAssessments: CyberEssentialsPlusAssessment[] = [];
-      letpenetrationTestResults: PenetrationTestResult[] = [];
+      let plusAssessments: CyberEssentialsPlusAssessment[] = [];
+      let penetrationTestResults: PenetrationTestResult[] = [];
 
       if (certificationLevel === 'plus') {
         plusAssessments = await this.conductCyberEssentialsPlusAssessments(organizationId);
@@ -276,7 +276,7 @@ export class UKCyberEssentialsService {
         organizationId
       );
 
-      constassessment: CyberEssentialsAssessment = {
+      const assessment: CyberEssentialsAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentType: certificationLevel === 'plus' ? 'cyber_essentials_plus' : 'cyber_essentials',
@@ -305,11 +305,11 @@ export class UKCyberEssentialsService {
         overallScore
       });
 
-      console.log(`Cyber Essentials assessment completed: ${savedAssessment.id} (${overallResult})`);
+      console.log(`Cyber Essentials assessmentcompleted: ${savedAssessment.id} (${overallResult})`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Cyber Essentials assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Cyber Essentials assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -319,7 +319,7 @@ export class UKCyberEssentialsService {
    */
   private async assessAllControls(organizationId: string): Promise<CyberEssentialsControlAssessment[]> {
     const controls = Object.values(CyberEssentialsControl);
-    constassessments: CyberEssentialsControlAssessment[] = [];
+    const assessments: CyberEssentialsControlAssessment[] = [];
 
     for (const control of controls) {
       const assessment = await this.assessControl(control, organizationId);
@@ -337,9 +337,9 @@ export class UKCyberEssentialsService {
     organizationId: string
   ): Promise<CyberEssentialsControlAssessment> {
     try {
-      console.log(`Assessing Cyber Essentials control: ${control}`);
+      console.log(`Assessing Cyber Essentialscontrol: ${control}`);
 
-      letassessment: CyberEssentialsControlAssessment;
+      let assessment: CyberEssentialsControlAssessment;
 
       switch (control) {
         case CyberEssentialsControl.BOUNDARY_FIREWALLS:
@@ -683,10 +683,10 @@ export class UKCyberEssentialsService {
    */
   private async conductVulnerabilityAssessment(organizationId: string): Promise<VulnerabilityFinding[]> {
     try {
-      console.log(`Conducting vulnerability assessment for: ${organizationId}`);
+      console.log(`Conducting vulnerability assessmentfor: ${organizationId}`);
 
       // Simulate comprehensive vulnerability assessment
-      constvulnerabilities: VulnerabilityFinding[] = [
+      const vulnerabilities: VulnerabilityFinding[] = [
         {
           id: this.generateVulnerabilityId(),
           severity: 'medium',
@@ -711,7 +711,7 @@ export class UKCyberEssentialsService {
       return vulnerabilities;
 
     } catch (error: unknown) {
-      console.error(`Vulnerability assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Vulnerability assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -722,7 +722,7 @@ export class UKCyberEssentialsService {
   private async conductCyberEssentialsPlusAssessments(
     organizationId: string
   ): Promise<CyberEssentialsPlusAssessment[]> {
-    constassessments: CyberEssentialsPlusAssessment[] = [];
+    const assessments: CyberEssentialsPlusAssessment[] = [];
 
     // Vulnerability Assessment
     assessments.push({
@@ -771,7 +771,7 @@ export class UKCyberEssentialsService {
    * Conduct penetration testing
    */
   private async conductPenetrationTesting(organizationId: string): Promise<PenetrationTestResult[]> {
-    consttestResults: PenetrationTestResult[] = [
+    const testResults: PenetrationTestResult[] = [
       {
         id: this.generatePentestId(),
         testType: 'external',
@@ -845,7 +845,7 @@ export class UKCyberEssentialsService {
     const highVulnerabilities = vulnerabilities.filter(v => v.severity === 'high');
 
     let certified = false;
-    letcertificationLevel: 'basic' | 'plus' | 'none' = 'none';
+    let certificationLevel: 'basic' | 'plus' | 'none' = 'none';
 
     if (overallResult === AssessmentResultStatus.PASS && criticalVulnerabilities.length === 0) {
       certified = true;
@@ -872,7 +872,7 @@ export class UKCyberEssentialsService {
     vulnerabilities: VulnerabilityFinding[],
     organizationId: string
   ): Promise<CyberEssentialsActionPlan> {
-    constactions: CyberEssentialsAction[] = [];
+    const actions: CyberEssentialsAction[] = [];
 
     // Generate actions for control gaps
     for (const control of controlAssessments) {
@@ -910,7 +910,7 @@ export class UKCyberEssentialsService {
       }
     }
 
-    constactionPlan: CyberEssentialsActionPlan = {
+    const actionPlan: CyberEssentialsActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,
@@ -956,7 +956,7 @@ export class UKCyberEssentialsService {
       console.log('Cyber Essentials compliance monitoring completed');
 
     } catch (error: unknown) {
-      console.error(`Cyber Essentials compliance monitoring failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Cyber Essentials compliance monitoringfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -998,7 +998,7 @@ export class UKCyberEssentialsService {
       return readinessReport;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate certification readiness report: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to generate certification readinessreport: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }

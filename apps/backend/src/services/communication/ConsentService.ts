@@ -152,7 +152,7 @@ export class ConsentService {
   privateaudit: AuditService;
   privatemessaging: RealtimeMessagingService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('ConsentService');
     this.email = new EmailService();
@@ -177,17 +177,17 @@ export class ConsentService {
 
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
-      constrequestData: CreateConsentRequestData = req.body;
+      const requestData: CreateConsentRequestData = req.body;
 
       const client = await this.db.getClient();
       await client.query('BEGIN');
 
       try {
         // Get template if specified
-        lettemplate: ConsentTemplate | null = null;
+        let template: ConsentTemplate | null = null;
         if (requestData.templateId) {
           const templateResult = await client.query(
-            'SELECT * FROM consent_templates WHERE id = $1 AND tenant_id = $2 AND is_active = true',
+            'SELECT * FROM consent_templates WHEREid = $1 AND tenant_id = $2 AND is_active = true',
             [requestData.templateId, tenantId]
           );
           template = templateResult.rows[0] || null;
@@ -259,7 +259,7 @@ export class ConsentService {
             userId: requestData.subjectId,
             type: 'consent_request',
             title: 'Consent Required',
-            message: `Your consent is required for: ${requestData.purpose}`,
+            message: `Your consent is requiredfor: ${requestData.purpose}`,
             data: { consentRequestId: requestId, consentUrl },
             actionRequired: true
           });
@@ -288,7 +288,7 @@ export class ConsentService {
           hasExternalEmail: !!requestData.externalEmail
         });
 
-        constresponse: ConsentRequest = {
+        const response: ConsentRequest = {
           id: consentRequest.id,
           tenantId: consentRequest.tenant_id,
           consentType: consentRequest.consent_type,
@@ -349,7 +349,7 @@ export class ConsentService {
       }
 
       const consentToken = req.params.consentToken;
-      constconsentData: ProvideConsentData = req.body;
+      const consentData: ProvideConsentData = req.body;
       const ipAddress = req.ip;
       const userAgent = req.get('User-Agent');
 
@@ -360,7 +360,7 @@ export class ConsentService {
         // Get consent request by token
         const requestResult = await client.query(`
           SELECT * FROM consent_requests 
-          WHERE consent_token = $1 AND status = 'pending'
+          WHERE consent_token = $1 ANDstatus = 'pending'
         `, [consentToken]);
 
         if (requestResult.rows.length === 0) {
@@ -377,8 +377,8 @@ export class ConsentService {
         if (consentRequest.expires_at && new Date() > new Date(consentRequest.expires_at)) {
           await client.query(`
             UPDATE consent_requests 
-            SET status = 'expired', updated_at = NOW()
-            WHERE id = $1
+            SETstatus = 'expired', updated_at = NOW()
+            WHEREid = $1
           `, [consentRequest.id]);
 
           res.status(400).json({
@@ -431,8 +431,8 @@ export class ConsentService {
         const newStatus = consentData.consentGiven ? 'given' : 'rejected';
         await client.query(`
           UPDATE consent_requests 
-          SET status = $1, updated_at = NOW()
-          WHERE id = $2
+          SETstatus = $1, updated_at = NOW()
+          WHEREid = $2
         `, [newStatus, consentRequest.id]);
 
         await client.query('COMMIT');
@@ -556,14 +556,14 @@ export class ConsentService {
         await client.query(`
           UPDATE consent_records 
           SET consent_withdrawn = true, withdrawn_at = NOW(), withdrawn_reason = $1
-          WHERE id = $2
+          WHEREid = $2
         `, [reason, recordId]);
 
         // Update consent request status
         await client.query(`
           UPDATE consent_requests 
-          SET status = 'withdrawn', updated_at = NOW()
-          WHERE id = $1
+          SETstatus = 'withdrawn', updated_at = NOW()
+          WHEREid = $1
         `, [consentRecord.consent_request_id]);
 
         await client.query('COMMIT');
@@ -633,7 +633,7 @@ export class ConsentService {
       const consentType = req.query.consentType as ConsentType;
 
       let whereClause = 'WHERE cr.tenant_id = $1 AND (cr.subject_id = $2 OR cr.external_email = $2)';
-      constparams: any[] = [tenantId, subjectId];
+      const params: any[] = [tenantId, subjectId];
 
       if (consentType) {
         whereClause += ' AND req.consent_type = $3';
@@ -990,7 +990,7 @@ export class ConsentService {
   }
 
   private getDefaultRetentionPeriod(consentType: ConsentType): number {
-    constperiods: Record<ConsentType, number> = {
+    const periods: Record<ConsentType, number> = {
       'family_communication': 365,
       'care_data_sharing': 2555, // 7 years
       'medical_information': 2555,
@@ -1004,7 +1004,7 @@ export class ConsentService {
   }
 
   private getDefaultPurpose(consentType: ConsentType): string {
-    constpurposes: Record<ConsentType, string> = {
+    const purposes: Record<ConsentType, string> = {
       'family_communication': 'Family communication and updates',
       'care_data_sharing': 'Care data sharing with authorized parties',
       'medical_information': 'Medical information sharing',
@@ -1018,7 +1018,7 @@ export class ConsentService {
   }
 
   private getDefaultDataCategories(consentType: ConsentType): string[] {
-    constcategories: Record<ConsentType, string[]> = {
+    const categories: Record<ConsentType, string[]> = {
       'family_communication': ['contact_information', 'care_updates', 'communication_preferences'],
       'care_data_sharing': ['care_plans', 'medical_records', 'incident_reports'],
       'medical_information': ['medical_history', 'current_medications', 'allergies'],

@@ -99,7 +99,7 @@ export class MobileSelfServiceService {
   privateauditService: AuditService;
   privateencryptionService: FieldLevelEncryptionService;
 
-  constructor() {
+  const ructor() {
     this.sessionRepository = AppDataSource.getRepository(MobileSession);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -186,7 +186,7 @@ export class MobileSelfServiceService {
 
       return savedSession;
     } catch (error: unknown) {
-      console.error('Error creating advanced mobile session:', error);
+      console.error('Error creating advanced mobilesession:', error);
       throw error;
     }
   }
@@ -254,7 +254,7 @@ export class MobileSelfServiceService {
 
       return syncResult;
     } catch (error: unknown) {
-      console.error('Error performing intelligent sync:', error);
+      console.error('Error performing intelligentsync:', error);
       throw error;
     }
   }
@@ -300,7 +300,7 @@ export class MobileSelfServiceService {
 
       return assistance;
     } catch (error: unknown) {
-      console.error('Error providing contextual assistance:', error);
+      console.error('Error providing contextualassistance:', error);
       throw error;
     }
   }
@@ -364,7 +364,7 @@ export class MobileSelfServiceService {
 
       return authResult;
     } catch (error: unknown) {
-      console.error('Error performing advanced biometric auth:', error);
+      console.error('Error performing advanced biometricauth:', error);
       throw error;
     }
   }
@@ -408,7 +408,7 @@ export class MobileSelfServiceService {
         }
       };
     } catch (error: unknown) {
-      console.error('Error getting advanced mobile analytics:', error);
+      console.error('Error getting advanced mobileanalytics:', error);
       throw error;
     }
   }
@@ -476,7 +476,7 @@ export class MobileSelfServiceService {
 
       return deployment;
     } catch (error: unknown) {
-      console.error('Error deploying progressive web app:', error);
+      console.error('Error deploying progressive webapp:', error);
       throw error;
     }
   }

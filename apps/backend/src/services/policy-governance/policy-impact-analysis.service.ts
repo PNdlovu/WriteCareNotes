@@ -213,16 +213,16 @@ export interface ImpactAnalysisReport {
  */
 @Injectable()
 export class PolicyImpactAnalysisService {
-  private readonly logger = new Logger(PolicyImpactAnalysisService.name);
+  private readonlylogger = new Logger(PolicyImpactAnalysisService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyDraft)
-    private readonly policyRepository: Repository<PolicyDraft>,
+    private readonlypolicyRepository: Repository<PolicyDraft>,
     
     @InjectRepository(PolicyDependency)
-    private readonly dependencyRepository: Repository<PolicyDependency>,
+    private readonlydependencyRepository: Repository<PolicyDependency>,
     
-    private readonly dependencyService: PolicyDependencyService
+    private readonlydependencyService: PolicyDependencyService
   ) {}
 
   /**
@@ -240,7 +240,7 @@ export class PolicyImpactAnalysisService {
    * ```typescript
    * const report = await service.analyzeImpact('policy-uuid', currentUser);
    * if (report.riskAssessment.riskLevel === ImpactRiskLevel.CRITICAL) {
-   *   console.warn('High-risk change requires approval!');
+   *   console.warn('High-risk change requiresapproval!');
    * }
    * ```
    */
@@ -288,7 +288,7 @@ export class PolicyImpactAnalysisService {
       riskAssessment
     );
 
-    constreport: ImpactAnalysisReport = {
+    const report: ImpactAnalysisReport = {
       policy: {
         id: policy.id,
         title: policy.title,
@@ -310,7 +310,7 @@ export class PolicyImpactAnalysisService {
       notificationsSuggested
     };
 
-    this.logger.log(`Impact analysis complete: ${changeScope.totalAffected} entities affected, risk level ${riskAssessment.riskLevel}`);
+    this.logger.log(`Impact analysiscomplete: ${changeScope.totalAffected} entities affected, risk level ${riskAssessment.riskLevel}`);
 
     return report;
   }
@@ -353,14 +353,14 @@ export class PolicyImpactAnalysisService {
 
     // Calculate overall risk score (0-100)
     let riskScore = 0;
-    riskScore += Math.min(30, strongDependencies * 10); // Strong deps: up to 30 points
-    riskScore += Math.min(20, depAnalysis.totalCount * 2); // Total deps: up to 20 points
-    riskScore += Math.min(25, criticalWorkflows * 5); // Critical workflows: up to 25 points
-    riskScore += Math.min(15, scope.impactRadius * 1.5); // Impact radius: up to 15 points
-    riskScore += Math.min(10, estimatedUserImpact / 10); // User impact: up to 10 points
+    riskScore += Math.min(30, strongDependencies * 10); // Strongdeps: up to 30 points
+    riskScore += Math.min(20, depAnalysis.totalCount * 2); // Totaldeps: up to 20 points
+    riskScore += Math.min(25, criticalWorkflows * 5); // Criticalworkflows: up to 25 points
+    riskScore += Math.min(15, scope.impactRadius * 1.5); // Impactradius: up to 15 points
+    riskScore += Math.min(10, estimatedUserImpact / 10); // Userimpact: up to 10 points
 
     // Determine risk level
-    letriskLevel: ImpactRiskLevel;
+    let riskLevel: ImpactRiskLevel;
     if (riskScore >= 80) {
       riskLevel = ImpactRiskLevel.CRITICAL;
     } else if (riskScore >= 60) {
@@ -421,7 +421,7 @@ export class PolicyImpactAnalysisService {
       dep => dep.dependentType === DependentType.WORKFLOW
     );
 
-    constworkflows: AffectedEntity[] = workflowDependencies.map(dep => ({
+    const workflows: AffectedEntity[] = workflowDependencies.map(dep => ({
       id: dep.dependentId,
       type: DependentType.WORKFLOW,
       name: `Workflow ${dep.dependentId.substring(0, 8)}`, // TODO: Fetch actual workflow name
@@ -436,7 +436,7 @@ export class PolicyImpactAnalysisService {
       wf => wf.riskLevel === ImpactRiskLevel.CRITICAL || wf.riskLevel === ImpactRiskLevel.HIGH
     );
 
-    constbyRiskLevel: Record<ImpactRiskLevel, number> = {
+    const byRiskLevel: Record<ImpactRiskLevel, number> = {
       [ImpactRiskLevel.LOW]: workflows.filter(w => w.riskLevel === ImpactRiskLevel.LOW).length,
       [ImpactRiskLevel.MEDIUM]: workflows.filter(w => w.riskLevel === ImpactRiskLevel.MEDIUM).length,
       [ImpactRiskLevel.HIGH]: workflows.filter(w => w.riskLevel === ImpactRiskLevel.HIGH).length,
@@ -474,7 +474,7 @@ export class PolicyImpactAnalysisService {
       dep => dep.dependentType === DependentType.MODULE
     );
 
-    constmodules: AffectedEntity[] = moduleDependencies.map(dep => ({
+    const modules: AffectedEntity[] = moduleDependencies.map(dep => ({
       id: dep.dependentId,
       type: DependentType.MODULE,
       name: `Module ${dep.dependentId.substring(0, 8)}`, // TODO: Fetch actual module name
@@ -488,7 +488,7 @@ export class PolicyImpactAnalysisService {
       mod => mod.riskLevel === ImpactRiskLevel.CRITICAL || mod.riskLevel === ImpactRiskLevel.HIGH
     );
 
-    constbyRiskLevel: Record<ImpactRiskLevel, number> = {
+    const byRiskLevel: Record<ImpactRiskLevel, number> = {
       [ImpactRiskLevel.LOW]: modules.filter(m => m.riskLevel === ImpactRiskLevel.LOW).length,
       [ImpactRiskLevel.MEDIUM]: modules.filter(m => m.riskLevel === ImpactRiskLevel.MEDIUM).length,
       [ImpactRiskLevel.HIGH]: modules.filter(m => m.riskLevel === ImpactRiskLevel.HIGH).length,
@@ -516,7 +516,7 @@ export class PolicyImpactAnalysisService {
    * ```typescript
    * const scope = await service.calculateChangeScope('policy-uuid');
    * if (!scope.isLocalized) {
-   *   console.warn('System-wide impact detected!');
+   *   console.warn('System-wide impactdetected!');
    * }
    * ```
    */
@@ -527,7 +527,7 @@ export class PolicyImpactAnalysisService {
 
     const totalAffected = dependencyGraph.totalDependencies;
 
-    constbyType: Record<DependentType, number> = {
+    const byType: Record<DependentType, number> = {
       [DependentType.WORKFLOW]: 0,
       [DependentType.MODULE]: 0,
       [DependentType.TEMPLATE]: 0,
@@ -628,7 +628,7 @@ export class PolicyImpactAnalysisService {
    * Get recommended actions for a dependency
    */
   private getRecommendedActions(dependency: PolicyDependency): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
 
     if (dependency.dependencyStrength === DependencyStrength.STRONG) {
       actions.push('Test thoroughly before publishing');
@@ -659,7 +659,7 @@ export class PolicyImpactAnalysisService {
     criticalWorkflows: number,
     scope: ChangeScope
   ): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     if (riskLevel === ImpactRiskLevel.CRITICAL || riskLevel === ImpactRiskLevel.HIGH) {
       recommendations.push('Obtain approval from senior management before publishing');
@@ -697,7 +697,7 @@ export class PolicyImpactAnalysisService {
     workflows: AffectedWorkflowsSummary,
     modules: AffectedModulesSummary
   ): { item: string; completed: boolean; required: boolean }[] {
-    constchecklist: { item: string; completed: boolean; required: boolean }[] = [];
+    const checklist: { item: string; completed: boolean; required: boolean }[] = [];
 
     // Always required
     checklist.push({
@@ -775,7 +775,7 @@ export class PolicyImpactAnalysisService {
     modules: AffectedModulesSummary,
     risk: RiskAssessment
   ): { recipient: string; message: string; priority: 'low' | 'medium' | 'high' }[] {
-    constnotifications: { recipient: string; message: string; priority: 'low' | 'medium' | 'high' }[] = [];
+    const notifications: { recipient: string; message: string; priority: 'low' | 'medium' | 'high' }[] = [];
 
     if (risk.riskLevel === ImpactRiskLevel.CRITICAL) {
       notifications.push({

@@ -1,7 +1,7 @@
 /**
  * Placement Review Entity
  * Represents statutory placement reviews
- * Compliant with: OFSTED Regulation 12, Care Planning Regulations 2010
+ * Compliantwith: OFSTED Regulation 12, Care Planning Regulations 2010
  */
 
 import {

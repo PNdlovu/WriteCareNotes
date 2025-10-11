@@ -21,16 +21,16 @@ import { LedgerAccount } from '../../entities/financial/LedgerAccount';
  */
 
 describe('Documentation Service', () => {
-  letservice: DocumentationService;
-  letdbsVerificationRepository: Repository<DBSVerification>;
-  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  letdvlaCheckRepository: Repository<DVLACheck>;
-  letcashTransactionRepository: Repository<CashTransaction>;
-  letbudgetRepository: Repository<Budget>;
-  letledgerAccountRepository: Repository<LedgerAccount>;
+  let service: DocumentationService;
+  let dbsVerificationRepository: Repository<DBSVerification>;
+  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  let dvlaCheckRepository: Repository<DVLACheck>;
+  let cashTransactionRepository: Repository<CashTransaction>;
+  let budgetRepository: Repository<Budget>;
+  let ledgerAccountRepository: Repository<LedgerAccount>;
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         DocumentationService,
         {
@@ -479,7 +479,7 @@ describe('Documentation Service', () => {
             description: 'Comprehensive budget planning and tracking',
             features: [
               'Budget creation',
-              'Variance analysis',
+              'variance analysis',
               'Forecasting',
               'Approval workflows',
               'Performance tracking'
@@ -755,8 +755,8 @@ describe('Documentation Service', () => {
 });
 
 describe('Documentation Integration Tests', () => {
-  letapp: any;
-  letdocumentationService: DocumentationService;
+  let app: any;
+  let documentationService: DocumentationService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -816,7 +816,7 @@ describe('Documentation Integration Tests', () => {
 });
 
 describe('Documentation E2E Tests', () => {
-  letapp: any;
+  let app: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

@@ -345,7 +345,7 @@ export class Supplier extends BaseEntity {
                      this.riskProfile.overallRiskRating === 'medium' ? 70 : 
                      this.riskProfile.overallRiskRating === 'high' ? 40 : 20;
     const sustainabilityScore = this.sustainabilityProfile.sustainabilityRating;
-    const costScore = 100 - Math.abs(this.performanceMetrics.costVarianceRate); // Lower variance = higher score
+    const costScore = 100 - Math.abs(this.performanceMetrics.costVarianceRate); // Lowervariance = higher score
     
     const totalScore = 
       qualityScore * weights.quality +

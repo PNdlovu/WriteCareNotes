@@ -3,7 +3,7 @@
  * 
  * TRACKS INDEPENDENT LIVING SKILLS FOR CARE LEAVERS
  * 
- * SKILLS CATEGORIES:
+ * SKILLSCATEGORIES:
  * 1. Cooking & Nutrition
  * 2. Budgeting & Money Management
  * 3. Job Search & Employment
@@ -56,18 +56,18 @@ export class LifeSkillsProgress {
   @JoinColumn({ name: 'childId' })
   child!: Child;
 
-  // ==================== SKILL DETAILS ====================
+  // ==================== SKILLDETAILS ====================
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   skillName!: string;
 
   @Column({ type: 'text' })
   description!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   category!: LifeSkillCategory;
 
-  @Column({ type: 'varchar', length: 50, default: SkillLevel.NOT_STARTED })
+  @Column({ type: 'var char', length: 50, default: SkillLevel.NOT_STARTED })
   skillLevel!: SkillLevel;
 
   @Column({ type: 'int', default: 0 })
@@ -95,21 +95,21 @@ export class LifeSkillsProgress {
   @Column({ type: 'boolean', default: false })
   trainingProvided!: boolean;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   trainingProvider?: string;
 
   @Column({ type: 'timestamptz', nullable: true })
   trainingDate?: Date;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   trainingCertificate?: string; // File path or URL
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   supportWorker?: string; // Who's helping with this skill
 
   // ==================== ASSESSMENT ====================
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   assessmentMethod?: string; // observation, practical_test, self_assessment
 
   @Column({ type: 'timestamptz', nullable: true })
@@ -121,7 +121,7 @@ export class LifeSkillsProgress {
   @Column({ type: 'int', default: 0 })
   assessmentScore!: number; // 0-100
 
-  // ==================== PRACTICE RECORDS ====================
+  // ==================== PRACTICERECORDS ====================
 
   @Column({ type: 'int', default: 0 })
   practiceCount!: number; // Number of times practiced
@@ -137,7 +137,7 @@ export class LifeSkillsProgress {
     notes: string;
   }>;
 
-  // ==================== YOUNG PERSON NOTES ====================
+  // ==================== YOUNG PERSONNOTES ====================
 
   @Column({ type: 'text', nullable: true })
   notes?: string; // Young person can add their own notes

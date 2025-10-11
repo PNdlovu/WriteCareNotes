@@ -174,7 +174,7 @@ export class PublicCustomerSupportAIService {
   privateauditService: AuditService;
   privatepublicKnowledgeBase: PublicKnowledgeBase;
 
-  constructor() {
+  const ructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -260,8 +260,8 @@ export class PublicCustomerSupportAIService {
       const message = inquiry.message.toLowerCase();
       
       let primaryIntent = 'GENERAL_INQUIRY';
-      constsecondaryIntents: string[] = [];
-      constentities: Record<string, any> = {};
+      const secondaryIntents: string[] = [];
+      const entities: Record<string, any> = {};
       
       // Intent classification
       if (message.includes('price') || message.includes('cost') || message.includes('subscription')) {
@@ -285,7 +285,7 @@ export class PublicCustomerSupportAIService {
       }
       
       // Urgency detection
-      leturgency: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
+      let urgency: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
       if (message.includes('urgent') || message.includes('asap') || message.includes('immediately')) {
         urgency = 'HIGH';
       } else if (message.includes('soon') || message.includes('quickly')) {
@@ -404,9 +404,9 @@ export class PublicCustomerSupportAIService {
   ): Promise<AIResponse> {
     try {
       let message = '';
-      constknowledgeSources: string[] = [];
-      constsuggestedActions: SuggestedAction[] = [];
-      constfollowUpQuestions: string[] = [];
+      const knowledgeSources: string[] = [];
+      const suggestedActions: SuggestedAction[] = [];
+      const followUpQuestions: string[] = [];
       let escalationRequired = false;
 
       // Generate response based on intent
@@ -514,7 +514,7 @@ export class PublicCustomerSupportAIService {
   private async generatePricingResponse(knowledge: any, inquiry: CustomerInquiry): Promise<string> {
     const pricingTiers = this.publicKnowledgeBase.pricingInformation;
     
-    let response = "I'd be happy to help you understand our pricing structure. WriteCareNotes offers flexible subscription tiers designed for different care home sizes and needs:\n\n";
+    let response = "I'd be happy to help you understand our pricing structure. WriteCareNotes offers flexible subscription tiers designed for different care home sizes andneeds:\n\n";
     
     pricingTiers.forEach(tier => {
       response += `**${tier.name}**: £${tier.monthlyPrice}/month\n`;
@@ -523,7 +523,7 @@ export class PublicCustomerSupportAIService {
       response += `- ${tier.supportLevel} support\n\n`;
     });
 
-    response += "All tiers include:\n";
+    response += "All tiersinclude:\n";
     response += "- Full UK compliance (CQC, Care Inspectorate, CIW, RQIA)\n";
     response += "- NHS Digital integration capabilities\n";
     response += "- 24/7 system availability\n";
@@ -540,9 +540,9 @@ export class PublicCustomerSupportAIService {
    * Generate demo-specific response
    */
   private async generateDemoResponse(knowledge: any, inquiry: CustomerInquiry): Promise<string> {
-    let response = "I'd be delighted to arrange a personalized demonstration of WriteCareNotes! Our demos are tailored to show you exactly how our system can benefit your specific care environment.\n\n";
+    let response = "I'd be delighted to arrange a personalized demonstration ofWriteCareNotes! Our demos are tailored to show you exactly how our system can benefit your specific care environment.\n\n";
     
-    response += "**What you'll see in the demo:**\n";
+    response += "**What you'll see in thedemo:**\n";
     response += "- Complete care documentation workflow\n";
     response += "- NHS Digital integration in action\n";
     response += "- Compliance reporting and monitoring\n";
@@ -559,7 +559,7 @@ export class PublicCustomerSupportAIService {
     response += "- **Guided Trial**: 7-day access to our demo environment\n";
     response += "- **On-site Demo**: Visit your facility for hands-on demonstration\n\n";
 
-    response += "Would you prefer a specific type of demo, or shall I schedule a brief call to discuss your needs and recommend the best approach?";
+    response += "Would you prefer a specific type of demo, or shall I schedule a brief call to discuss your needs and recommend the bestapproach?";
 
     return response;
   }
@@ -570,7 +570,7 @@ export class PublicCustomerSupportAIService {
   private async generateComplianceResponse(knowledge: any, inquiry: CustomerInquiry): Promise<string> {
     let response = "Compliance is at the heart of everything we do at WriteCareNotes. Our system is designed to exceed UK healthcare regulatory requirements across all British Isles jurisdictions.\n\n";
     
-    response += "**Full Compliance Coverage:**\n";
+    response += "**Full ComplianceCoverage:**\n";
     response += "- **CQC (England)**: Complete Key Lines of Enquiry (KLOE) support\n";
     response += "- **Care Inspectorate (Scotland)**: Health and Social Care Standards\n";
     response += "- **CIW (Wales)**: Regulation and Inspection of Social Care\n";
@@ -582,7 +582,7 @@ export class PublicCustomerSupportAIService {
     response += "- **Cyber Essentials Plus**: Government-backed cybersecurity\n";
     response += "- **ISO 27001**: Information security management\n\n";
 
-    response += "**Automated Compliance Features:**\n";
+    response += "**Automated ComplianceFeatures:**\n";
     response += "- Real-time compliance monitoring and alerts\n";
     response += "- Automated report generation for inspections\n";
     response += "- Continuous regulatory update integration\n";
@@ -633,7 +633,7 @@ export class PublicCustomerSupportAIService {
     response += "- Migration assistance and data validation\n";
     response += "- Ongoing technical support\n\n";
 
-    response += "Would you like to discuss your specific integration requirements, or shall I arrange a technical consultation with our integration specialists?";
+    response += "Would you like to discuss your specific integration requirements, or shall I arrange a technical consultation with our integrationspecialists?";
 
     return response;
   }
@@ -644,7 +644,7 @@ export class PublicCustomerSupportAIService {
   private async generateFeatureResponse(knowledge: any, inquiry: CustomerInquiry): Promise<string> {
     let response = "WriteCareNotes provides comprehensive care home management functionality designed specifically for British Isles healthcare requirements.\n\n";
     
-    response += "**Core Care Management:**\n";
+    response += "**Core CareManagement:**\n";
     response += "- **Resident Management**: Complete care profiles with medical history\n";
     response += "- **Care Planning**: Personalized care plans with outcome tracking\n";
     response += "- **Medication Management**: Full MAR with interaction checking\n";
@@ -667,7 +667,7 @@ export class PublicCustomerSupportAIService {
 
     // Add specific features based on inquiry context
     if (knowledge.features.length > 0) {
-      response += "**Specific Features You Might Find Interesting:**\n";
+      response += "**Specific Features You Might FindInteresting:**\n";
       knowledge.features.forEach(feature => {
         response += `- **${feature.name}**: ${feature.description}\n`;
         if (feature.benefits.length > 0) {
@@ -684,7 +684,7 @@ export class PublicCustomerSupportAIService {
    * Generate general response
    */
   private async generateGeneralResponse(knowledge: any, inquiry: CustomerInquiry): Promise<string> {
-    let response = "Thank you for your interest in WriteCareNotes! I'm here to help you understand how our comprehensive care home management system can benefit your organization.\n\n";
+    let response = "Thank you for your interest inWriteCareNotes! I'm here to help you understand how our comprehensive care home management system can benefit your organization.\n\n";
     
     response += "**WriteCareNotes Overview:**\n";
     response += "WriteCareNotes is the UK's leading care home management system, designed specifically for British Isles healthcare requirements. We provide a complete digital solution that streamlines care delivery while ensuring full regulatory compliance.\n\n";
@@ -698,21 +698,21 @@ export class PublicCustomerSupportAIService {
     response += "- **AI-Powered Assistance**: Intelligent care documentation and insights\n\n";
 
     if (knowledge.relevanceScore > 0.3 && knowledge.faqs.length > 0) {
-      response += "**You might also be interested in:**\n";
+      response += "**You might also be interestedin:**\n";
       knowledge.faqs.slice(0, 2).forEach(faq => {
         response += `- ${faq.question}\n`;
       });
       response += "\n";
     }
 
-    response += "I can provide detailed information about:\n";
+    response += "I can provide detailed informationabout:\n";
     response += "- Product features and capabilities\n";
     response += "- Pricing and subscription options\n";
     response += "- Compliance and regulatory support\n";
     response += "- Integration possibilities\n";
     response += "- Implementation timeline and support\n\n";
 
-    response += "What specific aspect would you like to explore further?";
+    response += "What specific aspect would you like to explorefurther?";
 
     return response;
   }
@@ -784,37 +784,37 @@ export class PublicCustomerSupportAIService {
    * Generate follow-up questions
    */
   private generateFollowUpQuestions(intentAnalysis: any, inquiry: CustomerInquiry): string[] {
-    constquestions: string[] = [];
+    const questions: string[] = [];
     
     switch (intentAnalysis.primaryIntent) {
       case 'PRICING_INQUIRY':
-        questions.push("How many residents does your care home accommodate?");
-        questions.push("Are you interested in multi-site licensing?");
-        questions.push("Do you need NHS Digital integration included?");
+        questions.push("How many residents does your care homeaccommodate?");
+        questions.push("Are you interested in multi-sitelicensing?");
+        questions.push("Do you need NHS Digital integrationincluded?");
         break;
         
       case 'DEMO_REQUEST':
-        questions.push("Would you prefer a live demo or guided trial access?");
-        questions.push("Are there specific features you'd like to focus on?");
-        questions.push("How many team members would join the demo?");
+        questions.push("Would you prefer a live demo or guided trialaccess?");
+        questions.push("Are there specific features you'd like to focuson?");
+        questions.push("How many team members would join thedemo?");
         break;
         
       case 'COMPLIANCE_INQUIRY':
-        questions.push("Which regulatory body will be conducting your next inspection?");
-        questions.push("Are you looking for help with a specific compliance area?");
-        questions.push("Do you need assistance with current compliance gaps?");
+        questions.push("Which regulatory body will be conducting your nextinspection?");
+        questions.push("Are you looking for help with a specific compliancearea?");
+        questions.push("Do you need assistance with current compliancegaps?");
         break;
         
       case 'INTEGRATION_INQUIRY':
-        questions.push("What systems are you currently using that need integration?");
-        questions.push("Do you have specific data migration requirements?");
-        questions.push("What's your preferred timeline for implementation?");
+        questions.push("What systems are you currently using that needintegration?");
+        questions.push("Do you have specific data migrationrequirements?");
+        questions.push("What's your preferred timeline forimplementation?");
         break;
         
       default:
-        questions.push("What's your biggest challenge with your current care management system?");
-        questions.push("Are you looking to replace an existing system or implementing for the first time?");
-        questions.push("What size care home or organization are you working with?");
+        questions.push("What's your biggest challenge with your current care managementsystem?");
+        questions.push("Are you looking to replace an existing system or implementing for the firsttime?");
+        questions.push("What size care home or organization are you workingwith?");
     }
     
     return questions.slice(0, 2); // Limit to 2 follow-up questions
@@ -1008,7 +1008,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
     return [
       {
         id: 'faq_1',
-        question: 'How does WriteCareNotes ensure CQC compliance?',
+        question: 'How does WriteCareNotes ensure CQCcompliance?',
         answer: 'WriteCareNotes is built with CQC compliance at its core, providing automated evidence collection, real-time compliance monitoring, and inspection-ready reports across all Key Lines of Enquiry.',
         category: 'Compliance',
         tags: ['CQC', 'compliance', 'inspection', 'evidence'],
@@ -1017,7 +1017,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
       },
       {
         id: 'faq_2',
-        question: 'Can WriteCareNotes integrate with our existing NHS systems?',
+        question: 'Can WriteCareNotes integrate with our existing NHSsystems?',
         answer: 'Yes, WriteCareNotes provides comprehensive NHS integration including GP Connect, NHS Digital, and Summary Care Record access, ensuring seamless data exchange and reduced administrative burden.',
         category: 'Integration',
         tags: ['NHS', 'integration', 'GP Connect', 'interoperability'],
@@ -1026,7 +1026,7 @@ Please follow up within 2 hours for high urgency, 24 hours for others.`,
       },
       {
         id: 'faq_3',
-        question: 'How secure is resident data in WriteCareNotes?',
+        question: 'How secure is resident data inWriteCareNotes?',
         answer: 'WriteCareNotes employs enterprise-grade security including AES-256 encryption, zero-trust architecture, GDPR compliance, and Cyber Essentials Plus certification to protect all resident data.',
         category: 'Security',
         tags: ['security', 'GDPR', 'encryption', 'data protection'],

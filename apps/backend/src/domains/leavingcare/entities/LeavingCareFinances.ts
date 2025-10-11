@@ -8,7 +8,7 @@
  * - Care Leavers (England) Regulations 2010
  * - Wales: Social Services and Well-being (Wales) Act 2014
  * - Scotland: Children and Young People (Scotland) Act 2014
- * - Northern Ireland: Children (Leaving Care) Act (NI) 2002
+ * - NorthernIreland: Children (Leaving Care) Act (NI) 2002
  * 
  * GRANTS & ALLOWANCES:
  * - Setting Up Home Grant (£2,000-£3,000)
@@ -70,12 +70,12 @@ export class LeavingCareFinances {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalGrantsReceived!: number;
 
-  // ==================== MONTHLY ALLOWANCE ====================
+  // ==================== MONTHLYALLOWANCE ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   monthlyAllowance!: number;
 
-  @Column({ type: 'varchar', length: 50, default: 'monthly' })
+  @Column({ type: 'var char', length: 50, default: 'monthly' })
   allowanceFrequency!: string; // monthly, fortnightly, weekly
 
   @Column({ type: 'timestamptz', nullable: true })
@@ -84,13 +84,13 @@ export class LeavingCareFinances {
   @Column({ type: 'timestamptz', nullable: true })
   nextPaymentDate?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   paymentMethod?: string; // bank_transfer, prepaid_card, cash
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   bankAccountNumber?: string; // Encrypted
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   bankSortCode?: string;
 
   // ==================== SAVINGS ====================
@@ -101,7 +101,7 @@ export class LeavingCareFinances {
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   savingsInterestRate!: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   savingsAccountProvider?: string;
 
   // ==================== BUDGETING ====================
@@ -137,15 +137,15 @@ export class LeavingCareFinances {
     monthlyRepayment: number;
   }>;
 
-  // ==================== EMPLOYMENT INCOME ====================
+  // ==================== EMPLOYMENTINCOME ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   employmentIncome!: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   employer?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   employmentStatus?: string; // employed, unemployed, student, apprentice
 
   // ==================== BENEFITS ====================
@@ -158,7 +158,7 @@ export class LeavingCareFinances {
     startDate: Date;
   }>;
 
-  // ==================== FINANCIAL LITERACY ====================
+  // ==================== FINANCIALLITERACY ====================
 
   @Column({ type: 'boolean', default: false })
   hasBankAccount!: boolean;
@@ -174,7 +174,7 @@ export class LeavingCareFinances {
 
   // ==================== AUDIT ====================
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   currency!: string; // GBP, EUR
 
   @Column({ type: 'text', nullable: true })

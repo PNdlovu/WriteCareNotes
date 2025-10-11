@@ -1,12 +1,12 @@
 /**
  * British Isles Regional Configuration
  * 
- * Jurisdiction-specific settings for ALL 8 BRITISH ISLES JURISDICTIONS:
+ * Jurisdiction-specific settings for ALL 8 BRITISH ISLESJURISDICTIONS:
  * - England, Scotland, Wales, Northern Ireland (UK)
  * - Ireland (Republic of Ireland)
  * - Jersey, Guernsey, Isle of Man (Crown Dependencies)
  * 
- * Handles regional variations in:
+ * Handles regional var iationsin:
  * - Leaving care ages and support
  * - Benefits systems
  * - Healthcare providers
@@ -22,11 +22,11 @@
  * - Staying Put Scotland 2013
  * - Social Services and Well-being (Wales) Act 2014
  * 
- * Republic of Ireland:
+ * Republic ofIreland:
  * - Child Care Act 1991
  * - Aftercare Act 2015
  * 
- * Crown Dependencies:
+ * CrownDependencies:
  * - Children (Jersey) Law 2002
  * - Children (Guernsey and Alderney) Law 2008
  * - Children and Young Persons Act 2001 (Isle of Man)
@@ -216,7 +216,7 @@ export const SCOTLAND_CONFIG: RegionalConfig = {
     apprenticeshipsUrl: 'https://www.apprenticeships.scot',
     careLeaverSupport: [
       'Throughcare and Aftercare services',
-      'Who Cares? Scotland',
+      'WhoCares? Scotland',
       'Modern Apprenticeships',
       'Foundation Apprenticeships'
     ]
@@ -234,7 +234,7 @@ export const SCOTLAND_CONFIG: RegionalConfig = {
   },
   resources: {
     governmentPortal: 'https://www.mygov.scot',
-    careLeaverCharity: 'Who Cares? Scotland',
+    careLeaverCharity: 'WhoCares? Scotland',
     localAuthorityUrl: 'https://www.mygov.scot/find-your-local-council'
   }
 };
@@ -701,7 +701,7 @@ export function getAvailableJurisdictions(): Jurisdiction[] {
  * Validate jurisdiction name
  */
 export function isValidJurisdiction(jurisdiction: string): jurisdiction is Jurisdiction {
-  constvalid: Jurisdiction[] = [
+  const valid: Jurisdiction[] = [
     'England', 
     'Scotland', 
     'Wales', 

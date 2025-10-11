@@ -108,12 +108,12 @@ export interface NotificationPreferences {
 
 @Injectable()
 export class PolicyReviewSchedulerService {
-  private readonly logger = new Logger(PolicyReviewSchedulerService.name);
+  private readonlylogger = new Logger(PolicyReviewSchedulerService.name);
 
-  constructor(
-    private readonly policyStatusService: PolicyStatusService,
-    private readonly auditTrailService: AuditService,
-    private readonly notificationService: NotificationService
+  const ructor(
+    private readonlypolicyStatusService: PolicyStatusService,
+    private readonlyauditTrailService: AuditService,
+    private readonlynotificationService: NotificationService
   ) {}
 
   /**
@@ -132,7 +132,7 @@ export class PolicyReviewSchedulerService {
       
       this.logger.log('Daily reminder checks completed successfully');
     } catch (error) {
-      this.logger.error('Error during daily reminder checks:', error.stack);
+      this.logger.error('Error during daily reminderchecks:', error.stack);
     }
   }
 
@@ -150,7 +150,7 @@ export class PolicyReviewSchedulerService {
       
       this.logger.log('Weekly review planning completed successfully');
     } catch (error) {
-      this.logger.error('Error during weekly review planning:', error.stack);
+      this.logger.error('Error during weekly reviewplanning:', error.stack);
     }
   }
 
@@ -158,7 +158,7 @@ export class PolicyReviewSchedulerService {
    * Schedule a new reminder
    */
   async scheduleReminder(reminder: Omit<ScheduledReminder, 'id'>): Promise<ScheduledReminder> {
-    constnewReminder: ScheduledReminder = {
+    const newReminder: ScheduledReminder = {
       ...reminder,
       id: this.generateReminderId(),
       isActive: true,
@@ -184,7 +184,7 @@ export class PolicyReviewSchedulerService {
   ): Promise<ReviewSchedule> {
     const nextReviewDue = this.calculateNextReviewDate(new Date(), reviewFrequency);
     
-    constreviewSchedule: ReviewSchedule = {
+    const reviewSchedule: ReviewSchedule = {
       policyId: policy.id,
       policyTitle: policy.title,
       currentVersion: policy.version,
@@ -238,11 +238,11 @@ export class PolicyReviewSchedulerService {
         (policy.reviewDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
       );
 
-      letpriority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
+      let priority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
       if (daysUntilDue <= 0) priority = 'critical';
       else if (daysUntilDue <= 7) priority = 'high';
       else if (daysUntilDue <= 14) priority = 'medium';
-      else priority = 'low';
+      elsepriority = 'low';
 
       await this.scheduleReminder({
         type: ReminderType.POLICY_REVIEW_DUE,
@@ -281,11 +281,11 @@ export class PolicyReviewSchedulerService {
         (policy.expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
       );
 
-      letpriority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
+      let priority: 'low' | 'medium' | 'high' | 'critical' = 'medium';
       if (daysUntilExpiry <= 0) priority = 'critical';
       else if (daysUntilExpiry <= 7) priority = 'high';
       else if (daysUntilExpiry <= 30) priority = 'medium';
-      else priority = 'low';
+      elsepriority = 'low';
 
       await this.scheduleReminder({
         type: ReminderType.POLICY_EXPIRING,
@@ -322,7 +322,7 @@ export class PolicyReviewSchedulerService {
         recipients: [overdue.userId],
         scheduledFor: new Date(),
         frequency: ReminderFrequency.WEEKLY,
-        message: `Policy acknowledgment overdue: "${overdue.policyTitle}"`,
+        message: `Policy acknowledgmentoverdue: "${overdue.policyTitle}"`,
         priority: 'high',
         escalationLevel: 0,
         maxEscalations: 2,
@@ -359,7 +359,7 @@ export class PolicyReviewSchedulerService {
           recipients: deadline.responsible,
           scheduledFor: new Date(),
           frequency: ReminderFrequency.DAILY,
-          message: `Compliance deadline approaching: ${deadline.requirement} (${daysUntilDeadline} days)`,
+          message: `Compliance deadlineapproaching: ${deadline.requirement} (${daysUntilDeadline} days)`,
           priority: deadline.priority,
           escalationLevel: 0,
           maxEscalations: deadline.escalationPath.length,
@@ -571,7 +571,7 @@ export class PolicyReviewSchedulerService {
     if (!preferences) return true; // Default to sending if no preferences set
     
     const typePreference = preferences.reminderTypes[reminder.type];
-    return typePreference?.enabled !== false;
+    returntypePreference?.enabled !== false;
   }
 
   // These methods would be implemented with actual database queries

@@ -66,7 +66,7 @@ export class EventStoreService {
   privateclient: EventStoreDBClient;
   privatelogger: Logger;
 
-  constructor() {
+  const ructor() {
     this.client = EventStoreDBClient.connectionString(
       process.env.EVENTSTORE_CONNECTION_STRING || 
       'esdb://eventstore.event-store.svc.cluster.local:2113?tls=false'
@@ -135,7 +135,7 @@ export class EventStoreService {
         eventId: event.eventId,
         error: error.message
       });
-      throw new Error(`Failed to append event: ${error.message}`);
+      throw new Error(`Failed to appendevent: ${error.message}`);
     }
   }
 
@@ -147,9 +147,9 @@ export class EventStoreService {
     options: EventReplayOptions = {}
   ): Promise<HealthcareEvent[]> {
     try {
-      constevents: HealthcareEvent[] = [];
+      const events: HealthcareEvent[] = [];
       
-      constreadOptions: any = {
+      const readOptions: any = {
         direction: 'forwards',
         fromRevision: options.fromVersion ? BigInt(options.fromVersion) : 'start',
         maxCount: 1000
@@ -181,7 +181,7 @@ export class EventStoreService {
         streamName,
         error: error.message
       });
-      throw new Error(`Failed to read stream: ${error.message}`);
+      throw new Error(`Failed to readstream: ${error.message}`);
     }
   }
 
@@ -223,7 +223,7 @@ export class EventStoreService {
         aggregateId: snapshot.aggregateId,
         error: error.message
       });
-      throw new Error(`Failed to create snapshot: ${error.message}`);
+      throw new Error(`Failed to createsnapshot: ${error.message}`);
     }
   }
 
@@ -291,7 +291,7 @@ export class EventStoreService {
     regulatoryFramework?: string
   ): Promise<HealthcareEvent[]> {
     try {
-      constevents: HealthcareEvent[] = [];
+      const events: HealthcareEvent[] = [];
       
       // Read from all healthcare streams
       const healthcareStreams = [
@@ -347,7 +347,7 @@ export class EventStoreService {
         regulatoryFramework,
         error: error.message
       });
-      throw new Error(`Failed to replay compliance events: ${error.message}`);
+      throw new Error(`Failed to replay complianceevents: ${error.message}`);
     }
   }
 
@@ -400,7 +400,7 @@ export class EventStoreService {
         tenantId,
         error: error.message
       });
-      throw new Error(`Failed to initialize healthcare streams: ${error.message}`);
+      throw new Error(`Failed to initialize healthcarestreams: ${error.message}`);
     }
   }
 
@@ -470,7 +470,7 @@ export class EventStoreService {
     try {
       const analyticsStreamName = `healthcare-analytics-${event.tenantId}`;
       
-      constanalyticsEvent: HealthcareEvent = {
+      const analyticsEvent: HealthcareEvent = {
         ...event,
         eventId: uuidv4(),
         eventType: `${event.eventType}Analytics`,

@@ -158,10 +158,10 @@ router.post('/',
       .withMessage('Date of birth must be a valid date'),
     body('gender')
       .isIn(['male', 'female', 'other', 'prefer-not-to-say'])
-      .withMessage('Gender must be one of: male, female, other, prefer-not-to-say'),
+      .withMessage('Gender must be oneof: male, female, other, prefer-not-to-say'),
     body('careLevel')
       .isIn(['residential', 'nursing', 'dementia', 'mental-health'])
-      .withMessage('Care level must be one of: residential, nursing, dementia, mental-health'),
+      .withMessage('Care level must be oneof: residential, nursing, dementia, mental-health'),
     body('medicalConditions')
       .optional()
       .isArray()
@@ -207,7 +207,7 @@ router.post('/',
       });
 
     } catch (error) {
-      logger.error('Failed to create resident:', error);
+      logger.error('Failed to createresident:', error);
       
       if (error.message.includes('already exists')) {
         return res.status(409).json({
@@ -359,7 +359,7 @@ router.put('/:id',
     body('careLevel')
       .optional()
       .isIn(['residential', 'nursing', 'dementia', 'mental-health'])
-      .withMessage('Care level must be one of: residential, nursing, dementia, mental-health'),
+      .withMessage('Care level must be oneof: residential, nursing, dementia, mental-health'),
     body('medicalConditions')
       .optional()
       .isArray()
@@ -504,11 +504,11 @@ router.get('/',
     query('careLevel')
       .optional()
       .isIn(['residential', 'nursing', 'dementia', 'mental-health'])
-      .withMessage('Care level must be one of: residential, nursing, dementia, mental-health'),
+      .withMessage('Care level must be oneof: residential, nursing, dementia, mental-health'),
     query('status')
       .optional()
       .isIn(['admitted', 'discharged', 'transferred', 'deceased'])
-      .withMessage('Status must be one of: admitted, discharged, transferred, deceased')
+      .withMessage('Status must be oneof: admitted, discharged, transferred, deceased')
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -542,7 +542,7 @@ router.get('/',
       });
 
     } catch (error) {
-      logger.error('Failed to search residents:', error);
+      logger.error('Failed to searchresidents:', error);
       next(error);
     }
   }
@@ -614,7 +614,7 @@ router.post('/:id/admit',
       .withMessage('Admission date must be a valid date'),
     body('careLevel')
       .isIn(['residential', 'nursing', 'dementia', 'mental-health'])
-      .withMessage('Care level must be one of: residential, nursing, dementia, mental-health'),
+      .withMessage('Care level must be oneof: residential, nursing, dementia, mental-health'),
     body('roomNumber')
       .trim()
       .isLength({ min: 1, max: 10 })
@@ -629,7 +629,7 @@ router.post('/:id/admit',
       .withMessage('Referral source must be between 1 and 100 characters'),
     body('fundingType')
       .isIn(['private', 'local-authority', 'nhs', 'insurance'])
-      .withMessage('Funding type must be one of: private, local-authority, nhs, insurance')
+      .withMessage('Funding type must be oneof: private, local-authority, nhs, insurance')
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -645,7 +645,7 @@ router.post('/:id/admit',
       const userId = req.user?.id;
       const residentId = req.params.id;
 
-      constadmissionData: AdmissionData = {
+      const admissionData: AdmissionData = {
         ...req.body,
         admittedBy: userId
       };
@@ -769,7 +769,7 @@ router.post('/:id/discharge',
       const userId = req.user?.id;
       const residentId = req.params.id;
 
-      constdischargeData: DischargeData = {
+      const dischargeData: DischargeData = {
         ...req.body,
         dischargedBy: userId
       };
@@ -878,7 +878,7 @@ router.post('/:id/transfer',
     body('newCareLevel')
       .optional()
       .isIn(['residential', 'nursing', 'dementia', 'mental-health'])
-      .withMessage('New care level must be one of: residential, nursing, dementia, mental-health')
+      .withMessage('New care level must be oneof: residential, nursing, dementia, mental-health')
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -894,7 +894,7 @@ router.post('/:id/transfer',
       const userId = req.user?.id;
       const residentId = req.params.id;
 
-      consttransferData: TransferData = {
+      const transferData: TransferData = {
         ...req.body,
         transferredBy: userId
       };

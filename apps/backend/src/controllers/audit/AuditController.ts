@@ -34,15 +34,15 @@ function getUserContext(req: Request): { userId: string; sessionId: string } {im
 
     sessionId: (req as any).session?.id || 'unknown',export class AuditController {
 
-  };  private auditService: EnterpriseAuditService;
+  };  privateauditService: EnterpriseAuditService;
 
 }
 
-  constructor() {
+  const ructor() {
 
 export class AuditController {    this.auditService = new EnterpriseAuditService();
 
-  constructor(private auditService: AuditService) {}  }
+  const ructor(private auditService: AuditService) {}  }
 
 
 

@@ -119,9 +119,9 @@ export interface PaymentReconciliationResult {
 
 @Injectable()
 export class PaymentService {
-  private readonly logger = new Logger(PaymentService.name);
+  private readonlylogger = new Logger(PaymentService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(Payment)
     privatepaymentRepository: Repository<Payment>,
     @InjectRepository(Invoice)
@@ -191,11 +191,11 @@ export class PaymentService {
       // Create financial transaction
       await this.createFinancialTransaction(savedPayment);
 
-      this.logger.log(`Payment created successfully: ${savedPayment.id}`);
+      this.logger.log(`Payment createdsuccessfully: ${savedPayment.id}`);
       return savedPayment;
 
     } catch (error) {
-      this.logger.error(`Failed to create payment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to createpayment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -230,11 +230,11 @@ export class PaymentService {
         await this.updateInvoiceWithPayment(payment);
       }
 
-      this.logger.log(`Payment processed successfully: ${request.paymentId}`);
+      this.logger.log(`Payment processedsuccessfully: ${request.paymentId}`);
       return updatedPayment;
 
     } catch (error) {
-      this.logger.error(`Failed to process payment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to processpayment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -265,11 +265,11 @@ export class PaymentService {
         await this.updateInvoiceWithPayment(payment);
       }
 
-      this.logger.log(`Payment completed successfully: ${paymentId}`);
+      this.logger.log(`Payment completedsuccessfully: ${paymentId}`);
       return updatedPayment;
 
     } catch (error) {
-      this.logger.error(`Failed to complete payment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to completepayment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -295,11 +295,11 @@ export class PaymentService {
 
       const updatedPayment = await this.paymentRepository.save(payment);
 
-      this.logger.log(`Payment failed successfully: ${paymentId}`);
+      this.logger.log(`Payment failedsuccessfully: ${paymentId}`);
       return updatedPayment;
 
     } catch (error) {
-      this.logger.error(`Failed to fail payment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to failpayment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -308,7 +308,7 @@ export class PaymentService {
    * Process refund for payment
    */
   async processRefund(request: RefundPaymentRequest): Promise<Payment> {
-    this.logger.log(`Processing refund for payment: ${request.paymentId}`);
+    this.logger.log(`Processing refund forpayment: ${request.paymentId}`);
     
     try {
       const payment = await this.getPaymentById(request.paymentId);
@@ -342,11 +342,11 @@ export class PaymentService {
       // Create refund transaction
       await this.createRefundTransaction(updatedPayment, refundAmount);
 
-      this.logger.log(`Refund processed successfully: ${request.paymentId}`);
+      this.logger.log(`Refund processedsuccessfully: ${request.paymentId}`);
       return updatedPayment;
 
     } catch (error) {
-      this.logger.error(`Failed to process refund: ${error.message}`, error.stack);
+      this.logger.error(`Failed to processrefund: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -443,7 +443,7 @@ export class PaymentService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to list payments: ${error.message}`, error.stack);
+      this.logger.error(`Failed to listpayments: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -460,9 +460,9 @@ export class PaymentService {
         relations: ['invoice'],
       });
 
-      constreconciledPayments: Payment[] = [];
-      constunreconciledPayments: Payment[] = [];
-      consterrors: string[] = [];
+      const reconciledPayments: Payment[] = [];
+      const unreconciledPayments: Payment[] = [];
+      const errors: string[] = [];
       let totalReconciled = new Decimal(0);
       let totalUnreconciled = new Decimal(0);
 
@@ -506,7 +506,7 @@ export class PaymentService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to reconcile payments: ${error.message}`, error.stack);
+      this.logger.error(`Failed to reconcilepayments: ${error.message}`, error.stack);
       throw error;
     }
   }

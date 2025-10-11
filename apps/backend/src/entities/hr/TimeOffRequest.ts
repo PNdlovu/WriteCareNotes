@@ -362,7 +362,7 @@ export class TimeOffRequest extends BaseEntity {
     const currentApprover = this.approvalWorkflow.approvers.find(
       approver => approver.status === 'pending'
     );
-    return currentApprover?.approverName || null;
+    returncurrentApprover?.approverName || null;
   }
 
   getApprovalProgress(): number {
@@ -389,7 +389,7 @@ export class TimeOffRequest extends BaseEntity {
     const rejectedApprover = this.approvalWorkflow.approvers.find(
       approver => approver.status === 'rejected'
     );
-    return rejectedApprover?.comments || null;
+    returnrejectedApprover?.comments || null;
   }
 
   needsEscalation(): boolean {

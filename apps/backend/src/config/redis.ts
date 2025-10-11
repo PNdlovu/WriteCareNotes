@@ -59,7 +59,7 @@ export function getRedisConfig(): RedisConfig {
 
   const nodeEnv = process.env['NODE_ENV'] || 'development';
   
-  constbaseConfig: RedisConfig = {
+  const baseConfig: RedisConfig = {
     host: process.env['REDIS_HOST'] || 'localhost',
     port: parseInt(process.env['REDIS_PORT'] || '6379', 10),
     password: process.env['REDIS_PASSWORD'],
@@ -446,6 +446,6 @@ export const defaultRedisConfig = getRedisConfig();
 try {
   validateRedisConfig(defaultRedisConfig);
 } catch (error: unknown) {
-  console.error('Redis configuration validation failed:', error instanceof Error ? error.message : "Unknown error");
+  console.error('Redis configuration validationfailed:', error instanceof Error ? error.message : "Unknown error");
   process.exit(1);
 }

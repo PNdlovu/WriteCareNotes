@@ -43,11 +43,11 @@ export interface PilotContext {
 
 @Injectable()
 export class PilotFeedbackAgent {
-  private readonly logger = new Logger(PilotFeedbackAgent.name);
+  private readonlylogger = new Logger(PilotFeedbackAgent.name);
 
-  constructor(
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -91,7 +91,7 @@ export class PilotFeedbackAgent {
       const evidence = await this.generateEvidence(recommendation, data);
 
       // Create feedback object
-      constfeedback: PilotFeedback = {
+      const feedback: PilotFeedback = {
         id: this.generateId(),
         pilotId: context.pilotId,
         careHomeId: context.careHomeId,
@@ -130,7 +130,7 @@ export class PilotFeedbackAgent {
         timestamp: new Date()
       });
 
-      this.logger.log(`Generated pilot feedback: ${feedback.id} for ${feedbackType}`);
+      this.logger.log(`Generated pilotfeedback: ${feedback.id} for ${feedbackType}`);
       return feedback;
 
     } catch (error) {
@@ -148,7 +148,7 @@ export class PilotFeedbackAgent {
         timestamp: new Date()
       });
 
-      this.logger.error(`Failed to generate pilot feedback: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate pilotfeedback: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -276,7 +276,7 @@ export class PilotFeedbackAgent {
    */
   private async generateEvidence(recommendation: any, data: any): Promise<string[]> {
     // Generate evidence based on available data
-    constevidence: string[] = [];
+    const evidence: string[] = [];
     
     if (data.medicationData) {
       evidence.push('Medication administration records');

@@ -124,7 +124,7 @@ export class DataAnalyticsService {
   privatecache: Map<string, any> = new Map();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-  constructor(private readonly eventEmitter: EventEmitter2) {}
+  const ructor(private readonlyeventEmitter: EventEmitter2) {}
 
   /**
    * Get vitals data for a resident
@@ -268,7 +268,7 @@ export class DataAnalyticsService {
       
       const queryTime = Date.now() - startTime;
       
-      constresult: AnalyticsResult = {
+      const result: AnalyticsResult = {
         query,
         data,
         summary,
@@ -291,7 +291,7 @@ export class DataAnalyticsService {
       
       return result;
     } catch (error: unknown) {
-      console.error(`Failed to execute analytics query: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to execute analyticsquery: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -317,7 +317,7 @@ export class DataAnalyticsService {
       
       return dashboardData;
     } catch (error: unknown) {
-      console.error(`Failed to get dashboard data: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get dashboarddata: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -326,7 +326,7 @@ export class DataAnalyticsService {
    * Generate vitals data (simulated)
    */
   private async generateVitalsData(residentId: string, startDate: Date): Promise<VitalsData[]> {
-    constdata: VitalsData[] = [];
+    const data: VitalsData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -355,7 +355,7 @@ export class DataAnalyticsService {
    * Generate activities data (simulated)
    */
   private async generateActivitiesData(residentId: string, startDate: Date): Promise<ActivitiesData[]> {
-    constdata: ActivitiesData[] = [];
+    const data: ActivitiesData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -381,7 +381,7 @@ export class DataAnalyticsService {
    * Generate medication data (simulated)
    */
   private async generateMedicationData(residentId: string, startDate: Date): Promise<MedicationData[]> {
-    constdata: MedicationData[] = [];
+    const data: MedicationData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -405,7 +405,7 @@ export class DataAnalyticsService {
    * Generate behavioral data (simulated)
    */
   private async generateBehavioralData(residentId: string, startDate: Date): Promise<BehavioralData[]> {
-    constdata: BehavioralData[] = [];
+    const data: BehavioralData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -435,7 +435,7 @@ export class DataAnalyticsService {
    * Generate environmental data (simulated)
    */
   private async generateEnvironmentalData(residentId: string, startDate: Date): Promise<EnvironmentalData[]> {
-    constdata: EnvironmentalData[] = [];
+    const data: EnvironmentalData[] = [];
     const days = Math.ceil((Date.now() - startDate.getTime()) / (24 * 60 * 60 * 1000));
     
     for (let i = 0; i < days; i++) {
@@ -464,7 +464,7 @@ export class DataAnalyticsService {
    * Process analytics query
    */
   private async processQuery(query: AnalyticsQuery): Promise<TimeSeriesData[]> {
-    constdata: TimeSeriesData[] = [];
+    const data: TimeSeriesData[] = [];
     
     // Simulate query processing based on parameters
     if (query.metric) {
@@ -504,7 +504,7 @@ export class DataAnalyticsService {
     endDate: Date,
     aggregation: string
   ): Promise<TimeSeriesData> {
-    constdataPoints: AnalyticsDataPoint[] = [];
+    const dataPoints: AnalyticsDataPoint[] = [];
     const interval = this.getInterval(aggregation);
     
     let currentDate = new Date(startDate);
@@ -547,10 +547,10 @@ export class DataAnalyticsService {
     };
     
     const baseValue = baseValues[metric] || 50;
-    const variation = (Math.random() - 0.5) * 0.2; // ±10% variation
+    const variation = (Math.random() - 0.5) * 0.2; // ±10% var iation
     const trend = Math.sin(date.getTime() / (7 * 24 * 60 * 60 * 1000)) * 0.1; // Weekly trend
     
-    return baseValue * (1 + variation + trend);
+    return baseValue * (1 + var iation + trend);
   }
 
   /**
@@ -595,7 +595,7 @@ export class DataAnalyticsService {
     const secondHalfAvg = secondHalf.reduce((sum, val) => sum + val, 0) / secondHalf.length;
     
     const trendPercentage = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100;
-    lettrend: 'increasing' | 'decreasing' | 'stable' = 'stable';
+    let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
     
     if (Math.abs(trendPercentage) > 5) {
       trend = trendPercentage > 0 ? 'increasing' : 'decreasing';

@@ -99,9 +99,9 @@ export interface GDPRViolation {
 
 @Injectable()
 export class GDPRComplianceService {
-  private readonly logger = new Logger(GDPRComplianceService.name);
+  private readonlylogger = new Logger(GDPRComplianceService.name);
 
-  constructor() {
+  const ructor() {
     console.log('GDPR Compliance Service initialized');
   }
 
@@ -118,7 +118,7 @@ export class GDPRComplianceService {
         requestType: 'financial'
       });
 
-      constprocessingRequest: GDPRDataProcessingRequest = {
+      const processingRequest: GDPRDataProcessingRequest = {
         dataSubject: request.residentId || 'organization',
         dataController: 'WriteCareNotes',
         processingPurpose: 'Financial management for healthcare services',
@@ -154,7 +154,7 @@ export class GDPRComplianceService {
         requestType: 'organizational'
       });
 
-      constprocessingRequest: GDPRDataProcessingRequest = {
+      const processingRequest: GDPRDataProcessingRequest = {
         dataSubject: 'organization',
         dataController: 'WriteCareNotes',
         processingPurpose: 'Organizational hierarchy management',
@@ -458,8 +458,8 @@ export class GDPRComplianceService {
   private async performComplianceCheck(
     request: GDPRDataProcessingRequest
   ): Promise<GDPRComplianceCheck> {
-    constviolations: GDPRViolation[] = [];
-    constrecommendations: any[] = [];
+    const violations: GDPRViolation[] = [];
+    const recommendations: any[] = [];
 
     // Check lawful basis
     if (!request.lawfulBasis) {

@@ -18,7 +18,7 @@ import { EnterpriseNotificationService } from '../../services/notifications/Ente
 export class NotificationController {
   privatenotificationService: EnterpriseNotificationService;
 
-  constructor() {
+  const ructor() {
     this.notificationService = new EnterpriseNotificationService();
   }
 

@@ -44,7 +44,7 @@ export interface MigrationConfig {
   validationRules: {
     requiredFields: string[];
     dataTypes: any[];
-    constraints: any[];
+    const raints: any[];
     businessRules: any[];
   };
   batchSize: number;
@@ -78,25 +78,25 @@ export interface MigrationResults {
 
 @Entity('data_migrations')
 export class DataMigration extends BaseEntity {
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   migrationName!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   description!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   sourceSystem!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   targetSystem!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   migrationType!: 'full' | 'incremental' | 'delta' | 'sync';
 
   @Column({ type: 'jsonb' })
   migrationConfig!: MigrationConfig;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   status!: 'pending' | 'running' | 'completed' | 'failed' | 'rolled_back' | 'paused';
 
   @Column({ type: 'integer', default: 0 })
@@ -143,10 +143,10 @@ export class DataMigration extends BaseEntity {
     rollbackTimestamp?: Date;
   };
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   executedBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -183,7 +183,7 @@ export class DataMigration extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   requiresApproval!: boolean;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
   // Relationships
@@ -380,7 +380,7 @@ export class DataMigration extends BaseEntity {
   }
 
   private generateRecommendations(issue: string): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
 
     if (issue.includes('missing')) {
       recommendations.push('Implement data validation to ensure required fields are populated');
@@ -394,7 +394,7 @@ export class DataMigration extends BaseEntity {
 
     if (issue.includes('duplicate')) {
       recommendations.push('Implement deduplication logic');
-      recommendations.push('Add unique constraints in target system');
+      recommendations.push('Add unique const raints in target system');
     }
 
     if (issue.includes('invalid')) {

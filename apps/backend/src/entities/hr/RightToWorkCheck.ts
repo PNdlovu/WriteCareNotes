@@ -121,31 +121,31 @@ export class RightToWorkCheck extends BaseEntity {
   priority!: RightToWorkPriority;
 
   // Document Information
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   documentNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   passportNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   visaNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   workPermitNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -173,13 +173,13 @@ export class RightToWorkCheck extends BaseEntity {
   lastCheckedDate?: Date;
 
   // Verification Details
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   issuingCountry?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -218,7 +218,7 @@ export class RightToWorkCheck extends BaseEntity {
   checkCount!: number;
 
   // Risk Assessment
-  @Column({ type: 'varchar', length: 20, default: 'low' })
+  @Column({ type: 'var char', length: 20, default: 'low' })
   @IsString()
   @Length(1, 20)
   riskLevel!: string;
@@ -238,13 +238,13 @@ export class RightToWorkCheck extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   department?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -264,7 +264,7 @@ export class RightToWorkCheck extends BaseEntity {
   @Transform(({ value }) => value ? parseFloat(value) : null)
   verificationCost?: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;

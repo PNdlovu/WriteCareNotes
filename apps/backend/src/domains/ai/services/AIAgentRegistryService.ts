@@ -38,7 +38,7 @@ export interface CapabilityRegistrationData {
 
 @Injectable()
 export class AIAgentRegistryService {
-  constructor(
+  const ructor(
     @InjectRepository(AIAgent)
     privateagentRepository: Repository<AIAgent>,
     @InjectRepository(AIAgentRegistry)
@@ -303,7 +303,7 @@ export class AIAgentRegistryService {
       return isHealthy;
 
     } catch (error) {
-      agent.setError(`Health check failed: ${error.message}`);
+      agent.setError(`Health checkfailed: ${error.message}`);
       await this.agentRepository.save(agent);
       return false;
     }
@@ -319,7 +319,7 @@ export class AIAgentRegistryService {
 
     let healthy = 0;
     let unhealthy = 0;
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     for (const agent of agents) {
       const isHealthy = await this.performHealthCheck(agent);

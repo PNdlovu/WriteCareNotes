@@ -131,7 +131,7 @@ export const enhancedAuthorize = (config: RBACConfig) => {
 
       next();
     } catch (error) {
-      logger.error('Enhanced authorization error:', error);
+      logger.error('Enhanced authorizationerror:', error);
       
       // Log the error
       await auditService.logEvent({

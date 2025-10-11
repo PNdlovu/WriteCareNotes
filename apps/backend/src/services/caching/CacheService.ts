@@ -80,7 +80,7 @@ export class CacheService {
   privatestats: CacheStats;
   privateinvalidationRules: Map<string, CacheInvalidationRule>;
 
-  constructor() {
+  const ructor() {
     this.logger = createLogger('CacheService');
     this.encryptionService = new EncryptionService();
     this.auditService = new AuditService();
@@ -142,7 +142,7 @@ export class CacheService {
       });
 
       this.redis.on('error', (error) => {
-        this.logger.error('Redis cluster error:', error);
+        this.logger.error('Redis clustererror:', error);
       });
 
       this.redis.on('node error', (error, node) => {
@@ -155,7 +155,7 @@ export class CacheService {
       });
 
     } catch (error) {
-      this.logger.error('Failed to initialize Redis cluster:', error);
+      this.logger.error('Failed to initialize Rediscluster:', error);
       throw error;
     }
   }
@@ -233,7 +233,7 @@ export class CacheService {
       this.stats.hits++;
       this.updateStats();
 
-      letparsedValue: any;
+      let parsedValue: any;
       
       try {
         parsedValue = JSON.parse(cachedValue);
@@ -347,7 +347,7 @@ export class CacheService {
         correlationId: this.generateCorrelationId()
       });
 
-      return result === 'OK';
+      returnresult === 'OK';
 
     } catch (error) {
       this.logger.error(`Cache set error for key ${key}:`, error);
@@ -407,7 +407,7 @@ export class CacheService {
         correlationId: this.generateCorrelationId()
       });
 
-      this.logger.info(`Invalidated ${result} keys matching pattern: ${pattern}`);
+      this.logger.info(`Invalidated ${result} keys matchingpattern: ${pattern}`);
       return result;
 
     } catch (error) {
@@ -421,7 +421,7 @@ export class CacheService {
    */
   async invalidateByTags(tags: string[], healthcareContext?: string): Promise<number> {
     try {
-      letallKeys: string[] = [];
+      let allKeys: string[] = [];
       
       for (const tag of tags) {
         const keys = await this.redis.smembers(`tag:${tag}`);
@@ -455,7 +455,7 @@ export class CacheService {
         correlationId: this.generateCorrelationId()
       });
 
-      this.logger.info(`Invalidated ${result} keys for tags: ${tags.join(', ')}`);
+      this.logger.info(`Invalidated ${result} keys fortags: ${tags.join(', ')}`);
       return result;
 
     } catch (error) {
@@ -496,7 +496,7 @@ export class CacheService {
       return successCount;
 
     } catch (error) {
-      this.logger.error('Cache warming error:', error);
+      this.logger.error('Cache warmingerror:', error);
       return 0;
     }
   }
@@ -516,7 +516,7 @@ export class CacheService {
       const clientLines = clients.split('\r\n');
 
       const parseInfo = (lines: string[]) => {
-        constresult: any = {};
+        const result: any = {};
         lines.forEach(line => {
           if (line.includes(':')) {
             const [key, value] = line.split(':');
@@ -541,7 +541,7 @@ export class CacheService {
       return { ...this.stats };
 
     } catch (error) {
-      this.logger.error('Error getting cache stats:', error);
+      this.logger.error('Error getting cachestats:', error);
       return this.stats;
     }
   }
@@ -571,7 +571,7 @@ export class CacheService {
       };
 
     } catch (error) {
-      this.logger.error('Cache health check failed:', error);
+      this.logger.error('Cache health checkfailed:', error);
       return {
         status: 'unhealthy',
         details: { error: error.message }
@@ -596,7 +596,7 @@ export class CacheService {
       try {
         await this.getStats();
       } catch (error) {
-        this.logger.error('Error collecting cache stats:', error);
+        this.logger.error('Error collecting cachestats:', error);
       }
     }, 60000); // Every minute
   }
@@ -616,7 +616,7 @@ export class CacheService {
       await this.redis.quit();
       this.logger.info('Cache service shutdown completed');
     } catch (error) {
-      this.logger.error('Error during cache service shutdown:', error);
+      this.logger.error('Error during cache serviceshutdown:', error);
     }
   }
 }

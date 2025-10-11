@@ -81,7 +81,7 @@ export interface MedicationChange {
 
 export interface BehavioralObservation {
   behavior: string;
-  frequency: 'rare' | 'occasional' | 'frequent' | 'constant';
+  frequency: 'rare' | 'occasional' | 'frequent' | 'const ant';
   severity: 'mild' | 'moderate' | 'severe';
   triggers: string[];
   interventions: string[];
@@ -199,7 +199,7 @@ export class RiskFlagAgent {
   privatellmService: LLMIntegrationService;
   privatesessionService: AIAgentSessionService;
 
-  constructor() {
+  const ructor() {
     this.openAIAdapter = new OpenAIAdapter();
     this.llmService = new LLMIntegrationService();
     this.sessionService = new AIAgentSessionService();
@@ -259,8 +259,8 @@ export class RiskFlagAgent {
         }
       };
     } catch (error) {
-      console.error('Risk assessment failed:', error);
-      throw new Error(`Risk assessment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Risk assessmentfailed:', error);
+      throw new Error(`Risk assessmentfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -295,7 +295,7 @@ export class RiskFlagAgent {
       // For now, we'll create a mock risk assessment
       return this.generateMockRiskAssessment();
     } catch (error) {
-      console.error('Failed to parse risk assessment:', error);
+      console.error('Failed to parse riskassessment:', error);
       return {
         riskFactors: [],
         analysis: 'Unable to parse risk assessment',
@@ -449,7 +449,7 @@ export class RiskFlagAgent {
     assessment: { riskFactors: RiskFactor[] },
     request: RiskAssessmentRequest
   ): RiskAlert[] {
-    constalerts: RiskAlert[] = [];
+    const alerts: RiskAlert[] = [];
 
     // Check for critical risk factors
     const criticalFactors = assessment.riskFactors.filter(f => f.severity === 'critical');
@@ -475,7 +475,7 @@ export class RiskFlagAgent {
         type: 'urgent',
         severity: 'high',
         title: 'Severe Hypertension',
-        description: `Blood pressure critically high: ${request.vitalSigns.bloodPressure.systolic}/${request.vitalSigns.bloodPressure.diastolic}`,
+        description: `Blood pressure criticallyhigh: ${request.vitalSigns.bloodPressure.systolic}/${request.vitalSigns.bloodPressure.diastolic}`,
         actionRequired: 'Check medication compliance and consider immediate medical review',
         timeframe: 'Within 1 hour',
         responsibleRole: 'Registered Nurse',
@@ -510,7 +510,7 @@ export class RiskFlagAgent {
     assessment: { riskFactors: RiskFactor[] },
     request: RiskAssessmentRequest
   ): RiskRecommendation[] {
-    constrecommendations: RiskRecommendation[] = [];
+    const recommendations: RiskRecommendation[] = [];
 
     // Blood pressure management
     if (request.vitalSigns.bloodPressure.systolic > 140) {
@@ -630,7 +630,7 @@ export class RiskFlagAgent {
    * Identify confidence factors
    */
   private identifyConfidenceFactors(request: RiskAssessmentRequest): string[] {
-    constfactors: string[] = [];
+    const factors: string[] = [];
 
     if (request.vitalSigns.bloodPressure.systolic > 0) {
       factors.push('Complete vital signs data');
@@ -694,7 +694,7 @@ export class RiskFlagAgent {
     followUpSchedule: string[];
   }> {
     return {
-      summary: `Risk assessment completed with overall risk level: ${assessment.overallRiskLevel} (Score: ${assessment.riskScore}/100)`,
+      summary: `Risk assessment completed with overall risklevel: ${assessment.overallRiskLevel} (Score: ${assessment.riskScore}/100)`,
       detailedAnalysis: `Identified ${assessment.riskFactors.length} risk factors across multiple categories. ${assessment.alerts.length} alerts generated requiring attention.`,
       actionPlan: `Implement ${assessment.recommendations.length} recommendations with priority focus on ${assessment.recommendations.filter(r => r.priority === 'critical').length} critical items.`,
       followUpSchedule: [

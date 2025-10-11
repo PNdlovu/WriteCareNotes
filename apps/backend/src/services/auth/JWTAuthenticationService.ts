@@ -73,7 +73,7 @@ export class JWTAuthenticationService {
   privateroleRepository: RoleRepository;
   privateemailService: EmailService;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.rateLimitService = new RateLimitService();
     this.userRepository = new UserRepository(dataSource);
     this.refreshTokenRepository = new RefreshTokenRepository(dataSource);
@@ -158,8 +158,8 @@ export class JWTAuthenticationService {
       await this.userRepository.updateLastLogin(user.id);
 
       // 7. Fetch role and permissions from database
-      letroles: string[] = [];
-      letpermissions: string[] = [];
+      let roles: string[] = [];
+      let permissions: string[] = [];
       let dataAccessLevel = 0;
       let complianceLevel = 0;
 
@@ -176,7 +176,7 @@ export class JWTAuthenticationService {
       }
 
       // 8. Build authenticated user object
-      constauthenticatedUser: AuthenticatedUser = {
+      const authenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
@@ -216,7 +216,7 @@ export class JWTAuthenticationService {
    * Generate access and refresh tokens
    */
   private async generateTokens(user: AuthenticatedUser): Promise<{ accessToken: string; refreshToken: string }> {
-    constpayload: JWTPayload = {
+    const payload: JWTPayload = {
       userId: user.id,
       email: user.email,
       tenantId: user.tenantId,
@@ -330,8 +330,8 @@ export class JWTAuthenticationService {
       }
 
       // Fetch role and permissions from database
-      letroles: string[] = [];
-      letpermissions: string[] = [];
+      let roles: string[] = [];
+      let permissions: string[] = [];
       let dataAccessLevel = 0;
       let complianceLevel = 0;
 
@@ -346,7 +346,7 @@ export class JWTAuthenticationService {
       }
 
       // Build authenticated user object
-      constauthenticatedUser: AuthenticatedUser = {
+      const authenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
@@ -465,7 +465,7 @@ export class JWTAuthenticationService {
       await this.refreshTokenRepository.revoke(storedToken.id, user.id, 'Token rotated');
 
       // 6. Build authenticated user
-      constauthenticatedUser: AuthenticatedUser = {
+      const authenticatedUser: AuthenticatedUser = {
         id: user.id,
         email: user.email,
         tenantId: user.tenantId,
@@ -714,7 +714,7 @@ export class JWTAuthenticationService {
 
   /**
    * Calculate data access level from permissions
-   * Higher level = more data access
+   * Higherlevel = more data access
    * @private
    */
   private calculateDataAccessLevel(permissions: string[]): number {
@@ -746,7 +746,7 @@ export class JWTAuthenticationService {
 
   /**
    * Calculate compliance level from permissions
-   * Higher level = more compliance responsibilities
+   * Higherlevel = more compliance responsibilities
    * @private
    */
   private calculateComplianceLevel(permissions: string[]): number {

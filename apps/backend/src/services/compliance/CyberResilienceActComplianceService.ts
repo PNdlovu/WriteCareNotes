@@ -330,8 +330,8 @@ export interface CRAComplianceRecommendation {
 export class CyberResilienceActComplianceService {
   // Logger removed
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -343,7 +343,7 @@ export class CyberResilienceActComplianceService {
     const assessmentId = request.assessmentId || uuidv4();
     
     try {
-      console.log(`Starting CRA compliance assessment: ${assessmentId}`);
+      console.log(`Starting CRA complianceassessment: ${assessmentId}`);
 
       // Assess essential cybersecurity requirements
       const essentialRequirements = await this.assessEssentialRequirements(request);
@@ -367,7 +367,7 @@ export class CyberResilienceActComplianceService {
       const certificationRequired = this.checkCertificationRequirements(request.productCategory);
       const ceMarkingEligible = this.checkCEMarkingEligibility(complianceScore, essentialRequirements);
 
-      constresult: CRAComplianceAssessmentResult = {
+      const result: CRAComplianceAssessmentResult = {
         assessmentId,
         productName: request.productName,
         productCategory: request.productCategory,
@@ -392,11 +392,11 @@ export class CyberResilienceActComplianceService {
         organizationId: request.organizationId
       });
 
-      console.log(`CRA compliance assessment completed: ${assessmentId}`);
+      console.log(`CRA compliance assessmentcompleted: ${assessmentId}`);
       return result;
 
     } catch (error: unknown) {
-      console.error(`CRA compliance assessment failed: ${assessmentId}`, error);
+      console.error(`CRA compliance assessmentfailed: ${assessmentId}`, error);
       throw error;
     }
   }
@@ -407,7 +407,7 @@ export class CyberResilienceActComplianceService {
   private async assessEssentialRequirements(
     request: CRAAssessmentRequest
   ): Promise<CRARequirementResult[]> {
-    constrequirements: CRARequirementResult[] = [];
+    const requirements: CRARequirementResult[] = [];
 
     // Requirement 1: Secure by design and by default
     requirements.push({
@@ -685,7 +685,7 @@ export class CyberResilienceActComplianceService {
     vulnerabilityAssessment: CRAVulnerabilityAssessmentResult,
     incidentResponseAssessment: CRAIncidentResponseAssessmentResult
   ): Promise<CRAComplianceRecommendation[]> {
-    constrecommendations: CRAComplianceRecommendation[] = [];
+    const recommendations: CRAComplianceRecommendation[] = [];
 
     // Recommendations for non-compliant requirements
     const nonCompliantRequirements = essentialRequirements.filter(req => req.status === 'non_compliant');
@@ -752,7 +752,7 @@ export class CyberResilienceActComplianceService {
    * Check certification requirements
    */
   private checkCertificationRequirements(productCategory: CRAProductCategory): boolean {
-    return productCategory === CRAProductCategory.CRITICAL_PRODUCT ||
+    returnproductCategory === CRAProductCategory.CRITICAL_PRODUCT ||
            productCategory === CRAProductCategory.IMPORTANT_PRODUCT;
   }
 
@@ -802,7 +802,7 @@ export class CyberResilienceActComplianceService {
     organizationId: string
   ): Promise<CRAComplianceAssessmentResult | null> {
     // Implementation would retrieve from database
-    console.log(`Retrieving CRA compliance status for product: ${productName}`);
+    console.log(`Retrieving CRA compliance status forproduct: ${productName}`);
     return null;
   }
 
@@ -814,7 +814,7 @@ export class CyberResilienceActComplianceService {
     updates: Partial<CRAComplianceAssessmentResult>
   ): Promise<void> {
     // Implementation would update database
-    console.log(`Updating CRA compliance assessment: ${assessmentId}`);
+    console.log(`Updating CRA complianceassessment: ${assessmentId}`);
   }
 
   /**
@@ -825,7 +825,7 @@ export class CyberResilienceActComplianceService {
     productCategory?: CRAProductCategory
   ): Promise<any> {
     // Implementation would generate comprehensive compliance report
-    console.log(`Generating CRA compliance report for organization: ${organizationId}`);
+    console.log(`Generating CRA compliance report fororganization: ${organizationId}`);
     return {
       organizationId,
       productCategory,

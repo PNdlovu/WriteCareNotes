@@ -34,12 +34,12 @@ export interface ComplianceReport {
 
 @Injectable()
 export class ComplianceService {
-  private readonly logger = new Logger(ComplianceService.name);
+  private readonlylogger = new Logger(ComplianceService.name);
 
-  constructor(
-    private readonly nhsComplianceService: NHSDigitalComplianceService,
-    private readonly cqcComplianceService: CQCDigitalStandardsService,
-    private readonly professionalStandardsService: ProfessionalStandardsService
+  const ructor(
+    private readonlynhsComplianceService: NHSDigitalComplianceService,
+    private readonlycqcComplianceService: CQCDigitalStandardsService,
+    private readonlyprofessionalStandardsService: ProfessionalStandardsService
   ) {}
 
   /**
@@ -47,7 +47,7 @@ export class ComplianceService {
    */
   async performComplianceCheck(tenantId: string): Promise<ComplianceReport> {
     try {
-      constchecks: ComplianceCheck[] = [];
+      const checks: ComplianceCheck[] = [];
 
       // NHS Digital Compliance
       const nhsChecks = await this.nhsComplianceService.performComplianceCheck(tenantId);
@@ -64,7 +64,7 @@ export class ComplianceService {
       // Determine overall status
       const overallStatus = this.determineOverallStatus(checks);
 
-      constreport: ComplianceReport = {
+      const report: ComplianceReport = {
         id: this.generateId(),
         tenantId,
         checks,
@@ -75,7 +75,7 @@ export class ComplianceService {
       this.logger.log(`Compliance check completed for tenant ${tenantId}: ${overallStatus}`);
       return report;
     } catch (error) {
-      this.logger.error(`Failed to perform compliance check: ${error.message}`, error.stack);
+      this.logger.error(`Failed to perform compliancecheck: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -89,7 +89,7 @@ export class ComplianceService {
       // For now, return null as placeholder
       return null;
     } catch (error) {
-      this.logger.error(`Failed to get compliance status: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get compliancestatus: ${error.message}`, error.stack);
       throw error;
     }
   }

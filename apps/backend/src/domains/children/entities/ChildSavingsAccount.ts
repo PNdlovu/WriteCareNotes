@@ -106,7 +106,7 @@ export class ChildSavingsAccount {
   @JoinColumn({ name: 'childId' })
   child!: Child;
 
-  // ==================== ACCOUNT TYPE ====================
+  // ==================== ACCOUNTTYPE ====================
 
   @Column({
     type: 'enum',
@@ -114,12 +114,12 @@ export class ChildSavingsAccount {
   })
   accountType!: SavingsAccountType;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   accountName?: string; // e.g., "Sarah's Birthday Savings"
 
-  // ==================== ACCOUNT STATUS ====================
+  // ==================== ACCOUNTSTATUS ====================
 
-  @Column({ type: 'varchar', length: 50, default: 'ACTIVE' })
+  @Column({ type: 'var char', length: 50, default: 'ACTIVE' })
   status!: string; // ACTIVE, CLOSED, FROZEN
 
   @Column({ type: 'date' })
@@ -128,7 +128,7 @@ export class ChildSavingsAccount {
   @Column({ type: 'date', nullable: true })
   closedDate?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   closureReason?: string;
 
   // ==================== BALANCE ====================
@@ -136,7 +136,7 @@ export class ChildSavingsAccount {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   currentBalance!: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency!: string; // GBP or EUR
 
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
@@ -148,18 +148,18 @@ export class ChildSavingsAccount {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   totalInterest!: number; // Lifetime interest earned
 
-  // ==================== EXTERNAL BANK ACCOUNT ====================
+  // ==================== EXTERNAL BANKACCOUNT ====================
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   bankName?: string; // e.g., "Nationwide", "Halifax"
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   accountNumber?: string; // Encrypted
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   sortCode?: string; // Encrypted
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   accountHolderName?: string; // Child's name
 
   @Column({ type: 'date', nullable: true })
@@ -170,7 +170,7 @@ export class ChildSavingsAccount {
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   interestRate!: number; // Annual interest rate (e.g., 2.5%)
 
-  @Column({ type: 'varchar', length: 50, default: 'MONTHLY' })
+  @Column({ type: 'var char', length: 50, default: 'MONTHLY' })
   interestFrequency!: string; // MONTHLY, QUARTERLY, ANNUALLY
 
   @Column({ type: 'date', nullable: true })
@@ -179,12 +179,12 @@ export class ChildSavingsAccount {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   accruedInterest!: number; // Interest not yet paid
 
-  // ==================== SAVINGS GOAL ====================
+  // ==================== SAVINGSGOAL ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   savingsGoalAmount?: number; // Target amount
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   savingsGoalDescription?: string; // What saving for
 
   @Column({ type: 'date', nullable: true })
@@ -193,7 +193,7 @@ export class ChildSavingsAccount {
   @Column({ type: 'boolean', default: false })
   savingsGoalAchieved!: boolean;
 
-  // ==================== WITHDRAWAL CONTROLS ====================
+  // ==================== WITHDRAWALCONTROLS ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 50 })
   highValueThreshold!: number; // Withdrawals above this need manager approval
@@ -235,7 +235,7 @@ export class ChildSavingsAccount {
     statementFrequency?: string; // MONTHLY, QUARTERLY
   };
 
-  // ==================== AUDIT TRAIL ====================
+  // ==================== AUDITTRAIL ====================
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -243,13 +243,13 @@ export class ChildSavingsAccount {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   createdBy!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   updatedBy?: string;
 
-  // ==================== BUSINESS METHODS ====================
+  // ==================== BUSINESSMETHODS ====================
 
   /**
    * Open savings account
@@ -529,16 +529,16 @@ export class ChildSavingsTransaction {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount!: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency!: string;
 
   @Column({ type: 'timestamp' })
   transactionDate!: Date;
 
-  @Column({ type: 'varchar', length: 1000 })
+  @Column({ type: 'var char', length: 1000 })
   description!: string; // e.g., "Pocket money savings", "Withdrawal for trainers"
 
-  // ==================== BALANCE TRACKING ====================
+  // ==================== BALANCETRACKING ====================
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   balanceBefore!: number;
@@ -546,7 +546,7 @@ export class ChildSavingsTransaction {
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   balanceAfter!: number;
 
-  // ==================== LINKED RECORDS ====================
+  // ==================== LINKEDRECORDS ====================
 
   @Column({ type: 'uuid', nullable: true })
   linkedPocketMoneyTransactionId?: string; // Source of deposit
@@ -554,7 +554,7 @@ export class ChildSavingsTransaction {
   @Column({ type: 'uuid', nullable: true })
   linkedAllowanceExpenditureId?: string; // Purpose of withdrawal
 
-  // ==================== WITHDRAWAL APPROVAL ====================
+  // ==================== WITHDRAWALAPPROVAL ====================
 
   @Column({
     type: 'enum',
@@ -580,7 +580,7 @@ export class ChildSavingsTransaction {
   @Column({ type: 'timestamp', nullable: true })
   approvedAt?: Date;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   approvalNotes?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -595,7 +595,7 @@ export class ChildSavingsTransaction {
 
   // ==================== DISBURSEMENT ====================
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   disbursementMethod?: string; // CASH, TRANSFER, CHEQUE
 
   @Column({ type: 'timestamp', nullable: true })
@@ -608,15 +608,15 @@ export class ChildSavingsTransaction {
   @JoinColumn({ name: 'disbursedByStaffId' })
   disbursedByStaff?: User;
 
-  // ==================== CHILD ACKNOWLEDGEMENT ====================
+  // ==================== CHILDACKNOWLEDGEMENT ====================
 
   @Column({ type: 'boolean', default: false })
   childAcknowledged!: boolean; // Child aware of transaction
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   childComment?: string;
 
-  // ==================== AUDIT TRAIL ====================
+  // ==================== AUDITTRAIL ====================
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -624,9 +624,9 @@ export class ChildSavingsTransaction {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   createdBy!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   updatedBy?: string;
 }

@@ -63,9 +63,9 @@ import { TenantGuard } from '../../guards/tenant.guard';
 @Controller('api/v1/emergency')
 @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
 export class EmergencyOnCallController {
-  constructor(
-    private readonly emergencyService: EnterpriseEmergencyManagementService,
-    private readonly nurseCallService: NurseCallSystemService
+  const ructor(
+    private readonlyemergencyService: EnterpriseEmergencyManagementService,
+    private readonlynurseCallService: NurseCallSystemService
   ) {}
 
   @Post('incidents')

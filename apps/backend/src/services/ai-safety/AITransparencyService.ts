@@ -77,7 +77,7 @@ export interface ComplianceCheck {
 
 @Injectable()
 export class AITransparencyService {
-  private readonly logger = new Logger(AITransparencyService.name);
+  private readonlylogger = new Logger(AITransparencyService.name);
 
   /**
    * Generate comprehensive explanation for AI response
@@ -112,7 +112,7 @@ export class AITransparencyService {
 **My Reasoning:**
 ${explanation.reasoning}
 
-## 📊 Confidence Level: ${confidencePercentage}%
+## 📊 ConfidenceLevel: ${confidencePercentage}%
 
 **${explanation.confidenceExplanation.interpretation}**
 
@@ -124,7 +124,7 @@ ${explanation.confidenceExplanation.factors.map(factor => `• ${factor}`).join(
 ## 📚 Sources I Referenced
 
 ${explanation.sourcesUsed.map(source => 
-  `• **${source.name}** (${source.type}) - Last updated: ${source.lastUpdated}`
+  `• **${source.name}** (${source.type}) - Lastupdated: ${source.lastUpdated}`
 ).join('\n')}
 
 ## ⚠️ Important Limitations
@@ -137,7 +137,7 @@ ${explanation.recommendations.map(rec => `• ${rec}`).join('\n')}
 
 ## ✅ Verification Steps
 
-To ensure this information is accurate for your specific situation:
+To ensure this information is accurate for your specificsituation:
 
 ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
 
@@ -317,7 +317,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
     }
     
     const factors = [
-      `Knowledge base match: ${(confidence.factors.knowledgeBaseMatch * 100).toFixed(0)}%`,
+      `Knowledge basematch: ${(confidence.factors.knowledgeBaseMatch * 100).toFixed(0)}%`,
       `Regulatory alignment: ${(confidence.factors.regulatoryAlignment * 100).toFixed(0)}%`,
       `Response specificity: ${(confidence.factors.responseSpecificity * 100).toFixed(0)}%`,
       `Validation score: ${(confidence.factors.validationScore * 100).toFixed(0)}%`,
@@ -369,7 +369,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
     recommendations.push("Document your decision-making process for audit purposes");
     
     if (context.jurisdiction.length > 1) {
-      recommendations.push("Consider jurisdiction-specific variations in implementation");
+      recommendations.push("Consider jurisdiction-specific var iations in implementation");
     }
     
     return recommendations;
@@ -407,7 +407,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
   }
 
   private identifyUncertainties(response: string, confidence: ConfidenceScore): UncertaintyIndicator[] {
-    constuncertainties: UncertaintyIndicator[] = [];
+    const uncertainties: UncertaintyIndicator[] = [];
     
     if (confidence.overallConfidence < 0.7) {
       uncertainties.push({
@@ -421,7 +421,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
     // Check for uncertainty language in response
     const uncertaintyPatterns = [
       { pattern: /may\s+need|might\s+require/gi, type: 'knowledge_gap' as const },
-      { pattern: /depends\s+on|varies\s+by/gi, type: 'conflicting_sources' as const },
+      { pattern: /depends\s+on|var ies\s+by/gi, type: 'conflicting_sources' as const },
       { pattern: /consult\s+with|seek\s+advice/gi, type: 'low_confidence' as const }
     ];
     
@@ -441,7 +441,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
   }
 
   private identifyRisks(response: string, context: PolicyContext): RiskWarning[] {
-    constrisks: RiskWarning[] = [];
+    const risks: RiskWarning[] = [];
     
     // High-risk policy categories
     const highRiskCategories = ['safeguarding', 'medication', 'infection_control', 'mental_capacity'];
@@ -476,7 +476,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
   }
 
   private async runComplianceChecks(response: string, context: PolicyContext): Promise<ComplianceCheck[]> {
-    constchecks: ComplianceCheck[] = [];
+    const checks: ComplianceCheck[] = [];
     
     for (const jurisdiction of context.jurisdiction) {
       checks.push({
@@ -492,10 +492,10 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
 
   private generateVerificationPrompts(response: string, context: PolicyContext): string[] {
     return [
-      "Have you checked this against the latest regulatory guidance?",
-      "Does this align with your organization's existing policies?",
-      "Have you considered the implementation timeline and resources?",
-      "Are there any organization-specific factors not addressed?"
+      "Have you checked this against the latest regulatoryguidance?",
+      "Does this align with your organization's existingpolicies?",
+      "Have you considered the implementation timeline andresources?",
+      "Are there any organization-specific factors notaddressed?"
     ];
   }
 
@@ -524,11 +524,11 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
 **Overall Confidence: ${(confidence.overallConfidence * 100).toFixed(0)}%**
 
 **Contributing Factors:**
-- Knowledge Base Match: ${(confidence.factors.knowledgeBaseMatch * 100).toFixed(0)}%
-- Regulatory Alignment: ${(confidence.factors.regulatoryAlignment * 100).toFixed(0)}%  
-- Response Specificity: ${(confidence.factors.responseSpecificity * 100).toFixed(0)}%
-- Validation Score: ${(confidence.factors.validationScore * 100).toFixed(0)}%
-- Model Confidence: ${(confidence.factors.modelConfidence * 100).toFixed(0)}%
+- Knowledge BaseMatch: ${(confidence.factors.knowledgeBaseMatch * 100).toFixed(0)}%
+- RegulatoryAlignment: ${(confidence.factors.regulatoryAlignment * 100).toFixed(0)}%  
+- ResponseSpecificity: ${(confidence.factors.responseSpecificity * 100).toFixed(0)}%
+- ValidationScore: ${(confidence.factors.validationScore * 100).toFixed(0)}%
+- ModelConfidence: ${(confidence.factors.modelConfidence * 100).toFixed(0)}%
 
 **Recommended Action: ${confidence.recommendedAction.replace('_', ' ').toUpperCase()}**
     `;
@@ -540,7 +540,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
     }
     
     return sources.map(source => 
-      `**${source.name}**\n- Type: ${source.type.replace('_', ' ')}\n- Last Updated: ${source.lastUpdated}\n- Relevance: ${(source.relevance * 100).toFixed(0)}%`
+      `**${source.name}**\n- Type: ${source.type.replace('_', ' ')}\n- LastUpdated: ${source.lastUpdated}\n- Relevance: ${(source.relevance * 100).toFixed(0)}%`
     ).join('\n\n');
   }
 
@@ -595,7 +595,7 @@ ${explanation.verificationSteps.map(step => `• ${step}`).join('\n')}
     userId?: string; 
   }): Promise<void> {
     // Log AI decision making for audit trail
-    console.log('AI Decision logged:', {
+    console.log('AI Decisionlogged:', {
       action: params.action,
       timestamp: new Date().toISOString(),
       userId: params.userId || 'system',

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Migration: Create Policy Versions Table
+ * @fileoverviewMigration: Create Policy Versions Table
  * @description Creates the policy_versions table for version history tracking
  * @version 1.0.0
  * @author WriteCareNotes Development Team
@@ -31,13 +31,13 @@ export class CreatePolicyVersionsTable1696579200000 implements MigrationInterfac
           },
           {
             name: 'version',
-            type: 'varchar',
+            type: 'var char',
             length: '20',
             isNullable: false
           },
           {
             name: 'title',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false
           },
@@ -98,15 +98,15 @@ export class CreatePolicyVersionsTable1696579200000 implements MigrationInterfac
           },
           {
             name: 'tags',
-            type: 'varchar',
+            type: 'var char',
             isArray: true,
-            default: 'ARRAY[]::varchar[]'
+            default: 'ARRAY[]::var char[]'
           },
           {
             name: 'linkedModules',
-            type: 'varchar',
+            type: 'var char',
             isArray: true,
-            default: 'ARRAY[]::varchar[]'
+            default: 'ARRAY[]::var char[]'
           },
           {
             name: 'changeDescription',

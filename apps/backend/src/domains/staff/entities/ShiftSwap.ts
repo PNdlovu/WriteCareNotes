@@ -50,7 +50,7 @@ export class ShiftSwap {
   @Column({ type: 'uuid', nullable: true })
   proposedShiftId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   swapNumber: string;
 
   @Column({ type: 'enum', enum: ShiftSwapType })
@@ -68,19 +68,19 @@ export class ShiftSwap {
   @Column({ type: 'text', nullable: true })
   rejectionReason: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
   approvedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   rejectedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
   rejectedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   cancelledBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -101,7 +101,7 @@ export class ShiftSwap {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   compensationAmount: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -110,10 +110,10 @@ export class ShiftSwap {
   @Column({ type: 'int', default: 24 })
   expiryHours: number; // Hours until the swap request expires
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()

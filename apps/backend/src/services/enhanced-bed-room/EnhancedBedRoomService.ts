@@ -93,7 +93,7 @@ export class EnhancedBedRoomService {
   privateauditService: AuditService;
   privatenotificationService: NotificationService;
 
-  constructor() {
+  const ructor() {
     this.bedRoomRepository = AppDataSource.getRepository(BedRoom);
     this.occupancyRepository = AppDataSource.getRepository(RoomOccupancy);
     this.residentRepository = AppDataSource.getRepository(Resident);
@@ -146,7 +146,7 @@ export class EnhancedBedRoomService {
 
       return savedRoom;
     } catch (error: unknown) {
-      console.error('Error creating room:', error);
+      console.error('Error creatingroom:', error);
       throw error;
     }
   }
@@ -240,7 +240,7 @@ export class EnhancedBedRoomService {
 
       return savedOccupancy;
     } catch (error: unknown) {
-      console.error('Error assigning resident to room:', error);
+      console.error('Error assigning resident toroom:', error);
       throw error;
     }
   }
@@ -285,7 +285,7 @@ export class EnhancedBedRoomService {
         equipment: room.equipment
       }));
     } catch (error: unknown) {
-      console.error('Error getting room availability:', error);
+      console.error('Error getting roomavailability:', error);
       throw error;
     }
   }
@@ -339,7 +339,7 @@ export class EnhancedBedRoomService {
         }
       });
     } catch (error: unknown) {
-      console.error('Error scheduling maintenance:', error);
+      console.error('Error schedulingmaintenance:', error);
       throw error;
     }
   }
@@ -379,7 +379,7 @@ export class EnhancedBedRoomService {
         userId: completedBy
       });
     } catch (error: unknown) {
-      console.error('Error completing maintenance:', error);
+      console.error('Error completingmaintenance:', error);
       throw error;
     }
   }
@@ -447,7 +447,7 @@ export class EnhancedBedRoomService {
         userId: 'system'
       });
     } catch (error: unknown) {
-      console.error('Error transferring resident:', error);
+      console.error('Error transferringresident:', error);
       throw error;
     }
   }
@@ -486,7 +486,7 @@ export class EnhancedBedRoomService {
         userId: 'system'
       });
     } catch (error: unknown) {
-      console.error('Error checking out resident:', error);
+      console.error('Error checking outresident:', error);
       throw error;
     }
   }
@@ -499,7 +499,7 @@ export class EnhancedBedRoomService {
         order: { checkInDate: 'DESC' }
       });
     } catch (error: unknown) {
-      console.error('Error getting room occupancy history:', error);
+      console.error('Error getting room occupancyhistory:', error);
       throw error;
     }
   }
@@ -514,7 +514,7 @@ export class EnhancedBedRoomService {
         order: { 'maintenanceSchedule.nextService': 'ASC' }
       });
     } catch (error: unknown) {
-      console.error('Error getting maintenance schedule:', error);
+      console.error('Error getting maintenanceschedule:', error);
       throw error;
     }
   }
@@ -530,7 +530,7 @@ export class EnhancedBedRoomService {
 
       return rooms.filter(room => room.needsMaintenance());
     } catch (error: unknown) {
-      console.error('Error getting rooms needing maintenance:', error);
+      console.error('Error getting rooms needingmaintenance:', error);
       throw error;
     }
   }
@@ -563,7 +563,7 @@ export class EnhancedBedRoomService {
 
       return updatedRoom;
     } catch (error: unknown) {
-      console.error('Error updating room details:', error);
+      console.error('Error updating roomdetails:', error);
       throw error;
     }
   }
@@ -616,7 +616,7 @@ export class EnhancedBedRoomService {
 
       return statistics;
     } catch (error: unknown) {
-      console.error('Error getting room statistics:', error);
+      console.error('Error getting roomstatistics:', error);
       throw error;
     }
   }

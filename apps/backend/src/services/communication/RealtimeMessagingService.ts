@@ -171,7 +171,7 @@ export class RealtimeMessagingService {
   privateupload: multer.Multer;
   privateconnectedUsers: Map<string, Set<string>> = new Map(); // tenantId -> Set of socketIds
 
-  constructor(io: SocketIOServer) {
+  const ructor(io: SocketIOServer) {
     this.db = new DatabaseService();
     this.logger = new Logger('RealtimeMessagingService');
     this.fileStorage = new FileStorageService();
@@ -366,7 +366,7 @@ export class RealtimeMessagingService {
 
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
-      constconversationData: CreateConversationRequest = req.body;
+      const conversationData: CreateConversationRequest = req.body;
 
       const client = await this.db.getClient();
       await client.query('BEGIN');
@@ -382,7 +382,7 @@ export class RealtimeMessagingService {
           RETURNING *
         `;
 
-        constdefaultSettings: ConversationSettings = {
+        const defaultSettings: ConversationSettings = {
           notificationsEnabled: true,
           retentionDays: 365,
           allowFileAttachments: true,
@@ -443,7 +443,7 @@ export class RealtimeMessagingService {
         await client.query('COMMIT');
 
         // Prepare response
-        constresponse: ConversationResponse = {
+        const response: ConversationResponse = {
           id: conversation.id,
           tenantId: conversation.tenant_id,
           conversationType: conversation.conversation_type,
@@ -530,7 +530,7 @@ export class RealtimeMessagingService {
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
       const conversationId = req.params.conversationId;
-      constmessageData: SendMessageRequest = req.body;
+      const messageData: SendMessageRequest = req.body;
 
       // Validate conversation access
       const hasAccess = await this.validateConversationAccess(tenantId, userId, conversationId);
@@ -557,7 +557,7 @@ export class RealtimeMessagingService {
 
       try {
         // Process file attachments
-        letattachments: FileAttachment[] = [];
+        let attachments: FileAttachment[] = [];
         if (messageData.attachments && messageData.attachments.length > 0) {
           attachments = await this.processAttachments(messageData.attachments, tenantId);
         }
@@ -592,7 +592,7 @@ export class RealtimeMessagingService {
         await client.query(`
           UPDATE conversations 
           SET updated_at = NOW() 
-          WHERE id = $1
+          WHEREid = $1
         `, [conversationId]);
 
         await client.query('COMMIT');
@@ -610,7 +610,7 @@ export class RealtimeMessagingService {
         });
 
         // Prepare response
-        constresponse: MessageResponse = {
+        const response: MessageResponse = {
           id: message.id,
           conversationId: message.conversation_id,
           senderId: message.sender_id,
@@ -703,17 +703,17 @@ export class RealtimeMessagingService {
 
       // Build query conditions
       let whereClause = 'WHERE m.conversation_id = $1 AND m.is_deleted = false';
-      constparams: any[] = [conversationId];
+      const params: any[] = [conversationId];
       let paramIndex = 2;
 
       if (before) {
-        whereClause += ` AND m.created_at < (SELECT created_at FROM messages WHERE id = $${paramIndex})`;
+        whereClause += ` AND m.created_at < (SELECT created_at FROM messages WHEREid = $${paramIndex})`;
         params.push(before);
         paramIndex++;
       }
 
       if (after) {
-        whereClause += ` AND m.created_at > (SELECT created_at FROM messages WHERE id = $${paramIndex})`;
+        whereClause += ` AND m.created_at > (SELECT created_at FROM messages WHEREid = $${paramIndex})`;
         params.push(after);
         paramIndex++;
       }
@@ -747,7 +747,7 @@ export class RealtimeMessagingService {
       params.push(limit, offset);
       const messagesResult = await this.db.query(messagesQuery, params);
 
-      constmessages: MessageResponse[] = messagesResult.rows.map(row => ({
+      const messages: MessageResponse[] = messagesResult.rows.map(row => ({
         id: row.id,
         conversationId: row.conversation_id,
         senderId: row.sender_id,
@@ -812,12 +812,12 @@ export class RealtimeMessagingService {
         });
 
         // Generate thumbnail for images
-        letthumbnail: string | undefined;
+        let thumbnail: string | undefined;
         if (file.mimetype.startsWith('image/')) {
           thumbnail = await this.fileStorage.generateThumbnail(filePath, 300, 300);
         }
 
-        constattachment: FileAttachment = {
+        const attachment: FileAttachment = {
           fileName: file.originalname,
           fileSize: file.size,
           mimeType: file.mimetype,
@@ -910,7 +910,7 @@ export class RealtimeMessagingService {
 
       // Get user info for the reaction
       const userInfo = await this.getUserInfo(userId);
-      constreactionResponse: MessageReaction = {
+      const reactionResponse: MessageReaction = {
         id: reaction.id,
         userId: reaction.user_id,
         userName: `${userInfo.first_name} ${userInfo.last_name}`,
@@ -994,7 +994,7 @@ export class RealtimeMessagingService {
       // Implementation would verify JWT token
       const userQuery = `
         SELECT 1 FROM users 
-        WHERE id = $1 AND tenant_id = $2 AND is_active = true
+        WHEREid = $1 AND tenant_id = $2 AND is_active = true
       `;
       const result = await this.db.query(userQuery, [userId, tenantId]);
       return result.rows.length > 0;
@@ -1026,7 +1026,7 @@ export class RealtimeMessagingService {
 
   private async getUserInfo(userId: string): Promise<any> {
     const result = await this.db.query(`
-      SELECT first_name, last_name, email FROM users WHERE id = $1
+      SELECT first_name, last_name, email FROM users WHEREid = $1
     `, [userId]);
     return result.rows[0];
   }
@@ -1107,7 +1107,7 @@ export class RealtimeMessagingService {
       // Default to in-app delivery if not specified
       const deliveryMethods = messageData.deliveryMethod ? [messageData.deliveryMethod] : ['in_app'];
       
-      constdeliveryResults: any = {
+      const deliveryResults: any = {
         inApp: { success: false, error: '' }
       };
 
@@ -1185,7 +1185,7 @@ export class RealtimeMessagingService {
     
     // Get conversation details
     const conversationQuery = `
-      SELECT title, conversation_type FROM conversations WHERE id = $1
+      SELECT title, conversation_type FROM conversations WHEREid = $1
     `;
     const conversation = await this.db.query(conversationQuery, [conversationId]);
     const conversationTitle = conversation.rows[0]?.title || 'Care Team Communication';
@@ -1287,7 +1287,7 @@ export class RealtimeMessagingService {
     try {
       const campaignId = uuidv4();
       
-      constcampaign: BulkMessagingCampaign = {
+      const campaign: BulkMessagingCampaign = {
         campaignId,
         campaignName: campaignData.campaignName || 'Untitled Campaign',
         templateId: campaignData.templateId,
@@ -1333,7 +1333,7 @@ export class RealtimeMessagingService {
    */
   async getChannelHealth(tenantId: string): Promise<ChannelHealthStatus[]> {
     try {
-      consthealthChecks: ChannelHealthStatus[] = [];
+      const healthChecks: ChannelHealthStatus[] = [];
 
       // Check in-app messaging health
       const startTime = Date.now();
@@ -1368,7 +1368,7 @@ export class RealtimeMessagingService {
       for (const channel of additionalChannels) {
         const channelStartTime = Date.now();
         try {
-          // In production, implement real health checks:
+          // In production, implement real healthchecks:
           /*
           if (channel.id === 'email') {
             await this.emailService.healthCheck();
@@ -1470,7 +1470,7 @@ export class RealtimeMessagingService {
       const { conversationId } = req.params;
       const tenantId = req.headers['x-tenant-id'] as string;
       const senderId = req.headers['x-user-id'] as string;
-      constmessageData: SendMessageRequest = req.body;
+      const messageData: SendMessageRequest = req.body;
 
       const result = await this.sendMultiChannelMessage(conversationId, messageData, tenantId, senderId);
 
@@ -1496,7 +1496,7 @@ export class RealtimeMessagingService {
     try {
       const tenantId = req.headers['x-tenant-id'] as string;
       const createdBy = req.headers['x-user-id'] as string;
-      constcampaignData: Partial<BulkMessagingCampaign> = req.body;
+      const campaignData: Partial<BulkMessagingCampaign> = req.body;
 
       const campaign = await this.createBulkCampaign(campaignData, tenantId, createdBy);
 

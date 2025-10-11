@@ -23,7 +23,7 @@ import { VisitType, VisitPriority } from '../../entities/family/VisitRequest';
 export class FamilyCommunicationController {
   privatefamilyService: FamilyCommunicationService;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.familyService = new FamilyCommunicationService(dataSource);
   }
 
@@ -39,7 +39,7 @@ export class FamilyCommunicationController {
       }
 
       const organizationId = (req as any).organizationId;
-      constdto: CreateFamilyMemberDTO = { ...req.body, organizationId };
+      const dto: CreateFamilyMemberDTO = { ...req.body, organizationId };
 
       const familyMember = await this.familyService.createFamilyMember(dto);
 
@@ -49,7 +49,7 @@ export class FamilyCommunicationController {
         message: 'Family member created successfully',
       });
     } catch (error: any) {
-      console.error('Error creating family member:', error);
+      console.error('Error creating familymember:', error);
       return res.status(500).json({ success: false, error: error.message });
     }
   }
@@ -77,7 +77,7 @@ export class FamilyCommunicationController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: FamilyFilters = {};
+      const filters: FamilyFilters = {};
       if (req.query.residentId) filters.residentId = req.query.residentId as string;
       if (req.query.relationship) filters.relationship = req.query.relationship as RelationshipType;
       if (req.query.accessLevel) filters.accessLevel = req.query.accessLevel as AccessLevel;
@@ -110,7 +110,7 @@ export class FamilyCommunicationController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      constdto: UpdateFamilyMemberDTO = req.body;
+      const dto: UpdateFamilyMemberDTO = req.body;
 
       const familyMember = await this.familyService.updateFamilyMember(id, organizationId, dto);
 
@@ -185,7 +185,7 @@ export class FamilyCommunicationController {
       }
 
       const organizationId = (req as any).organizationId;
-      constdto: CreateMessageDTO = { ...req.body, organizationId };
+      const dto: CreateMessageDTO = { ...req.body, organizationId };
 
       const message = await this.familyService.createMessage(dto);
 
@@ -222,7 +222,7 @@ export class FamilyCommunicationController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: MessageFilters = {};
+      const filters: MessageFilters = {};
       if (req.query.familyId) filters.familyId = req.query.familyId as string;
       if (req.query.residentId) filters.residentId = req.query.residentId as string;
       if (req.query.type) filters.type = req.query.type as MessageType;
@@ -312,7 +312,7 @@ export class FamilyCommunicationController {
       }
 
       const organizationId = (req as any).organizationId;
-      constdto: CreateVisitRequestDTO = { ...req.body, organizationId };
+      const dto: CreateVisitRequestDTO = { ...req.body, organizationId };
 
       const visit = await this.familyService.createVisitRequest(dto);
 
@@ -349,7 +349,7 @@ export class FamilyCommunicationController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: VisitFilters = {};
+      const filters: VisitFilters = {};
       if (req.query.familyId) filters.familyId = req.query.familyId as string;
       if (req.query.residentId) filters.residentId = req.query.residentId as string;
       if (req.query.type) filters.type = req.query.type as VisitType;

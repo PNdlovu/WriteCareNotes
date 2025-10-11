@@ -78,12 +78,12 @@ const createCarePlanSchema = Joi.object({
     }),
   planType: Joi.string().valid(...Object.values(CarePlanType)).required()
     .messages({
-      'any.only': 'Plan type must be one of: initial, review, emergency, discharge',
+      'any.only': 'Plan type must be oneof: initial, review, emergency, discharge',
       'any.required': 'Plan type is required'
     }),
   reviewFrequency: Joi.string().valid(...Object.values(ReviewFrequency)).required()
     .messages({
-      'any.only': 'Review frequency must be one of: weekly, monthly, quarterly, annually',
+      'any.only': 'Review frequency must be oneof: weekly, monthly, quarterly, annually',
       'any.required': 'Review frequency is required'
     }),
   effectiveFrom: Joi.date().iso().required()
@@ -145,7 +145,7 @@ const searchCarePlansSchema = Joi.object({
 });
 
 export class CarePlanController {
-  constructor(private carePlanService: CarePlanService) {}
+  const ructor(private carePlanService: CarePlanService) {}
 
   /**
    * Create a new care plan
@@ -162,7 +162,7 @@ export class CarePlanController {
       // Validate request body
       const { error, value } = createCarePlanSchema.validate(req.body, { abortEarly: false });
       if (error) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -184,7 +184,7 @@ export class CarePlanController {
       }
 
       // Create care plan request
-      constcreateRequest: CreateCarePlanRequest = {
+      const createRequest: CreateCarePlanRequest = {
         ...value,
         createdBy: req.user!.id
       };
@@ -192,7 +192,7 @@ export class CarePlanController {
       // Create care plan
       const carePlan = await this.carePlanService.createCarePlan(createRequest);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -211,7 +211,7 @@ export class CarePlanController {
       });
 
       if (error instanceof CarePlanValidationError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_VALIDATION_ERROR',
@@ -244,7 +244,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -263,7 +263,7 @@ export class CarePlanController {
       const carePlan = await this.carePlanService.getCarePlanById(id, includeRelations);
 
       if (!carePlan) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
@@ -279,7 +279,7 @@ export class CarePlanController {
         return;
       }
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -311,7 +311,7 @@ export class CarePlanController {
       // Validate query parameters
       const { error, value } = searchCarePlansSchema.validate(req.query, { abortEarly: false });
       if (error) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -337,7 +337,7 @@ export class CarePlanController {
       // Search care plans
       const result = await this.carePlanService.searchCarePlans(filters, page, limit);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: result.carePlans.map(plan => plan.toJSON()),
         meta: {
@@ -375,7 +375,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -394,7 +394,7 @@ export class CarePlanController {
       // Validate request body
       const { error, value } = updateCarePlanSchema.validate(req.body, { abortEarly: false });
       if (error) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -416,7 +416,7 @@ export class CarePlanController {
       }
 
       // Create update request
-      constupdateRequest: UpdateCarePlanRequest = {
+      const updateRequest: UpdateCarePlanRequest = {
         ...value,
         updatedBy: req.user!.id
       };
@@ -424,7 +424,7 @@ export class CarePlanController {
       // Update care plan
       const carePlan = await this.carePlanService.updateCarePlan(id, updateRequest);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -444,7 +444,7 @@ export class CarePlanController {
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
@@ -461,7 +461,7 @@ export class CarePlanController {
       }
 
       if (error instanceof CarePlanValidationError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_VALIDATION_ERROR',
@@ -493,7 +493,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -512,7 +512,7 @@ export class CarePlanController {
       // Validate request body
       const { error, value } = approveCarePlanSchema.validate(req.body, { abortEarly: false });
       if (error) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -534,7 +534,7 @@ export class CarePlanController {
       }
 
       // Create approval request
-      constapprovalRequest: CarePlanApprovalRequest = {
+      const approvalRequest: CarePlanApprovalRequest = {
         ...value,
         approvedBy: req.user!.id
       };
@@ -542,7 +542,7 @@ export class CarePlanController {
       // Approve care plan
       const carePlan = await this.carePlanService.approveCarePlan(id, approvalRequest);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -562,7 +562,7 @@ export class CarePlanController {
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
@@ -579,7 +579,7 @@ export class CarePlanController {
       }
 
       if (error instanceof CarePlanApprovalError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_APPROVAL_ERROR',
@@ -611,7 +611,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -630,7 +630,7 @@ export class CarePlanController {
       // Archive care plan
       const carePlan = await this.carePlanService.archiveCarePlan(id, req.user!.id, reason);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: carePlan.toJSON(),
         meta: {
@@ -650,7 +650,7 @@ export class CarePlanController {
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',
@@ -680,7 +680,7 @@ export class CarePlanController {
       const daysAhead = parseInt(req.query['daysAhead'] as string) || 7;
 
       if (daysAhead < 0 || daysAhead > 365) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_PARAMETER',
@@ -698,7 +698,7 @@ export class CarePlanController {
 
       const carePlans = await this.carePlanService.getCarePlansDueForReview(daysAhead);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: carePlans.map(plan => plan.toJSON()),
         meta: {
@@ -730,7 +730,7 @@ export class CarePlanController {
 
       // Validate UUID format
       if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'INVALID_ID',
@@ -748,7 +748,7 @@ export class CarePlanController {
 
       const versionHistory = await this.carePlanService.getCarePlanVersionHistory(id);
 
-      constresponse: CarePlanResponse = {
+      const response: CarePlanResponse = {
         success: true,
         data: {
           currentVersion: versionHistory.currentVersion.toJSON(),
@@ -772,7 +772,7 @@ export class CarePlanController {
       });
 
       if (error instanceof CarePlanNotFoundError) {
-        constresponse: CarePlanResponse = {
+        const response: CarePlanResponse = {
           success: false,
           error: {
             code: 'CARE_PLAN_NOT_FOUND',

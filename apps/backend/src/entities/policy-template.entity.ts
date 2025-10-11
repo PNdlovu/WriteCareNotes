@@ -96,7 +96,7 @@ export class PolicyTemplate {
    * Template title
    * @example "Medication Administration Policy"
    */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @Index()
   title: string;
 
@@ -133,7 +133,7 @@ export class PolicyTemplate {
   content: string;
 
   /**
-   * Variable definitions for template
+   * variable definitions for template
    */
   @Column({ type: 'jsonb' })
   variables: PolicyTemplateVariable[];
@@ -142,7 +142,7 @@ export class PolicyTemplate {
    * Template version
    * @example "1.0.0"
    */
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   version: string;
 
   /**
@@ -167,13 +167,13 @@ export class PolicyTemplate {
   /**
    * Who approved this template
    */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   approvedBy: string;
 
   /**
    * Template tags for searching and categorization
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   tags: string[];
 
   /**

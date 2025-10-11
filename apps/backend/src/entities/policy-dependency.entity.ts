@@ -111,7 +111,7 @@ export class PolicyDependency {
    * Used for targeted impact analysis and categorization.
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 50,
     nullable: false
   })
@@ -136,13 +136,13 @@ export class PolicyDependency {
    * @enum DependencyStrength
    * @default DependencyStrength.MEDIUM
    * 
-   * Indicates how critical this dependency is:
+   * Indicates how critical this dependencyis:
    * - STRONG: Changes to the policy will break the dependent entity
    * - MEDIUM: Changes may require adjustments to the dependent entity
    * - WEAK: Changes have minimal impact on the dependent entity
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     nullable: false,
     default: DependencyStrength.MEDIUM
@@ -153,7 +153,7 @@ export class PolicyDependency {
    * Additional metadata about the dependency
    * @optional
    * 
-   * JSON object storing additional information:
+   * JSON object storing additionalinformation:
    * - impactDescription: Human-readable description of the impact
    * - affectedSections: Which policy sections are referenced
    * - automaticUpdate: Whether dependent can auto-update on policy change

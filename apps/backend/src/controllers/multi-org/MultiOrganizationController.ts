@@ -18,7 +18,7 @@ import { MultiOrganizationService } from '../../services/multi-org/MultiOrganiza
 export class MultiOrganizationController {
   privateorgService: MultiOrganizationService;
 
-  constructor() {
+  const ructor() {
     this.orgService = new MultiOrganizationService();
   }
 

@@ -19,11 +19,11 @@ import { Request, Response } from 'express';
  * Provides comprehensive structured logging with correlation IDs and context
  */
 export class StructuredLoggingService {
-  private static instance: StructuredLoggingService;
+  private staticinstance: StructuredLoggingService;
   privatelogger: winston.Logger;
   privatecorrelationId: string | null = null;
 
-  private constructor() {
+  private const ructor() {
     this.initializeLogger();
   }
 

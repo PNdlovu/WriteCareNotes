@@ -114,7 +114,7 @@ export class VisitRequest {
   @Column({ type: 'enum', enum: VisitPriority, default: VisitPriority.NORMAL })
   priority!: VisitPriority;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   title!: string;
 
   @Column({ type: 'text', nullable: true })
@@ -141,79 +141,79 @@ export class VisitRequest {
   @Column({ type: 'jsonb' })
   location!: VisitLocation;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   reason?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   specialRequirements?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   requestedBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   approvedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deniedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   deniedAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   denialReason?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   confirmedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   confirmedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   cancelledBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   cancelledAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   cancellationReason?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   rescheduledBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   rescheduledAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   rescheduleReason?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   completedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   completedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   noShowBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   noShowAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   noShowReason?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   staffMember?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   staffRole?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   department?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   shift?: string;
 
   @Column({ type: 'text', nullable: true })
@@ -296,7 +296,7 @@ export class VisitRequest {
   @Column({ type: 'boolean', default: false })
   isRecurring!: boolean;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   recurrencePattern?: string; // daily, weekly, monthly, custom
 
   @Column({ type: 'jsonb', nullable: true })
@@ -329,25 +329,25 @@ export class VisitRequest {
   @Column({ type: 'timestamp', nullable: true })
   archivedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   archivedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   archiveReason?: string;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   ipAddress?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   userAgent?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deviceId?: string;
 
-  @Column({ type: 'varchar', length: 10, nullable: true })
+  @Column({ type: 'var char', length: 10, nullable: true })
   language?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   timezone?: string;
 
   @CreateDateColumn()

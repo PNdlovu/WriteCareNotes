@@ -57,13 +57,13 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
 
   // Check file type
   if (!allowedMimeTypes.includes(file.mimetype)) {
-    return cb(new Error(`File type not allowed: ${file.mimetype}`));
+    return cb(new Error(`File type notallowed: ${file.mimetype}`));
   }
 
   // Check file size (50MB max)
   const maxSize = 50 * 1024 * 1024; // 50MB
   if (file.size && file.size > maxSize) {
-    return cb(new Error(`File too large: ${file.size} bytes (max: ${maxSize})`));
+    return cb(new Error(`File toolarge: ${file.size} bytes (max: ${maxSize})`));
   }
 
   // Validate filename
@@ -148,11 +148,11 @@ export const fileUploadMiddleware = (req: Request, res: Response, next: NextFunc
       req.file.hash = fileHash;
 
       // Log file upload for audit
-      console.log(`File uploaded successfully: ${req.file.originalname} (${req.file.size} bytes, hash: ${fileHash})`);
+      console.log(`File uploadedsuccessfully: ${req.file.originalname} (${req.file.size} bytes, hash: ${fileHash})`);
 
       next();
     } catch (error: unknown) {
-      console.error('File upload middleware error:', error);
+      console.error('File upload middlewareerror:', error);
       res.status(500).json({
         success: false,
         error: 'Internal server error during file upload',
@@ -169,13 +169,13 @@ async function performSecurityValidation(file: Express.Multer.File): Promise<{
   safe: boolean;
   issues: string[];
 }> {
-  constissues: string[] = [];
+  const issues: string[] = [];
 
   // Check for executable file extensions
   const dangerousExtensions = ['.exe', '.bat', '.cmd', '.scr', '.vbs', '.js', '.jar'];
   const fileExtension = path.extname(file.originalname).toLowerCase();
   if (dangerousExtensions.includes(fileExtension)) {
-    issues.push(`Dangerous file extension: ${fileExtension}`);
+    issues.push(`Dangerous fileextension: ${fileExtension}`);
   }
 
   // Basic malware signature detection (simplified)

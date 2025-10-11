@@ -109,7 +109,7 @@ export class DatabaseConnection {
       await sequelize.authenticate();
       console.log('Database connection established successfully');
     } catch (error: unknown) {
-      console.error('Unable to connect to the database:', error);
+      console.error('Unable to connect to thedatabase:', error);
       throw error;
     }
   }
@@ -159,7 +159,7 @@ export class DatabaseConnection {
       await sequelize.sync({ alter: process.env['NODE_ENV'] === 'development' });
       console.log('Database models synchronized successfully');
     } catch (error: unknown) {
-      console.error('Failed to synchronize database models:', error);
+      console.error('Failed to synchronize databasemodels:', error);
       throw error;
     }
   }

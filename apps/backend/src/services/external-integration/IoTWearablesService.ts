@@ -173,7 +173,7 @@ export class IoTWearablesService {
   privatedevices: Map<string, IoTDevice> = new Map();
   privatetransformationRules: Map<string, DataTransformationRule> = new Map();
 
-  constructor() {
+  const ructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
     this.auditService = new AuditTrailService();
     this.notificationService = new NotificationService();
@@ -205,7 +205,7 @@ export class IoTWearablesService {
         batchSize: parseInt(process.env.IOT_BATCH_SIZE || '100'),
         processingInterval: parseInt(process.env.IOT_PROCESSING_INTERVAL || '5000'),
         maxRetries: 3,
-        deadLetterQueue: 'iot-dead-letter-queue'
+        deadLetterQueue: 'iot-dead-let ter-queue'
       },
       storage: {
         retentionPeriod: parseInt(process.env.IOT_RETENTION_DAYS || '90'),
@@ -288,8 +288,8 @@ export class IoTWearablesService {
 
       return system;
     } catch (error) {
-      console.error('Failed to initialize IoT integration:', error);
-      throw new Error(`IoT integration initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Failed to initialize IoTintegration:', error);
+      throw new Error(`IoT integration initializationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -334,8 +334,8 @@ export class IoTWearablesService {
       });
 
     } catch (error) {
-      console.error('Device registration failed:', error);
-      throw new Error(`Device registration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Device registrationfailed:', error);
+      throw new Error(`Device registrationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -374,9 +374,9 @@ export class IoTWearablesService {
       });
 
     } catch (error) {
-      console.error('Raw data processing failed:', error);
+      console.error('Raw data processingfailed:', error);
       
-      // Send to dead letter queue
+      // Send to dead let ter queue
       await this.sendToDeadLetterQueue(message, error);
     }
   }
@@ -390,7 +390,7 @@ export class IoTWearablesService {
       const rule = this.transformationRules.get(deviceId);
 
       if (!rule) {
-        throw new Error(`No transformation rule found for device: ${deviceId}`);
+        throw new Error(`No transformation rule found fordevice: ${deviceId}`);
       }
 
       let transformedData = { ...rawData };
@@ -405,7 +405,7 @@ export class IoTWearablesService {
 
       return transformedData as WearableData;
     } catch (error) {
-      console.error('Data transformation failed:', error);
+      console.error('Data transformationfailed:', error);
       throw error;
     }
   }
@@ -426,7 +426,7 @@ export class IoTWearablesService {
       case 'aggregate':
         return this.aggregateData(data, transformation);
       default:
-        throw new Error(`Unknown transformation operation: ${transformation.operation}`);
+        throw new Error(`Unknown transformationoperation: ${transformation.operation}`);
     }
   }
 
@@ -487,10 +487,10 @@ export class IoTWearablesService {
 
     // Replace variables in formula with actual values
     let formulaWithValues = formula;
-    for (const [varName, varField] of Object.entries(variables)) {
-      const value = data[varField as string];
+    for (const [var Name, var Field] of Object.entries(variables)) {
+      const value = data[var Field as string];
       if (value !== undefined) {
-        formulaWithValues = formulaWithValues.replace(new RegExp(varName, 'g'), value.toString());
+        formulaWithValues = formulaWithValues.replace(new RegExp(var Name, 'g'), value.toString());
       }
     }
 
@@ -498,7 +498,7 @@ export class IoTWearablesService {
     try {
       data[field] = eval(formulaWithValues);
     } catch (error) {
-      console.error('Formula evaluation failed:', error);
+      console.error('Formula evaluationfailed:', error);
       data[field] = 0;
     }
 
@@ -567,7 +567,7 @@ export class IoTWearablesService {
    * Detect anomalies
    */
   private async detectAnomalies(data: WearableData): Promise<AnomalyDetectionResult[]> {
-    constanomalies: AnomalyDetectionResult[] = [];
+    const anomalies: AnomalyDetectionResult[] = [];
 
     try {
       // Check heart rate anomalies
@@ -603,7 +603,7 @@ export class IoTWearablesService {
       }
 
     } catch (error) {
-      console.error('Anomaly detection failed:', error);
+      console.error('Anomaly detectionfailed:', error);
     }
 
     return anomalies;
@@ -701,7 +701,7 @@ export class IoTWearablesService {
         timestamp: data.timestamp,
         anomalyType: 'movement',
         severity: 'medium',
-        description: `Significantly reduced movement: ${steps} steps (expected: ${expectedSteps})`,
+        description: `Significantly reducedmovement: ${steps} steps (expected: ${expectedSteps})`,
         affectedMeasurements: ['steps'],
         baselineValues: { steps: expectedSteps },
         currentValues: { steps },
@@ -789,7 +789,7 @@ export class IoTWearablesService {
         });
 
       } catch (error) {
-        console.error('Anomaly handling failed:', error);
+        console.error('Anomaly handlingfailed:', error);
       }
     }
   }
@@ -845,15 +845,15 @@ export class IoTWearablesService {
    */
   private async storeProcessedData(data: WearableData): Promise<void> {
     // In a real implementation, this would store the data in the database
-    console.log('Storing processed data:', data.deviceId, data.dataType);
+    console.log('Storing processeddata:', data.deviceId, data.dataType);
   }
 
   /**
-   * Send to dead letter queue
+   * Send to dead let ter queue
    */
   private async sendToDeadLetterQueue(message: KafkaMessage, error: any): Promise<void> {
-    // In a real implementation, this would send the message to a dead letter queue
-    console.error('Sending to dead letter queue:', message.topic, error);
+    // In a real implementation, this would send the message to a dead let ter queue
+    console.error('Sending to dead let terqueue:', message.topic, error);
   }
 
   /**
@@ -869,7 +869,7 @@ export class IoTWearablesService {
    */
   private initializeTransformationRules(): void {
     // Add default transformation rules
-    constdefaultRule: DataTransformationRule = {
+    const defaultRule: DataTransformationRule = {
       id: 'default_rule',
       name: 'Default IoT Data Transformation',
       sourceDevice: 'all',
@@ -951,7 +951,7 @@ export class IoTWearablesService {
     // Check required fields
     for (const field of rule.validation.requiredFields) {
       if (data[field] === undefined) {
-        throw new Error(`Required field missing: ${field}`);
+        throw new Error(`Required fieldmissing: ${field}`);
       }
     }
 
@@ -960,7 +960,7 @@ export class IoTWearablesService {
       if (data[field] !== undefined) {
         const actualType = typeof data[field];
         if (actualType !== expectedType) {
-          throw new Error(`Field ${field} has wrong type: expected ${expectedType}, got ${actualType}`);
+          throw new Error(`Field ${field} has wrongtype: expected ${expectedType}, got ${actualType}`);
         }
       }
     }
@@ -1007,7 +1007,7 @@ export class IoTWearablesService {
         anomaliesDetected: 0 // Would track in real implementation
       };
     } catch (error) {
-      console.error('Failed to get integration status:', error);
+      console.error('Failed to get integrationstatus:', error);
       throw error;
     }
   }

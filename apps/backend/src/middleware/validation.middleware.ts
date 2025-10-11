@@ -17,28 +17,28 @@ export const validatePilotRegistration = (req: Request, res: Response, next: Nex
   const { careHomeName, location, region, size, type, contactEmail, contactPhone } = req.body;
 
   // Required fields validation
-  if (!careHomeName || typeof careHomeName !== 'string' || careHomeName.trim().length === 0) {
+  if (!careHomeName || typeofcareHomeName !== 'string' || careHomeName.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Care home name is required and must be a non-empty string'
     });
   }
 
-  if (!location || typeof location !== 'string' || location.trim().length === 0) {
+  if (!location || typeoflocation !== 'string' || location.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Location is required and must be a non-empty string'
     });
   }
 
-  if (!region || typeof region !== 'string' || region.trim().length === 0) {
+  if (!region || typeofregion !== 'string' || region.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Region is required and must be a non-empty string'
     });
   }
 
-  if (!size || typeof size !== 'number' || size <= 0) {
+  if (!size || typeofsize !== 'number' || size <= 0) {
     return res.status(400).json({
       success: false,
       message: 'Size is required and must be a positive number'
@@ -48,18 +48,18 @@ export const validatePilotRegistration = (req: Request, res: Response, next: Nex
   if (!type || !['nursing', 'residential', 'dementia', 'mixed'].includes(type)) {
     return res.status(400).json({
       success: false,
-      message: 'Type is required and must be one of: nursing, residential, dementia, mixed'
+      message: 'Type is required and must be oneof: nursing, residential, dementia, mixed'
     });
   }
 
-  if (!contactEmail || typeof contactEmail !== 'string' || !isValidEmail(contactEmail)) {
+  if (!contactEmail || typeofcontactEmail !== 'string' || !isValidEmail(contactEmail)) {
     return res.status(400).json({
       success: false,
       message: 'Valid contact email is required'
     });
   }
 
-  if (!contactPhone || typeof contactPhone !== 'string' || contactPhone.trim().length === 0) {
+  if (!contactPhone || typeofcontactPhone !== 'string' || contactPhone.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Contact phone is required and must be a non-empty string'
@@ -95,21 +95,21 @@ export const validatePilotFeedback = (req: Request, res: Response, next: NextFun
   const { tenantId, module, description, severity, suggestedFix, submittedBy } = req.body;
 
   // Required fields validation
-  if (!tenantId || typeof tenantId !== 'string' || tenantId.trim().length === 0) {
+  if (!tenantId || typeoftenantId !== 'string' || tenantId.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Tenant ID is required and must be a non-empty string'
     });
   }
 
-  if (!module || typeof module !== 'string' || module.trim().length === 0) {
+  if (!module || typeofmodule !== 'string' || module.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Module is required and must be a non-empty string'
     });
   }
 
-  if (!description || typeof description !== 'string' || description.trim().length < 10) {
+  if (!description || typeofdescription !== 'string' || description.trim().length < 10) {
     return res.status(400).json({
       success: false,
       message: 'Description is required and must be at least 10 characters long'
@@ -119,11 +119,11 @@ export const validatePilotFeedback = (req: Request, res: Response, next: NextFun
   if (!severity || !['low', 'medium', 'high', 'critical'].includes(severity)) {
     return res.status(400).json({
       success: false,
-      message: 'Severity is required and must be one of: low, medium, high, critical'
+      message: 'Severity is required and must be oneof: low, medium, high, critical'
     });
   }
 
-  if (!submittedBy || typeof submittedBy !== 'string' || submittedBy.trim().length === 0) {
+  if (!submittedBy || typeofsubmittedBy !== 'string' || submittedBy.trim().length === 0) {
     return res.status(400).json({
       success: false,
       message: 'Submitted by is required and must be a non-empty string'
@@ -131,7 +131,7 @@ export const validatePilotFeedback = (req: Request, res: Response, next: NextFun
   }
 
   // Optional fields validation
-  if (suggestedFix && typeof suggestedFix !== 'string') {
+  if (suggestedFix && typeofsuggestedFix !== 'string') {
     return res.status(400).json({
       success: false,
       message: 'Suggested fix must be a string'

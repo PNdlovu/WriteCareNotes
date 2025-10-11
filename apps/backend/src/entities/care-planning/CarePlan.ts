@@ -284,7 +284,7 @@ export class CarePlan {
       this.careGoals = [];
     }
     
-    constnewGoal: CareGoal = {
+    const newGoal: CareGoal = {
       ...goal,
       id: `goal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
@@ -307,7 +307,7 @@ export class CarePlan {
       this.riskAssessments = [];
     }
     
-    constnewRisk: RiskAssessment = {
+    const newRisk: RiskAssessment = {
       ...risk,
       id: `risk_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
@@ -330,7 +330,7 @@ export class CarePlan {
       this.residentPreferences = [];
     }
     
-    constnewPreference: ResidentPreference = {
+    const newPreference: ResidentPreference = {
       ...preference,
       dateRecorded: new Date(),
       recordedBy

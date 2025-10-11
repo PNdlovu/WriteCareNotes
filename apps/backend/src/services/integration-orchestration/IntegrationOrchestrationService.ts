@@ -19,7 +19,7 @@ import { WorkflowOrchestration, WorkflowStatus } from '../../entities/integratio
 export class IntegrationOrchestrationService {
   privateworkflowRepository: Repository<WorkflowOrchestration>;
 
-  constructor() {
+  const ructor() {
     this.workflowRepository = AppDataSource.getRepository(WorkflowOrchestration);
   }
 
@@ -35,7 +35,7 @@ export class IntegrationOrchestrationService {
 
       return await this.workflowRepository.save(workflow);
     } catch (error: unknown) {
-      console.error('Error creating workflow:', error);
+      console.error('Error creatingworkflow:', error);
       throw error;
     }
   }
@@ -50,7 +50,7 @@ export class IntegrationOrchestrationService {
         successRate: workflows.length > 0 ? (workflows.filter(w => w.isCompleted()).length / workflows.length) * 100 : 100
       };
     } catch (error: unknown) {
-      console.error('Error getting orchestration analytics:', error);
+      console.error('Error getting orchestrationanalytics:', error);
       throw error;
     }
   }

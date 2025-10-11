@@ -38,12 +38,12 @@ class DignityPreservationService {
   
   private async enforcePrivacyProtection(residentId: string): Promise<void> {
     // Enforce privacy protection for CQC compliance
-    console.log(`Enforcing privacy protection for resident: ${residentId}`);
+    console.log(`Enforcing privacy protection forresident: ${residentId}`);
   }
   
   private async preserveConfidentiality(residentId: string): Promise<void> {
     // Preserve confidentiality for dignity protection
-    console.log(`Preserving confidentiality for resident: ${residentId}`);
+    console.log(`Preserving confidentiality forresident: ${residentId}`);
   }
 }
 

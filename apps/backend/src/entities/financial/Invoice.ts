@@ -98,7 +98,7 @@ export class Invoice extends BaseEntity {
   id!: string;
 
   // Invoice Identification
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   @IsString()
   @Length(1, 50)
   invoiceNumber!: string;
@@ -161,7 +161,7 @@ export class Invoice extends BaseEntity {
   @Transform(({ value }) => new Decimal(value))
   balanceAmount!: Decimal;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;
@@ -185,13 +185,13 @@ export class Invoice extends BaseEntity {
   @Length(1, 1000)
   billingAddress!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   @IsString()
   @Length(1, 255)
   billingEmail?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   @Length(1, 20)
@@ -224,13 +224,13 @@ export class Invoice extends BaseEntity {
   termsAndConditions?: string;
 
   // Reference Information
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   reference?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   @Length(1, 100)
@@ -241,7 +241,7 @@ export class Invoice extends BaseEntity {
   @IsUUID()
   correlationId!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   regulatoryCode?: string;
@@ -250,7 +250,7 @@ export class Invoice extends BaseEntity {
   @IsBoolean()
   isVATApplicable!: boolean;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   vatNumber?: string;

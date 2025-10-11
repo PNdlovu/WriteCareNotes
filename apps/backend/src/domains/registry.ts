@@ -40,10 +40,10 @@ export const DOMAIN_REGISTRY = {
 export type DomainName = keyof typeof DOMAIN_REGISTRY;
 
 export class DomainRegistry {
-  private static instance: DomainRegistry;
+  private staticinstance: DomainRegistry;
   privatemodules: Map<DomainName, DomainModule> = new Map();
 
-  private constructor() {
+  private const ructor() {
     this.initializeDomains();
   }
 

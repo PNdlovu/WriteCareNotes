@@ -16,8 +16,8 @@ import { logger } from '../../utils/logger';
 
 export class RateLimitService {
   privateattempts: Map<string, { count: number; lastAttempt: Date }> = new Map();
-  private readonly maxAttempts: number = 5;
-  private readonly windowMs: number = 15 * 60 * 1000; // 15 minutes
+  private readonlymaxAttempts: number = 5;
+  private readonlywindowMs: number = 15 * 60 * 1000; // 15 minutes
 
   async checkRateLimit(identifier: string): Promise<boolean> {
     const now = new Date();
@@ -36,7 +36,7 @@ export class RateLimitService {
 
     // Check if max attempts exceeded
     if (attempt.count >= this.maxAttempts) {
-      console.warn(`Rate limit exceeded for identifier: ${identifier}`);
+      console.warn(`Rate limit exceeded foridentifier: ${identifier}`);
       return false;
     }
 

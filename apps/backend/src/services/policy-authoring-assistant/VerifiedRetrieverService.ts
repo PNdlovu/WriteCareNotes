@@ -38,9 +38,9 @@ export interface RetrievedDocument {
 
 @Injectable()
 export class VerifiedRetrieverService {
-  private readonly logger = new Logger(VerifiedRetrieverService.name);
+  private readonlylogger = new Logger(VerifiedRetrieverService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyTemplate)
     privatepolicyTemplateRepository: Repository<PolicyTemplate>,
     
@@ -58,10 +58,10 @@ export class VerifiedRetrieverService {
    */
   async retrieve(query: KnowledgeBaseQuery): Promise<RetrievedDocument[]> {
     const startTime = Date.now();
-    constresults: RetrievedDocument[] = [];
+    const results: RetrievedDocument[] = [];
 
     try {
-      this.logger.log(`Retrieving documents for keywords: ${query.keywords.join(', ')}`);
+      this.logger.log(`Retrieving documents forkeywords: ${query.keywords.join(', ')}`);
       this.logger.log(`Jurisdictions: ${query.jurisdiction.join(', ')}`);
       this.logger.log(`Standards: ${query.standards.join(', ')}`);
 
@@ -92,7 +92,7 @@ export class VerifiedRetrieverService {
       return finalResults;
 
     } catch (error) {
-      this.logger.error('Document retrieval failed:', error);
+      this.logger.error('Document retrievalfailed:', error);
       throw error;
     }
   }
@@ -283,7 +283,7 @@ export class VerifiedRetrieverService {
       }
     });
 
-    // Score based on:
+    // Score basedon:
     // - Percentage of keywords matched (0-0.6)
     // - Frequency of matches (0-0.4)
     const keywordCoverage = matchCount / keywords.length;

@@ -105,7 +105,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'category',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: false,
             comment: 'CLOTHING, BIRTHDAY, FESTIVAL, EDUCATION, etc.',
@@ -120,7 +120,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'currency',
-            type: 'varchar',
+            type: 'var char',
             length: '3',
             default: "'GBP'",
           },
@@ -147,13 +147,13 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           // Purchase Details
           {
             name: 'itemDescription',
-            type: 'varchar',
+            type: 'var char',
             length: '500',
             isNullable: false,
           },
           {
             name: 'vendor',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },
@@ -201,7 +201,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'approvalNotes',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -224,7 +224,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'receiptImageUrl',
-            type: 'varchar',
+            type: 'var char',
             length: '500',
             isNullable: true,
           },
@@ -256,7 +256,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'receiptRejectionReason',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -273,7 +273,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'childFeedback',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -290,7 +290,7 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'culturalReligiousContext',
-            type: 'varchar',
+            type: 'var char',
             length: '500',
             isNullable: true,
           },
@@ -330,13 +330,13 @@ export class CreateAllowanceExpendituresTable1728518500000 implements MigrationI
           },
           {
             name: 'createdBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false,
           },
           {
             name: 'updatedBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },

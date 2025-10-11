@@ -57,7 +57,7 @@ import { CPPCategory } from '../entities/ChildProtectionPlan';
 export class SafeguardingController {
   privatesafeguardingService: SafeguardingService;
 
-  constructor() {
+  const ructor() {
     this.safeguardingService = new SafeguardingService();
   }
 
@@ -153,7 +153,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error reporting incident:', error);
+      console.error('Error reportingincident:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to report incident'
@@ -188,7 +188,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching incident:', error);
+      console.error('Error fetchingincident:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch incident'
@@ -228,7 +228,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error updating incident status:', error);
+      console.error('Error updating incidentstatus:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to update incident status'
@@ -274,7 +274,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error recording LADO notification:', error);
+      console.error('Error recording LADOnotification:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to record LADO notification'
@@ -307,7 +307,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching overdue incidents:', error);
+      console.error('Error fetching overdueincidents:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch overdue incidents'
@@ -334,7 +334,7 @@ export class SafeguardingController {
         limit = 20
       } = req.query;
 
-      constwhere: any = { organizationId };
+      const where: any = { organizationId };
 
       if (childId) where.childId = childId;
       if (type) where.type = type;
@@ -361,7 +361,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error searching incidents:', error);
+      console.error('Error searchingincidents:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to search incidents'
@@ -423,7 +423,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error raising concern:', error);
+      console.error('Error raisingconcern:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to raise concern'
@@ -463,7 +463,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error assessing concern:', error);
+      console.error('Error assessingconcern:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to assess concern'
@@ -497,7 +497,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error escalating concern:', error);
+      console.error('Error escalatingconcern:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to escalate concern'
@@ -563,7 +563,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error creating CPP:', error);
+      console.error('Error creatingCPP:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to create child protection plan'
@@ -598,7 +598,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching CPP:', error);
+      console.error('Error fetchingCPP:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch child protection plan'
@@ -624,7 +624,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching overdue CPP reviews:', error);
+      console.error('Error fetching overdue CPPreviews:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch overdue reviews'
@@ -642,7 +642,7 @@ export class SafeguardingController {
       const organizationId = (req as any).user?.organizationId;
       const { startDate, endDate } = req.query;
 
-      constwhere: any = { organizationId };
+      const where: any = { organizationId };
 
       const [
         totalIncidents,
@@ -677,7 +677,7 @@ export class SafeguardingController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching statistics:', error);
+      console.error('Error fetchingstatistics:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch statistics'

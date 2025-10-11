@@ -10,13 +10,13 @@ export class CreateOnboardingMigrationTables1704067260000 implements MigrationIn
         await queryRunner.query(`
             CREATE TABLE "data_migrations" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-                "migrationName" character varying(100) NOT NULL,
-                "description" character varying(255) NOT NULL,
-                "sourceSystem" character varying(50) NOT NULL,
-                "targetSystem" character varying(50) NOT NULL,
-                "migrationType" character varying(50) NOT NULL,
+                "migrationName" character var ying(100) NOT NULL,
+                "description" character var ying(255) NOT NULL,
+                "sourceSystem" character var ying(50) NOT NULL,
+                "targetSystem" character var ying(50) NOT NULL,
+                "migrationType" character var ying(50) NOT NULL,
                 "migrationConfig" jsonb NOT NULL,
-                "status" character varying(20) NOT NULL DEFAULT 'pending',
+                "status" character var ying(20) NOT NULL DEFAULT 'pending',
                 "totalRecords" integer NOT NULL DEFAULT 0,
                 "processedRecords" integer NOT NULL DEFAULT 0,
                 "successfulRecords" integer NOT NULL DEFAULT 0,
@@ -28,18 +28,18 @@ export class CreateOnboardingMigrationTables1704067260000 implements MigrationIn
                 "errorLog" jsonb NOT NULL DEFAULT '[]',
                 "migrationResults" jsonb,
                 "rollbackInfo" jsonb,
-                "executedBy" character varying(100),
-                "approvedBy" character varying(100),
+                "executedBy" character var ying(100),
+                "approvedBy" character var ying(100),
                 "approvedAt" TIMESTAMP,
                 "progressTracking" jsonb,
                 "dataQualityReport" jsonb,
                 "isDryRun" boolean NOT NULL DEFAULT false,
                 "requiresApproval" boolean NOT NULL DEFAULT false,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "UQ_data_migrations_migrationName" UNIQUE ("migrationName"),
-                CONSTRAINT "PK_data_migrations" PRIMARY KEY ("id")
+                CONST RAINT "UQ_data_migrations_migrationName" UNIQUE ("migrationName"),
+                CONST RAINT "PK_data_migrations" PRIMARY KEY ("id")
             )
         `);
 
@@ -48,29 +48,29 @@ export class CreateOnboardingMigrationTables1704067260000 implements MigrationIn
             CREATE TABLE "migration_mappings" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "migrationId" uuid NOT NULL,
-                "sourceField" character varying(100) NOT NULL,
-                "targetField" character varying(100) NOT NULL,
-                "sourceTable" character varying(50) NOT NULL,
-                "targetTable" character varying(50) NOT NULL,
+                "sourceField" character var ying(100) NOT NULL,
+                "targetField" character var ying(100) NOT NULL,
+                "sourceTable" character var ying(50) NOT NULL,
+                "targetTable" character var ying(50) NOT NULL,
                 "dataTypeMapping" jsonb NOT NULL,
                 "transformationRules" jsonb NOT NULL,
                 "isRequired" boolean NOT NULL DEFAULT true,
-                "defaultValue" character varying(255),
-                "description" character varying(500),
+                "defaultValue" character var ying(255),
+                "description" character var ying(500),
                 "mappingOrder" integer NOT NULL DEFAULT 0,
                 "isActive" boolean NOT NULL DEFAULT true,
                 "validationResults" jsonb,
                 "transformationResults" jsonb,
-                "sourceDataType" character varying(50),
-                "targetDataType" character varying(50),
+                "sourceDataType" character var ying(50),
+                "targetDataType" character var ying(50),
                 "allowNulls" boolean NOT NULL DEFAULT false,
-                "customValidationFunction" character varying(100),
+                "customValidationFunction" character var ying(100),
                 "businessRules" jsonb,
                 "lookupData" jsonb,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_migration_mappings" PRIMARY KEY ("id")
+                CONST RAINT "PK_migration_mappings" PRIMARY KEY ("id")
             )
         `);
 
@@ -87,17 +87,17 @@ export class CreateOnboardingMigrationTables1704067260000 implements MigrationIn
         await queryRunner.query(`CREATE INDEX "IDX_migration_mappings_targetTable" ON "migration_mappings" ("targetTable")`);
         await queryRunner.query(`CREATE INDEX "IDX_migration_mappings_isActive" ON "migration_mappings" ("isActive")`);
 
-        // Add foreign key constraints
+        // Add foreign key const raints
         await queryRunner.query(`
             ALTER TABLE "migration_mappings" 
-            ADD CONSTRAINT "FK_migration_mappings_migrationId" 
+            ADD CONST RAINT "FK_migration_mappings_migrationId" 
             FOREIGN KEY ("migrationId") REFERENCES "data_migrations"("id") ON DELETE CASCADE ON UPDATE NO ACTION
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop foreign key constraints
-        await queryRunner.query(`ALTER TABLE "migration_mappings" DROP CONSTRAINT "FK_migration_mappings_migrationId"`);
+        // Drop foreign key const raints
+        await queryRunner.query(`ALTER TABLE "migration_mappings" DROP CONST RAINT "FK_migration_mappings_migrationId"`);
 
         // Drop indexes
         await queryRunner.query(`DROP INDEX "IDX_migration_mappings_isActive"`);

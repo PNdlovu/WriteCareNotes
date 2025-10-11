@@ -68,7 +68,7 @@ export interface PolicyFilterOptions {
 
 @Injectable()
 export class PolicyStatusService {
-  private readonly logger = new Logger(PolicyStatusService.name);
+  private readonlylogger = new Logger(PolicyStatusService.name);
 
   /**
    * Calculate the color-coded status for a policy
@@ -171,7 +171,7 @@ export class PolicyStatusService {
       };
     }
 
-    // ✅ Green (Compliant) - All good!
+    // ✅ Green (Compliant) - Allgood!
     return {
       color: PolicyTrackingColor.GREEN,
       icon: '✅',
@@ -211,7 +211,7 @@ export class PolicyStatusService {
       const reviewDate = policy.reviewDue;
       const daysUntilReview = reviewDate ? Math.ceil((reviewDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 999;
 
-      constdashboardItem: PolicyDashboardItem = {
+      const dashboardItem: PolicyDashboardItem = {
         policy,
         status,
         acknowledgmentStats: {
@@ -424,7 +424,7 @@ export class PolicyStatusService {
   ): boolean {
     if (!previousStatus) return false;
 
-    // Trigger notification if:
+    // Trigger notificationif:
     // 1. Status color changed to red (critical)
     // 2. Status changed from green to amber/red (degradation)
     // 3. Action became required when it wasn't before

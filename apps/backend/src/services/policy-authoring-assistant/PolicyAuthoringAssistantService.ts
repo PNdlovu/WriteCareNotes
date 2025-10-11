@@ -16,7 +16,7 @@
  * World-first RAG-based AI assistant for care home policy authoring
  * with zero hallucination guarantees and complete audit integrity.
  * 
- * Key Features:
+ * KeyFeatures:
  * - Retrieval-Augmented Generation (RAG) architecture
  * - Zero freeform generation (verified sources only)
  * - Immutable audit trails with source attribution
@@ -24,7 +24,7 @@
  * - Human-in-the-loop workflows
  * - Role-based access controls
  * 
- * Competitive Advantage:
+ * CompetitiveAdvantage:
  * - ONLY RAG-based policy assistant in British Isles care homes
  * - ONLY zero hallucination guarantee in care management software
  * - ONLY multi-jurisdictional AI system (all 7 regulatory bodies)
@@ -151,14 +151,14 @@ export interface KnowledgeBaseQuery {
  */
 @Injectable()
 export class PolicyAuthoringAssistantService {
-  private readonly logger = new Logger(PolicyAuthoringAssistantService.name);
+  private readonlylogger = new Logger(PolicyAuthoringAssistantService.name);
 
   // Guardrail thresholds
   private readonly MIN_CONFIDENCE_THRESHOLD = 0.75;
   private readonly MIN_SOURCE_REFERENCES = 2;
   private readonly MAX_RETRIEVAL_RESULTS = 10;
 
-  constructor(
+  const ructor(
     @InjectRepository(AISuggestionLog)
     privatesuggestionLogRepository: Repository<AISuggestionLog>,
     
@@ -171,18 +171,18 @@ export class PolicyAuthoringAssistantService {
     @InjectRepository(User)
     privateuserRepository: Repository<User>,
     
-    private readonly aiSafetyGuard: AISafetyGuardService,
-    private readonly aiTransparency: AITransparencyService,
-    private readonly auditTrail: AuditService,
-    private readonly promptOrchestrator: PromptOrchestratorService,
-    private readonly verifiedRetriever: VerifiedRetrieverService,
-    private readonly clauseSynthesizer: ClauseSynthesizerService,
-    private readonly fallbackHandler: FallbackHandlerService,
-    private readonly roleGuard: RoleGuardService,
+    private readonlyaiSafetyGuard: AISafetyGuardService,
+    private readonlyaiTransparency: AITransparencyService,
+    private readonlyauditTrail: AuditService,
+    private readonlypromptOrchestrator: PromptOrchestratorService,
+    private readonlyverifiedRetriever: VerifiedRetrieverService,
+    private readonlyclauseSynthesizer: ClauseSynthesizerService,
+    private readonlyfallbackHandler: FallbackHandlerService,
+    private readonlyroleGuard: RoleGuardService,
   ) {}
 
   /**
-   * 🚀 MAIN ENTRY POINT: Generate AI Suggestion
+   * 🚀 MAIN ENTRYPOINT: Generate AI Suggestion
    * 
    * Orchestrates the complete RAG pipeline with guardrails
    */
@@ -246,7 +246,7 @@ export class PolicyAuthoringAssistantService {
       }
 
       // ✅ SUCCESS: Build response with complete audit metadata
-      constresponse: AISuggestionResponse = {
+      const response: AISuggestionResponse = {
         id: suggestionId,
         suggestion: synthesizedSuggestion.content,
         sourceReferences: retrievedContent.map(doc => ({
@@ -295,7 +295,7 @@ export class PolicyAuthoringAssistantService {
       return response;
 
     } catch (error) {
-      this.logger.error(`[${suggestionId}] AI suggestion generation failed:`, error);
+      this.logger.error(`[${suggestionId}] AI suggestion generationfailed:`, error);
       
       // Log failure for audit trail
       await this.logSuggestion(suggestionId, prompt, null, user, 'error', error.message);
@@ -317,11 +317,11 @@ export class PolicyAuthoringAssistantService {
     startTime: number,
     reason: 'insufficient_sources' | 'low_confidence' | 'safety_validation_failed' | 'system_error',
   ): Promise<AISuggestionResponse> {
-    this.logger.warn(`[${suggestionId}] Fallback triggered: ${reason}`);
+    this.logger.warn(`[${suggestionId}] Fallbacktriggered: ${reason}`);
 
     const fallback = await this.fallbackHandler.generateFallback(prompt, reason);
 
-    constresponse: AISuggestionResponse = {
+    const response: AISuggestionResponse = {
       id: suggestionId,
       suggestion: null,
       sourceReferences: [],
@@ -357,7 +357,7 @@ export class PolicyAuthoringAssistantService {
     errorMessage?: string,
   ): Promise<void> {
     // Map intent string to AIIntent enum
-    constintentMap: Record<string, AIIntent> = {
+    const intentMap: Record<string, AIIntent> = {
       'suggest_clause': AIIntent.SUGGEST_CLAUSE,
       'map_policy': AIIntent.MAP_POLICY,
       'review_policy': AIIntent.REVIEW_POLICY,
@@ -366,7 +366,7 @@ export class PolicyAuthoringAssistantService {
     };
     
     // Map status string to SuggestionStatus enum
-    conststatusMap: Record<string, SuggestionStatus> = {
+    const statusMap: Record<string, SuggestionStatus> = {
       'success': SuggestionStatus.SUCCESS,
       'fallback': SuggestionStatus.FALLBACK,
       'error': SuggestionStatus.ERROR,
@@ -434,7 +434,7 @@ export class PolicyAuthoringAssistantService {
 
     await this.suggestionLogRepository.save(log);
 
-    this.logger.log(`[${suggestionId}] User decision recorded: ${decision}`);
+    this.logger.log(`[${suggestionId}] User decisionrecorded: ${decision}`);
   }
 
   /**
@@ -563,7 +563,7 @@ export class PolicyAuthoringAssistantService {
  */
 @Injectable()
 export class PromptOrchestratorService {
-  private readonly logger = new Logger(PromptOrchestratorService.name);
+  private readonlylogger = new Logger(PromptOrchestratorService.name);
 
   async validateAndRoute(prompt: AISuggestionPrompt): Promise<AISuggestionPrompt> {
     // Validate required fields
@@ -619,7 +619,7 @@ export class PromptOrchestratorService {
         throw new Error(`Unknown intent: ${prompt.intent}`);
     }
 
-    this.logger.log(`Prompt validated and routed: ${prompt.intent} -> ${routedPrompt.outputFormat}`);
+    this.logger.log(`Prompt validated androuted: ${prompt.intent} -> ${routedPrompt.outputFormat}`);
 
     return routedPrompt;
   }

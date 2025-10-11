@@ -15,12 +15,12 @@ import { EventEmitter2 } from "eventemitter2";
  * Base Organization Hierarchy Error
  */
 export class OrganizationHierarchyError extends Error {
-  public readonly code: string;
-  public readonly correlationId: string;
-  public readonly timestamp: Date;
+  public readonlycode: string;
+  public readonlycorrelationId: string;
+  public readonlytimestamp: Date;
   public readonly context?: Record<string, any>;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     correlationId: string,
@@ -55,9 +55,9 @@ export class OrganizationHierarchyError extends Error {
  * Organization Validation Error
  */
 export class OrganizationValidationError extends OrganizationHierarchyError {
-  public readonly validationErrors: ValidationError[];
+  public readonlyvalidationErrors: ValidationError[];
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     validationErrors: ValidationError[],
@@ -79,11 +79,11 @@ export class OrganizationValidationError extends OrganizationHierarchyError {
  * Hierarchy Violation Error
  */
 export class HierarchyViolationError extends OrganizationHierarchyError {
-  public readonly violationType: HierarchyViolationType;
+  public readonlyviolationType: HierarchyViolationType;
   public readonly organizationId?: string;
   public readonly parentOrganizationId?: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     violationType: HierarchyViolationType,
@@ -103,11 +103,11 @@ export class HierarchyViolationError extends OrganizationHierarchyError {
  * Tenant Isolation Error
  */
 export class TenantIsolationError extends OrganizationHierarchyError {
-  public readonly userTenantId: string;
-  public readonly targetTenantId: string;
-  public readonly operationType: string;
+  public readonlyuserTenantId: string;
+  public readonlytargetTenantId: string;
+  public readonlyoperationType: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     userTenantId: string,
@@ -137,11 +137,11 @@ export class TenantIsolationError extends OrganizationHierarchyError {
  * Configuration Error
  */
 export class ConfigurationError extends OrganizationHierarchyError {
-  public readonly organizationId: string;
+  public readonlyorganizationId: string;
   public readonly configurationCategory?: string;
   public readonly configurationKey?: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     organizationId: string,
@@ -161,11 +161,11 @@ export class ConfigurationError extends OrganizationHierarchyError {
  * Dashboard Generation Error
  */
 export class DashboardGenerationError extends OrganizationHierarchyError {
-  public readonly dashboardLevel: string;
-  public readonly organizationScope: string[];
-  public readonly widgetErrors: WidgetError[];
+  public readonlydashboardLevel: string;
+  public readonlyorganizationScope: string[];
+  public readonlywidgetErrors: WidgetError[];
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     dashboardLevel: string,
@@ -185,11 +185,11 @@ export class DashboardGenerationError extends OrganizationHierarchyError {
  * Report Generation Error
  */
 export class ReportGenerationError extends OrganizationHierarchyError {
-  public readonly reportType: string;
-  public readonly organizationScope: string[];
-  public readonly dataErrors: DataError[];
+  public readonlyreportType: string;
+  public readonlyorganizationScope: string[];
+  public readonlydataErrors: DataError[];
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     reportType: string,
@@ -209,12 +209,12 @@ export class ReportGenerationError extends OrganizationHierarchyError {
  * Permission Denied Error
  */
 export class PermissionDeniedError extends OrganizationHierarchyError {
-  public readonly userId: string;
-  public readonly requiredPermissions: string[];
+  public readonlyuserId: string;
+  public readonlyrequiredPermissions: string[];
   public readonly organizationId?: string;
-  public readonly operationType: string;
+  public readonlyoperationType: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     userId: string,
@@ -236,11 +236,11 @@ export class PermissionDeniedError extends OrganizationHierarchyError {
  * Data Aggregation Error
  */
 export class DataAggregationError extends OrganizationHierarchyError {
-  public readonly aggregationType: string;
-  public readonly sourceOrganizations: string[];
-  public readonly failedOrganizations: string[];
+  public readonlyaggregationType: string;
+  public readonlysourceOrganizations: string[];
+  public readonlyfailedOrganizations: string[];
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     aggregationType: string,
@@ -260,10 +260,10 @@ export class DataAggregationError extends OrganizationHierarchyError {
  * Hierarchy Cycle Error
  */
 export class HierarchyCycleError extends OrganizationHierarchyError {
-  public readonly cycleNodes: string[];
-  public readonly cycleLength: number;
+  public readonlycycleNodes: string[];
+  public readonlycycleLength: number;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     cycleNodes: string[],
@@ -280,13 +280,13 @@ export class HierarchyCycleError extends OrganizationHierarchyError {
  * Organization Migration Error
  */
 export class OrganizationMigrationError extends OrganizationHierarchyError {
-  public readonly organizationId: string;
+  public readonlyorganizationId: string;
   public readonly sourceParentId?: string;
   public readonly targetParentId?: string;
-  public readonly migrationStep: string;
-  public readonly rollbackRequired: boolean;
+  public readonlymigrationStep: string;
+  public readonlyrollbackRequired: boolean;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     organizationId: string,
@@ -377,7 +377,7 @@ export class OrganizationErrorFactory {
     validationErrors: ValidationError[],
     context?: Record<string, any>
   ): OrganizationValidationError {
-    const message = `Organization validation failed: ${validationErrors.length} errors found`;
+    const message = `Organization validationfailed: ${validationErrors.length} errors found`;
     return new OrganizationValidationError(message, correlationId, validationErrors, context);
   }
 
@@ -391,7 +391,7 @@ export class OrganizationErrorFactory {
     parentOrganizationId?: string,
     context?: Record<string, any>
   ): HierarchyViolationError {
-    const message = `Hierarchy violation detected: ${violationType}`;
+    const message = `Hierarchy violationdetected: ${violationType}`;
     return new HierarchyViolationError(
       message,
       correlationId,
@@ -412,7 +412,7 @@ export class OrganizationErrorFactory {
     operationType: string,
     context?: Record<string, any>
   ): TenantIsolationError {
-    const message = `Tenant isolation violation: User from tenant ${userTenantId} attempted ${operationType} on tenant ${targetTenantId}`;
+    const message = `Tenant isolationviolation: User from tenant ${userTenantId} attempted ${operationType} on tenant ${targetTenantId}`;
     return new TenantIsolationError(
       message,
       correlationId,
@@ -533,7 +533,7 @@ export class OrganizationErrorFactory {
     targetParentId?: string,
     context?: Record<string, any>
   ): OrganizationMigrationError {
-    const message = `Organization migration failed at step: ${migrationStep}`;
+    const message = `Organization migration failed atstep: ${migrationStep}`;
     return new OrganizationMigrationError(
       message,
       correlationId,

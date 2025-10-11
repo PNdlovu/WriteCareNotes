@@ -50,13 +50,13 @@ export interface ComplianceMetrics {
 
 @Injectable()
 export class ComplianceAgent {
-  private readonly logger = new Logger(ComplianceAgent.name);
+  private readonlylogger = new Logger(ComplianceAgent.name);
   privatemonitoringInterval: NodeJS.Timeout | null = null;
-  private isMonitoring = false;
+  privateisMonitoring = false;
 
-  constructor(
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -75,7 +75,7 @@ export class ComplianceAgent {
       try {
         await this.performComplianceCheck();
       } catch (error) {
-        this.logger.error('Error during compliance check:', error);
+        this.logger.error('Error during compliancecheck:', error);
       }
     }, 5 * 60 * 1000); // 5 minutes
 
@@ -105,7 +105,7 @@ export class ComplianceAgent {
    */
   async performComplianceCheck(): Promise<ComplianceAnomaly[]> {
     const startTime = Date.now();
-    constanomalies: ComplianceAnomaly[] = [];
+    const anomalies: ComplianceAnomaly[] = [];
 
     try {
       await this.auditService.log({
@@ -149,7 +149,7 @@ export class ComplianceAgent {
         timestamp: new Date()
       });
 
-      this.logger.log(`Compliance check completed: ${anomalies.length} anomalies found`);
+      this.logger.log(`Compliance checkcompleted: ${anomalies.length} anomalies found`);
       return anomalies;
 
     } catch (error) {
@@ -164,7 +164,7 @@ export class ComplianceAgent {
         timestamp: new Date()
       });
 
-      this.logger.error('Compliance check failed:', error);
+      this.logger.error('Compliance checkfailed:', error);
       throw error;
     }
   }
@@ -188,7 +188,7 @@ export class ComplianceAgent {
    * Check for data breaches
    */
   private async checkDataBreaches(): Promise<ComplianceAnomaly[]> {
-    constanomalies: ComplianceAnomaly[] = [];
+    const anomalies: ComplianceAnomaly[] = [];
     
     // Check for suspicious data access patterns
     const suspiciousAccess = await this.auditService.findSuspiciousAccess();
@@ -231,7 +231,7 @@ export class ComplianceAgent {
    * Check for unauthorized access
    */
   private async checkUnauthorizedAccess(): Promise<ComplianceAnomaly[]> {
-    constanomalies: ComplianceAnomaly[] = [];
+    const anomalies: ComplianceAnomaly[] = [];
     
     // Check for failed authentication attempts
     const failedAuth = await this.auditService.findFailedAuthentication();
@@ -274,7 +274,7 @@ export class ComplianceAgent {
    * Check for policy violations
    */
   private async checkPolicyViolations(): Promise<ComplianceAnomaly[]> {
-    constanomalies: ComplianceAnomaly[] = [];
+    const anomalies: ComplianceAnomaly[] = [];
     
     // Check for policy violations in audit logs
     const violations = await this.auditService.findPolicyViolations();
@@ -313,7 +313,7 @@ export class ComplianceAgent {
    * Check for audit gaps
    */
   private async checkAuditGaps(): Promise<ComplianceAnomaly[]> {
-    constanomalies: ComplianceAnomaly[] = [];
+    const anomalies: ComplianceAnomaly[] = [];
     
     // Check for missing audit entries
     const gaps = await this.auditService.findAuditGaps();
@@ -356,7 +356,7 @@ export class ComplianceAgent {
    * Check for consent issues
    */
   private async checkConsentIssues(): Promise<ComplianceAnomaly[]> {
-    constanomalies: ComplianceAnomaly[] = [];
+    const anomalies: ComplianceAnomaly[] = [];
     
     // Check for expired or missing consents
     const consentIssues = await this.complianceService.findConsentIssues();

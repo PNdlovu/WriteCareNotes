@@ -18,12 +18,12 @@ import { Logger } from '@nestjs/common';
 
 @Controller('api/academy-training')
 export class EnhancedAcademyController {
-  private readonly logger = new Logger(EnhancedAcademyController.name);
+  private readonlylogger = new Logger(EnhancedAcademyController.name);
 
-  constructor(
-    private readonly certificationService: StaffCertificationService,
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlycertificationService: StaffCertificationService,
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -64,7 +64,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get academy dashboard:', error);
+      this.logger.error('Failed to get academydashboard:', error);
       throw new HttpException('Failed to get academy dashboard', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -95,7 +95,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to create training module:', error);
+      this.logger.error('Failed to create trainingmodule:', error);
       throw new HttpException('Failed to create training module', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -114,7 +114,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get training modules:', error);
+      this.logger.error('Failed to get trainingmodules:', error);
       throw new HttpException('Failed to get training modules', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -143,7 +143,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to assign training:', error);
+      this.logger.error('Failed to assigntraining:', error);
       throw new HttpException('Failed to assign training', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -168,7 +168,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to start training:', error);
+      this.logger.error('Failed to starttraining:', error);
       throw new HttpException('Failed to start training', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -199,7 +199,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to update progress:', error);
+      this.logger.error('Failed to updateprogress:', error);
       throw new HttpException('Failed to update progress', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -230,7 +230,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to submit assessment:', error);
+      this.logger.error('Failed to submitassessment:', error);
       throw new HttpException('Failed to submit assessment', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -249,7 +249,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get staff certifications:', error);
+      this.logger.error('Failed to get staffcertifications:', error);
       throw new HttpException('Failed to get staff certifications', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -276,7 +276,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to create learning path:', error);
+      this.logger.error('Failed to create learningpath:', error);
       throw new HttpException('Failed to create learning path', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -296,7 +296,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get learning paths:', error);
+      this.logger.error('Failed to get learningpaths:', error);
       throw new HttpException('Failed to get learning paths', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -402,7 +402,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get training analytics:', error);
+      this.logger.error('Failed to get traininganalytics:', error);
       throw new HttpException('Failed to get training analytics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -447,7 +447,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get certification report:', error);
+      this.logger.error('Failed to get certificationreport:', error);
       throw new HttpException('Failed to get certification report', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -476,7 +476,7 @@ export class EnhancedAcademyController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Health check failed:', error);
+      this.logger.error('Health checkfailed:', error);
       throw new HttpException('Health check failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

@@ -23,14 +23,14 @@ export interface ComplianceCheck {
 
 @Injectable()
 export class CQCDigitalStandardsService {
-  private readonly logger = new Logger(CQCDigitalStandardsService.name);
+  private readonlylogger = new Logger(CQCDigitalStandardsService.name);
 
   /**
    * Perform CQC digital standards compliance check
    */
   async performComplianceCheck(tenantId: string): Promise<ComplianceCheck[]> {
     try {
-      constchecks: ComplianceCheck[] = [];
+      const checks: ComplianceCheck[] = [];
 
       // Person-centered care tracking
       checks.push({
@@ -87,8 +87,8 @@ export class CQCDigitalStandardsService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to perform CQC compliance check: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to perform CQC compliance check: ${errorMessage}`);
+      this.logger.error(`Failed to perform CQC compliancecheck: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to perform CQC compliancecheck: ${errorMessage}`);
     }
   }
 
@@ -103,7 +103,7 @@ export class CQCDigitalStandardsService {
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Care plan compliance check failed: ${errorMessage}`);
+      this.logger.error(`Care plan compliance checkfailed: ${errorMessage}`);
       return false;
     }
   }
@@ -119,7 +119,7 @@ export class CQCDigitalStandardsService {
       return true;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Medication compliance check failed: ${errorMessage}`);
+      this.logger.error(`Medication compliance checkfailed: ${errorMessage}`);
       return false;
     }
   }
@@ -149,8 +149,8 @@ export class CQCDigitalStandardsService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to generate CQC inspection report: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to generate CQC inspection report: ${errorMessage}`);
+      this.logger.error(`Failed to generate CQC inspectionreport: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to generate CQC inspectionreport: ${errorMessage}`);
     }
   }
 }

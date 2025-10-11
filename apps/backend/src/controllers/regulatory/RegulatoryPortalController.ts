@@ -18,7 +18,7 @@ import { EnterpriseRegulatoryPortalService } from '../../services/regulatory/Ent
 export class RegulatoryPortalController {
   privateregulatoryService: EnterpriseRegulatoryPortalService;
 
-  constructor() {
+  const ructor() {
     this.regulatoryService = new EnterpriseRegulatoryPortalService();
   }
 

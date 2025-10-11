@@ -158,7 +158,7 @@ export class FinanceModule {
       // Check if all required services are available
       return true;
     } catch (error) {
-      console.error('Finance domain health check failed:', error);
+      console.error('Finance domain health checkfailed:', error);
       return false;
     }
   }

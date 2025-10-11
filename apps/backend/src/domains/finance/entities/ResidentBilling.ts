@@ -15,49 +15,49 @@ export class ResidentBilling {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   residentId: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   residentName: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   residentAddress: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   residentPostcode: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   residentEmail: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   residentPhone: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   nextOfKinName: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   nextOfKinPhone: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   nextOfKinEmail: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   nextOfKinRelationship: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   fundingSource: string; // Self-funded, Local Authority, NHS, etc.
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   localAuthority: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   socialWorkerName: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   socialWorkerPhone: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   socialWorkerEmail: string;
 
   @Column({ type: 'json' })
@@ -66,7 +66,7 @@ export class ResidentBilling {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalMonthlyCharges: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency: string;
 
   @Column({ type: 'boolean', default: true })
@@ -87,10 +87,10 @@ export class ResidentBilling {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   // Relationships

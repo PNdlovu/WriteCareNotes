@@ -105,12 +105,12 @@ export class GardenTherapyService {
   // Logger removed
   privateactiveSessions: Map<string, GardenTherapySession> = new Map();
   privateplantCareSchedules: Map<string, PlantCareSchedule> = new Map();
-  private weatherMonitoring = true;
+  privateweatherMonitoring = true;
 
-  constructor(
+  const ructor(
     
-    private readonly gardenRepository: Repository<GardenAreaEntity>,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlygardenRepository: Repository<GardenAreaEntity>,
+    private readonlyeventEmitter: EventEmitter2,
   ) {
     this.initializeGardenTherapy();
   }
@@ -120,7 +120,7 @@ export class GardenTherapyService {
    */
   async scheduleGardenTherapy(sessionData: Partial<GardenTherapySession>): Promise<GardenTherapySession> {
     try {
-      constsession: GardenTherapySession = {
+      const session: GardenTherapySession = {
         id: `garden_session_${Date.now()}`,
         residentId: sessionData.residentId,
         gardenAreaId: sessionData.gardenAreaId,
@@ -156,11 +156,11 @@ export class GardenTherapyService {
       this.activeSessions.set(session.id, session);
 
       this.eventEmitter.emit('garden_therapy.session_scheduled', session);
-      console.log(`Garden therapy session scheduled: ${session.id} for resident ${session.residentId}`);
+      console.log(`Garden therapy sessionscheduled: ${session.id} for resident ${session.residentId}`);
 
       return session;
     } catch (error: unknown) {
-      console.error(`Failed to schedule garden therapy session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to schedule garden therapysession: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -195,11 +195,11 @@ export class GardenTherapyService {
       this.activeSessions.set(sessionId, session);
 
       this.eventEmitter.emit('garden_therapy.session_started', session);
-      console.log(`Garden therapy session started: ${sessionId}`);
+      console.log(`Garden therapy sessionstarted: ${sessionId}`);
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to start garden therapy session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to start garden therapysession: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -245,11 +245,11 @@ export class GardenTherapyService {
         timestamp: new Date(),
       });
 
-      console.log(`Garden therapy session completed: ${sessionId} with average improvement: ${averageImprovement}`);
+      console.log(`Garden therapy sessioncompleted: ${sessionId} with averageimprovement: ${averageImprovement}`);
 
       return session;
     } catch (error: unknown) {
-      console.error(`Failed to complete garden therapy session: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to complete garden therapysession: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -334,7 +334,7 @@ export class GardenTherapyService {
         plantCareSchedules: this.plantCareSchedules,
       };
     } catch (error: unknown) {
-      console.error(`Failed to create seasonal program: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to create seasonalprogram: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -392,11 +392,11 @@ export class GardenTherapyService {
         timestamp: new Date(),
       });
 
-      console.log(`Designed sensory garden for area ${gardenAreaId} with focus on: ${sensoryFocus.join(', ')}`);
+      console.log(`Designed sensory garden for area ${gardenAreaId} with focuson: ${sensoryFocus.join(', ')}`);
 
       return { design, implementationPlan };
     } catch (error: unknown) {
-      console.error(`Failed to design sensory garden: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to design sensorygarden: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -480,7 +480,7 @@ export class GardenTherapyService {
 
       return outcomes;
     } catch (error: unknown) {
-      console.error(`Failed to monitor therapy outcomes: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to monitor therapyoutcomes: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -491,7 +491,7 @@ export class GardenTherapyService {
   async managePlantCareSchedule(): Promise<PlantCareSchedule[]> {
     try {
       const today = new Date();
-      constupcomingTasks: PlantCareSchedule[] = [];
+      const upcomingTasks: PlantCareSchedule[] = [];
 
       for (const [plantId, schedule] of this.plantCareSchedules) {
         const dueTasks = schedule.careActivities.filter(activity => 
@@ -515,11 +515,11 @@ export class GardenTherapyService {
         timestamp: today,
       });
 
-      console.log(`Managed plant care schedule: ${upcomingTasks.length} plants need attention`);
+      console.log(`Managed plant careschedule: ${upcomingTasks.length} plants need attention`);
 
       return upcomingTasks;
     } catch (error: unknown) {
-      console.error(`Failed to manage plant care schedule: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to manage plant careschedule: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -540,13 +540,13 @@ export class GardenTherapyService {
 
       console.log('Garden therapy service initialized');
     } catch (error: unknown) {
-      console.error(`Failed to initialize garden therapy: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to initialize gardentherapy: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
   private async checkWeatherConditions(): Promise<WeatherCondition> {
     // In a real implementation, this would call a weather API
-    constweather: WeatherCondition = {
+    const weather: WeatherCondition = {
       temperature: 18 + Math.random() * 12, // 18-30°C
       humidity: 40 + Math.random() * 40, // 40-80%
       windSpeed: Math.random() * 20, // 0-20 km/h
@@ -628,7 +628,7 @@ export class GardenTherapyService {
   }
 
   private async recordTherapySession(session: GardenTherapySession): Promise<void> {
-    console.log(`Recording therapy session: ${session.id}`);
+    console.log(`Recording therapysession: ${session.id}`);
     // Implementation would save to database
   }
 
@@ -661,7 +661,7 @@ export class GardenTherapyService {
 
   private async initializePlantCareSchedules(): Promise<void> {
     // Initialize with sample plant care schedules
-    constsampleSchedule: PlantCareSchedule = {
+    const sampleSchedule: PlantCareSchedule = {
       plantId: 'herb_garden_01',
       plantName: 'Mixed Herb Garden',
       gardenAreaId: 'sensory_garden',
@@ -674,7 +674,7 @@ export class GardenTherapyService {
       }],
       therapeuticValue: ['sensory_stimulation', 'culinary_connection'],
       sensoryAttributes: {
-        visual: ['green_foliage', 'varied_textures'],
+        visual: ['green_foliage', 'var ied_textures'],
         tactile: ['soft_leaves', 'different_textures'],
         olfactory: ['fresh_herbs', 'aromatic'],
         auditory: ['rustling_leaves'],

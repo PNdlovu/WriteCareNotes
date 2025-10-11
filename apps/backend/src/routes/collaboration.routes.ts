@@ -8,9 +8,9 @@
  * @since 2.0.0 - Phase 2 Feature 2: Real-Time Collaboration
  * @license Proprietary - WriteCareNotes Platform
  * 
- * API Endpoints:
+ * APIEndpoints:
  * 
- * Session Management:
+ * SessionManagement:
  * - GET    /sessions/:policyId              - Get active sessions for a policy
  * - POST   /sessions                        - Create new collaboration session
  * - GET    /sessions/:sessionId             - Get session details
@@ -20,7 +20,7 @@
  * - GET    /sessions/:sessionId/stats       - Get session statistics
  * - DELETE /sessions/:sessionId             - End session
  * 
- * Comment Management:
+ * CommentManagement:
  * - GET    /comments/policy/:policyId       - Get all comments for a policy
  * - GET    /comments/:commentId             - Get single comment
  * - POST   /comments                        - Create new comment
@@ -38,7 +38,7 @@
  * Authentication:
  * - All endpoints require authentication (JWT token)
  * - User ID and Organization ID extracted from auth headers
- * - Rate limiting: 100 requests/minute per user
+ * - Ratelimiting: 100 requests/minute per user
  * 
  * Validation:
  * - UUID validation for all IDs
@@ -46,7 +46,7 @@
  * - Required field validation
  * - Authorization checks (user can access policy)
  * 
- * Error Handling:
+ * ErrorHandling:
  * - 400: Bad Request (invalid input)
  * - 401: Unauthorized (missing/invalid token)
  * - 403: Forbidden (no permission)
@@ -149,7 +149,7 @@ router.get('/sessions/:policyId', async (req: Request, res: Response) => {
       }
     });
   } catch (error: any) {
-    console.error('Error fetching sessions:', error);
+    console.error('Error fetchingsessions:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch sessions'
@@ -189,7 +189,7 @@ router.post('/sessions', async (req: Request, res: Response) => {
       data: session.toJSON()
     });
   } catch (error: any) {
-    console.error('Error creating session:', error);
+    console.error('Error creatingsession:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to create session'
@@ -223,7 +223,7 @@ router.get('/sessions/detail/:sessionId', async (req: Request, res: Response) =>
       data: session.toJSON()
     });
   } catch (error: any) {
-    console.error('Error fetching session:', error);
+    console.error('Error fetchingsession:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch session'
@@ -252,7 +252,7 @@ router.post('/sessions/:sessionId/join', async (req: Request, res: Response) => 
       message: 'Successfully joined session'
     });
   } catch (error: any) {
-    console.error('Error joining session:', error);
+    console.error('Error joiningsession:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to join session'
@@ -280,7 +280,7 @@ router.delete('/sessions/:sessionId/leave', async (req: Request, res: Response) 
       message: 'Successfully left session'
     });
   } catch (error: any) {
-    console.error('Error leaving session:', error);
+    console.error('Error leavingsession:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to leave session'
@@ -321,7 +321,7 @@ router.get('/sessions/:sessionId/participants', async (req: Request, res: Respon
       }
     });
   } catch (error: any) {
-    console.error('Error fetching participants:', error);
+    console.error('Error fetchingparticipants:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch participants'
@@ -357,7 +357,7 @@ router.get('/sessions/:sessionId/stats', async (req: Request, res: Response) => 
       data: stats
     });
   } catch (error: any) {
-    console.error('Error fetching session stats:', error);
+    console.error('Error fetching sessionstats:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch session statistics'
@@ -385,7 +385,7 @@ router.delete('/sessions/:sessionId', async (req: Request, res: Response) => {
       message: 'Session ended successfully'
     });
   } catch (error: any) {
-    console.error('Error ending session:', error);
+    console.error('Error endingsession:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to end session'
@@ -421,7 +421,7 @@ router.get('/comments/policy/:policyId', async (req: Request, res: Response) => 
       }
     });
   } catch (error: any) {
-    console.error('Error fetching comments:', error);
+    console.error('Error fetchingcomments:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch comments'
@@ -455,7 +455,7 @@ router.get('/comments/:commentId', async (req: Request, res: Response) => {
       data: comment.toJSON(true)
     });
   } catch (error: any) {
-    console.error('Error fetching comment:', error);
+    console.error('Error fetchingcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch comment'
@@ -512,7 +512,7 @@ router.post('/comments', async (req: Request, res: Response) => {
       data: comment.toJSON(false)
     });
   } catch (error: any) {
-    console.error('Error creating comment:', error);
+    console.error('Error creatingcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to create comment'
@@ -550,7 +550,7 @@ router.put('/comments/:commentId', async (req: Request, res: Response) => {
       message: 'Comment updated successfully'
     });
   } catch (error: any) {
-    console.error('Error updating comment:', error);
+    console.error('Error updatingcomment:', error);
     const status = error.message.includes('Only comment author') ? 403 :
                    error.message.includes('too old') ? 403 : 500;
     res.status(error.message === 'Authentication required' ? 401 : status).json({
@@ -580,7 +580,7 @@ router.delete('/comments/:commentId', async (req: Request, res: Response) => {
       message: 'Comment deleted successfully'
     });
   } catch (error: any) {
-    console.error('Error deleting comment:', error);
+    console.error('Error deletingcomment:', error);
     const status = error.message.includes('Only comment author') ? 403 : 500;
     res.status(error.message === 'Authentication required' ? 401 : status).json({
       success: false,
@@ -609,7 +609,7 @@ router.post('/comments/:commentId/resolve', async (req: Request, res: Response) 
       message: 'Comment resolved successfully'
     });
   } catch (error: any) {
-    console.error('Error resolving comment:', error);
+    console.error('Error resolvingcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to resolve comment'
@@ -637,7 +637,7 @@ router.post('/comments/:commentId/reopen', async (req: Request, res: Response) =
       message: 'Comment reopened successfully'
     });
   } catch (error: any) {
-    console.error('Error reopening comment:', error);
+    console.error('Error reopeningcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to reopen comment'
@@ -665,7 +665,7 @@ router.post('/comments/:commentId/like', async (req: Request, res: Response) => 
       message: 'Comment liked successfully'
     });
   } catch (error: any) {
-    console.error('Error liking comment:', error);
+    console.error('Error likingcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to like comment'
@@ -693,7 +693,7 @@ router.delete('/comments/:commentId/like', async (req: Request, res: Response) =
       message: 'Comment unliked successfully'
     });
   } catch (error: any) {
-    console.error('Error unliking comment:', error);
+    console.error('Error unlikingcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to unlike comment'
@@ -721,7 +721,7 @@ router.post('/comments/:commentId/pin', async (req: Request, res: Response) => {
       message: 'Comment pinned successfully'
     });
   } catch (error: any) {
-    console.error('Error pinning comment:', error);
+    console.error('Error pinningcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to pin comment'
@@ -749,7 +749,7 @@ router.delete('/comments/:commentId/pin', async (req: Request, res: Response) =>
       message: 'Comment unpinned successfully'
     });
   } catch (error: any) {
-    console.error('Error unpinning comment:', error);
+    console.error('Error unpinningcomment:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to unpin comment'
@@ -784,7 +784,7 @@ router.get('/comments/mentions/:userId', async (req: Request, res: Response) => 
       }
     });
   } catch (error: any) {
-    console.error('Error fetching mentions:', error);
+    console.error('Error fetchingmentions:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch mentions'
@@ -811,7 +811,7 @@ router.get('/comments/policy/:policyId/stats', async (req: Request, res: Respons
       data: stats
     });
   } catch (error: any) {
-    console.error('Error fetching comment stats:', error);
+    console.error('Error fetching commentstats:', error);
     res.status(error.message === 'Authentication required' ? 401 : 500).json({
       success: false,
       error: error.message || 'Failed to fetch comment statistics'

@@ -139,11 +139,11 @@ export interface DashboardData {
 
 @Injectable()
 export class PilotFeedbackDashboardService {
-  private readonly logger = new Logger(PilotFeedbackDashboardService.name);
+  private readonlylogger = new Logger(PilotFeedbackDashboardService.name);
 
-  constructor(
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -159,7 +159,7 @@ export class PilotFeedbackDashboardService {
         timestamp: new Date()
       });
 
-      constdashboardData: DashboardData = {
+      const dashboardData: DashboardData = {
         overview: {
           totalPilots: 12,
           activePilots: 8,
@@ -255,7 +255,7 @@ export class PilotFeedbackDashboardService {
       return dashboardData;
 
     } catch (error) {
-      this.logger.error(`Failed to get dashboard data: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get dashboarddata: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -266,7 +266,7 @@ export class PilotFeedbackDashboardService {
   async getPilotMetrics(pilotId: string): Promise<PilotMetrics> {
     try {
       // In a real implementation, this would query the database
-      constmetrics: PilotMetrics = {
+      const metrics: PilotMetrics = {
         pilotId,
         careHomeId: 'carehome_001',
         startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
@@ -326,7 +326,7 @@ export class PilotFeedbackDashboardService {
       return metrics;
 
     } catch (error) {
-      this.logger.error(`Failed to get pilot metrics: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get pilotmetrics: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -336,7 +336,7 @@ export class PilotFeedbackDashboardService {
    */
   async submitFeedback(feedback: Omit<PilotFeedback, 'id' | 'submittedAt'>): Promise<PilotFeedback> {
     try {
-      constnewFeedback: PilotFeedback = {
+      const newFeedback: PilotFeedback = {
         ...feedback,
         id: this.generateId(),
         submittedAt: new Date()
@@ -355,11 +355,11 @@ export class PilotFeedbackDashboardService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Pilot feedback submitted: ${newFeedback.id}`);
+      this.logger.log(`Pilot feedbacksubmitted: ${newFeedback.id}`);
       return newFeedback;
 
     } catch (error) {
-      this.logger.error(`Failed to submit feedback: ${error.message}`, error.stack);
+      this.logger.error(`Failed to submitfeedback: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -369,7 +369,7 @@ export class PilotFeedbackDashboardService {
    */
   async generateCaseStudy(pilotId: string, careHomeId: string): Promise<CaseStudy> {
     try {
-      constcaseStudy: CaseStudy = {
+      const caseStudy: CaseStudy = {
         id: this.generateId(),
         pilotId,
         careHomeId,
@@ -463,11 +463,11 @@ export class PilotFeedbackDashboardService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Generated case study: ${caseStudy.id}`);
+      this.logger.log(`Generated casestudy: ${caseStudy.id}`);
       return caseStudy;
 
     } catch (error) {
-      this.logger.error(`Failed to generate case study: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate casestudy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -482,7 +482,7 @@ export class PilotFeedbackDashboardService {
   }): Promise<CaseStudy[]> {
     try {
       // In a real implementation, this would query the database
-      constcaseStudies: CaseStudy[] = [];
+      const caseStudies: CaseStudy[] = [];
 
       await this.auditService.log({
         action: 'case_studies_requested',
@@ -495,7 +495,7 @@ export class PilotFeedbackDashboardService {
       return caseStudies;
 
     } catch (error) {
-      this.logger.error(`Failed to get case studies: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get casestudies: ${error.message}`, error.stack);
       throw error;
     }
   }

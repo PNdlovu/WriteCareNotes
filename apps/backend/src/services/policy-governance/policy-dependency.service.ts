@@ -148,14 +148,14 @@ export interface CreateDependencyDto {
  */
 @Injectable()
 export class PolicyDependencyService {
-  private readonly logger = new Logger(PolicyDependencyService.name);
+  private readonlylogger = new Logger(PolicyDependencyService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyDependency)
-    private readonly dependencyRepository: Repository<PolicyDependency>,
+    private readonlydependencyRepository: Repository<PolicyDependency>,
     
     @InjectRepository(PolicyDraft)
-    private readonly policyRepository: Repository<PolicyDraft>
+    private readonlypolicyRepository: Repository<PolicyDraft>
   ) {}
 
   /**
@@ -242,7 +242,7 @@ export class PolicyDependencyService {
     policyId: string,
     includeInactive: boolean = false
   ): Promise<PolicyDependency[]> {
-    constwhereClause: any = { policyId };
+    const whereClause: any = { policyId };
     
     if (!includeInactive) {
       whereClause.isActive = true;
@@ -272,7 +272,7 @@ export class PolicyDependencyService {
    * ```typescript
    * const analysis = await service.analyzePolicyDependencies('policy-uuid');
    * if (analysis.riskScore > 70) {
-   *   console.warn('High-risk policy change!');
+   *   console.warn('High-risk policychange!');
    * }
    * ```
    */
@@ -282,7 +282,7 @@ export class PolicyDependencyService {
     const allDependencies = await this.getPolicyDependencies(policyId, false);
 
     // Initialize counters
-    constbyType: Record<DependentType, number> = {
+    const byType: Record<DependentType, number> = {
       [DependentType.WORKFLOW]: 0,
       [DependentType.MODULE]: 0,
       [DependentType.TEMPLATE]: 0,
@@ -291,7 +291,7 @@ export class PolicyDependencyService {
       [DependentType.DOCUMENT]: 0
     };
 
-    constbyStrength: Record<DependencyStrength, number> = {
+    const byStrength: Record<DependencyStrength, number> = {
       [DependencyStrength.STRONG]: 0,
       [DependencyStrength.MEDIUM]: 0,
       [DependencyStrength.WEAK]: 0
@@ -317,7 +317,7 @@ export class PolicyDependencyService {
       (byStrength[DependencyStrength.WEAK] * 2)
     );
 
-    this.logger.log(`Analysis complete: ${allDependencies.length} deps, risk score: ${riskScore}`);
+    this.logger.log(`Analysiscomplete: ${allDependencies.length} deps, riskscore: ${riskScore}`);
 
     return {
       policyId,
@@ -363,15 +363,15 @@ export class PolicyDependencyService {
     }
 
     // Initialize graph structures
-    constnodes: DependencyNode[] = [];
-    constedges: DependencyEdge[] = [];
+    const nodes: DependencyNode[] = [];
+    const edges: DependencyEdge[] = [];
     const visited = new Set<string>();
     const strengthBreakdown = { strong: 0, medium: 0, weak: 0 };
-    consttypeBreakdown: Record<string, number> = {};
+    const typeBreakdown: Record<string, number> = {};
     let actualMaxDepth = 0;
 
     // Create root node
-    constrootNode: DependencyNode = {
+    const rootNode: DependencyNode = {
       id: rootPolicy.id,
       type: 'policy',
       label: rootPolicy.title,
@@ -421,7 +421,7 @@ export class PolicyDependencyService {
         if (!visited.has(childId)) {
           visited.add(childId);
 
-          constchildNode: DependencyNode = {
+          const childNode: DependencyNode = {
             id: childId,
             type: childType,
             label: `${childType.charAt(0).toUpperCase()}${childType.slice(1)} ${childId.substring(0, 8)}`,
@@ -483,14 +483,14 @@ export class PolicyDependencyService {
   ): Promise<DependencyStrength> {
     // TODO: Implement actual analysis based on usage patterns
     // For now, return heuristic-based strength:
-    // - Workflows that enforce policies: STRONG
-    // - Modules that reference policies: MEDIUM
-    // - Templates derived from policies: MEDIUM
-    // - Documents that link policies: WEAK
-    // - Assessments that check policies: MEDIUM
-    // - Training modules about policies: WEAK
+    // - Workflows that enforcepolicies: STRONG
+    // - Modules that referencepolicies: MEDIUM
+    // - Templates derived frompolicies: MEDIUM
+    // - Documents that linkpolicies: WEAK
+    // - Assessments that checkpolicies: MEDIUM
+    // - Training modules aboutpolicies: WEAK
 
-    conststrengthMap: Record<DependentType, DependencyStrength> = {
+    const strengthMap: Record<DependentType, DependencyStrength> = {
       [DependentType.WORKFLOW]: DependencyStrength.STRONG,
       [DependentType.MODULE]: DependencyStrength.MEDIUM,
       [DependentType.TEMPLATE]: DependencyStrength.MEDIUM,
@@ -598,14 +598,14 @@ export class PolicyDependencyService {
   ): Promise<PolicyDependency[]> {
     this.logger.log(`Bulk creating ${dependencies.length} dependencies`);
 
-    constcreated: PolicyDependency[] = [];
+    const created: PolicyDependency[] = [];
 
     for (const dto of dependencies) {
       try {
         const dep = await this.createDependency(dto, createdBy);
         created.push(dep);
       } catch (error) {
-        this.logger.warn(`Failed to create dependency: ${error.message}`);
+        this.logger.warn(`Failed to createdependency: ${error.message}`);
         // Continue with other dependencies
       }
     }

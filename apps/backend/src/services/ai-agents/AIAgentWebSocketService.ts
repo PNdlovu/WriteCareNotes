@@ -69,10 +69,10 @@ export class AIAgentWebSocketService {
   privatesessionService: AIAgentSessionService;
   privatepublicAIService: PublicCustomerSupportAIService;
   privatetenantAIService: TenantCareAssistantAIService;
-  private rateLimitWindow = 60000; // 1 minute
-  private maxMessagesPerWindow = 20;
+  privaterateLimitWindow = 60000; // 1 minute
+  privatemaxMessagesPerWindow = 20;
 
-  constructor(io: SocketIOServer) {
+  const ructor(io: SocketIOServer) {
     this.io = io;
     this.sessionService = new AIAgentSessionService();
     this.publicAIService = new PublicCustomerSupportAIService();
@@ -193,9 +193,9 @@ export class AIAgentWebSocketService {
   }): Promise<void> {
     try {
       let authenticated = false;
-      letuserId: string | undefined;
-      letuserRole: string | undefined;
-      lettenantId: string | undefined;
+      let userId: string | undefined;
+      let userRole: string | undefined;
+      let tenantId: string | undefined;
 
       // Authenticate for tenant sessions
       if (data.agentType === 'TENANT') {
@@ -241,7 +241,7 @@ export class AIAgentWebSocketService {
       }
 
       // Create socket session
-      constsocketSession: SocketSession = {
+      const socketSession: SocketSession = {
         socketId: socket.id,
         sessionId,
         agentType: data.agentType,
@@ -320,7 +320,7 @@ export class AIAgentWebSocketService {
         .emit('agent_typing', { sessionId: sessionData.sessionId, typing: true });
 
       // Process message based on agent type
-      letresponse: any;
+      let response: any;
       
       if (sessionData.agentType === 'PUBLIC') {
         response = await this.processPublicMessage(data, sessionData);
@@ -666,7 +666,7 @@ export class AIAgentWebSocketService {
     avgMessageCount: number;
   } {
     const sessions = Array.from(this.activeSessions.values());
-    consttenantSessionCounts: { [tenantId: string]: number } = {};
+    const tenantSessionCounts: { [tenantId: string]: number } = {};
 
     sessions.forEach(session => {
       if (session.tenantId) {
@@ -705,7 +705,7 @@ export class AIAgentWebSocketService {
     try {
       const now = Date.now();
       const inactivityThreshold = 30 * 60 * 1000; // 30 minutes
-      constinactiveSessions: string[] = [];
+      const inactiveSessions: string[] = [];
 
       for (const [socketId, sessionData] of this.activeSessions) {
         const inactiveTime = now - sessionData.lastActivity.getTime();

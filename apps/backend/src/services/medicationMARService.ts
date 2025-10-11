@@ -18,7 +18,7 @@
  * - Side effect reporting (immediate alert to prescriber)
  * - Omission code tracking (01-10 standard NHS codes)
  * - Instant CQC audit trail export
- * - Real-time MAR sheet updates (no more paper!)
+ * - Real-time MAR sheet updates (no morepaper!)
  * - Handwritten note OCR for legacy data
  * 
  * @benefits
@@ -159,13 +159,13 @@ export interface ControlledDrugRegisterEntry {
 
 @Injectable()
 export class MedicationMARService {
-  private readonly logger = new Logger(MedicationMARService.name);
+  private readonlylogger = new Logger(MedicationMARService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(MedicationRecord)
-    private readonly medicationRepository: Repository<MedicationRecord>,
+    private readonlymedicationRepository: Repository<MedicationRecord>,
     
-    private readonly eventEmitter: EventEmitter2
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   // ==========================================
@@ -198,7 +198,7 @@ export class MedicationMARService {
     });
 
     if (!medication) {
-      throw new BadRequestException(`Medication not found: ${medicationId}`);
+      throw new BadRequestException(`Medication notfound: ${medicationId}`);
     }
 
     // Verify medication using photo (AI pill recognition)
@@ -228,7 +228,7 @@ export class MedicationMARService {
     }
 
     // Create administration record
-    constadminRecord: MedicationAdministrationRecord = {
+    const adminRecord: MedicationAdministrationRecord = {
       id: `admin_${Date.now()}_${medicationId}`,
       medicationId: medication.id,
       medicationName: medication.medicationName,
@@ -283,7 +283,7 @@ export class MedicationMARService {
     // Emit event for real-time MAR sheet update
     this.eventEmitter.emit('medication.administered', adminRecord);
 
-    this.logger.log(`✅ Medication administered: ${medication.medicationName} to ${medication.child.firstName} by ${administrationData.administeredBy}`);
+    this.logger.log(`✅ Medicationadministered: ${medication.medicationName} to ${medication.child.firstName} by ${administrationData.administeredBy}`);
 
     return adminRecord;
   }
@@ -306,10 +306,10 @@ export class MedicationMARService {
     });
 
     if (!medication) {
-      throw new BadRequestException(`Medication not found: ${medicationId}`);
+      throw new BadRequestException(`Medication notfound: ${medicationId}`);
     }
 
-    constrefusalRecord: MedicationAdministrationRecord = {
+    const refusalRecord: MedicationAdministrationRecord = {
       id: `refusal_${Date.now()}_${medicationId}`,
       medicationId: medication.id,
       medicationName: medication.medicationName,
@@ -346,7 +346,7 @@ export class MedicationMARService {
     // Emit event (may trigger prescriber notification if frequent refusals)
     this.eventEmitter.emit('medication.refused', refusalRecord);
 
-    this.logger.warn(`⚠️ Medication refused: ${medication.medicationName} by ${medication.child.firstName} - "${refusalData.childQuote}"`);
+    this.logger.warn(`⚠️ Medicationrefused: ${medication.medicationName} by ${medication.child.firstName} - "${refusalData.childQuote}"`);
 
     return refusalRecord;
   }
@@ -366,10 +366,10 @@ export class MedicationMARService {
     });
 
     if (!medication) {
-      throw new BadRequestException(`Medication not found: ${medicationId}`);
+      throw new BadRequestException(`Medication notfound: ${medicationId}`);
     }
 
-    constomissionRecord: MedicationAdministrationRecord = {
+    const omissionRecord: MedicationAdministrationRecord = {
       id: `omission_${Date.now()}_${medicationId}`,
       medicationId: medication.id,
       medicationName: medication.medicationName,
@@ -402,7 +402,7 @@ export class MedicationMARService {
     // Emit event
     this.eventEmitter.emit('medication.omitted', omissionRecord);
 
-    this.logger.log(`ℹ️ Medication omitted: ${medication.medicationName} - Code ${omissionData.omissionCode}: ${omissionData.omissionNotes}`);
+    this.logger.log(`ℹ️ Medicationomitted: ${medication.medicationName} - Code ${omissionData.omissionCode}: ${omissionData.omissionNotes}`);
 
     return omissionRecord;
   }
@@ -429,7 +429,7 @@ export class MedicationMARService {
     // TODO: Fetch administration record from database
     // For now, create report
 
-    constreport: SideEffectReport = {
+    const report: SideEffectReport = {
       medicationAdministrationId: administrationId,
       medicationName: 'Example Medication', // TODO: Get from admin record
       childId: 'child_123',
@@ -458,7 +458,7 @@ export class MedicationMARService {
       await this.submitMHRAYellowCard(report);
     }
 
-    this.logger.error(`🚨 SIDE EFFECT REPORTED: ${report.medicationName} - ${sideEffectData.sideEffects.map(se => se.symptom).join(', ')}`);
+    this.logger.error(`🚨 SIDE EFFECTREPORTED: ${report.medicationName} - ${sideEffectData.sideEffects.map(se => se.symptom).join(', ')}`);
 
     return report;
   }
@@ -475,7 +475,7 @@ export class MedicationMARService {
     adminRecord: MedicationAdministrationRecord
   ): Promise<ControlledDrugRegisterEntry> {
     
-    constcdEntry: ControlledDrugRegisterEntry = {
+    const cdEntry: ControlledDrugRegisterEntry = {
       id: `cd_${Date.now()}`,
       medicationName: adminRecord.medicationName,
       schedule: this.getControlledDrugSchedule(adminRecord.medicationName),
@@ -493,7 +493,7 @@ export class MedicationMARService {
 
     // TODO: Save to controlled_drug_register table
 
-    this.logger.log(`📋 CD Register: ${cdEntry.medicationName} - Stock: ${cdEntry.stockBefore} → ${cdEntry.stockAfter}`);
+    this.logger.log(`📋 CDRegister: ${cdEntry.medicationName} - Stock: ${cdEntry.stockBefore} → ${cdEntry.stockAfter}`);
 
     return cdEntry;
   }
@@ -530,7 +530,7 @@ export class MedicationMARService {
     // TODO: Integrate with AI pill recognition service (e.g., MedSnap, NIH Pill Image Recognition)
     // For now, return mock result
     
-    this.logger.log(`📸 AI Pill Recognition: Analyzing photo for ${expectedMedicationName}...`);
+    this.logger.log(`📸 AI PillRecognition: Analyzing photo for ${expectedMedicationName}...`);
     
     return {
       match: true,
@@ -550,7 +550,7 @@ export class MedicationMARService {
     // TODO: Query medication barcode database
     // For now, return mock result
     
-    this.logger.log(`📦 Barcode Scan: ${scannedBarcode} - Verifying...`);
+    this.logger.log(`📦 BarcodeScan: ${scannedBarcode} - Verifying...`);
     
     return true; // Match
   }
@@ -567,7 +567,7 @@ export class MedicationMARService {
     const photoId = `photo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const photoUrl = `https://secure-storage.wcnotes.com/medication-photos/${photoId}.jpg`;
     
-    this.logger.log(`💾 Photo saved: ${photoUrl}`);
+    this.logger.log(`💾 Photosaved: ${photoUrl}`);
     
     return photoUrl;
   }
@@ -625,7 +625,7 @@ export class MedicationMARService {
     // - Side effect reports
     // - Refusal records with child quotes
     
-    this.logger.log(`📄 Exporting MAR sheet for CQC: Child ${childId} (${startDate.toDateString()} - ${endDate.toDateString()})`);
+    this.logger.log(`📄 Exporting MAR sheet forCQC: Child ${childId} (${startDate.toDateString()} - ${endDate.toDateString()})`);
     
     return {
       exportUrl: 'https://wcnotes.com/exports/mar-sheet-child-123.pdf',

@@ -88,7 +88,7 @@ export class FamilyTrustEngineService {
   privatedashboardService: TransparencyDashboardService;
   privateanalyticsService: CommunicationAnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('FamilyTrustEngineService');
     this.audit = new AuditService();
@@ -132,7 +132,7 @@ export class FamilyTrustEngineService {
           ) RETURNING *
         `;
 
-        constdefaultPreferences: CommunicationPreferences = {
+        const defaultPreferences: CommunicationPreferences = {
           preferredMethod: 'email',
           frequency: 'weekly',
           updateTypes: ['care_updates', 'incidents', 'activities'],
@@ -188,7 +188,7 @@ export class FamilyTrustEngineService {
           registeredBy: userId
         });
 
-        constresponse: FamilyMember = {
+        const response: FamilyMember = {
           id: familyMember.id,
           tenantId: familyMember.tenant_id,
           residentId: familyMember.resident_id,
@@ -341,7 +341,7 @@ export class FamilyTrustEngineService {
           updatedBy: userId
         });
 
-        constupdatedMetrics: TrustMetrics = {
+        const updatedMetrics: TrustMetrics = {
           overallTrustScore,
           communicationSatisfaction: metricsData.communicationSatisfaction,
           transparencyRating: metricsData.transparencyRating,
@@ -422,7 +422,7 @@ export class FamilyTrustEngineService {
   }
 
   private calculateTrustTrends(current: TrustMetrics, updated: any): TrustTrend[] {
-    consttrends: TrustTrend[] = [];
+    const trends: TrustTrend[] = [];
     const metrics = [
       { key: 'communicationSatisfaction', name: 'Communication Satisfaction' },
       { key: 'transparencyRating', name: 'Transparency Rating' },
@@ -435,7 +435,7 @@ export class FamilyTrustEngineService {
       const currentValue = updated[metric.key];
       const changePercentage = ((currentValue - previousValue) / previousValue) * 100;
       
-      lettrend: 'improving' | 'declining' | 'stable' = 'stable';
+      let trend: 'improving' | 'declining' | 'stable' = 'stable';
       if (Math.abs(changePercentage) > 10) {
         trend = changePercentage > 0 ? 'improving' : 'declining';
       }
@@ -537,7 +537,7 @@ export class FamilyTrustEngineService {
       }
 
       const familyMemberResult = await this.db.query(`
-        SELECT resident_id FROM family_members WHERE id = $1 AND tenant_id = $2
+        SELECT resident_id FROM family_members WHEREid = $1 AND tenant_id = $2
       `, [familyMemberId, tenantId]);
 
       if (familyMemberResult.rows.length === 0) {
@@ -727,7 +727,7 @@ export class FamilyTrustEngineService {
   }
 
   private parseTimeframe(timeframe: string): number {
-    consttimeframeMap: Record<string, number> = {
+    const timeframeMap: Record<string, number> = {
       '7d': 7, '30d': 30, '90d': 90, '6m': 180, '1y': 365
     };
     return timeframeMap[timeframe] || 90;

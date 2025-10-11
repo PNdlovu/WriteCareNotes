@@ -10,7 +10,7 @@
  * 4. Cognitive Development
  * 5. Self-Care & Independence
  * 
- * ASSESSMENT FRAMEWORK:
+ * ASSESSMENTFRAMEWORK:
  * - Ages & Stages Questionnaires (ASQ)
  * - Early Years Foundation Stage (EYFS) Profile
  * - Healthy Child Programme (0-5)
@@ -73,21 +73,21 @@ export class DevelopmentalMilestones {
   @JoinColumn({ name: 'childId' })
   child!: Child;
 
-  // ==================== MILESTONE DETAILS ====================
+  // ==================== MILESTONEDETAILS ====================
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   domain!: DevelopmentalDomain;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   ageGroup!: AgeGroup;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   milestoneName!: string;
 
   @Column({ type: 'text' })
   description!: string;
 
-  @Column({ type: 'varchar', length: 50, default: MilestoneStatus.NOT_ASSESSED })
+  @Column({ type: 'var char', length: 50, default: MilestoneStatus.NOT_ASSESSED })
   status!: MilestoneStatus;
 
   // ==================== ASSESSMENT ====================
@@ -118,10 +118,10 @@ export class DevelopmentalMilestones {
   @Column({ type: 'text', nullable: true })
   observationNotes?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   observedBy?: string; // Care staff member
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   observationMethod?: string; // direct_observation, parent_report, formal_assessment
 
   // ==================== INTERVENTION ====================
@@ -132,16 +132,16 @@ export class DevelopmentalMilestones {
   @Column({ type: 'text', nullable: true })
   interventionPlan?: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   specialist?: string; // Speech therapist, occupational therapist, etc.
 
   @Column({ type: 'timestamptz', nullable: true })
   specialistReferralDate?: Date;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   interventionStatus?: string; // planned, in_progress, completed
 
-  // ==================== PROGRESS TRACKING ====================
+  // ==================== PROGRESSTRACKING ====================
 
   @Column({ type: 'jsonb', nullable: true })
   progressNotes?: Array<{
@@ -153,10 +153,10 @@ export class DevelopmentalMilestones {
   @Column({ type: 'int', default: 0 })
   progressScore!: number; // 0-100
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   trend?: string; // improving, stable, declining
 
-  // ==================== COMPARISON TO NORMS ====================
+  // ==================== COMPARISON TONORMS ====================
 
   @Column({ type: 'boolean', default: true })
   withinNormalRange!: boolean;
@@ -167,7 +167,7 @@ export class DevelopmentalMilestones {
   @Column({ type: 'int', default: 50 })
   percentileRank!: number; // 1-99
 
-  // ==================== RED FLAGS ====================
+  // ==================== REDFLAGS ====================
 
   @Column({ type: 'boolean', default: false })
   redFlag!: boolean; // Serious concern requiring immediate action
@@ -178,10 +178,10 @@ export class DevelopmentalMilestones {
   @Column({ type: 'timestamptz', nullable: true })
   redFlagReportedDate?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   redFlagReportedTo?: string; // Social worker, pediatrician
 
-  // ==================== SUPPORTING ACTIVITIES ====================
+  // ==================== SUPPORTINGACTIVITIES ====================
 
   @Column({ type: 'jsonb', nullable: true })
   supportingActivities?: Array<{

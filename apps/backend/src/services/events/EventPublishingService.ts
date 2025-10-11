@@ -135,11 +135,11 @@ export interface EventDeliveryResult {
 
 @Injectable()
 export class EventPublishingService {
-  private readonly logger = new Logger(EventPublishingService.name);
+  private readonlylogger = new Logger(EventPublishingService.name);
   privatesubscriptions: Map<string, EventSubscription> = new Map();
   privateeventHistory: Map<string, any> = new Map();
 
-  constructor(private readonly eventEmitter: EventEmitter2) {
+  const ructor(private readonlyeventEmitter: EventEmitter2) {
     console.log('Event Publishing Service initialized');
     this.setupEventListeners();
   }
@@ -273,7 +273,7 @@ export class EventPublishingService {
     filters?: EventFilter[]
   ): Promise<EventSubscription> {
     try {
-      constsubscription: EventSubscription = {
+      const subscription: EventSubscription = {
         subscriptionId: uuidv4(),
         eventTypes,
         subscriberId,
@@ -312,7 +312,7 @@ export class EventPublishingService {
       const subscription = this.subscriptions.get(subscriptionId);
       
       if (!subscription) {
-        throw new Error(`Subscription not found: ${subscriptionId}`);
+        throw new Error(`Subscription notfound: ${subscriptionId}`);
       }
 
       subscription.isActive = false;
@@ -463,9 +463,9 @@ export class EventPublishingService {
 
     switch (filter.operator) {
       case 'equals':
-        return fieldValue === filter.value;
+        returnfieldValue === filter.value;
       case 'not_equals':
-        return fieldValue !== filter.value;
+        returnfieldValue !== filter.value;
       case 'contains':
         return String(fieldValue).includes(String(filter.value));
       case 'in':
@@ -485,7 +485,7 @@ export class EventPublishingService {
     event: any,
     subscription: EventSubscription
   ): Promise<EventDeliveryResult> {
-    constdeliveryResult: EventDeliveryResult = {
+    const deliveryResult: EventDeliveryResult = {
       eventId: event.eventId,
       subscriptionId: subscription.subscriptionId,
       deliveryStatus: 'SUCCESS',
@@ -704,7 +704,7 @@ export class EventPublishingService {
             }
           }
         } catch (error: unknown) {
-          reject(new Error(`Invalid webhook URL: ${url}`));
+          reject(new Error(`Invalid webhookURL: ${url}`));
         }
       }, 100 + Math.random() * 200); // Simulate 100-300ms network delay
     });
@@ -744,7 +744,7 @@ export class EventPublishingService {
 
   // Critical Event Helper Methods
   private generateCriticalEventDescription(event: any): string {
-    constdescriptions: Record<string, string> = {
+    const descriptions: Record<string, string> = {
       'security.violation': 'Security breach detected - immediate investigation required',
       'compliance.alert': 'Compliance violation detected - regulatory action may be required',
       'system.error': 'Critical system error - service availability may be impacted',
@@ -756,7 +756,7 @@ export class EventPublishingService {
   }
 
   private determineCriticalEventActions(event: any): string[] {
-    constactionMap: Record<string, string[]> = {
+    const actionMap: Record<string, string[]> = {
       'security.violation': [
         'Immediately review security logs',
         'Check for unauthorized access attempts',
@@ -871,7 +871,7 @@ export class EventPublishingService {
   private async triggerAutomatedResponse(event: any): Promise<void> {
     try {
       // Implement automated response procedures based on event type
-      constautomatedActions: Record<string, () => Promise<void>> = {
+      const automatedActions: Record<string, () => Promise<void>> = {
         'security.violation': async () => {
           console.warn('Triggering security lockdown procedures');
           this.eventEmitter.emit('security.lockdown.initiated', { eventId: event.eventId });

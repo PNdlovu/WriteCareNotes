@@ -61,12 +61,12 @@ interface MedicalInsight {
 }
 
 class AIService {
-  private static instance: AIService;
+  private staticinstance: AIService;
   privateopenai: OpenAI | null = null;
   privateazureOpenAI: OpenAI | null = null;
   privateisEnabled: boolean = false;
 
-  private constructor() {
+  private const ructor() {
     this.initializeServices();
   }
 
@@ -141,18 +141,18 @@ class AIService {
     const startTime = Date.now();
     
     try {
-      loggerService.debug(`AI request started: ${operation}`, { context });
+      loggerService.debug(`AI requeststarted: ${operation}`, { context });
       
       const result = await requestFn();
       const duration = Date.now() - startTime;
       
       loggerService.performance(`AI ${operation}`, duration, { context });
-      loggerService.info(`AI request completed: ${operation}`, { duration, context });
+      loggerService.info(`AI requestcompleted: ${operation}`, { duration, context });
       
       return result;
     } catch (error) {
       const duration = Date.now() - startTime;
-      loggerService.error(`AI request failed: ${operation}`, error as Error, { duration, context });
+      loggerService.error(`AI requestfailed: ${operation}`, error as Error, { duration, context });
       throw error;
     }
   }
@@ -164,14 +164,14 @@ class AIService {
 
       const systemPrompt = `You are a medical AI assistant specializing in summarizing patient care notes and communications. 
       Create concise, accurate summaries that preserve critical medical information, patient concerns, and care decisions.
-      ${request.focusAreas ? `Focus on these areas: ${request.focusAreas.join(', ')}` : ''}
+      ${request.focusAreas ? `Focus on theseareas: ${request.focusAreas.join(', ')}` : ''}
       ${request.maxLength ? `Keep the summary under ${request.maxLength} words.` : 'Keep the summary concise but comprehensive.'}`;
 
       const response = await client.chat.completions.create({
         model: aiConfig.openai.model,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Please summarize the following text:\n\n${request.text}` }
+          { role: 'user', content: `Please summarize the followingtext:\n\n${request.text}` }
         ],
         max_tokens: aiConfig.openai.maxTokens,
         temperature: aiConfig.openai.temperature
@@ -188,7 +188,7 @@ class AIService {
 
       const systemPrompt = `You are a sentiment analysis AI specialized in healthcare communications. 
       Analyze the sentiment and emotions in patient communications, care notes, and feedback.
-      Respond with a JSON object containing:
+      Respond with a JSON objectcontaining:
       - sentiment: "positive", "negative", or "neutral"
       - confidence: a number between 0 and 1
       - emotions: an array of detected emotions (e.g., ["anxious", "hopeful", "frustrated"])`;
@@ -197,7 +197,7 @@ class AIService {
         model: aiConfig.openai.model,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Analyze the sentiment of this text:\n\n${request.text}` }
+          { role: 'user', content: `Analyze the sentiment of thistext:\n\n${request.text}` }
         ],
         max_tokens: 500,
         temperature: 0.3
@@ -228,8 +228,8 @@ class AIService {
 
       const regulations = request.regulations || ['GDPR', 'HIPAA', 'Care Quality Commission (CQC)', 'NHS Data Security Standards'];
       
-      const systemPrompt = `You are a healthcare compliance AI assistant. Analyze content for compliance with regulations: ${regulations.join(', ')}.
-      Respond with a JSON object containing:
+      const systemPrompt = `You are a healthcare compliance AI assistant. Analyze content for compliance withregulations: ${regulations.join(', ')}.
+      Respond with a JSON objectcontaining:
       - compliant: boolean indicating overall compliance
       - issues: array of specific compliance issues found
       - recommendations: array of recommendations to address issues
@@ -239,7 +239,7 @@ class AIService {
         model: aiConfig.openai.model,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Analyze this content for compliance:\n\n${request.content}` }
+          { role: 'user', content: `Analyze this content forcompliance:\n\n${request.content}` }
         ],
         max_tokens: 1000,
         temperature: 0.2
@@ -269,7 +269,7 @@ class AIService {
       Provide insights based on patient notes, but always emphasize that your analysis is for reference only and 
       should not replace professional medical judgment.
       
-      Respond with a JSON object containing:
+      Respond with a JSON objectcontaining:
       - keyFindings: array of important findings from the notes
       - recommendations: array of potential care recommendations
       - urgencyLevel: "low", "medium", "high", or "urgent" based on apparent severity
@@ -287,7 +287,7 @@ class AIService {
         model: aiConfig.openai.model,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Analyze this patient information:\n\n${contextText}` }
+          { role: 'user', content: `Analyze this patientinformation:\n\n${contextText}` }
         ],
         max_tokens: 1500,
         temperature: 0.3
@@ -318,7 +318,7 @@ class AIService {
       const aiConfig = configService.getAI();
 
       const systemPrompt = `You are a healthcare documentation AI assistant. Generate professional care notes based on patient interactions and session summaries.
-      The notes should be:
+      The notes shouldbe:
       - Clear and concise
       - Medically accurate terminology
       - Include relevant observations
@@ -335,7 +335,7 @@ class AIService {
         model: aiConfig.openai.model,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Generate care notes based on:\n\n${contextText}` }
+          { role: 'user', content: `Generate care notes basedon:\n\n${contextText}` }
         ],
         max_tokens: aiConfig.openai.maxTokens,
         temperature: 0.4

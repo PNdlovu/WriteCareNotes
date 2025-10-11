@@ -166,7 +166,7 @@ export class AIAutomationService {
   privateauditService: AuditService;
   privateencryptionService: FieldLevelEncryptionService;
 
-  constructor() {
+  const ructor() {
     this.summaryRepository = AppDataSource.getRepository(AISummary);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -269,7 +269,7 @@ export class AIAutomationService {
 
       return savedSummary;
     } catch (error: unknown) {
-      console.error('Error generating intelligent care summary:', error);
+      console.error('Error generating intelligent caresummary:', error);
       throw error;
     }
   }
@@ -302,7 +302,7 @@ export class AIAutomationService {
         clinicalAnalysis
       );
 
-      constdecisionSupport: ClinicalDecisionSupport = {
+      const decisionSupport: ClinicalDecisionSupport = {
         evidenceBasedRecommendations,
         riskAssessments,
         treatmentOptimization
@@ -325,7 +325,7 @@ export class AIAutomationService {
 
       return decisionSupport;
     } catch (error: unknown) {
-      console.error('Error providing clinical decision support:', error);
+      console.error('Error providing clinical decisionsupport:', error);
       throw error;
     }
   }
@@ -338,7 +338,7 @@ export class AIAutomationService {
     approvalRequired: boolean;
   }): Promise<IntelligentAutomation> {
     try {
-      constautomation: IntelligentAutomation = {
+      const automation: IntelligentAutomation = {
         careTaskAutomation: {
           routineTaskIdentification: await this.identifyRoutineTasks(automationRequest.context),
           automationRules: await this.generateAutomationRules(automationRequest),
@@ -372,7 +372,7 @@ export class AIAutomationService {
 
       return automation;
     } catch (error: unknown) {
-      console.error('Error executing intelligent automation:', error);
+      console.error('Error executing intelligentautomation:', error);
       throw error;
     }
   }
@@ -540,8 +540,8 @@ export class AIAutomationService {
   ): Promise<any> {
     const startTime = Date.now();
     
-    // Construct sophisticated AI prompt
-    const prompt = this.constructAdvancedPrompt(
+    // Const ruct sophisticated AI prompt
+    const prompt = this.const ructAdvancedPrompt(
       sourceData,
       multiModalAnalysis,
       personalizationContext,
@@ -627,7 +627,7 @@ export class AIAutomationService {
   }
 
   // Advanced helper methods
-  private constructAdvancedPrompt(
+  private const ructAdvancedPrompt(
     sourceData: any[],
     multiModalAnalysis: any,
     personalizationContext: any,
@@ -637,9 +637,9 @@ export class AIAutomationService {
     
     prompt += `CONTEXT:\n`;
     prompt += `- Resident: ${personalizationContext.residentId}\n`;
-    prompt += `- Care Level: ${personalizationContext.careLevel}\n`;
-    prompt += `- Cognitive Status: ${personalizationContext.cognitiveStatus}\n`;
-    prompt += `- Cultural Considerations: ${personalizationContext.culturalConsiderations.join(', ')}\n\n`;
+    prompt += `- CareLevel: ${personalizationContext.careLevel}\n`;
+    prompt += `- CognitiveStatus: ${personalizationContext.cognitiveStatus}\n`;
+    prompt += `- CulturalConsiderations: ${personalizationContext.culturalConsiderations.join(', ')}\n\n`;
     
     prompt += `TASK: Generate a ${summaryRequest.summaryType.replace('_', ' ')} for ${summaryRequest.targetAudience} audience.\n\n`;
     
@@ -656,7 +656,7 @@ export class AIAutomationService {
     prompt += `- Ensure GDPR compliance and data protection\n`;
     
     if (summaryRequest.customInstructions) {
-      prompt += `- Additional instructions: ${summaryRequest.customInstructions}\n`;
+      prompt += `- Additionalinstructions: ${summaryRequest.customInstructions}\n`;
     }
     
     return prompt;
@@ -702,22 +702,22 @@ EXECUTIVE SUMMARY:
 Resident has shown stable progress across all care domains with particular improvements in social engagement and mobility. No significant concerns identified.
 
 CLINICAL PROGRESS:
-- Physical health: Stable with minor improvements in mobility
-- Mental health: Positive mood with good cognitive engagement
-- Medication management: Excellent compliance with no adverse effects
-- Nutritional status: Maintaining healthy weight and appetite
+- Physicalhealth: Stable with minor improvements in mobility
+- Mentalhealth: Positive mood with good cognitive engagement
+- Medicationmanagement: Excellent compliance with no adverse effects
+- Nutritionalstatus: Maintaining healthy weight and appetite
 
-CARE GOAL ACHIEVEMENTS:
-- Mobility goal: 80% achieved - walking 50 meters with assistance
-- Social goal: 100% achieved - participating in daily group activities
-- Independence goal: 70% achieved - managing personal hygiene with minimal support
+CARE GOALACHIEVEMENTS:
+- Mobilitygoal: 80% achieved - walking 50 meters with assistance
+- Socialgoal: 100% achieved - participating in daily group activities
+- Independencegoal: 70% achieved - managing personal hygiene with minimal support
 
 FAMILY ENGAGEMENT:
 - Regular family visits maintained
 - Positive family feedback received
 - Family education completed on care approaches
 
-RECOMMENDATIONS FOR NEXT WEEK:
+RECOMMENDATIONS FOR NEXTWEEK:
 - Continue current care plan with minor adjustments
 - Increase physiotherapy frequency
 - Schedule medication review
@@ -728,12 +728,12 @@ RECOMMENDATIONS FOR NEXT WEEK:
 INCIDENT OVERVIEW:
 Minor incident involving resident mobility assistance. No injuries sustained. Immediate response appropriate and effective.
 
-ROOT CAUSE ANALYSIS:
-- Primary cause: Environmental factor (wet floor)
-- Contributing factors: Reduced lighting, hurried movement
-- System factors: Cleaning schedule timing
+ROOT CAUSEANALYSIS:
+- Primarycause: Environmental factor (wet floor)
+- Contributingfactors: Reduced lighting, hurried movement
+- Systemfactors: Cleaning schedule timing
 
-IMMEDIATE ACTIONS TAKEN:
+IMMEDIATE ACTIONSTAKEN:
 - Resident safety assessed and confirmed
 - Area secured and hazard removed
 - Incident documented and reported

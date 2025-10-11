@@ -14,7 +14,7 @@ import { DocumentType, DocumentStatus } from '../../entities/document/DocumentMa
 /**
  * Service #8: Simple Document Controller
  * 
- * HTTP API layer for document management with:
+ * HTTP API layer for document managementwith:
  * - Document CRUD operations
  * - Version control
  * - Workflow management (submit → review → approve → publish)
@@ -25,7 +25,7 @@ import { DocumentType, DocumentStatus } from '../../entities/document/DocumentMa
 export class SimpleDocumentController {
   privatedocumentService: SimpleDocumentService;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.documentService = new SimpleDocumentService(dataSource);
   }
 
@@ -45,7 +45,7 @@ export class SimpleDocumentController {
         return res.status(400).json({ success: false, error: 'Organization ID is required' });
       }
 
-      constdto: CreateDocumentDTO = {
+      const dto: CreateDocumentDTO = {
         ...req.body,
         organizationId,
       };
@@ -58,7 +58,7 @@ export class SimpleDocumentController {
         message: 'Document created successfully',
       });
     } catch (error: any) {
-      console.error('Error creating document:', error);
+      console.error('Error creatingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -83,7 +83,7 @@ export class SimpleDocumentController {
         data: document,
       });
     } catch (error: any) {
-      console.error('Error fetching document:', error);
+      console.error('Error fetchingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -98,7 +98,7 @@ export class SimpleDocumentController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: DocumentFilters = {};
+      const filters: DocumentFilters = {};
 
       if (req.query.documentType) {
         filters.documentType = req.query.documentType as DocumentType;
@@ -137,7 +137,7 @@ export class SimpleDocumentController {
         },
       });
     } catch (error: any) {
-      console.error('Error fetching documents:', error);
+      console.error('Error fetchingdocuments:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -155,7 +155,7 @@ export class SimpleDocumentController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      constdto: UpdateDocumentDTO = req.body;
+      const dto: UpdateDocumentDTO = req.body;
 
       const document = await this.documentService.update(id, organizationId, dto);
 
@@ -165,7 +165,7 @@ export class SimpleDocumentController {
         message: 'Document updated successfully',
       });
     } catch (error: any) {
-      console.error('Error updating document:', error);
+      console.error('Error updatingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -186,7 +186,7 @@ export class SimpleDocumentController {
         message: 'Document deleted successfully',
       });
     } catch (error: any) {
-      console.error('Error deleting document:', error);
+      console.error('Error deletingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -204,7 +204,7 @@ export class SimpleDocumentController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      constdto: CreateVersionDTO = req.body;
+      const dto: CreateVersionDTO = req.body;
 
       const document = await this.documentService.createNewVersion(id, organizationId, dto);
 
@@ -214,7 +214,7 @@ export class SimpleDocumentController {
         message: 'New document version created successfully',
       });
     } catch (error: any) {
-      console.error('Error creating document version:', error);
+      console.error('Error creating documentversion:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -236,7 +236,7 @@ export class SimpleDocumentController {
         message: 'Document submitted for review',
       });
     } catch (error: any) {
-      console.error('Error submitting document:', error);
+      console.error('Error submittingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -254,7 +254,7 @@ export class SimpleDocumentController {
 
       const { id } = req.params;
       const organizationId = (req as any).organizationId;
-      constdto: ApprovalDTO = req.body;
+      const dto: ApprovalDTO = req.body;
 
       const document = await this.documentService.approve(id, organizationId, dto);
 
@@ -264,7 +264,7 @@ export class SimpleDocumentController {
         message: 'Document approved successfully',
       });
     } catch (error: any) {
-      console.error('Error approving document:', error);
+      console.error('Error approvingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -286,7 +286,7 @@ export class SimpleDocumentController {
         message: 'Document published successfully',
       });
     } catch (error: any) {
-      console.error('Error publishing document:', error);
+      console.error('Error publishingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -308,7 +308,7 @@ export class SimpleDocumentController {
         message: 'Document archived successfully',
       });
     } catch (error: any) {
-      console.error('Error archiving document:', error);
+      console.error('Error archivingdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -330,7 +330,7 @@ export class SimpleDocumentController {
         message: `Found ${history.length} versions`,
       });
     } catch (error: any) {
-      console.error('Error fetching version history:', error);
+      console.error('Error fetching versionhistory:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -352,7 +352,7 @@ export class SimpleDocumentController {
         message: `Found ${documents.length} documents expiring within ${daysAhead} days`,
       });
     } catch (error: any) {
-      console.error('Error fetching expiring documents:', error);
+      console.error('Error fetching expiringdocuments:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -373,7 +373,7 @@ export class SimpleDocumentController {
         message: `Found ${documents.length} expired documents`,
       });
     } catch (error: any) {
-      console.error('Error fetching expired documents:', error);
+      console.error('Error fetching expireddocuments:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -395,7 +395,7 @@ export class SimpleDocumentController {
         message: `Found ${documents.length} ${type} documents`,
       });
     } catch (error: any) {
-      console.error('Error fetching documents by type:', error);
+      console.error('Error fetching documents bytype:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -416,7 +416,7 @@ export class SimpleDocumentController {
         message: `Found ${documents.length} legal requirement documents`,
       });
     } catch (error: any) {
-      console.error('Error fetching legal documents:', error);
+      console.error('Error fetching legaldocuments:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -436,7 +436,7 @@ export class SimpleDocumentController {
         data: stats,
       });
     } catch (error: any) {
-      console.error('Error fetching statistics:', error);
+      console.error('Error fetchingstatistics:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }
@@ -458,7 +458,7 @@ export class SimpleDocumentController {
         message: 'Document restored successfully',
       });
     } catch (error: any) {
-      console.error('Error restoring document:', error);
+      console.error('Error restoringdocument:', error);
       return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
     }
   }

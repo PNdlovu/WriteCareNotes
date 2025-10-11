@@ -48,7 +48,7 @@ import { GoalDomain, GoalPriority } from '../entities/CarePlanGoal';
 export class CarePlanningController {
   privatecarePlanningService: CarePlanningService;
 
-  constructor() {
+  const ructor() {
     this.carePlanningService = new CarePlanningService();
   }
 
@@ -84,7 +84,7 @@ export class CarePlanningController {
       if (planType && !Object.values(CarePlanType).includes(planType)) {
         res.status(400).json({
           success: false,
-          message: `Invalid plan type. Must be one of: ${Object.values(CarePlanType).join(', ')}`
+          message: `Invalid plan type. Must be oneof: ${Object.values(CarePlanType).join(', ')}`
         });
         return;
       }
@@ -97,7 +97,7 @@ export class CarePlanningController {
         data: carePlan
       });
     } catch (error) {
-      console.error('Error creating care plan:', error);
+      console.error('Error creating careplan:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to create care plan',
@@ -130,7 +130,7 @@ export class CarePlanningController {
         count: carePlans.length
       });
     } catch (error) {
-      console.error('Error retrieving care plans:', error);
+      console.error('Error retrieving careplans:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve care plans',
@@ -155,7 +155,7 @@ export class CarePlanningController {
         data: carePlan
       });
     } catch (error) {
-      console.error('Error updating care plan:', error);
+      console.error('Error updating careplan:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to update care plan',
@@ -194,7 +194,7 @@ export class CarePlanningController {
         data: carePlan
       });
     } catch (error) {
-      console.error('Error approving care plan:', error);
+      console.error('Error approving careplan:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to approve care plan',
@@ -236,7 +236,7 @@ export class CarePlanningController {
       if (reviewType && !Object.values(ReviewType).includes(reviewType)) {
         res.status(400).json({
           success: false,
-          message: `Invalid review type. Must be one of: ${Object.values(ReviewType).join(', ')}`
+          message: `Invalid review type. Must be oneof: ${Object.values(ReviewType).join(', ')}`
         });
         return;
       }
@@ -249,7 +249,7 @@ export class CarePlanningController {
         data: review
       });
     } catch (error) {
-      console.error('Error scheduling review:', error);
+      console.error('Error schedulingreview:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to schedule review',
@@ -274,7 +274,7 @@ export class CarePlanningController {
         data: review
       });
     } catch (error) {
-      console.error('Error completing review:', error);
+      console.error('Error completingreview:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to complete review',
@@ -300,7 +300,7 @@ export class CarePlanningController {
         count: reviews.length
       });
     } catch (error) {
-      console.error('Error retrieving reviews:', error);
+      console.error('Error retrievingreviews:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve reviews',
@@ -345,7 +345,7 @@ export class CarePlanningController {
       if (goalDomain && !Object.values(GoalDomain).includes(goalDomain)) {
         res.status(400).json({
           success: false,
-          message: `Invalid goal domain. Must be one of: ${Object.values(GoalDomain).join(', ')}`
+          message: `Invalid goal domain. Must be oneof: ${Object.values(GoalDomain).join(', ')}`
         });
         return;
       }
@@ -354,7 +354,7 @@ export class CarePlanningController {
       if (req.body.priority && !Object.values(GoalPriority).includes(req.body.priority)) {
         res.status(400).json({
           success: false,
-          message: `Invalid priority. Must be one of: ${Object.values(GoalPriority).join(', ')}`
+          message: `Invalid priority. Must be oneof: ${Object.values(GoalPriority).join(', ')}`
         });
         return;
       }
@@ -367,7 +367,7 @@ export class CarePlanningController {
         data: goal
       });
     } catch (error) {
-      console.error('Error creating goal:', error);
+      console.error('Error creatinggoal:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to create goal',
@@ -399,7 +399,7 @@ export class CarePlanningController {
         count: goals.length
       });
     } catch (error) {
-      console.error('Error retrieving goals:', error);
+      console.error('Error retrievinggoals:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve goals',
@@ -446,7 +446,7 @@ export class CarePlanningController {
         data: goal
       });
     } catch (error) {
-      console.error('Error updating goal progress:', error);
+      console.error('Error updating goalprogress:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to update goal progress',
@@ -485,7 +485,7 @@ export class CarePlanningController {
         data: goal
       });
     } catch (error) {
-      console.error('Error achieving goal:', error);
+      console.error('Error achievinggoal:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to achieve goal',
@@ -524,7 +524,7 @@ export class CarePlanningController {
         data: statistics
       });
     } catch (error) {
-      console.error('Error retrieving statistics:', error);
+      console.error('Error retrievingstatistics:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve statistics',

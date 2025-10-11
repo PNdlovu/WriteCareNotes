@@ -104,10 +104,10 @@ export function aiAgentSecurityMiddleware(agentType: 'PUBLIC' | 'TENANT') {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const sessionId = generateSessionId();
-      constviolations: SecurityViolation[] = [];
+      const violations: SecurityViolation[] = [];
       
       // Initialize security context
-      constsecurityContext: AIAgentSecurityContext = {
+      const securityContext: AIAgentSecurityContext = {
         agentType,
         sessionId,
         securityLevel: agentType === 'TENANT' ? 'MAXIMUM' : 'ENHANCED',
@@ -492,7 +492,7 @@ function sanitizeMessage(message: string): string {
  * Sanitize care context data
  */
 function sanitizeCareContext(careContext: any): any {
-  if (!careContext || typeof careContext !== 'object') {
+  if (!careContext || typeofcareContext !== 'object') {
     return {};
   }
 
@@ -511,7 +511,7 @@ function sanitizeCareContext(careContext: any): any {
     if (careContext[field]) {
       if (Array.isArray(careContext[field])) {
         sanitized[field] = careContext[field]
-          .filter(item => typeof item === 'string')
+          .filter(item => typeofitem === 'string')
           .map(item => sanitizeMessage(item))
           .slice(0, 10); // Limit array size
       } else if (typeof careContext[field] === 'string') {

@@ -189,10 +189,10 @@ export class ContactSession {
   // LOCATION & VENUE
   // ========================================
 
-  @Column({ name: 'location_type', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'location_type', type: 'var char', length: 100, nullable: true })
   locationType?: string;
 
-  @Column({ name: 'venue_name', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'venue_name', type: 'var char', length: 200, nullable: true })
   venueName?: string;
 
   @Column({ name: 'venue_address', type: 'text', nullable: true })
@@ -211,13 +211,13 @@ export class ContactSession {
   @Column({ name: 'supervised', type: 'boolean', default: false })
   supervised!: boolean;
 
-  @Column({ name: 'supervisor_name', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'supervisor_name', type: 'var char', length: 200, nullable: true })
   supervisorName?: string;
 
-  @Column({ name: 'supervisor_role', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'supervisor_role', type: 'var char', length: 100, nullable: true })
   supervisorRole?: string;
 
-  @Column({ name: 'supervision_level', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'supervision_level', type: 'var char', length: 50, nullable: true })
   supervisionLevel?: string;
 
   @Column({ name: 'supervision_notes', type: 'text', nullable: true })
@@ -242,7 +242,7 @@ export class ContactSession {
   @Column({ name: 'child_presentation_notes', type: 'text', nullable: true })
   childPresentationNotes?: string;
 
-  @Column({ name: 'child_engagement_level', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'child_engagement_level', type: 'var char', length: 50, nullable: true })
   childEngagementLevel?: 'VERY_HIGH' | 'HIGH' | 'MODERATE' | 'LOW' | 'VERY_LOW';
 
   @Column({ name: 'child_verbal_communication', type: 'text', nullable: true })
@@ -411,7 +411,7 @@ export class ContactSession {
   @Column({ name: 'cancellation_reason', type: 'text', nullable: true })
   cancellationReason?: string;
 
-  @Column({ name: 'cancelled_by', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'cancelled_by', type: 'var char', length: 200, nullable: true })
   cancelledBy?: string;
 
   @Column({ name: 'cancellation_date', type: 'timestamp', nullable: true })

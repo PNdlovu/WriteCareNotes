@@ -114,7 +114,7 @@ export class DVLACheckService {
   privatenotificationService: NotificationService;
   privateeventEmitter: EventEmitter2;
 
-  constructor() {
+  const ructor() {
     this.dvlaCheckRepository = AppDataSource.getRepository(DVLACheck);
     this.dvlaServiceRepository = AppDataSource.getRepository(DVLAService);
     this.employeeRepository = AppDataSource.getRepository(Employee);

@@ -308,7 +308,7 @@ export class Asset extends BaseEntity {
     const lifecycleStage = this.getLifecycleStage();
     const maintenanceCostRatio = this.getTotalMaintenanceCost() / this.purchasePrice;
     
-    return lifecycleStage === 'end_of_life' || 
+    returnlifecycleStage === 'end_of_life' || 
            maintenanceCostRatio > 0.6 || // Maintenance cost exceeds 60% of purchase price
            this.status === AssetStatus.OUT_OF_SERVICE;
   }

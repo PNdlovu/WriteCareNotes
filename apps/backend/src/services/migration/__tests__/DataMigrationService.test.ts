@@ -27,15 +27,15 @@ jest.mock('../../../utils/logger', () => ({
 }));
 
 describe('DataMigrationService', () => {
-  letmigrationService: DataMigrationService;
-  letmockConfig: MigrationConfig;
-  letmockSourcePool: jest.Mocked<Pool>;
-  letmockTargetPool: jest.Mocked<Pool>;
-  letmockSourceClient: jest.Mocked<PoolClient>;
-  letmockTargetClient: jest.Mocked<PoolClient>;
-  letmockEncryptionService: jest.Mocked<EncryptionService>;
-  letmockAuditService: jest.Mocked<AuditService>;
-  letmockEventStoreService: jest.Mocked<EventStoreService>;
+  let migrationService: DataMigrationService;
+  let mockConfig: MigrationConfig;
+  let mockSourcePool: jest.Mocked<Pool>;
+  let mockTargetPool: jest.Mocked<Pool>;
+  let mockSourceClient: jest.Mocked<PoolClient>;
+  let mockTargetClient: jest.Mocked<PoolClient>;
+  let mockEncryptionService: jest.Mocked<EncryptionService>;
+  let mockAuditService: jest.Mocked<AuditService>;
+  let mockEventStoreService: jest.Mocked<EventStoreService>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -120,7 +120,7 @@ describe('DataMigrationService', () => {
     migrationService = new DataMigrationService(mockConfig);
   });
 
-  describe('constructor', () => {
+  describe('const ructor', () => {
     it('should initialize with correct configuration', () => {
       expect(Pool).toHaveBeenCalledTimes(2); // Source + 1 target
       expect(mockAuditService).toBeDefined();

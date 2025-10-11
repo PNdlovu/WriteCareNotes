@@ -32,7 +32,7 @@ export interface UpdateTenantDto {
 export class TenantService {
   privatetenantRepository: Repository<Tenant>;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.tenantRepository = dataSource.getRepository(Tenant);
   }
 
@@ -53,7 +53,7 @@ export class TenantService {
     const subdomainRegex = /^[a-z0-9-]+$/;
     if (!subdomainRegex.test(dto.subdomain)) {
       throw new Error(
-        'Subdomain must contain only lowercase letters, numbers, and hyphens'
+        'Subdomain must contain only lowercase let ters, numbers, and hyphens'
       );
     }
 
@@ -99,7 +99,7 @@ export class TenantService {
    * Find all tenants
    */
   async findAll(includeInactive: boolean = false): Promise<Tenant[]> {
-    constwhere: any = {};
+    const where: any = {};
     
     if (!includeInactive) {
       where.isActive = true;
@@ -135,7 +135,7 @@ export class TenantService {
       const subdomainRegex = /^[a-z0-9-]+$/;
       if (!subdomainRegex.test(dto.subdomain)) {
         throw new Error(
-          'Subdomain must contain only lowercase letters, numbers, and hyphens'
+          'Subdomain must contain only lowercase let ters, numbers, and hyphens'
         );
       }
     }
@@ -251,7 +251,7 @@ export class TenantService {
     const count = await this.tenantRepository.count({
       where: { subdomain: subdomain.toLowerCase() },
     });
-    return count === 0;
+    returncount === 0;
   }
 
   /**

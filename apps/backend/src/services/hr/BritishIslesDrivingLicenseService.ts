@@ -173,7 +173,7 @@ export class BritishIslesDrivingLicenseService {
   // In-memory license storage (would be replaced with proper database entity)
   privatelicenses: Map<string, DrivingLicense> = new Map();
 
-  constructor() {
+  const ructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -224,7 +224,7 @@ export class BritishIslesDrivingLicenseService {
       }
 
       // Check with appropriate authority
-      letapiResponse: DVLAAPIResponse;
+      let apiResponse: DVLAAPIResponse;
       switch (jurisdiction) {
         case BritishIslesJurisdiction.ENGLAND:
         case BritishIslesJurisdiction.SCOTLAND:
@@ -372,7 +372,7 @@ export class BritishIslesDrivingLicenseService {
       }
 
       const license = this.licenses.get(`${employeeId}-license`);
-      constissues: string[] = [];
+      const issues: string[] = [];
 
       if (!license) {
         issues.push('No driving license on file');
@@ -391,7 +391,7 @@ export class BritishIslesDrivingLicenseService {
         );
         
         if (!hasCategory) {
-          issues.push(`Missing required category: ${requiredCategory}`);
+          issues.push(`Missing requiredcategory: ${requiredCategory}`);
         }
       }
 
@@ -401,7 +401,7 @@ export class BritishIslesDrivingLicenseService {
         .reduce((sum, e) => sum + e.penaltyPoints, 0);
       
       if (totalPoints >= 9) {
-        issues.push(`High penalty points: ${totalPoints}/12`);
+        issues.push(`High penaltypoints: ${totalPoints}/12`);
       }
 
       return {
@@ -483,7 +483,7 @@ export class BritishIslesDrivingLicenseService {
         if (totalPoints >= 9) {
           complianceData.highRiskDrivers++;
           complianceData.complianceIssues.push(
-            `${employee.getFullName()} - High penalty points: ${totalPoints}`
+            `${employee.getFullName()} - High penaltypoints: ${totalPoints}`
           );
         }
 
@@ -541,7 +541,7 @@ export class BritishIslesDrivingLicenseService {
     if (!pattern.test(licenseNumber.toUpperCase().replace(/\s/g, ''))) {
       return { 
         isValid: false, 
-        error: `Invalid license format for ${jurisdiction}. Expected format varies by jurisdiction.` 
+        error: `Invalid license format for ${jurisdiction}. Expected format var ies by jurisdiction.` 
       };
     }
 
@@ -695,7 +695,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private generateWarnings(licenseData: any): string[] {
-    constwarnings: string[] = [];
+    const warnings: string[] = [];
     
     // Check expiry within 90 days
     const expiryDate = new Date(licenseData.expiryDate);
@@ -715,7 +715,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private generateErrors(licenseData: any, validationDetails: any): string[] {
-    consterrors: string[] = [];
+    const errors: string[] = [];
     
     if (!validationDetails.licenseActive) {
       errors.push('License is not active');
@@ -733,7 +733,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private generateRecommendations(licenseData: any, validationDetails: any): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (!validationDetails.isValid) {
       recommendations.push('Suspend driving duties until license issues are resolved');
@@ -781,7 +781,7 @@ export class BritishIslesDrivingLicenseService {
   }
 
   private async storeLicenseInformation(employeeId: string, licenseData: any, jurisdiction: BritishIslesJurisdiction): Promise<void> {
-    constlicense: DrivingLicense = {
+    const license: DrivingLicense = {
       licenseId: `${employeeId}-license`,
       employeeId,
       licenseNumber: licenseData.licenseNumber,

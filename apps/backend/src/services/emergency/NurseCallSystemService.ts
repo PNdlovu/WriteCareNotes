@@ -122,15 +122,15 @@ export interface StaffAllocation {
 export class NurseCallSystemService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly nurseCallRepository: Repository<NurseCallAlert>,
+    private readonlynurseCallRepository: Repository<NurseCallAlert>,
     
-    private readonly onCallRepository: Repository<OnCallRota>,
+    private readonlyonCallRepository: Repository<OnCallRota>,
     
-    private readonly residentRepository: Repository<Resident>,
-    private readonly notificationService: NotificationService,
-    private readonly auditService: AuditTrailService
+    private readonlyresidentRepository: Repository<Resident>,
+    private readonlynotificationService: NotificationService,
+    private readonlyauditService: AuditTrailService
   ) {
     console.log('Modern Nurse Call System Service initialized');
   }
@@ -154,7 +154,7 @@ export class NurseCallSystemService {
       });
 
       if (!resident) {
-        throw new Error(`Resident not found: ${residentId}`);
+        throw new Error(`Resident notfound: ${residentId}`);
       }
 
       // AI-powered priority assessment
@@ -583,7 +583,7 @@ export class NurseCallSystemService {
   }
 
   private getEscalationTime(priority: CallPriority): number {
-    consttimes: Record<CallPriority, number> = {
+    const times: Record<CallPriority, number> = {
       [CallPriority.EMERGENCY]: 60 * 1000, // 1 minute
       [CallPriority.URGENT]: 3 * 60 * 1000, // 3 minutes
       [CallPriority.HIGH]: 5 * 60 * 1000, // 5 minutes
@@ -594,7 +594,7 @@ export class NurseCallSystemService {
   }
 
   private async getEscalationStaff(level: number, tenantId: string, organizationId: string): Promise<OnCallRota[]> {
-    constrolesByLevel: Record<number, OnCallRole[]> = {
+    const rolesByLevel: Record<number, OnCallRole[]> = {
       1: [OnCallRole.REGISTERED_NURSE, OnCallRole.SENIOR_CARER],
       2: [OnCallRole.SENIOR_NURSE],
       3: [OnCallRole.MANAGER, OnCallRole.CLINICAL_LEAD],

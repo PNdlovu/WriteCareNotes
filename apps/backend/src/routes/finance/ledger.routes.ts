@@ -70,7 +70,7 @@ router.get('/accounts', [
       message: 'Ledger accounts retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving ledger accounts:', error);
+    logger.error('Error retrieving ledgeraccounts:', error);
     next(error);
   }
 });
@@ -100,7 +100,7 @@ router.get('/accounts/:id', [
       message: 'Ledger account retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving ledger account:', error);
+    logger.error('Error retrieving ledgeraccount:', error);
     next(error);
   }
 });
@@ -141,7 +141,7 @@ router.post('/accounts', [
       message: 'Ledger account created successfully'
     });
   } catch (error) {
-    logger.error('Error creating ledger account:', error);
+    logger.error('Error creating ledgeraccount:', error);
     next(error);
   }
 });
@@ -184,7 +184,7 @@ router.put('/accounts/:id', [
       message: 'Ledger account updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating ledger account:', error);
+    logger.error('Error updating ledgeraccount:', error);
     next(error);
   }
 });
@@ -213,7 +213,7 @@ router.delete('/accounts/:id', [
       message: 'Ledger account deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting ledger account:', error);
+    logger.error('Error deleting ledgeraccount:', error);
     next(error);
   }
 });
@@ -238,7 +238,7 @@ router.post('/accounts/:id/close', [
       message: 'Ledger account closed successfully'
     });
   } catch (error) {
-    logger.error('Error closing ledger account:', error);
+    logger.error('Error closing ledgeraccount:', error);
     next(error);
   }
 });
@@ -261,7 +261,7 @@ router.get('/accounts/:id/balance', [
       message: 'Account balance retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving account balance:', error);
+    logger.error('Error retrieving accountbalance:', error);
     next(error);
   }
 });
@@ -307,7 +307,7 @@ router.get('/journal-entries', [
       message: 'Journal entries retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving journal entries:', error);
+    logger.error('Error retrieving journalentries:', error);
     next(error);
   }
 });
@@ -337,7 +337,7 @@ router.get('/journal-entries/:id', [
       message: 'Journal entry retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving journal entry:', error);
+    logger.error('Error retrieving journalentry:', error);
     next(error);
   }
 });
@@ -382,7 +382,7 @@ router.post('/journal-entries', [
       message: 'Journal entry created successfully'
     });
   } catch (error) {
-    logger.error('Error creating journal entry:', error);
+    logger.error('Error creating journalentry:', error);
     next(error);
   }
 });
@@ -425,7 +425,7 @@ router.put('/journal-entries/:id', [
       message: 'Journal entry updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating journal entry:', error);
+    logger.error('Error updating journalentry:', error);
     next(error);
   }
 });
@@ -454,7 +454,7 @@ router.delete('/journal-entries/:id', [
       message: 'Journal entry deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting journal entry:', error);
+    logger.error('Error deleting journalentry:', error);
     next(error);
   }
 });
@@ -479,7 +479,7 @@ router.post('/journal-entries/:id/post', [
       message: 'Journal entry posted successfully'
     });
   } catch (error) {
-    logger.error('Error posting journal entry:', error);
+    logger.error('Error posting journalentry:', error);
     next(error);
   }
 });
@@ -507,7 +507,7 @@ router.post('/journal-entries/:id/reverse', [
       message: 'Journal entry reversed successfully'
     });
   } catch (error) {
-    logger.error('Error reversing journal entry:', error);
+    logger.error('Error reversing journalentry:', error);
     next(error);
   }
 });
@@ -535,7 +535,7 @@ router.post('/journal-entries/:id/cancel', [
       message: 'Journal entry cancelled successfully'
     });
   } catch (error) {
-    logger.error('Error cancelling journal entry:', error);
+    logger.error('Error cancelling journalentry:', error);
     next(error);
   }
 });
@@ -563,7 +563,7 @@ router.post('/journal-entries/:id/approve', [
       message: 'Journal entry approved successfully'
     });
   } catch (error) {
-    logger.error('Error approving journal entry:', error);
+    logger.error('Error approving journalentry:', error);
     next(error);
   }
 });
@@ -592,7 +592,7 @@ router.get('/trial-balance', [
       message: 'Trial balance retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving trial balance:', error);
+    logger.error('Error retrieving trialbalance:', error);
     next(error);
   }
 });
@@ -619,7 +619,7 @@ router.get('/balance-sheet', [
       message: 'Balance sheet retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving balance sheet:', error);
+    logger.error('Error retrieving balancesheet:', error);
     next(error);
   }
 });
@@ -648,7 +648,7 @@ router.get('/income-statement', [
       message: 'Income statement retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving income statement:', error);
+    logger.error('Error retrieving incomestatement:', error);
     next(error);
   }
 });

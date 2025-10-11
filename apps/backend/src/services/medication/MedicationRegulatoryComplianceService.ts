@@ -99,10 +99,10 @@ export interface CreateIncidentReportRequest {
 }
 
 export class MedicationRegulatoryComplianceService {
-  private logger = logger;
+  privatelogger = logger;
   privatedb: Pool;
 
-  constructor(db: Pool) {
+  const ructor(db: Pool) {
     this.db = db;
   }
 
@@ -131,7 +131,7 @@ export class MedicationRegulatoryComplianceService {
       // Calculate submission deadline
       const submissionDeadline = this.calculateSubmissionDeadline(request.severity);
 
-      constincident: IncidentReport = {
+      const incident: IncidentReport = {
         id: incidentId,
         organizationId: request.organizationId,
         incidentType: request.incidentType,
@@ -168,7 +168,7 @@ export class MedicationRegulatoryComplianceService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId: request.organizationId 
       });
-      throw new Error(`Failed to create incident report: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to create incidentreport: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -200,7 +200,7 @@ export class MedicationRegulatoryComplianceService {
       `;
       const incidentsResult = await this.db.query(incidentsQuery, [organizationId, limit, offset]);
 
-      constincidents: IncidentReport[] = incidentsResult.rows.map(row => this.mapDbRowToIncident(row));
+      const incidents: IncidentReport[] = incidentsResult.rows.map(row => this.mapDbRowToIncident(row));
 
       const totalPages = Math.ceil(total / limit);
 
@@ -221,7 +221,7 @@ export class MedicationRegulatoryComplianceService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get incident reports: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get incidentreports: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -236,8 +236,8 @@ export class MedicationRegulatoryComplianceService {
 
       const query = `
         UPDATE incident_reports 
-        SET status = $1, notes = $2, updated_at = $3, updated_by = $4
-        WHERE id = $5 AND deleted_at IS NULL
+        SETstatus = $1, notes = $2, updated_at = $3, updated_by = $4
+        WHEREid = $5 AND deleted_at IS NULL
       `;
 
       await this.db.query(query, [status, notes, new Date(), userId, incidentId]);
@@ -252,7 +252,7 @@ export class MedicationRegulatoryComplianceService {
         error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to update incident status: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to update incidentstatus: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -276,7 +276,7 @@ export class MedicationRegulatoryComplianceService {
       const recommendations = this.generateRecommendations(findings);
       const status = this.determineComplianceStatus(findings);
 
-      constcompliance: RegulatoryCompliance = {
+      const compliance: RegulatoryCompliance = {
         id: assessmentId,
         organizationId,
         complianceType,
@@ -306,7 +306,7 @@ export class MedicationRegulatoryComplianceService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to perform compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to perform complianceassessment: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -361,12 +361,12 @@ export class MedicationRegulatoryComplianceService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to export compliance data: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to export compliancedata: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateIncidentReportRequest(request: CreateIncidentReportRequest): void {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!request.organizationId?.trim()) errors.push('Organization ID is required');
     if (!request.incidentType) errors.push('Incident type is required');
@@ -384,7 +384,7 @@ export class MedicationRegulatoryComplianceService {
     severity: string,
     organizationId: string
   ): string[] {
-    constbodies: string[] = [];
+    const bodies: string[] = [];
 
     // Always include CQC for care homes
     bodies.push('CQC');
@@ -439,7 +439,7 @@ export class MedicationRegulatoryComplianceService {
         message: 'Critical incident requires immediate attention'
       });
 
-      // In a real implementation, this would send notifications to:
+      // In a real implementation, this would send notificationsto:
       // - Care Quality Commission (CQC)
       // - NHS England
       // - Local authority
@@ -450,7 +450,7 @@ export class MedicationRegulatoryComplianceService {
         error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to send critical incident alert: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to send critical incidentalert: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -458,7 +458,7 @@ export class MedicationRegulatoryComplianceService {
     organizationId: string,
     complianceType: string
   ): Promise<ComplianceFinding[]> {
-    constfindings: ComplianceFinding[] = [];
+    const findings: ComplianceFinding[] = [];
 
     // Simulate compliance checks based on type
     switch (complianceType) {
@@ -792,7 +792,7 @@ export class MedicationRegulatoryComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to store incident report', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to store incident report: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to store incidentreport: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -826,7 +826,7 @@ export class MedicationRegulatoryComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to store compliance assessment', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to store compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to store complianceassessment: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -860,7 +860,7 @@ export class MedicationRegulatoryComplianceService {
 
     } catch (error: unknown) {
       console.error('Failed to store export record', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to store export record: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to store exportrecord: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

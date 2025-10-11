@@ -76,7 +76,7 @@ export class CertificationService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.certificationRepository = AppDataSource.getRepository(Certification);
     this.employeeRepository = AppDataSource.getRepository(Employee);
     this.notificationService = new NotificationService(new EventEmitter2());

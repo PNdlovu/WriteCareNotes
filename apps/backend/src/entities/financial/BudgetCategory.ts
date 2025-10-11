@@ -42,15 +42,15 @@ import { MonthlyBudget } from './MonthlyBudget';
 @Index(['isActive'])
 export class BudgetCategory extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // Category Identification
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   categoryName!: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   categoryCode?: string;
 
@@ -88,16 +88,16 @@ export class BudgetCategory extends BaseEntity {
   @IsNumber()
   sortOrder!: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   parentCategoryId?: string;
 
   // Healthcare-Specific Fields
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   costCenter?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   departmentCode?: string;
 
@@ -114,7 +114,7 @@ export class BudgetCategory extends BaseEntity {
   isClinicalExpense!: boolean;
 
   // Allocation Rules
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   allocationMethod?: string; // FIXED, PER_RESIDENT, PER_BED, PERCENTAGE
 
@@ -141,19 +141,19 @@ export class BudgetCategory extends BaseEntity {
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   /**
    * Validate category before insert

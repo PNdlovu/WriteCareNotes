@@ -61,7 +61,7 @@ export class SafeguardingService {
   privatecppRepository: Repository<ChildProtectionPlan>;
   privatechildRepository: Repository<Child>;
 
-  constructor() {
+  const ructor() {
     this.incidentRepository = AppDataSource.getRepository(SafeguardingIncident);
     this.concernRepository = AppDataSource.getRepository(SafeguardingConcern);
     this.cppRepository = AppDataSource.getRepository(ChildProtectionPlan);
@@ -165,7 +165,7 @@ export class SafeguardingService {
    * @returns Updated incident with notification flags set
    */
   private async assessNotificationRequirements(incident: SafeguardingIncident): Promise<SafeguardingIncident> {
-    // LADO notification required for:
+    // LADO notification requiredfor:
     // - All allegations against staff
     // - Serious harm to children
     // - Sexual abuse
@@ -177,7 +177,7 @@ export class SafeguardingService {
       IncidentType.STAFF_ALLEGATION
     ].includes(incident.type) || incident.severity === Severity.CRITICAL;
 
-    // Police notification required for:
+    // Police notification requiredfor:
     // - Criminal offenses
     // - Missing children
     // - CSE/CCE
@@ -190,7 +190,7 @@ export class SafeguardingService {
       IncidentType.RADICALISATION
     ].includes(incident.type) || incident.severity === Severity.CRITICAL;
 
-    // OFSTED notification required for:
+    // OFSTED notification requiredfor:
     // - Serious incidents
     // - Allegations against staff
     // - Deaths or serious injuries

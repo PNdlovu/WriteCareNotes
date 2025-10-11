@@ -37,7 +37,7 @@ export interface AgentDeploymentConfig {
 export class AIAgentLifecycleService {
   privateeventListeners: Map<string, ((event: AgentLifecycleEvent) => void)[]> = new Map();
 
-  constructor(
+  const ructor(
     @InjectRepository(AIAgent)
     privateagentRepository: Repository<AIAgent>,
     @InjectRepository(AIAgentSession)
@@ -61,9 +61,9 @@ export class AIAgentLifecycleService {
 
     try {
       // Simulate agent deployment
-      console.log(`Deploying agent ${agent.name} with config:`, config);
+      console.log(`Deploying agent ${agent.name} withconfig:`, config);
       
-      // In a real implementation, this would:
+      // In a real implementation, thiswould:
       // 1. Create Kubernetes deployment
       // 2. Configure service endpoints
       // 3. Set up health checks
@@ -121,7 +121,7 @@ export class AIAgentLifecycleService {
       // Simulate agent undeployment
       console.log(`Undeploying agent ${agent.name}`);
       
-      // In a real implementation, this would:
+      // In a real implementation, thiswould:
       // 1. Scale down Kubernetes deployment to 0
       // 2. Remove service endpoints
       // 3. Clean up monitoring

@@ -17,7 +17,7 @@ import { logger } from '../../utils/logger';
 export class AgentReviewController {
   privatereviewService: AgentReviewService;
 
-  constructor() {
+  const ructor() {
     this.reviewService = new AgentReviewService();
   }
 

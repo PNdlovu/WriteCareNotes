@@ -41,7 +41,7 @@ export interface EventStreamConfig {
 export class EventStreamService {
   privateeventHandlers: Map<string, ((event: CareEventData) => Promise<void>)[]> = new Map();
 
-  constructor(
+  const ructor(
     @InjectRepository(CareEvent)
     privatecareEventRepository: Repository<CareEvent>,
     @InjectRepository(EventStream)
@@ -72,7 +72,7 @@ export class EventStreamService {
 
     // Process event asynchronously
     this.processEvent(savedEvent).catch(error => {
-      console.error('Error processing event:', error);
+      console.error('Error processingevent:', error);
     });
 
     return savedEvent;
@@ -111,7 +111,7 @@ export class EventStreamService {
       await this.careEventRepository.save(event);
 
     } catch (error) {
-      console.error('Error processing event:', error);
+      console.error('Error processingevent:', error);
       event.errorMessage = error.message;
       await this.careEventRepository.save(event);
     }
@@ -163,7 +163,7 @@ export class EventStreamService {
     for (const [key, value] of Object.entries(conditions)) {
       if (key === 'domain' && event.domain !== value) return false;
       if (key === 'entityId' && event.entityId !== value) return false;
-      if (key === 'data' && typeof value === 'object') {
+      if (key === 'data' && typeofvalue === 'object') {
         for (const [dataKey, dataValue] of Object.entries(value)) {
           if (event.data[dataKey] !== dataValue) return false;
         }

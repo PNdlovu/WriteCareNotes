@@ -38,7 +38,7 @@ export interface AlternativeResource {
 
 @Injectable()
 export class FallbackHandlerService {
-  private readonly logger = new Logger(FallbackHandlerService.name);
+  private readonlylogger = new Logger(FallbackHandlerService.name);
 
   /**
    * 🚨 GENERATE FALLBACK RESPONSE
@@ -49,7 +49,7 @@ export class FallbackHandlerService {
     prompt: AISuggestionPrompt,
     reason: 'insufficient_sources' | 'low_confidence' | 'safety_validation_failed' | 'system_error',
   ): Promise<FallbackResponse> {
-    this.logger.warn(`Generating fallback for reason: ${reason}`);
+    this.logger.warn(`Generating fallback forreason: ${reason}`);
 
     const baseMessage = this.getBaseMessage(reason);
     const contextMessage = this.getContextualMessage(prompt);
@@ -97,7 +97,7 @@ export class FallbackHandlerService {
 
     switch (prompt.intent) {
       case 'suggest_clause':
-        return `We could not find verified policy clauses for "${prompt.context}" in ${jurisdictionNames}. This may be because:
+        return `We could not find verified policy clauses for "${prompt.context}" in ${jurisdictionNames}. This may bebecause:
 • No templates exist for this specific scenario
 • The terminology used doesn't match our knowledge base
 • This is a new or emerging policy area`;
@@ -123,7 +123,7 @@ export class FallbackHandlerService {
    * 💡 GET SUGGESTED ACTIONS
    */
   private getSuggestedActions(prompt: AISuggestionPrompt, reason: string): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
 
     // Always include consultation option
     actions.push('📞 Consult your compliance officer or manager');
@@ -190,7 +190,7 @@ export class FallbackHandlerService {
     jurisdictions: RegulatoryJurisdiction[],
     intent: string,
   ): AlternativeResource[] {
-    constresources: AlternativeResource[] = [];
+    const resources: AlternativeResource[] = [];
 
     // Add help center
     resources.push({
@@ -287,25 +287,25 @@ export class FallbackHandlerService {
   private getJurisdictionResource(jurisdiction: RegulatoryJurisdiction): string | null {
     const resources = {
       [RegulatoryJurisdiction.ENGLAND_CQC]: 
-        '📞 CQC helpline: 03000 616161',
+        '📞 CQChelpline: 03000 616161',
       
       [RegulatoryJurisdiction.SCOTLAND_CARE_INSPECTORATE]: 
-        '📞 Care Inspectorate: 0345 600 9527',
+        '📞 CareInspectorate: 0345 600 9527',
       
       [RegulatoryJurisdiction.WALES_CIW]: 
-        '📞 CIW South Wales: 0300 7900 126',
+        '📞 CIW SouthWales: 0300 7900 126',
       
       [RegulatoryJurisdiction.NORTHERN_IRELAND_RQIA]: 
         '📞 RQIA: 028 9051 7500',
       
       [RegulatoryJurisdiction.ISLE_OF_MAN]: 
-        '📞 Health & Social Care: +44 1624 685656',
+        '📞 Health & SocialCare: +44 1624 685656',
       
       [RegulatoryJurisdiction.JERSEY]: 
-        '📞 Health Services: +44 1534 442000',
+        '📞 HealthServices: +44 1534 442000',
       
       [RegulatoryJurisdiction.GUERNSEY]: 
-        '📞 Health & Social Care: +44 1481 725241',
+        '📞 Health & SocialCare: +44 1481 725241',
     };
 
     return resources[jurisdiction] || null;
@@ -332,7 +332,7 @@ export class FallbackHandlerService {
    * 📞 SHOULD CONTACT COMPLIANCE OFFICER
    */
   private shouldContactCompliance(reason: string, prompt: AISuggestionPrompt): boolean {
-    // Always require compliance contact for:
+    // Always require compliance contactfor:
     // - Safety validation failures
     // - Policy publishing intents
     // - Compliance validation intents
@@ -355,7 +355,7 @@ export class FallbackHandlerService {
     
     return {
       message: 'Fallback statistics tracking - implementation pending',
-      // Will include:
+      // Willinclude:
       // - Most common fallback reasons
       // - Jurisdiction-specific gaps
       // - Intent-specific gaps

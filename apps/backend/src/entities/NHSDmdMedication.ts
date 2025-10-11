@@ -19,11 +19,11 @@
  * 
  * @sources
  * - NHSBSA dm+d API: https://services.nhsbsa.nhs.uk/dmd-browser/
- * - dm+d XML files: https://www.nhsbsa.nhs.uk/pharmacies-gp-practices-and-appliance-contractors/dictionary-medicines-and-devices-dmd
- * - SNOMED CT: https://termbrowser.nhs.uk/
+ * - dm+d XMLfiles: https://www.nhsbsa.nhs.uk/pharmacies-gp-practices-and-appliance-contractors/dictionary-medicines-and-devices-dmd
+ * - SNOMEDCT: https://termbrowser.nhs.uk/
  * 
  * @interoperability
- * This entity enables data exchange with:
+ * This entity enables data exchangewith:
  * - NHS Spine (national health IT infrastructure)
  * - Electronic Prescription Service (EPS)
  * - Summary Care Record (SCR)
@@ -154,7 +154,7 @@ export class NHSDmdMedication extends BaseEntity {
   /**
    * Short Name - Abbreviated name for display
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   shortName?: string;
 
   /**
@@ -181,25 +181,25 @@ export class NHSDmdMedication extends BaseEntity {
    * Strength - Active ingredient strength
    * e.g., "500mg", "10mg/5ml"
    */
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   strength?: string;
 
   /**
    * Unit of Measure - Standard unit (mg, ml, mcg, etc.)
    */
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   unitOfMeasure?: string;
 
   /**
    * Manufacturer - For AMPs (branded products)
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   manufacturer?: string;
 
   /**
    * Supplier - Who supplies the medication
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   supplier?: string;
 
   // ==========================================
@@ -219,7 +219,7 @@ export class NHSDmdMedication extends BaseEntity {
   /**
    * Controlled Drug Schedule - Legal schedule under Misuse of Drugs Regulations
    */
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   controlledDrugSchedule?: string;
 
   // ==========================================
@@ -227,7 +227,7 @@ export class NHSDmdMedication extends BaseEntity {
   // ==========================================
 
   /**
-   * Prescribable - Can this medication be prescribed?
+   * Prescribable - Can this medication beprescribed?
    */
   @Column({ type: 'boolean', default: true })
   isPrescribable!: boolean;
@@ -241,19 +241,19 @@ export class NHSDmdMedication extends BaseEntity {
   /**
    * BNF Code - British National Formulary code
    */
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   bnfCode?: string;
 
   /**
    * BNF for Children Code - Pediatric BNF code
    */
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   bnfcCode?: string;
 
   /**
    * Prescribing Status - Active, discontinued, etc.
    */
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   prescribingStatus?: string;
 
   // ==========================================
@@ -300,7 +300,7 @@ export class NHSDmdMedication extends BaseEntity {
   // ==========================================
 
   /**
-   * Pediatric Use - Approved for children?
+   * Pediatric Use - Approved forchildren?
    */
   @Column({ type: 'boolean', default: false })
   isPediatricApproved!: boolean;
@@ -337,13 +337,13 @@ export class NHSDmdMedication extends BaseEntity {
   /**
    * NHS dm+d Version - Version of dm+d database
    */
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   dmdVersion?: string;
 
   /**
    * NHS dm+d ID - Original dm+d database ID
    */
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   dmdId?: string;
 
   /**
@@ -355,7 +355,7 @@ export class NHSDmdMedication extends BaseEntity {
   /**
    * Drug Tariff Category - NHS pricing category
    */
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   drugTariffCategory?: string;
 
   // ==========================================

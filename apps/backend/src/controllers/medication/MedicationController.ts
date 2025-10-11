@@ -27,9 +27,9 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: CQC Medication Management Standards
  * - Scotland: Care Inspectorate Medication Guidelines
  * - Wales: CIW Medication Safety Requirements
- * - Northern Ireland: RQIA Medication Standards
- * - Republic of Ireland: HIQA Medication Management Framework
- * - Isle of Man: DHSC Medication Guidelines
+ * - NorthernIreland: RQIA Medication Standards
+ * - Republic ofIreland: HIQA Medication Management Framework
+ * - Isle ofMan: DHSC Medication Guidelines
  * - Guernsey: Committee for Health & Social Care Standards
  * - Jersey: Care Commission Medication Requirements
  * - MHRA Good Distribution Practice Guidelines
@@ -54,7 +54,7 @@ import { logger } from '../../utils/logger';
 export class MedicationController {
   privatemedicationService: MedicationService;
 
-  constructor() {
+  const ructor() {
     this.medicationService = new MedicationService();
   }
 
@@ -71,7 +71,7 @@ export class MedicationController {
         return;
       }
 
-      constmedicationData: MedicationData = {
+      const medicationData: MedicationData = {
         name: req.body['name'],
         genericName: req.body['genericName'],
         brandName: req.body['brandName'],
@@ -99,7 +99,7 @@ export class MedicationController {
       if (!medicationData.name || !medicationData.dosageForm || 
           !medicationData.strength || !medicationData.unit || !medicationData.category) {
         res.status(400).json({ 
-          error: 'Missing required fields: name, dosageForm, strength, unit, category' 
+          error: 'Missing requiredfields: name, dosageForm, strength, unit, category' 
         });
         return;
       }
@@ -111,7 +111,7 @@ export class MedicationController {
       ];
       if (!validDosageForms.includes(medicationData.dosageForm.toLowerCase())) {
         res.status(400).json({ 
-          error: 'Invalid dosage form. Must be one of: ' + validDosageForms.join(', ')
+          error: 'Invalid dosage form. Must be oneof: ' + validDosageForms.join(', ')
         });
         return;
       }
@@ -125,7 +125,7 @@ export class MedicationController {
       ];
       if (!validCategories.includes(medicationData.category.toLowerCase())) {
         res.status(400).json({ 
-          error: 'Invalid category. Must be one of: ' + validCategories.join(', ')
+          error: 'Invalid category. Must be oneof: ' + validCategories.join(', ')
         });
         return;
       }
@@ -179,7 +179,7 @@ export class MedicationController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      constfilters: MedicationFilters = {};
+      const filters: MedicationFilters = {};
 
       // Apply filters from query parameters
       if (req.query['name']) {
@@ -297,7 +297,7 @@ export class MedicationController {
         return;
       }
 
-      constupdates: Partial<MedicationData> = {};
+      const updates: Partial<MedicationData> = {};
 
       // Only include provided fields in updates
       if (req.body['name'] !== undefined) updates.name = req.body['name'];
@@ -336,7 +336,7 @@ export class MedicationController {
         ];
         if (!validDosageForms.includes(updates.dosageForm.toLowerCase())) {
           res.status(400).json({ 
-            error: 'Invalid dosage form. Must be one of: ' + validDosageForms.join(', ')
+            error: 'Invalid dosage form. Must be oneof: ' + validDosageForms.join(', ')
           });
           return;
         }
@@ -352,7 +352,7 @@ export class MedicationController {
         ];
         if (!validCategories.includes(updates.category.toLowerCase())) {
           res.status(400).json({ 
-            error: 'Invalid category. Must be one of: ' + validCategories.join(', ')
+            error: 'Invalid category. Must be oneof: ' + validCategories.join(', ')
           });
           return;
         }
@@ -406,7 +406,7 @@ export class MedicationController {
         return;
       }
 
-      constupdates: Partial<MedicationData> = {};
+      const updates: Partial<MedicationData> = {};
 
       // Only include provided fields in updates
       if (req.body['name'] !== undefined) updates.name = req.body['name'];
@@ -445,7 +445,7 @@ export class MedicationController {
         ];
         if (!validDosageForms.includes(updates.dosageForm.toLowerCase())) {
           res.status(400).json({ 
-            error: 'Invalid dosage form. Must be one of: ' + validDosageForms.join(', ')
+            error: 'Invalid dosage form. Must be oneof: ' + validDosageForms.join(', ')
           });
           return;
         }
@@ -461,7 +461,7 @@ export class MedicationController {
         ];
         if (!validCategories.includes(updates.category.toLowerCase())) {
           res.status(400).json({ 
-            error: 'Invalid category. Must be one of: ' + validCategories.join(', ')
+            error: 'Invalid category. Must be oneof: ' + validCategories.join(', ')
           });
           return;
         }

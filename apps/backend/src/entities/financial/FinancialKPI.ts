@@ -58,7 +58,7 @@ export enum AlertType {
   THRESHOLD_EXCEEDED = 'threshold_exceeded',
   THRESHOLD_BELOW = 'threshold_below',
   TREND_NEGATIVE = 'trend_negative',
-  VARIANCE_HIGH = 'variance_high'
+  variance_HIGH = 'variance_high'
 }
 
 export enum AlertSeverity {
@@ -77,10 +77,10 @@ export enum AlertSeverity {
 @Index(['entityId', 'kpiType'])
 export class FinancialKPI extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // KPI Identification
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   kpiName!: string;
@@ -98,7 +98,7 @@ export class FinancialKPI extends BaseEntity {
   @IsEnum(KPIFrequency)
   frequency!: KPIFrequency;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   entityType!: string;
 
@@ -165,7 +165,7 @@ export class FinancialKPI extends BaseEntity {
   @IsDate()
   periodEnd!: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   @IsString()
   calculationFormula?: string;
 
@@ -178,7 +178,7 @@ export class FinancialKPI extends BaseEntity {
   @IsEnum(Currency)
   currency?: Currency;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   unit?: string;
 
@@ -192,7 +192,7 @@ export class FinancialKPI extends BaseEntity {
   @Transform(({ value }) => value ? new Decimal(value) : null)
   performanceScore?: Decimal;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   performanceRating?: string;
 
@@ -217,7 +217,7 @@ export class FinancialKPI extends BaseEntity {
   @IsUUID()
   departmentId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   costCenter?: string;
 
@@ -238,25 +238,25 @@ export class FinancialKPI extends BaseEntity {
   @IsNumber()
   alertCount!: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   highestAlertSeverity?: string;
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   /**
    * Validate KPI before insert
@@ -435,7 +435,7 @@ export class FinancialKPI extends BaseEntity {
           return currentVal < alert.threshold;
         case AlertType.TREND_NEGATIVE:
           return this.trend === TrendDirection.DOWN;
-        case AlertType.VARIANCE_HIGH:
+        case AlertType.variance_HIGH:
           return this.varianceFromTarget && 
                  Math.abs(this.varianceFromTarget.toNumber()) > alert.threshold;
         default:

@@ -23,7 +23,7 @@ export class IntegrationService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.integrationRepository = AppDataSource.getRepository(SystemIntegration);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -46,7 +46,7 @@ export class IntegrationService {
       
       return savedIntegration;
     } catch (error: unknown) {
-      console.error('Error creating advanced integration:', error);
+      console.error('Error creating advancedintegration:', error);
       throw error;
     }
   }
@@ -62,7 +62,7 @@ export class IntegrationService {
         criticalIssues: integrations.filter(int => !int.isHealthy()).length
       };
     } catch (error: unknown) {
-      console.error('Error getting integration health:', error);
+      console.error('Error getting integrationhealth:', error);
       throw error;
     }
   }

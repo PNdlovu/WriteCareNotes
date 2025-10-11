@@ -23,7 +23,7 @@ export class AdvancedAnalyticsService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.datasetRepository = AppDataSource.getRepository(AnalyticsDataset);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -76,7 +76,7 @@ export class AdvancedAnalyticsService {
       
       return savedDataset;
     } catch (error: unknown) {
-      console.error('Error creating advanced dataset:', error);
+      console.error('Error creating advanceddataset:', error);
       throw error;
     }
   }
@@ -109,7 +109,7 @@ export class AdvancedAnalyticsService {
         ]
       };
     } catch (error: unknown) {
-      console.error('Error generating executive dashboard:', error);
+      console.error('Error generating executivedashboard:', error);
       throw error;
     }
   }
@@ -136,7 +136,7 @@ export class AdvancedAnalyticsService {
 
       return mlModels[analysisType] || { error: 'Analysis type not supported' };
     } catch (error: unknown) {
-      console.error('Error performing predictive analysis:', error);
+      console.error('Error performing predictiveanalysis:', error);
       throw error;
     }
   }

@@ -119,14 +119,14 @@ export interface QueryAction {
 
 @Injectable()
 export class AIPolicyAssistantService {
-  private readonly logger = new Logger(AIPolicyAssistantService.name);
+  private readonlylogger = new Logger(AIPolicyAssistantService.name);
   privateopenai: OpenAI;
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly auditTrailService: AuditService,
-    private readonly safetyGuard: AISafetyGuardService,
-    private readonly transparencyService: AITransparencyService
+  const ructor(
+    private readonlyconfigService: ConfigService,
+    private readonlyauditTrailService: AuditService,
+    private readonlysafetyGuard: AISafetyGuardService,
+    private readonlytransparencyService: AITransparencyService
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -138,11 +138,11 @@ export class AIPolicyAssistantService {
    */
   async analyzePolicyContentSafe(policy: PolicyDraft): Promise<AIAnalysisResult> {
     const startTime = Date.now();
-    this.logger.log(`Starting enhanced AI analysis for policy: ${policy.title}`);
+    this.logger.log(`Starting enhanced AI analysis forpolicy: ${policy.title}`);
 
     try {
       // Extract policy context for safety validation
-      constcontext: PolicyContext = {
+      const context: PolicyContext = {
         jurisdiction: policy.jurisdiction,
         category: policy.category,
         criticalCompliance: AIPolicyAssistantHelpers.isCriticalComplianceArea(policy.category),
@@ -154,7 +154,7 @@ export class AIPolicyAssistantService {
       const inputValidation = await this.safetyGuard.validateInput(policyText, context);
 
       if (!inputValidation.safe) {
-        throw new Error(`Input validation failed: ${inputValidation.warnings.map(w => w.message).join(', ')}`);
+        throw new Error(`Input validationfailed: ${inputValidation.warnings.map(w => w.message).join(', ')}`);
       }
 
       // Step 2: Generate AI analysis with safety monitoring
@@ -227,7 +227,7 @@ export class AIPolicyAssistantService {
       };
 
     } catch (error) {
-      this.logger.error(`Enhanced AI analysis failed: ${error.message}`, error.stack);
+      this.logger.error(`Enhanced AI analysisfailed: ${error.message}`, error.stack);
       
       // Return safe fallback response with required safety fields
       const basicAnalysis = {
@@ -270,7 +270,7 @@ export class AIPolicyAssistantService {
           recommendations: ['Consult compliance expert', 'Manual policy review'],
           verificationSteps: ['Contact technical support', 'Arrange expert review']
         },
-        safetyWarnings: [`AI analysis failed: ${error.message}`],
+        safetyWarnings: [`AI analysisfailed: ${error.message}`],
         humanReviewRequired: true,
         safetyFeatures: {
           uncertaintyIndicators: [],
@@ -282,7 +282,7 @@ export class AIPolicyAssistantService {
     }
   }
   async analyzePolicyContent(policy: PolicyDraft): Promise<AIAnalysisResult> {
-    this.logger.log(`Analyzing policy content for: ${policy.title}`);
+    this.logger.log(`Analyzing policy contentfor: ${policy.title}`);
 
     try {
       const prompt = this.buildAnalysisPrompt(policy);
@@ -318,7 +318,7 @@ export class AIPolicyAssistantService {
         }
       );
 
-      this.logger.log(`AI analysis completed for policy: ${policy.title}`);
+      this.logger.log(`AI analysis completed forpolicy: ${policy.title}`);
       return analysisResult;
 
     } catch (error) {
@@ -340,7 +340,7 @@ export class AIPolicyAssistantService {
       specialRequirements?: string[];
     }
   ): Promise<AIGeneratedPolicy> {
-    this.logger.log(`Generating AI policy for: ${requirements.title}`);
+    this.logger.log(`Generating AI policyfor: ${requirements.title}`);
 
     try {
       const prompt = this.buildGenerationPrompt(requirements);
@@ -378,11 +378,11 @@ export class AIPolicyAssistantService {
         }
       });
 
-      this.logger.log(`AI policy generated: ${requirements.title}`);
+      this.logger.log(`AI policygenerated: ${requirements.title}`);
       return generatedPolicy;
 
     } catch (error) {
-      this.logger.error(`AI policy generation failed:`, error.stack);
+      this.logger.error(`AI policy generationfailed:`, error.stack);
       throw error;
     }
   }
@@ -395,7 +395,7 @@ export class AIPolicyAssistantService {
     userId: string,
     organizationId: string
   ): Promise<NaturalLanguageQuery> {
-    this.logger.log(`Processing NL query: ${query.substring(0, 100)}...`);
+    this.logger.log(`Processing NLquery: ${query.substring(0, 100)}...`);
 
     try {
       const prompt = this.buildQueryPrompt(query, organizationId);
@@ -430,7 +430,7 @@ export class AIPolicyAssistantService {
       return queryResult;
 
     } catch (error) {
-      this.logger.error(`NL query processing failed:`, error.stack);
+      this.logger.error(`NL query processingfailed:`, error.stack);
       throw error;
     }
   }
@@ -473,7 +473,7 @@ export class AIPolicyAssistantService {
       return suggestions;
 
     } catch (error) {
-      this.logger.error(`AI template suggestion failed:`, error.stack);
+      this.logger.error(`AI template suggestionfailed:`, error.stack);
       throw error;
     }
   }
@@ -516,7 +516,7 @@ export class AIPolicyAssistantService {
       return riskPrediction;
 
     } catch (error) {
-      this.logger.error(`AI risk prediction failed:`, error.stack);
+      this.logger.error(`AI risk predictionfailed:`, error.stack);
       throw error;
     }
   }
@@ -528,7 +528,7 @@ export class AIPolicyAssistantService {
     policy: PolicyDraft,
     focusAreas: string[] = ['clarity', 'compliance', 'completeness']
   ): Promise<PolicyImprovement> {
-    this.logger.log(`AI improving policy: ${policy.title}`);
+    this.logger.log(`AI improvingpolicy: ${policy.title}`);
 
     try {
       const prompt = this.buildImprovementPrompt(policy, focusAreas);
@@ -554,7 +554,7 @@ export class AIPolicyAssistantService {
       return improvement;
 
     } catch (error) {
-      this.logger.error(`AI policy improvement failed:`, error.stack);
+      this.logger.error(`AI policy improvementfailed:`, error.stack);
       throw error;
     }
   }
@@ -564,14 +564,14 @@ export class AIPolicyAssistantService {
   private getSystemPrompt(type: string): string {
     const prompts = {
       policy_analysis: `You are an expert policy analyst specializing in healthcare compliance and care home regulations across the entire British Isles. 
-                       You have comprehensive knowledge of ALL regulatory frameworks:
+                       You have comprehensive knowledge of ALL regulatoryframeworks:
                        - CQC (England): Fundamental Standards 9-20, KLOEs (Safe, Effective, Caring, Responsive, Well-Led)
                        - Care Inspectorate (Scotland): National Care Standards 1-15, Health and Social Care Standards
                        - CIW (Wales): Six Quality Standards (Well-being, Voice & Control, Good Care, Right Staff, Safe Environment, Governance)
                        - RQIA (Northern Ireland): Seven Minimum Standards (Rights, Management, Support, Healthcare, Nutrition, Environment, Safeguarding)
                        - JCC (Jersey): Six Care Standards (Rights & Dignity, Management, Staffing, Care & Support, Safeguarding, Premises)
                        - GCRB (Guernsey): Guernsey Care Home Standards under Health Service Law 2013
-                       - DHSC Isle of Man: Manx Care Home Standards under Care Services Act 2006
+                       - DHSC Isle ofMan: Manx Care Home Standards under Care Services Act 2006
                        
                        Analyze policies for compliance gaps, clarity issues, and improvement opportunities across all applicable jurisdictions.
                        Provide specific, actionable recommendations with exact regulatory references.`,
@@ -615,14 +615,14 @@ export class AIPolicyAssistantService {
   }
 
   private buildAnalysisPrompt(policy: PolicyDraft): string {
-    return `Analyze this care home policy for compliance and quality:
+    return `Analyze this care home policy for compliance andquality:
 
 Title: ${policy.title}
 Category: ${policy.category}
 Jurisdiction: ${policy.jurisdiction.join(', ')}
 Content: ${this.extractTextFromRichContent(policy.content)}
 
-Provide analysis in JSON format with:
+Provide analysis in JSON formatwith:
 1. Overall score (0-100)
 2. Specific suggestions for improvement
 3. Compliance gaps identified
@@ -633,7 +633,7 @@ Focus on British Isles care home regulations and best practices.`;
   }
 
   private buildGenerationPrompt(requirements: any): string {
-    return `Generate a comprehensive care home policy with these requirements:
+    return `Generate a comprehensive care home policy with theserequirements:
 
 Title: ${requirements.title}
 Category: ${requirements.category}
@@ -642,7 +642,7 @@ Key Points: ${requirements.keyPoints.join(', ')}
 Organization Context: ${requirements.organizationContext}
 Special Requirements: ${requirements.specialRequirements?.join(', ') || 'None'}
 
-Generate a structured policy with:
+Generate a structured policywith:
 1. Clear title and purpose
 2. Scope and definitions
 3. Policy statements
@@ -654,12 +654,12 @@ Ensure compliance with relevant British Isles regulations.`;
   }
 
   private buildQueryPrompt(query: string, organizationId: string): string {
-    return `Process this natural language query about care home policies:
+    return `Process this natural language query about care homepolicies:
 
 Query: "${query}"
 Organization ID: ${organizationId}
 
-Extract and return in JSON format:
+Extract and return in JSONformat:
 1. Intent (search, create, analyze, compliance, help)
 2. Entities (policy categories, jurisdictions, dates, etc.)
 3. Suggested actions
@@ -669,7 +669,7 @@ Focus on care home policy management context.`;
   }
 
   private buildTemplateSuggestionPrompt(context: any): string {
-    return `Suggest policy templates for this care home organization:
+    return `Suggest policy templates for this care homeorganization:
 
 Type: ${context.type}
 Size: ${context.size}
@@ -677,7 +677,7 @@ Specialties: ${context.specialties.join(', ')}
 Jurisdiction: ${context.jurisdiction.join(', ')}
 Existing Policies: ${context.existingPolicies.join(', ')}
 
-Recommend priority templates based on:
+Recommend priority templates basedon:
 1. Regulatory requirements
 2. Missing essential policies
 3. Organization type and size
@@ -687,7 +687,7 @@ Return prioritized list with explanations.`;
   }
 
   private buildRiskPredictionPrompt(policies: PolicyDraft[], orgData: any): string {
-    return `Predict compliance risks for this care home:
+    return `Predict compliance risks for this carehome:
 
 Policy Count: ${policies.length}
 Policy Categories: ${[...new Set(policies.map(p => p.category))].join(', ')}
@@ -695,7 +695,7 @@ Recent Incidents: ${orgData.recentIncidents.length}
 Staff Turnover: ${orgData.staffTurnover}%
 Training Completion: ${orgData.trainingCompletion}%
 
-Analyze and predict:
+Analyze andpredict:
 1. High-risk areas
 2. Likelihood of compliance issues
 3. Potential regulatory violations
@@ -705,13 +705,13 @@ Focus on care home compliance patterns and risks.`;
   }
 
   private buildImprovementPrompt(policy: PolicyDraft, focusAreas: string[]): string {
-    return `Improve this care home policy focusing on: ${focusAreas.join(', ')}
+    return `Improve this care home policy focusingon: ${focusAreas.join(', ')}
 
 Title: ${policy.title}
 Category: ${policy.category}
 Current Content: ${this.extractTextFromRichContent(policy.content)}
 
-Provide specific improvements for:
+Provide specific improvementsfor:
 1. Content clarity and readability
 2. Regulatory compliance
 3. Completeness and coverage

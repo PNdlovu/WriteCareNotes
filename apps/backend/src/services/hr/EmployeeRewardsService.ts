@@ -153,7 +153,7 @@ export class EmployeeRewardsService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -180,7 +180,7 @@ export class EmployeeRewardsService {
       const applicableCriteria = await this.getApplicableRewardCriteria(employee, metrics);
       
       // Generate rewards based on performance
-      constrewards: EmployeeReward[] = [];
+      const rewards: EmployeeReward[] = [];
       
       for (const criteria of applicableCriteria) {
         if (this.meetsRewardCriteria(metrics, criteria)) {
@@ -236,7 +236,7 @@ export class EmployeeRewardsService {
       await this.validateNomination(nomination);
       
       // Create peer nomination reward
-      constreward: EmployeeReward = {
+      const reward: EmployeeReward = {
         rewardId: `peer-${Date.now()}`,
         employeeId: nomination.nomineeId,
         rewardType: RewardType.PEER_NOMINATION,
@@ -345,7 +345,7 @@ export class EmployeeRewardsService {
         where: { employmentInformation: { employmentStatus: 'ACTIVE' } as any }
       });
 
-      constmilestoneRewards: EmployeeReward[] = [];
+      const milestoneRewards: EmployeeReward[] = [];
 
       for (const employee of employees) {
         // Check for service anniversaries
@@ -417,7 +417,7 @@ export class EmployeeRewardsService {
 
   private async getApplicableRewardCriteria(employee: Employee, metrics: PerformanceMetrics): Promise<RewardCriteria[]> {
     // Return reward criteria that the employee is eligible for
-    constcriteria: RewardCriteria[] = [
+    const criteria: RewardCriteria[] = [
       {
         criteriaId: 'performance-excellence',
         criteriaName: 'Performance Excellence',
@@ -488,7 +488,7 @@ export class EmployeeRewardsService {
       value: criteria.rewardValue,
       awardedDate: new Date(),
       awardedBy: 'system',
-      reason: `Achieved ${criteria.criteriaName} with score: ${metrics.overallScore}`,
+      reason: `Achieved ${criteria.criteriaName} withscore: ${metrics.overallScore}`,
       status: criteria.automationRules.approvalRequired ? 'pending' : 'approved'
     };
   }
@@ -605,7 +605,7 @@ export class EmployeeRewardsService {
   }
 
   private async groupRewardsByDepartment(rewards: EmployeeReward[]): Promise<{ [key: string]: number }> {
-    constdepartmentGroups: { [key: string]: number } = {};
+    const departmentGroups: { [key: string]: number } = {};
     
     for (const reward of rewards) {
       const employee = await this.employeeRepository.findOne({ where: { id: reward.employeeId } });
@@ -650,7 +650,7 @@ export class EmployeeRewardsService {
   }
 
   private async generateRewardsRecommendations(organizationId: string, rewards: EmployeeReward[], roi: any): Promise<string[]> {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (roi.percentage < 200) {
       recommendations.push('Consider increasing reward values to improve ROI');
@@ -698,7 +698,7 @@ export class EmployeeRewardsService {
   }
 
   private async checkTrainingMilestones(employee: Employee): Promise<EmployeeReward[]> {
-    constrewards: EmployeeReward[] = [];
+    const rewards: EmployeeReward[] = [];
     
     // Check for recent training completions
     const recentCompletions = employee.trainingRecords.filter(tr => 
@@ -730,7 +730,7 @@ export class EmployeeRewardsService {
   }
 
   private async checkPerformanceMilestones(employee: Employee): Promise<EmployeeReward[]> {
-    constrewards: EmployeeReward[] = [];
+    const rewards: EmployeeReward[] = [];
     
     const avgRating = employee.getAveragePerformanceRating();
     if (avgRating >= 4.5) {
@@ -747,7 +747,7 @@ export class EmployeeRewardsService {
         },
         awardedDate: new Date(),
         awardedBy: 'system',
-        reason: `Outstanding performance rating: ${avgRating.toFixed(1)}`,
+        reason: `Outstanding performancerating: ${avgRating.toFixed(1)}`,
         status: 'approved'
       });
     }

@@ -65,32 +65,32 @@ export class RightToWorkDocument extends BaseEntity {
   rightToWorkCheck?: RightToWorkCheck;
 
   // Document Details
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   @Length(1, 100)
   documentType!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   fileName!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   @Length(1, 100)
   originalFileName!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   @Length(1, 50)
   mimeType!: string;
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   @IsString()
   @Length(1, 500)
   filePath!: string;
 
-  @Column({ type: 'varchar', length: 64 })
+  @Column({ type: 'var char', length: 64 })
   @IsString()
   @Length(64, 64)
   fileHash!: string;
@@ -148,7 +148,7 @@ export class RightToWorkDocument extends BaseEntity {
   uploadedBy?: string;
 
   // Document Metadata
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -164,26 +164,26 @@ export class RightToWorkDocument extends BaseEntity {
   @IsOptional()
   expiryDate?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   issuingAuthority?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   issuingCountry?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 50)
   documentVersion?: string;
 
   // Security & Compliance
-  @Column({ type: 'varchar', length: 64, nullable: true })
+  @Column({ type: 'var char', length: 64, nullable: true })
   @IsString()
   @IsOptional()
   @Length(64, 64)
@@ -213,7 +213,7 @@ export class RightToWorkDocument extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)

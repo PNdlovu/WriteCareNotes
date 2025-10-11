@@ -63,7 +63,7 @@ export interface ActivityFilters {
 /**
  * Service #12: Activity & Wellbeing Service
  * 
- * Comprehensive activity coordination and wellbeing tracking with:
+ * Comprehensive activity coordination and wellbeing trackingwith:
  * - Activity planning and scheduling
  * - Attendance tracking
  * - Participation monitoring
@@ -77,7 +77,7 @@ export class ActivityWellbeingService {
   privateactivityRepository: Repository<Activity>;
   privateattendanceRepository: Repository<AttendanceRecord>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.activityRepository = this.dataSource.getRepository(Activity);
     this.attendanceRepository = this.dataSource.getRepository(AttendanceRecord);
   }

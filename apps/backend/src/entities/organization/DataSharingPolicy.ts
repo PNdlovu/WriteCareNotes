@@ -69,10 +69,10 @@ export enum DataCategory {
 @Index(['dataCategory', 'sharingType'])
 export class DataSharingPolicy extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // Policy Identity
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   policyName!: string;
@@ -126,7 +126,7 @@ export class DataSharingPolicy extends BaseEntity {
   expiryDate?: Date;
 
   // GDPR Compliance
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   lawfulBasis!: string;
 
@@ -146,19 +146,19 @@ export class DataSharingPolicy extends BaseEntity {
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   @BeforeInsert()
   async beforeInsert(): Promise<void> {

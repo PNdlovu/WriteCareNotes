@@ -46,10 +46,10 @@ export interface AuditEventRequest {
 
 @Injectable()
 export class AuditService {
-  private readonly logger = new Logger(AuditService.name);
+  private readonlylogger = new Logger(AuditService.name);
 
-  constructor(
-    private readonly enterpriseAuditService: EnterpriseAuditService
+  const ructor(
+    private readonlyenterpriseAuditService: EnterpriseAuditService
   ) {}
 
   /**
@@ -57,7 +57,7 @@ export class AuditService {
    */
   async logEvent(event: AuditEventRequest): Promise<void> {
     try {
-      constauditEvent: AuditEvent = {
+      const auditEvent: AuditEvent = {
         id: this.generateId(),
         userId: event.userId,
         action: event.action,
@@ -77,10 +77,10 @@ export class AuditService {
       // TODO: Implement proper audit event storage
       this.logger.log(`Audit event: ${JSON.stringify(auditEvent)}`);
       
-      this.logger.log(`Audit event logged: ${event.action} on ${event.resource} by ${event.userId}`);
+      this.logger.log(`Audit eventlogged: ${event.action} on ${event.resource} by ${event.userId}`);
     } catch (error) {
-      this.logger.error(`Failed to log audit event: ${error.message}`, error.stack);
-      throw new Error(`Failed to log audit event: ${error.message}`);
+      this.logger.error(`Failed to log auditevent: ${error.message}`, error.stack);
+      throw new Error(`Failed to log auditevent: ${error.message}`);
     }
   }
 
@@ -111,7 +111,7 @@ export class AuditService {
       // TODO: Implement proper audit event retrieval
       return [];
     } catch (error) {
-      this.logger.error(`Failed to get user audit events: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get user auditevents: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -124,7 +124,7 @@ export class AuditService {
       // TODO: Implement proper audit event retrieval
       return [];
     } catch (error) {
-      this.logger.error(`Failed to get resource audit events: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get resource auditevents: ${error.message}`, error.stack);
       throw error;
     }
   }

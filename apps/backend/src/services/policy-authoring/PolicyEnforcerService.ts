@@ -108,12 +108,12 @@ export interface RequiredAction {
 
 @Injectable()
 export class PolicyEnforcerService {
-  private readonly logger = new Logger(PolicyEnforcerService.name);
+  private readonlylogger = new Logger(PolicyEnforcerService.name);
 
-  constructor(
-    private readonly policyStatusService: PolicyStatusService,
-    private readonly auditTrailService: AuditService,
-    private readonly notificationService: NotificationService
+  const ructor(
+    private readonlypolicyStatusService: PolicyStatusService,
+    private readonlyauditTrailService: AuditService,
+    private readonlynotificationService: NotificationService
   ) {}
 
   /**
@@ -127,10 +127,10 @@ export class PolicyEnforcerService {
   ): Promise<EnforcementResult> {
     this.logger.log(`Enforcing policies for workflow ${context.workflowType} by user ${context.userId}`);
 
-    constviolations: PolicyViolation[] = [];
-    constwarnings: PolicyWarning[] = [];
-    constrequiredActions: RequiredAction[] = [];
-    letblockingAction: EnforcementAction | null = null;
+    const violations: PolicyViolation[] = [];
+    const warnings: PolicyWarning[] = [];
+    const requiredActions: RequiredAction[] = [];
+    let blockingAction: EnforcementAction | null = null;
     let resultMessage = '';
 
     // Find applicable enforcement rules for this workflow
@@ -167,7 +167,7 @@ export class PolicyEnforcerService {
       if (failedConditions.length > 0) {
         // Policy violation detected
         for (const failed of failedConditions) {
-          constviolation: PolicyViolation = {
+          const violation: PolicyViolation = {
             policy,
             rule,
             condition: failed.condition,
@@ -242,7 +242,7 @@ export class PolicyEnforcerService {
     // Send notifications for violations and escalations
     await this.handleEnforcementNotifications(context, violations, requiredActions);
 
-    constresult: EnforcementResult = {
+    const result: EnforcementResult = {
       allowed,
       enforcementAction: finalAction,
       violatedPolicies: violations,
@@ -317,11 +317,11 @@ export class PolicyEnforcerService {
           satisfied = this.evaluateCustomCondition(condition, context, policy);
           reason = satisfied 
             ? 'Custom condition satisfied'
-            : `Custom condition failed: ${condition.description}`;
+            : `Custom conditionfailed: ${condition.description}`;
           break;
 
         default:
-          this.logger.warn(`Unknown condition type: ${condition.type}`);
+          this.logger.warn(`Unknown conditiontype: ${condition.type}`);
           satisfied = true; // Default to satisfied for unknown conditions
           reason = 'Unknown condition type, defaulting to satisfied';
       }
@@ -347,27 +347,27 @@ export class PolicyEnforcerService {
       const { operator, value } = condition;
       const metadata = context.metadata;
 
-      // Example custom conditions:
+      // Example customconditions:
       if (condition.description.includes('high_risk_resident')) {
         const residentRisk = metadata.residentRiskLevel;
-        return operator === 'equals' ? residentRisk === value : residentRisk !== value;
+        returnoperator === 'equals' ? residentRisk === value : residentRisk !== value;
       }
 
       if (condition.description.includes('out_of_hours')) {
         const hour = new Date().getHours();
         const isOutOfHours = hour < 8 || hour > 18;
-        return operator === 'equals' ? isOutOfHours === value : isOutOfHours !== value;
+        returnoperator === 'equals' ? isOutOfHours === value : isOutOfHours !== value;
       }
 
       if (condition.description.includes('sensitive_data')) {
         const containsSensitiveData = metadata.containsSensitiveData || false;
-        return operator === 'equals' ? containsSensitiveData === value : containsSensitiveData !== value;
+        returnoperator === 'equals' ? containsSensitiveData === value : containsSensitiveData !== value;
       }
 
       // Default fallback
       return true;
     } catch (error) {
-      this.logger.error(`Error evaluating custom condition: ${error.message}`, error.stack);
+      this.logger.error(`Error evaluating customcondition: ${error.message}`, error.stack);
       return false; // Fail safe - if custom condition can't be evaluated, fail the check
     }
   }
@@ -376,7 +376,7 @@ export class PolicyEnforcerService {
    * Check if enforcement action should block workflow
    */
   private isBlockingAction(action: EnforcementAction): boolean {
-    return action === EnforcementAction.BLOCK || action === EnforcementAction.ESCALATE;
+    returnaction === EnforcementAction.BLOCK || action === EnforcementAction.ESCALATE;
   }
 
   /**
@@ -483,7 +483,7 @@ export class PolicyEnforcerService {
       const savedEvent = await this.auditTrailService.createAuditEvent(auditEvent);
       return savedEvent.id;
     } catch (error) {
-      this.logger.error(`Failed to create enforcement audit event: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create enforcement auditevent: ${error.message}`, error.stack);
       return 'audit_creation_failed';
     }
   }
@@ -561,7 +561,7 @@ export class PolicyEnforcerService {
         }
       }
     } catch (error) {
-      this.logger.error(`Failed to send enforcement notifications: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send enforcementnotifications: ${error.message}`, error.stack);
     }
   }
 

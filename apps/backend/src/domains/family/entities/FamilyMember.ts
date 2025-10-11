@@ -213,10 +213,10 @@ export class FamilyMember {
   @Column({ name: 'contact_restriction_review_date', type: 'date', nullable: true })
   contactRestrictionReviewDate?: Date;
 
-  @Column({ name: 'court_order_reference', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'court_order_reference', type: 'var char', length: 100, nullable: true })
   courtOrderReference?: string;
 
-  @Column({ name: 'court_order_type', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'court_order_type', type: 'var char', length: 100, nullable: true })
   courtOrderType?: string;
 
   @Column({ name: 'court_order_date', type: 'date', nullable: true })
@@ -229,43 +229,43 @@ export class FamilyMember {
   // ADDRESS & CONTACT DETAILS
   // ========================================
 
-  @Column({ name: 'address_line_1', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'address_line_1', type: 'var char', length: 200, nullable: true })
   addressLine1?: string;
 
-  @Column({ name: 'address_line_2', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'address_line_2', type: 'var char', length: 200, nullable: true })
   addressLine2?: string;
 
-  @Column({ name: 'city', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'city', type: 'var char', length: 100, nullable: true })
   city?: string;
 
-  @Column({ name: 'county', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'county', type: 'var char', length: 100, nullable: true })
   county?: string;
 
-  @Column({ name: 'postcode', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'postcode', type: 'var char', length: 20, nullable: true })
   postcode?: string;
 
-  @Column({ name: 'country', type: 'varchar', length: 100, default: 'United Kingdom' })
+  @Column({ name: 'country', type: 'var char', length: 100, default: 'United Kingdom' })
   country!: string;
 
-  @Column({ name: 'phone_home', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'phone_home', type: 'var char', length: 20, nullable: true })
   phoneHome?: string;
 
-  @Column({ name: 'phone_mobile', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'phone_mobile', type: 'var char', length: 20, nullable: true })
   phoneMobile?: string;
 
-  @Column({ name: 'phone_work', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'phone_work', type: 'var char', length: 20, nullable: true })
   phoneWork?: string;
 
-  @Column({ name: 'email', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'email', type: 'var char', length: 255, nullable: true })
   email?: string;
 
-  @Column({ name: 'preferred_contact_method', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'preferred_contact_method', type: 'var char', length: 50, nullable: true })
   preferredContactMethod?: string;
 
   @Column({ name: 'interpreter_required', type: 'boolean', default: false })
   interpreterRequired!: boolean;
 
-  @Column({ name: 'interpreter_language', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'interpreter_language', type: 'var char', length: 100, nullable: true })
   interpreterLanguage?: string;
 
   // ========================================
@@ -291,7 +291,7 @@ export class FamilyMember {
   @Column({ name: 'verification_date', type: 'date', nullable: true })
   verificationDate?: Date;
 
-  @Column({ name: 'verification_method', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'verification_method', type: 'var char', length: 100, nullable: true })
   verificationMethod?: string;
 
   @Column({ name: 'verification_documents', type: 'jsonb', nullable: true })
@@ -315,7 +315,7 @@ export class FamilyMember {
   @Column({ name: 'safeguarding_details', type: 'text', nullable: true })
   safeguardingDetails?: string;
 
-  @Column({ name: 'risk_to_child', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'risk_to_child', type: 'var char', length: 50, nullable: true })
   riskToChild?: 'LOW' | 'MEDIUM' | 'HIGH' | 'VERY_HIGH';
 
   @Column({ name: 'criminal_record', type: 'boolean', default: false })
@@ -327,23 +327,23 @@ export class FamilyMember {
   @Column({ name: 'dbs_check_required', type: 'boolean', default: false })
   dbsCheckRequired!: boolean;
 
-  @Column({ name: 'dbs_check_status', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'dbs_check_status', type: 'var char', length: 50, nullable: true })
   dbsCheckStatus?: 'PENDING' | 'CLEAR' | 'WITH_CONCERNS' | 'EXPIRED' | 'NOT_REQUIRED';
 
   @Column({ name: 'dbs_check_date', type: 'date', nullable: true })
   dbsCheckDate?: Date;
 
-  @Column({ name: 'dbs_certificate_number', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'dbs_certificate_number', type: 'var char', length: 50, nullable: true })
   dbsCertificateNumber?: string;
 
   // ========================================
   // ADDITIONAL INFORMATION
   // ========================================
 
-  @Column({ name: 'occupation', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'occupation', type: 'var char', length: 200, nullable: true })
   occupation?: string;
 
-  @Column({ name: 'employer', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'employer', type: 'var char', length: 200, nullable: true })
   employer?: string;
 
   @Column({ name: 'health_conditions', type: 'text', nullable: true })

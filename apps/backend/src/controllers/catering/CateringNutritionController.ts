@@ -20,7 +20,7 @@ import { ResidentDietaryProfile } from '../../entities/catering/ResidentDietaryP
 export class CateringNutritionController {
   privatecateringService: CateringNutritionService;
 
-  constructor() {
+  const ructor() {
     this.cateringService = new CateringNutritionService();
   }
 

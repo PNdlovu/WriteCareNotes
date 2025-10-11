@@ -2,7 +2,7 @@
  * Transfer Child DTO
  * Data transfer object for transferring a child to another facility
  * 
- * British Isles Compliance:
+ * British IslesCompliance:
  * - Handles cross-border transfers between jurisdictions
  * - Validates jurisdiction changes require proper authorization
  * - Ensures legal status remains valid in destination jurisdiction
@@ -32,7 +32,7 @@ export class TransferChildDto {
    * Optional: Destination jurisdiction (if different from current)
    * 
    * ⚠️ CROSS-BORDER TRANSFERS:
-   * When transferring between jurisdictions, additional requirements apply:
+   * When transferring between jurisdictions, additional requirementsapply:
    * - Legal status must be valid in destination jurisdiction
    * - Local authority approval required for cross-border placements
    * - Regulatory body notification required within statutory timescales

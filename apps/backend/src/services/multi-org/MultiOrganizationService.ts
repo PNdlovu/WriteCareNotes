@@ -19,7 +19,7 @@ import { MultiOrganization, OrganizationType } from '../../entities/multi-org/Mu
 export class MultiOrganizationService {
   privateorganizationRepository: Repository<MultiOrganization>;
 
-  constructor() {
+  const ructor() {
     this.organizationRepository = AppDataSource.getRepository(MultiOrganization);
   }
 
@@ -39,7 +39,7 @@ export class MultiOrganizationService {
 
       return await this.organizationRepository.save(organization);
     } catch (error: unknown) {
-      console.error('Error creating organization:', error);
+      console.error('Error creatingorganization:', error);
       throw error;
     }
   }
@@ -57,7 +57,7 @@ export class MultiOrganizationService {
         }, {})
       };
     } catch (error: unknown) {
-      console.error('Error getting organization analytics:', error);
+      console.error('Error getting organizationanalytics:', error);
       throw error;
     }
   }

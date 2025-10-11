@@ -88,7 +88,7 @@ export class JournalEntryService {
   privatenotificationService: NotificationService;
   privateeventEmitter: EventEmitter2;
 
-  constructor() {
+  const ructor() {
     this.journalEntryRepository = AppDataSource.getRepository(JournalEntry);
     this.ledgerAccountRepository = AppDataSource.getRepository(LedgerAccount);
     this.auditService = new AuditTrailService();

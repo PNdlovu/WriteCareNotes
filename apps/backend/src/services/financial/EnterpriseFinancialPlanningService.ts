@@ -171,20 +171,20 @@ export interface DriverBasedPlanning {
 export class EnterpriseFinancialPlanningService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly transactionRepository: Repository<FinancialTransaction>,
-    
-    
-    private readonly budgetRepository: Repository<Budget>,
+    private readonlytransactionRepository: Repository<FinancialTransaction>,
     
     
-    private readonly accountRepository: Repository<ChartOfAccounts>,
+    private readonlybudgetRepository: Repository<Budget>,
+    
+    
+    private readonlyaccountRepository: Repository<ChartOfAccounts>,
 
-    private readonly entityManager: EntityManager,
-    private readonly auditService: AuditService,
-    private readonly notificationService: NotificationService,
-    private readonly spreadsheetService: BuiltInSpreadsheetService
+    private readonlyentityManager: EntityManager,
+    private readonlyauditService: AuditService,
+    private readonlynotificationService: NotificationService,
+    private readonlyspreadsheetService: BuiltInSpreadsheetService
   ) {
     console.log('Enterprise Financial Planning Service initialized');
   }
@@ -220,7 +220,7 @@ export class EnterpriseFinancialPlanningService {
       // Calculate cash flow drivers
       const cashFlowDrivers = await this.calculateCashFlowDrivers(organizationId, historicalData);
 
-      constcashFlowManagement: CashFlowManagement = {
+      const cashFlowManagement: CashFlowManagement = {
         cashPosition,
         cashFlowForecasting: {
           dailyForecast,
@@ -284,7 +284,7 @@ export class EnterpriseFinancialPlanningService {
 
       const scenarios = [baselineScenario, optimisticScenario, pessimisticScenario, customScenario];
 
-      constscenarioPlanning: ScenarioPlanning = {
+      const scenarioPlanning: ScenarioPlanning = {
         scenarios,
         baselineScenario: baselineScenario.scenarioId,
         optimisticScenario: optimisticScenario.scenarioId,
@@ -323,7 +323,7 @@ export class EnterpriseFinancialPlanningService {
       // Calculate cost drivers
       const costDrivers = await this.calculateCostDrivers(organizationId, operationalMetrics);
 
-      constdriverBasedPlan: DriverBasedPlanning = {
+      const driverBasedPlan: DriverBasedPlanning = {
         revenueDrivers,
         costDrivers
       };
@@ -585,7 +585,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async generateDailyForecast(organizationId: string, days: number, historicalData: any[]): Promise<CashFlowForecast[]> {
-    constforecasts: CashFlowForecast[] = [];
+    const forecasts: CashFlowForecast[] = [];
     
     for (let i = 0; i < days; i++) {
       const forecastDate = new Date();
@@ -600,7 +600,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async generateMonthlyForecast(organizationId: string, months: number, historicalData: any[]): Promise<CashFlowForecast[]> {
-    constforecasts: CashFlowForecast[] = [];
+    const forecasts: CashFlowForecast[] = [];
     
     for (let i = 0; i < months; i++) {
       const forecastDate = new Date();
@@ -659,7 +659,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async addCareHomeFormulas(workbook: any, budget: Budget): Promise<void> {
-    // Add British Isles specific formulas:
+    // Add British Isles specificformulas:
     // - NHS funding calculations
     // - Local authority rate calculations  
     // - Occupancy rate formulas
@@ -682,7 +682,7 @@ export class EnterpriseFinancialPlanningService {
   }
 
   private async generateWeeklyForecast(organizationId: string, weeks: number, historicalData: any[]): Promise<CashFlowForecast[]> { 
-    constforecasts: CashFlowForecast[] = [];
+    const forecasts: CashFlowForecast[] = [];
     
     for (let i = 0; i < weeks; i++) {
       const forecastDate = new Date();
@@ -699,7 +699,7 @@ export class EnterpriseFinancialPlanningService {
   private async calculateCashFlowDrivers(organizationId: string, historicalData: any[]): Promise<any> { 
     return {
       occupancyImpact: new Decimal(0.15), // 15% impact per occupancy point
-      seasonalVariations: new Decimal(0.08), // 8% seasonal variation
+      seasonalVariations: new Decimal(0.08), // 8% seasonal var iation
       paymentTermsImpact: new Decimal(0.05), // 5% impact from payment terms
       regulatoryFundingChanges: new Decimal(0.03) // 3% impact from regulatory changes
     };

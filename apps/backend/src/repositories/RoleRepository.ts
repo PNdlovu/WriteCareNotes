@@ -13,7 +13,7 @@ import { logger } from '../utils/logger';
 export class RoleRepository {
   privaterepository: Repository<Role>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(Role);
   }
 

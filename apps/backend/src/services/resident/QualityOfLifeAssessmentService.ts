@@ -381,7 +381,7 @@ export class QualityOfLifeAssessmentService {
   privateai: AIService;
   privateanalytics: AnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('QualityOfLifeAssessmentService');
     this.audit = new AuditService();
@@ -667,7 +667,7 @@ export class QualityOfLifeAssessmentService {
     domainData: any[],
     residentId: string
   ): Promise<QualityDomain[]> {
-    constdomains: QualityDomain[] = [];
+    const domains: QualityDomain[] = [];
 
     for (const domain of domainData) {
       // Process indicators for this domain
@@ -752,12 +752,12 @@ export class QualityOfLifeAssessmentService {
     recommendations: QualityRecommendation[],
     domains: QualityDomain[]
   ): ActionPlan {
-    constimmediateActions: ActionItem[] = [];
-    constshortTermActions: ActionItem[] = [];
-    constlongTermActions: ActionItem[] = [];
+    const immediateActions: ActionItem[] = [];
+    const shortTermActions: ActionItem[] = [];
+    const longTermActions: ActionItem[] = [];
 
     recommendations.forEach(rec => {
-      constaction: ActionItem = {
+      const action: ActionItem = {
         action: rec.recommendation,
         assignedTo: rec.responsibility,
         deadline: this.calculateActionDeadline(rec.timeframe),

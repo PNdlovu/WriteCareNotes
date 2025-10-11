@@ -55,7 +55,7 @@ export interface ApprovalDTO {
 /**
  * Service #8: Simple Document Management Service
  * 
- * Comprehensive document lifecycle management with:
+ * Comprehensive document lifecycle managementwith:
  * - Document CRUD operations
  * - Version control and history
  * - Document approval workflow
@@ -68,7 +68,7 @@ export interface ApprovalDTO {
 export class SimpleDocumentService {
   privatedocumentRepository: Repository<DocumentManagement>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.documentRepository = this.dataSource.getRepository(DocumentManagement);
   }
 
@@ -78,7 +78,7 @@ export class SimpleDocumentService {
   async create(dto: CreateDocumentDTO): Promise<DocumentManagement> {
     const documentId = await this.generateDocumentId(dto.documentType);
 
-    constversionControl: VersionControl = {
+    const versionControl: VersionControl = {
       versionNumber: '1.0',
       changeDescription: 'Initial version',
       changedBy: dto.metadata.author,
@@ -290,7 +290,7 @@ export class SimpleDocumentService {
     const [major, minor] = currentVersion.split('.').map(Number);
     const newVersion = dto.majorChange ? `${major + 1}.0` : `${major}.${minor + 1}`;
 
-    constversionControl: VersionControl = {
+    const versionControl: VersionControl = {
       versionNumber: newVersion,
       previousVersionId: previousDocument.id,
       changeDescription: dto.changeDescription,
@@ -545,7 +545,7 @@ export class SimpleDocumentService {
    * Get document prefix based on type
    */
   private getDocumentPrefix(type: DocumentType): string {
-    constprefixes: Record<DocumentType, string> = {
+    const prefixes: Record<DocumentType, string> = {
       [DocumentType.CARE_PLAN]: 'CP',
       [DocumentType.MEDICAL_RECORD]: 'MR',
       [DocumentType.POLICY]: 'POL',

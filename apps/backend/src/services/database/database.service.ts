@@ -18,7 +18,7 @@ import { logger } from '../../utils/logger';
  */
 export class DatabaseService {
   
-  constructor() {
+  const ructor() {
     logger.info('DatabaseService initialized (mock implementation)');
   }
 

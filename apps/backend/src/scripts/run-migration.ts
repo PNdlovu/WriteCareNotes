@@ -53,11 +53,11 @@ function loadMigrationConfig(configPath: string): MigrationConfig {
     const configContent = readFileSync(configPath, 'utf-8');
     const config = JSON.parse(configContent);
     
-    logger.info(`Loaded migration configuration from: ${configPath}`);
+    logger.info(`Loaded migration configurationfrom: ${configPath}`);
     return config;
     
   } catch (error) {
-    logger.error(`Failed to load migration configuration: ${error.message}`);
+    logger.error(`Failed to load migrationconfiguration: ${error.message}`);
     process.exit(1);
   }
 }
@@ -118,11 +118,11 @@ function formatDuration(ms: number): string {
  */
 async function executeRollback(migrationService: DataMigrationService, serviceName: string): Promise<void> {
   try {
-    logger.info(`Starting rollback for service: ${serviceName}`);
+    logger.info(`Starting rollback forservice: ${serviceName}`);
     
     await migrationService.rollbackService(serviceName);
     
-    logger.info(`Rollback completed successfully for service: ${serviceName}`);
+    logger.info(`Rollback completed successfully forservice: ${serviceName}`);
     console.log(`✅ Rollback completed for ${serviceName}`);
     
   } catch (error) {
@@ -147,7 +147,7 @@ async function executeMigration(migrationService: DataMigrationService, options:
     const results = await migrationService.executeMigration();
     
     // Display results summary
-    console.log('\n📊 Migration Results Summary:');
+    console.log('\n📊 Migration ResultsSummary:');
     console.log('================================');
     
     let totalRecords = 0;
@@ -167,7 +167,7 @@ async function executeMigration(migrationService: DataMigrationService, options:
       }
       
       if (result.validationErrors.length > 0) {
-        console.log(`   Validation Errors: ${result.validationErrors.length}`);
+        console.log(`   ValidationErrors: ${result.validationErrors.length}`);
         result.validationErrors.slice(0, 3).forEach(error => {
           console.log(`     - ${error}`);
         });
@@ -183,18 +183,18 @@ async function executeMigration(migrationService: DataMigrationService, options:
       totalFailed += result.failedRecords;
     }
     
-    console.log('📈 Overall Summary:');
-    console.log(`   Total Records: ${totalRecords}`);
+    console.log('📈 OverallSummary:');
+    console.log(`   TotalRecords: ${totalRecords}`);
     console.log(`   Migrated: ${totalMigrated}`);
     console.log(`   Failed: ${totalFailed}`);
-    console.log(`   Success Rate: ${totalRecords > 0 ? Math.round((totalMigrated / totalRecords) * 100) : 0}%`);
+    console.log(`   SuccessRate: ${totalRecords > 0 ? Math.round((totalMigrated / totalRecords) * 100) : 0}%`);
     
     const finalProgress = migrationService.getMigrationProgress();
     const totalDuration = Date.now() - finalProgress.startTime.getTime();
-    console.log(`   Total Duration: ${formatDuration(totalDuration)}`);
+    console.log(`   TotalDuration: ${formatDuration(totalDuration)}`);
     
     if (totalFailed === 0) {
-      console.log('\n🎉 Migration completed successfully!');
+      console.log('\n🎉 Migration completedsuccessfully!');
       logger.info('Migration completed successfully');
     } else {
       console.log('\n⚠️ Migration completed with some failures');
@@ -202,8 +202,8 @@ async function executeMigration(migrationService: DataMigrationService, options:
     }
     
   } catch (error) {
-    logger.error('Migration execution failed:', error);
-    console.error(`❌ Migration failed: ${error.message}`);
+    logger.error('Migration executionfailed:', error);
+    console.error(`❌ Migrationfailed: ${error.message}`);
     process.exit(1);
   }
 }
@@ -265,8 +265,8 @@ async function main(): Promise<void> {
     await migrationService.shutdown();
     
   } catch (error) {
-    logger.error('Migration runner failed:', error);
-    console.error(`❌ Migration runner failed: ${error.message}`);
+    logger.error('Migration runnerfailed:', error);
+    console.error(`❌ Migration runnerfailed: ${error.message}`);
     process.exit(1);
   }
 }
@@ -284,7 +284,7 @@ process.on('SIGTERM', async () => {
 
 // Handle unhandled errors
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  logger.error('Unhandled Rejectionat:', promise, 'reason:', reason);
   console.error('❌ Unhandled error occurred. Check logs for details.');
   process.exit(1);
 });
@@ -293,7 +293,7 @@ process.on('unhandledRejection', (reason, promise) => {
 if (require.main === module) {
   main().catch((error) => {
     logger.error('Fatal error:', error);
-    console.error(`❌ Fatal error: ${error.message}`);
+    console.error(`❌ Fatalerror: ${error.message}`);
     process.exit(1);
   });
 }

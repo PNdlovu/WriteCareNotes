@@ -11,15 +11,15 @@ import { TrainingProgress } from '../../entities/training/TrainingProgress';
 import { TrainingAnalytics } from '../../entities/training/TrainingAnalytics';
 
 describe('AcademyTrainingService', () => {
-  letservice: AcademyTrainingService;
-  letmockCourseRepository: any;
-  letmockEnrollmentRepository: any;
-  letmockSessionRepository: any;
-  letmockCertificateRepository: any;
-  letmockProgressRepository: any;
-  letmockAnalyticsRepository: any;
-  letmockEventEmitter: any;
-  letmockAuditService: any;
+  let service: AcademyTrainingService;
+  let mockCourseRepository: any;
+  let mockEnrollmentRepository: any;
+  let mockSessionRepository: any;
+  let mockCertificateRepository: any;
+  let mockProgressRepository: any;
+  let mockAnalyticsRepository: any;
+  let mockEventEmitter: any;
+  let mockAuditService: any;
 
   beforeEach(async () => {
     mockCourseRepository = {
@@ -78,7 +78,7 @@ describe('AcademyTrainingService', () => {
       logEvent: jest.fn(),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         AcademyTrainingService,
         {
@@ -156,7 +156,7 @@ describe('AcademyTrainingService', () => {
               {
                 id: 'q1',
                 type: 'multiple_choice' as const,
-                question: 'What is the first step in providing care?',
+                question: 'What is the first step in providingcare?',
                 options: ['Wash hands', 'Check vital signs', 'Introduce yourself'],
                 correctAnswer: 'Wash hands',
                 points: 10,
@@ -506,7 +506,7 @@ describe('AcademyTrainingService', () => {
               {
                 id: 'q1',
                 type: 'multiple_choice',
-                question: 'What is the first step in providing care?',
+                question: 'What is the first step in providingcare?',
                 options: ['Wash hands', 'Check vital signs', 'Introduce yourself'],
                 correctAnswer: 'Wash hands',
                 points: 10,
@@ -572,7 +572,7 @@ describe('AcademyTrainingService', () => {
               {
                 id: 'q1',
                 type: 'multiple_choice',
-                question: 'What is the first step in providing care?',
+                question: 'What is the first step in providingcare?',
                 options: ['Wash hands', 'Check vital signs', 'Introduce yourself'],
                 correctAnswer: 'Wash hands',
                 points: 10,

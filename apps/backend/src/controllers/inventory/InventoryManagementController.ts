@@ -18,7 +18,7 @@ import { InventoryManagementService } from '../../services/inventory/InventoryMa
 export class InventoryManagementController {
   privateinventoryService: InventoryManagementService;
 
-  constructor() {
+  const ructor() {
     this.inventoryService = new InventoryManagementService();
   }
 

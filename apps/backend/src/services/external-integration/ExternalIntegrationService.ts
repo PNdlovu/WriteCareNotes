@@ -21,7 +21,7 @@ export class ExternalIntegrationService {
   privatesystemRepository: Repository<ExternalSystem>;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
     this.auditService = new AuditTrailService();
   }
@@ -62,7 +62,7 @@ export class ExternalIntegrationService {
 
       return savedSystem;
     } catch (error: unknown) {
-      console.error('Error creating external system:', error);
+      console.error('Error creating externalsystem:', error);
       throw error;
     }
   }
@@ -79,7 +79,7 @@ export class ExternalIntegrationService {
         systemsByType: this.calculateSystemDistribution(allSystems)
       };
     } catch (error: unknown) {
-      console.error('Error getting integration analytics:', error);
+      console.error('Error getting integrationanalytics:', error);
       throw error;
     }
   }

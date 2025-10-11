@@ -26,7 +26,7 @@ export class ProfessionalRegistration {
   @IsEnum(['nmc', 'gmc', 'hcpc', 'gphc', 'goc', 'gdc'])
   professionalBody: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   registrationNumber: string;
 
@@ -82,15 +82,15 @@ export class ProfessionalQualification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   qualificationType: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   qualificationName: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   awardingBody: string;
 
@@ -105,7 +105,7 @@ export class ProfessionalQualification {
   @IsEnum(['verified', 'pending', 'unverified'])
   verificationStatus: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   certificateNumber?: string;
 
   @ManyToOne(() => ProfessionalRegistration, registration => registration.qualifications)
@@ -131,15 +131,15 @@ export class ContinuingEducationRecord {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   activityType: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   activityName: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   provider: string;
 
@@ -215,7 +215,7 @@ export class ProfessionalStandardsAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 

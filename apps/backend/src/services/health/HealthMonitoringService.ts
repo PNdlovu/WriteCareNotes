@@ -74,7 +74,7 @@ export interface HealthMonitoringFilters {
 /**
  * Service #11: Health Monitoring Service
  * 
- * Comprehensive health tracking with:
+ * Comprehensive health trackingwith:
  * - Vital signs monitoring (BP, HR, temp, O2, glucose)
  * - Weight and BMI tracking
  * - Health assessments
@@ -87,7 +87,7 @@ export interface HealthMonitoringFilters {
 export class HealthMonitoringService {
   privateassessmentRepository: Repository<ResidentAssessment>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.assessmentRepository = this.dataSource.getRepository(ResidentAssessment);
   }
 
@@ -445,7 +445,7 @@ export class HealthMonitoringService {
   }
 
   private getAssessmentPrefix(type: AssessmentType): string {
-    constprefixes: Record<AssessmentType, string> = {
+    const prefixes: Record<AssessmentType, string> = {
       [AssessmentType.INITIAL_ASSESSMENT]: 'INIT',
       [AssessmentType.COMPREHENSIVE_GERIATRIC_ASSESSMENT]: 'CGA',
       [AssessmentType.FALLS_RISK_ASSESSMENT]: 'FALL',

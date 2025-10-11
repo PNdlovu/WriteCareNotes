@@ -43,7 +43,7 @@ export class TrainingEnrollment extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   notes?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   currentContentId?: string;
 
   @Column({ type: 'int', nullable: true })

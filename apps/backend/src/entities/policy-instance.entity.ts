@@ -69,7 +69,7 @@ export class PolicyInstance {
   /**
    * Policy title (can be customized from template)
    */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   title: string;
 
   /**
@@ -98,7 +98,7 @@ export class PolicyInstance {
   content: string;
 
   /**
-   * Variable values used to generate this policy
+   * variable values used to generate this policy
    */
   @Column({ type: 'jsonb' })
   variableValues: Record<string, any>;
@@ -106,7 +106,7 @@ export class PolicyInstance {
   /**
    * Template version used for generation
    */
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   version: string;
 
   /**
@@ -166,13 +166,13 @@ export class PolicyInstance {
   /**
    * Digital signature or approval hash
    */
-  @Column({ type: 'varchar', length: 512, nullable: true })
+  @Column({ type: 'var char', length: 512, nullable: true })
   digitalSignature?: string;
 
   /**
    * Policy document attachments (file paths)
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   attachments: string[];
 
   /**

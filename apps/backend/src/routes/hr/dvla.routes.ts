@@ -68,7 +68,7 @@ router.get('/', [
       message: 'DVLA checks retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving DVLA checks:', error);
+    logger.error('Error retrieving DVLAchecks:', error);
     next(error);
   }
 });
@@ -98,7 +98,7 @@ router.get('/:id', [
       message: 'DVLA check retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving DVLA check:', error);
+    logger.error('Error retrieving DVLAcheck:', error);
     next(error);
   }
 });
@@ -141,7 +141,7 @@ router.post('/', [
       message: 'DVLA check created successfully'
     });
   } catch (error) {
-    logger.error('Error creating DVLA check:', error);
+    logger.error('Error creating DVLAcheck:', error);
     next(error);
   }
 });
@@ -192,7 +192,7 @@ router.put('/:id', [
       message: 'DVLA check updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating DVLA check:', error);
+    logger.error('Error updating DVLAcheck:', error);
     next(error);
   }
 });
@@ -221,7 +221,7 @@ router.delete('/:id', [
       message: 'DVLA check deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting DVLA check:', error);
+    logger.error('Error deleting DVLAcheck:', error);
     next(error);
   }
 });
@@ -249,7 +249,7 @@ router.post('/:id/start-verification', [
       message: 'DVLA verification started successfully'
     });
   } catch (error) {
-    logger.error('Error starting DVLA verification:', error);
+    logger.error('Error starting DVLAverification:', error);
     next(error);
   }
 });
@@ -275,7 +275,7 @@ router.post('/:id/submit-verification', [
       message: 'DVLA verification submitted successfully'
     });
   } catch (error) {
-    logger.error('Error submitting DVLA verification:', error);
+    logger.error('Error submitting DVLAverification:', error);
     next(error);
   }
 });
@@ -305,7 +305,7 @@ router.post('/:id/complete-verification', [
       message: 'DVLA verification completed successfully'
     });
   } catch (error) {
-    logger.error('Error completing DVLA verification:', error);
+    logger.error('Error completing DVLAverification:', error);
     next(error);
   }
 });
@@ -333,7 +333,7 @@ router.post('/:id/reject-verification', [
       message: 'DVLA verification rejected successfully'
     });
   } catch (error) {
-    logger.error('Error rejecting DVLA verification:', error);
+    logger.error('Error rejecting DVLAverification:', error);
     next(error);
   }
 });
@@ -365,7 +365,7 @@ router.get('/:id/services', [
       message: 'DVLA services retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving DVLA services:', error);
+    logger.error('Error retrieving DVLAservices:', error);
     next(error);
   }
 });
@@ -407,7 +407,7 @@ router.post('/:id/services', [
       message: 'DVLA service created successfully'
     });
   } catch (error) {
-    logger.error('Error creating DVLA service:', error);
+    logger.error('Error creating DVLAservice:', error);
     next(error);
   }
 });
@@ -433,7 +433,7 @@ router.post('/services/:serviceId/execute', [
       message: 'DVLA service executed successfully'
     });
   } catch (error) {
-    logger.error('Error executing DVLA service:', error);
+    logger.error('Error executing DVLAservice:', error);
     next(error);
   }
 });
@@ -459,7 +459,7 @@ router.post('/services/:serviceId/retry', [
       message: 'DVLA service retried successfully'
     });
   } catch (error) {
-    logger.error('Error retrying DVLA service:', error);
+    logger.error('Error retrying DVLAservice:', error);
     next(error);
   }
 });
@@ -494,7 +494,7 @@ router.get('/compliance/summary', [
       message: 'DVLA compliance summary retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving DVLA compliance summary:', error);
+    logger.error('Error retrieving DVLA compliancesummary:', error);
     next(error);
   }
 });
@@ -521,7 +521,7 @@ router.get('/expiry-alerts', [
       message: 'DVLA expiry alerts retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving DVLA expiry alerts:', error);
+    logger.error('Error retrieving DVLA expiryalerts:', error);
     next(error);
   }
 });
@@ -541,7 +541,7 @@ router.get('/license-categories', async (req: Request, res: Response, next: Next
       message: 'License categories retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving license categories:', error);
+    logger.error('Error retrieving licensecategories:', error);
     next(error);
   }
 });
@@ -574,7 +574,7 @@ router.post('/verify-license', [
       message: 'License verification completed successfully'
     });
   } catch (error) {
-    logger.error('Error verifying license with DVLA:', error);
+    logger.error('Error verifying license withDVLA:', error);
     next(error);
   }
 });

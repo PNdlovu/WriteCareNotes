@@ -38,7 +38,7 @@ class SafeguardingService {
   
   private async assessProtectionNeeds(residentId: string): Promise<void> {
     // Assess protection needs for RQIA compliance
-    console.log(`Assessing protection needs for resident: ${residentId}`);
+    console.log(`Assessing protection needs forresident: ${residentId}`);
   }
 }
 

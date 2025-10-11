@@ -55,12 +55,12 @@ export interface TemplateRecommendation {
 
 @Injectable()
 export class PolicyTemplateService {
-  private readonly logger = new Logger(PolicyTemplateService.name);
+  private readonlylogger = new Logger(PolicyTemplateService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyTemplate)
-    private readonly templateRepository: Repository<PolicyTemplate>,
-    private readonly auditTrailService: AuditTrailService
+    private readonlytemplateRepository: Repository<PolicyTemplate>,
+    private readonlyauditTrailService: AuditTrailService
   ) {}
 
   /**
@@ -85,7 +85,7 @@ export class PolicyTemplateService {
    * Create pre-built system templates
    */
   private async createSystemTemplates(): Promise<void> {
-    constsystemTemplates: CreateTemplateDto[] = [
+    const systemTemplates: CreateTemplateDto[] = [
       // Safeguarding Policy Template
       {
         title: 'Adult Safeguarding Policy',
@@ -250,7 +250,7 @@ export class PolicyTemplateService {
       });
 
       await this.templateRepository.save(template);
-      this.logger.debug(`Created system template: ${template.title}`);
+      this.logger.debug(`Created systemtemplate: ${template.title}`);
     }
   }
 
@@ -258,7 +258,7 @@ export class PolicyTemplateService {
    * Create new policy template
    */
   async createTemplate(createDto: CreateTemplateDto, createdBy: string): Promise<PolicyTemplate> {
-    this.logger.log(`Creating new policy template: ${createDto.title}`);
+    this.logger.log(`Creating new policytemplate: ${createDto.title}`);
 
     const template = this.templateRepository.create({
       ...createDto,
@@ -278,7 +278,7 @@ export class PolicyTemplateService {
       jurisdiction: savedTemplate.jurisdiction
     });
 
-    this.logger.log(`Policy template created with ID: ${savedTemplate.id}`);
+    this.logger.log(`Policy template created withID: ${savedTemplate.id}`);
     return savedTemplate;
   }
 
@@ -406,7 +406,7 @@ export class PolicyTemplateService {
   ): Promise<Partial<PolicyDraft>> {
     const template = await this.getTemplateById(templateId, organizationId);
 
-    this.logger.log(`Creating policy from template: ${template.title}`);
+    this.logger.log(`Creating policy fromtemplate: ${template.title}`);
 
     // Apply customizations to template content
     const customizedContent = this.applyCustomizations(template.content, template.customizableFields, customizations);
@@ -416,7 +416,7 @@ export class PolicyTemplateService {
     await this.templateRepository.save(template);
 
     // Create policy draft structure
-    constpolicyDraft: Partial<PolicyDraft> = {
+    const policyDraft: Partial<PolicyDraft> = {
       title,
       content: customizedContent,
       category: template.category,
@@ -426,7 +426,7 @@ export class PolicyTemplateService {
       version: '1.0',
       organizationId,
       createdBy,
-      description: `Policy created from template: ${template.title}`,
+      description: `Policy created fromtemplate: ${template.title}`,
       tags: template.tags,
       reviewDue: this.calculateReviewDate(template.metadata?.reviewFrequency || 'annually')
     };
@@ -451,7 +451,7 @@ export class PolicyTemplateService {
     organizationModules: string[]
   ): Promise<TemplateRecommendation[]> {
     const allTemplates = await this.getTemplates({}, organizationId);
-    constrecommendations: TemplateRecommendation[] = [];
+    const recommendations: TemplateRecommendation[] = [];
 
     for (const template of allTemplates) {
       const score = this.calculateRecommendationScore(

@@ -9,7 +9,7 @@ import { AssessmentType, AssessmentStatus } from '../../entities/assessment/Resi
  * 13 endpoints for comprehensive health tracking
  */
 export class HealthMonitoringController {
-  constructor(private healthService: HealthMonitoringService) {}
+  const ructor(private healthService: HealthMonitoringService) {}
 
   /**
    * POST /health/vital-signs
@@ -143,7 +143,7 @@ export class HealthMonitoringController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: any = {};
+      const filters: any = {};
       if (req.query.residentId) filters.residentId = req.query.residentId;
       if (req.query.assessmentType) filters.assessmentType = req.query.assessmentType;
       if (req.query.startDate) filters.startDate = new Date(req.query.startDate as string);

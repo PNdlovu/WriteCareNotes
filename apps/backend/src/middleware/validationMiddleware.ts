@@ -16,7 +16,7 @@ import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 
 export class ValidationMiddleware {
-  static schemas = {
+  staticschemas = {
     uuid: Joi.string().uuid().required(),
     pagination: Joi.object({
       page: Joi.number().integer().min(1).default(1),
@@ -34,7 +34,7 @@ export class ValidationMiddleware {
     dateOptional: Joi.date().optional()
   };
 
-  static healthcareSchemas = {
+  statichealthcareSchemas = {
     medication: Joi.object({
       name: Joi.string().required(),
       dosage: Joi.string().required(),

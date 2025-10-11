@@ -108,7 +108,7 @@ export class PathwayPlan {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   pathwayPlanNumber: string; // Format: PP-YYYY-NNNN
 
   @ManyToOne(() => Child)
@@ -151,25 +151,25 @@ export class PathwayPlan {
   // PERSONAL ADVISOR
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   personalAdvisor: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   personalAdvisorEmail: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   personalAdvisorPhone: string;
 
   @Column({ type: 'date', nullable: true })
   personalAdvisorAssignedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   previousPersonalAdvisor: string;
 
   @Column({ type: 'date', nullable: true })
   lastContactWithPA: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   contactFrequency: string;
 
   // ========================================
@@ -256,16 +256,16 @@ export class PathwayPlan {
   })
   currentEETStatus: EducationEmploymentStatus;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentEducationProvider: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentCourse: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentEmployer: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentJobTitle: string;
 
   @Column({ type: 'text', nullable: true })
@@ -314,10 +314,10 @@ export class PathwayPlan {
   @Column({ type: 'boolean', default: false })
   registeredWithGP: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   gpName: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   gpAddress: string;
 
   @Column({ type: 'boolean', default: false })
@@ -536,13 +536,13 @@ export class PathwayPlan {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

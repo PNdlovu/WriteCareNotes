@@ -100,17 +100,17 @@ export interface OnCallManagement {
 export class EnterpriseEmergencyManagementService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly emergencyRepository: Repository<EmergencyIncident>,
+    private readonlyemergencyRepository: Repository<EmergencyIncident>,
     
-    private readonly nurseCallRepository: Repository<NurseCallAlert>,
+    private readonlynurseCallRepository: Repository<NurseCallAlert>,
     
-    private readonly onCallRepository: Repository<OnCallRota>,
+    private readonlyonCallRepository: Repository<OnCallRota>,
     
-    private readonly residentRepository: Repository<Resident>,
-    private readonly notificationService: NotificationService,
-    private readonly auditService: AuditTrailService
+    private readonlyresidentRepository: Repository<Resident>,
+    private readonlynotificationService: NotificationService,
+    private readonlyauditService: AuditTrailService
   ) {
     console.log('Enterprise Emergency Management Service initialized');
   }
@@ -325,7 +325,7 @@ export class EnterpriseEmergencyManagementService {
       });
 
       if (!nurseCall) {
-        throw new Error(`Nurse call not found: ${callId}`);
+        throw new Error(`Nurse call notfound: ${callId}`);
       }
 
       const acknowledgedCall = await this.nurseCallRepository.save({
@@ -371,7 +371,7 @@ export class EnterpriseEmergencyManagementService {
       });
 
       if (!nurseCall) {
-        throw new Error(`Nurse call not found: ${callId}`);
+        throw new Error(`Nurse call notfound: ${callId}`);
       }
 
       const resolvedCall = await this.nurseCallRepository.save({
@@ -475,7 +475,7 @@ export class EnterpriseEmergencyManagementService {
       if (primaryOnCall) {
         await this.notificationService.sendNotification({
           recipientId: primaryOnCall.staffId,
-          message: `Emergency incident reported: ${incident.emergencyType} at ${incident.location}`,
+          message: `Emergency incidentreported: ${incident.emergencyType} at ${incident.location}`,
           channels: ['SMS', 'PUSH'],
           priority: 'HIGH'
         });
@@ -546,7 +546,7 @@ export class EnterpriseEmergencyManagementService {
 
     await this.notificationService.sendUrgentNotification({
       recipients: escalationStaff,
-      message: `ESCALATED NURSE CALL: ${nurseCall.callType} - Room ${nurseCall.location} (Level ${escalationLevel})`,
+      message: `ESCALATED NURSECALL: ${nurseCall.callType} - Room ${nurseCall.location} (Level ${escalationLevel})`,
       channels: ['SMS', 'VOICE_CALL'],
       priority: 'URGENT'
     });
@@ -554,7 +554,7 @@ export class EnterpriseEmergencyManagementService {
 
   // Helper methods
   private getImmediateActions(emergencyType: EmergencyType): string[] {
-    constactions: Record<EmergencyType, string[]> = {
+    const actions: Record<EmergencyType, string[]> = {
       [EmergencyType.MEDICAL]: ['Call 999', 'Provide first aid', 'Clear airway if needed', 'Monitor vital signs'],
       [EmergencyType.FIRE]: ['Evacuate area', 'Call fire service', 'Use fire extinguisher if safe', 'Account for all residents'],
       [EmergencyType.SECURITY]: ['Secure area', 'Call police if needed', 'Protect residents', 'Document incident'],
@@ -570,7 +570,7 @@ export class EnterpriseEmergencyManagementService {
   }
 
   private getResourceRequirements(severity: EmergencySeverity): string[] {
-    constresources: Record<EmergencySeverity, string[]> = {
+    const resources: Record<EmergencySeverity, string[]> = {
       [EmergencySeverity.LOW]: ['First aider', 'Basic equipment'],
       [EmergencySeverity.MEDIUM]: ['Qualified nurse', 'Emergency kit', 'Additional staff'],
       [EmergencySeverity.HIGH]: ['Senior nurse', 'Manager', 'Emergency equipment', 'External support'],
@@ -621,7 +621,7 @@ export class EnterpriseEmergencyManagementService {
     
     await this.notificationService.sendUrgentNotification({
       recipients: onCallStaff.map(staff => staff.staffId),
-      message: `ESCALATED NURSE CALL: No available nurses - ${nurseCall.callType} in ${nurseCall.location}`,
+      message: `ESCALATED NURSECALL: No available nurses - ${nurseCall.callType} in ${nurseCall.location}`,
       channels: ['SMS', 'VOICE_CALL'],
       priority: 'URGENT'
     });
@@ -660,7 +660,7 @@ export class EnterpriseEmergencyManagementService {
 
   private predictIncidentDuration(incidentData: CreateEmergencyIncidentDTO): number {
     // AI prediction based on historical data and incident type
-    constbaseDuration: Record<EmergencyType, number> = {
+    const baseDuration: Record<EmergencyType, number> = {
       [EmergencyType.MEDICAL]: 45,
       [EmergencyType.FIRE]: 120,
       [EmergencyType.SECURITY]: 60,
@@ -678,7 +678,7 @@ export class EnterpriseEmergencyManagementService {
 
   private predictRecoveryTime(incidentData: CreateEmergencyIncidentDTO): number {
     // Recovery time prediction
-    constseverityMultiplier: Record<EmergencySeverity, number> = {
+    const severityMultiplier: Record<EmergencySeverity, number> = {
       [EmergencySeverity.LOW]: 1,
       [EmergencySeverity.MEDIUM]: 2,
       [EmergencySeverity.HIGH]: 4,

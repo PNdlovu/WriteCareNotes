@@ -106,7 +106,7 @@ export class AuditEvent {
   /**
    * IP address of the actor (for security auditing)
    */
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   ipAddress?: string;
 
   /**
@@ -118,19 +118,19 @@ export class AuditEvent {
   /**
    * Session ID (for tracking user sessions)
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   sessionId?: string;
 
   /**
    * Request ID for tracing distributed operations
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   requestId?: string;
 
   /**
    * Correlation ID for tracking related events
    */
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   correlationId?: string;
 
   /**
@@ -152,7 +152,7 @@ export class AuditEvent {
   /**
    * System or module that generated the event
    */
-  @Column({ type: 'varchar', length: 100, default: 'policy_authoring' })
+  @Column({ type: 'var char', length: 100, default: 'policy_authoring' })
   source: string;
 
   /**

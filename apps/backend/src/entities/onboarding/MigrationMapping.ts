@@ -47,7 +47,7 @@ export interface DataTypeMapping {
   length?: number;
   nullable: boolean;
   defaultValue?: any;
-  constraints?: {
+  const raints?: {
     unique?: boolean;
     primaryKey?: boolean;
     foreignKey?: {
@@ -63,16 +63,16 @@ export class MigrationMapping extends BaseEntity {
   @Column({ type: 'uuid' })
   migrationId!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   sourceField!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   targetField!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   sourceTable!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   targetTable!: string;
 
   @Column({ type: 'jsonb' })
@@ -84,10 +84,10 @@ export class MigrationMapping extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   isRequired!: boolean;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   defaultValue?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   description?: string;
 
   @Column({ type: 'integer', default: 0 })
@@ -126,16 +126,16 @@ export class MigrationMapping extends BaseEntity {
     }[];
   };
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   sourceDataType?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   targetDataType?: string;
 
   @Column({ type: 'boolean', default: false })
   allowNulls!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   customValidationFunction?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -157,7 +157,7 @@ export class MigrationMapping extends BaseEntity {
     fallbackValue?: any;
   };
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
   // Relationships
@@ -270,7 +270,7 @@ export class MigrationMapping extends BaseEntity {
         };
       }
     } catch (error: unknown) {
-      return { isValid: false, error: `Business rule evaluation failed: ${error instanceof Error ? error.message : "Unknown error"}` };
+      return { isValid: false, error: `Business rule evaluationfailed: ${error instanceof Error ? error.message : "Unknown error"}` };
     }
 
     return { isValid: true };
@@ -288,7 +288,7 @@ export class MigrationMapping extends BaseEntity {
       // Evaluate the expression
       return Boolean(eval(evalExpression));
     } catch (error: unknown) {
-      throw new Error(`Expression evaluation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Expression evaluationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -368,7 +368,7 @@ export class MigrationMapping extends BaseEntity {
       // Evaluate the formula
       return eval(evalFormula);
     } catch (error: unknown) {
-      throw new Error(`Formula evaluation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Formula evaluationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -395,9 +395,9 @@ export class MigrationMapping extends BaseEntity {
   private evaluateCondition(fieldValue: any, operator: string, expectedValue: any): boolean {
     switch (operator) {
       case 'equals':
-        return fieldValue === expectedValue;
+        returnfieldValue === expectedValue;
       case 'not_equals':
-        return fieldValue !== expectedValue;
+        returnfieldValue !== expectedValue;
       case 'greater_than':
         return Number(fieldValue) > Number(expectedValue);
       case 'less_than':
@@ -441,7 +441,7 @@ export class MigrationMapping extends BaseEntity {
 
     switch (targetType.toLowerCase()) {
       case 'string':
-      case 'varchar':
+      case 'var char':
       case 'text':
         return String(value);
       case 'integer':
@@ -459,7 +459,7 @@ export class MigrationMapping extends BaseEntity {
         return new Date(value);
       case 'json':
       case 'jsonb':
-        return typeof value === 'string' ? JSON.parse(value) : value;
+        return typeofvalue === 'string' ? JSON.parse(value) : value;
       default:
         return value;
     }

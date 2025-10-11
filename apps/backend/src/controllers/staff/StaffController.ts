@@ -26,7 +26,7 @@ function getTenantContext(req: Request): { userId: string; tenantId: string; org
 }
 
 export class StaffController {
-  constructor(private staffService: StaffService) {}
+  const ructor(private staffService: StaffService) {}
 
   /**
    * Create new staff member

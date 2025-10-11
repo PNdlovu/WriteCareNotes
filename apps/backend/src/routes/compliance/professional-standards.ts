@@ -56,7 +56,7 @@ router.post('/assessment',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Professional standards assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Professional standards assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }
@@ -107,7 +107,7 @@ router.get('/registrations/:organizationId',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Failed to retrieve professional registrations: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Failed to retrieve professionalregistrations: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }
@@ -149,7 +149,7 @@ router.post('/development-plan',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Development plan generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Development plan generationfailed: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }
@@ -191,7 +191,7 @@ router.post('/validate-registration',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Registration validation failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Registration validationfailed: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }
@@ -220,7 +220,7 @@ router.get('/monitor/:organizationId',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Professional standards monitoring failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Professional standards monitoringfailed: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }
@@ -261,7 +261,7 @@ router.get('/expiring/:organizationId',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Failed to retrieve expiring registrations: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Failed to retrieve expiringregistrations: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }
@@ -304,7 +304,7 @@ router.get('/cpd-status/:organizationId',
     } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        message: `Failed to retrieve CPD status: ${error instanceof Error ? error.message : "Unknown error"}`
+        message: `Failed to retrieve CPDstatus: ${error instanceof Error ? error.message : "Unknown error"}`
       });
     }
   }

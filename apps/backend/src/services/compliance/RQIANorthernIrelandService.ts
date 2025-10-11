@@ -242,12 +242,12 @@ export interface NorthernIrelandServiceManager {
 export class RQIANorthernIrelandService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly assessmentRepository: Repository<NorthernIrelandComplianceAssessment>,
+    private readonlyassessmentRepository: Repository<NorthernIrelandComplianceAssessment>,
     
-    private readonly registrationRepository: Repository<RQIAServiceRegistration>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlyregistrationRepository: Repository<RQIAServiceRegistration>,
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -260,7 +260,7 @@ export class RQIANorthernIrelandService {
     assessedBy: string
   ): Promise<NorthernIrelandComplianceAssessment> {
     try {
-      console.log(`Starting RQIA assessment for service: ${serviceId}`);
+      console.log(`Starting RQIA assessment forservice: ${serviceId}`);
 
       // Assess Quality Standards
       const qualityStandardOutcomes = await this.assessQualityStandards(serviceId, organizationId);
@@ -290,7 +290,7 @@ export class RQIANorthernIrelandService {
         serviceId
       );
 
-      constassessment: NorthernIrelandComplianceAssessment = {
+      const assessment: NorthernIrelandComplianceAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         serviceId,
@@ -318,11 +318,11 @@ export class RQIANorthernIrelandService {
         overallOutcome
       });
 
-      console.log(`Northern Ireland assessment completed: ${savedAssessment.id} (Outcome: ${overallOutcome})`);
+      console.log(`Northern Ireland assessmentcompleted: ${savedAssessment.id} (Outcome: ${overallOutcome})`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Northern Ireland assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Northern Ireland assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -334,7 +334,7 @@ export class RQIANorthernIrelandService {
     serviceId: string,
     organizationId: string
   ): Promise<Record<RQIAQualityStandard, RQIAInspectionOutcome>> {
-    constoutcomes: Record<RQIAQualityStandard, RQIAInspectionOutcome> = {} as any;
+    const outcomes: Record<RQIAQualityStandard, RQIAInspectionOutcome> = {} as any;
 
     // Standard 1: Compassionate Care
     outcomes[RQIAQualityStandard.COMPASSIONATE_CARE] = await this.assessCompassionateCare(serviceId, organizationId);
@@ -447,7 +447,7 @@ export class RQIANorthernIrelandService {
     organizationId: string
   ): Promise<RQIAStandardCompliance[]> {
     const standards = Object.values(RQIAStandardCriteria);
-    constcompliance: RQIAStandardCompliance[] = [];
+    const compliance: RQIAStandardCompliance[] = [];
 
     for (const standard of standards) {
       const standardCompliance = await this.assessStandardCriteria(standard, serviceId, organizationId);
@@ -489,7 +489,7 @@ export class RQIANorthernIrelandService {
     organizationId: string
   ): Promise<NISCCRequirementsCompliance[]> {
     const requirements = Object.values(NISCCRequirement);
-    constcompliance: NISCCRequirementsCompliance[] = [];
+    const compliance: NISCCRequirementsCompliance[] = [];
 
     for (const requirement of requirements) {
       const requirementCompliance = await this.assessNISCCRequirement(requirement, serviceId, organizationId);
@@ -507,11 +507,11 @@ export class RQIANorthernIrelandService {
     serviceId: string,
     organizationId: string
   ): Promise<NISCCRequirementsCompliance> {
-    letcompliance: boolean;
-    letstaffCompliance: number;
-    letevidence: string[];
-    letgaps: string[];
-    letactionRequired: string[];
+    let compliance: boolean;
+    let staffCompliance: number;
+    let evidence: string[];
+    let gaps: string[];
+    let actionRequired: string[];
 
     switch (requirement) {
       case NISCCRequirement.REGISTRATION:
@@ -560,7 +560,7 @@ export class RQIANorthernIrelandService {
         break;
 
       default:
-        throw new Error(`Unknown NISCC requirement: ${requirement}`);
+        throw new Error(`Unknown NISCCrequirement: ${requirement}`);
     }
 
     return {
@@ -581,7 +581,7 @@ export class RQIANorthernIrelandService {
     organizationId: string
   ): Promise<HSCANIRequirementsCompliance[]> {
     const requirements = Object.values(HSCANIRequirement);
-    constcompliance: HSCANIRequirementsCompliance[] = [];
+    const compliance: HSCANIRequirementsCompliance[] = [];
 
     for (const requirement of requirements) {
       const requirementCompliance = await this.assessHSCANIRequirement(requirement, serviceId, organizationId);
@@ -676,7 +676,7 @@ export class RQIANorthernIrelandService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess Northern Ireland digital records: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to assess Northern Ireland digitalrecords: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -689,9 +689,9 @@ export class RQIANorthernIrelandService {
     serviceDetails: Partial<RQIAServiceRegistration>
   ): Promise<RQIAServiceRegistration> {
     try {
-      console.log(`Registering service with RQIA: ${serviceDetails.serviceName}`);
+      console.log(`Registering service withRQIA: ${serviceDetails.serviceName}`);
 
-      constregistration: RQIAServiceRegistration = {
+      const registration: RQIAServiceRegistration = {
         id: this.generateRegistrationId(),
         organizationId,
         serviceType: serviceDetails.serviceType || 'residential_care',
@@ -722,11 +722,11 @@ export class RQIANorthernIrelandService {
         organizationId
       });
 
-      console.log(`Northern Ireland service registered: ${savedRegistration.registrationNumber}`);
+      console.log(`Northern Ireland serviceregistered: ${savedRegistration.registrationNumber}`);
       return savedRegistration;
 
     } catch (error: unknown) {
-      console.error(`Northern Ireland service registration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Northern Ireland service registrationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -761,7 +761,7 @@ export class RQIANorthernIrelandService {
       return readinessReport;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate Northern Ireland readiness report: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to generate Northern Ireland readinessreport: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -822,7 +822,7 @@ export class RQIANorthernIrelandService {
       return complianceStatus;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor Northern Ireland compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to monitor Northern Irelandcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -973,7 +973,7 @@ export class RQIANorthernIrelandService {
     digitalCompliance: NorthernIrelandDigitalRecordsCompliance,
     serviceId: string
   ): Promise<NorthernIrelandActionPlan> {
-    constactions: NorthernIrelandAction[] = [];
+    const actions: NorthernIrelandAction[] = [];
 
     // Generate actions for non-compliant quality standards
     for (const [standard, outcome] of Object.entries(qualityStandardOutcomes)) {
@@ -1013,7 +1013,7 @@ export class RQIANorthernIrelandService {
       actions.push(...digitalActions);
     }
 
-    constactionPlan: NorthernIrelandActionPlan = {
+    const actionPlan: NorthernIrelandActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,

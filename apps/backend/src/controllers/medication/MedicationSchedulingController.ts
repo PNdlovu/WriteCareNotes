@@ -27,9 +27,9 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: CQC Medication Management Standards, NICE Guidelines
  * - Scotland: Care Inspectorate Medication Guidelines, NHS Scotland Standards
  * - Wales: CIW Medication Administration Requirements, NHS Wales Standards
- * - Northern Ireland: RQIA Medication Management Standards, HSC Standards
- * - Republic of Ireland: HIQA Medication Safety Guidelines, HSE Standards
- * - Isle of Man: DHSC Medication Administration Protocols
+ * - NorthernIreland: RQIA Medication Management Standards, HSC Standards
+ * - Republic ofIreland: HIQA Medication Safety Guidelines, HSE Standards
+ * - Isle ofMan: DHSC Medication Administration Protocols
  * - Guernsey: Committee for Health & Social Care Standards
  * - Jersey: Care Commission Medication Requirements
  * - RCN Medication Administration Standards
@@ -64,7 +64,7 @@ import { logger } from '../../utils/logger';
 export class MedicationSchedulingController {
   privateschedulingService: MedicationSchedulingService;
 
-  constructor() {
+  const ructor() {
     this.schedulingService = new MedicationSchedulingService();
   }
 
@@ -99,7 +99,7 @@ export class MedicationSchedulingController {
       if (!prescriptionId || !frequency || !scheduleType || !optimizationPreferences || 
           !alertSettings || !priority) {
         res.status(400).json({ 
-          error: 'Missing required fields: prescriptionId, frequency, scheduleType, optimizationPreferences, alertSettings, priority' 
+          error: 'Missing requiredfields: prescriptionId, frequency, scheduleType, optimizationPreferences, alertSettings, priority' 
         });
         return;
       }
@@ -108,7 +108,7 @@ export class MedicationSchedulingController {
       const validScheduleTypes = ['regular', 'prn', 'stat', 'variable'];
       if (!validScheduleTypes.includes(scheduleType)) {
         res.status(400).json({ 
-          error: 'Invalid schedule type. Must be one of: ' + validScheduleTypes.join(', ')
+          error: 'Invalid schedule type. Must be oneof: ' + validScheduleTypes.join(', ')
         });
         return;
       }
@@ -117,7 +117,7 @@ export class MedicationSchedulingController {
       const validPriorities = ['low', 'normal', 'high', 'critical'];
       if (!validPriorities.includes(priority)) {
         res.status(400).json({ 
-          error: 'Invalid priority. Must be one of: ' + validPriorities.join(', ')
+          error: 'Invalid priority. Must be oneof: ' + validPriorities.join(', ')
         });
         return;
       }
@@ -126,7 +126,7 @@ export class MedicationSchedulingController {
       const validFrequencyTypes = ['once', 'daily', 'weekly', 'monthly', 'interval', 'custom'];
       if (!frequency.type || !validFrequencyTypes.includes(frequency.type)) {
         res.status(400).json({ 
-          error: 'Invalid frequency type. Must be one of: ' + validFrequencyTypes.join(', ')
+          error: 'Invalid frequency type. Must be oneof: ' + validFrequencyTypes.join(', ')
         });
         return;
       }
@@ -171,7 +171,7 @@ export class MedicationSchedulingController {
       if (!Array.isArray(alertSettings.alertMethods) || 
           !alertSettings.alertMethods.every(method => validAlertMethods.includes(method))) {
         res.status(400).json({ 
-          error: 'Invalid alert methods. Must be array containing: ' + validAlertMethods.join(', ')
+          error: 'Invalid alert methods. Must be arraycontaining: ' + validAlertMethods.join(', ')
         });
         return;
       }
@@ -238,7 +238,7 @@ export class MedicationSchedulingController {
       }
 
       const alertTypes = req.query['alertTypes'] as string;
-      letalertTypeArray: MedicationAlert['alertType'][] | undefined;
+      let alertTypeArray: MedicationAlert['alertType'][] | undefined;
 
       if (alertTypes) {
         alertTypeArray = alertTypes.split(',') as MedicationAlert['alertType'][];
@@ -250,7 +250,7 @@ export class MedicationSchedulingController {
         
         if (!alertTypeArray.every(type => validAlertTypes.includes(type))) {
           res.status(400).json({ 
-            error: 'Invalid alert types. Must be one of: ' + validAlertTypes.join(', ')
+            error: 'Invalid alert types. Must be oneof: ' + validAlertTypes.join(', ')
           });
           return;
         }
@@ -304,7 +304,7 @@ export class MedicationSchedulingController {
       const { optimizationRules } = req.body;
 
       // Validate optimization rules if provided
-      letrules: OptimizationRule[] = [];
+      let rules: OptimizationRule[] = [];
       if (optimizationRules) {
         if (!Array.isArray(optimizationRules)) {
           res.status(400).json({ error: 'Optimization rules must be an array' });
@@ -319,7 +319,7 @@ export class MedicationSchedulingController {
         for (const rule of optimizationRules) {
           if (!rule.ruleType || !validRuleTypes.includes(rule.ruleType)) {
             res.status(400).json({ 
-              error: 'Invalid rule type. Must be one of: ' + validRuleTypes.join(', ')
+              error: 'Invalid rule type. Must be oneof: ' + validRuleTypes.join(', ')
             });
             return;
           }
@@ -428,7 +428,7 @@ export class MedicationSchedulingController {
       // Validate required fields
       if (!indication || !requestedBy || !requestedAt || !clinicalJustification) {
         res.status(400).json({ 
-          error: 'Missing required fields: indication, requestedBy, requestedAt, clinicalJustification' 
+          error: 'Missing requiredfields: indication, requestedBy, requestedAt, clinicalJustification' 
         });
         return;
       }
@@ -549,7 +549,7 @@ export class MedicationSchedulingController {
         const validFrequencyTypes = ['once', 'daily', 'weekly', 'monthly', 'interval', 'custom'];
         if (!frequency.type || !validFrequencyTypes.includes(frequency.type)) {
           res.status(400).json({ 
-            error: 'Invalid frequency type. Must be one of: ' + validFrequencyTypes.join(', ')
+            error: 'Invalid frequency type. Must be oneof: ' + validFrequencyTypes.join(', ')
           });
           return;
         }
@@ -560,7 +560,7 @@ export class MedicationSchedulingController {
         const validPriorities = ['low', 'normal', 'high', 'critical'];
         if (!validPriorities.includes(priority)) {
           res.status(400).json({ 
-            error: 'Invalid priority. Must be one of: ' + validPriorities.join(', ')
+            error: 'Invalid priority. Must be oneof: ' + validPriorities.join(', ')
           });
           return;
         }
@@ -571,7 +571,7 @@ export class MedicationSchedulingController {
         const validStatuses = ['active', 'paused', 'completed', 'discontinued'];
         if (!validStatuses.includes(status)) {
           res.status(400).json({ 
-            error: 'Invalid status. Must be one of: ' + validStatuses.join(', ')
+            error: 'Invalid status. Must be oneof: ' + validStatuses.join(', ')
           });
           return;
         }
@@ -583,7 +583,7 @@ export class MedicationSchedulingController {
         if (!Array.isArray(alertSettings.alertMethods) || 
             !alertSettings.alertMethods.every(method => validAlertMethods.includes(method))) {
           res.status(400).json({ 
-            error: 'Invalid alert methods. Must be array containing: ' + validAlertMethods.join(', ')
+            error: 'Invalid alert methods. Must be arraycontaining: ' + validAlertMethods.join(', ')
           });
           return;
         }
@@ -653,7 +653,7 @@ export class MedicationSchedulingController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      constfilters: ScheduleFilters = {};
+      const filters: ScheduleFilters = {};
 
       // Apply filters from query parameters
       if (req.query['residentId']) {

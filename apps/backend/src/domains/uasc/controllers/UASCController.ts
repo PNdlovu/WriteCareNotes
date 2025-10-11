@@ -60,7 +60,7 @@ import {
 export class UASCController {
   privateuascService: UASCService;
 
-  constructor() {
+  const ructor() {
     this.uascService = new UASCService();
   }
 

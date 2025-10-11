@@ -4,7 +4,7 @@
  * Immutable audit trail for all AI-generated policy suggestions
  * Used by PolicyAuthoringAssistantService for complete traceability
  * 
- * Key Features:
+ * KeyFeatures:
  * - Immutable event sourcing (write-once, never update)
  * - Complete request/response logging
  * - Source attribution for every suggestion
@@ -142,7 +142,7 @@ export class AISuggestionLog {
    * Regulatory jurisdictions (array)
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     array: true,
   })
   @Index()
@@ -218,7 +218,7 @@ export class AISuggestionLog {
   /**
    * Reason for fallback (if applicable)
    */
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   fallbackReason?: 'insufficient_sources' | 'low_confidence' | 'safety_validation_failed' | 'system_error';
 
   /**
@@ -315,19 +315,19 @@ export class AISuggestionLog {
   /**
    * IP address of the request
    */
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   ipAddress?: string;
 
   /**
    * User agent string
    */
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   userAgent?: string;
 
   /**
    * Session ID
    */
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   sessionId?: string;
 
   /**
@@ -403,7 +403,7 @@ export class AISuggestionLog {
    * Get jurisdiction names
    */
   getJurisdictionNames(): string[] {
-    constnames: { [key in RegulatoryJurisdiction]: string } = {
+    const names: { [key in RegulatoryJurisdiction]: string } = {
       [RegulatoryJurisdiction.ENGLAND_CQC]: 'England (CQC)',
       [RegulatoryJurisdiction.SCOTLAND_CARE_INSPECTORATE]: 'Scotland (Care Inspectorate)',
       [RegulatoryJurisdiction.WALES_CIW]: 'Wales (CIW)',

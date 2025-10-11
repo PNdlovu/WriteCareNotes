@@ -18,7 +18,7 @@ import { AdvancedAnalyticsService } from '../../services/analytics/AdvancedAnaly
 export class AdvancedAnalyticsController {
   privateanalyticsService: AdvancedAnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.analyticsService = new AdvancedAnalyticsService();
   }
 

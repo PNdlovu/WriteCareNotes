@@ -15,7 +15,7 @@ export { default as LegacySystemConnectors } from './LegacySystemConnectors';
 export { default as DataValidationService } from './DataValidationService';
 export { default as MigrationWebSocketService } from './MigrationWebSocketService';
 
-// Export types for external use
+// export type s for external use
 export type {
   FileImportOptions,
   FileImportResult,

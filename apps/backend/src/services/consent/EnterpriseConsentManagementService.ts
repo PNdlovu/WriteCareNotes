@@ -125,14 +125,14 @@ export interface ConsentComplianceReport {
 export class EnterpriseConsentManagementService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly consentRepository: Repository<ConsentManagement>,
+    private readonlyconsentRepository: Repository<ConsentManagement>,
     
-    private readonly residentRepository: Repository<Resident>,
-    private readonly notificationService: NotificationService,
-    private readonly auditService: AuditService,
-    private readonly encryptionService: EncryptionService
+    private readonlyresidentRepository: Repository<Resident>,
+    private readonlynotificationService: NotificationService,
+    private readonlyauditService: AuditService,
+    private readonlyencryptionService: EncryptionService
   ) {
     console.log('Enterprise Consent Management Service initialized');
   }
@@ -157,7 +157,7 @@ export class EnterpriseConsentManagementService {
       });
 
       if (!resident) {
-        throw new Error(`Resident not found: ${consentData.residentId}`);
+        throw new Error(`Resident notfound: ${consentData.residentId}`);
       }
 
       // Check for existing active consent of same type
@@ -186,7 +186,7 @@ export class EnterpriseConsentManagementService {
       const consentValidation = await this.validateConsentQuality(consentData);
       
       if (!consentValidation.valid) {
-        throw new Error(`Consent validation failed: ${consentValidation.issues.join(', ')}`);
+        throw new Error(`Consent validationfailed: ${consentValidation.issues.join(', ')}`);
       }
 
       // Create consent record
@@ -289,11 +289,11 @@ export class EnterpriseConsentManagementService {
       });
 
       if (!consent) {
-        throw new Error(`Consent record not found: ${consentId}`);
+        throw new Error(`Consent record notfound: ${consentId}`);
       }
 
       if (consent.status !== ConsentStatus.GIVEN) {
-        throw new Error(`Cannot withdraw consent with status: ${consent.status}`);
+        throw new Error(`Cannot withdraw consent withstatus: ${consent.status}`);
       }
 
       // Encrypt withdrawal reason
@@ -442,9 +442,9 @@ export class EnterpriseConsentManagementService {
       );
 
       // Generate renewal reminders
-      constrenewalReminders: string[] = [];
-      constcomplianceIssues: string[] = [];
-      constrecommendedActions: string[] = [];
+      const renewalReminders: string[] = [];
+      const complianceIssues: string[] = [];
+      const recommendedActions: string[] = [];
 
       for (const consent of filteredExpiringConsents) {
         const daysUntilExpiry = Math.ceil(
@@ -609,7 +609,7 @@ export class EnterpriseConsentManagementService {
       });
 
       if (!consent) {
-        throw new Error(`Consent record not found: ${consentId}`);
+        throw new Error(`Consent record notfound: ${consentId}`);
       }
 
       // Create new consent record for renewal
@@ -701,8 +701,8 @@ export class EnterpriseConsentManagementService {
       );
 
       const permitted = applicableConsents.length > 0;
-      constmissingConsents: string[] = [];
-      constrecommendations: any[] = [];
+      const missingConsents: string[] = [];
+      const recommendations: any[] = [];
 
       if (!permitted) {
         // Identify missing consent types
@@ -851,7 +851,7 @@ export class EnterpriseConsentManagementService {
       freelyGiven: boolean;
     };
   }> {
-    constissues: string[] = [];
+    const issues: string[] = [];
     
     // Check if consent is informed
     const informed = consentData.consentDescription.length > 50 && 
@@ -1048,7 +1048,7 @@ export class EnterpriseConsentManagementService {
     });
 
     if (!consent) {
-      throw new Error(`Consent record not found: ${consentId}`);
+      throw new Error(`Consent record notfound: ${consentId}`);
     }
 
     // Create new consent record for renewal

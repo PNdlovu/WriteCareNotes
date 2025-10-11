@@ -118,7 +118,7 @@ export interface InterventionComplexityAnalysis {
 }
 
 export class CareInterventionValidationError extends Error {
-  constructor(
+  const ructor(
     message: string,
     publicvalidationErrors: ValidationError[]
   ) {
@@ -128,14 +128,14 @@ export class CareInterventionValidationError extends Error {
 }
 
 export class CareInterventionNotFoundError extends Error {
-  constructor(interventionId: string) {
+  const ructor(interventionId: string) {
     super(`Care intervention with ID ${interventionId} not found`);
     this.name = 'CareInterventionNotFoundError';
   }
 }
 
 export class CareInterventionSafetyError extends Error {
-  constructor(message: string, public safetyIssues: string[]) {
+  const ructor(message: string, publicsafetyIssues: string[]) {
     super(message);
     this.name = 'CareInterventionSafetyError';
   }
@@ -145,7 +145,7 @@ export class CareInterventionService {
   privatecareInterventionRepository: Repository<CareIntervention>;
   privatecareDomainRepository: Repository<CareDomain>;
 
-  constructor(
+  const ructor(
     privatedataSource: DataSource,
     privateauditService: AuditService,
     privateencryptionService: FieldLevelEncryptionService,
@@ -749,7 +749,7 @@ export class CareInterventionService {
     missingSkills: RequiredSkill[],
     safetyWarnings: SafetyConsideration[]
   ): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
 
     if (contraindications.length > 0) {
       recommendations.push('Review contraindications before proceeding');
@@ -789,7 +789,7 @@ export class CareInterventionService {
   }
 
   private extractRiskFactors(intervention: CareIntervention): string[] {
-    constriskFactors: string[] = [];
+    const riskFactors: string[] = [];
 
     if (intervention.hasHighRiskSafetyConsiderations) {
       riskFactors.push('High-risk safety considerations');
@@ -811,7 +811,7 @@ export class CareInterventionService {
   }
 
   private extractResourceRequirements(intervention: CareIntervention): string[] {
-    constrequirements: string[] = [];
+    const requirements: string[] = [];
 
     if (intervention.equipmentNeeded && intervention.equipmentNeeded.length > 0) {
       requirements.push(`Equipment needed: ${intervention.equipmentNeeded.length} items`);

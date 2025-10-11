@@ -9,7 +9,7 @@
  * 
  * @description
  * Repository pattern for User entity operations.
- * Handles all database interactions for user management including:
+ * Handles all database interactions for user managementincluding:
  * - User CRUD operations
  * - Authentication-related queries
  * - Account security (login attempts, locking)
@@ -59,7 +59,7 @@ export interface UpdateUserData {
 export class UserRepository {
   privaterepository: Repository<User>;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(User);
   }
 
@@ -127,7 +127,7 @@ export class UserRepository {
    */
   async findByOrganization(organizationId: string, includeInactive: boolean = false): Promise<User[]> {
     try {
-      constwhere: FindOptionsWhere<User> = { 
+      const where: FindOptionsWhere<User> = { 
         organizationId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -152,7 +152,7 @@ export class UserRepository {
    */
   async findByTenant(tenantId: string, includeInactive: boolean = false): Promise<User[]> {
     try {
-      constwhere: FindOptionsWhere<User> = { 
+      const where: FindOptionsWhere<User> = { 
         tenantId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -455,7 +455,7 @@ export class UserRepository {
    */
   async countByOrganization(organizationId: string, activeOnly: boolean = true): Promise<number> {
     try {
-      constwhere: FindOptionsWhere<User> = { 
+      const where: FindOptionsWhere<User> = { 
         organizationId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -480,7 +480,7 @@ export class UserRepository {
    */
   async countByTenant(tenantId: string, activeOnly: boolean = true): Promise<number> {
     try {
-      constwhere: FindOptionsWhere<User> = { 
+      const where: FindOptionsWhere<User> = { 
         tenantId,
         deletedAt: null
       } as FindOptionsWhere<User>;
@@ -505,7 +505,7 @@ export class UserRepository {
    */
   async isEmailTaken(email: string, excludeUserId?: string): Promise<boolean> {
     try {
-      constwhere: FindOptionsWhere<User> = { 
+      const where: FindOptionsWhere<User> = { 
         email,
         deletedAt: null
       } as FindOptionsWhere<User>;

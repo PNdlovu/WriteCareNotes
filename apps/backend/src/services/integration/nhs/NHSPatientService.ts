@@ -72,12 +72,12 @@ interface NHSResponse<T> {
  * Provides integration with NHS Digital services for patient data management
  */
 export class NHSPatientService {
-  private static instance: NHSPatientService;
+  private staticinstance: NHSPatientService;
   privateapiClient: AxiosInstance;
   privateprometheusService: PrometheusService;
   privatesentryService: SentryService;
 
-  private constructor() {
+  private const ructor() {
     this.prometheusService = PrometheusService.getInstance();
     this.sentryService = SentryService.getInstance();
     
@@ -196,7 +196,7 @@ export class NHSPatientService {
       );
 
       if (!response.data.success) {
-        throw new Error(`NHS API error: ${response.data.errors?.join(', ')}`);
+        throw new Error(`NHS APIerror: ${response.data.errors?.join(', ')}`);
       }
 
       logger.info('Patient retrieved from NHS', {
@@ -227,7 +227,7 @@ export class NHSPatientService {
       );
 
       if (!response.data.success) {
-        throw new Error(`NHS API error: ${response.data.errors?.join(', ')}`);
+        throw new Error(`NHS APIerror: ${response.data.errors?.join(', ')}`);
       }
 
       logger.info('Patient search completed', {
@@ -257,7 +257,7 @@ export class NHSPatientService {
       );
 
       if (!response.data.success) {
-        throw new Error(`NHS API error: ${response.data.errors?.join(', ')}`);
+        throw new Error(`NHS APIerror: ${response.data.errors?.join(', ')}`);
       }
 
       logger.info('Patient care record updated in NHS', {
@@ -294,7 +294,7 @@ export class NHSPatientService {
       );
 
       if (!response.data.success) {
-        throw new Error(`NHS API error: ${response.data.errors?.join(', ')}`);
+        throw new Error(`NHS APIerror: ${response.data.errors?.join(', ')}`);
       }
 
       logger.info('Patient care records retrieved from NHS', {
@@ -351,7 +351,7 @@ export class NHSPatientService {
         throw new Error('Invalid NHS number format');
       }
 
-      constparams: any = {};
+      const params: any = {};
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
 
@@ -361,7 +361,7 @@ export class NHSPatientService {
       );
 
       if (!response.data.success) {
-        throw new Error(`NHS API error: ${response.data.errors?.join(', ')}`);
+        throw new Error(`NHS APIerror: ${response.data.errors?.join(', ')}`);
       }
 
       logger.info('Patient appointments retrieved from NHS', {
@@ -390,7 +390,7 @@ export class NHSPatientService {
       );
 
       if (!response.data.success) {
-        throw new Error(`NHS API error: ${response.data.errors?.join(', ')}`);
+        throw new Error(`NHS APIerror: ${response.data.errors?.join(', ')}`);
       }
 
       logger.info('Patient medications retrieved from NHS', {

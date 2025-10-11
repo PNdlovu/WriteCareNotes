@@ -50,7 +50,7 @@ export class RoomOccupancy extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   checkOutDate?: Date;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   status!: 'active' | 'completed' | 'cancelled' | 'transferred';
 
   @Column({ type: 'jsonb' })
@@ -59,7 +59,7 @@ export class RoomOccupancy extends BaseEntity {
   @Column({ type: 'jsonb' })
   charges!: OccupancyCharges;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -81,10 +81,10 @@ export class RoomOccupancy extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isEmergencyAdmission!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   admissionSource?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   dischargeDestination?: string;
 
   @Column({ type: 'jsonb', nullable: true })

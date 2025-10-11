@@ -29,7 +29,7 @@ import { APIResponse, PaginationMeta } from '../../types/api-response';
 import { ValidationError } from '../../types/errors';
 
 export class MedicationApiController {
-  constructor(private medicationService: MedicationService) {}
+  const ructor(private medicationService: MedicationService) {}
 
   /**
    * Create a new medication
@@ -49,14 +49,14 @@ export class MedicationApiController {
 
       const validationErrors = await validate(createDto);
       if (validationErrors.length > 0) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
             message: 'Invalid medication data',
             details: validationErrors.map(error => ({
               field: error.property,
-              constraints: error.constraints
+              const raints: error.const raints
             })),
             correlationId
           }
@@ -66,7 +66,7 @@ export class MedicationApiController {
       }
 
       // Convert DTO to service request
-      constcreateRequest: CreateMedicationRequest = {
+      const createRequest: CreateMedicationRequest = {
         name: createDto.name,
         genericName: createDto.genericName,
         brandName: createDto.brandName,
@@ -92,7 +92,7 @@ export class MedicationApiController {
       // Convert to response DTO
       const responseDto = this.mapMedicationToResponseDto(medication);
 
-      constresponse: APIResponse<MedicationResponseDto> = {
+      const response: APIResponse<MedicationResponseDto> = {
         success: true,
         data: responseDto,
         meta: {
@@ -116,7 +116,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -147,14 +147,14 @@ export class MedicationApiController {
 
       const validationErrors = await validate(createDto);
       if (validationErrors.length > 0) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
             message: 'Invalid prescription data',
             details: validationErrors.map(error => ({
               field: error.property,
-              constraints: error.constraints
+              const raints: error.const raints
             })),
             correlationId
           }
@@ -164,7 +164,7 @@ export class MedicationApiController {
       }
 
       // Convert DTO to service request
-      constcreateRequest: CreatePrescriptionRequest = {
+      const createRequest: CreatePrescriptionRequest = {
         residentId: createDto.residentId,
         medicationId: createDto.medicationId,
         prescriberId: createDto.prescriberId,
@@ -188,7 +188,7 @@ export class MedicationApiController {
       // Convert to response DTO
       const responseDto = this.mapPrescriptionToResponseDto(prescription);
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: responseDto,
         meta: {
@@ -215,7 +215,7 @@ export class MedicationApiController {
       const statusCode = error instanceof Error && error.message.includes('drug interactions') ? 400 : 500;
       const errorCode = statusCode === 400 ? 'DRUG_INTERACTION_ERROR' : 'INTERNAL_ERROR';
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: errorCode,
@@ -246,14 +246,14 @@ export class MedicationApiController {
 
       const validationErrors = await validate(adminDto);
       if (validationErrors.length > 0) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
             message: 'Invalid medication administration data',
             details: validationErrors.map(error => ({
               field: error.property,
-              constraints: error.constraints
+              const raints: error.const raints
             })),
             correlationId
           }
@@ -263,7 +263,7 @@ export class MedicationApiController {
       }
 
       // Convert DTO to service request
-      constadminRequest: MedicationAdministrationRequest = {
+      const adminRequest: MedicationAdministrationRequest = {
         prescriptionId: adminDto.prescriptionId,
         residentId: adminDto.residentId,
         scheduledTime: new Date(adminDto.scheduledTime),
@@ -281,7 +281,7 @@ export class MedicationApiController {
       // Convert to response DTO
       const responseDto = this.mapAdministrationToResponseDto(administration);
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: responseDto,
         meta: {
@@ -309,7 +309,7 @@ export class MedicationApiController {
         (error.message.includes('not found') || error.message.includes('inactive')) ? 404 : 500;
       const errorCode = statusCode === 404 ? 'NOT_FOUND' : 'INTERNAL_ERROR';
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: errorCode,
@@ -341,7 +341,7 @@ export class MedicationApiController {
       // Check drug interactions
       const interactionCheck = await this.medicationService.checkDrugInteractions(residentId, medicationId);
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: {
           hasInteractions: interactionCheck.hasInteractions,
@@ -383,7 +383,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -413,7 +413,7 @@ export class MedicationApiController {
       const { admissionMedications } = req.body;
 
       if (!admissionMedications || !Array.isArray(admissionMedications)) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -432,7 +432,7 @@ export class MedicationApiController {
         req.user!.id
       );
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: {
           discrepancyCount: reconciliationResult.discrepancies.length,
@@ -471,7 +471,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -504,7 +504,7 @@ export class MedicationApiController {
 
       // Validate date range
       if (dateFrom > dateTo) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -526,7 +526,7 @@ export class MedicationApiController {
       // Convert to response DTOs
       const responseDtos = administrations.map(admin => this.mapAdministrationToResponseDto(admin));
 
-      constresponse: APIResponse<any[]> = {
+      const response: APIResponse<any[]> = {
         success: true,
         data: responseDtos,
         meta: {
@@ -556,7 +556,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -588,7 +588,7 @@ export class MedicationApiController {
 
       // Validate date range
       if (dateFrom > dateTo) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -607,7 +607,7 @@ export class MedicationApiController {
         facilityId
       );
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: report,
         meta: {
@@ -632,7 +632,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -682,7 +682,7 @@ export class MedicationApiController {
         }
       ];
 
-      constpaginationMeta: PaginationMeta = {
+      const paginationMeta: PaginationMeta = {
         page,
         limit,
         total: medications.length,
@@ -691,7 +691,7 @@ export class MedicationApiController {
         hasPrev: page > 1
       };
 
-      constresponse: APIResponse<any[]> = {
+      const response: APIResponse<any[]> = {
         success: true,
         data: medications,
         meta: {
@@ -716,7 +716,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -763,7 +763,7 @@ export class MedicationApiController {
         }
       ];
 
-      constresponse: APIResponse<any[]> = {
+      const response: APIResponse<any[]> = {
         success: true,
         data: prescriptions,
         meta: {
@@ -789,7 +789,7 @@ export class MedicationApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',

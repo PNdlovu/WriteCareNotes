@@ -46,7 +46,7 @@ export class CQCComplianceAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
@@ -84,7 +84,7 @@ export class CQCActionPlan {
   @IsDate()
   targetCompletionDate: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   responsibleManager: string;
 

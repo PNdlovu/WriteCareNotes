@@ -23,7 +23,7 @@ export class FiveSMethodologyService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.workplaceRepository = AppDataSource.getRepository(FiveSWorkplace);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -46,7 +46,7 @@ export class FiveSMethodologyService {
       
       return savedWorkplace;
     } catch (error: unknown) {
-      console.error('Error creating workplace assessment:', error);
+      console.error('Error creating workplaceassessment:', error);
       throw error;
     }
   }

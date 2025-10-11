@@ -47,7 +47,7 @@ export interface InvoiceFilters {
 
 @Injectable()
 export class InvoiceService {
-  constructor(
+  const ructor(
     @InjectRepository(Invoice)
     privateinvoiceRepository: Repository<Invoice>,
     @InjectRepository(InvoiceLineItem)
@@ -366,11 +366,11 @@ export class InvoiceService {
       .andWhere('billing.nextInvoiceDate <= :today', { today: new Date() })
       .getMany();
 
-    constgeneratedInvoices: Invoice[] = [];
+    const generatedInvoices: Invoice[] = [];
 
     for (const billing of residentBillings) {
       try {
-        constinvoiceData: InvoiceData = {
+        const invoiceData: InvoiceData = {
           type: InvoiceType.RESIDENT_BILLING,
           recipientName: billing.residentName,
           recipientAddress: billing.residentAddress,

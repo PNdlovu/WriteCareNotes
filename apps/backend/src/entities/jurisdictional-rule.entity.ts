@@ -4,7 +4,7 @@
  * Represents regulatory rules specific to each British Isles jurisdiction
  * Used by VerifiedRetrieverService for RAG-based policy suggestions
  * 
- * Key Features:
+ * KeyFeatures:
  * - Single jurisdiction per rule (jurisdiction-specific requirements)
  * - Links to compliance standards
  * - Version tracking for regulatory updates
@@ -73,7 +73,7 @@ export class JurisdictionalRule {
   /**
    * 📝 RULE TITLE
    */
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   title: string;
 
   /**
@@ -95,7 +95,7 @@ export class JurisdictionalRule {
   /**
    * 🔢 VERSION
    */
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   version: string;
 
   /**
@@ -113,14 +113,14 @@ export class JurisdictionalRule {
    * 🏛️ REGULATORY BODY
    * e.g., "Care Quality Commission", "Care Inspectorate", "CIW", "RQIA"
    */
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   @Index()
   regulatoryBody: string;
 
   /**
    * ⚠️ ENFORCEMENT LEVEL
    */
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   enforcementLevel: 'Critical' | 'High' | 'Medium' | 'Low';
 
   /**
@@ -144,7 +144,7 @@ export class JurisdictionalRule {
    * 🔗 RELATED COMPLIANCE STANDARDS
    * Array of compliance standard codes this rule relates to
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   relatedStandards: string[];
 
   /**
@@ -295,7 +295,7 @@ export class JurisdictionalRule {
    * Get jurisdiction display name
    */
   getJurisdictionName(): string {
-    constnames: { [key in RegulatoryJurisdiction]: string } = {
+    const names: { [key in RegulatoryJurisdiction]: string } = {
       [RegulatoryJurisdiction.ENGLAND_CQC]: 'England (CQC)',
       [RegulatoryJurisdiction.SCOTLAND_CARE_INSPECTORATE]: 'Scotland (Care Inspectorate)',
       [RegulatoryJurisdiction.WALES_CIW]: 'Wales (CIW)',
@@ -312,7 +312,7 @@ export class JurisdictionalRule {
    * Get enforcement level color (for UI)
    */
   getEnforcementColor(): string {
-    constcolors: { [key: string]: string } = {
+    const colors: { [key: string]: string } = {
       Critical: '#dc2626', // Red
       High: '#ea580c',     // Orange
       Medium: '#ca8a04',   // Yellow

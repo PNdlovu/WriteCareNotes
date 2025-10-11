@@ -50,19 +50,19 @@ export class AIAgentConfig {
   // // Logger removed
   private static instance: AIAgentConfig;
   
-  private publicAgentConfig!: {
+  privatepublicAgentConfig!: {
     model: AIModelConfig;
     prompts: PromptConfig;
     security: SecurityConfig;
   };
   
-  private tenantAgentConfig!: {
+  privatetenantAgentConfig!: {
     model: AIModelConfig;
     prompts: PromptConfig;
     security: SecurityConfig;
   };
 
-  private constructor() {
+  private const ructor() {
     this.initializeConfigurations();
   }
 
@@ -256,7 +256,7 @@ COMPLIANCE AWARENESS:
 - Understanding of organizational compliance requirements
 - Integration with existing care workflows and documentation`,
 
-      safetyPrompt: `CRITICAL SAFETY REQUIREMENTS:
+      safetyPrompt: `CRITICAL SAFETYREQUIREMENTS:
 - Absolute tenant isolation - no cross-tenant data access
 - Immediate escalation for medical emergencies
 - Strict adherence to clinical safety standards
@@ -288,7 +288,7 @@ COMPLIANCE AWARENESS:
     prompts: PromptConfig;
     security: SecurityConfig;
   } {
-    return agentType === 'PUBLIC' ? this.publicAgentConfig : this.tenantAgentConfig;
+    returnagentType === 'PUBLIC' ? this.publicAgentConfig : this.tenantAgentConfig;
   }
 
   /**
@@ -355,8 +355,8 @@ COMPLIANCE AWARENESS:
     errors: string[];
     warnings: string[];
   } {
-    consterrors: string[] = [];
-    constwarnings: string[] = [];
+    const errors: string[] = [];
+    const warnings: string[] = [];
 
     // Validate model configurations
     [this.publicAgentConfig, this.tenantAgentConfig].forEach((config, index) => {
@@ -525,15 +525,15 @@ COMPLIANCE AWARENESS:
     let contextPrompt = prompts.contextPrompt;
 
     if (agentType === 'TENANT' && careData) {
-      contextPrompt += '\n\nCURRENT CARE CONTEXT:';
+      contextPrompt += '\n\nCURRENT CARECONTEXT:';
       
       if (careData.resident) {
-        contextPrompt += `\nResident Care Needs: ${careData.resident.careNeeds.join(', ')}`;
+        contextPrompt += `\nResident CareNeeds: ${careData.resident.careNeeds.join(', ')}`;
         contextPrompt += `\nRisk Factors: ${careData.resident.riskFactors.join(', ')}`;
       }
       
       if (careData.assessments) {
-        contextPrompt += `\nLatest Risk Scores: Overall ${careData.assessments.riskScores.overallRisk}/5`;
+        contextPrompt += `\nLatest RiskScores: Overall ${careData.assessments.riskScores.overallRisk}/5`;
       }
       
       if (careData.medications) {

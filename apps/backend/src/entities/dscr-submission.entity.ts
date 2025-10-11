@@ -13,7 +13,7 @@ export class DSCRSubmission {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'submission_id', type: 'varchar', length: 255, unique: true })
+  @Column({ name: 'submission_id', type: 'var char', length: 255, unique: true })
   submissionId: string;
 
   @Column({ name: 'facility_id', type: 'uuid' })
@@ -30,13 +30,13 @@ export class DSCRSubmission {
   })
   status: string;
 
-  @Column({ name: 'data_hash', type: 'varchar', length: 64 })
+  @Column({ name: 'data_hash', type: 'var char', length: 64 })
   dataHash: string;
 
   @Column({ name: 'record_count', type: 'integer', default: 0 })
   recordCount: number;
 
-  @Column({ name: 'submission_type', type: 'varchar', length: 50 })
+  @Column({ name: 'submission_type', type: 'var char', length: 50 })
   submissionType: string;
 
   @Column({ name: 'nhs_response', type: 'jsonb', nullable: true })

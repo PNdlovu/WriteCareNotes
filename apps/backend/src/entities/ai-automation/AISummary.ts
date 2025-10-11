@@ -256,7 +256,7 @@ export class AISummary extends BaseEntity {
   calculateQualityScore(): number {
     let score = this.aiGenerationMetrics.qualityScore * 0.4;
     score += this.aiGenerationMetrics.factualAccuracyScore * 0.3;
-    score += (100 - this.aiGenerationMetrics.biasDetectionScore) * 0.2; // Lower bias = higher score
+    score += (100 - this.aiGenerationMetrics.biasDetectionScore) * 0.2; // Lowerbias = higher score
     score += (this.qualityRating || 3) * 20 * 0.1; // Human rating contribution
     
     return Math.min(100, Math.max(0, score));
@@ -398,13 +398,13 @@ export class AISummary extends BaseEntity {
     const keyPoints = this.getCriticalKeyPoints();
     let cognitiveFriendly = `Summary for ${this.personalizationContext.residentId}:\n\n`;
     
-    cognitiveFriendly += 'Important things today:\n';
+    cognitiveFriendly += 'Important thingstoday:\n';
     keyPoints.forEach((point, index) => {
       cognitiveFriendly += `${index + 1}. ${this.simplifyLanguage(point.content)}\n`;
     });
     
     if (this.getActionableKeyPoints().length > 0) {
-      cognitiveFriendly += '\nThings to do:\n';
+      cognitiveFriendly += '\nThings todo:\n';
       this.getActionableKeyPoints().forEach((point, index) => {
         cognitiveFriendly += `${index + 1}. ${this.simplifyLanguage(point.content)}\n`;
       });

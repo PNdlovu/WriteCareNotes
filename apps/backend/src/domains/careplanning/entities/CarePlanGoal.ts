@@ -101,7 +101,7 @@ export class CarePlanGoal {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   goalNumber: string; // Format: CPG-YYYY-NNNNN
 
   @ManyToOne(() => Child)
@@ -203,13 +203,13 @@ export class CarePlanGoal {
   // RESPONSIBILITY
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   leadProfessional: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   leadProfessionalRole: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   leadProfessionalContact: string;
 
   @Column({ type: 'simple-json', nullable: true })
@@ -326,7 +326,7 @@ export class CarePlanGoal {
   @Column({ type: 'date', nullable: true })
   lastReviewDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   lastReviewedBy: string;
 
   @Column({ type: 'text', nullable: true })
@@ -372,13 +372,13 @@ export class CarePlanGoal {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

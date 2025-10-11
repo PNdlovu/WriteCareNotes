@@ -18,12 +18,12 @@ import { Logger } from '@nestjs/common';
 
 @Controller('api/pilot')
 export class EnhancedPilotController {
-  private readonly logger = new Logger(EnhancedPilotController.name);
+  private readonlylogger = new Logger(EnhancedPilotController.name);
 
-  constructor(
-    private readonly pilotDashboardService: PilotFeedbackDashboardService,
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlypilotDashboardService: PilotFeedbackDashboardService,
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -40,7 +40,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get pilot dashboard:', error);
+      this.logger.error('Failed to get pilotdashboard:', error);
       throw new HttpException('Failed to get pilot dashboard', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -59,7 +59,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get pilot metrics:', error);
+      this.logger.error('Failed to get pilotmetrics:', error);
       throw new HttpException('Failed to get pilot metrics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -89,7 +89,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to submit pilot feedback:', error);
+      this.logger.error('Failed to submit pilotfeedback:', error);
       throw new HttpException('Failed to submit pilot feedback', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -114,7 +114,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to generate case study:', error);
+      this.logger.error('Failed to generate casestudy:', error);
       throw new HttpException('Failed to generate case study', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -147,7 +147,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get case studies:', error);
+      this.logger.error('Failed to get casestudies:', error);
       throw new HttpException('Failed to get case studies', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -260,7 +260,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get onboarding checklist:', error);
+      this.logger.error('Failed to get onboardingchecklist:', error);
       throw new HttpException('Failed to get onboarding checklist', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -302,7 +302,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to update task status:', error);
+      this.logger.error('Failed to update taskstatus:', error);
       throw new HttpException('Failed to update task status', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -368,7 +368,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get success metrics:', error);
+      this.logger.error('Failed to get successmetrics:', error);
       throw new HttpException('Failed to get success metrics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -421,7 +421,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get pilot analytics:', error);
+      this.logger.error('Failed to get pilotanalytics:', error);
       throw new HttpException('Failed to get pilot analytics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -451,7 +451,7 @@ export class EnhancedPilotController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Health check failed:', error);
+      this.logger.error('Health checkfailed:', error);
       throw new HttpException('Health check failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

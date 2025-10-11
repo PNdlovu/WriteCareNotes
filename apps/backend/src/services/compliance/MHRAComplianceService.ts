@@ -226,12 +226,12 @@ export interface MHRAComplianceAssessment {
 export class MHRAComplianceService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly deviceRepository: Repository<MHRADeviceRegistration>,
+    private readonlydeviceRepository: Repository<MHRADeviceRegistration>,
     
-    private readonly assessmentRepository: Repository<MHRAComplianceAssessment>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlyassessmentRepository: Repository<MHRAComplianceAssessment>,
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -242,7 +242,7 @@ export class MHRAComplianceService {
     organizationId: string
   ): Promise<MHRADeviceRegistration> {
     try {
-      console.log(`Registering medical device: ${deviceDetails.deviceName}`);
+      console.log(`Registering medicaldevice: ${deviceDetails.deviceName}`);
 
       // Classify software safety class
       const softwareSafetyClass = await this.classifySoftwareSafety(deviceDetails);
@@ -262,7 +262,7 @@ export class MHRAComplianceService {
       // Create post-market surveillance plan
       const postMarketSurveillance = await this.createPostMarketSurveillancePlan(deviceDetails);
 
-      constregistration: MHRADeviceRegistration = {
+      const registration: MHRADeviceRegistration = {
         id: this.generateRegistrationId(),
         deviceName: deviceDetails.deviceName || 'WriteCareNotes Healthcare Management System',
         deviceClass,
@@ -291,12 +291,12 @@ export class MHRAComplianceService {
         organizationId
       });
 
-      console.log(`Medical device registered: ${savedRegistration.id}`);
+      console.log(`Medical deviceregistered: ${savedRegistration.id}`);
       return savedRegistration;
 
     } catch (error: unknown) {
-      console.error(`Failed to register medical device: ${error instanceof Error ? error.message : "Unknown error"}`);
-      throw new Error(`Medical device registration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to register medicaldevice: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Medical device registrationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -308,7 +308,7 @@ export class MHRAComplianceService {
     assessedBy: string
   ): Promise<MHRAComplianceAssessment> {
     try {
-      console.log(`Conducting MHRA compliance assessment for: ${organizationId}`);
+      console.log(`Conducting MHRA compliance assessmentfor: ${organizationId}`);
 
       // Get all device registrations for organization
       const deviceRegistrations = await this.deviceRepository.find({
@@ -340,7 +340,7 @@ export class MHRAComplianceService {
       // Generate recommendations
       const recommendations = await this.generateMHRARecommendations(complianceResults);
 
-      constassessment: MHRAComplianceAssessment = {
+      const assessment: MHRAComplianceAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         deviceRegistrations,
@@ -364,11 +364,11 @@ export class MHRAComplianceService {
         complianceScore: overallScore
       });
 
-      console.log(`MHRA assessment completed: ${savedAssessment.id} (Score: ${overallScore}%)`);
+      console.log(`MHRA assessmentcompleted: ${savedAssessment.id} (Score: ${overallScore}%)`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`MHRA assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`MHRA assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -379,7 +379,7 @@ export class MHRAComplianceService {
   private async classifySoftwareSafety(deviceDetails: Partial<MHRADeviceRegistration>): Promise<MHRASoftwareSafetyClass> {
     const intendedPurpose = deviceDetails.intendedPurpose?.toLowerCase() || '';
 
-    // Class D: Software for diagnosis/treatment decisions
+    // ClassD: Software for diagnosis/treatment decisions
     if (intendedPurpose.includes('diagnosis') || 
         intendedPurpose.includes('treatment') || 
         intendedPurpose.includes('clinical decision') ||
@@ -387,21 +387,21 @@ export class MHRAComplianceService {
       return MHRASoftwareSafetyClass.CLASS_D;
     }
 
-    // Class C: Software for managing/analyzing medical data
+    // ClassC: Software for managing/analyzing medical data
     if (intendedPurpose.includes('healthcare management') ||
         intendedPurpose.includes('care records') ||
         intendedPurpose.includes('patient data')) {
       return MHRASoftwareSafetyClass.CLASS_C;
     }
 
-    // Class B: Software with wellness purpose
+    // ClassB: Software with wellness purpose
     if (intendedPurpose.includes('wellness') ||
         intendedPurpose.includes('lifestyle') ||
         intendedPurpose.includes('general health')) {
       return MHRASoftwareSafetyClass.CLASS_B;
     }
 
-    // Class A: Non-medical device software
+    // ClassA: Non-medical device software
     return MHRASoftwareSafetyClass.CLASS_A;
   }
 
@@ -450,7 +450,7 @@ export class MHRAComplianceService {
     return {
       deviceDescription: `WriteCareNotes is a comprehensive healthcare management system designed for adult care homes in the British Isles. The system provides clinical decision support, medication management, care planning, and regulatory compliance features.`,
       
-      intendedUse: `The system is intended for use by qualified healthcare professionals in adult care homes to:
+      intendedUse: `The system is intended for use by qualified healthcare professionals in adult care homesto:
         - Manage resident care records and assessments
         - Support clinical decision-making through evidence-based recommendations
         - Ensure medication safety and administration compliance
@@ -517,7 +517,7 @@ export class MHRAComplianceService {
    */
   private async conductRiskAnalysis(deviceDetails: Partial<MHRADeviceRegistration>): Promise<MHRARiskAnalysis> {
     // Identify hazards
-    consthazards: MHRAHazard[] = [
+    const hazards: MHRAHazard[] = [
       {
         id: 'HAZ-001',
         hazardType: 'Software Error',
@@ -545,7 +545,7 @@ export class MHRAComplianceService {
     ];
 
     // Estimate risks
-    constriskEstimations: MHRARiskEstimation[] = hazards.map(hazard => ({
+    const riskEstimations: MHRARiskEstimation[] = hazards.map(hazard => ({
       hazardId: hazard.id,
       severity: this.estimateHazardSeverity(hazard),
       probability: this.estimateHazardProbability(hazard),
@@ -554,7 +554,7 @@ export class MHRAComplianceService {
     }));
 
     // Define risk controls
-    constriskControls: MHRARiskControl[] = hazards.map(hazard => ({
+    const riskControls: MHRARiskControl[] = hazards.map(hazard => ({
       hazardId: hazard.id,
       controlMeasures: this.defineControlMeasures(hazard),
       controlType: 'protective_measures',
@@ -564,7 +564,7 @@ export class MHRAComplianceService {
     }));
 
     // Calculate residual risks
-    constresidualRisks: MHRAResidualRisk[] = hazards.map(hazard => ({
+    const residualRisks: MHRAResidualRisk[] = hazards.map(hazard => ({
       hazardId: hazard.id,
       residualSeverity: 'Minor',
       residualProbability: 'Remote',
@@ -715,7 +715,7 @@ export class MHRAComplianceService {
       });
 
       if (!device) {
-        throw new Error(`Device registration not found: ${registrationId}`);
+        throw new Error(`Device registration notfound: ${registrationId}`);
       }
 
       const ukca_documentation = {
@@ -756,7 +756,7 @@ export class MHRAComplianceService {
       return ukca_documentation;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate UKCA marking documentation: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to generate UKCA markingdocumentation: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -790,7 +790,7 @@ export class MHRAComplianceService {
       return complianceStatus;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor MHRA compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to monitor MHRAcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -893,20 +893,20 @@ export class MHRAComplianceService {
     return `
 UKCA Declaration of Conformity
 
-We, ${device.manufacturerDetails.name}, declare under our sole responsibility that the medical device:
+We, ${device.manufacturerDetails.name}, declare under our sole responsibility that the medicaldevice:
 
 Product: ${device.deviceName}
 Model: WriteCareNotes Healthcare Management System
 Class: ${device.deviceClass}
 
-is in conformity with the relevant UK legislation:
+is in conformity with the relevant UKlegislation:
 - Medical Devices Regulations 2002 (SI 2002 No 618) as amended
 - UK Medical Devices Regulation (UK MDR)
 
-The device has been subject to the conformity assessment procedure set out in:
+The device has been subject to the conformity assessment procedure set outin:
 - Annex II (Quality Management System) + Annex III (Technical Documentation)
 
-Applied harmonised standards:
+Applied harmonisedstandards:
 - BS EN ISO 13485:2016
 - BS EN ISO 14971:2019
 - BS EN IEC 62304:2006

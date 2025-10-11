@@ -66,7 +66,7 @@ export interface PayrollTrends {
 
 @Injectable()
 export class FinancialAnalyticsService {
-  constructor(
+  const ructor(
     @InjectRepository(PayrollRun)
     privatepayrollRunRepository: Repository<PayrollRun>,
     @InjectRepository(Payslip)
@@ -307,14 +307,14 @@ export class FinancialAnalyticsService {
       .where('budget.period = :period', { period })
       .getMany();
 
-    constanalysis: BudgetAnalysis[] = [];
+    const analysis: BudgetAnalysis[] = [];
 
     for (const budget of budgets) {
       const actual = await this.getActualSpending(budget.category, budget.period);
       const variance = actual - budget.amount;
       const variancePercentage = budget.amount > 0 ? (variance / budget.amount) * 100 : 0;
       
-      letstatus: 'over' | 'under' | 'on_track' = 'on_track';
+      let status: 'over' | 'under' | 'on_track' = 'on_track';
       if (variancePercentage > 10) status = 'over';
       else if (variancePercentage < -10) status = 'under';
 
@@ -335,7 +335,7 @@ export class FinancialAnalyticsService {
    * Get payroll trends
    */
   async getPayrollTrends(months: number = 12): Promise<PayrollTrends[]> {
-    consttrends: PayrollTrends[] = [];
+    const trends: PayrollTrends[] = [];
     const endDate = new Date();
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - months);

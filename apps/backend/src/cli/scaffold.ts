@@ -33,7 +33,7 @@ interface ScaffoldOptions {
 class DomainScaffolder {
   privatetemplates: Map<string, DomainTemplate> = new Map();
 
-  constructor() {
+  const ructor() {
     this.initializeTemplates();
   }
 
@@ -119,7 +119,7 @@ class DomainScaffolder {
    */
   async scaffoldDomain(options: ScaffoldOptions): Promise<void> {
     try {
-      console.log(`🚀 Scaffolding domain: ${options.domain}`);
+      console.log(`🚀 Scaffoldingdomain: ${options.domain}`);
 
       // Validate domain name
       this.validateDomainName(options.domain);
@@ -172,11 +172,11 @@ class DomainScaffolder {
       // Generate README
       await this.generateREADME(domainPath, options.domain, template);
 
-      console.log(`✅ Domain '${options.domain}' scaffolded successfully!`);
-      console.log(`📁 Domain location: ${domainPath}`);
+      console.log(`✅ Domain '${options.domain}' scaffoldedsuccessfully!`);
+      console.log(`📁 Domainlocation: ${domainPath}`);
 
     } catch (error) {
-      console.error(`❌ Failed to scaffold domain: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error(`❌ Failed to scaffolddomain: ${error instanceof Error ? error.message : 'Unknown error'}`);
       process.exit(1);
     }
   }
@@ -210,7 +210,7 @@ class DomainScaffolder {
       const entityPath = path.join(domainPath, 'entities', `${entityName}.ts`);
       const entityContent = this.generateEntityContent(entityName, domainName);
       await fs.writeFile(entityPath, entityContent);
-      console.log(`📄 Generated entity: ${entityName}.ts`);
+      console.log(`📄 Generatedentity: ${entityName}.ts`);
     }
   }
 
@@ -222,7 +222,7 @@ class DomainScaffolder {
       const servicePath = path.join(domainPath, 'services', `${serviceName}.ts`);
       const serviceContent = this.generateServiceContent(serviceName, domainName);
       await fs.writeFile(servicePath, serviceContent);
-      console.log(`🔧 Generated service: ${serviceName}.ts`);
+      console.log(`🔧 Generatedservice: ${serviceName}.ts`);
     }
   }
 
@@ -234,7 +234,7 @@ class DomainScaffolder {
       const controllerPath = path.join(domainPath, 'controllers', `${controllerName}.ts`);
       const controllerContent = this.generateControllerContent(controllerName, domainName);
       await fs.writeFile(controllerPath, controllerContent);
-      console.log(`🎮 Generated controller: ${controllerName}.ts`);
+      console.log(`🎮 Generatedcontroller: ${controllerName}.ts`);
     }
   }
 
@@ -246,7 +246,7 @@ class DomainScaffolder {
       const routePath = path.join(domainPath, 'routes', `${routeName}.ts`);
       const routeContent = this.generateRouteContent(routeName, domainName);
       await fs.writeFile(routePath, routeContent);
-      console.log(`🛣️  Generated route: ${routeName}.ts`);
+      console.log(`🛣️  Generatedroute: ${routeName}.ts`);
     }
   }
 
@@ -258,7 +258,7 @@ class DomainScaffolder {
       const componentPath = path.join(domainPath, 'components', `${componentName}.tsx`);
       const componentContent = this.generateComponentContent(componentName, domainName);
       await fs.writeFile(componentPath, componentContent);
-      console.log(`⚛️  Generated component: ${componentName}.tsx`);
+      console.log(`⚛️  Generatedcomponent: ${componentName}.tsx`);
     }
   }
 
@@ -270,7 +270,7 @@ class DomainScaffolder {
       const testPath = path.join(domainPath, 'tests', `${testName}.ts`);
       const testContent = this.generateTestContent(testName, domainName);
       await fs.writeFile(testPath, testContent);
-      console.log(`🧪 Generated test: ${testName}.ts`);
+      console.log(`🧪 Generatedtest: ${testName}.ts`);
     }
   }
 
@@ -281,7 +281,7 @@ class DomainScaffolder {
     const indexContent = this.generateIndexContent(domainName, template);
     const indexPath = path.join(domainPath, 'index.ts');
     await fs.writeFile(indexPath, indexContent);
-    console.log(`📋 Generated domain index: index.ts`);
+    console.log(`📋 Generated domainindex: index.ts`);
   }
 
   /**
@@ -291,7 +291,7 @@ class DomainScaffolder {
     const readmeContent = this.generateREADMEContent(domainName, template);
     const readmePath = path.join(domainPath, 'README.md');
     await fs.writeFile(readmePath, readmeContent);
-    console.log(`📖 Generated README: README.md`);
+    console.log(`📖 GeneratedREADME: README.md`);
   }
 
   /**
@@ -350,7 +350,7 @@ export class ${serviceName} {
   privaterepository: Repository<${serviceName.replace('Service', '')}>;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.repository = AppDataSource.getRepository(${serviceName.replace('Service', '')});
     this.auditService = new AuditTrailService();
   }
@@ -470,7 +470,7 @@ import { ${controllerName.replace('Controller', 'Service')} } from '../services/
 export class ${controllerName} {
   privateservice: ${controllerName.replace('Controller', 'Service')};
 
-  constructor() {
+  const ructor() {
     this.service = new ${controllerName.replace('Controller', 'Service')}();
   }
 
@@ -681,7 +681,7 @@ export const ${componentName}: React.FC<${componentName}Props> = ({ className })
       const result = await response.json();
       setData(result.data || []);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetchingdata:', error);
     } finally {
       setLoading(false);
     }
@@ -707,7 +707,7 @@ export const ${componentName}: React.FC<${componentName}Props> = ({ className })
       });
       fetchData();
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error('Error deletingitem:', error);
     }
   };
 
@@ -731,7 +731,7 @@ export const ${componentName}: React.FC<${componentName}Props> = ({ className })
       setModalVisible(false);
       fetchData();
     } catch (error) {
-      console.error('Error saving item:', error);
+      console.error('Error savingitem:', error);
     }
   };
 
@@ -762,7 +762,7 @@ export const ${componentName}: React.FC<${componentName}Props> = ({ className })
           <Button size="small" onClick={() => handleEdit(record)}>
             Edit
           </Button>
-          <Button size="small" danger onClick={() => handleDelete(record.id)}>
+          <Buttonsize="small" dangeronClick={() => handleDelete(record.id)}>
             Delete
           </Button>
         </div>
@@ -837,8 +837,8 @@ jest.mock('../../config/database', () => ({
 }));
 
 describe('${testName.replace('.test', '')}', () => {
-  letservice: ${testName.replace('.test', '')};
-  letmockRepository: jest.Mocked<Repository<any>>;
+  let service: ${testName.replace('.test', '')};
+  let mockRepository: jest.Mocked<Repository<any>>;
 
   beforeEach(() => {
     mockRepository = {
@@ -1087,7 +1087,7 @@ import { ${template.components[0]} } from './domains/${domainName}';
 
 ## Testing
 
-Run tests for this domain:
+Run tests for thisdomain:
 
 \`\`\`bash
 npm test -- --testPathPattern=${domainName}
@@ -1119,7 +1119,7 @@ npm test -- --testPathPattern=${domainName}
   private getTemplate(templateName: string): DomainTemplate {
     const template = this.templates.get(templateName);
     if (!template) {
-      throw new Error(`Template '${templateName}' not found. Available templates: ${Array.from(this.templates.keys()).join(', ')}`);
+      throw new Error(`Template '${templateName}' not found. Availabletemplates: ${Array.from(this.templates.keys()).join(', ')}`);
     }
     return template;
   }
@@ -1132,7 +1132,7 @@ npm test -- --testPathPattern=${domainName}
       throw new Error('Domain name is required');
     }
     if (!/^[a-z][a-z0-9-]*$/.test(domainName)) {
-      throw new Error('Domain name must start with a letter and contain only lowercase letters, numbers, and hyphens');
+      throw new Error('Domain name must start with a let ter and contain only lowercase let ters, numbers, and hyphens');
     }
   }
 
@@ -1173,7 +1173,7 @@ program
   .action(async (options: any) => {
     const scaffolder = new DomainScaffolder();
     
-    constscaffoldOptions: ScaffoldOptions = {
+    const scaffoldOptions: ScaffoldOptions = {
       domain: options.domain,
       description: options.description,
       entities: options.entities ? options.entities.split(',') : undefined,

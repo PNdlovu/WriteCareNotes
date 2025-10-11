@@ -107,7 +107,7 @@ export class CarePlan {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   carePlanNumber: string; // Format: CP-YYYY-NNNN
 
   @ManyToOne(() => Child)
@@ -192,7 +192,7 @@ export class CarePlan {
   @Column({ type: 'date', nullable: true })
   childViewsRecordedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   childViewsRecordedBy: string;
 
   @Column({
@@ -249,7 +249,7 @@ export class CarePlan {
   // PLACEMENT PLAN
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentPlacementType: string;
 
   @Column({ type: 'text', nullable: true })
@@ -311,10 +311,10 @@ export class CarePlan {
   @Column({ type: 'text', nullable: true })
   educationInterventions: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentSchool: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   designatedTeacher: string;
 
   @Column({ type: 'boolean', default: false })
@@ -450,7 +450,7 @@ export class CarePlan {
   @Column({ type: 'date' })
   nextReviewDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   nextReviewType: string; // 'LAC_REVIEW', 'IRO_REVIEW', 'PLACEMENT_REVIEW'
 
   @Column({ type: 'int', default: 0 })
@@ -469,10 +469,10 @@ export class CarePlan {
   // IRO INVOLVEMENT
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   independentReviewingOfficer: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   iroContactDetails: string;
 
   @Column({ type: 'date', nullable: true })
@@ -497,10 +497,10 @@ export class CarePlan {
   @Column({ type: 'boolean', default: false })
   planApproved: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   approvedBy: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   approverRole: string;
 
   @Column({ type: 'date', nullable: true })
@@ -526,13 +526,13 @@ export class CarePlan {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

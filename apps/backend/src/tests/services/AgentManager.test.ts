@@ -9,10 +9,10 @@ jest.mock('../../services/ai-agents/LLMIntegrationService');
 jest.mock('../../services/ai-agents/AIAgentSessionService');
 
 describe('AgentManager', () => {
-  letagentManager: AgentManager;
-  letmockOpenAIAdapter: jest.Mocked<OpenAIAdapter>;
-  letmockLLMService: jest.Mocked<LLMIntegrationService>;
-  letmockSessionService: jest.Mocked<AIAgentSessionService>;
+  let agentManager: AgentManager;
+  let mockOpenAIAdapter: jest.Mocked<OpenAIAdapter>;
+  let mockLLMService: jest.Mocked<LLMIntegrationService>;
+  let mockSessionService: jest.Mocked<AIAgentSessionService>;
 
   beforeEach(() => {
     mockOpenAIAdapter = {

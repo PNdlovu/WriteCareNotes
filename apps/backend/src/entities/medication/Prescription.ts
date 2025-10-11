@@ -47,7 +47,7 @@ export enum PrescriptionType {
   REGULAR = 'regular',
   PRN = 'prn', // Pro re nata (as required)
   STAT = 'stat', // Single dose immediately
-  VARIABLE = 'variable', // Variable dosing
+  variable = 'variable', // variable dosing
   TITRATION = 'titration' // Dose adjustment schedule
 }
 

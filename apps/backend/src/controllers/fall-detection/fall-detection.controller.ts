@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/fall-detection')
 @UseGuards(JwtAuthGuard)
 export class FallDetectionController {
-  constructor(
-    private readonly fallDetectionService: FallDetectionService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyfallDetectionService: FallDetectionService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -56,7 +56,7 @@ export class FallDetectionController {
         message: success ? 'Fall detection device initialized successfully' : 'Failed to initialize device',
       };
     } catch (error) {
-      console.error('Error initializing fall detection device:', error);
+      console.error('Error initializing fall detectiondevice:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -122,7 +122,7 @@ export class FallDetectionController {
         };
       }
     } catch (error) {
-      console.error('Error processing fall detection:', error);
+      console.error('Error processing falldetection:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -163,7 +163,7 @@ export class FallDetectionController {
         message: 'Emergency button alert processed successfully',
       };
     } catch (error) {
-      console.error('Error handling emergency button:', error);
+      console.error('Error handling emergencybutton:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -219,7 +219,7 @@ export class FallDetectionController {
         };
       }
     } catch (error) {
-      console.error('Error monitoring movement patterns:', error);
+      console.error('Error monitoring movementpatterns:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -254,7 +254,7 @@ export class FallDetectionController {
         message: 'No movement alerts retrieved successfully',
       };
     } catch (error) {
-      console.error('Error checking no movement alerts:', error);
+      console.error('Error checking no movementalerts:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -299,7 +299,7 @@ export class FallDetectionController {
         message: success ? 'Fall event status updated successfully' : 'Failed to update fall event status',
       };
     } catch (error) {
-      console.error('Error updating fall event status:', error);
+      console.error('Error updating fall eventstatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -337,7 +337,7 @@ export class FallDetectionController {
         message: 'Fall detection statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting fall detection statistics:', error);
+      console.error('Error getting fall detectionstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -397,7 +397,7 @@ export class FallDetectionController {
         message: 'Fall event retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting fall event:', error);
+      console.error('Error getting fallevent:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -452,7 +452,7 @@ export class FallDetectionController {
         message: 'Device status retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting device status:', error);
+      console.error('Error getting devicestatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -522,7 +522,7 @@ export class FallDetectionController {
         message: 'Recent fall events retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting recent fall events:', error);
+      console.error('Error getting recent fallevents:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -575,7 +575,7 @@ export class FallDetectionController {
         message: 'Movement baseline retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting movement baseline:', error);
+      console.error('Error getting movementbaseline:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

@@ -14,12 +14,12 @@ export interface DomainFactoryOptions {
 }
 
 export class DomainFactory {
-  private static instance: DomainFactory;
+  private staticinstance: DomainFactory;
   privatedomainRegistry: DomainRegistry;
   privateconfigManager: DomainConfigManager;
   privateinitializedDomains: Set<string> = new Set();
 
-  private constructor() {
+  private const ructor() {
     this.domainRegistry = DomainRegistry.getInstance();
     this.configManager = DomainConfigManager.getInstance();
   }
@@ -123,7 +123,7 @@ export class DomainFactory {
       }
     }
 
-    console.log(`✅ All domains initialized: ${Array.from(initialized).join(', ')}`);
+    console.log(`✅ All domainsinitialized: ${Array.from(initialized).join(', ')}`);
   }
 
   /**
@@ -212,7 +212,7 @@ export class DomainFactory {
    * Get all domains health status
    */
   public async getAllDomainsHealth(): Promise<Record<string, any>> {
-    consthealthStatus: Record<string, any> = {};
+    const healthStatus: Record<string, any> = {};
     const domainNames = this.domainRegistry.getDomainNames();
 
     for (const domainName of domainNames) {

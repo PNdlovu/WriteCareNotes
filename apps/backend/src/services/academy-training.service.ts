@@ -15,7 +15,7 @@
  *   - GDPR & Data Protection Act 2018
  * @stability stable
  * 
- * @description Complete training management hub for care homes across the British Isles:
+ * @description Complete training management hub for care homes across the BritishIsles:
  * - Internal app training (role-based modules, updates, onboarding)
  * - External accredited training tracking (Skills for Care, awarding bodies)
  * - Compliance monitoring and regulatory audit reports
@@ -351,19 +351,19 @@ export interface TrainingAnalytics {
 
 @Injectable()
 export class AcademyTrainingService {
-  private readonly logger = new Logger(AcademyTrainingService.name);
+  private readonlylogger = new Logger(AcademyTrainingService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(TrainingCourse)
-    private readonly courseRepository: Repository<TrainingCourse>,
+    private readonlycourseRepository: Repository<TrainingCourse>,
     @InjectRepository(TrainingEnrollment)
-    private readonly enrollmentRepository: Repository<TrainingEnrollment>,
+    private readonlyenrollmentRepository: Repository<TrainingEnrollment>,
     @InjectRepository(TrainingSession)
-    private readonly sessionRepository: Repository<TrainingSession>,
+    private readonlysessionRepository: Repository<TrainingSession>,
     @InjectRepository(TrainingCompletionRecord)
-    private readonly completionRecordRepository: Repository<TrainingCompletionRecord>,
-    private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditService,
+    private readonlycompletionRecordRepository: Repository<TrainingCompletionRecord>,
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -397,13 +397,13 @@ export class AcademyTrainingService {
         timestamp: new Date(),
       });
 
-      this.logger.log(`Training course created: ${savedCourse.title} (${savedCourse.id})`);
+      this.logger.log(`Training coursecreated: ${savedCourse.title} (${savedCourse.id})`);
       return savedCourse;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to create course: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to create course: ${errorMessage}`);
+      this.logger.error(`Failed to createcourse: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to createcourse: ${errorMessage}`);
     }
   }
 
@@ -421,8 +421,8 @@ export class AcademyTrainingService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to get courses: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get courses: ${errorMessage}`);
+      this.logger.error(`Failed to getcourses: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to getcourses: ${errorMessage}`);
     }
   }
 
@@ -442,7 +442,7 @@ export class AcademyTrainingService {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
       this.logger.error(`Failed to get course ${courseId}: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get course: ${errorMessage}`);
+      throw new Error(`Failed to getcourse: ${errorMessage}`);
     }
   }
 
@@ -496,8 +496,8 @@ export class AcademyTrainingService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to enroll user: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to enroll user: ${errorMessage}`);
+      this.logger.error(`Failed to enrolluser: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to enrolluser: ${errorMessage}`);
     }
   }
 
@@ -516,7 +516,7 @@ export class AcademyTrainingService {
         throw new Error('Enrollment not found');
       }
 
-      constupdateData: Partial<TrainingEnrollment> = {
+      const updateData: Partial<TrainingEnrollment> = {
         progress,
         timeSpent: enrollment.timeSpent + timeSpent,
         currentContentId: contentId,
@@ -561,7 +561,7 @@ export class AcademyTrainingService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to update progress: ${errorMessage}`, errorStack);
+      this.logger.error(`Failed to updateprogress: ${errorMessage}`, errorStack);
       return false;
     }
   }
@@ -596,7 +596,7 @@ export class AcademyTrainingService {
       const passed = score >= assessment.passingScore;
 
       // Update enrollment
-      constupdateData: Partial<TrainingEnrollment> = {
+      const updateData: Partial<TrainingEnrollment> = {
         score: Math.max(enrollment.score || 0, score),
         attempts: enrollment.attempts + 1,
       };
@@ -640,8 +640,8 @@ export class AcademyTrainingService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to submit assessment: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to submit assessment: ${errorMessage}`);
+      this.logger.error(`Failed to submitassessment: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to submitassessment: ${errorMessage}`);
     }
   }
 
@@ -668,7 +668,7 @@ export class AcademyTrainingService {
 
       // Determine record type and number based on training type
       const isExternal = course.trainingType === 'external_accredited';
-      constrecordType: 'internal_completion' | 'external_certificate' = isExternal ? 'external_certificate' : 'internal_completion';
+      const recordType: 'internal_completion' | 'external_certificate' = isExternal ? 'external_certificate' : 'internal_completion';
       const recordPrefix = isExternal ? 'EXTERNAL-CERT' : 'INTERNAL';
       
       const completionRecord = this.completionRecordRepository.create({
@@ -718,13 +718,13 @@ export class AcademyTrainingService {
         timestamp: new Date(),
       });
 
-      this.logger.log(`Completion record generated: ${savedRecord.recordNumber} (${savedRecord.recordType}) for user ${enrollment.userId}`);
+      this.logger.log(`Completion recordgenerated: ${savedRecord.recordNumber} (${savedRecord.recordType}) for user ${enrollment.userId}`);
       return savedRecord;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to generate completion record: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to generate completion record: ${errorMessage}`);
+      this.logger.error(`Failed to generate completionrecord: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to generate completionrecord: ${errorMessage}`);
     }
   }
 
@@ -739,7 +739,7 @@ export class AcademyTrainingService {
         order: { createdAt: 'DESC' },
       });
 
-      constprogressRecords: TrainingProgress[] = [];
+      const progressRecords: TrainingProgress[] = [];
 
       for (const enrollment of enrollments) {
         const course = await this.courseRepository.findOne({ where: { id: enrollment.courseId } });
@@ -785,8 +785,8 @@ export class AcademyTrainingService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to get training progress: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get training progress: ${errorMessage}`);
+      this.logger.error(`Failed to get trainingprogress: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to get trainingprogress: ${errorMessage}`);
     }
   }
 
@@ -825,11 +825,11 @@ export class AcademyTrainingService {
           contentId: content.id,
           contentTitle: content.title,
           dropOffRate,
-          commonReasons: ['Content too difficult', 'Time constraints', 'Technical issues'],
+          commonReasons: ['Content too difficult', 'Time const raints', 'Technical issues'],
         };
       });
 
-      constanalytics: TrainingAnalytics = {
+      const analytics: TrainingAnalytics = {
         courseId,
         totalEnrollments,
         completions,
@@ -846,8 +846,8 @@ export class AcademyTrainingService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to get course analytics: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get course analytics: ${errorMessage}`);
+      this.logger.error(`Failed to get courseanalytics: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to get courseanalytics: ${errorMessage}`);
     }
   }
 
@@ -894,13 +894,13 @@ export class AcademyTrainingService {
         lastUpdated: new Date(),
       };
 
-      this.logger.log(`Generated academy training statistics: ${totalCourses} courses, ${totalEnrollments} enrollments`);
+      this.logger.log(`Generated academy trainingstatistics: ${totalCourses} courses, ${totalEnrollments} enrollments`);
       return statistics;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to get academy training statistics: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get academy training statistics: ${errorMessage}`);
+      this.logger.error(`Failed to get academy trainingstatistics: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to get academy trainingstatistics: ${errorMessage}`);
     }
   }
 

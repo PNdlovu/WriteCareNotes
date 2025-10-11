@@ -18,7 +18,7 @@ import { DatabaseService } from '../database/database.service';
 export class AgentComplianceService {
   privatedb: DatabaseService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
   }
 
@@ -30,8 +30,8 @@ export class AgentComplianceService {
     violations: string[];
     recommendations: string[];
   }> {
-    constviolations: string[] = [];
-    constrecommendations: string[] = [];
+    const violations: string[] = [];
+    const recommendations: string[] = [];
 
     // Check autonomy level compliance
     if (config.autonomy !== 'recommend-only') {
@@ -75,7 +75,7 @@ export class AgentComplianceService {
     issues: string[];
     score: number;
   }> {
-    constissues: string[] = [];
+    const issues: string[] = [];
     let score = 100;
 
     // Check consent rates
@@ -103,7 +103,7 @@ export class AgentComplianceService {
         SUM(CASE WHEN metadata LIKE '%pii_masked%' THEN 1 ELSE 0 END) as masked
       FROM agent_audit_log 
       WHERE tenant_id = ? 
-      AND action = 'PII_MASKED'
+      ANDaction = 'PII_MASKED'
       AND timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     `;
     const maskingRows = await this.db.query(maskingQuery, [tenantId]);
@@ -120,7 +120,7 @@ export class AgentComplianceService {
       SELECT COUNT(*) as count
       FROM agent_audit_log 
       WHERE tenant_id = ? 
-      AND action = 'PHI_LEAKAGE_DETECTED'
+      ANDaction = 'PHI_LEAKAGE_DETECTED'
       AND timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
     `;
     const phileakageRows = await this.db.query(phileakageQuery, [tenantId]);
@@ -135,7 +135,7 @@ export class AgentComplianceService {
     const auditQuery = `
       SELECT 
         COUNT(*) as total,
-        SUM(CASE WHEN metadata IS NOT NULL AND metadata != '{}' THEN 1 ELSE 0 END) as complete
+        SUM(CASE WHEN metadata IS NOT NULL ANDmetadata != '{}' THEN 1 ELSE 0 END) as complete
       FROM agent_audit_log 
       WHERE tenant_id = ? 
       AND timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
@@ -169,7 +169,7 @@ export class AgentComplianceService {
       auditLogs: number;
     };
   }> {
-    constissues: string[] = [];
+    const issues: string[] = [];
 
     // Get retention statistics
     const retentionQuery = `
@@ -238,7 +238,7 @@ export class AgentComplianceService {
     issues: string[];
     securityScore: number;
   }> {
-    constissues: string[] = [];
+    const issues: string[] = [];
     let securityScore = 100;
 
     // Check for unauthorized access attempts
@@ -246,7 +246,7 @@ export class AgentComplianceService {
       SELECT COUNT(*) as count
       FROM agent_audit_log 
       WHERE tenant_id = ? 
-      AND action = 'UNAUTHORIZED_ACCESS'
+      ANDaction = 'UNAUTHORIZED_ACCESS'
       AND timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
     `;
     const unauthorizedRows = await this.db.query(unauthorizedQuery, [tenantId]);
@@ -262,7 +262,7 @@ export class AgentComplianceService {
       SELECT COUNT(*) as count
       FROM agent_audit_log 
       WHERE tenant_id = ? 
-      AND action = 'POLICY_VIOLATION'
+      ANDaction = 'POLICY_VIOLATION'
       AND timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
     `;
     const violationsRows = await this.db.query(violationsQuery, [tenantId]);
@@ -278,7 +278,7 @@ export class AgentComplianceService {
       SELECT COUNT(*) as count
       FROM agent_audit_log 
       WHERE tenant_id = ? 
-      AND action = 'DATA_BREACH'
+      ANDaction = 'DATA_BREACH'
       AND timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
     `;
     const breachesRows = await this.db.query(breachesQuery, [tenantId]);
@@ -304,7 +304,7 @@ export class AgentComplianceService {
     const uniqueIPs = accessRows[0].uniqueIPs;
 
     if (totalAccess > 100 && uniqueIPs < 3) {
-      issues.push('Suspicious access pattern detected: high volume from few IPs');
+      issues.push('Suspicious access patterndetected: high volume from few IPs');
       securityScore -= 20;
     }
 
@@ -336,7 +336,7 @@ export class AgentComplianceService {
       (dataProcessing.score + security.securityScore) / 2
     );
 
-    constreport: AgentComplianceReport = {
+    const report: AgentComplianceReport = {
       tenantId,
       period: { from, to },
       dataProcessing: {
@@ -477,7 +477,7 @@ export class AgentComplianceService {
       WHERE tenant_id = ?
     `;
 
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
 
     if (filters.from) {
       query += ' AND created_at >= ?';
@@ -490,12 +490,12 @@ export class AgentComplianceService {
     }
 
     if (filters.severity) {
-      query += ' AND severity = ?';
+      query += ' ANDseverity = ?';
       params.push(filters.severity);
     }
 
     if (filters.status) {
-      query += ' AND status = ?';
+      query += ' ANDstatus = ?';
       params.push(filters.status);
     }
 

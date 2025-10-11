@@ -19,7 +19,7 @@ import { DeviceType } from '../../entities/mobile/MobileSession';
 export class MobileSelfServiceController {
   privatemobileService: MobileSelfServiceService;
 
-  constructor() {
+  const ructor() {
     this.mobileService = new MobileSelfServiceService();
   }
 

@@ -117,7 +117,7 @@ export class LaundryHousekeepingService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.laundryRepository = AppDataSource.getRepository(LaundryItem);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -206,7 +206,7 @@ export class LaundryHousekeepingService {
 
       return savedItem;
     } catch (error: unknown) {
-      console.error('Error creating laundry item:', error);
+      console.error('Error creating laundryitem:', error);
       throw error;
     }
   }
@@ -229,7 +229,7 @@ export class LaundryHousekeepingService {
       // Validate batch compatibility
       const batchValidation = await this.validateBatchCompatibility(items);
       if (!batchValidation.isValid) {
-        throw new Error(`Batch validation failed: ${batchValidation.reasons.join(', ')}`);
+        throw new Error(`Batch validationfailed: ${batchValidation.reasons.join(', ')}`);
       }
       
       // Optimize washing parameters
@@ -277,7 +277,7 @@ export class LaundryHousekeepingService {
         costEstimate: items.reduce((sum, item) => sum + item.processTracking.costTracking.totalCost, 0)
       };
     } catch (error: unknown) {
-      console.error('Error processing laundry batch:', error);
+      console.error('Error processing laundrybatch:', error);
       throw error;
     }
   }
@@ -285,7 +285,7 @@ export class LaundryHousekeepingService {
   // Advanced Housekeeping Operations
   async scheduleHousekeepingTasks(): Promise<HousekeepingOperations> {
     try {
-      consthousekeepingOps: HousekeepingOperations = {
+      const housekeepingOps: HousekeepingOperations = {
         roomCleaning: {
           standardCleaningProtocol: [
             'Remove and replace bed linen',
@@ -411,7 +411,7 @@ export class LaundryHousekeepingService {
 
       return housekeepingOps;
     } catch (error: unknown) {
-      console.error('Error scheduling housekeeping tasks:', error);
+      console.error('Error scheduling housekeepingtasks:', error);
       throw error;
     }
   }
@@ -426,7 +426,7 @@ export class LaundryHousekeepingService {
         return new Date(item.createdAt) >= thirtyDaysAgo;
       });
 
-      constanalytics: LaundryAnalytics = {
+      const analytics: LaundryAnalytics = {
         operationalMetrics: {
           dailyThroughput: this.calculateDailyThroughput(recentItems),
           averageProcessingTime: this.calculateAverageProcessingTime(recentItems),
@@ -460,7 +460,7 @@ export class LaundryHousekeepingService {
 
       return analytics;
     } catch (error: unknown) {
-      console.error('Error getting laundry analytics:', error);
+      console.error('Error getting laundryanalytics:', error);
       throw error;
     }
   }
@@ -514,7 +514,7 @@ export class LaundryHousekeepingService {
 
       return qualityReport;
     } catch (error: unknown) {
-      console.error('Error performing quality control:', error);
+      console.error('Error performing qualitycontrol:', error);
       throw error;
     }
   }
@@ -634,7 +634,7 @@ export class LaundryHousekeepingService {
   }
 
   private requiresSpecialCare(laundryType: LaundryType, infectionLevel?: InfectionControlLevel): boolean {
-    return laundryType === LaundryType.SPECIALIST_ITEMS ||
+    returnlaundryType === LaundryType.SPECIALIST_ITEMS ||
            laundryType === LaundryType.PROTECTIVE_EQUIPMENT ||
            (infectionLevel && infectionLevel !== InfectionControlLevel.STANDARD);
   }

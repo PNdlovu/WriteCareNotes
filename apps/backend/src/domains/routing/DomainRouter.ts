@@ -8,11 +8,11 @@ import DomainRegistry from '../registry';
 import { DomainRequest } from '../middleware/DomainMiddleware';
 
 export class DomainRouter {
-  private static instance: DomainRouter;
+  private staticinstance: DomainRouter;
   privatedomainRegistry: DomainRegistry;
   privaterouter: Router;
 
-  private constructor() {
+  private const ructor() {
     this.domainRegistry = DomainRegistry.getInstance();
     this.router = Router();
     this.setupRoutes();

@@ -85,7 +85,7 @@ router.get('/metrics',
       });
 
     } catch (error) {
-      console.error('Error retrieving visitor analytics metrics:', error);
+      console.error('Error retrieving visitor analyticsmetrics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve visitor analytics metrics',
@@ -156,7 +156,7 @@ router.get('/trends',
       });
 
     } catch (error) {
-      console.error('Error retrieving visitor trend analysis:', error);
+      console.error('Error retrieving visitor trendanalysis:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve visitor trend analysis',
@@ -225,7 +225,7 @@ router.get('/security',
       });
 
     } catch (error) {
-      console.error('Error retrieving security analytics:', error);
+      console.error('Error retrieving securityanalytics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve security analytics',
@@ -294,7 +294,7 @@ router.get('/satisfaction',
       });
 
     } catch (error) {
-      console.error('Error retrieving satisfaction analytics:', error);
+      console.error('Error retrieving satisfactionanalytics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve satisfaction analytics',
@@ -363,7 +363,7 @@ router.get('/demographics',
       });
 
     } catch (error) {
-      console.error('Error retrieving demographics analytics:', error);
+      console.error('Error retrieving demographicsanalytics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve demographics analytics',
@@ -408,7 +408,7 @@ router.get('/dashboard',
       });
 
     } catch (error) {
-      console.error('Error retrieving real-time dashboard data:', error);
+      console.error('Error retrieving real-time dashboarddata:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve real-time dashboard data',
@@ -511,7 +511,7 @@ router.post('/reports/comprehensive',
       });
 
     } catch (error) {
-      console.error('Error generating comprehensive report:', error);
+      console.error('Error generating comprehensivereport:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to generate comprehensive report',
@@ -596,7 +596,7 @@ router.get('/predictive',
       });
 
     } catch (error) {
-      console.error('Error retrieving predictive analytics:', error);
+      console.error('Error retrieving predictiveanalytics:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to retrieve predictive analytics',
@@ -751,7 +751,7 @@ router.post('/export',
       });
 
     } catch (error) {
-      console.error('Error exporting analytics data:', error);
+      console.error('Error exporting analyticsdata:', error);
       res.status(500).json({
         success: false,
         error: 'Failed to export analytics data',
@@ -765,7 +765,7 @@ router.post('/export',
  * Error handling middleware
  */
 router.use((error: Error, req: Request, res: Response, next: any) => {
-  console.error('Visitor Analytics API Error:', error);
+  console.error('Visitor Analytics APIError:', error);
   
   res.status(500).json({
     success: false,

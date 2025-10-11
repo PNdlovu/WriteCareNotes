@@ -27,9 +27,9 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: MHRA Good Distribution Practice Guidelines, CQC Storage Standards
  * - Scotland: MHRA Good Distribution Practice Guidelines, Care Inspectorate Standards
  * - Wales: MHRA Good Distribution Practice Guidelines, CIW Storage Requirements
- * - Northern Ireland: MHRA Good Distribution Practice Guidelines, RQIA Standards
- * - Republic of Ireland: IMB Good Distribution Practice, HIQA Standards
- * - Isle of Man: DHSC Medication Storage Guidelines
+ * - NorthernIreland: MHRA Good Distribution Practice Guidelines, RQIA Standards
+ * - Republic ofIreland: IMB Good Distribution Practice, HIQA Standards
+ * - Isle ofMan: DHSC Medication Storage Guidelines
  * - Guernsey: Committee for Health & Social Care Storage Standards
  * - Jersey: Care Commission Storage Requirements
  * - Human Medicines Regulations 2012
@@ -62,7 +62,7 @@ import { logger } from '../../utils/logger';
 export class MedicationInventoryController {
   privateinventoryService: MedicationInventoryService;
 
-  constructor() {
+  const ructor() {
     this.inventoryService = new MedicationInventoryService();
   }
 
@@ -229,7 +229,7 @@ export class MedicationInventoryController {
       // Validate required fields
       if (!movementType || !quantity || !reason) {
         res.status(400).json({ 
-          error: 'Missing required fields: movementType, quantity, reason' 
+          error: 'Missing requiredfields: movementType, quantity, reason' 
         });
         return;
       }
@@ -238,7 +238,7 @@ export class MedicationInventoryController {
       const validMovementTypes = ['receipt', 'issue', 'adjustment', 'transfer', 'waste', 'return', 'expired'];
       if (!validMovementTypes.includes(movementType)) {
         res.status(400).json({ 
-          error: 'Invalid movement type. Must be one of: ' + validMovementTypes.join(', ')
+          error: 'Invalid movement type. Must be oneof: ' + validMovementTypes.join(', ')
         });
         return;
       }
@@ -318,7 +318,7 @@ export class MedicationInventoryController {
       // Validate required fields
       if (!supplierId || !expectedDeliveryDate || !items || !deliveryAddress) {
         res.status(400).json({ 
-          error: 'Missing required fields: supplierId, expectedDeliveryDate, items, deliveryAddress' 
+          error: 'Missing requiredfields: supplierId, expectedDeliveryDate, items, deliveryAddress' 
         });
         return;
       }
@@ -430,7 +430,7 @@ export class MedicationInventoryController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      constfilters: InventoryFilters = {};
+      const filters: InventoryFilters = {};
 
       // Apply filters from query parameters
       if (req.query['medicationName']) {
@@ -605,7 +605,7 @@ export class MedicationInventoryController {
       // Validate required fields
       if (!deliveryDate || !deliveryReference || !items) {
         res.status(400).json({ 
-          error: 'Missing required fields: deliveryDate, deliveryReference, items' 
+          error: 'Missing requiredfields: deliveryDate, deliveryReference, items' 
         });
         return;
       }

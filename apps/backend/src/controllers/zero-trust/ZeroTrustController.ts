@@ -18,7 +18,7 @@ import { ZeroTrustService } from '../../services/zero-trust/ZeroTrustService';
 export class ZeroTrustController {
   privatezeroTrustService: ZeroTrustService;
 
-  constructor() {
+  const ructor() {
     this.zeroTrustService = new ZeroTrustService();
   }
 

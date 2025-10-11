@@ -64,7 +64,7 @@ export class CateringNutritionService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.menuRepository = AppDataSource.getRepository(Menu);
     this.dietaryProfileRepository = AppDataSource.getRepository(ResidentDietaryProfile);
     this.notificationService = new NotificationService(new EventEmitter2());
@@ -98,7 +98,7 @@ export class CateringNutritionService {
 
       return savedMenu;
     } catch (error: unknown) {
-      console.error('Error creating menu:', error);
+      console.error('Error creatingmenu:', error);
       throw error;
     }
   }
@@ -185,7 +185,7 @@ export class CateringNutritionService {
 
       return savedProfile;
     } catch (error: unknown) {
-      console.error('Error creating dietary profile:', error);
+      console.error('Error creating dietaryprofile:', error);
       throw error;
     }
   }
@@ -236,15 +236,15 @@ export class CateringNutritionService {
       throw new Error('No active standard menu found');
     }
 
-    constresults: MealPlanningResult[] = [];
+    const results: MealPlanningResult[] = [];
     const mealTypes = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER];
 
     for (const mealType of mealTypes) {
       const mealItems = standardMenu.getMenuItemsForMeal(mealType);
       
       // Calculate portions by dietary requirements
-      constspecialDietPortions: { [dietType: string]: number } = {};
-      consttextureModifications: { [modification: string]: number } = {};
+      const specialDietPortions: { [dietType: string]: number } = {};
+      const textureModifications: { [modification: string]: number } = {};
       
       let totalPortions = 0;
       let estimatedCost = 0;
@@ -356,7 +356,7 @@ export class CateringNutritionService {
     
     const weightLossAlerts = profiles.filter(profile => {
       const trend = profile.getWeightTrend();
-      return trend === 'decreasing';
+      returntrend === 'decreasing';
     }).length;
 
     return {
@@ -451,7 +451,7 @@ export class CateringNutritionService {
 
   // Food Safety Management
   async reportFoodSafetyIssue(issueData: Partial<FoodSafetyAlert>): Promise<void> {
-    constalert: FoodSafetyAlert = {
+    const alert: FoodSafetyAlert = {
       alertType: issueData.alertType!,
       description: issueData.description!,
       severity: issueData.severity!,
@@ -581,7 +581,7 @@ export class CateringNutritionService {
     const mealPlans = await this.planMealsForDate(date);
     
     // Aggregate ingredients needed
-    constingredientRequirements: { [ingredient: string]: number } = {};
+    const ingredientRequirements: { [ingredient: string]: number } = {};
     
     for (const mealPlan of mealPlans) {
       const menu = await this.getMenuById(mealPlan.menuId);
@@ -636,11 +636,11 @@ export class CateringNutritionService {
     const bmi = latestWeight.weight / (height * height);
 
     // Determine weight status
-    letweightStatus: 'underweight' | 'normal' | 'overweight' | 'obese';
+    let weightStatus: 'underweight' | 'normal' | 'overweight' | 'obese';
     if (bmi < 18.5) weightStatus = 'underweight';
     else if (bmi < 25) weightStatus = 'normal';
     else if (bmi < 30) weightStatus = 'overweight';
-    else weightStatus = 'obese';
+    elseweightStatus = 'obese';
 
     // Assess nutritional risk
     const nutritionalRisk = this.assessNutritionalRisk(profile, bmi, weightStatus);

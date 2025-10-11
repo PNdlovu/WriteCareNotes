@@ -305,8 +305,8 @@ class FinancialReportFilterDto {
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ChildFinanceController {
-  constructor(
-    private readonly childFinanceService: ChildFinanceIntegrationService,
+  const ructor(
+    private readonlychildFinanceService: ChildFinanceIntegrationService,
   ) {}
 
   // ============================================
@@ -318,7 +318,7 @@ export class ChildFinanceController {
    * 
    * POST /api/children/billing
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER
+   * RequiredRole: FINANCE_ADMIN, MANAGER
    */
   @Post()
   @Roles('FINANCE_ADMIN', 'MANAGER')
@@ -395,7 +395,7 @@ export class ChildFinanceController {
    * 
    * GET /api/children/billing/:childId
    * 
-   * Required Role: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, SOCIAL_WORKER
+   * RequiredRole: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, SOCIAL_WORKER
    */
   @Get(':childId')
   @Roles('FINANCE_ADMIN', 'FINANCE_VIEWER', 'MANAGER', 'SOCIAL_WORKER')
@@ -458,7 +458,7 @@ export class ChildFinanceController {
    * 
    * PUT /api/children/billing/:id
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER
+   * RequiredRole: FINANCE_ADMIN, MANAGER
    */
   @Put(':id')
   @Roles('FINANCE_ADMIN', 'MANAGER')
@@ -526,7 +526,7 @@ export class ChildFinanceController {
    * 
    * DELETE /api/children/billing/:id
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER
+   * RequiredRole: FINANCE_ADMIN, MANAGER
    */
   @Delete(':id')
   @Roles('FINANCE_ADMIN', 'MANAGER')
@@ -596,7 +596,7 @@ export class ChildFinanceController {
    * 
    * GET /api/children/billing/:childId/invoices
    * 
-   * Required Role: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, SOCIAL_WORKER
+   * RequiredRole: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, SOCIAL_WORKER
    */
   @Get(':childId/invoices')
   @Roles('FINANCE_ADMIN', 'FINANCE_VIEWER', 'MANAGER', 'SOCIAL_WORKER')
@@ -663,7 +663,7 @@ export class ChildFinanceController {
    * 
    * POST /api/children/billing/:id/generate-invoice
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER
+   * RequiredRole: FINANCE_ADMIN, MANAGER
    */
   @Post(':id/generate-invoice')
   @Roles('FINANCE_ADMIN', 'MANAGER')
@@ -735,7 +735,7 @@ export class ChildFinanceController {
    * 
    * POST /api/children/billing/:id/record-payment/:invoiceId
    * 
-   * Required Role: FINANCE_ADMIN
+   * RequiredRole: FINANCE_ADMIN
    */
   @Post(':id/record-payment/:invoiceId')
   @Roles('FINANCE_ADMIN')
@@ -819,7 +819,7 @@ export class ChildFinanceController {
    * 
    * GET /api/children/billing/overdue
    * 
-   * Required Role: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER
+   * RequiredRole: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER
    */
   @Get('reports/overdue')
   @Roles('FINANCE_ADMIN', 'FINANCE_VIEWER', 'MANAGER')
@@ -867,7 +867,7 @@ export class ChildFinanceController {
    * 
    * GET /api/children/billing/stats
    * 
-   * Required Role: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, IRO
+   * RequiredRole: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, IRO
    */
   @Get('reports/stats')
   @Roles('FINANCE_ADMIN', 'FINANCE_VIEWER', 'MANAGER', 'IRO')
@@ -896,7 +896,7 @@ export class ChildFinanceController {
     @Query('hasDispute') hasDispute?: boolean,
   ) {
     try {
-      constfilters: FinancialReportFilter = {
+      const filters: FinancialReportFilter = {
         jurisdiction,
         fundingSource,
         hasArrears,
@@ -928,7 +928,7 @@ export class ChildFinanceController {
    * 
    * GET /api/children/billing/:childId/report
    * 
-   * Required Role: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, SOCIAL_WORKER, IRO
+   * RequiredRole: FINANCE_ADMIN, FINANCE_VIEWER, MANAGER, SOCIAL_WORKER, IRO
    */
   @Get(':childId/report')
   @Roles('FINANCE_ADMIN', 'FINANCE_VIEWER', 'MANAGER', 'SOCIAL_WORKER', 'IRO')
@@ -983,7 +983,7 @@ export class ChildFinanceController {
    * 
    * GET /api/children/billing/iro/dashboard
    * 
-   * Required Role: IRO, MANAGER
+   * RequiredRole: IRO, MANAGER
    */
   @Get('reports/iro/dashboard')
   @Roles('IRO', 'MANAGER')
@@ -1026,7 +1026,7 @@ export class ChildFinanceController {
    * 
    * POST /api/children/billing/:id/raise-dispute
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER
+   * RequiredRole: FINANCE_ADMIN, MANAGER
    */
   @Post(':id/raise-dispute')
   @Roles('FINANCE_ADMIN', 'MANAGER')
@@ -1091,7 +1091,7 @@ export class ChildFinanceController {
    * 
    * POST /api/children/billing/:id/resolve-dispute
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER
+   * RequiredRole: FINANCE_ADMIN, MANAGER
    */
   @Post(':id/resolve-dispute')
   @Roles('FINANCE_ADMIN', 'MANAGER')
@@ -1168,7 +1168,7 @@ export class ChildFinanceController {
    * 
    * POST /api/children/billing/:id/transition
    * 
-   * Required Role: FINANCE_ADMIN, MANAGER, SOCIAL_WORKER
+   * RequiredRole: FINANCE_ADMIN, MANAGER, SOCIAL_WORKER
    */
   @Post(':id/transition')
   @Roles('FINANCE_ADMIN', 'MANAGER', 'SOCIAL_WORKER')

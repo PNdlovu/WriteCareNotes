@@ -23,7 +23,7 @@ export class FinancialReimbursementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.claimRepository = AppDataSource.getRepository(ReimbursementClaim);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -55,7 +55,7 @@ export class FinancialReimbursementService {
 
       return savedClaim;
     } catch (error: unknown) {
-      console.error('Error creating reimbursement claim:', error);
+      console.error('Error creating reimbursementclaim:', error);
       throw error;
     }
   }
@@ -81,7 +81,7 @@ export class FinancialReimbursementService {
       
       return submissionResult;
     } catch (error: unknown) {
-      console.error('Error submitting claim:', error);
+      console.error('Error submittingclaim:', error);
       throw error;
     }
   }
@@ -99,7 +99,7 @@ export class FinancialReimbursementService {
         paymentStatus: this.calculatePaymentStatus(allClaims)
       };
     } catch (error: unknown) {
-      console.error('Error getting reimbursement analytics:', error);
+      console.error('Error getting reimbursementanalytics:', error);
       throw error;
     }
   }

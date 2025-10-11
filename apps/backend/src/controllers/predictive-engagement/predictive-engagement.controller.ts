@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/predictive-engagement')
 @UseGuards(JwtAuthGuard)
 export class PredictiveEngagementController {
-  constructor(
-    private readonly predictiveEngagementService: PredictiveEngagementService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlypredictiveEngagementService: PredictiveEngagementService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -65,7 +65,7 @@ export class PredictiveEngagementController {
         message: 'Engagement prediction generated successfully',
       };
     } catch (error) {
-      console.error('Error generating prediction:', error);
+      console.error('Error generatingprediction:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -105,7 +105,7 @@ export class PredictiveEngagementController {
         message: 'Predictions retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting predictions:', error);
+      console.error('Error gettingpredictions:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -170,7 +170,7 @@ export class PredictiveEngagementController {
         message: 'Engagement model created successfully',
       };
     } catch (error) {
-      console.error('Error creating model:', error);
+      console.error('Error creatingmodel:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -220,7 +220,7 @@ export class PredictiveEngagementController {
         message: 'Engagement event recorded successfully',
       };
     } catch (error) {
-      console.error('Error recording event:', error);
+      console.error('Error recordingevent:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -258,7 +258,7 @@ export class PredictiveEngagementController {
         message: 'Engagement insights generated successfully',
       };
     } catch (error) {
-      console.error('Error generating insights:', error);
+      console.error('Error generatinginsights:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -298,7 +298,7 @@ export class PredictiveEngagementController {
         message: 'Insights retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting insights:', error);
+      console.error('Error gettinginsights:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -362,7 +362,7 @@ export class PredictiveEngagementController {
         message: 'Engagement campaign created successfully',
       };
     } catch (error) {
-      console.error('Error creating campaign:', error);
+      console.error('Error creatingcampaign:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -400,7 +400,7 @@ export class PredictiveEngagementController {
         message: 'Campaigns retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting campaigns:', error);
+      console.error('Error gettingcampaigns:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -440,7 +440,7 @@ export class PredictiveEngagementController {
         message: 'Engagement analytics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting engagement analytics:', error);
+      console.error('Error getting engagementanalytics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -481,7 +481,7 @@ export class PredictiveEngagementController {
         message: 'Predictive engagement statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting predictive engagement statistics:', error);
+      console.error('Error getting predictive engagementstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -564,7 +564,7 @@ export class PredictiveEngagementController {
         message: 'Prediction types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting prediction types:', error);
+      console.error('Error getting predictiontypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -647,7 +647,7 @@ export class PredictiveEngagementController {
         message: 'Event types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting event types:', error);
+      console.error('Error getting eventtypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -730,7 +730,7 @@ export class PredictiveEngagementController {
         message: 'Insight types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting insight types:', error);
+      console.error('Error getting insighttypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -813,7 +813,7 @@ export class PredictiveEngagementController {
         message: 'Campaign types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting campaign types:', error);
+      console.error('Error getting campaigntypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

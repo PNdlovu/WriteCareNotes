@@ -97,13 +97,13 @@ export interface ComplianceReporting {
 
 @Entity('security_incidents')
 export class SecurityIncident extends BaseEntity {
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   incidentType!: 'unauthorized_access' | 'data_breach' | 'malware' | 'phishing' | 'insider_threat' | 'ddos' | 'sql_injection' | 'xss' | 'privilege_escalation' | 'account_compromise' | 'physical_security' | 'social_engineering';
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   severity!: 'low' | 'medium' | 'high' | 'critical';
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   title!: string;
 
   @Column({ type: 'text' })
@@ -112,7 +112,7 @@ export class SecurityIncident extends BaseEntity {
   @Column({ type: 'jsonb' })
   details!: IncidentDetails;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   status!: 'reported' | 'investigating' | 'contained' | 'resolved' | 'closed' | 'escalated';
 
   @Column({ type: 'timestamp' })
@@ -130,10 +130,10 @@ export class SecurityIncident extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   closedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   reportedBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   assignedTo?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -151,7 +151,7 @@ export class SecurityIncident extends BaseEntity {
   @Column({ type: 'uuid', nullable: true })
   policyId?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   detectionMethod?: 'automated' | 'manual' | 'user_report' | 'external' | 'audit';
 
   @Column({ type: 'jsonb', nullable: true })
@@ -191,10 +191,10 @@ export class SecurityIncident extends BaseEntity {
     response?: string;
   }[];
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   rootCause?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   lessonsLearned?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -214,7 +214,7 @@ export class SecurityIncident extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   requiresLegalReview!: boolean;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
   // Relationships
@@ -342,7 +342,7 @@ export class SecurityIncident extends BaseEntity {
     this.addInvestigationNote({
       timestamp: new Date(),
       investigator: containedBy,
-      note: `Incident contained using: ${containmentMethod}`,
+      note: `Incident containedusing: ${containmentMethod}`,
       tags: ['containment']
     });
   }
@@ -437,7 +437,7 @@ export class SecurityIncident extends BaseEntity {
   }
 
   validateIncident(): { isValid: boolean; errors: string[] } {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!this.title || this.title.trim().length === 0) {
       errors.push('Incident title is required');

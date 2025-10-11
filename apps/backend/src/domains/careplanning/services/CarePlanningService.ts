@@ -49,7 +49,7 @@ export class CarePlanningService {
   privatecarePlanGoalRepository: Repository<CarePlanGoal>;
   privatechildRepository: Repository<Child>;
 
-  constructor() {
+  const ructor() {
     this.carePlanRepository = AppDataSource.getRepository(CarePlan);
     this.carePlanReviewRepository = AppDataSource.getRepository(CarePlanReview);
     this.carePlanGoalRepository = AppDataSource.getRepository(CarePlanGoal);

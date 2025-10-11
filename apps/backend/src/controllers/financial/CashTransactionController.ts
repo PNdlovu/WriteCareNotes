@@ -17,7 +17,7 @@ import { logger } from '../../utils/logger';
 export class CashTransactionController {
   privatecashTransactionService: CashTransactionService;
 
-  constructor() {
+  const ructor() {
     this.cashTransactionService = new CashTransactionService();
   }
 
@@ -26,7 +26,7 @@ export class CashTransactionController {
    */
   async createCashTransaction(req: Request, res: Response): Promise<void> {
     try {
-      constrequest: CashTransactionRequest = req.body;
+      const request: CashTransactionRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const transaction = await this.cashTransactionService.createCashTransaction(request, createdBy);
@@ -88,7 +88,7 @@ export class CashTransactionController {
    */
   async searchCashTransactions(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: CashTransactionSearchCriteria = req.query;
+      const criteria: CashTransactionSearchCriteria = req.query;
 
       const transactions = await this.cashTransactionService.searchCashTransactions(criteria);
 
@@ -116,7 +116,7 @@ export class CashTransactionController {
   async updateCashTransaction(req: Request, res: Response): Promise<void> {
     try {
       const { transactionId } = req.params;
-      constupdates: CashTransactionUpdate = req.body;
+      const updates: CashTransactionUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const transaction = await this.cashTransactionService.updateCashTransaction(

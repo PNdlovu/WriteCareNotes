@@ -116,19 +116,19 @@ interface EscalationRule {
 
 @Injectable()
 export class SmartAlertsEngine {
-  private readonly logger = new Logger(SmartAlertsEngine.name);
+  private readonlylogger = new Logger(SmartAlertsEngine.name);
   
   // In-memory alert store (in production, use Redis or database)
   privateactiveAlerts: Map<string, MedicationAlert> = new Map();
   
-  constructor(
+  const ructor(
     @InjectRepository(MedicationRecord)
-    private readonly medicationRepository: Repository<MedicationRecord>,
+    private readonlymedicationRepository: Repository<MedicationRecord>,
     
     @InjectRepository(Child)
-    private readonly childRepository: Repository<Child>,
+    private readonlychildRepository: Repository<Child>,
     
-    private readonly eventEmitter: EventEmitter2
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   // ==========================================
@@ -137,7 +137,7 @@ export class SmartAlertsEngine {
 
   /**
    * Check for missed doses every 5 minutes
-   * Runs at: :00, :05, :10, :15, :20, :25, :30, :35, :40, :45, :50, :55
+   * Runsat: :00, :05, :10, :15, :20, :25, :30, :35, :40, :45, :50, :55
    */
   @Cron(CronExpression.EVERY_5_MINUTES)
   async checkMissedDoses(): Promise<void> {
@@ -261,7 +261,7 @@ export class SmartAlertsEngine {
     // Check how many doses have been missed
     const missedCount = await this.getMissedDoseCount(medication.id);
     
-    constalert: MedicationAlert = {
+    const alert: MedicationAlert = {
       id: `alert_${Date.now()}_${medication.id}`,
       type: missedCount >= 2 ? AlertType.MULTIPLE_MISSED_DOSES : AlertType.MISSED_DOSE,
       severity: missedCount >= 2 ? AlertSeverity.HIGH : AlertSeverity.MEDIUM,
@@ -296,7 +296,7 @@ export class SmartAlertsEngine {
     // Emit event for other modules
     this.eventEmitter.emit('medication.alert.created', alert);
 
-    this.logger.warn(`Missed dose alert created: ${alert.message}`);
+    this.logger.warn(`Missed dose alertcreated: ${alert.message}`);
   }
 
   /**
@@ -308,7 +308,7 @@ export class SmartAlertsEngine {
       (medication.parentalConsentExpiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    constalert: MedicationAlert = {
+    const alert: MedicationAlert = {
       id: `alert_${Date.now()}_${medication.id}`,
       type: AlertType.CONSENT_EXPIRING,
       severity: daysUntilExpiry <= 3 ? AlertSeverity.HIGH : AlertSeverity.MEDIUM,
@@ -337,7 +337,7 @@ export class SmartAlertsEngine {
   private async createGillickReviewAlert(medication: MedicationRecord): Promise<void> {
     const child = await this.getChild(medication.childId);
 
-    constalert: MedicationAlert = {
+    const alert: MedicationAlert = {
       id: `alert_${Date.now()}_${medication.id}`,
       type: AlertType.GILLICK_REVIEW_DUE,
       severity: AlertSeverity.MEDIUM,
@@ -375,7 +375,7 @@ export class SmartAlertsEngine {
                          severity === 'moderate' ? AlertSeverity.HIGH : 
                          AlertSeverity.MEDIUM;
 
-    constalert: MedicationAlert = {
+    const alert: MedicationAlert = {
       id: `alert_${Date.now()}_interaction`,
       type: AlertType.DRUG_INTERACTION,
       severity: alertSeverity,
@@ -383,7 +383,7 @@ export class SmartAlertsEngine {
       childName: `${child.firstName} ${child.lastName}`,
       medicationId: '',
       medicationName: `${medication1Name} + ${medication2Name}`,
-      message: `Drug interaction detected: ${medication1Name} and ${medication2Name}`,
+      message: `Drug interactiondetected: ${medication1Name} and ${medication2Name}`,
       details: {
         medication1: medication1Name,
         medication2: medication2Name,
@@ -400,7 +400,7 @@ export class SmartAlertsEngine {
     await this.sendNotifications(alert, this.getNotificationChannels(alert));
     this.eventEmitter.emit('medication.alert.created', alert);
 
-    this.logger.error(`Drug interaction alert: ${alert.message} (${severity})`);
+    this.logger.error(`Drug interactionalert: ${alert.message} (${severity})`);
   }
 
   /**
@@ -414,7 +414,7 @@ export class SmartAlertsEngine {
   ): Promise<void> {
     const child = await this.getChild(childId);
 
-    constalert: MedicationAlert = {
+    const alert: MedicationAlert = {
       id: `alert_${Date.now()}_age`,
       type: AlertType.AGE_RESTRICTION,
       severity: AlertSeverity.CRITICAL,
@@ -436,7 +436,7 @@ export class SmartAlertsEngine {
     await this.sendNotifications(alert, this.getNotificationChannels(alert));
     this.eventEmitter.emit('medication.alert.created', alert);
 
-    this.logger.error(`Age restriction alert: ${alert.message}`);
+    this.logger.error(`Age restrictionalert: ${alert.message}`);
   }
 
   // ==========================================
@@ -449,7 +449,7 @@ export class SmartAlertsEngine {
   async acknowledgeAlert(alertId: string, acknowledgedBy: string): Promise<void> {
     const alert = this.activeAlerts.get(alertId);
     if (!alert) {
-      throw new Error(`Alert not found: ${alertId}`);
+      throw new Error(`Alert notfound: ${alertId}`);
     }
 
     alert.acknowledgedAt = new Date();
@@ -467,7 +467,7 @@ export class SmartAlertsEngine {
   async resolveAlert(alertId: string, resolvedBy: string): Promise<void> {
     const alert = this.activeAlerts.get(alertId);
     if (!alert) {
-      throw new Error(`Alert not found: ${alertId}`);
+      throw new Error(`Alert notfound: ${alertId}`);
     }
 
     alert.resolvedAt = new Date();
@@ -505,7 +505,7 @@ export class SmartAlertsEngine {
    * Get all active alerts for a child
    */
   async getAlertsForChild(childId: string): Promise<MedicationAlert[]> {
-    constalerts: MedicationAlert[] = [];
+    const alerts: MedicationAlert[] = [];
     
     for (const [_, alert] of this.activeAlerts) {
       if (alert.childId === childId && !alert.resolvedAt) {
@@ -520,7 +520,7 @@ export class SmartAlertsEngine {
    * Get all active alerts (dashboard view)
    */
   async getAllActiveAlerts(): Promise<MedicationAlert[]> {
-    constalerts: MedicationAlert[] = [];
+    const alerts: MedicationAlert[] = [];
     
     for (const [_, alert] of this.activeAlerts) {
       if (!alert.resolvedAt) {
@@ -635,7 +635,7 @@ export class SmartAlertsEngine {
    * Get escalation rule for alert type and severity
    */
   private getEscalationRule(type: AlertType, severity: AlertSeverity): EscalationRule | null {
-    construles: EscalationRule[] = [
+    const rules: EscalationRule[] = [
       {
         alertType: AlertType.MULTIPLE_MISSED_DOSES,
         severity: AlertSeverity.HIGH,

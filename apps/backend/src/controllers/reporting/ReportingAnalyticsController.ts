@@ -8,7 +8,7 @@ import { ReportingAnalyticsService } from '../../services/reporting/ReportingAna
  * 10 endpoints for comprehensive reporting and analytics
  */
 export class ReportingAnalyticsController {
-  constructor(private reportingService: ReportingAnalyticsService) {}
+  const ructor(private reportingService: ReportingAnalyticsService) {}
 
   /**
    * POST /reporting/custom-report

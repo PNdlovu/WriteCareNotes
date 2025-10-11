@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/system-integration')
 @UseGuards(JwtAuthGuard)
 export class SystemIntegrationController {
-  constructor(
-    private readonly systemIntegrationService: SystemIntegrationService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlysystemIntegrationService: SystemIntegrationService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -52,7 +52,7 @@ export class SystemIntegrationController {
         message: result.success ? 'All integrations initialized successfully' : 'Some integrations failed to initialize',
       };
     } catch (error) {
-      console.error('Error initializing integrations:', error);
+      console.error('Error initializingintegrations:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -102,7 +102,7 @@ export class SystemIntegrationController {
         message: result.success ? 'Integration tests completed successfully' : 'Some integration tests failed',
       };
     } catch (error) {
-      console.error('Error running integration tests:', error);
+      console.error('Error running integrationtests:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -139,7 +139,7 @@ export class SystemIntegrationController {
         message: 'System health validation completed',
       };
     } catch (error) {
-      console.error('Error validating system health:', error);
+      console.error('Error validating systemhealth:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -190,7 +190,7 @@ export class SystemIntegrationController {
         message: result.success ? 'Data flow test completed successfully' : 'Data flow test failed',
       };
     } catch (error) {
-      console.error('Error testing data flow integration:', error);
+      console.error('Error testing data flowintegration:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -224,7 +224,7 @@ export class SystemIntegrationController {
         message: 'Integration dashboard retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting integration dashboard:', error);
+      console.error('Error getting integrationdashboard:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -261,7 +261,7 @@ export class SystemIntegrationController {
         message: 'System integration status retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting system integration status:', error);
+      console.error('Error getting system integrationstatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -301,7 +301,7 @@ export class SystemIntegrationController {
         message: 'Endpoint status retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting endpoint status:', error);
+      console.error('Error getting endpointstatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -341,7 +341,7 @@ export class SystemIntegrationController {
         message: 'Integration tests retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting integration tests:', error);
+      console.error('Error getting integrationtests:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -379,7 +379,7 @@ export class SystemIntegrationController {
         message: 'Test results retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting test results:', error);
+      console.error('Error getting testresults:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -419,7 +419,7 @@ export class SystemIntegrationController {
         message: 'System dependencies retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting system dependencies:', error);
+      console.error('Error getting systemdependencies:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -477,7 +477,7 @@ export class SystemIntegrationController {
         message: 'Integration statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting integration statistics:', error);
+      console.error('Error getting integrationstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -568,7 +568,7 @@ export class SystemIntegrationController {
         message: 'Integration logs retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting integration logs:', error);
+      console.error('Error getting integrationlogs:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -637,7 +637,7 @@ export class SystemIntegrationController {
         message: 'Integration configuration retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting integration configuration:', error);
+      console.error('Error getting integrationconfiguration:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -678,7 +678,7 @@ export class SystemIntegrationController {
         message: success ? 'Integration configuration updated successfully' : 'Failed to update configuration',
       };
     } catch (error) {
-      console.error('Error updating integration configuration:', error);
+      console.error('Error updating integrationconfiguration:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

@@ -113,7 +113,7 @@ export class PolicyDraft {
    * Policy title
    * @example "Safeguarding Adults Policy"
    */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @Index()
   title: string;
 
@@ -157,13 +157,13 @@ export class PolicyDraft {
    * Policy version
    * @example "1.2.3"
    */
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   version: string;
 
   /**
    * Modules linked to this policy
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   linkedModules: string[];
 
   /**
@@ -182,7 +182,7 @@ export class PolicyDraft {
   /**
    * Tags for categorization and search
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   tags: string[];
 
   /**
@@ -397,7 +397,7 @@ export class PolicyDraft {
    * Get compliance requirements based on jurisdiction
    */
   getComplianceRequirements(): string[] {
-    constrequirements: string[] = [];
+    const requirements: string[] = [];
     
     this.jurisdiction.forEach(j => {
       switch (j) {

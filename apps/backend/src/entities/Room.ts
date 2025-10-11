@@ -16,19 +16,19 @@ import { Resident } from './Resident';
 
 @Entity('wcn_rooms')
 export class Room extends BaseEntity {
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   roomNumber!: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   roomName?: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   roomType!: string; // SINGLE, DOUBLE, SHARED
 
   @Column({ type: 'integer', default: 1 })
   capacity!: number;
 
-  @Column({ type: 'varchar', length: 50, default: 'AVAILABLE' })
+  @Column({ type: 'var char', length: 50, default: 'AVAILABLE' })
   status!: string; // AVAILABLE, OCCUPIED, MAINTENANCE, OUT_OF_SERVICE
 
   @Column({ type: 'text', nullable: true })

@@ -9,7 +9,7 @@
  * 
  * @description
  * Repository pattern for PasswordResetToken entity operations.
- * Handles password reset token lifecycle:
+ * Handles password reset tokenlifecycle:
  * - Token creation and storage
  * - Token validation
  * - Token usage tracking
@@ -31,7 +31,7 @@ export interface CreatePasswordResetTokenData {
 export class PasswordResetTokenRepository {
   privaterepository: Repository<PasswordResetToken>;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(PasswordResetToken);
   }
 

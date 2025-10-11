@@ -4,14 +4,14 @@
  * Utility functions to safely parse JSON fields in PathwayPlan entity
  * Handles fields stored as strings but accessed as objects
  * 
- * FIELDS HANDLED:
+ * FIELDSHANDLED:
  * - educationGoals (text -> JSON)
  * - accommodationGoals (text -> JSON)
  * - personalAdvisor (text -> JSON)
  * - relationshipGoals (text -> JSON)
  * 
- * BRITISH ISLES COMPLIANCE:
- * Includes regional variations for education systems, housing types
+ * BRITISH ISLESCOMPLIANCE:
+ * Includes regional var iations for education systems, housing types
  */
 
 import { logger } from './logger';
@@ -37,7 +37,7 @@ export interface EducationGoals {
   }>;
   careerAspirations: string | null;
   nextSteps: string[];
-  educationSystem?: 'England' | 'Scotland' | 'Wales' | 'Northern Ireland'; // Regional variation
+  educationSystem?: 'England' | 'Scotland' | 'Wales' | 'Northern Ireland'; // Regional var iation
 }
 
 export interface AccommodationGoals {
@@ -89,7 +89,7 @@ export interface RelationshipGoals {
  * Parse educationGoals field (stored as text JSON)
  */
 export function parseEducationGoals(jsonString: string | null): EducationGoals {
-  constdefaultGoals: EducationGoals = {
+  const defaultGoals: EducationGoals = {
     pepStatus: 'Not Started',
     pepReviewDate: null,
     goals: [],
@@ -122,7 +122,7 @@ export function parseEducationGoals(jsonString: string | null): EducationGoals {
       educationSystem: parsed.educationSystem || undefined
     };
   } catch (error) {
-    logger.error('Error parsing educationGoals JSON:', error);
+    logger.error('Error parsing educationGoalsJSON:', error);
     return defaultGoals;
   }
 }
@@ -131,7 +131,7 @@ export function parseEducationGoals(jsonString: string | null): EducationGoals {
  * Parse accommodationGoals field (stored as text JSON)
  */
 export function parseAccommodationGoals(jsonString: string | null): AccommodationGoals {
-  constdefaultGoals: AccommodationGoals = {
+  const defaultGoals: AccommodationGoals = {
     currentStatus: 'Planning',
     options: [],
     viewings: [],
@@ -166,7 +166,7 @@ export function parseAccommodationGoals(jsonString: string | null): Accommodatio
       jurisdiction: parsed.jurisdiction || undefined
     };
   } catch (error) {
-    logger.error('Error parsing accommodationGoals JSON:', error);
+    logger.error('Error parsing accommodationGoalsJSON:', error);
     return defaultGoals;
   }
 }
@@ -175,7 +175,7 @@ export function parseAccommodationGoals(jsonString: string | null): Accommodatio
  * Parse personalAdvisor field (stored as text JSON)
  */
 export function parsePersonalAdvisor(jsonString: string | null): PersonalAdvisor {
-  constdefaultAdvisor: PersonalAdvisor = {
+  const defaultAdvisor: PersonalAdvisor = {
     name: 'Not assigned',
     email: '',
     phone: '',
@@ -199,7 +199,7 @@ export function parsePersonalAdvisor(jsonString: string | null): PersonalAdvisor
       organization: parsed.organization || undefined
     };
   } catch (error) {
-    logger.error('Error parsing personalAdvisor JSON:', error);
+    logger.error('Error parsing personalAdvisorJSON:', error);
     return defaultAdvisor;
   }
 }
@@ -208,7 +208,7 @@ export function parsePersonalAdvisor(jsonString: string | null): PersonalAdvisor
  * Parse relationshipGoals field (stored as text JSON)
  */
 export function parseRelationshipGoals(jsonString: string | null): RelationshipGoals {
-  constdefaultGoals: RelationshipGoals = {
+  const defaultGoals: RelationshipGoals = {
     familyContact: null,
     supportNetwork: [],
     mentoringScheme: false,
@@ -230,7 +230,7 @@ export function parseRelationshipGoals(jsonString: string | null): RelationshipG
       concernsIdentified: Array.isArray(parsed.concernsIdentified) ? parsed.concernsIdentified : []
     };
   } catch (error) {
-    logger.error('Error parsing relationshipGoals JSON:', error);
+    logger.error('Error parsing relationshipGoalsJSON:', error);
     return defaultGoals;
   }
 }
@@ -246,7 +246,7 @@ export function serializeEducationGoals(goals: EducationGoals): string {
   try {
     return JSON.stringify(goals);
   } catch (error) {
-    logger.error('Error serializing educationGoals:', error);
+    logger.error('Error serializingeducationGoals:', error);
     return JSON.stringify({});
   }
 }
@@ -258,7 +258,7 @@ export function serializeAccommodationGoals(goals: AccommodationGoals): string {
   try {
     return JSON.stringify(goals);
   } catch (error) {
-    logger.error('Error serializing accommodationGoals:', error);
+    logger.error('Error serializingaccommodationGoals:', error);
     return JSON.stringify({});
   }
 }
@@ -270,7 +270,7 @@ export function serializePersonalAdvisor(advisor: PersonalAdvisor): string {
   try {
     return JSON.stringify(advisor);
   } catch (error) {
-    logger.error('Error serializing personalAdvisor:', error);
+    logger.error('Error serializingpersonalAdvisor:', error);
     return JSON.stringify({});
   }
 }
@@ -282,7 +282,7 @@ export function serializeRelationshipGoals(goals: RelationshipGoals): string {
   try {
     return JSON.stringify(goals);
   } catch (error) {
-    logger.error('Error serializing relationshipGoals:', error);
+    logger.error('Error serializingrelationshipGoals:', error);
     return JSON.stringify({});
   }
 }
@@ -325,7 +325,7 @@ export function validateAccommodationGoals(goals: Partial<AccommodationGoals>): 
 export function validatePersonalAdvisor(advisor: Partial<PersonalAdvisor>): boolean {
   if (!advisor) return false;
   
-  // Minimum requirement: must have a name
+  // Minimumrequirement: must have a name
   if (!advisor.name || advisor.name.trim() === '') {
     return false;
   }

@@ -13,10 +13,10 @@ export interface DomainRequest extends Request {
 }
 
 export class DomainMiddleware {
-  private static instance: DomainMiddleware;
+  private staticinstance: DomainMiddleware;
   privatedomainRegistry: DomainRegistry;
 
-  private constructor() {
+  private const ructor() {
     this.domainRegistry = DomainRegistry.getInstance();
   }
 

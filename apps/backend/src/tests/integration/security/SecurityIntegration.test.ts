@@ -7,8 +7,8 @@ import { SecurityPolicy } from '../../../entities/security/SecurityPolicy';
 import { SecurityIncident } from '../../../entities/security/SecurityIncident';
 
 describe('SecurityService Integration Tests', () => {
-  letservice: SecurityService;
-  letmodule: TestingModule;
+  let service: SecurityService;
+  let module: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({

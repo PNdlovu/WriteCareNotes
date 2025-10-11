@@ -24,9 +24,9 @@
  * - CQC Regulation 12
  * 
  * @sources
- * - dm+d Browser API: https://services.nhsbsa.nhs.uk/dmd-browser/
- * - dm+d XML Files: https://www.nhsbsa.nhs.uk/dmd
- * - SNOMED CT UK: https://termbrowser.nhs.uk/
+ * - dm+d BrowserAPI: https://services.nhsbsa.nhs.uk/dmd-browser/
+ * - dm+d XMLFiles: https://www.nhsbsa.nhs.uk/dmd
+ * - SNOMED CTUK: https://termbrowser.nhs.uk/
  */
 
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
@@ -80,14 +80,14 @@ interface PediatricDosingGuidance {
 
 @Injectable()
 export class NHSDmdIntegrationService {
-  private readonly logger = new Logger(NHSDmdIntegrationService.name);
+  private readonlylogger = new Logger(NHSDmdIntegrationService.name);
   
   // NHS dm+d API endpoint (production would use actual NHSBSA API)
   private readonly DMD_API_BASE = 'https://services.nhsbsa.nhs.uk/dmd-browser/api';
   
-  constructor(
+  const ructor(
     @InjectRepository(NHSDmdMedication)
-    private readonly dmdRepository: Repository<NHSDmdMedication>
+    private readonlydmdRepository: Repository<NHSDmdMedication>
   ) {}
 
   // ==========================================
@@ -146,7 +146,7 @@ export class NHSDmdIntegrationService {
     });
 
     if (!medication) {
-      throw new NotFoundException(`Medication not found for SNOMED code: ${snomedCode}`);
+      throw new NotFoundException(`Medication not found for SNOMEDcode: ${snomedCode}`);
     }
 
     return medication;
@@ -185,7 +185,7 @@ export class NHSDmdIntegrationService {
     snomedCodes: string[],
     newMedicationSnomedCode: string
   ): Promise<DrugInteractionResult[]> {
-    constinteractions: DrugInteractionResult[] = [];
+    const interactions: DrugInteractionResult[] = [];
 
     // Get the new medication being added
     const newMed = await this.getMedicationBySnomedCode(newMedicationSnomedCode);
@@ -319,7 +319,7 @@ export class NHSDmdIntegrationService {
 
   /**
    * Sync medication data from NHS dm+d database
-   * In production, this would:
+   * In production, thiswould:
    * 1. Download latest dm+d XML files from NHSBSA
    * 2. Parse XML and extract medication data
    * 3. Update local database with new/changed medications
@@ -363,11 +363,11 @@ export class NHSDmdIntegrationService {
         syncedCount++;
       }
 
-      this.logger.log(`NHS dm+d sync completed: ${syncedCount} medications synced`);
+      this.logger.log(`NHS dm+d synccompleted: ${syncedCount} medications synced`);
       return syncedCount;
 
     } catch (error) {
-      this.logger.error(`NHS dm+d sync failed: ${error}`);
+      this.logger.error(`NHS dm+d syncfailed: ${error}`);
       throw error;
     }
   }
@@ -688,7 +688,7 @@ export class NHSDmdIntegrationService {
    * Get SNOMED code for medication form
    */
   private getFormSnomedCode(form: DmdFormType): string {
-    constformCodes: Record<DmdFormType, string> = {
+    const formCodes: Record<DmdFormType, string> = {
       [DmdFormType.TABLET]: '385055001',
       [DmdFormType.CAPSULE]: '385049006',
       [DmdFormType.ORAL_SOLUTION]: '385023001',

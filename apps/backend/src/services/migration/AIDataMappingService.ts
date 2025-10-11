@@ -84,7 +84,7 @@ export class AIDataMappingService extends EventEmitter {
   privatetransformationLibrary: Map<string, Function>;
   privatelearningCache: Map<string, MappingRecommendation[]> = new Map();
 
-  constructor() {
+  const ructor() {
     super();
     this.initializeHealthcarePatterns();
     this.initializeSemanticRules();
@@ -424,7 +424,7 @@ export class AIDataMappingService extends EventEmitter {
       return [];
     }
 
-    constrecommendations: MappingRecommendation[] = [];
+    const recommendations: MappingRecommendation[] = [];
     const sampleRecord = sourceData[0];
     const sourceFields = Object.keys(sampleRecord);
     
@@ -503,7 +503,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private findBestPatternMatch(sourceField: string): FieldPattern | null {
-    letbestMatch: FieldPattern | null = null;
+    let bestMatch: FieldPattern | null = null;
     let highestConfidence = 0;
 
     for (const pattern of this.healthcareFieldPatterns) {
@@ -636,7 +636,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private getTransformationFunction(targetField: string): Function | null {
-    consttransformationMap: { [key: string]: string } = {
+    const transformationMap: { [key: string]: string } = {
       'full_name': 'normalize_name',
       'first_name': 'normalize_name',
       'last_name': 'normalize_name',
@@ -685,7 +685,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private generateAlternativeTargets(sourceField: string, primaryTarget: string): Array<{ field: string; confidence: number; reasoning: string }> {
-    constalternatives: Array<{ field: string; confidence: number; reasoning: string }> = [];
+    const alternatives: Array<{ field: string; confidence: number; reasoning: string }> = [];
     
     // Generate contextual alternatives based on source field
     const fieldLower = sourceField.toLowerCase();
@@ -721,7 +721,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private generateValidationRules(targetField: string): string[] {
-    constvalidationMap: { [key: string]: string[] } = {
+    const validationMap: { [key: string]: string[] } = {
       'resident_id': ['Not null', 'Unique', 'Alphanumeric', 'Max 20 characters'],
       'nhs_number': ['Exactly 10 digits', 'Valid check digit', 'Unique'],
       'date_of_birth': ['Valid date', 'Age 18-120', 'Not future date'],
@@ -749,7 +749,7 @@ export class AIDataMappingService extends EventEmitter {
     sourceData: any[], 
     recommendations: MappingRecommendation[]
   ): Promise<DataRelationship[]> {
-    constrelationships: DataRelationship[] = [];
+    const relationships: DataRelationship[] = [];
     
     // Detect hierarchical relationships
     const idFields = recommendations.filter(r => r.targetField.includes('id'));
@@ -857,7 +857,7 @@ export class AIDataMappingService extends EventEmitter {
 
   private async learnNewMapping(sourceField: string, targetField: string, reasoning: string): Promise<void> {
     // Create new pattern based on user feedback
-    constnewPattern: FieldPattern = {
+    const newPattern: FieldPattern = {
       pattern: new RegExp(`^${sourceField.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'),
       targetField,
       confidence: 0.7, // Start with moderate confidence
@@ -878,7 +878,7 @@ export class AIDataMappingService extends EventEmitter {
       context?: any;
     }>
   ): Promise<{ [datasetName: string]: MappingRecommendation[] }> {
-    constresults: { [datasetName: string]: MappingRecommendation[] } = {};
+    const results: { [datasetName: string]: MappingRecommendation[] } = {};
     
     for (const dataset of datasets) {
       this.emit('batch_processing', { 
@@ -927,7 +927,7 @@ export class AIDataMappingService extends EventEmitter {
    * Import mapping template with user modifications
    */
   async importMappingTemplate(template: any): Promise<MappingRecommendation[]> {
-    constrecommendations: MappingRecommendation[] = [];
+    const recommendations: MappingRecommendation[] = [];
     
     for (const mapping of template.mappings) {
       if (mapping.userApproved) {
@@ -973,15 +973,15 @@ export class AIDataMappingService extends EventEmitter {
       fieldCoverage: {
         clinical: recommendations.filter(r => {
           const semantic = this.getSemanticAnalysis(r.targetField);
-          return semantic?.healthcareContext.includes('clinical');
+          returnsemantic?.healthcareContext.includes('clinical');
         }).length,
         administrative: recommendations.filter(r => {
           const semantic = this.getSemanticAnalysis(r.targetField);
-          return semantic?.healthcareContext.includes('administrative');
+          returnsemantic?.healthcareContext.includes('administrative');
         }).length,
         demographic: recommendations.filter(r => {
           const semantic = this.getSemanticAnalysis(r.targetField);
-          return semantic?.healthcareContext.includes('demographic');
+          returnsemantic?.healthcareContext.includes('demographic');
         }).length
       }
     };
@@ -1012,7 +1012,7 @@ export class AIDataMappingService extends EventEmitter {
   }
 
   private generateMappingRecommendations(stats: any): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (stats.lowConfidenceMappings > stats.totalMappings * 0.3) {
       recommendations.push('Consider manual review of low-confidence mappings');

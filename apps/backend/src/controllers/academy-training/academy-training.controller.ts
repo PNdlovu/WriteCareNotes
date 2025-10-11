@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/academy-training')
 @UseGuards(AuthGuard)
 export class AcademyTrainingController {
-  constructor(
-    private readonly academyTrainingService: AcademyTrainingService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyacademyTrainingService: AcademyTrainingService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -104,7 +104,7 @@ export class AcademyTrainingController {
         message: 'Course created successfully',
       };
     } catch (error) {
-      console.error('Error creating course:', error);
+      console.error('Error creatingcourse:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -160,7 +160,7 @@ export class AcademyTrainingController {
         message: 'Courses retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting courses:', error);
+      console.error('Error gettingcourses:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -206,7 +206,7 @@ export class AcademyTrainingController {
         message: 'Course retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting course:', error);
+      console.error('Error gettingcourse:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -251,7 +251,7 @@ export class AcademyTrainingController {
         message: 'User enrolled successfully',
       };
     } catch (error) {
-      console.error('Error enrolling user:', error);
+      console.error('Error enrollinguser:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -299,7 +299,7 @@ export class AcademyTrainingController {
         message: success ? 'Progress updated successfully' : 'Failed to update progress',
       };
     } catch (error) {
-      console.error('Error updating progress:', error);
+      console.error('Error updatingprogress:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -348,7 +348,7 @@ export class AcademyTrainingController {
         message: 'Assessment submitted successfully',
       };
     } catch (error) {
-      console.error('Error submitting assessment:', error);
+      console.error('Error submittingassessment:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -388,7 +388,7 @@ export class AcademyTrainingController {
         message: 'Certificate generated successfully',
       };
     } catch (error) {
-      console.error('Error generating certificate:', error);
+      console.error('Error generatingcertificate:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -428,7 +428,7 @@ export class AcademyTrainingController {
         message: 'Training progress retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting training progress:', error);
+      console.error('Error getting trainingprogress:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -468,7 +468,7 @@ export class AcademyTrainingController {
         message: 'Course analytics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting course analytics:', error);
+      console.error('Error getting courseanalytics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -507,7 +507,7 @@ export class AcademyTrainingController {
         message: 'Academy training statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting academy training statistics:', error);
+      console.error('Error getting academy trainingstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -598,7 +598,7 @@ export class AcademyTrainingController {
         message: 'Course categories retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting course categories:', error);
+      console.error('Error getting coursecategories:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -661,7 +661,7 @@ export class AcademyTrainingController {
         message: 'Course levels retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting course levels:', error);
+      console.error('Error getting courselevels:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -752,7 +752,7 @@ export class AcademyTrainingController {
         message: 'Content types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting content types:', error);
+      console.error('Error getting contenttypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -827,7 +827,7 @@ export class AcademyTrainingController {
         message: 'Assessment types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting assessment types:', error);
+      console.error('Error getting assessmenttypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -910,7 +910,7 @@ export class AcademyTrainingController {
         message: 'Question types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting question types:', error);
+      console.error('Error getting questiontypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

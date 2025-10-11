@@ -27,9 +27,9 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: MHRA Controlled Drugs Regulations 2013, CQC Standards
  * - Scotland: MHRA Controlled Drugs Regulations 2013, Care Inspectorate Standards
  * - Wales: MHRA Controlled Drugs Regulations 2013, CIW Standards
- * - Northern Ireland: MHRA Controlled Drugs Regulations 2013, RQIA Standards
- * - Republic of Ireland: IMB Controlled Drugs Regulations, HIQA Standards
- * - Isle of Man: DHSC Controlled Substances Guidelines
+ * - NorthernIreland: MHRA Controlled Drugs Regulations 2013, RQIA Standards
+ * - Republic ofIreland: IMB Controlled Drugs Regulations, HIQA Standards
+ * - Isle ofMan: DHSC Controlled Substances Guidelines
  * - Guernsey: Committee for Health & Social Care Controlled Drugs Policy
  * - Jersey: Care Commission Controlled Substances Requirements
  * - Misuse of Drugs Act 1971
@@ -61,7 +61,7 @@ import { logger } from '../../utils/logger';
 export class ControlledSubstancesController {
   privatecontrolledSubstancesService: ControlledSubstancesService;
 
-  constructor() {
+  const ructor() {
     this.controlledSubstancesService = new ControlledSubstancesService();
   }
 
@@ -136,7 +136,7 @@ export class ControlledSubstancesController {
       }
 
       // Validate witness verifications
-      constprimaryWitnessVerification: WitnessVerification = {
+      const primaryWitnessVerification: WitnessVerification = {
         witnessId: primaryWitness.witnessId,
         witnessName: primaryWitness.witnessName,
         witnessRole: primaryWitness.witnessRole,
@@ -147,7 +147,7 @@ export class ControlledSubstancesController {
         ipAddress: req.ip
       };
 
-      constsecondaryWitnessVerification: WitnessVerification = {
+      const secondaryWitnessVerification: WitnessVerification = {
         witnessId: secondaryWitness.witnessId,
         witnessName: secondaryWitness.witnessName,
         witnessRole: secondaryWitness.witnessRole,
@@ -260,7 +260,7 @@ export class ControlledSubstancesController {
       }
 
       // Validate witness verifications
-      constprimaryWitnessVerification: WitnessVerification = {
+      const primaryWitnessVerification: WitnessVerification = {
         witnessId: primaryWitness.witnessId,
         witnessName: primaryWitness.witnessName,
         witnessRole: primaryWitness.witnessRole,
@@ -271,7 +271,7 @@ export class ControlledSubstancesController {
         ipAddress: req.ip
       };
 
-      constsecondaryWitnessVerification: WitnessVerification = {
+      const secondaryWitnessVerification: WitnessVerification = {
         witnessId: secondaryWitness.witnessId,
         witnessName: secondaryWitness.witnessName,
         witnessRole: secondaryWitness.witnessRole,
@@ -356,7 +356,7 @@ export class ControlledSubstancesController {
       // Validate required fields
       if (actualStock === undefined || !reconciledBy || !witnessedBy) {
         res.status(400).json({ 
-          error: 'Missing required fields: actualStock, reconciledBy, witnessedBy' 
+          error: 'Missing requiredfields: actualStock, reconciledBy, witnessedBy' 
         });
         return;
       }
@@ -454,7 +454,7 @@ export class ControlledSubstancesController {
       const validReasons = ['expired', 'damaged', 'recalled', 'patient_deceased', 'discontinued', 'other'];
       if (!validReasons.includes(reason)) {
         res.status(400).json({ 
-          error: 'Invalid destruction reason. Must be one of: ' + validReasons.join(', ')
+          error: 'Invalid destruction reason. Must be oneof: ' + validReasons.join(', ')
         });
         return;
       }
@@ -467,7 +467,7 @@ export class ControlledSubstancesController {
       }
 
       // Validate witness verifications
-      constwitness1Verification: WitnessVerification = {
+      const witness1Verification: WitnessVerification = {
         witnessId: witness1.witnessId,
         witnessName: witness1.witnessName,
         witnessRole: witness1.witnessRole,
@@ -478,7 +478,7 @@ export class ControlledSubstancesController {
         ipAddress: req.ip
       };
 
-      constwitness2Verification: WitnessVerification = {
+      const witness2Verification: WitnessVerification = {
         witnessId: witness2.witnessId,
         witnessName: witness2.witnessName,
         witnessRole: witness2.witnessRole,
@@ -548,7 +548,7 @@ export class ControlledSubstancesController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 50, 100);
 
-      constfilters: ControlledDrugFilters = {};
+      const filters: ControlledDrugFilters = {};
 
       // Apply filters from query parameters
       if (req.query['schedule']) {

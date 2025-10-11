@@ -1,7 +1,7 @@
 /**
  * Policy Template Entity - Pre-built Editable Templates
  * 
- * Implements the PolicyGovernanceEngine template library for:
+ * Implements the PolicyGovernanceEngine template libraryfor:
  * - Safeguarding policies
  * - Data protection policies  
  * - Complaints handling policies
@@ -287,10 +287,10 @@ export class PolicyTemplate {
     const now = new Date();
     const monthsSinceUpdate = (now.getTime() - this.updatedAt.getTime()) / (1000 * 60 * 60 * 24 * 30);
     
-    // Templates should be reviewed:
-    // - Monthly templates: every month
-    // - Quarterly templates: every 3 months  
-    // - Annually templates: every 12 months
+    // Templates should bereviewed:
+    // - Monthlytemplates: every month
+    // - Quarterlytemplates: every 3 months  
+    // - Annuallytemplates: every 12 months
     // - Default: every 6 months
     
     const reviewFrequency = this.metadata?.reviewFrequency || 'biannually';

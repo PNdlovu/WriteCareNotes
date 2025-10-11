@@ -5,9 +5,9 @@ import { GardenTherapyService, GardenTherapyType } from '../../services/garden-t
 import { GardenAreaEntity } from '../../entities/garden-area.entity';
 
 describe('GardenTherapyService', () => {
-  letservice: GardenTherapyService;
-  letgardenRepository: any;
-  leteventEmitter: EventEmitter2;
+  let service: GardenTherapyService;
+  let gardenRepository: any;
+  let eventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const mockRepository = {
@@ -17,7 +17,7 @@ describe('GardenTherapyService', () => {
       create: jest.fn(),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         GardenTherapyService,
         {

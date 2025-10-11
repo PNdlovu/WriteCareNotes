@@ -9,7 +9,7 @@
  * @since 2024
  *
  * @description
- * Core entity for placement management tracking:
+ * Core entity for placement managementtracking:
  * - Unique placement numbering (PL-YYYY-NNNN format)
  * - Placement lifecycle (PENDING → ACTIVE → ENDED/BREAKDOWN)
  * - Child and facility associations with full relationship tracking

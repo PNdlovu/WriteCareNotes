@@ -32,7 +32,7 @@ export function createReportingRoutes(dataSource: DataSource): Router {
   /**
    * GET /reporting/cqc-compliance
    * Get CQC compliance report
-   * Query params: startDate, endDate
+   * Queryparams: startDate, endDate
    */
   router.get('/cqc-compliance', (req, res) => reportingController.getCQCComplianceReport(req, res));
 
@@ -45,7 +45,7 @@ export function createReportingRoutes(dataSource: DataSource): Router {
   /**
    * GET /reporting/trends
    * Get trend analysis
-   * Query params: metric, period, days
+   * Queryparams: metric, period, days
    */
   router.get('/trends', (req, res) => reportingController.getTrendAnalysis(req, res));
 

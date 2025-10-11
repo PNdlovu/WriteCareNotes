@@ -38,7 +38,7 @@ export class Expense {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   expenseNumber: string;
 
   @ManyToOne(() => StaffMember)
@@ -48,7 +48,7 @@ export class Expense {
   @Column({ type: 'uuid' })
   staffMemberId: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   description: string;
 
   @Column({ type: 'enum', enum: ExpenseCategory })
@@ -63,7 +63,7 @@ export class Expense {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency: string;
 
   @Column({ type: 'date' })
@@ -78,10 +78,10 @@ export class Expense {
   @Column({ type: 'date', nullable: true })
   paymentDate: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   paidBy: string;
 
   @Column({ type: 'text', nullable: true })
@@ -90,16 +90,16 @@ export class Expense {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   receiptUrl: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   attachmentUrl: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   vendor: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   location: string;
 
   @Column({ type: 'boolean', default: false })
@@ -108,16 +108,16 @@ export class Expense {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   reimbursedAmount: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   projectCode: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   costCenter: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()

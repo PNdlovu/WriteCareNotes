@@ -33,7 +33,7 @@ export class Payment {
   @Column({ type: 'uuid' })
   invoiceId: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   paymentReference: string;
 
   @Column({ type: 'enum', enum: PaymentMethod })
@@ -45,7 +45,7 @@ export class Payment {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency: string;
 
   @Column({ type: 'date' })
@@ -54,19 +54,19 @@ export class Payment {
   @Column({ type: 'timestamp', nullable: true })
   processedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   transactionId: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   bankReference: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   payerName: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   payerEmail: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   payerPhone: string;
 
   @Column({ type: 'text', nullable: true })
@@ -81,13 +81,13 @@ export class Payment {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   netAmount: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   processedBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()

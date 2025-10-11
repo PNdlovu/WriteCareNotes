@@ -21,7 +21,7 @@ export class AgentFeatureFlagsService {
   privatecacheExpiry: Map<string, number> = new Map();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.initializeDefaultFlags();
   }
@@ -62,7 +62,7 @@ export class AgentFeatureFlagsService {
     rolloutPercentage?: number,
     conditions?: Record<string, any>
   ): Promise<void> {
-    constflagData: AgentFeatureFlag = {
+    const flagData: AgentFeatureFlag = {
       tenantId,
       flag,
       enabled,
@@ -198,7 +198,7 @@ export class AgentFeatureFlagsService {
   async deleteFeatureFlag(tenantId: string, flag: string): Promise<void> {
     const query = `
       DELETE FROM agent_feature_flags 
-      WHERE tenant_id = ? AND flag = ?
+      WHERE tenant_id = ? ANDflag = ?
     `;
 
     await this.db.query(query, [tenantId, flag]);
@@ -224,14 +224,14 @@ export class AgentFeatureFlagsService {
     let query = `
       SELECT 
         COUNT(*) as totalFlags,
-        SUM(CASE WHEN enabled = true THEN 1 ELSE 0 END) as enabledFlags,
-        SUM(CASE WHEN enabled = false THEN 1 ELSE 0 END) as disabledFlags,
+        SUM(CASE WHENenabled = true THEN 1 ELSE 0 END) as enabledFlags,
+        SUM(CASE WHENenabled = false THEN 1 ELSE 0 END) as disabledFlags,
         SUM(CASE WHEN rollout_percentage > 0 AND rollout_percentage < 100 THEN 1 ELSE 0 END) as rolloutFlags,
-        SUM(CASE WHEN conditions IS NOT NULL AND conditions != '{}' THEN 1 ELSE 0 END) as conditionalFlags
+        SUM(CASE WHEN conditions IS NOT NULL ANDconditions != '{}' THEN 1 ELSE 0 END) as conditionalFlags
       FROM agent_feature_flags
     `;
 
-    constparams: any[] = [];
+    const params: any[] = [];
     if (tenantId) {
       query += ' WHERE tenant_id = ?';
       params.push(tenantId);
@@ -280,10 +280,10 @@ export class AgentFeatureFlagsService {
       WHERE tenant_id = ?
     `;
 
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
     
     if (flag) {
-      query += ' AND flag = ?';
+      query += ' ANDflag = ?';
       params.push(flag);
     }
 
@@ -316,7 +316,7 @@ export class AgentFeatureFlagsService {
         created_at as createdAt,
         updated_at as updatedAt
       FROM agent_feature_flags 
-      WHERE tenant_id = ? AND flag = ?
+      WHERE tenant_id = ? ANDflag = ?
     `;
 
     const rows = await this.db.query(query, [tenantId, flag]);
@@ -412,7 +412,7 @@ export class AgentFeatureFlagsService {
   }
 
   private getDefaultFlagValue(flag: string): boolean {
-    constdefaultFlags: Record<string, boolean> = {
+    const defaultFlags: Record<string, boolean> = {
       'agent.pilotFeedback.enabled': false,
       'agent.pilotFeedback.autonomy': false,
       'agent.pilotFeedback.clustering': true,

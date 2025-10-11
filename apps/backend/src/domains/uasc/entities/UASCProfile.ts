@@ -105,7 +105,7 @@ export class UASCProfile {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   uascNumber: string; // Format: UASC-YYYY-NNNN
 
   @ManyToOne(() => Child)
@@ -136,7 +136,7 @@ export class UASCProfile {
   @Column({ type: 'date' })
   arrivalDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   arrivalLocation: string;
 
   @Column({
@@ -158,35 +158,35 @@ export class UASCProfile {
   @Column({ type: 'date' })
   referralDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   referringOrganization: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   referringOfficer: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   referenceNumber: string;
 
   // ========================================
   // COUNTRY OF ORIGIN
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   countryOfOrigin: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   countryOfOriginCode: string; // ISO country code
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   nationality: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   ethnicOrigin: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   religion: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   placeOfBirth: string;
 
   @Column({ type: 'simple-json', nullable: true })
@@ -196,22 +196,22 @@ export class UASCProfile {
   // LANGUAGES
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   firstLanguage: string;
 
   @Column({ type: 'simple-json', nullable: true })
   otherLanguagesSpoken: string[];
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   englishProficiency: string; // None, Basic, Intermediate, Fluent
 
   @Column({ type: 'boolean', default: true })
   interpreterRequired: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   preferredInterpreterLanguage: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   interpreterGenderPreference: string;
 
   @Column({ type: 'text', nullable: true })
@@ -254,7 +254,7 @@ export class UASCProfile {
   @Column({ type: 'text', nullable: true })
   familyTracingProgress: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   redCrossReferenceNumber: string;
 
   // ========================================
@@ -288,7 +288,7 @@ export class UASCProfile {
   @Column({ type: 'number', nullable: true })
   journeyCost: number;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   journeyCostCurrency: string;
 
   // ========================================
@@ -313,7 +313,7 @@ export class UASCProfile {
   @Column({ type: 'date', nullable: true })
   ageAssessmentDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   ageAssessmentOutcome: string;
 
   @Column({ type: 'date', nullable: true })
@@ -326,22 +326,22 @@ export class UASCProfile {
   // IMMIGRATION STATUS
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   homeOfficeReference: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   portReferenceNumber: string;
 
   @Column({ type: 'date', nullable: true })
   asylumClaimDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   asylumClaimStatus: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   immigrationStatus: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   leaveToRemainType: string;
 
   @Column({ type: 'date', nullable: true })
@@ -353,7 +353,7 @@ export class UASCProfile {
   @Column({ type: 'boolean', default: false })
   biometricResidencePermit: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   brpNumber: string;
 
   @Column({ type: 'date', nullable: true })
@@ -366,16 +366,16 @@ export class UASCProfile {
   @Column({ type: 'boolean', default: false })
   hasLegalRepresentation: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorName: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorFirm: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorContact: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   legalAidReference: string;
 
   // ========================================
@@ -398,10 +398,10 @@ export class UASCProfile {
   @Column({ type: 'date', nullable: true })
   nrmReferralDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   nrmReferenceNumber: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   nrmDecision: string;
 
   @Column({ type: 'date', nullable: true })
@@ -439,7 +439,7 @@ export class UASCProfile {
   @Column({ type: 'text', nullable: true })
   educationInCountryOfOrigin: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   highestEducationLevel: string;
 
   @Column({ type: 'simple-json', nullable: true })
@@ -474,13 +474,13 @@ export class UASCProfile {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

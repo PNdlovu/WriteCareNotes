@@ -40,7 +40,7 @@ export class RobotEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   name: string;
 
@@ -48,23 +48,23 @@ export class RobotEntity {
   @IsEnum(RobotType)
   robotType: RobotType;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsNotEmpty()
   manufacturer: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsNotEmpty()
   model: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'var char', length: 255, unique: true })
   @IsNotEmpty()
   serialNumber: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsNotEmpty()
   firmwareVersion: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsNotEmpty()
   softwareVersion: string;
 
@@ -72,11 +72,11 @@ export class RobotEntity {
   @IsEnum(RobotStatus)
   status: RobotStatus;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   currentLocation: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   targetLocation: string;
 
@@ -148,11 +148,11 @@ export class RobotEntity {
     progress: number;
   };
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   assignedResident: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   assignedStaff: string;
 

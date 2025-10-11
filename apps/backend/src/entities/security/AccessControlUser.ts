@@ -335,7 +335,7 @@ export class AccessControlUser extends BaseEntity {
   }
 
   enrollBiometric(biometricData: Omit<BiometricData, 'biometricId' | 'enrollmentDate' | 'verificationCount'>): void {
-    constbiometric: BiometricData = {
+    const biometric: BiometricData = {
       biometricId: crypto.randomUUID(),
       enrollmentDate: new Date(),
       verificationCount: 0,
@@ -488,7 +488,7 @@ export class AccessControlUser extends BaseEntity {
     }).length;
 
     // Assess threat level
-    letthreatLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    let threatLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
     
     if (recentFailures >= 10) threatLevel = 'critical';
     else if (recentFailures >= 5) threatLevel = 'high';

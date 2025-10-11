@@ -39,7 +39,7 @@ import { logger } from '@/utils/logger';
  * Prescription Controller with comprehensive API endpoints
  */
 export class PrescriptionController {
-  constructor(private prescriptionService: PrescriptionService) {}
+  const ructor(private prescriptionService: PrescriptionService) {}
 
   /**
    * Create new prescription
@@ -77,7 +77,7 @@ export class PrescriptionController {
         return;
       }
 
-      constprescriptionData: CreatePrescriptionRequest = {
+      const prescriptionData: CreatePrescriptionRequest = {
         ...req.body,
         organizationId,
         tenantId
@@ -261,7 +261,7 @@ export class PrescriptionController {
         limit = 50
       } = req.query;
 
-      constfilters: PrescriptionSearchFilters = {
+      const filters: PrescriptionSearchFilters = {
         organizationId,
         tenantId
       };
@@ -366,7 +366,7 @@ export class PrescriptionController {
         return;
       }
 
-      constupdates: UpdatePrescriptionRequest = req.body;
+      const updates: UpdatePrescriptionRequest = req.body;
 
       const updatedPrescription = await this.prescriptionService.updatePrescription(
         id,

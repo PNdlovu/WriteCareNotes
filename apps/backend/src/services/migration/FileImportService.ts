@@ -95,13 +95,13 @@ export interface DataTypeAnalysis {
 }
 
 export class FileImportService extends EventEmitter {
-  private supportedFormats = ['.csv', '.xlsx', '.xls', '.json', '.xml', '.tsv'];
-  private maxFileSize = 100 * 1024 * 1024; // 100MB
+  privatesupportedFormats = ['.csv', '.xlsx', '.xls', '.json', '.xml', '.tsv'];
+  privatemaxFileSize = 100 * 1024 * 1024; // 100MB
 
-  private tempDirectory = process.env['TEMP_UPLOAD_DIR'] || './temp/uploads';
+  privatetempDirectory = process.env['TEMP_UPLOAD_DIR'] || './temp/uploads';
 
 
-  constructor() {
+  const ructor() {
     super();
     this.ensureTempDirectory();
   }
@@ -131,7 +131,7 @@ export class FileImportService extends EventEmitter {
       this.validateFile(buffer, fileName);
       
       // Parse file based on format
-      letrawData: any[] = [];
+      let rawData: any[] = [];
       
       switch (fileExtension) {
         case '.csv':
@@ -149,7 +149,7 @@ export class FileImportService extends EventEmitter {
           rawData = await this.parseXML(buffer, options);
           break;
         default:
-          throw new Error(`Unsupported file format: ${fileExtension}`);
+          throw new Error(`Unsupported fileformat: ${fileExtension}`);
       }
       
       this.emit('data_parsed', { importId, recordCount: rawData.length });
@@ -165,8 +165,8 @@ export class FileImportService extends EventEmitter {
       );
       
       // Validate data if requested
-      letvalidationErrors: ImportError[] = [];
-      letvalidationWarnings: ImportWarning[] = [];
+      let validationErrors: ImportError[] = [];
+      let validationWarnings: ImportWarning[] = [];
       
       if (options.validateOnImport) {
         const validation = await this.validateImportedData(transformedData);
@@ -183,7 +183,7 @@ export class FileImportService extends EventEmitter {
       
       const processingTime = Date.now() - startTime;
       
-      constresult: FileImportResult = {
+      const result: FileImportResult = {
         importId,
         fileName,
         fileSize: buffer.length,
@@ -213,12 +213,12 @@ export class FileImportService extends EventEmitter {
    */
   private async parseCSV(buffer: Buffer, options: FileImportOptions): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      constresults: any[] = [];
+      const results: any[] = [];
       const stream = require('stream');
       const bufferStream = new stream.PassThrough();
       bufferStream.end(buffer);
       
-      constcsvOptions: any = {
+      const csvOptions: any = {
         separator: options.delimiter || (path.extname('file').toLowerCase() === '.tsv' ? '\t' : ','),
         headers: options.headers !== false,
         skipEmptyLines: true,
@@ -269,7 +269,7 @@ export class FileImportService extends EventEmitter {
       return options.maxRows ? jsonData.slice(0, options.maxRows) : jsonData;
       
     } catch (error: unknown) {
-      throw new Error(`Excel parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Excel parsingfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -294,7 +294,7 @@ export class FileImportService extends EventEmitter {
       }
       
     } catch (error: unknown) {
-      throw new Error(`JSON parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`JSON parsingfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -327,12 +327,12 @@ export class FileImportService extends EventEmitter {
       }
       
     } catch (error: unknown) {
-      throw new Error(`XML parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`XML parsingfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private extractRecordsFromXML(xmlObj: any): any[] {
-    constrecords: any[] = [];
+    const records: any[] = [];
     
     function traverse(obj: any) {
       if (typeof obj === 'object' && obj !== null) {
@@ -373,7 +373,7 @@ export class FileImportService extends EventEmitter {
   async analyzeDataTypes(data: any[]): Promise<DataTypeAnalysis[]> {
     if (!data || data.length === 0) return [];
     
-    constfieldAnalysis: { [field: string]: DataTypeAnalysis } = {};
+    const fieldAnalysis: { [field: string]: DataTypeAnalysis } = {};
     const sampleSize = Math.min(data.length, 100);
     
     // Get all unique field names
@@ -401,8 +401,8 @@ export class FileImportService extends EventEmitter {
     const nullCount = values.length - values.filter(v => v !== null && v !== undefined && v !== '').length;
     
     // Pattern analysis
-    constpatterns: string[] = [];
-    letdetectedType: DataTypeAnalysis['detectedType'] = 'string';
+    const patterns: string[] = [];
+    let detectedType: DataTypeAnalysis['detectedType'] = 'string';
     let confidence = 0.5;
     
     // NHS Number detection
@@ -507,13 +507,13 @@ export class FileImportService extends EventEmitter {
     rules: TransformationRule[], 
     dataTypes: DataTypeAnalysis[]
   ): Promise<{ transformedData: any[]; errors: ImportError[]; warnings: ImportWarning[] }> {
-    consttransformedData: any[] = [];
-    consterrors: ImportError[] = [];
-    constwarnings: ImportWarning[] = [];
+    const transformedData: any[] = [];
+    const errors: ImportError[] = [];
+    const warnings: ImportWarning[] = [];
     
     for (let i = 0; i < data.length; i++) {
       const record = data[i];
-      consttransformedRecord: any = { ...record };
+      const transformedRecord: any = { ...record };
       
       // Apply transformation rules
       for (const rule of rules) {
@@ -645,7 +645,7 @@ export class FileImportService extends EventEmitter {
       return isoDate;
     }
     
-    throw new Error(`Unable to parse date: ${value}`);
+    throw new Error(`Unable to parsedate: ${value}`);
   }
 
   private parseDateWithFormat(dateStr: string, format: string): Date | null {
@@ -664,7 +664,7 @@ export class FileImportService extends EventEmitter {
     const num = parseFloat(numStr);
     
     if (isNaN(num)) {
-      throw new Error(`Invalid number format: ${value}`);
+      throw new Error(`Invalid numberformat: ${value}`);
     }
     
     return num;
@@ -684,7 +684,7 @@ export class FileImportService extends EventEmitter {
     
     // Validate UK phone number format
     if (!/^\+44[0-9]{10}$/.test(phone)) {
-      throw new Error(`Invalid UK phone number format: ${value}`);
+      throw new Error(`Invalid UK phone numberformat: ${value}`);
     }
     
     return phone;
@@ -696,7 +696,7 @@ export class FileImportService extends EventEmitter {
     // UK postcode validation
     const ukPostcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/;
     if (!ukPostcodeRegex.test(postcode)) {
-      throw new Error(`Invalid UK postcode format: ${value}`);
+      throw new Error(`Invalid UK postcodeformat: ${value}`);
     }
     
     // Ensure proper spacing
@@ -722,7 +722,7 @@ export class FileImportService extends EventEmitter {
     const expectedCheckDigit = remainder === 0 ? 0 : 11 - remainder;
     
     if (expectedCheckDigit !== checkDigit && expectedCheckDigit !== 11) {
-      throw new Error(`Invalid NHS number check digit: ${value}`);
+      throw new Error(`Invalid NHS number checkdigit: ${value}`);
     }
     
     return nhsNumber;
@@ -774,8 +774,8 @@ export class FileImportService extends EventEmitter {
    * Validate imported data against healthcare standards
    */
   private async validateImportedData(data: any[]): Promise<{ errors: ImportError[]; warnings: ImportWarning[] }> {
-    consterrors: ImportError[] = [];
-    constwarnings: ImportWarning[] = [];
+    const errors: ImportError[] = [];
+    const warnings: ImportWarning[] = [];
     
     for (let i = 0; i < data.length; i++) {
       const record = data[i];
@@ -910,7 +910,7 @@ export class FileImportService extends EventEmitter {
   }
 
   private simplifyDataTypes(dataTypes: DataTypeAnalysis[]): { [field: string]: string } {
-    constsimplified: { [field: string]: string } = {};
+    const simplified: { [field: string]: string } = {};
     
     for (const analysis of dataTypes) {
       simplified[analysis.field] = analysis.detectedType;
@@ -928,7 +928,7 @@ export class FileImportService extends EventEmitter {
     // File format validation
     const extension = path.extname(fileName).toLowerCase();
     if (!this.supportedFormats.includes(extension)) {
-      throw new Error(`Unsupported file format: ${extension}. Supported formats: ${this.supportedFormats.join(', ')}`);
+      throw new Error(`Unsupported fileformat: ${extension}. Supportedformats: ${this.supportedFormats.join(', ')}`);
     }
     
     // Empty file validation

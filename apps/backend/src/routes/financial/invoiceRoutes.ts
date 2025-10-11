@@ -21,7 +21,7 @@ export class InvoiceRoutes {
   privaterouter: Router;
   privateinvoiceController: InvoiceController;
 
-  constructor(invoiceController: InvoiceController) {
+  const ructor(invoiceController: InvoiceController) {
     this.router = Router();
     this.invoiceController = invoiceController;
     this.setupMiddleware();

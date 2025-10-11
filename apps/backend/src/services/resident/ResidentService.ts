@@ -7,7 +7,7 @@
  * @compliance CQC, Care Inspectorate, CIW, RQIA, GDPR
  * @stability stable
  * 
- * @description Production-ready resident management service with:
+ * @description Production-ready resident management servicewith:
  * - Complete CRUD operations
  * - Tenant isolation and organization scoping
  * - Audit trail for all operations
@@ -130,7 +130,7 @@ export interface ResidentSearchResult {
 export class ResidentService {
   privaterepository: Repository<Resident>;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(Resident);
   }
 
@@ -177,7 +177,7 @@ export class ResidentService {
         userId,
       });
       throw new Error(
-        `Failed to create resident: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to createresident: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -214,7 +214,7 @@ export class ResidentService {
         tenantId,
       });
       throw new Error(
-        `Failed to find resident: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to findresident: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -239,7 +239,7 @@ export class ResidentService {
       });
 
       // Build where clause
-      constwhere: FindOptionsWhere<Resident> = {
+      const where: FindOptionsWhere<Resident> = {
         organizationId,
         tenantId,
         deletedAt: undefined as any,
@@ -266,8 +266,8 @@ export class ResidentService {
       const skip = (page - 1) * limit;
 
       // Search term (firstName, lastName, preferredName)
-      letresidents: Resident[];
-      lettotal: number;
+      let residents: Resident[];
+      let total: number;
 
       if (filters.searchTerm) {
         const searchWhere = [
@@ -323,7 +323,7 @@ export class ResidentService {
         filters,
       });
       throw new Error(
-        `Failed to search residents: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to searchresidents: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -374,7 +374,7 @@ export class ResidentService {
         userId,
       });
       throw new Error(
-        `Failed to update resident: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to updateresident: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -412,7 +412,7 @@ export class ResidentService {
         userId,
       });
       throw new Error(
-        `Failed to delete resident: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to deleteresident: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -464,7 +464,7 @@ export class ResidentService {
         userId,
       });
       throw new Error(
-        `Failed to restore resident: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to restoreresident: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -521,7 +521,7 @@ export class ResidentService {
         userId,
       });
       throw new Error(
-        `Failed to update resident status: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to update residentstatus: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -550,7 +550,7 @@ export class ResidentService {
         tenantId,
       });
       throw new Error(
-        `Failed to count residents: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to countresidents: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -580,7 +580,7 @@ export class ResidentService {
         tenantId,
       });
       throw new Error(
-        `Failed to count active residents: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to count activeresidents: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }

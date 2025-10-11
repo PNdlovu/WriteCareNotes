@@ -75,16 +75,16 @@ export interface AccessControlEvent {
 
 @Injectable()
 export class SecurityIntegrationService {
-  private readonly logger = new Logger(SecurityIntegrationService.name);
-  private readonly cctvCameras = new Map<string, CCTVMonitoring>();
-  private readonly accessControlPoints = new Map<string, any>();
-  private readonly activeAlerts = new Map<string, SecurityAlert>();
-  private readonly visitorMonitoring = new Map<string, any>();
+  private readonlylogger = new Logger(SecurityIntegrationService.name);
+  private readonlycctvCameras = new Map<string, CCTVMonitoring>();
+  private readonlyaccessControlPoints = new Map<string, any>();
+  private readonlyactiveAlerts = new Map<string, SecurityAlert>();
+  private readonlyvisitorMonitoring = new Map<string, any>();
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditService,
-    private readonly notificationService: NotificationService
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlyauditService: AuditService,
+    private readonlynotificationService: NotificationService
   ) {
     this.initializeSecuritySystems();
   }
@@ -113,7 +113,7 @@ export class SecurityIntegrationService {
 
       this.logger.log('Security systems initialized successfully');
     } catch (error) {
-      this.logger.error(`Failed to initialize security systems: ${error.message}`, error.stack);
+      this.logger.error(`Failed to initialize securitysystems: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -122,7 +122,7 @@ export class SecurityIntegrationService {
    * Get current security system status
    */
   async checkCurrentSecurityStatus(visitorId?: string): Promise<SecuritySystemStatus> {
-    this.logger.log(`Checking security status${visitorId ? ` for visitor: ${visitorId}` : ''}`);
+    this.logger.log(`Checking security status${visitorId ? ` forvisitor: ${visitorId}` : ''}`);
 
     try {
       const cctvStatus = await this.checkCCTVSystemStatus();
@@ -148,7 +148,7 @@ export class SecurityIntegrationService {
         activeAlerts
       };
     } catch (error) {
-      this.logger.error(`Failed to check security status: ${error.message}`, error.stack);
+      this.logger.error(`Failed to check securitystatus: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -157,7 +157,7 @@ export class SecurityIntegrationService {
    * Activate visitor monitoring based on risk level
    */
   async activateVisitorMonitoring(visitId: string, visitor: VisitorManagement): Promise<void> {
-    this.logger.log(`Activating visitor monitoring for visit: ${visitId}`);
+    this.logger.log(`Activating visitor monitoring forvisit: ${visitId}`);
 
     try {
       const riskLevel = visitor.advancedScreening.securityScreening.riskAssessment;
@@ -212,9 +212,9 @@ export class SecurityIntegrationService {
         monitoringType: monitoring.monitoringType
       });
 
-      this.logger.log(`Visitor monitoring activated for visit: ${visitId}`);
+      this.logger.log(`Visitor monitoring activated forvisit: ${visitId}`);
     } catch (error) {
-      this.logger.error(`Failed to activate visitor monitoring: ${error.message}`, error.stack);
+      this.logger.error(`Failed to activate visitormonitoring: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -223,12 +223,12 @@ export class SecurityIntegrationService {
    * Deactivate visitor monitoring
    */
   async deactivateVisitorMonitoring(visitId: string): Promise<void> {
-    this.logger.log(`Deactivating visitor monitoring for visit: ${visitId}`);
+    this.logger.log(`Deactivating visitor monitoring forvisit: ${visitId}`);
 
     try {
       const monitoring = this.visitorMonitoring.get(visitId);
       if (!monitoring) {
-        this.logger.warn(`No monitoring found for visit: ${visitId}`);
+        this.logger.warn(`No monitoring found forvisit: ${visitId}`);
         return;
       }
 
@@ -265,9 +265,9 @@ export class SecurityIntegrationService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Visitor monitoring deactivated for visit: ${visitId}`);
+      this.logger.log(`Visitor monitoring deactivated forvisit: ${visitId}`);
     } catch (error) {
-      this.logger.error(`Failed to deactivate visitor monitoring: ${error.message}`, error.stack);
+      this.logger.error(`Failed to deactivate visitormonitoring: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -284,7 +284,7 @@ export class SecurityIntegrationService {
     reason: string;
     affectedVisitors: string[];
   }): Promise<EmergencyLockdownResult> {
-    this.logger.log(`Activating emergency lockdown: ${lockdownRequest.lockdownId}`);
+    this.logger.log(`Activating emergencylockdown: ${lockdownRequest.lockdownId}`);
 
     try {
       // Determine lockdown parameters
@@ -316,7 +316,7 @@ export class SecurityIntegrationService {
       );
 
       // Create lockdown result
-      constresult: EmergencyLockdownResult = {
+      const result: EmergencyLockdownResult = {
         lockdownId: lockdownRequest.lockdownId,
         activated: true,
         evacuationRequired: lockdownConfig.evacuationRequired,
@@ -350,11 +350,11 @@ export class SecurityIntegrationService {
         initiatedBy: lockdownRequest.initiatedBy
       });
 
-      this.logger.log(`Emergency lockdown activated: ${lockdownRequest.lockdownId}`);
+      this.logger.log(`Emergency lockdownactivated: ${lockdownRequest.lockdownId}`);
       return result;
 
     } catch (error) {
-      this.logger.error(`Failed to activate emergency lockdown: ${error.message}`, error.stack);
+      this.logger.error(`Failed to activate emergencylockdown: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -363,7 +363,7 @@ export class SecurityIntegrationService {
    * Implement enhanced security for high-risk visitors
    */
   async implementEnhancedSecurity(visitorId: string): Promise<void> {
-    this.logger.log(`Implementing enhanced security for visitor: ${visitorId}`);
+    this.logger.log(`Implementing enhanced security forvisitor: ${visitorId}`);
 
     try {
       // Enable continuous tracking
@@ -381,9 +381,9 @@ export class SecurityIntegrationService {
       // Enable real-time reporting
       await this.enableRealTimeReporting(visitorId);
 
-      this.logger.log(`Enhanced security implemented for visitor: ${visitorId}`);
+      this.logger.log(`Enhanced security implemented forvisitor: ${visitorId}`);
     } catch (error) {
-      this.logger.error(`Failed to implement enhanced security: ${error.message}`, error.stack);
+      this.logger.error(`Failed to implement enhancedsecurity: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -392,7 +392,7 @@ export class SecurityIntegrationService {
    * Setup enhanced monitoring for high-risk visitors
    */
   async setupEnhancedMonitoring(visitorId: string): Promise<void> {
-    this.logger.log(`Setting up enhanced monitoring for visitor: ${visitorId}`);
+    this.logger.log(`Setting up enhanced monitoring forvisitor: ${visitorId}`);
 
     const enhancedConfig = {
       continuousTracking: true,
@@ -404,14 +404,14 @@ export class SecurityIntegrationService {
     };
 
     // Implementation details would go here
-    this.logger.log(`Enhanced monitoring configured for visitor: ${visitorId}`);
+    this.logger.log(`Enhanced monitoring configured forvisitor: ${visitorId}`);
   }
 
   /**
    * Setup standard monitoring for regular visitors
    */
   async setupStandardMonitoring(visitorId: string): Promise<void> {
-    this.logger.log(`Setting up standard monitoring for visitor: ${visitorId}`);
+    this.logger.log(`Setting up standard monitoring forvisitor: ${visitorId}`);
 
     const standardConfig = {
       continuousTracking: false,
@@ -423,14 +423,14 @@ export class SecurityIntegrationService {
     };
 
     // Implementation details would go here
-    this.logger.log(`Standard monitoring configured for visitor: ${visitorId}`);
+    this.logger.log(`Standard monitoring configured forvisitor: ${visitorId}`);
   }
 
   /**
    * Activate emergency protocols for emergency visitors
    */
   async activateEmergencyProtocols(visitId: string, emergencyRequest: any): Promise<void> {
-    this.logger.log(`Activating emergency protocols for visit: ${visitId}`);
+    this.logger.log(`Activating emergency protocols forvisit: ${visitId}`);
 
     try {
       // Fast-track security clearance
@@ -445,9 +445,9 @@ export class SecurityIntegrationService {
       // Activate emergency communication
       await this.activateEmergencyVisitorCommunication(visitId, emergencyRequest);
 
-      this.logger.log(`Emergency protocols activated for visit: ${visitId}`);
+      this.logger.log(`Emergency protocols activated forvisit: ${visitId}`);
     } catch (error) {
-      this.logger.error(`Failed to activate emergency protocols: ${error.message}`, error.stack);
+      this.logger.error(`Failed to activate emergencyprotocols: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -463,7 +463,7 @@ export class SecurityIntegrationService {
     ];
 
     for (const location of cameraLocations) {
-      constcamera: CCTVMonitoring = {
+      const camera: CCTVMonitoring = {
         cameraId: `CAM-${location.toUpperCase()}-001`,
         location,
         status: 'online',
@@ -538,7 +538,7 @@ export class SecurityIntegrationService {
     const onlinePoints = Array.from(this.accessControlPoints.values())
       .filter(point => point.status === 'online').length;
     
-    return onlinePoints === this.accessControlPoints.size; // All points must be online
+    returnonlinePoints === this.accessControlPoints.size; // All points must be online
   }
 
   private async checkAlarmSystemStatus(): Promise<boolean> {
@@ -709,7 +709,7 @@ export class SecurityIntegrationService {
     const alarmType = lockdownType === 'fire' ? 'fire_alarm' : 'security_alarm';
     
     // Implementation would integrate with physical alarm system
-    this.logger.log(`Activating ${alarmType} in areas: ${affectedAreas.join(', ')}`);
+    this.logger.log(`Activating ${alarmType} inareas: ${affectedAreas.join(', ')}`);
   }
 
   private async secureVisitorAccess(affectedVisitors: string[]): Promise<void> {
@@ -793,7 +793,7 @@ export class SecurityIntegrationService {
       }
 
     } catch (error) {
-      this.logger.error(`System health check failed: ${error.message}`, error.stack);
+      this.logger.error(`System health checkfailed: ${error.message}`, error.stack);
     }
   }
 
@@ -807,7 +807,7 @@ export class SecurityIntegrationService {
   }
 
   private async generateSystemAlert(description: string, severity: 'low' | 'medium' | 'high' | 'critical'): Promise<void> {
-    constalert: SecurityAlert = {
+    const alert: SecurityAlert = {
       alertId: `ALERT-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
       type: 'system_failure',
       severity,
@@ -839,38 +839,38 @@ export class SecurityIntegrationService {
 
   // Additional placeholder methods for enhanced security features
   private async enableContinuousTracking(visitorId: string): Promise<void> {
-    this.logger.log(`Enabling continuous tracking for visitor: ${visitorId}`);
+    this.logger.log(`Enabling continuous tracking forvisitor: ${visitorId}`);
   }
 
   private async setupAutomatedBehaviorMonitoring(visitorId: string): Promise<void> {
-    this.logger.log(`Setting up automated behavior monitoring for visitor: ${visitorId}`);
+    this.logger.log(`Setting up automated behavior monitoring forvisitor: ${visitorId}`);
   }
 
   private async configureEnhancedAlertThresholds(visitorId: string): Promise<void> {
-    this.logger.log(`Configuring enhanced alert thresholds for visitor: ${visitorId}`);
+    this.logger.log(`Configuring enhanced alert thresholds forvisitor: ${visitorId}`);
   }
 
   private async setupEscortCoordination(visitorId: string): Promise<void> {
-    this.logger.log(`Setting up escort coordination for visitor: ${visitorId}`);
+    this.logger.log(`Setting up escort coordination forvisitor: ${visitorId}`);
   }
 
   private async enableRealTimeReporting(visitorId: string): Promise<void> {
-    this.logger.log(`Enabling real-time reporting for visitor: ${visitorId}`);
+    this.logger.log(`Enabling real-time reporting forvisitor: ${visitorId}`);
   }
 
   private async fastTrackSecurityClearance(visitId: string, emergencyRequest: any): Promise<void> {
-    this.logger.log(`Fast-tracking security clearance for emergency visit: ${visitId}`);
+    this.logger.log(`Fast-tracking security clearance for emergencyvisit: ${visitId}`);
   }
 
   private async setupEmergencyMonitoring(visitId: string, emergencyRequest: any): Promise<void> {
-    this.logger.log(`Setting up emergency monitoring for visit: ${visitId}`);
+    this.logger.log(`Setting up emergency monitoring forvisit: ${visitId}`);
   }
 
   private async configureEmergencyAccess(visitId: string, emergencyRequest: any): Promise<void> {
-    this.logger.log(`Configuring emergency access for visit: ${visitId}`);
+    this.logger.log(`Configuring emergency access forvisit: ${visitId}`);
   }
 
   private async activateEmergencyVisitorCommunication(visitId: string, emergencyRequest: any): Promise<void> {
-    this.logger.log(`Activating emergency visitor communication for visit: ${visitId}`);
+    this.logger.log(`Activating emergency visitor communication forvisit: ${visitId}`);
   }
 }

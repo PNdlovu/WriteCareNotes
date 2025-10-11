@@ -10,28 +10,28 @@ export class CreateCommunicationTables1704067320000 implements MigrationInterfac
         await queryRunner.query(`
             CREATE TABLE "communication_channels" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-                "channelType" character varying(50) NOT NULL,
-                "channelName" character varying(100) NOT NULL,
-                "displayName" character varying(255) NOT NULL,
+                "channelType" character var ying(50) NOT NULL,
+                "channelName" character var ying(100) NOT NULL,
+                "displayName" character var ying(255) NOT NULL,
                 "description" text,
                 "configuration" jsonb NOT NULL,
                 "capabilities" jsonb NOT NULL,
                 "isActive" boolean NOT NULL DEFAULT true,
                 "isDefault" boolean NOT NULL DEFAULT false,
                 "priority" integer NOT NULL DEFAULT 0,
-                "provider" character varying(50),
-                "providerId" character varying(100),
+                "provider" character var ying(50),
+                "providerId" character var ying(100),
                 "statistics" jsonb,
                 "healthCheck" jsonb,
                 "templates" jsonb,
                 "routingRules" jsonb,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "requiresApproval" boolean NOT NULL DEFAULT false,
                 "approvalWorkflow" jsonb,
                 "complianceSettings" jsonb,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_communication_channels" PRIMARY KEY ("id")
+                CONST RAINT "PK_communication_channels" PRIMARY KEY ("id")
             )
         `);
 
@@ -40,18 +40,18 @@ export class CreateCommunicationTables1704067320000 implements MigrationInterfac
             CREATE TABLE "communication_messages" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "channelId" uuid NOT NULL,
-                "messageType" character varying(100) NOT NULL,
-                "subject" character varying(255) NOT NULL,
+                "messageType" character var ying(100) NOT NULL,
+                "subject" character var ying(255) NOT NULL,
                 "content" text NOT NULL,
                 "recipients" jsonb NOT NULL,
-                "status" character varying(20) NOT NULL DEFAULT 'draft',
+                "status" character var ying(20) NOT NULL DEFAULT 'draft',
                 "scheduledAt" TIMESTAMP,
                 "sentAt" TIMESTAMP,
                 "deliveredAt" TIMESTAMP,
                 "deliveryResults" jsonb,
                 "attachments" jsonb,
                 "template" jsonb,
-                "priority" character varying(50),
+                "priority" character var ying(50),
                 "isRichText" boolean NOT NULL DEFAULT false,
                 "requiresDeliveryConfirmation" boolean NOT NULL DEFAULT false,
                 "requiresReadReceipt" boolean NOT NULL DEFAULT false,
@@ -59,13 +59,13 @@ export class CreateCommunicationTables1704067320000 implements MigrationInterfac
                 "maxRetries" integer NOT NULL DEFAULT 3,
                 "metadata" jsonb,
                 "trackingData" jsonb,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "isBulkMessage" boolean NOT NULL DEFAULT false,
                 "totalRecipients" integer NOT NULL DEFAULT 0,
                 "complianceData" jsonb,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_communication_messages" PRIMARY KEY ("id")
+                CONST RAINT "PK_communication_messages" PRIMARY KEY ("id")
             )
         `);
 
@@ -85,17 +85,17 @@ export class CreateCommunicationTables1704067320000 implements MigrationInterfac
         await queryRunner.query(`CREATE INDEX "IDX_communication_messages_priority" ON "communication_messages" ("priority")`);
         await queryRunner.query(`CREATE INDEX "IDX_communication_messages_createdAt" ON "communication_messages" ("createdAt")`);
 
-        // Add foreign key constraints
+        // Add foreign key const raints
         await queryRunner.query(`
             ALTER TABLE "communication_messages" 
-            ADD CONSTRAINT "FK_communication_messages_channelId" 
+            ADD CONST RAINT "FK_communication_messages_channelId" 
             FOREIGN KEY ("channelId") REFERENCES "communication_channels"("id") ON DELETE CASCADE ON UPDATE NO ACTION
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop foreign key constraints
-        await queryRunner.query(`ALTER TABLE "communication_messages" DROP CONSTRAINT "FK_communication_messages_channelId"`);
+        // Drop foreign key const raints
+        await queryRunner.query(`ALTER TABLE "communication_messages" DROP CONST RAINT "FK_communication_messages_channelId"`);
 
         // Drop indexes
         await queryRunner.query(`DROP INDEX "IDX_communication_messages_createdAt"`);

@@ -58,7 +58,7 @@ export class EnvironmentEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   name: string;
 
@@ -70,7 +70,7 @@ export class EnvironmentEntity {
   @IsOptional()
   description: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsNotEmpty()
   building: string;
 
@@ -78,7 +78,7 @@ export class EnvironmentEntity {
   @IsNumber()
   floor: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsNotEmpty()
   roomNumber: string;
 
@@ -279,7 +279,7 @@ export class EnvironmentEntity {
   @IsOptional()
   notes: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   managedBy: string;
 

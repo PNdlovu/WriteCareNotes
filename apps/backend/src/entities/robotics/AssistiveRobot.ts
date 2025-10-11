@@ -7,16 +7,16 @@ import { RobotMaintenance } from './RobotMaintenance';
 
 @Entity('assistive_robots')
 export class AssistiveRobot extends BaseEntity {
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   robotId!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   name!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   model!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   manufacturer!: string;
 
   @Column({ 
@@ -31,7 +31,7 @@ export class AssistiveRobot extends BaseEntity {
   })
   status!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   location?: string;
 
   @Column({ type: 'json', nullable: true })

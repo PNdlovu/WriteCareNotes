@@ -22,14 +22,14 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('System Service', () => {
-  letservice: SystemService;
-  letdbsVerificationRepository: Repository<DBSVerification>;
-  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  letdvlaCheckRepository: Repository<DVLACheck>;
-  letcashTransactionRepository: Repository<CashTransaction>;
-  letbudgetRepository: Repository<Budget>;
-  letledgerAccountRepository: Repository<LedgerAccount>;
-  letemployeeRepository: Repository<Employee>;
+  let service: SystemService;
+  let dbsVerificationRepository: Repository<DBSVerification>;
+  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  let dvlaCheckRepository: Repository<DVLACheck>;
+  let cashTransactionRepository: Repository<CashTransaction>;
+  let budgetRepository: Repository<Budget>;
+  let ledgerAccountRepository: Repository<LedgerAccount>;
+  let employeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -180,7 +180,7 @@ describe('System Service', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         SystemService,
         {
@@ -669,7 +669,7 @@ describe('System Service', () => {
             status: 'passed',
             tests: [
               {
-                name: 'Database Constraints',
+                name: 'Database Const raints',
                 status: 'passed',
                 duration: 200,
                 assertions: 5
@@ -825,8 +825,8 @@ describe('System Service', () => {
 });
 
 describe('System Integration Tests', () => {
-  letapp: any;
-  letsystemService: SystemService;
+  let app: any;
+  let systemService: SystemService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -882,7 +882,7 @@ describe('System Integration Tests', () => {
 });
 
 describe('System E2E Tests', () => {
-  letapp: any;
+  let app: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

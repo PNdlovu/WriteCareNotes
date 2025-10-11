@@ -63,7 +63,7 @@ export interface ConsumptionPattern {
   monthlyTrend: number; // percentage change
   seasonalFactors: { [month: string]: number };
   peakUsagePeriods: string[];
-  consumptionVariability: number; // coefficient of variation
+  consumptionVariability: number; // coefficient of var iation
 }
 
 export interface QualityControl {
@@ -328,7 +328,7 @@ export class InventoryItem extends BaseEntity {
     const demandVariability = this.consumptionPattern.consumptionVariability;
     const leadTimeVariability = 0.2; // 20% lead time variability
     
-    // Safety stock formula: Z * sqrt(LT * σ²demand + μdemand² * σ²LT)
+    // Safety stockformula: Z * sqrt(LT * σ²demand + μdemand² * σ²LT)
     const zScore = 1.65; // For 95% service level
     const avgDemand = this.consumptionPattern.dailyAverageUsage;
     const demandStdDev = avgDemand * demandVariability;
@@ -433,7 +433,7 @@ export class InventoryItem extends BaseEntity {
     const holdingCostRate = 0.2;
     const annualDemand = this.consumptionPattern.dailyAverageUsage * 365;
     
-    // Total cost = ordering cost + purchase cost + holding cost
+    // Totalcost = ordering cost + purchase cost + holding cost
     const orderingCost = (annualDemand / quantity) * fixedOrderCost;
     const purchaseCost = annualDemand * unitCost;
     const holdingCost = (quantity / 2) * unitCost * holdingCostRate;

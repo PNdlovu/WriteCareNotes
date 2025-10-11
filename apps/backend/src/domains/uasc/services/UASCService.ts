@@ -69,7 +69,7 @@ export class UASCService {
   privateimmigrationStatusRepository: Repository<ImmigrationStatus>;
   privatecorrespondenceRepository: Repository<HomeOfficeCorrespondence>;
 
-  constructor() {
+  const ructor() {
     this.uascProfileRepository = AppDataSource.getRepository(UASCProfile);
     this.ageAssessmentRepository = AppDataSource.getRepository(AgeAssessment);
     this.immigrationStatusRepository = AppDataSource.getRepository(ImmigrationStatus);

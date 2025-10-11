@@ -241,7 +241,7 @@ export class NurseCallAlert extends BaseEntity {
    * Get response time limit based on priority
    */
   getResponseTimeLimit(): number {
-    constlimits: Record<CallPriority, number> = {
+    const limits: Record<CallPriority, number> = {
       [CallPriority.EMERGENCY]: 60 * 1000, // 1 minute
       [CallPriority.URGENT]: 2 * 60 * 1000, // 2 minutes
       [CallPriority.HIGH]: 5 * 60 * 1000, // 5 minutes

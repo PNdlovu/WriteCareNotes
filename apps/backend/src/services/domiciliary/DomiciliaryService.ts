@@ -109,7 +109,7 @@ export class DomiciliaryService {
   privatecareWorkerLocations: Map<string, CareWorkerLocation> = new Map();
   privateactiveEmergencies: Map<string, EmergencyAlert> = new Map();
 
-  constructor() {
+  const ructor() {
     this.serviceUserRepository = AppDataSource.getRepository(ServiceUser);
     this.careVisitRepository = AppDataSource.getRepository(CareVisit);
     this.employeeRepository = AppDataSource.getRepository(Employee);
@@ -354,7 +354,7 @@ export class DomiciliaryService {
       throw new Error('No visits scheduled for this date');
     }
 
-    constrouteData: RouteOptimization = {
+    const routeData: RouteOptimization = {
       careWorkerId,
       date,
       visits: visits.map(visit => ({
@@ -400,7 +400,7 @@ export class DomiciliaryService {
 
   // Emergency Management
   async raiseEmergencyAlert(alertData: Omit<EmergencyAlert, 'id' | 'timestamp' | 'status'>): Promise<EmergencyAlert> {
-    constalert: EmergencyAlert = {
+    const alert: EmergencyAlert = {
       ...alertData,
       id: `emergency_${Date.now()}`,
       timestamp: new Date(),
@@ -498,7 +498,7 @@ export class DomiciliaryService {
     // QR code should contain service user ID and location verification
     const expectedQRData = `${visit.serviceUserId}:${visit.serviceUser.personalDetails.address.postcode}`;
     
-    return qrCodeData === expectedQRData;
+    returnqrCodeData === expectedQRData;
   }
 
   async verifyVisitLocation(

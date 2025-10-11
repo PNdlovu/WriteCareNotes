@@ -142,7 +142,7 @@ export class InvoiceService extends EventEmitter2 {
   privateauditTrailService: AuditService;
   privatenotificationService: NotificationService;
 
-  constructor() {
+  const ructor() {
     super();
     this.invoiceRepository = AppDataSource.getRepository('Invoice');
     this.paymentRepository = AppDataSource.getRepository('Payment');
@@ -154,7 +154,7 @@ export class InvoiceService extends EventEmitter2 {
     invoiceData: Omit<Invoice, 'id' | 'invoiceNumber' | 'createdAt' | 'updatedAt'>,
     userId: string
   ): Promise<Invoice> {
-    constinvoice: Invoice = {
+    const invoice: Invoice = {
       id: this.generateId(),
       invoiceNumber: await this.generateInvoiceNumber(invoiceData.careHomeId),
       ...invoiceData,
@@ -279,7 +279,7 @@ export class InvoiceService extends EventEmitter2 {
       throw new Error('Invoice not found');
     }
 
-    constpayment: Payment = {
+    const payment: Payment = {
       id: this.generateId(),
       ...paymentData,
       createdAt: new Date(),
@@ -326,7 +326,7 @@ export class InvoiceService extends EventEmitter2 {
       }
     });
 
-    constanalysis: AgedDebtorAnalysis = {
+    const analysis: AgedDebtorAnalysis = {
       current: { count: 0, amount: 0 },
       days30: { count: 0, amount: 0 },
       days60: { count: 0, amount: 0 },

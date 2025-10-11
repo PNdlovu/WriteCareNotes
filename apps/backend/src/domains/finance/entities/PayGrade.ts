@@ -16,10 +16,10 @@ export class PayGrade {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   name: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   displayName: string;
 
   @Column({ type: 'text' })
@@ -40,7 +40,7 @@ export class PayGrade {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   midSalary: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency: string;
 
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
@@ -79,10 +79,10 @@ export class PayGrade {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   // Relationships

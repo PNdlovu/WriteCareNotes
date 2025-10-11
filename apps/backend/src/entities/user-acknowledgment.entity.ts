@@ -74,13 +74,13 @@ export class UserAcknowledgment {
   /**
    * Digital signature or hash (if applicable)
    */
-  @Column({ type: 'varchar', length: 512, nullable: true })
+  @Column({ type: 'var char', length: 512, nullable: true })
   digitalSignature?: string;
 
   /**
    * IP address when acknowledged (for audit purposes)
    */
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   ipAddress?: string;
 
   /**

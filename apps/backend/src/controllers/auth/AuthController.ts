@@ -17,7 +17,7 @@ import { body, validationResult } from 'express-validator';
 export class AuthController {
   privateauthService: JWTAuthenticationService;
 
-  constructor(authService?: JWTAuthenticationService) {
+  const ructor(authService?: JWTAuthenticationService) {
     this.authService = authService || new JWTAuthenticationService();
   }
 

@@ -355,8 +355,8 @@ export class ConsentManagement extends BaseEntity {
     issues: string[];
     recommendations: string[];
   } {
-    constissues: string[] = [];
-    constrecommendations: any[] = [];
+    const issues: string[] = [];
+    const recommendations: any[] = [];
 
     // Check GDPR validity criteria
     if (!this.isInformed) {
@@ -416,9 +416,9 @@ export class ConsentManagement extends BaseEntity {
         
         ConsentReference: ${this.consentReference}
         ConsentType: ${this.consentType}
-        Original Consent Date: ${this.consentGivenDate.toLocaleDateString()}
+        Original ConsentDate: ${this.consentGivenDate.toLocaleDateString()}
         
-        I wish to withdraw my consent for: ${this.consentDescription}
+        I wish to withdraw my consentfor: ${this.consentDescription}
         
         WithdrawalDate: ___________
         Signature: ___________
@@ -463,12 +463,12 @@ export class ConsentManagement extends BaseEntity {
                    factors.informationProvided + factors.voluntariness + 
                    factors.specificity) / 5;
 
-    letoverallGrade: 'excellent' | 'good' | 'adequate' | 'weak' | 'invalid';
+    let overallGrade: 'excellent' | 'good' | 'adequate' | 'weak' | 'invalid';
     if (score >= 90) overallGrade = 'excellent';
     else if (score >= 80) overallGrade = 'good';
     else if (score >= 70) overallGrade = 'adequate';
     else if (score >= 60) overallGrade = 'weak';
-    else overallGrade = 'invalid';
+    elseoverallGrade = 'invalid';
 
     return { score, factors, overallGrade };
   }
@@ -486,11 +486,11 @@ export class ConsentManagement extends BaseEntity {
       Math.ceil((this.expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 
       Infinity;
 
-    leturgencyLevel: 'low' | 'medium' | 'high' | 'critical';
+    let urgencyLevel: 'low' | 'medium' | 'high' | 'critical';
     if (daysUntilExpiry <= 7) urgencyLevel = 'critical';
     else if (daysUntilExpiry <= 30) urgencyLevel = 'high';
     else if (daysUntilExpiry <= 60) urgencyLevel = 'medium';
-    else urgencyLevel = 'low';
+    elseurgencyLevel = 'low';
 
     return {
       daysUntilExpiry,
@@ -573,7 +573,7 @@ export class ConsentManagement extends BaseEntity {
     let score = 50; // Base score
 
     if (this.isFreelyGiven) score += 30;
-    if (this.consentConditions?.conditions?.length === 0) score += 20; // No conditions = more voluntary
+    if (this.consentConditions?.conditions?.length === 0) score += 20; // Noconditions = more voluntary
 
     return Math.min(100, score);
   }
@@ -582,7 +582,7 @@ export class ConsentManagement extends BaseEntity {
     let score = 50; // Base score
 
     if (this.isSpecific) score += 30;
-    if (this.dataProcessingDetails?.processingPurposes?.length === 1) score += 20; // Single purpose = more specific
+    if (this.dataProcessingDetails?.processingPurposes?.length === 1) score += 20; // Singlepurpose = more specific
 
     return Math.min(100, score);
   }

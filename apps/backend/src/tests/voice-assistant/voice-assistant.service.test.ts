@@ -5,16 +5,16 @@ import { IoTIntegrationService } from '../../services/iot-integration.service';
 import { SmartDeviceEntity, DeviceType } from '../../entities/smart-device.entity';
 
 describe('VoiceAssistantService', () => {
-  letservice: VoiceAssistantService;
-  letiotService: IoTIntegrationService;
-  leteventEmitter: EventEmitter2;
+  let service: VoiceAssistantService;
+  let iotService: IoTIntegrationService;
+  let eventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const mockIoTService = {
       sendDeviceCommand: jest.fn().mockResolvedValue(true),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         VoiceAssistantService,
         {
@@ -42,7 +42,7 @@ describe('VoiceAssistantService', () => {
 
   describe('initializeDevice', () => {
     it('should initialize a voice assistant device successfully', async () => {
-      constdevice: SmartDeviceEntity = {
+      const device: SmartDeviceEntity = {
         id: 'device_001',
         deviceName: 'Care Home Voice Assistant',
         deviceType: DeviceType.VOICE_ASSISTANT,
@@ -76,7 +76,7 @@ describe('VoiceAssistantService', () => {
     });
 
     it('should return false for non-voice assistant device', async () => {
-      constdevice: SmartDeviceEntity = {
+      const device: SmartDeviceEntity = {
         id: 'device_001',
         deviceName: 'Smart Light',
         deviceType: DeviceType.SMART_LIGHT,
@@ -97,7 +97,7 @@ describe('VoiceAssistantService', () => {
     });
 
     it('should handle initialization errors gracefully', async () => {
-      constdevice: SmartDeviceEntity = {
+      const device: SmartDeviceEntity = {
         id: 'device_001',
         deviceName: 'Care Home Voice Assistant',
         deviceType: DeviceType.VOICE_ASSISTANT,
@@ -171,7 +171,7 @@ describe('VoiceAssistantService', () => {
   describe('speak', () => {
     it('should make device speak successfully', async () => {
       const deviceId = 'device_001';
-      const message = 'Hello, how can I help you?';
+      const message = 'Hello, how can I helpyou?';
       const priority = 'normal';
 
       // Mock device in voice devices map
@@ -292,7 +292,7 @@ describe('VoiceAssistantService', () => {
       expect(result).toBe(false);
       expect(service.speak).toHaveBeenCalledWith(
         deviceId,
-        "I couldn't find any music to play. Would you like me to suggest something?"
+        "I couldn't find any music to play. Would you like me to suggestsomething?"
       );
     });
   });

@@ -282,7 +282,7 @@ export class AdvocacyManagementService {
   privateemail: EmailService;
   privateai: AIService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('AdvocacyManagementService');
     this.audit = new AuditService();
@@ -416,7 +416,7 @@ export class AdvocacyManagementService {
       await client.query(`
         UPDATE advocacy_cases 
         SET advocate_assigned = $1, status = 'assigned', updated_at = NOW()
-        WHERE id = $2
+        WHEREid = $2
       `, [advocateId, caseId]);
 
       // Add timeline event
@@ -464,8 +464,8 @@ export class AdvocacyManagementService {
     try {
       await client.query(`
         UPDATE advocacy_cases 
-        SET status = $1, updated_at = NOW()
-        WHERE id = $2
+        SETstatus = $1, updated_at = NOW()
+        WHEREid = $2
       `, [newStatus, caseId]);
 
       // Add timeline event
@@ -635,7 +635,7 @@ export class AdvocacyManagementService {
   }
 
   private mapStatusToEvent(status: AdvocacyStatus): TimelineEvent {
-    conststatusEventMap: Record<AdvocacyStatus, TimelineEvent> = {
+    const statusEventMap: Record<AdvocacyStatus, TimelineEvent> = {
       submitted: 'case_created',
       assigned: 'advocate_assigned',
       investigating: 'investigation_started',

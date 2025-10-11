@@ -21,7 +21,7 @@ export class TaxRecordRoutes {
   privaterouter: Router;
   privatetaxRecordController: TaxRecordController;
 
-  constructor(taxRecordController: TaxRecordController) {
+  const ructor(taxRecordController: TaxRecordController) {
     this.router = Router();
     this.taxRecordController = taxRecordController;
     this.setupMiddleware();

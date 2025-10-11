@@ -65,12 +65,12 @@ export class FinancialPeriod extends BaseEntity {
   id!: string;
 
   // Period Identification
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   @Length(1, 100)
   periodName!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   periodCode?: string;
 
@@ -87,7 +87,7 @@ export class FinancialPeriod extends BaseEntity {
   @IsDate()
   endDate!: Date;
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'var char', length: 10 })
   @IsString()
   @Length(4, 10)
   financialYear!: string;

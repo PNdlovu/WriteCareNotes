@@ -101,7 +101,7 @@ export interface VisitFilters {
 /**
  * Service #9: Family Communication Service
  * 
- * Comprehensive family portal management with:
+ * Comprehensive family portal managementwith:
  * - Family member management
  * - Communication logs
  * - Visit scheduling and management
@@ -115,7 +115,7 @@ export class FamilyCommunicationService {
   privatemessageRepository: Repository<FamilyMessage>;
   privatevisitRepository: Repository<VisitRequest>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.familyRepository = this.dataSource.getRepository(FamilyMember);
     this.messageRepository = this.dataSource.getRepository(FamilyMessage);
     this.visitRepository = this.dataSource.getRepository(VisitRequest);

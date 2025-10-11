@@ -39,7 +39,7 @@ export function createIncidentRoutes(dataSource: DataSource): Router {
   /**
    * GET /incidents
    * List all incidents with filtering
-   * Query params: incidentType, severity, status, reportedBy, startDate, endDate, critical, page, limit
+   * Queryparams: incidentType, severity, status, reportedBy, startDate, endDate, critical, page, limit
    */
   router.get(
     '/',
@@ -161,7 +161,7 @@ export function createIncidentRoutes(dataSource: DataSource): Router {
   /**
    * GET /incidents/trends
    * Get trend analysis
-   * Query params: startDate, endDate
+   * Queryparams: startDate, endDate
    */
   router.get(
     '/trends',

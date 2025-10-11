@@ -66,12 +66,12 @@ enum ErrorCode {
 }
 
 class AppError extends Error {
-  public readonly statusCode: number;
-  public readonly code: ErrorCode;
-  public readonly isOperational: boolean;
+  public readonlystatusCode: number;
+  public readonlycode: ErrorCode;
+  public readonlyisOperational: boolean;
   public readonly details?: any;
 
-  constructor(
+  const ructor(
     message: string,
     statusCode: number,
     code: ErrorCode,
@@ -85,65 +85,65 @@ class AppError extends Error {
     this.isOperational = isOperational;
     this.details = details;
     
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.const ructor);
   }
 }
 
 class ValidationError extends AppError {
-  constructor(message: string, details?: any) {
+  const ructor(message: string, details?: any) {
     super(message, 400, ErrorCode.VALIDATION_ERROR, true, details);
   }
 }
 
 class AuthenticationError extends AppError {
-  constructor(message: string = 'Authentication required') {
+  const ructor(message: string = 'Authentication required') {
     super(message, 401, ErrorCode.AUTHENTICATION_REQUIRED);
   }
 }
 
 class AuthorizationError extends AppError {
-  constructor(message: string = 'Forbidden') {
+  const ructor(message: string = 'Forbidden') {
     super(message, 403, ErrorCode.FORBIDDEN);
   }
 }
 
 class NotFoundError extends AppError {
-  constructor(message: string = 'Resource not found') {
+  const ructor(message: string = 'Resource not found') {
     super(message, 404, ErrorCode.NOT_FOUND);
   }
 }
 
 class ConflictError extends AppError {
-  constructor(message: string, details?: any) {
+  const ructor(message: string, details?: any) {
     super(message, 409, ErrorCode.CONFLICT, true, details);
   }
 }
 
 class DatabaseError extends AppError {
-  constructor(message: string, details?: any) {
+  const ructor(message: string, details?: any) {
     super(message, 500, ErrorCode.DATABASE_ERROR, true, details);
   }
 }
 
 class ExternalServiceError extends AppError {
-  constructor(service: string, message: string, details?: any) {
-    super(`External service error: ${service} - ${message}`, 502, ErrorCode.EXTERNAL_SERVICE_ERROR, true, details);
+  const ructor(service: string, message: string, details?: any) {
+    super(`External serviceerror: ${service} - ${message}`, 502, ErrorCode.EXTERNAL_SERVICE_ERROR, true, details);
   }
 }
 
 class AIServiceError extends AppError {
-  constructor(message: string, details?: any) {
-    super(`AI service error: ${message}`, 503, ErrorCode.AI_SERVICE_ERROR, true, details);
+  const ructor(message: string, details?: any) {
+    super(`AI serviceerror: ${message}`, 503, ErrorCode.AI_SERVICE_ERROR, true, details);
   }
 }
 
 class ErrorHandlingService {
-  private static instance: ErrorHandlingService;
+  private staticinstance: ErrorHandlingService;
   privatehealthChecks: Map<string, () => Promise<HealthCheckResult>> = new Map();
   privatelastHealthCheck: SystemHealth | null = null;
   privatehealthCheckInterval: NodeJS.Timeout | null = null;
 
-  private constructor() {
+  private const ructor() {
     this.setupProcessHandlers();
     this.startHealthCheckScheduler();
   }
@@ -221,7 +221,7 @@ class ErrorHandlingService {
       let statusCode = 500;
       let code = ErrorCode.INTERNAL_ERROR;
       let message = 'Internal server error';
-      letdetails: any = undefined;
+      let details: any = undefined;
 
       if (error instanceof AppError) {
         statusCode = error.statusCode;
@@ -242,7 +242,7 @@ class ErrorHandlingService {
         message = configService.isProduction() ? 'Database error occurred' : error.message;
       }
 
-      consterrorResponse: ErrorResponse = {
+      const errorResponse: ErrorResponse = {
         error: code,
         message,
         statusCode,
@@ -286,7 +286,7 @@ class ErrorHandlingService {
     checkFn: () => Promise<HealthCheckResult>
   ): void {
     this.healthChecks.set(name, checkFn);
-    loggerService.info(`Health check registered: ${name}`);
+    loggerService.info(`Health checkregistered: ${name}`);
   }
 
   // Built-in health checks
@@ -380,7 +380,7 @@ class ErrorHandlingService {
   // Comprehensive health check
   public async performHealthCheck(): Promise<SystemHealth> {
     const startTime = Date.now();
-    constservices: HealthCheckResult[] = [];
+    const services: HealthCheckResult[] = [];
 
     // Run built-in health checks
     services.push(await this.checkDatabase());
@@ -405,7 +405,7 @@ class ErrorHandlingService {
     const hasUnhealthy = services.some(s => s.status === 'unhealthy');
     const hasDegraded = services.some(s => s.status === 'degraded');
     
-    letoverallStatus: 'healthy' | 'unhealthy' | 'degraded';
+    let overallStatus: 'healthy' | 'unhealthy' | 'degraded';
     if (hasUnhealthy) {
       overallStatus = 'unhealthy';
     } else if (hasDegraded) {
@@ -414,7 +414,7 @@ class ErrorHandlingService {
       overallStatus = 'healthy';
     }
 
-    consthealth: SystemHealth = {
+    const health: SystemHealth = {
       status: overallStatus,
       services,
       timestamp: new Date().toISOString(),

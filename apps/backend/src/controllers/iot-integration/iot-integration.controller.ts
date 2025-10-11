@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/iot-integration')
 @UseGuards(JwtAuthGuard)
 export class IoTIntegrationController {
-  constructor(
-    private readonly iotIntegrationService: IoTIntegrationService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyiotIntegrationService: IoTIntegrationService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -56,7 +56,7 @@ export class IoTIntegrationController {
         message: success ? 'Device connected successfully' : 'Failed to connect device',
       };
     } catch (error) {
-      console.error('Error connecting device:', error);
+      console.error('Error connectingdevice:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -94,7 +94,7 @@ export class IoTIntegrationController {
         message: success ? 'Device disconnected successfully' : 'Failed to disconnect device',
       };
     } catch (error) {
-      console.error('Error disconnecting device:', error);
+      console.error('Error disconnectingdevice:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -141,7 +141,7 @@ export class IoTIntegrationController {
         message: success ? 'Command sent successfully' : 'Failed to send command',
       };
     } catch (error) {
-      console.error('Error sending device command:', error);
+      console.error('Error sending devicecommand:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -179,7 +179,7 @@ export class IoTIntegrationController {
         message: success ? 'Device state synced successfully' : 'Failed to sync device state',
       };
     } catch (error) {
-      console.error('Error syncing device state:', error);
+      console.error('Error syncing devicestate:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -213,7 +213,7 @@ export class IoTIntegrationController {
         message: 'Connection status retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting connection status:', error);
+      console.error('Error getting connectionstatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -280,7 +280,7 @@ export class IoTIntegrationController {
         message: 'Device telemetry retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting device telemetry:', error);
+      console.error('Error getting devicetelemetry:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -349,7 +349,7 @@ export class IoTIntegrationController {
         message: 'Device retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting device:', error);
+      console.error('Error gettingdevice:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -437,7 +437,7 @@ export class IoTIntegrationController {
         message: 'Devices retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting devices:', error);
+      console.error('Error gettingdevices:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -512,7 +512,7 @@ export class IoTIntegrationController {
         message: 'Device types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting device types:', error);
+      console.error('Error getting devicetypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -592,7 +592,7 @@ export class IoTIntegrationController {
         message: 'Connectivity types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting connectivity types:', error);
+      console.error('Error getting connectivitytypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -649,7 +649,7 @@ export class IoTIntegrationController {
         message: 'IoT statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting IoT statistics:', error);
+      console.error('Error getting IoTstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

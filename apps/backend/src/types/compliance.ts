@@ -444,7 +444,7 @@ export const validateComplianceAcrossTerms = (
   requirements: ComplianceRequirement[],
   territories: string[]
 ): { compliant: boolean; issues: string[] } => {
-  constissues: string[] = []
+  const issues: string[] = []
   let compliant = true
 
   territories.forEach(territoryId => {

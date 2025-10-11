@@ -3,7 +3,7 @@
  * 
  * LIMITED SELF-SERVICE PORTAL FOR 16+ CARE LEAVERS
  * 
- * ACCESS RESTRICTIONS:
+ * ACCESSRESTRICTIONS:
  * - Must be 16+ years old
  * - Can only access own data
  * - Read-only for most data (managed by staff)
@@ -37,7 +37,7 @@ interface AuthenticatedRequest extends Request {
 export class YoungPersonPortalController {
   privateportalService: YoungPersonPortalService;
 
-  constructor() {
+  const ructor() {
     this.portalService = new YoungPersonPortalService();
   }
 

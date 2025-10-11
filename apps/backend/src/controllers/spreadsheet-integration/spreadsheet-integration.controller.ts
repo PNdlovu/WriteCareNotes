@@ -20,9 +20,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/spreadsheet-integration')
 @UseGuards(JwtAuthGuard)
 export class SpreadsheetIntegrationController {
-  constructor(
-    private readonly spreadsheetIntegrationService: SpreadsheetIntegrationService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyspreadsheetIntegrationService: SpreadsheetIntegrationService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -90,7 +90,7 @@ export class SpreadsheetIntegrationController {
         message: 'Template created successfully',
       };
     } catch (error) {
-      console.error('Error creating template:', error);
+      console.error('Error creatingtemplate:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -108,7 +108,7 @@ export class SpreadsheetIntegrationController {
     @Request() req: any,
   ) {
     try {
-      lettemplates: SpreadsheetTemplate[];
+      let templates: SpreadsheetTemplate[];
 
       if (category) {
         templates = await this.spreadsheetIntegrationService.getTemplatesByCategory(category as any);
@@ -134,7 +134,7 @@ export class SpreadsheetIntegrationController {
         message: 'Templates retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting templates:', error);
+      console.error('Error gettingtemplates:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -180,7 +180,7 @@ export class SpreadsheetIntegrationController {
         message: 'Template retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting template:', error);
+      console.error('Error gettingtemplate:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -231,7 +231,7 @@ export class SpreadsheetIntegrationController {
         message: 'Export completed successfully',
       };
     } catch (error) {
-      console.error('Error exporting to spreadsheet:', error);
+      console.error('Error exporting tospreadsheet:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -291,7 +291,7 @@ export class SpreadsheetIntegrationController {
         message: 'Import completed successfully',
       };
     } catch (error) {
-      console.error('Error importing from spreadsheet:', error);
+      console.error('Error importing fromspreadsheet:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -337,7 +337,7 @@ export class SpreadsheetIntegrationController {
         message: 'Validation completed successfully',
       };
     } catch (error) {
-      console.error('Error validating spreadsheet data:', error);
+      console.error('Error validating spreadsheetdata:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -375,7 +375,7 @@ export class SpreadsheetIntegrationController {
         message: 'Export history retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting export history:', error);
+      console.error('Error getting exporthistory:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -413,7 +413,7 @@ export class SpreadsheetIntegrationController {
         message: 'Import history retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting import history:', error);
+      console.error('Error getting importhistory:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -468,7 +468,7 @@ export class SpreadsheetIntegrationController {
         message: 'Scheduled report created successfully',
       };
     } catch (error) {
-      console.error('Error creating scheduled report:', error);
+      console.error('Error creating scheduledreport:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -502,7 +502,7 @@ export class SpreadsheetIntegrationController {
         message: 'Reports retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting reports:', error);
+      console.error('Error gettingreports:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -541,7 +541,7 @@ export class SpreadsheetIntegrationController {
         message: 'Spreadsheet integration statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting spreadsheet integration statistics:', error);
+      console.error('Error getting spreadsheet integrationstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -632,7 +632,7 @@ export class SpreadsheetIntegrationController {
         message: 'Template categories retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting template categories:', error);
+      console.error('Error getting templatecategories:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -703,7 +703,7 @@ export class SpreadsheetIntegrationController {
         message: 'File types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting file types:', error);
+      console.error('Error getting filetypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -780,7 +780,7 @@ export class SpreadsheetIntegrationController {
         message: 'Field types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting field types:', error);
+      console.error('Error getting fieldtypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -825,7 +825,7 @@ export class SpreadsheetIntegrationController {
         message: 'Download link generated successfully',
       };
     } catch (error) {
-      console.error('Error downloading file:', error);
+      console.error('Error downloadingfile:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

@@ -153,7 +153,7 @@ export class BusinessIntelligenceService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.warehouseRepository = AppDataSource.getRepository(DataWarehouse);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -203,7 +203,7 @@ export class BusinessIntelligenceService {
 
       return savedWarehouse;
     } catch (error: unknown) {
-      console.error('Error creating enterprise data warehouse:', error);
+      console.error('Error creating enterprise datawarehouse:', error);
       throw error;
     }
   }
@@ -219,7 +219,7 @@ export class BusinessIntelligenceService {
   }): Promise<any> {
     try {
       // Enterprise ML model deployment with MLOps
-      constmlPipeline: AdvancedMLPipeline = {
+      const mlPipeline: AdvancedMLPipeline = {
         pipelineId: crypto.randomUUID(),
         pipelineName: modelConfig.name,
         modelType: modelConfig.type,
@@ -270,7 +270,7 @@ export class BusinessIntelligenceService {
         businessImpact: await this.calculateBusinessImpact(trainedModel)
       };
     } catch (error: unknown) {
-      console.error('Error deploying advanced ML model:', error);
+      console.error('Error deploying advanced MLmodel:', error);
       throw error;
     }
   }
@@ -278,7 +278,7 @@ export class BusinessIntelligenceService {
   // Real-Time Executive Dashboard
   async generateExecutiveDashboard(): Promise<ExecutiveDashboard> {
     try {
-      constdashboard: ExecutiveDashboard = {
+      const dashboard: ExecutiveDashboard = {
         dashboardId: crypto.randomUUID(),
         executiveKPIs: {
           financial: {
@@ -290,7 +290,7 @@ export class BusinessIntelligenceService {
           operational: {
             careQuality: { score: 4.7, trend: 'improving', benchmarkComparison: 0.3 },
             staffEfficiency: { score: 87, improvement: 5.2, targetAchievement: 91 },
-            residentSatisfaction: { score: 4.6, trend: 'stable', actionItems: ['Improve meal variety', 'Enhance activities'] },
+            residentSatisfaction: { score: 4.6, trend: 'stable', actionItems: ['Improve meal var iety', 'Enhance activities'] },
             familySatisfaction: { score: 4.4, trend: 'improving', improvementAreas: ['Communication', 'Visiting facilities'] }
           },
           regulatory: {
@@ -310,7 +310,7 @@ export class BusinessIntelligenceService {
 
       return dashboard;
     } catch (error: unknown) {
-      console.error('Error generating executive dashboard:', error);
+      console.error('Error generating executivedashboard:', error);
       throw error;
     }
   }
@@ -318,7 +318,7 @@ export class BusinessIntelligenceService {
   // Advanced Predictive Healthcare Analytics
   async deployPredictiveHealthcareModels(): Promise<PredictiveHealthcareModels> {
     try {
-      constmodels: PredictiveHealthcareModels = {
+      const models: PredictiveHealthcareModels = {
         healthDeteriorationModel: {
           modelId: 'health_deterioration_v3_1',
           accuracy: 0.89,
@@ -391,7 +391,7 @@ export class BusinessIntelligenceService {
 
       return models;
     } catch (error: unknown) {
-      console.error('Error deploying predictive healthcare models:', error);
+      console.error('Error deploying predictive healthcaremodels:', error);
       throw error;
     }
   }
@@ -444,7 +444,7 @@ export class BusinessIntelligenceService {
         processingTime: new Date().getTime() - eventData.timestamp.getTime()
       };
     } catch (error: unknown) {
-      console.error('Error processing real-time business intelligence:', error);
+      console.error('Error processing real-time businessintelligence:', error);
       throw error;
     }
   }
@@ -499,7 +499,7 @@ export class BusinessIntelligenceService {
 
       return queryResult;
     } catch (error: unknown) {
-      console.error('Error executing advanced analytics query:', error);
+      console.error('Error executing advanced analyticsquery:', error);
       throw error;
     }
   }

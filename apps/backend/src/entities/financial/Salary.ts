@@ -111,12 +111,12 @@ export class Salary extends BaseEntity {
   @IsUUID()
   employeeId!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   @Length(1, 100)
   employeeName!: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   employeeNumber?: string;
@@ -142,7 +142,7 @@ export class Salary extends BaseEntity {
   @IsEnum(PayFrequency)
   payFrequency!: PayFrequency;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   payrollRunId?: string;
@@ -302,7 +302,7 @@ export class Salary extends BaseEntity {
   @IsUUID()
   correlationId!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   regulatoryCode?: string;
@@ -437,9 +437,9 @@ export class Salary extends BaseEntity {
    * Calculate income tax (simplified UK calculation)
    */
   private calculateIncomeTax(): void {
-    // Basic rate: 20% on income between £12,570 and £50,270
-    // Higher rate: 40% on income between £50,270 and £125,140
-    // Additional rate: 45% on income above £125,140
+    // Basicrate: 20% on income between £12,570 and £50,270
+    // Higherrate: 40% on income between £50,270 and £125,140
+    // Additionalrate: 45% on income above £125,140
     
     const annualGross = this.grossPay.times(this.getPayFrequencyMultiplier());
     const personalAllowance = new Decimal(12570); // 2023/24 tax year

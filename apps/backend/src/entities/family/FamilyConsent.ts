@@ -117,10 +117,10 @@ export class FamilyConsent {
   @Column({ type: 'text', nullable: true })
   withdrawalTerms?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   purpose!: string;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   description!: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -155,43 +155,43 @@ export class FamilyConsent {
   @Column({ type: 'timestamp', nullable: true })
   expiresAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   grantedBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deniedBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   withdrawnBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   revokedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   reason?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   withdrawalReason?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   revocationReason?: string;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   ipAddress?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   userAgent?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deviceId?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   location?: string;
 
-  @Column({ type: 'varchar', length: 10, nullable: true })
+  @Column({ type: 'var char', length: 10, nullable: true })
   language?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   timezone?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -229,10 +229,10 @@ export class FamilyConsent {
   @Column({ type: 'timestamp', nullable: true })
   archivedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   archivedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   archiveReason?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -241,7 +241,7 @@ export class FamilyConsent {
   @Column({ type: 'timestamp', nullable: true })
   renewalDueAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   renewalReminderSentTo?: string;
 
   @Column({ type: 'timestamp', nullable: true })

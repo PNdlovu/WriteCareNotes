@@ -85,7 +85,7 @@ export enum JournalEntryPriority {
 export class JournalEntry extends BaseEntity {
 
   // Entry Identification
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   @IsString()
   @Length(1, 50)
   entryNumber!: string;
@@ -103,7 +103,7 @@ export class JournalEntry extends BaseEntity {
   priority!: JournalEntryPriority;
 
   // Entry Details
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   description!: string;
@@ -155,25 +155,25 @@ export class JournalEntry extends BaseEntity {
   @Transform(({ value }) => new Decimal(value))
   creditAmount!: InstanceType<typeof Decimal>;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;
 
   // Reference Information
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   referenceNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   sourceDocument?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -203,13 +203,13 @@ export class JournalEntry extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   department?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -271,7 +271,7 @@ export class JournalEntry extends BaseEntity {
   version!: number;
 
   // Additional properties for service compatibility
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   reference?: string;

@@ -70,7 +70,7 @@ router.get('/', [
       message: 'Budgets retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budgets:', error);
+    logger.error('Error retrievingbudgets:', error);
     next(error);
   }
 });
@@ -100,7 +100,7 @@ router.get('/:id', [
       message: 'Budget retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget:', error);
+    logger.error('Error retrievingbudget:', error);
     next(error);
   }
 });
@@ -142,7 +142,7 @@ router.post('/', [
       message: 'Budget created successfully'
     });
   } catch (error) {
-    logger.error('Error creating budget:', error);
+    logger.error('Error creatingbudget:', error);
     next(error);
   }
 });
@@ -188,7 +188,7 @@ router.put('/:id', [
       message: 'Budget updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating budget:', error);
+    logger.error('Error updatingbudget:', error);
     next(error);
   }
 });
@@ -217,7 +217,7 @@ router.delete('/:id', [
       message: 'Budget deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting budget:', error);
+    logger.error('Error deletingbudget:', error);
     next(error);
   }
 });
@@ -247,7 +247,7 @@ router.post('/:id/approve', [
       message: 'Budget approved successfully'
     });
   } catch (error) {
-    logger.error('Error approving budget:', error);
+    logger.error('Error approvingbudget:', error);
     next(error);
   }
 });
@@ -270,7 +270,7 @@ router.post('/:id/activate', [
       message: 'Budget activated successfully'
     });
   } catch (error) {
-    logger.error('Error activating budget:', error);
+    logger.error('Error activatingbudget:', error);
     next(error);
   }
 });
@@ -293,7 +293,7 @@ router.post('/:id/lock', [
       message: 'Budget locked successfully'
     });
   } catch (error) {
-    logger.error('Error locking budget:', error);
+    logger.error('Error lockingbudget:', error);
     next(error);
   }
 });
@@ -316,7 +316,7 @@ router.post('/:id/archive', [
       message: 'Budget archived successfully'
     });
   } catch (error) {
-    logger.error('Error archiving budget:', error);
+    logger.error('Error archivingbudget:', error);
     next(error);
   }
 });
@@ -341,7 +341,7 @@ router.get('/:id/performance', [
       message: 'Budget performance retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget performance:', error);
+    logger.error('Error retrieving budgetperformance:', error);
     next(error);
   }
 });
@@ -364,7 +364,7 @@ router.get('/:id/variance-analysis', [
       message: 'Budget variance analysis retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget variance analysis:', error);
+    logger.error('Error retrieving budget varianceanalysis:', error);
     next(error);
   }
 });
@@ -387,7 +387,7 @@ router.get('/:id/utilization-metrics', [
       message: 'Budget utilization metrics retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget utilization metrics:', error);
+    logger.error('Error retrieving budget utilizationmetrics:', error);
     next(error);
   }
 });
@@ -410,7 +410,7 @@ router.get('/:id/forecasting', [
       message: 'Budget forecasting data retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget forecasting data:', error);
+    logger.error('Error retrieving budget forecastingdata:', error);
     next(error);
   }
 });
@@ -441,7 +441,7 @@ router.get('/summary', [
       message: 'Budgets summary retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budgets summary:', error);
+    logger.error('Error retrieving budgetssummary:', error);
     next(error);
   }
 });
@@ -474,7 +474,7 @@ router.get('/variance-report', [
       message: 'Budget variance report retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget variance report:', error);
+    logger.error('Error retrieving budget variancereport:', error);
     next(error);
   }
 });
@@ -507,7 +507,7 @@ router.get('/forecasting-report', [
       message: 'Budget forecasting report retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving budget forecasting report:', error);
+    logger.error('Error retrieving budget forecastingreport:', error);
     next(error);
   }
 });

@@ -20,14 +20,14 @@ import { Logger } from '@nestjs/common';
 
 @Controller('api/ai-agents')
 export class AIAgentOrchestrationController {
-  private readonly logger = new Logger(AIAgentOrchestrationController.name);
+  private readonlylogger = new Logger(AIAgentOrchestrationController.name);
 
-  constructor(
-    private readonly pilotFeedbackAgent: PilotFeedbackAgent,
-    private readonly complianceAgent: ComplianceAgent,
-    private readonly predictiveEngagementAgent: PredictiveEngagementAgent,
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlypilotFeedbackAgent: PilotFeedbackAgent,
+    private readonlycomplianceAgent: ComplianceAgent,
+    private readonlypredictiveEngagementAgent: PredictiveEngagementAgent,
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -61,7 +61,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get agent status:', error);
+      this.logger.error('Failed to get agentstatus:', error);
       throw new HttpException('Failed to get agent status', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -102,7 +102,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to generate pilot feedback:', error);
+      this.logger.error('Failed to generate pilotfeedback:', error);
       throw new HttpException('Failed to generate pilot feedback', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -127,7 +127,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get pilot feedback history:', error);
+      this.logger.error('Failed to get pilot feedbackhistory:', error);
       throw new HttpException('Failed to get pilot feedback history', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -154,7 +154,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to start compliance monitoring:', error);
+      this.logger.error('Failed to start compliancemonitoring:', error);
       throw new HttpException('Failed to start compliance monitoring', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -181,7 +181,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to stop compliance monitoring:', error);
+      this.logger.error('Failed to stop compliancemonitoring:', error);
       throw new HttpException('Failed to stop compliance monitoring', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -204,7 +204,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to perform compliance check:', error);
+      this.logger.error('Failed to perform compliancecheck:', error);
       throw new HttpException('Failed to perform compliance check', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -223,7 +223,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get compliance metrics:', error);
+      this.logger.error('Failed to get compliancemetrics:', error);
       throw new HttpException('Failed to get compliance metrics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -252,7 +252,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to generate engagement prediction:', error);
+      this.logger.error('Failed to generate engagementprediction:', error);
       throw new HttpException('Failed to generate engagement prediction', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -285,7 +285,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to validate engagement prediction:', error);
+      this.logger.error('Failed to validate engagementprediction:', error);
       throw new HttpException('Failed to validate engagement prediction', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -304,7 +304,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get engagement metrics:', error);
+      this.logger.error('Failed to get engagementmetrics:', error);
       throw new HttpException('Failed to get engagement metrics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -336,7 +336,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get all agent metrics:', error);
+      this.logger.error('Failed to get all agentmetrics:', error);
       throw new HttpException('Failed to get agent metrics', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -364,7 +364,7 @@ export class AIAgentOrchestrationController {
         timestamp: new Date()
       };
     } catch (error) {
-      this.logger.error('Health check failed:', error);
+      this.logger.error('Health checkfailed:', error);
       throw new HttpException('Health check failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

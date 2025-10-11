@@ -58,7 +58,7 @@ export class EducationService {
   privateplacementRepository: Repository<SchoolPlacement>;
   privatechildRepository: Repository<Child>;
 
-  constructor() {
+  const ructor() {
     this.pepRepository = AppDataSource.getRepository(PersonalEducationPlan);
     this.placementRepository = AppDataSource.getRepository(SchoolPlacement);
     this.childRepository = AppDataSource.getRepository(Child);
@@ -467,7 +467,7 @@ export class EducationService {
       where: { organizationId }
     });
 
-    constneetChildren: Child[] = [];
+    const neetChildren: Child[] = [];
 
     for (const child of allChildren) {
       const activePlacement = await this.placementRepository.findOne({

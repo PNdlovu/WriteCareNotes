@@ -58,7 +58,7 @@ export class WebRTCProvider {
   privateapiKey: string;
   privatebaseUrl: string;
 
-  constructor() {
+  const ructor() {
     this.logger = new Logger('WebRTCProvider');
     this.apiKey = process.env.DAILY_API_KEY || '';
     this.baseUrl = 'https://api.daily.co/v1';
@@ -127,7 +127,7 @@ export class WebRTCProvider {
 
       const response = await this.client.post('/rooms', requestData);
       
-      constroom: Room = response.data;
+      const room: Room = response.data;
       
       this.logger.info('WebRTC room created successfully', {
         roomId: room.id,
@@ -144,7 +144,7 @@ export class WebRTCProvider {
         data: error.response?.data
       });
       
-      throw new Error(`Failed to create WebRTC room: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to create WebRTCroom: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -167,7 +167,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to get WebRTC room: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to get WebRTCroom: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -194,7 +194,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to update WebRTC room: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to update WebRTCroom: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -219,7 +219,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to delete WebRTC room: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to delete WebRTCroom: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -259,7 +259,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to generate access token: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to generate accesstoken: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -277,7 +277,7 @@ export class WebRTCProvider {
 
       const response = await this.client.post(`/rooms/${roomName}/recordings`, requestData);
       
-      constrecording: Recording = response.data;
+      const recording: Recording = response.data;
       
       this.logger.info('Recording started successfully', {
         roomName,
@@ -295,7 +295,7 @@ export class WebRTCProvider {
         data: error.response?.data
       });
       
-      throw new Error(`Failed to start recording: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to startrecording: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -310,7 +310,7 @@ export class WebRTCProvider {
 
       const response = await this.client.post(url);
       
-      constrecording: Recording = response.data;
+      const recording: Recording = response.data;
       
       this.logger.info('Recording stopped successfully', {
         roomName,
@@ -328,7 +328,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to stop recording: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to stoprecording: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -351,7 +351,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to get recording: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to getrecording: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -372,7 +372,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to list recordings: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to listrecordings: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -397,7 +397,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to delete recording: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to deleterecording: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -416,7 +416,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to get room participants: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to get roomparticipants: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -440,7 +440,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to eject participant: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to ejectparticipant: ${error.response?.data?.error || error.message}`);
     }
   }
 
@@ -449,7 +449,7 @@ export class WebRTCProvider {
    */
   async getRoomAnalytics(roomName: string, from?: Date, to?: Date): Promise<any> {
     try {
-      constparams: any = {};
+      const params: any = {};
       if (from) params.from = from.toISOString();
       if (to) params.to = to.toISOString();
 
@@ -463,7 +463,7 @@ export class WebRTCProvider {
         status: error.response?.status
       });
       
-      throw new Error(`Failed to get room analytics: ${error.response?.data?.error || error.message}`);
+      throw new Error(`Failed to get roomanalytics: ${error.response?.data?.error || error.message}`);
     }
   }
 

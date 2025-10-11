@@ -66,7 +66,7 @@ export interface ClinicalObservation {
   observationType: 'mood' | 'behavior' | 'cognition' | 'social' | 'physical' | 'environmental';
   observation: string;
   severity: 'mild' | 'moderate' | 'severe';
-  frequency: 'rare' | 'occasional' | 'frequent' | 'constant';
+  frequency: 'rare' | 'occasional' | 'frequent' | 'const ant';
   triggers: string[];
   interventionsTriedPreviously: string[];
   responseToInterventions: string[];
@@ -119,13 +119,13 @@ export interface CognitiveProfile {
     attention: { sustained: number; selective: number; divided: number };
     executiveFunction: { planning: number; problemSolving: number; flexibility: number };
     language: { comprehension: number; expression: number; naming: number };
-    visuospatial: { construction: number; perception: number; navigation: number };
+    visuospatial: { const ruction: number; perception: number; navigation: number };
   };
   functionalImpact: {
     adlsAffected: string[];
     iadlsAffected: string[];
     safetyRisks: string[];
-    supervisionNeeded: 'none' | 'minimal' | 'moderate' | 'constant';
+    supervisionNeeded: 'none' | 'minimal' | 'moderate' | 'const ant';
   };
   progressionMarkers: {
     rateOfDecline: 'stable' | 'slow' | 'moderate' | 'rapid';
@@ -311,7 +311,7 @@ export class MentalHealthAssessment extends BaseEntity {
       domains.attention.sustained,
       domains.executiveFunction.planning,
       domains.language.comprehension,
-      domains.visuospatial.construction
+      domains.visuospatial.const ruction
     ];
     
     return scores.reduce((sum, score) => sum + score, 0) / scores.length;
@@ -365,13 +365,13 @@ export class MentalHealthAssessment extends BaseEntity {
     const cognitiveDescription = this.getCognitiveFunctioningLevel().replace('_', ' ').toUpperCase();
     const complexityDescription = this.calculateTreatmentComplexity().replace('_', ' ').toUpperCase();
     
-    return `Mental Health Assessment Summary:
+    return `Mental Health AssessmentSummary:
 Risk Level: ${riskDescription}
 Cognitive Status: ${cognitiveDescription}
 Treatment Complexity: ${complexityDescription}
 Primary Diagnoses: ${this.diagnoses.join(', ')}
 Key Concerns: ${this.observations.filter(obs => obs.severity === 'severe').map(obs => obs.observation).join('; ')}
-Immediate Actions Required: ${this.getHighestPriorityRecommendations().length > 0 ? 'YES' : 'NO'}`;
+Immediate ActionsRequired: ${this.getHighestPriorityRecommendations().length > 0 ? 'YES' : 'NO'}`;
   }
 
   updateProgress(goalId: string, progressPercentage: number, barriers: string[], supports: string[]): void {

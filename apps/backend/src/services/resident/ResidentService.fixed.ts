@@ -93,10 +93,10 @@ export interface ResidentSearchResult {
 }
 
 export class ResidentService {
-  private logger = logger;
+  privatelogger = logger;
   privatedb: Pool;
 
-  constructor(db: Pool) {
+  const ructor(db: Pool) {
     this.db = db;
   }
 
@@ -168,7 +168,7 @@ export class ResidentService {
 
     } catch (error: unknown) {
       console.error('Failed to create resident', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to create resident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to createresident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -176,7 +176,7 @@ export class ResidentService {
     try {
       this.logger.debug('Retrieving resident by ID', { id, userId, organizationId });
 
-      let query = 'SELECT * FROM residents WHERE id = $1 AND deleted_at IS NULL';
+      let query = 'SELECT * FROM residents WHEREid = $1 AND deleted_at IS NULL';
       const values = [id];
 
       if (organizationId) {
@@ -201,7 +201,7 @@ export class ResidentService {
 
     } catch (error: unknown) {
       console.error('Failed to retrieve resident', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to retrieve resident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to retrieveresident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -211,7 +211,7 @@ export class ResidentService {
 
       // Build base query
       let query = 'SELECT * FROM residents WHERE deleted_at IS NULL';
-      constvalues: any[] = [];
+      const values: any[] = [];
       let paramCount = 0;
 
       // Add organization filter
@@ -227,7 +227,7 @@ export class ResidentService {
       // Add status filter
       if (filters.status) {
         paramCount++;
-        query += ` AND status = $${paramCount}`;
+        query += ` ANDstatus = $${paramCount}`;
         values.push(filters.status);
       }
 
@@ -277,7 +277,7 @@ export class ResidentService {
       const hasNext = page < totalPages;
       const hasPrevious = page > 1;
 
-      constsearchResult: ResidentSearchResult = {
+      const searchResult: ResidentSearchResult = {
         residents,
         pagination: {
           page,
@@ -298,7 +298,7 @@ export class ResidentService {
 
     } catch (error: unknown) {
       console.error('Failed to search residents', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to search residents: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to searchresidents: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -310,8 +310,8 @@ export class ResidentService {
       const existingResident = await this.getResidentById(id, userId);
 
       // Build update query dynamically
-      constupdateFields: string[] = [];
-      constvalues: any[] = [];
+      const updateFields: string[] = [];
+      const values: any[] = [];
       let paramCount = 0;
 
       Object.entries(updates).forEach(([key, value]) => {
@@ -349,7 +349,7 @@ export class ResidentService {
       const query = `
         UPDATE residents 
         SET ${updateFields.join(', ')} 
-        WHERE id = $${paramCount} AND deleted_at IS NULL
+        WHEREid = $${paramCount} AND deleted_at IS NULL
         RETURNING *
       `;
 
@@ -370,7 +370,7 @@ export class ResidentService {
 
     } catch (error: unknown) {
       console.error('Failed to update resident', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to update resident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to updateresident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -380,8 +380,8 @@ export class ResidentService {
 
       const query = `
         UPDATE residents 
-        SET status = 'DISCHARGED', discharge_date = $1, updated_at = $2, updated_by = $3
-        WHERE id = $4 AND deleted_at IS NULL
+        SETstatus = 'DISCHARGED', discharge_date = $1, updated_at = $2, updated_by = $3
+        WHEREid = $4 AND deleted_at IS NULL
         RETURNING *
       `;
 
@@ -402,7 +402,7 @@ export class ResidentService {
 
     } catch (error: unknown) {
       console.error('Failed to discharge resident', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to discharge resident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to dischargeresident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -413,9 +413,9 @@ export class ResidentService {
       const query = `
         SELECT 
           COUNT(*) as total_residents,
-          COUNT(CASE WHEN status = 'ACTIVE' THEN 1 END) as active_residents,
-          COUNT(CASE WHEN status = 'DISCHARGED' THEN 1 END) as discharged_residents,
-          COUNT(CASE WHEN status = 'DECEASED' THEN 1 END) as deceased_residents,
+          COUNT(CASE WHENstatus = 'ACTIVE' THEN 1 END) as active_residents,
+          COUNT(CASE WHENstatus = 'DISCHARGED' THEN 1 END) as discharged_residents,
+          COUNT(CASE WHENstatus = 'DECEASED' THEN 1 END) as deceased_residents,
           COUNT(CASE WHEN care_level = 'LOW' THEN 1 END) as low_care,
           COUNT(CASE WHEN care_level = 'MEDIUM' THEN 1 END) as medium_care,
           COUNT(CASE WHEN care_level = 'HIGH' THEN 1 END) as high_care,
@@ -444,12 +444,12 @@ export class ResidentService {
 
     } catch (error: unknown) {
       console.error('Failed to get resident statistics', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to get resident statistics: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get residentstatistics: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateCreateResidentRequest(request: CreateResidentRequest): void {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!request.firstName?.trim()) errors.push('First name is required');
     if (!request.lastName?.trim()) errors.push('Last name is required');
@@ -505,7 +505,7 @@ export class ResidentService {
     const remainder = sum % 11;
     const calculatedCheckDigit = remainder < 2 ? remainder : 11 - remainder;
     
-    return calculatedCheckDigit === checkDigit;
+    returncalculatedCheckDigit === checkDigit;
   }
 
   private isValidEmail(email: string): boolean {
@@ -514,7 +514,7 @@ export class ResidentService {
   }
 
   private camelToSnakeCase(str: string): string {
-    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    return str.replace(/[A-Z]/g, let ter => `_${let ter.toLowerCase()}`);
   }
 
   private mapDbRowToResident(row: any): Resident {

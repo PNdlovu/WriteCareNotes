@@ -62,7 +62,7 @@ export class LLMIntegrationService {
   // Logger removed
   privateproviders: Map<string, LLMProvider> = new Map();
 
-  constructor() {
+  const ructor() {
     this.initializeProviders();
   }
 
@@ -88,7 +88,7 @@ export class LLMIntegrationService {
       // Calculate confidence score
       const confidence = this.calculateConfidence(processedResponse, request);
       
-      constresponse: LLMResponse = {
+      const response: LLMResponse = {
         responseId: `llm_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         message: processedResponse.content,
         tokensUsed: processedResponse.tokensUsed,
@@ -430,7 +430,7 @@ export class LLMIntegrationService {
     tokensUsed: number;
     securityFlags: string[];
   }> {
-    constsecurityFlags: string[] = [];
+    const securityFlags: string[] = [];
     let content = rawResponse.content;
 
     // Check for potential data leaks in response
@@ -654,7 +654,7 @@ Your role:
 - Guide users toward appropriate next steps (demos, sales contact, etc.)
 - Maintain professional, helpful, and knowledgeable tone
 
-Key knowledge areas:
+Key knowledgeareas:
 - WriteCareNotes features and capabilities
 - UK healthcare compliance (CQC, Care Inspectorate, CIW, RQIA)
 - NHS Digital integration capabilities
@@ -698,7 +698,7 @@ Capabilities:
 - Awareness of relevant compliance requirements
 - Integration with care planning and documentation systems
 
-CRITICAL SECURITY RULES:
+CRITICAL SECURITYRULES:
 - NEVER access or reference data from other tenants
 - ALWAYS maintain strict tenant isolation
 - ONLY use data specifically belonging to tenant ${tenantId}
@@ -728,7 +728,7 @@ Remember: You are operating within a strictly isolated tenant environment. Any a
    * Get provider status
    */
   getProviderStatus(): { [key: string]: boolean } {
-    conststatus: { [key: string]: boolean } = {};
+    const status: { [key: string]: boolean } = {};
     
     for (const [name, provider] of this.providers) {
       status[name] = !!provider.apiKey;

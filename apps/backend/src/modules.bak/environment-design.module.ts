@@ -30,7 +30,7 @@ import { TherapeuticDesignService } from '../services/therapeutic-design.service
 /**
  * Environment & Design Module
  * 
- * Provides comprehensive environment and space design capabilities:
+ * Provides comprehensive environment and space designcapabilities:
  * - Homely living space design and optimization
  * - Therapeutic garden areas and outdoor spaces
  * - Activity areas for social engagement and therapy

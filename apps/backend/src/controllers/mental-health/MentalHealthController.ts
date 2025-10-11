@@ -18,7 +18,7 @@ import { MentalHealthService } from '../../services/mental-health/MentalHealthSe
 export class MentalHealthController {
   privatementalHealthService: MentalHealthService;
 
-  constructor() {
+  const ructor() {
     this.mentalHealthService = new MentalHealthService();
   }
 

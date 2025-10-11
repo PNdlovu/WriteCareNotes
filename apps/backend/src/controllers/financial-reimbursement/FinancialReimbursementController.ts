@@ -18,7 +18,7 @@ import { FinancialReimbursementService } from '../../services/financial-reimburs
 export class FinancialReimbursementController {
   privatereimbursementService: FinancialReimbursementService;
 
-  constructor() {
+  const ructor() {
     this.reimbursementService = new FinancialReimbursementService();
   }
 

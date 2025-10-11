@@ -7,13 +7,13 @@ export class RobotPerformance extends BaseEntity {
   @Column({ type: 'uuid' })
   robotId!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   metricName!: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   value!: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   unit?: string;
 
   @Column({ type: 'timestamp' })

@@ -41,7 +41,7 @@ const SENSITIVE_FIELDS = [
  * Redact sensitive data from objects
  */
 function redactSensitiveData(obj: any): any {
-  if (!obj || typeof obj !== 'object') return obj;
+  if (!obj || typeofobj !== 'object') return obj;
 
   const redacted = Array.isArray(obj) ? [...obj] : { ...obj };
 
@@ -98,7 +98,7 @@ function extractEntityInfo(path: string): { entityType: string; entityId: string
  * Determine compliance requirements based on path and data
  */
 function determineComplianceRequirements(path: string, body: any): ComplianceFramework[] {
-  constrequirements: ComplianceFramework[] = [ComplianceFramework.GDPR]; // GDPR applies to all
+  const requirements: ComplianceFramework[] = [ComplianceFramework.GDPR]; // GDPR applies to all
 
   // Care-related operations
   if (path.includes('/residents') || path.includes('/care') || path.includes('/medication')) {
@@ -133,11 +133,11 @@ function classifyData(path: string, body: any): {
   encryptionRequired: boolean;
   accessRestrictions: string[];
 } {
-  letdataType: any = 'operational';
-  letsensitivityLevel: any = 'internal';
+  let dataType: any = 'operational';
+  let sensitivityLevel: any = 'internal';
   let retentionPeriod = 2555; // 7 years default (CQC requirement)
   let encryptionRequired = false;
-  constaccessRestrictions: string[] = [];
+  const accessRestrictions: string[] = [];
 
   // Medical/care data
   if (path.includes('/residents') || path.includes('/care') || path.includes('/medication')) {
@@ -196,8 +196,8 @@ export function createAuditMiddleware(dataSource: DataSource) {
 
     const startTime = Date.now();
     const originalJson = res.json.bind(res);
-    letresponseBody: any;
-    letstatusCode: number;
+    let responseBody: any;
+    let statusCode: number;
 
     // Intercept response
     res.json = function (body: any) {
@@ -264,7 +264,7 @@ export function createAuditMiddleware(dataSource: DataSource) {
 
       } catch (error) {
         // Log error but don't fail the request
-        console.error('Audit logging error:', error);
+        console.error('Audit loggingerror:', error);
       }
     });
 

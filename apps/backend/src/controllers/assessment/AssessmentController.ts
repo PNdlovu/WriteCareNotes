@@ -18,7 +18,7 @@ import { AssessmentService } from '../../services/assessment/AssessmentService';
 export class AssessmentController {
   privateassessmentService: AssessmentService;
 
-  constructor() {
+  const ructor() {
     this.assessmentService = new AssessmentService();
   }
 

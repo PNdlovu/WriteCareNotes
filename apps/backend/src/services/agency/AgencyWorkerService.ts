@@ -19,7 +19,7 @@ import { AgencyWorker, WorkerStatus } from '../../entities/agency/AgencyWorker';
 export class AgencyWorkerService {
   privateworkerRepository: Repository<AgencyWorker>;
 
-  constructor() {
+  const ructor() {
     this.workerRepository = AppDataSource.getRepository(AgencyWorker);
   }
 
@@ -36,7 +36,7 @@ export class AgencyWorkerService {
 
       return await this.workerRepository.save(worker);
     } catch (error: unknown) {
-      console.error('Error creating agency worker:', error);
+      console.error('Error creating agencyworker:', error);
       throw error;
     }
   }
@@ -51,7 +51,7 @@ export class AgencyWorkerService {
         averageHourlyRate: workers.reduce((sum, w) => sum + w.hourlyRate, 0) / workers.length
       };
     } catch (error: unknown) {
-      console.error('Error getting agency analytics:', error);
+      console.error('Error getting agencyanalytics:', error);
       throw error;
     }
   }

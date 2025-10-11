@@ -24,7 +24,7 @@ import { APIResponse, PaginationMeta } from '../../types/api-response';
 import { ValidationError } from '../../types/errors';
 
 export class CarePlanApiController {
-  constructor(private carePlanService: CarePlanService) {}
+  const ructor(private carePlanService: CarePlanService) {}
 
   /**
    * Create a new care plan
@@ -44,14 +44,14 @@ export class CarePlanApiController {
 
       const validationErrors = await validate(createDto);
       if (validationErrors.length > 0) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
             message: 'Invalid care plan data',
             details: validationErrors.map(error => ({
               field: error.property,
-              constraints: error.constraints
+              const raints: error.const raints
             })),
             correlationId
           }
@@ -61,7 +61,7 @@ export class CarePlanApiController {
       }
 
       // Convert DTO to service request
-      constcreateRequest: CreateCarePlanRequest = {
+      const createRequest: CreateCarePlanRequest = {
         residentId: createDto.residentId,
         planName: createDto.planName,
         planType: createDto.planType as CarePlanType,
@@ -97,7 +97,7 @@ export class CarePlanApiController {
       // Convert to response DTO
       const responseDto = this.mapToResponseDto(carePlan);
 
-      constresponse: APIResponse<CarePlanResponseDto> = {
+      const response: APIResponse<CarePlanResponseDto> = {
         success: true,
         data: responseDto,
         meta: {
@@ -121,7 +121,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -151,7 +151,7 @@ export class CarePlanApiController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
       
-      constfilters: CarePlanSearchFilters = {
+      const filters: CarePlanSearchFilters = {
         residentId: req.query.residentId as string,
         status: req.query.status as CarePlanStatus,
         planType: req.query.type as CarePlanType,
@@ -176,7 +176,7 @@ export class CarePlanApiController {
       // Convert to response DTOs
       const responseDtos = result.carePlans.map(carePlan => this.mapToResponseDto(carePlan));
 
-      constpaginationMeta: PaginationMeta = {
+      const paginationMeta: PaginationMeta = {
         page,
         limit,
         total: result.total,
@@ -185,7 +185,7 @@ export class CarePlanApiController {
         hasPrev: page > 1
       };
 
-      constresponse: APIResponse<CarePlanResponseDto[]> = {
+      const response: APIResponse<CarePlanResponseDto[]> = {
         success: true,
         data: responseDtos,
         meta: {
@@ -211,7 +211,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -241,7 +241,7 @@ export class CarePlanApiController {
       const carePlan = await this.carePlanService.getCarePlanById(carePlanId);
 
       if (!carePlan) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'NOT_FOUND',
@@ -255,7 +255,7 @@ export class CarePlanApiController {
 
       const responseDto = this.mapToResponseDto(carePlan);
 
-      constresponse: APIResponse<CarePlanResponseDto> = {
+      const response: APIResponse<CarePlanResponseDto> = {
         success: true,
         data: responseDto,
         meta: {
@@ -280,7 +280,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -313,14 +313,14 @@ export class CarePlanApiController {
 
       const validationErrors = await validate(updateDto);
       if (validationErrors.length > 0) {
-        constresponse: APIResponse<null> = {
+        const response: APIResponse<null> = {
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
             message: 'Invalid care plan update data',
             details: validationErrors.map(error => ({
               field: error.property,
-              constraints: error.constraints
+              const raints: error.const raints
             })),
             correlationId
           }
@@ -330,7 +330,7 @@ export class CarePlanApiController {
       }
 
       // Convert DTO to service request
-      constupdateRequest: UpdateCarePlanRequest = {
+      const updateRequest: UpdateCarePlanRequest = {
         planName: updateDto.planName,
         reviewFrequency: updateDto.reviewFrequency as ReviewFrequency,
         effectiveFrom: updateDto.effectiveFrom ? new Date(updateDto.effectiveFrom) : undefined,
@@ -367,7 +367,7 @@ export class CarePlanApiController {
       // Convert to response DTO
       const responseDto = this.mapToResponseDto(carePlan);
 
-      constresponse: APIResponse<CarePlanResponseDto> = {
+      const response: APIResponse<CarePlanResponseDto> = {
         success: true,
         data: responseDto,
         meta: {
@@ -395,7 +395,7 @@ export class CarePlanApiController {
       const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500;
       const errorCode = statusCode === 404 ? 'NOT_FOUND' : 'INTERNAL_ERROR';
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: errorCode,
@@ -443,7 +443,7 @@ export class CarePlanApiController {
       const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500;
       const errorCode = statusCode === 404 ? 'NOT_FOUND' : 'INTERNAL_ERROR';
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: errorCode,
@@ -470,7 +470,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constapprovalRequest: CarePlanApprovalRequest = {
+      const approvalRequest: CarePlanApprovalRequest = {
         approvedBy: req.user!.id,
         approvalNotes: req.body.approvalNotes,
         effectiveFrom: req.body.effectiveFrom ? new Date(req.body.effectiveFrom) : undefined
@@ -480,7 +480,7 @@ export class CarePlanApiController {
 
       const responseDto = this.mapToResponseDto(carePlan);
 
-      constresponse: APIResponse<CarePlanResponseDto> = {
+      const response: APIResponse<CarePlanResponseDto> = {
         success: true,
         data: responseDto,
         meta: {
@@ -508,7 +508,7 @@ export class CarePlanApiController {
       const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 400;
       const errorCode = statusCode === 404 ? 'NOT_FOUND' : 'BAD_REQUEST';
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: errorCode,
@@ -544,7 +544,7 @@ export class CarePlanApiController {
         status: 'scheduled'
       };
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: reviewData,
         meta: {
@@ -570,7 +570,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -605,7 +605,7 @@ export class CarePlanApiController {
         status: 'draft'
       };
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: generatedPlan,
         meta: {
@@ -630,7 +630,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -668,7 +668,7 @@ export class CarePlanApiController {
         status: 'active'
       };
 
-      constresponse: APIResponse<any> = {
+      const response: APIResponse<any> = {
         success: true,
         data: careDomain,
         meta: {
@@ -694,7 +694,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
@@ -739,7 +739,7 @@ export class CarePlanApiController {
         }
       ];
 
-      constpaginationMeta: PaginationMeta = {
+      const paginationMeta: PaginationMeta = {
         page,
         limit,
         total: careDomains.length,
@@ -748,7 +748,7 @@ export class CarePlanApiController {
         hasPrev: page > 1
       };
 
-      constresponse: APIResponse<any[]> = {
+      const response: APIResponse<any[]> = {
         success: true,
         data: careDomains,
         meta: {
@@ -775,7 +775,7 @@ export class CarePlanApiController {
         correlationId 
       });
 
-      constresponse: APIResponse<null> = {
+      const response: APIResponse<null> = {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',

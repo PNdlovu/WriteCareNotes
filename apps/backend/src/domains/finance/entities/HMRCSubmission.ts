@@ -27,7 +27,7 @@ export class HMRCSubmission {
   @Column({ type: 'uuid' })
   payrollRunId: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   submissionId: string; // HMRC submission reference
 
   @Column({ type: 'enum', enum: HMRCSubmissionType })
@@ -36,10 +36,10 @@ export class HMRCSubmission {
   @Column({ type: 'enum', enum: HMRCSubmissionStatus, default: HMRCSubmissionStatus.DRAFT })
   status: HMRCSubmissionStatus;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   taxYear: string; // e.g., "2024-25"
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'var char', length: 10 })
   payPeriod: string; // e.g., "01" for January
 
   @Column({ type: 'date' })
@@ -51,10 +51,10 @@ export class HMRCSubmission {
   @Column({ type: 'timestamp', nullable: true })
   processedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   submittedBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   processedBy: string;
 
   // Submission Data
@@ -80,10 +80,10 @@ export class HMRCSubmission {
   totalApprenticeshipLevy: number;
 
   // HMRC Response
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   hmrcReference: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   correlationId: string;
 
   @Column({ type: 'text', nullable: true })

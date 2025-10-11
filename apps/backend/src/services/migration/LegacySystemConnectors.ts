@@ -66,7 +66,7 @@ export class LegacySystemConnectors extends EventEmitter {
   privateconnections: Map<string, LegacySystemConnection> = new Map();
   privateconnectorImplementations: Map<string, any> = new Map();
 
-  constructor() {
+  const ructor() {
     super();
     this.initializeConnectorImplementations();
   }
@@ -251,7 +251,7 @@ export class LegacySystemConnectors extends EventEmitter {
             sourceVersion: 'PCS 2024.1.5',
             extractionMethod: 'database_query',
             dataIntegrity: true,
-            warnings: ['Some email addresses are empty', 'Medication review dates vary']
+            warnings: ['Some email addresses are empty', 'Medication review dates var y']
           }
         };
       },
@@ -271,7 +271,7 @@ export class LegacySystemConnectors extends EventEmitter {
           knownLimitations: [
             'No real-time API access',
             'Export limited to 5000 records per batch',
-            'Medication data format varies by version'
+            'Medication data format var ies by version'
           ]
         };
       }
@@ -934,7 +934,7 @@ export class LegacySystemConnectors extends EventEmitter {
       
       const connector = this.connectorImplementations.get(systemType);
       if (!connector) {
-        throw new Error(`Unsupported legacy system type: ${systemType}`);
+        throw new Error(`Unsupported legacy systemtype: ${systemType}`);
       }
 
       // Test connection if requested
@@ -947,14 +947,14 @@ export class LegacySystemConnectors extends EventEmitter {
         testDetails = testResult.details;
         
         if (!connectionSuccessful) {
-          throw new Error(`Connection test failed: ${JSON.stringify(testResult.details)}`);
+          throw new Error(`Connection testfailed: ${JSON.stringify(testResult.details)}`);
         }
       }
 
       // Get system capabilities
       const capabilities = connector.getCapabilities();
       
-      constconnection: LegacySystemConnection = {
+      const connection: LegacySystemConnection = {
         connectionId,
         systemName: connector.name,
         systemType: this.determineSystemType(systemType),
@@ -1231,7 +1231,7 @@ export class LegacySystemConnectors extends EventEmitter {
   // Helper methods
 
   private determineSystemType(systemType: string): 'database' | 'file_based' | 'api' | 'proprietary' {
-    consttypeMap: { [key: string]: any } = {
+    const typeMap: { [key: string]: any } = {
       'person_centred_software': 'database',
       'care_systems_uk': 'database',
       'nhs_spine': 'api',
@@ -1250,7 +1250,7 @@ export class LegacySystemConnectors extends EventEmitter {
       }
     }
     
-    throw new Error(`System type not found for connection: ${connection.systemName}`);
+    throw new Error(`System type not found forconnection: ${connection.systemName}`);
   }
 
   private estimateDataQuality(systemType: string, testDetails: any): number {
@@ -1294,7 +1294,7 @@ export class LegacySystemConnectors extends EventEmitter {
     const capabilities = this.getSystemCapabilities(systemType);
     
     if (!capabilities) {
-      throw new Error(`System capabilities not found for: ${systemType}`);
+      throw new Error(`System capabilities not foundfor: ${systemType}`);
     }
 
     // Calculate compatibility score
@@ -1306,7 +1306,7 @@ export class LegacySystemConnectors extends EventEmitter {
     if (capabilities.knownLimitations.length < 3) compatibilityScore += 5;
     
     // Determine complexity
-    letcomplexity: 'low' | 'medium' | 'high' | 'complex' = 'medium';
+    let complexity: 'low' | 'medium' | 'high' | 'complex' = 'medium';
     if (systemType === 'generic_file_import') complexity = 'low';
     else if (systemType === 'nhs_spine' || systemType === 'social_services') complexity = 'high';
     else if (capabilities.knownLimitations.length > 5) complexity = 'complex';

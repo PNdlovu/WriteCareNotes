@@ -28,7 +28,7 @@ jest.mock('../../../middleware/enhanced-rbac-audit', () => ({
 }));
 
 describe('DBS Verification API Integration Tests', () => {
-  letmockService: jest.Mocked<DBSVerificationService>;
+  let mockService: jest.Mocked<DBSVerificationService>;
 
   beforeEach(() => {
     mockService = new MockedDBSVerificationService() as jest.Mocked<DBSVerificationService>;

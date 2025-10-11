@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/garden-therapy')
 @UseGuards(JwtAuthGuard)
 export class GardenTherapyController {
-  constructor(
-    private readonly gardenTherapyService: GardenTherapyService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlygardenTherapyService: GardenTherapyService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -68,7 +68,7 @@ export class GardenTherapyController {
         message: 'Garden therapy session scheduled successfully',
       };
     } catch (error) {
-      console.error('Error scheduling garden therapy session:', error);
+      console.error('Error scheduling garden therapysession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -105,7 +105,7 @@ export class GardenTherapyController {
         message: success ? 'Garden therapy session started successfully' : 'Failed to start session',
       };
     } catch (error) {
-      console.error('Error starting garden therapy session:', error);
+      console.error('Error starting garden therapysession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -145,7 +145,7 @@ export class GardenTherapyController {
         message: 'Garden therapy session completed successfully',
       };
     } catch (error) {
-      console.error('Error completing garden therapy session:', error);
+      console.error('Error completing garden therapysession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -183,7 +183,7 @@ export class GardenTherapyController {
         message: 'Seasonal garden program created successfully',
       };
     } catch (error) {
-      console.error('Error creating seasonal program:', error);
+      console.error('Error creating seasonalprogram:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -227,7 +227,7 @@ export class GardenTherapyController {
         message: 'Sensory garden designed successfully',
       };
     } catch (error) {
-      console.error('Error designing sensory garden:', error);
+      console.error('Error designing sensorygarden:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -265,7 +265,7 @@ export class GardenTherapyController {
         message: 'Therapy outcomes retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting therapy outcomes:', error);
+      console.error('Error getting therapyoutcomes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -299,7 +299,7 @@ export class GardenTherapyController {
         message: 'Plant care schedule retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting plant care schedule:', error);
+      console.error('Error getting plant careschedule:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -373,7 +373,7 @@ export class GardenTherapyController {
         message: 'Garden therapy session retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting garden therapy session:', error);
+      console.error('Error getting garden therapysession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -450,7 +450,7 @@ export class GardenTherapyController {
         message: 'Garden areas retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting garden areas:', error);
+      console.error('Error getting gardenareas:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -549,7 +549,7 @@ export class GardenTherapyController {
         message: 'Therapy types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting therapy types:', error);
+      console.error('Error getting therapytypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -594,7 +594,7 @@ export class GardenTherapyController {
         message: 'Weather conditions retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting weather conditions:', error);
+      console.error('Error getting weatherconditions:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

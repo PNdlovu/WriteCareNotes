@@ -47,7 +47,7 @@ export interface ExpenseRejectionData {
 
 @Injectable()
 export class ExpenseService {
-  constructor(
+  const ructor(
     @InjectRepository(Expense)
     privateexpenseRepository: Repository<Expense>,
     @InjectRepository(StaffMember)

@@ -86,7 +86,7 @@ export class EmployeeProfileService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.profileRepository = AppDataSource.getRepository(EmployeeProfile);
     this.employeeRepository = AppDataSource.getRepository(Employee);
     this.notificationService = new NotificationService(new EventEmitter2());
@@ -254,7 +254,7 @@ export class EmployeeProfileService {
 
   // Onboarding
   async onBoardEmployee(onboardingData: OnboardingData): Promise<EmployeeProfile> {
-    constprofileData: Partial<EmployeeProfile> = {
+    const profileData: Partial<EmployeeProfile> = {
       employeeId: onboardingData.employeeId,
       status: ProfileStatus.PENDING_APPROVAL,
       profileType: ProfileType.BASIC,

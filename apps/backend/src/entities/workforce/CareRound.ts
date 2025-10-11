@@ -171,7 +171,7 @@ export class CareRound {
 
   get estimatedDuration(): number {
     // Estimate based on round type and resident count
-    constbaseTimePerResident: { [key in RoundType]: number } = {
+    const baseTimePerResident: { [key in RoundType]: number } = {
       [RoundType.MORNING_MEDICATION]: 10,
       [RoundType.MORNING_CARE]: 15,
       [RoundType.LUNCH_MEDICATION]: 8,

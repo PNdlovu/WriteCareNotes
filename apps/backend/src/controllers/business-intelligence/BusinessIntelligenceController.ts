@@ -18,7 +18,7 @@ import { BusinessIntelligenceService } from '../../services/business-intelligenc
 export class BusinessIntelligenceController {
   privatebiService: BusinessIntelligenceService;
 
-  constructor() {
+  const ructor() {
     this.biService = new BusinessIntelligenceService();
   }
 

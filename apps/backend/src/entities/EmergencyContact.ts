@@ -22,7 +22,7 @@ export class EmergencyContact extends BaseEntity {
   @Column({ type: 'text' }) // Encrypted
   lastName!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   relationship!: string;
 
   @Column({ type: 'text' }) // Encrypted

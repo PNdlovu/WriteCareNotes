@@ -6,7 +6,7 @@ import { TrainingCertificate } from './TrainingCertificate';
 
 @Entity('training_courses')
 export class TrainingCourse extends BaseEntity {
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   title!: string;
 
   @Column({ type: 'text' })

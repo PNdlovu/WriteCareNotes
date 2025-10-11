@@ -38,7 +38,7 @@ export class GraphQLController {
   privategraphQLService: GraphQLGatewayService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.graphQLService = new GraphQLGatewayService();
     this.auditService = new AuditTrailService();
   }
@@ -75,7 +75,7 @@ export class GraphQLController {
       );
 
       // Prepare response
-      constresponse: GraphQLResponse = {
+      const response: GraphQLResponse = {
         data: execution.result?.data,
         errors: execution.error ? [{
           message: execution.error,
@@ -96,9 +96,9 @@ export class GraphQLController {
       res.status(statusCode).json(response);
 
     } catch (error) {
-      console.error('GraphQL request failed:', error);
+      console.error('GraphQL requestfailed:', error);
       
-      constresponse: GraphQLResponse = {
+      const response: GraphQLResponse = {
         errors: [{
           message: error instanceof Error ? error.message : 'Unknown error',
           extensions: {
@@ -143,7 +143,7 @@ export class GraphQLController {
       );
 
       // Prepare response
-      constresponse: GraphQLResponse = {
+      const response: GraphQLResponse = {
         data: execution.result?.data,
         errors: execution.error ? [{
           message: execution.error,
@@ -164,9 +164,9 @@ export class GraphQLController {
       res.status(statusCode).json(response);
 
     } catch (error) {
-      console.error('GraphQL mutation failed:', error);
+      console.error('GraphQL mutationfailed:', error);
       
-      constresponse: GraphQLResponse = {
+      const response: GraphQLResponse = {
         errors: [{
           message: error instanceof Error ? error.message : 'Unknown error',
           extensions: {
@@ -211,7 +211,7 @@ export class GraphQLController {
       );
 
       // Prepare response
-      constresponse: GraphQLResponse = {
+      const response: GraphQLResponse = {
         data: {
           subscriptionId,
           status: 'created'
@@ -224,9 +224,9 @@ export class GraphQLController {
       res.status(201).json(response);
 
     } catch (error) {
-      console.error('GraphQL subscription failed:', error);
+      console.error('GraphQL subscriptionfailed:', error);
       
-      constresponse: GraphQLResponse = {
+      const response: GraphQLResponse = {
         errors: [{
           message: error instanceof Error ? error.message : 'Unknown error',
           extensions: {
@@ -271,7 +271,7 @@ export class GraphQLController {
       }
 
     } catch (error) {
-      console.error('Failed to get schema:', error);
+      console.error('Failed to getschema:', error);
       res.status(500).json({
         error: error instanceof Error ? error.message : 'Unknown error',
         code: 'INTERNAL_ERROR'
@@ -294,7 +294,7 @@ export class GraphQLController {
         offset = 0
       } = req.query;
 
-      constfilters: any = {};
+      const filters: any = {};
       if (userId) filters.userId = userId as string;
       if (tenantId) filters.tenantId = tenantId as string;
       if (status) filters.status = status as string;
@@ -318,7 +318,7 @@ export class GraphQLController {
       });
 
     } catch (error) {
-      console.error('Failed to get execution history:', error);
+      console.error('Failed to get executionhistory:', error);
       res.status(500).json({
         error: error instanceof Error ? error.message : 'Unknown error',
         code: 'INTERNAL_ERROR'
@@ -348,7 +348,7 @@ export class GraphQLController {
       });
 
     } catch (error) {
-      console.error('Failed to get execution:', error);
+      console.error('Failed to getexecution:', error);
       res.status(500).json({
         error: error instanceof Error ? error.message : 'Unknown error',
         code: 'INTERNAL_ERROR'
@@ -369,7 +369,7 @@ export class GraphQLController {
       });
 
     } catch (error) {
-      console.error('Failed to get metrics:', error);
+      console.error('Failed to getmetrics:', error);
       res.status(500).json({
         error: error instanceof Error ? error.message : 'Unknown error',
         code: 'INTERNAL_ERROR'
@@ -402,7 +402,7 @@ export class GraphQLController {
       });
 
     } catch (error) {
-      console.error('Health check failed:', error);
+      console.error('Health checkfailed:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

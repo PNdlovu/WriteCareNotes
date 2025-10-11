@@ -83,10 +83,10 @@ export interface IncidentFollowUp {
 }
 
 export class MedicationIncidentService {
-  private logger = logger;
+  privatelogger = logger;
   privatedb: Pool;
 
-  constructor(db: Pool) {
+  const ructor(db: Pool) {
     this.db = db;
   }
 
@@ -106,7 +106,7 @@ export class MedicationIncidentService {
       const incidentId = uuidv4();
       const now = new Date();
 
-      constincident: MedicationIncident = {
+      const incident: MedicationIncident = {
         id: incidentId,
         residentId: request.residentId,
         medicationId: request.medicationId,
@@ -151,7 +151,7 @@ export class MedicationIncidentService {
         error: error instanceof Error ? error.message : "Unknown error", 
         residentId: request.residentId 
       });
-      throw new Error(`Failed to create medication incident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to create medicationincident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -174,7 +174,7 @@ export class MedicationIncidentService {
 
       // Build query with filters
       let whereClause = 'WHERE organization_id = $1 AND deleted_at IS NULL';
-      constqueryParams: any[] = [organizationId];
+      const queryParams: any[] = [organizationId];
       let paramCount = 1;
 
       if (filters?.residentId) {
@@ -185,13 +185,13 @@ export class MedicationIncidentService {
 
       if (filters?.severity) {
         paramCount++;
-        whereClause += ` AND severity = $${paramCount}`;
+        whereClause += ` ANDseverity = $${paramCount}`;
         queryParams.push(filters.severity);
       }
 
       if (filters?.status) {
         paramCount++;
-        whereClause += ` AND status = $${paramCount}`;
+        whereClause += ` ANDstatus = $${paramCount}`;
         queryParams.push(filters.status);
       }
 
@@ -226,7 +226,7 @@ export class MedicationIncidentService {
       `;
       const incidentsResult = await this.db.query(incidentsQuery, queryParams);
 
-      constincidents: MedicationIncident[] = incidentsResult.rows.map(row => this.mapDbRowToIncident(row));
+      const incidents: MedicationIncident[] = incidentsResult.rows.map(row => this.mapDbRowToIncident(row));
 
       const totalPages = Math.ceil(total / limit);
 
@@ -247,7 +247,7 @@ export class MedicationIncidentService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get medication incidents: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get medicationincidents: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -257,7 +257,7 @@ export class MedicationIncidentService {
 
       const query = `
         SELECT * FROM medication_incidents 
-        WHERE id = $1 AND organization_id = $2 AND deleted_at IS NULL
+        WHEREid = $1 AND organization_id = $2 AND deleted_at IS NULL
       `;
       const result = await this.db.query(query, [incidentId, organizationId]);
 
@@ -276,7 +276,7 @@ export class MedicationIncidentService {
         error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to get medication incident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get medicationincident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -291,8 +291,8 @@ export class MedicationIncidentService {
 
       const query = `
         UPDATE medication_incidents 
-        SET status = $1, notes = $2, updated_at = $3, updated_by = $4
-        WHERE id = $5 AND deleted_at IS NULL
+        SETstatus = $1, notes = $2, updated_at = $3, updated_by = $4
+        WHEREid = $5 AND deleted_at IS NULL
       `;
 
       await this.db.query(query, [status, notes, new Date(), userId, incidentId]);
@@ -307,7 +307,7 @@ export class MedicationIncidentService {
         error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to update incident status: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to update incidentstatus: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -318,14 +318,14 @@ export class MedicationIncidentService {
       const query = `
         SELECT 
           COUNT(*) as total_incidents,
-          COUNT(CASE WHEN severity = 'LOW' THEN 1 END) as low_severity,
-          COUNT(CASE WHEN severity = 'MEDIUM' THEN 1 END) as medium_severity,
-          COUNT(CASE WHEN severity = 'HIGH' THEN 1 END) as high_severity,
-          COUNT(CASE WHEN severity = 'CRITICAL' THEN 1 END) as critical_severity,
-          COUNT(CASE WHEN status = 'REPORTED' THEN 1 END) as reported,
-          COUNT(CASE WHEN status = 'INVESTIGATING' THEN 1 END) as investigating,
-          COUNT(CASE WHEN status = 'RESOLVED' THEN 1 END) as resolved,
-          COUNT(CASE WHEN status = 'CLOSED' THEN 1 END) as closed
+          COUNT(CASE WHENseverity = 'LOW' THEN 1 END) as low_severity,
+          COUNT(CASE WHENseverity = 'MEDIUM' THEN 1 END) as medium_severity,
+          COUNT(CASE WHENseverity = 'HIGH' THEN 1 END) as high_severity,
+          COUNT(CASE WHENseverity = 'CRITICAL' THEN 1 END) as critical_severity,
+          COUNT(CASE WHENstatus = 'REPORTED' THEN 1 END) as reported,
+          COUNT(CASE WHENstatus = 'INVESTIGATING' THEN 1 END) as investigating,
+          COUNT(CASE WHENstatus = 'RESOLVED' THEN 1 END) as resolved,
+          COUNT(CASE WHENstatus = 'CLOSED' THEN 1 END) as closed
         FROM medication_incidents 
         WHERE organization_id = $1 AND deleted_at IS NULL
       `;
@@ -356,12 +356,12 @@ export class MedicationIncidentService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get incident statistics: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get incidentstatistics: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateIncidentRequest(request: CreateMedicationIncidentRequest): void {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!request.residentId?.trim()) errors.push('Resident ID is required');
     if (!request.medicationId?.trim()) errors.push('Medication ID is required');
@@ -423,7 +423,7 @@ export class MedicationIncidentService {
       const investigationId = uuidv4();
       const now = new Date();
 
-      constinvestigation: IncidentInvestigation = {
+      const investigation: IncidentInvestigation = {
         id: investigationId,
         incidentId,
         investigatorId,
@@ -469,7 +469,7 @@ export class MedicationIncidentService {
         error: error instanceof Error ? error.message : "Unknown error", 
         incidentId 
       });
-      throw new Error(`Failed to create incident investigation: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to create incidentinvestigation: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -478,7 +478,7 @@ export class MedicationIncidentService {
       const followUpId = uuidv4();
       const now = new Date();
 
-      constfollowUp: IncidentFollowUp = {
+      const followUp: IncidentFollowUp = {
         id: followUpId,
         incidentId,
         followUpDate,
@@ -562,7 +562,7 @@ export class MedicationIncidentService {
 
     } catch (error: unknown) {
       console.error('Failed to store medication incident', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to store medication incident: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to store medicationincident: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

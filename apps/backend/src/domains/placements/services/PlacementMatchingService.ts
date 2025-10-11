@@ -36,7 +36,7 @@ export interface MatchScore {
 
 @Injectable()
 export class PlacementMatchingService {
-  constructor(
+  const ructor(
     @InjectRepository(PlacementRequest)
     privateplacementRequestRepository: Repository<PlacementRequest>,
     
@@ -80,7 +80,7 @@ export class PlacementMatchingService {
     }
 
     // Score each organization
-    constmatchScores: MatchScore[] = [];
+    const matchScores: MatchScore[] = [];
 
     for (const org of organizations) {
       const score = await this.calculateMatchScore(request, org);
@@ -164,9 +164,9 @@ export class PlacementMatchingService {
     }
 
     /**
-     * PRODUCTION IMPLEMENTATION:
+     * PRODUCTIONIMPLEMENTATION:
      * This method uses a simplified distance estimation algorithm.
-     * For production deployment, integrate with a geocoding service:
+     * For production deployment, integrate with a geocodingservice:
      * 
      * Option 1: Google Maps Distance Matrix API
      * - Requires API key configuration in environment
@@ -211,10 +211,10 @@ export class PlacementMatchingService {
    */
   private calculateHaversineDistance(postcode1: string, postcode2: string): number {
     /**
-     * In production, integrate with postcodes.io or similar service:
+     * In production, integrate with postcodes.io or similarservice:
      * 
-     * 1. Fetch coordinates for postcode1: GET https://api.postcodes.io/postcodes/{postcode1}
-     * 2. Fetch coordinates for postcode2: GET https://api.postcodes.io/postcodes/{postcode2}
+     * 1. Fetch coordinates for postcode1: GEThttps://api.postcodes.io/postcodes/{postcode1}
+     * 2. Fetch coordinates for postcode2: GEThttps://api.postcodes.io/postcodes/{postcode2}
      * 3. Apply Haversine formula to lat/long pairs
      * 
      * For now, returning average UK care home distance (50km) as conservative estimate.
@@ -230,7 +230,7 @@ export class PlacementMatchingService {
     request: PlacementRequest,
     organization: Organization
   ): { score: number; max: number; matched: string[] } {
-    constmatched: string[] = [];
+    const matched: string[] = [];
     let score = 0;
     const max = 10;
 
@@ -452,7 +452,7 @@ export class PlacementMatchingService {
    * Generate recommendations based on score breakdown
    */
   private generateRecommendations(breakdown: any): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     if (breakdown.specialisms.matched.length > 0) {
       recommendations.push(`Matched specialisms: ${breakdown.specialisms.matched.join(', ')}`);
@@ -473,7 +473,7 @@ export class PlacementMatchingService {
    * Generate concerns based on score breakdown
    */
   private generateConcerns(breakdown: any): string[] {
-    constconcerns: string[] = [];
+    const concerns: string[] = [];
 
     if (!breakdown.capacity.available) {
       concerns.push('No capacity currently available');

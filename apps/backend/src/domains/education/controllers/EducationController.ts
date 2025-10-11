@@ -54,7 +54,7 @@ import { PlacementType } from '../entities/SchoolPlacement';
 export class EducationController {
   privateeducationService: EducationService;
 
-  constructor() {
+  const ructor() {
     this.educationService = new EducationService();
   }
 
@@ -139,7 +139,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error creating PEP:', error);
+      console.error('Error creatingPEP:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to create PEP'
@@ -174,7 +174,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching PEP:', error);
+      console.error('Error fetchingPEP:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch PEP'
@@ -209,7 +209,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error updating PEP status:', error);
+      console.error('Error updating PEPstatus:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to update PEP status'
@@ -250,7 +250,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error updating target progress:', error);
+      console.error('Error updating targetprogress:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to update target progress'
@@ -316,7 +316,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching overdue PEPs:', error);
+      console.error('Error fetching overduePEPs:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch overdue PEPs'
@@ -382,7 +382,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error creating school placement:', error);
+      console.error('Error creating schoolplacement:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to create school placement'
@@ -417,7 +417,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching school placement:', error);
+      console.error('Error fetching schoolplacement:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch school placement'
@@ -458,7 +458,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error recording exclusion:', error);
+      console.error('Error recordingexclusion:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to record exclusion'
@@ -497,7 +497,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error updating attendance:', error);
+      console.error('Error updatingattendance:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to update attendance'
@@ -549,7 +549,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching NEET children:', error);
+      console.error('Error fetching NEETchildren:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch NEET children'
@@ -574,7 +574,7 @@ export class EducationController {
       });
 
     } catch (error: any) {
-      console.error('Error fetching statistics:', error);
+      console.error('Error fetchingstatistics:', error);
       return res.status(500).json({
         success: false,
         error: error.message || 'Failed to fetch statistics'

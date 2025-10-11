@@ -109,7 +109,7 @@ export class EnterpriseAuditService {
   privateauditRepository: Repository<AuditEvent>;
   privatenotificationService: NotificationService;
 
-  constructor() {
+  const ructor() {
     this.auditRepository = AppDataSource.getRepository(AuditEvent);
     this.notificationService = new NotificationService(new EventEmitter2());
   }
@@ -211,7 +211,7 @@ export class EnterpriseAuditService {
 
       return savedEvent;
     } catch (error: unknown) {
-      console.error('Error creating advanced audit event:', error);
+      console.error('Error creating advanced auditevent:', error);
       throw error;
     }
   }
@@ -258,7 +258,7 @@ export class EnterpriseAuditService {
         anomalies
       );
 
-      constinvestigation: AuditInvestigation = {
+      const investigation: AuditInvestigation = {
         investigationId: crypto.randomUUID(),
         triggerEvent: investigationRequest.triggerEventId,
         investigationType: investigationRequest.investigationType,
@@ -316,7 +316,7 @@ export class EnterpriseAuditService {
 
       return investigation;
     } catch (error: unknown) {
-      console.error('Error conducting audit investigation:', error);
+      console.error('Error conducting auditinvestigation:', error);
       throw error;
     }
   }
@@ -331,7 +331,7 @@ export class EnterpriseAuditService {
         return new Date(event.createdAt) >= thirtyDaysAgo;
       });
 
-      constanalytics: AuditAnalytics = {
+      const analytics: AuditAnalytics = {
         volumeMetrics: {
           totalEvents: allEvents.length,
           eventsPerDay: recentEvents.length / 30,
@@ -364,7 +364,7 @@ export class EnterpriseAuditService {
 
       return analytics;
     } catch (error: unknown) {
-      console.error('Error getting advanced audit analytics:', error);
+      console.error('Error getting advanced auditanalytics:', error);
       throw error;
     }
   }

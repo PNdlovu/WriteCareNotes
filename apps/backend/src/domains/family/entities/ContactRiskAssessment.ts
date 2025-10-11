@@ -124,19 +124,19 @@ export class ContactRiskAssessment {
   @Column({ name: 'assessment_date', type: 'date' })
   assessmentDate!: Date;
 
-  @Column({ name: 'assessment_type', type: 'varchar', length: 100 })
+  @Column({ name: 'assessment_type', type: 'var char', length: 100 })
   assessmentType!: string;
 
   @Column({ name: 'status', type: 'enum', enum: RiskAssessmentStatus, default: RiskAssessmentStatus.DRAFT })
   status!: RiskAssessmentStatus;
 
-  @Column({ name: 'assessed_by_name', type: 'varchar', length: 200 })
+  @Column({ name: 'assessed_by_name', type: 'var char', length: 200 })
   assessedByName!: string;
 
-  @Column({ name: 'assessed_by_role', type: 'varchar', length: 100 })
+  @Column({ name: 'assessed_by_role', type: 'var char', length: 100 })
   assessedByRole!: string;
 
-  @Column({ name: 'assessed_by_organization', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'assessed_by_organization', type: 'var char', length: 200, nullable: true })
   assessedByOrganization?: string;
 
   // ========================================
@@ -235,7 +235,7 @@ export class ContactRiskAssessment {
   @Column({ name: 'domestic_violence_details', type: 'text', nullable: true })
   domesticViolenceDetails?: string;
 
-  @Column({ name: 'compliance_with_conditions', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'compliance_with_conditions', type: 'var char', length: 50, nullable: true })
   complianceWithConditions?: 'EXCELLENT' | 'GOOD' | 'SATISFACTORY' | 'POOR' | 'NON_COMPLIANT';
 
   // ========================================
@@ -257,7 +257,7 @@ export class ContactRiskAssessment {
     concerns?: string;
   }[];
 
-  @Column({ name: 'neighbourhood_safety', type: 'varchar', length: 50, nullable: true })
+  @Column({ name: 'neighbourhood_safety', type: 'var char', length: 50, nullable: true })
   neighbourhoodSafety?: 'SAFE' | 'MODERATE_CONCERN' | 'HIGH_CONCERN';
 
   // ========================================
@@ -294,13 +294,13 @@ export class ContactRiskAssessment {
     effectivenessRating?: 'VERY_EFFECTIVE' | 'EFFECTIVE' | 'PARTIALLY_EFFECTIVE' | 'INEFFECTIVE';
   }[];
 
-  @Column({ name: 'supervision_recommendation', type: 'varchar', length: 100 })
+  @Column({ name: 'supervision_recommendation', type: 'var char', length: 100 })
   supervisionRecommendation!: string;
 
   @Column({ name: 'supervision_rationale', type: 'text' })
   supervisionRationale!: string;
 
-  @Column({ name: 'contact_frequency_recommendation', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'contact_frequency_recommendation', type: 'var char', length: 100, nullable: true })
   contactFrequencyRecommendation?: string;
 
   @Column({ name: 'contact_duration_recommendation', type: 'int', nullable: true })
@@ -399,10 +399,10 @@ export class ContactRiskAssessment {
   @Column({ name: 'approved_by', type: 'uuid', nullable: true })
   approvedBy?: string;
 
-  @Column({ name: 'approved_by_name', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'approved_by_name', type: 'var char', length: 200, nullable: true })
   approvedByName?: string;
 
-  @Column({ name: 'approved_by_role', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'approved_by_role', type: 'var char', length: 100, nullable: true })
   approvedByRole?: string;
 
   @Column({ name: 'approval_date', type: 'date', nullable: true })

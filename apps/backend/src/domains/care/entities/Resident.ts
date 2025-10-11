@@ -47,32 +47,32 @@ export class Resident {
   id!: string;
 
   // Personal Information
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   firstName!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   lastName!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   preferredName?: string;
 
-  @Column({ type: 'varchar', length: 10, nullable: true })
+  @Column({ type: 'var char', length: 10, nullable: true })
   title?: string;
 
   @Column({ type: 'date' })
   dateOfBirth!: Date;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   gender?: string;
 
   // Contact Information
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   email?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   phone?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   mobilePhone?: string;
 
   // Care Information
@@ -88,33 +88,33 @@ export class Resident {
   @Column({ type: 'date', nullable: true })
   dischargeDate?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   roomNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   bedNumber?: string;
 
   // Medical Information (Basic - detailed in CareRecord)
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   nhsNumber?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   gpName?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   gpPractice?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   gpPhone?: string;
 
   // Emergency Contact
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   emergencyContactName?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   emergencyContactRelationship?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   emergencyContactPhone?: string;
 
   // Multi-tenancy
@@ -129,10 +129,10 @@ export class Resident {
   organization?: Organization;
 
   // Metadata
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy?: string;
 
   @CreateDateColumn()
@@ -145,7 +145,7 @@ export class Resident {
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deletedBy?: string;
 
   // Additional Information
@@ -231,7 +231,7 @@ export class Resident {
    * Validate before save
    */
   validate(): { valid: boolean; errors: string[] } {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!this.firstName || this.firstName.trim() === '') {
       errors.push('First name is required');

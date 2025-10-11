@@ -17,7 +17,7 @@ import { logger } from '../../utils/logger';
 export class AgentMonitoringController {
   privatemonitoringService: AgentMonitoringService;
 
-  constructor() {
+  const ructor() {
     this.monitoringService = new AgentMonitoringService();
   }
 

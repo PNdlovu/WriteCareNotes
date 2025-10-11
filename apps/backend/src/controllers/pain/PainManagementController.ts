@@ -18,7 +18,7 @@ import { PainManagementService } from '../../services/pain/PainManagementService
 export class PainManagementController {
   privatepainService: PainManagementService;
 
-  constructor() {
+  const ructor() {
     this.painService = new PainManagementService();
   }
 

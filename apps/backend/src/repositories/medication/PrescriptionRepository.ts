@@ -59,7 +59,7 @@ export interface PrescriptionStatistics {
 export class PrescriptionRepository {
   privaterepository: Repository<Prescription>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.repository = dataSource.getRepository(Prescription);
   }
 
@@ -339,7 +339,7 @@ export class PrescriptionRepository {
       const requiresMonitoring = prescriptions.filter(p => p.requiresMonitoring).length;
 
       // Group by therapeutic class
-      constbyTherapeuticClass: Record<string, number> = {};
+      const byTherapeuticClass: Record<string, number> = {};
       prescriptions.forEach(p => {
         if (p.medication?.therapeuticClass) {
           const className = p.medication.therapeuticClass;
@@ -348,7 +348,7 @@ export class PrescriptionRepository {
       });
 
       // Group by prescription type
-      constbyPrescriptionType: Record<string, number> = {};
+      const byPrescriptionType: Record<string, number> = {};
       prescriptions.forEach(p => {
         const type = p.prescriptionType;
         byPrescriptionType[type] = (byPrescriptionType[type] || 0) + 1;

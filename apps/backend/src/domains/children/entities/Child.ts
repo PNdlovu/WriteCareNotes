@@ -106,9 +106,9 @@ export enum Jurisdiction {
  * 
  * England/Wales: Section 20, 31, 38, EPO
  * Scotland: CSO (Compulsory Supervision Order), Permanence Order
- * Northern Ireland: Care Order (NI), Residence Order
+ * NorthernIreland: Care Order (NI), Residence Order
  * Ireland: Care Order (IE), Emergency Care Order, Voluntary Care
- * Crown Dependencies: Jurisdiction-specific care orders
+ * CrownDependencies: Jurisdiction-specific care orders
  */
 export enum LegalStatus {
   // England & Wales (Children Act 1989)

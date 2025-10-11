@@ -23,7 +23,7 @@ export class FacilitiesManagementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.assetRepository = AppDataSource.getRepository(FacilityAsset);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -71,7 +71,7 @@ export class FacilitiesManagementService {
 
       return savedAsset;
     } catch (error: unknown) {
-      console.error('Error creating facility asset:', error);
+      console.error('Error creating facilityasset:', error);
       throw error;
     }
   }
@@ -89,7 +89,7 @@ export class FacilitiesManagementService {
         predictiveInsights: this.generatePredictiveInsights(allAssets)
       };
     } catch (error: unknown) {
-      console.error('Error getting facilities analytics:', error);
+      console.error('Error getting facilitiesanalytics:', error);
       throw error;
     }
   }

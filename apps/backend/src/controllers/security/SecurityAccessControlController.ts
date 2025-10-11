@@ -19,7 +19,7 @@ import { BiometricType } from '../../entities/security/AccessControlUser';
 export class SecurityAccessControlController {
   privatesecurityService: SecurityAccessControlService;
 
-  constructor() {
+  const ructor() {
     this.securityService = new SecurityAccessControlService();
   }
 

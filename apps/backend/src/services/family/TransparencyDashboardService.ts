@@ -112,7 +112,7 @@ export class TransparencyDashboardService {
   privatelogger: Logger;
   privateanalytics: AnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('TransparencyDashboardService');
     this.analytics = new AnalyticsService();
@@ -147,7 +147,7 @@ export class TransparencyDashboardService {
         this.getFamilyEngagement(tenantId, familyMemberId, timeframe)
       ]);
 
-      constdashboardData: DashboardData = {
+      const dashboardData: DashboardData = {
         careOverview,
         recentActivities,
         communicationSummary,
@@ -287,7 +287,7 @@ export class TransparencyDashboardService {
     // Get communication preferences
     const prefQuery = `
       SELECT communication_preferences FROM family_members 
-      WHERE id = $1
+      WHEREid = $1
     `;
     const prefResult = await this.db.query(prefQuery, [familyMemberId]);
     const prefs = JSON.parse(prefResult.rows[0]?.communication_preferences || '{}');
@@ -432,7 +432,7 @@ export class TransparencyDashboardService {
     const eventQuery = `
       SELECT 
         COUNT(*) as total_events,
-        COUNT(CASE WHEN attended = true THEN 1 END) as attended_events
+        COUNT(CASE WHENattended = true THEN 1 END) as attended_events
       FROM family_event_participation 
       WHERE family_member_id = $1 AND tenant_id = $2
         AND event_date >= NOW() - INTERVAL '${days} days'
@@ -465,7 +465,7 @@ export class TransparencyDashboardService {
   }
 
   private parseTimeframe(timeframe: string): number {
-    consttimeframeMap: Record<string, number> = {
+    const timeframeMap: Record<string, number> = {
       '7d': 7,
       '30d': 30,
       '90d': 90,

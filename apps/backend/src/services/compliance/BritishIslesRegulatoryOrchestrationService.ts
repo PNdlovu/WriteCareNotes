@@ -26,10 +26,10 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: CQC (Care Quality Commission)
  * - Scotland: Care Inspectorate Scotland
  * - Wales: CIW (Care Inspectorate Wales)
- * - Northern Ireland: RQIA (Regulation and Quality Improvement Authority)
+ * - NorthernIreland: RQIA (Regulation and Quality Improvement Authority)
  * - Jersey: Jersey Care Commission
  * - Guernsey: Committee for Health & Social Care
- * - Isle of Man: Department of Health and Social Care
+ * - Isle ofMan: Department of Health and Social Care
  */
 
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
@@ -120,26 +120,26 @@ export interface MultiJurisdictionalAssessment {
 export class BritishIslesRegulatoryOrchestrationService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly complianceRepository: Repository<BritishIslesCompliance>,
+    private readonlycomplianceRepository: Repository<BritishIslesCompliance>,
     
-    private readonly regulatoryUpdateRepository: Repository<RegulatoryUpdate>,
+    private readonlyregulatoryUpdateRepository: Repository<RegulatoryUpdate>,
     
-    private readonly assessmentRepository: Repository<ComplianceAssessment>,
+    private readonlyassessmentRepository: Repository<ComplianceAssessment>,
     
-    private readonly organizationRepository: Repository<Organization>,
+    private readonlyorganizationRepository: Repository<Organization>,
     
     // Inject all jurisdiction-specific services
-    private readonly cqcService: CQCDigitalStandardsService,
-    private readonly careInspectorateService: CareInspectorateScotlandService,
-    private readonly ciwService: CIWWalesComplianceService,
-    private readonly rqiaService: RQIANorthernIrelandService,
-    private readonly jerseyCareService: JerseyCareCommissionService,
-    private readonly guernseyService: GuernseyHealthSocialCareService,
-    private readonly iomService: IsleOfManHealthSocialCareService,
+    private readonlycqcService: CQCDigitalStandardsService,
+    private readonlycareInspectorateService: CareInspectorateScotlandService,
+    private readonlyciwService: CIWWalesComplianceService,
+    private readonlyrqiaService: RQIANorthernIrelandService,
+    private readonlyjerseyCareService: JerseyCareCommissionService,
+    private readonlyguernseyService: GuernseyHealthSocialCareService,
+    private readonlyiomService: IsleOfManHealthSocialCareService,
     
-    private readonly eventEmitter: EventEmitter2,
+    private readonlyeventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -159,7 +159,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       // Determine applicable jurisdictions based on organization locations
       const applicableJurisdictions = this.determineApplicableJurisdictions(organization);
       
-      constassessment: MultiJurisdictionalAssessment = {
+      const assessment: MultiJurisdictionalAssessment = {
         organizationId,
         assessmentDate: new Date(),
         jurisdictions: {},
@@ -188,7 +188,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       console.log(`Comprehensive compliance assessment completed for organization ${organizationId}`);
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get comprehensive compliance status: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get comprehensive compliancestatus: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -233,7 +233,7 @@ export class BritishIslesRegulatoryOrchestrationService {
    * Determine applicable jurisdictions based on organization locations
    */
   private determineApplicableJurisdictions(organization: Organization): BritishIslesJurisdiction[] {
-    constjurisdictions: BritishIslesJurisdiction[] = [];
+    const jurisdictions: BritishIslesJurisdiction[] = [];
     
     // Check each location and determine jurisdiction
     for (const location of organization.locations || []) {
@@ -267,7 +267,7 @@ export class BritishIslesRegulatoryOrchestrationService {
   async getAllRegulatoryUpdates(jurisdictions?: BritishIslesJurisdiction[]): Promise<RegulatoryUpdate[]> {
     try {
       const applicableJurisdictions = jurisdictions || Object.values(BritishIslesJurisdiction);
-      constallUpdates: RegulatoryUpdate[] = [];
+      const allUpdates: RegulatoryUpdate[] = [];
 
       for (const jurisdiction of applicableJurisdictions) {
         const updates = await this.getJurisdictionRegulatoryUpdates(jurisdiction);
@@ -277,7 +277,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       // Sort by effective date (most recent first)
       return allUpdates.sort((a, b) => b.effectiveDate.getTime() - a.effectiveDate.getTime());
     } catch (error: unknown) {
-      console.error(`Failed to get regulatory updates: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get regulatoryupdates: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -314,7 +314,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       console.log(`Harmonized compliance report generated for organization ${organizationId}`);
       return report;
     } catch (error: unknown) {
-      console.error(`Failed to generate harmonized report: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to generate harmonizedreport: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -328,7 +328,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       console.log('Starting daily regulatory monitoring across British Isles');
 
       const jurisdictions = Object.values(BritishIslesJurisdiction);
-      constnewUpdates: RegulatoryUpdate[] = [];
+      const newUpdates: RegulatoryUpdate[] = [];
 
       for (const jurisdiction of jurisdictions) {
         const updates = await this.checkForRegulatoryUpdates(jurisdiction);
@@ -345,7 +345,7 @@ export class BritishIslesRegulatoryOrchestrationService {
         console.log(`Found ${newUpdates.length} new regulatory updates across British Isles`);
       }
     } catch (error: unknown) {
-      console.error(`Failed to monitor regulatory changes: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to monitor regulatorychanges: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -533,7 +533,7 @@ export class BritishIslesRegulatoryOrchestrationService {
 
       return actionPlan;
     } catch (error: unknown) {
-      console.error(`Failed to generate unified action plan: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to generate unified actionplan: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -616,7 +616,7 @@ export class BritishIslesRegulatoryOrchestrationService {
       'Inconsistent care standards across locations',
       'Staff training gaps between jurisdictions',
       'Documentation differences affecting transfers',
-      'Varying medication management requirements'
+      'Var ying medication management requirements'
     ];
   }
 

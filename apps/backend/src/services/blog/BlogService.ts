@@ -20,7 +20,7 @@ import { CreateBlogPostDto, UpdateBlogPostDto, CreateBlogCategoryDto, UpdateBlog
 
 
 export class BlogService {
-  constructor(
+  const ructor(
     
     privateblogPostRepository: Repository<BlogPost>,
     
@@ -381,7 +381,7 @@ export class BlogService {
     const categories = await this.blogCategoryRepository.find();
     const tags = await this.blogTagRepository.find();
 
-    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    let sitemap = `<?xmlversion="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://writecarenotes.com/blog</loc>
@@ -434,7 +434,7 @@ export class BlogService {
       relations: ['categories', 'tags']
     });
 
-    let rss = `<?xml version="1.0" encoding="UTF-8"?>
+    let rss = `<?xmlversion="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>WriteCareNotes Blog</title>

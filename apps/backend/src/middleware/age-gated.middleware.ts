@@ -23,7 +23,7 @@ import { AppDataSource } from '../config/database';
 /**
  * Middleware: Require child to be 16+ (leaving care age)
  * 
- * USED FOR:
+ * USEDFOR:
  * - Young person portal access
  * - Leaving care self-service features
  * - Limited write access to own data
@@ -75,7 +75,7 @@ export const requireLeavingCareAge = async (
 /**
  * Middleware: Require child to be 18+ (adult age)
  * 
- * USED FOR:
+ * USEDFOR:
  * - Adult care services transition
  * - Full data access rights
  * - Independent decision making
@@ -125,7 +125,7 @@ export const requireAdultAge = async (
  * USAGE:
  * router.use(requireAgeRange(13, 17)); // Teenagers only
  * 
- * USED FOR:
+ * USEDFOR:
  * - Age-specific services
  * - Developmental stage services
  * - Custom age restrictions
@@ -172,7 +172,7 @@ export const requireAgeRange = (minAge: number, maxAge: number) => {
 /**
  * Middleware: Block child access (staff only)
  * 
- * USED FOR:
+ * USEDFOR:
  * - 0-15 year old profiles (no child access)
  * - Staff-only management endpoints
  * - Sensitive safeguarding data

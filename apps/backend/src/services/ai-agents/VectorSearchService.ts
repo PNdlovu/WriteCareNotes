@@ -64,7 +64,7 @@ export class VectorSearchService {
   privateembeddingModel: string;
   privateembeddingProvider: 'OPENAI' | 'AZURE_OPENAI' | 'LOCAL';
 
-  constructor() {
+  const ructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);
 
     this.embeddingModel = process.env['EMBEDDING_MODEL'] || 'text-embedding-ada-002';
@@ -127,7 +127,7 @@ export class VectorSearchService {
         case 'LOCAL':
           return await this.generateLocalEmbedding(request);
         default:
-          throw new Error(`Unsupported embedding provider: ${this.embeddingProvider}`);
+          throw new Error(`Unsupported embeddingprovider: ${this.embeddingProvider}`);
       }
     } catch (error: unknown) {
       console.error('Failed to generate embedding', {
@@ -234,7 +234,7 @@ export class VectorSearchService {
           AND (1 - (ka.embedding_vector <=> $1::vector)) > $2
       `;
 
-      constqueryParams: any[] = [
+      const queryParams: any[] = [
         `[${queryEmbedding.embedding.join(',')}]`, // Vector as string
         query.threshold || 0.5 // Similarity threshold
       ];
@@ -398,7 +398,7 @@ export class VectorSearchService {
         tenantId: query.tenantId
       });
 
-      constwhereConditions: any = {
+      const whereConditions: any = {
         aiSearchable: true
       };
 
@@ -482,7 +482,7 @@ export class VectorSearchService {
    */
   async reindexAllArticles(tenantId?: string): Promise<void> {
     try {
-      constwhereConditions: any = { aiSearchable: true };
+      const whereConditions: any = { aiSearchable: true };
       if (tenantId) {
         whereConditions.tenantId = tenantId;
       }
@@ -541,7 +541,7 @@ export class VectorSearchService {
       }
 
       // Find similar articles using vector similarity
-      constquery: VectorSearchQuery = {
+      const query: VectorSearchQuery = {
         query: article.title + ' ' + article.content.substring(0, 500),
         tenantId,
         limit: limit + 1, // +1 to exclude the original article
@@ -633,7 +633,7 @@ export class VectorSearchService {
     lastIndexUpdate: Date;
   }> {
     try {
-      constwhereConditions: any = { aiSearchable: true };
+      const whereConditions: any = { aiSearchable: true };
       if (tenantId) {
         whereConditions.tenantId = tenantId;
       } else {
@@ -681,7 +681,7 @@ export class VectorSearchService {
       // Check if pgvector extension is available
       const result = await AppDataSource.query(`
         SELECT EXISTS(
-          SELECT 1 FROM pg_extension WHERE extname = 'vector'
+          SELECT 1 FROM pg_extension WHEREextname = 'vector'
         ) as has_vector
       `);
 

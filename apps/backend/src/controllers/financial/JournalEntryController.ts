@@ -17,7 +17,7 @@ import { logger } from '../../utils/logger';
 export class JournalEntryController {
   privatejournalEntryService: JournalEntryService;
 
-  constructor() {
+  const ructor() {
     this.journalEntryService = new JournalEntryService();
   }
 
@@ -26,7 +26,7 @@ export class JournalEntryController {
    */
   async createJournalEntry(req: Request, res: Response): Promise<void> {
     try {
-      constrequest: JournalEntryRequest = req.body;
+      const request: JournalEntryRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const entry = await this.journalEntryService.createJournalEntry(request, createdBy);
@@ -122,7 +122,7 @@ export class JournalEntryController {
    */
   async searchJournalEntries(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: JournalEntrySearchCriteria = req.query;
+      const criteria: JournalEntrySearchCriteria = req.query;
 
       const entries = await this.journalEntryService.searchJournalEntries(criteria);
 
@@ -150,7 +150,7 @@ export class JournalEntryController {
   async updateJournalEntry(req: Request, res: Response): Promise<void> {
     try {
       const { entryId } = req.params;
-      constupdates: JournalEntryUpdate = req.body;
+      const updates: JournalEntryUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const entry = await this.journalEntryService.updateJournalEntry(

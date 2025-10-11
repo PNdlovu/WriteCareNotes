@@ -146,10 +146,10 @@ export const useAnalytics = (options: UseAnalyticsOptions): UseAnalyticsReturn =
       });
 
       if (!response.ok) {
-        throw new Error(`Analytics API error: ${response.status} ${response.statusText}`);
+        throw new Error(`Analytics APIerror: ${response.status} ${response.statusText}`);
       }
 
-      constanalyticsData: AnalyticsData = await response.json();
+      const analyticsData: AnalyticsData = await response.json();
       
       // Enterprise validation
       if (!analyticsData.metrics || !analyticsData.trends || !analyticsData.insights || !analyticsData.kpiMetrics) {
@@ -158,7 +158,7 @@ export const useAnalytics = (options: UseAnalyticsOptions): UseAnalyticsReturn =
 
       // Validate data quality
       if (analyticsData.dataQuality < 0.7) {
-        console.warn('Analytics data quality below threshold:', analyticsData.dataQuality);
+        console.warn('Analytics data quality belowthreshold:', analyticsData.dataQuality);
       }
 
       // Cache successful response
@@ -170,7 +170,7 @@ export const useAnalytics = (options: UseAnalyticsOptions): UseAnalyticsReturn =
             ttl: options.cacheStrategy === 'aggressive' ? 3600000 : 1800000 // 1h or 30min
           }));
         } catch (cacheError) {
-          console.warn('Failed to cache analytics data:', cacheError);
+          console.warn('Failed to cache analyticsdata:', cacheError);
         }
       }
 
@@ -195,7 +195,7 @@ export const useAnalytics = (options: UseAnalyticsOptions): UseAnalyticsReturn =
       setError(errorMessage);
       
       // Enhanced error logging
-      console.error('Analytics fetch error:', {
+      console.error('Analytics fetcherror:', {
         error: errorMessage,
         tenantId: options.tenantId,
         timeRange: options.timeRange,
@@ -222,7 +222,7 @@ export const useAnalytics = (options: UseAnalyticsOptions): UseAnalyticsReturn =
           }
         }
       } catch (cacheError) {
-        console.error('Failed to parse cached analytics data:', cacheError);
+        console.error('Failed to parse cached analyticsdata:', cacheError);
         localStorage.removeItem(cacheKey);
       }
     } finally {

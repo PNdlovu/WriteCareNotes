@@ -95,11 +95,11 @@ export interface AuditEntry {
 
 @Injectable()
 export class IoTIntegrationService {
-  private readonly logger = new Logger(IoTIntegrationService.name);
+  private readonlylogger = new Logger(IoTIntegrationService.name);
 
-  constructor(
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -107,7 +107,7 @@ export class IoTIntegrationService {
    */
   async registerDevice(deviceData: Omit<IoTDevice, 'id' | 'createdAt' | 'updatedAt' | 'lastSeen'>): Promise<IoTDevice> {
     try {
-      constdevice: IoTDevice = {
+      const device: IoTDevice = {
         ...deviceData,
         id: this.generateId(),
         lastSeen: new Date(),
@@ -128,11 +128,11 @@ export class IoTIntegrationService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Registered IoT device: ${device.id}`);
+      this.logger.log(`Registered IoTdevice: ${device.id}`);
       return device;
 
     } catch (error) {
-      this.logger.error(`Failed to register IoT device: ${error.message}`, error.stack);
+      this.logger.error(`Failed to register IoTdevice: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -150,7 +150,7 @@ export class IoTIntegrationService {
     roomId?: string
   ): Promise<IoTDataPoint> {
     try {
-      constdataPoint: IoTDataPoint = {
+      const dataPoint: IoTDataPoint = {
         id: this.generateId(),
         deviceId,
         timestamp: new Date(),
@@ -194,11 +194,11 @@ export class IoTIntegrationService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Processed IoT data point: ${dataPoint.id}`);
+      this.logger.log(`Processed IoT datapoint: ${dataPoint.id}`);
       return dataPoint;
 
     } catch (error) {
-      this.logger.error(`Failed to process IoT data point: ${error.message}`, error.stack);
+      this.logger.error(`Failed to process IoT datapoint: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -208,7 +208,7 @@ export class IoTIntegrationService {
    */
   async getIoTDashboard(careHomeId: string): Promise<IoTDashboard> {
     try {
-      constdashboard: IoTDashboard = {
+      const dashboard: IoTDashboard = {
         totalDevices: 45,
         onlineDevices: 42,
         offlineDevices: 3,
@@ -231,7 +231,7 @@ export class IoTIntegrationService {
       return dashboard;
 
     } catch (error) {
-      this.logger.error(`Failed to get IoT dashboard: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get IoTdashboard: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -242,7 +242,7 @@ export class IoTIntegrationService {
   async getIoTDevices(careHomeId: string, category?: string): Promise<IoTDevice[]> {
     try {
       // In a real implementation, this would query the database
-      constdevices: IoTDevice[] = [
+      const devices: IoTDevice[] = [
         {
           id: 'iot_device_001',
           name: 'Temperature Sensor - Room 101',
@@ -298,7 +298,7 @@ export class IoTIntegrationService {
       return devices;
 
     } catch (error) {
-      this.logger.error(`Failed to get IoT devices: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get IoTdevices: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -309,7 +309,7 @@ export class IoTIntegrationService {
   async getIoTAlerts(careHomeId: string, status?: string): Promise<IoTAlert[]> {
     try {
       // In a real implementation, this would query the database
-      constalerts: IoTAlert[] = [
+      const alerts: IoTAlert[] = [
         {
           id: 'iot_alert_001',
           deviceId: 'iot_device_001',
@@ -334,7 +334,7 @@ export class IoTIntegrationService {
       return alerts;
 
     } catch (error) {
-      this.logger.error(`Failed to get IoT alerts: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get IoTalerts: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -364,11 +364,11 @@ export class IoTIntegrationService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Acknowledged IoT alert: ${alertId}`);
+      this.logger.log(`Acknowledged IoTalert: ${alertId}`);
       return alert;
 
     } catch (error) {
-      this.logger.error(`Failed to acknowledge IoT alert: ${error.message}`, error.stack);
+      this.logger.error(`Failed to acknowledge IoTalert: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -397,11 +397,11 @@ export class IoTIntegrationService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Resolved IoT alert: ${alertId}`);
+      this.logger.log(`Resolved IoTalert: ${alertId}`);
       return alert;
 
     } catch (error) {
-      this.logger.error(`Failed to resolve IoT alert: ${error.message}`, error.stack);
+      this.logger.error(`Failed to resolve IoTalert: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -417,7 +417,7 @@ export class IoTIntegrationService {
         type: 'threshold',
         severity: 'medium',
         title: 'High Temperature Alert',
-        description: `Temperature exceeded threshold: ${dataPoint.value}°C`,
+        description: `Temperature exceededthreshold: ${dataPoint.value}°C`,
         data: { temperature: dataPoint.value, threshold: 25 },
         location: dataPoint.location,
         careHomeId: dataPoint.careHomeId,
@@ -434,7 +434,7 @@ export class IoTIntegrationService {
    * Create IoT alert
    */
   private async createAlert(alertData: Omit<IoTAlert, 'id' | 'createdAt' | 'updatedAt'>): Promise<IoTAlert> {
-    constalert: IoTAlert = {
+    const alert: IoTAlert = {
       ...alertData,
       id: this.generateId(),
       createdAt: new Date(),

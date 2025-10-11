@@ -111,12 +111,12 @@ interface ValidationResult {
 }
 
 class SecurityService {
-  private static instance: SecurityService;
+  private staticinstance: SecurityService;
   privateblacklistedTokens: Set<string> = new Set();
   privatefailedLoginAttempts: Map<string, number> = new Map();
   privatelockedAccounts: Map<string, Date> = new Map();
 
-  private constructor() {}
+  private const ructor() {}
 
   public static getInstance(): SecurityService {
     if (!SecurityService.instance) {
@@ -139,7 +139,7 @@ class SecurityService {
   public generateToken(user: User): string {
     const securityConfig = configService.getSecurity();
     
-    constpayload: Omit<JWTPayload, 'iat' | 'exp'> = {
+    const payload: Omit<JWTPayload, 'iat' | 'exp'> = {
       userId: user.id,
       email: user.email,
       role: user.role,
@@ -342,7 +342,7 @@ class SecurityService {
 
   // Input validation
   public validateInput(data: any, rules: ValidationRule[]): ValidationResult {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     for (const rule of rules) {
       const value = data[rule.field];
@@ -387,7 +387,7 @@ class SecurityService {
       }
 
       // Pattern validation
-      if (rule.pattern && typeof value === 'string') {
+      if (rule.pattern && typeofvalue === 'string') {
         if (!rule.pattern.test(value)) {
           errors.push(`${rule.field} format is invalid`);
         }
@@ -413,16 +413,16 @@ class SecurityService {
   private validateType(value: any, type: string): boolean {
     switch (type) {
       case 'string':
-        return typeof value === 'string';
+        return typeofvalue === 'string';
       case 'number':
-        return typeof value === 'number' && !isNaN(value);
+        return typeofvalue === 'number' && !isNaN(value);
       case 'boolean':
-        return typeof value === 'boolean';
+        return typeofvalue === 'boolean';
       case 'email':
-        return typeof value === 'string' && 
+        return typeofvalue === 'string' && 
                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
       case 'phone':
-        return typeof value === 'string' && 
+        return typeofvalue === 'string' && 
                /^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/[\s\-\(\)]/g, ''));
       case 'date':
         return !isNaN(Date.parse(value));
@@ -441,7 +441,7 @@ class SecurityService {
     }
 
     if (typeof data === 'object' && data !== null) {
-      constsanitized: any = Array.isArray(data) ? [] : {};
+      const sanitized: any = Array.isArray(data) ? [] : {};
       
       for (const key in data) {
         sanitized[key] = this.sanitizeInput(data[key]);
@@ -487,7 +487,7 @@ class SecurityService {
       
       // Update last login time
       await databaseService.query(
-        'UPDATE users SET last_login_at = NOW(), login_attempts = 0 WHERE email = $1',
+        'UPDATE users SET last_login_at = NOW(), login_attempts = 0 WHEREemail = $1',
         [email]
       );
     } else {
@@ -500,7 +500,7 @@ class SecurityService {
         this.lockedAccounts.set(key, lockUntil);
         
         await databaseService.query(
-          'UPDATE users SET locked_until = $1, login_attempts = $2 WHERE email = $3',
+          'UPDATE users SET locked_until = $1, login_attempts = $2 WHEREemail = $3',
           [lockUntil, attempts, email]
         );
 
@@ -511,7 +511,7 @@ class SecurityService {
         });
       } else {
         await databaseService.query(
-          'UPDATE users SET login_attempts = $1 WHERE email = $2',
+          'UPDATE users SET login_attempts = $1 WHEREemail = $2',
           [attempts, email]
         );
       }
@@ -530,7 +530,7 @@ class SecurityService {
         `SELECT id, email, role, permissions, is_active, last_login_at, 
                 login_attempts, locked_until
          FROM users 
-         WHERE id = $1 AND deleted_at IS NULL`,
+         WHEREid = $1 AND deleted_at IS NULL`,
         [userId]
       );
 

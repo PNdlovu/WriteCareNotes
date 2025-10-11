@@ -194,15 +194,15 @@ export interface SummarizationRequest {
 
 @Injectable()
 export class HandoverSummarizerService {
-  private readonly logger = new Logger(HandoverSummarizerService.name);
+  private readonlylogger = new Logger(HandoverSummarizerService.name);
 
   // In-memory storage (would be replaced with proper database entities)
   privatesummaries: Map<string, HandoverSummary> = new Map();
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2,
-    private readonly notificationService: NotificationService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlynotificationService: NotificationService,
+    private readonlyauditService: AuditService,
   ) {
     this.logger.log('AI-Powered Handover Summarizer Service initialized');
   }
@@ -237,7 +237,7 @@ export class HandoverSummarizerService {
       const aiSummary = await this.generateAISummary(processedData, request);
       
       // Create structured summary
-      constsummary: HandoverSummary = {
+      const summary: HandoverSummary = {
         summaryId: `handover-summary-${Date.now()}`,
         handoverDate: request.handoverDate,
         shiftType: request.shiftType,
@@ -308,12 +308,12 @@ export class HandoverSummarizerService {
         userId: request.requestedBy
       });
 
-      this.logger.log(`Handover summary generated: ${summary.summaryId}`);
+      this.logger.log(`Handover summarygenerated: ${summary.summaryId}`);
       return summary;
 
     } catch (error: unknown) {
-      this.logger.error(`Error generating handover summary: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
-      throw new Error(`Failed to generate handover summary: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Error generating handoversummary: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      throw new Error(`Failed to generate handoversummary: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -349,8 +349,8 @@ export class HandoverSummarizerService {
       return summaries;
 
     } catch (error: unknown) {
-      this.logger.error(`Error getting handover history: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
-      throw new Error(`Failed to get handover history: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Error getting handoverhistory: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      throw new Error(`Failed to get handoverhistory: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -379,8 +379,8 @@ export class HandoverSummarizerService {
       return summary || null;
 
     } catch (error: unknown) {
-      this.logger.error(`Error getting handover summary: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
-      throw new Error(`Failed to get handover summary: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Error getting handoversummary: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      throw new Error(`Failed to get handoversummary: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -428,12 +428,12 @@ export class HandoverSummarizerService {
         userId: updatedBy
       });
 
-      this.logger.log(`Handover summary updated: ${summaryId}`);
+      this.logger.log(`Handover summaryupdated: ${summaryId}`);
       return updatedSummary;
 
     } catch (error: unknown) {
-      this.logger.error(`Error updating handover summary: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
-      throw new Error(`Failed to update handover summary: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Error updating handoversummary: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      throw new Error(`Failed to update handoversummary: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -464,8 +464,8 @@ export class HandoverSummarizerService {
       return analytics;
 
     } catch (error: unknown) {
-      this.logger.error(`Error getting handover analytics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
-      throw new Error(`Failed to get handover analytics: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Error getting handoveranalytics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      throw new Error(`Failed to get handoveranalytics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -508,7 +508,7 @@ export class HandoverSummarizerService {
 
   private prepareTextForAI(data: any): string {
     // Prepare structured text for AI processing
-    let text = `Daily Handover Summary Data:\n\n`;
+    let text = `Daily Handover SummaryData:\n\n`;
     
     if (data.shiftNotes?.length > 0) {
       text += `Shift Notes:\n${data.shiftNotes.join('\n')}\n\n`;

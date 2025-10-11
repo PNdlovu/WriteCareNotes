@@ -72,7 +72,7 @@ router.get('/', [
       message: 'Right to Work checks retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving Right to Work checks:', error);
+    logger.error('Error retrieving Right to Workchecks:', error);
     next(error);
   }
 });
@@ -102,7 +102,7 @@ router.get('/:id', [
       message: 'Right to Work check retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving Right to Work check:', error);
+    logger.error('Error retrieving Right to Workcheck:', error);
     next(error);
   }
 });
@@ -142,7 +142,7 @@ router.post('/', [
       message: 'Right to Work check created successfully'
     });
   } catch (error) {
-    logger.error('Error creating Right to Work check:', error);
+    logger.error('Error creating Right to Workcheck:', error);
     next(error);
   }
 });
@@ -195,7 +195,7 @@ router.put('/:id', [
       message: 'Right to Work check updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating Right to Work check:', error);
+    logger.error('Error updating Right to Workcheck:', error);
     next(error);
   }
 });
@@ -224,7 +224,7 @@ router.delete('/:id', [
       message: 'Right to Work check deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting Right to Work check:', error);
+    logger.error('Error deleting Right to Workcheck:', error);
     next(error);
   }
 });
@@ -252,7 +252,7 @@ router.post('/:id/start-verification', [
       message: 'Right to Work verification started successfully'
     });
   } catch (error) {
-    logger.error('Error starting Right to Work verification:', error);
+    logger.error('Error starting Right to Workverification:', error);
     next(error);
   }
 });
@@ -278,7 +278,7 @@ router.post('/:id/submit-verification', [
       message: 'Right to Work verification submitted successfully'
     });
   } catch (error) {
-    logger.error('Error submitting Right to Work verification:', error);
+    logger.error('Error submitting Right to Workverification:', error);
     next(error);
   }
 });
@@ -308,7 +308,7 @@ router.post('/:id/complete-verification', [
       message: 'Right to Work verification completed successfully'
     });
   } catch (error) {
-    logger.error('Error completing Right to Work verification:', error);
+    logger.error('Error completing Right to Workverification:', error);
     next(error);
   }
 });
@@ -336,7 +336,7 @@ router.post('/:id/reject-verification', [
       message: 'Right to Work verification rejected successfully'
     });
   } catch (error) {
-    logger.error('Error rejecting Right to Work verification:', error);
+    logger.error('Error rejecting Right to Workverification:', error);
     next(error);
   }
 });
@@ -361,7 +361,7 @@ router.get('/:id/documents', [
       message: 'Right to Work documents retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving Right to Work documents:', error);
+    logger.error('Error retrieving Right to Workdocuments:', error);
     next(error);
   }
 });
@@ -404,7 +404,7 @@ router.post('/:id/documents', [
       message: 'Right to Work document uploaded successfully'
     });
   } catch (error) {
-    logger.error('Error uploading Right to Work document:', error);
+    logger.error('Error uploading Right to Workdocument:', error);
     next(error);
   }
 });
@@ -432,7 +432,7 @@ router.post('/documents/:documentId/verify', [
       message: 'Right to Work document verified successfully'
     });
   } catch (error) {
-    logger.error('Error verifying Right to Work document:', error);
+    logger.error('Error verifying Right to Workdocument:', error);
     next(error);
   }
 });
@@ -460,7 +460,7 @@ router.post('/documents/:documentId/reject', [
       message: 'Right to Work document rejected successfully'
     });
   } catch (error) {
-    logger.error('Error rejecting Right to Work document:', error);
+    logger.error('Error rejecting Right to Workdocument:', error);
     next(error);
   }
 });
@@ -495,7 +495,7 @@ router.get('/:id/notifications', [
       message: 'Right to Work notifications retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving Right to Work notifications:', error);
+    logger.error('Error retrieving Right to Worknotifications:', error);
     next(error);
   }
 });
@@ -537,7 +537,7 @@ router.post('/:id/notifications', [
       message: 'Right to Work notification created successfully'
     });
   } catch (error) {
-    logger.error('Error creating Right to Work notification:', error);
+    logger.error('Error creating Right to Worknotification:', error);
     next(error);
   }
 });
@@ -572,7 +572,7 @@ router.get('/compliance/summary', [
       message: 'Right to Work compliance summary retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving Right to Work compliance summary:', error);
+    logger.error('Error retrieving Right to Work compliancesummary:', error);
     next(error);
   }
 });
@@ -599,7 +599,7 @@ router.get('/expiry-alerts', [
       message: 'Right to Work expiry alerts retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving Right to Work expiry alerts:', error);
+    logger.error('Error retrieving Right to Work expiryalerts:', error);
     next(error);
   }
 });

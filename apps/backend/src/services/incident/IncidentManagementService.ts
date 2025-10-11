@@ -63,7 +63,7 @@ export interface IncidentFilters {
 /**
  * Service #10: Incident Management Service
  * 
- * Comprehensive incident reporting and investigation with:
+ * Comprehensive incident reporting and investigationwith:
  * - Incident logging and tracking
  * - Root cause analysis
  * - Corrective action management
@@ -76,7 +76,7 @@ export interface IncidentFilters {
 export class IncidentManagementService {
   privateincidentRepository: Repository<IncidentReport>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.incidentRepository = this.dataSource.getRepository(IncidentReport);
   }
 
@@ -108,7 +108,7 @@ export class IncidentManagementService {
     };
 
     // Initialize root cause analysis placeholder
-    constrootCauseAnalysis: RootCauseAnalysis = {
+    const rootCauseAnalysis: RootCauseAnalysis = {
       primaryCause: '',
       contributingFactors: [],
       systemicIssues: [],
@@ -485,7 +485,7 @@ export class IncidentManagementService {
       where: { organizationId },
     });
 
-    constoverdueActions: any[] = [];
+    const overdueActions: any[] = [];
     incidents.forEach(incident => {
       incident.correctiveActions.forEach(action => {
         if (new Date() > action.deadline && action.status !== 'completed') {
@@ -630,7 +630,7 @@ export class IncidentManagementService {
   }
 
   private getIncidentPrefix(type: IncidentType): string {
-    constprefixes: Record<IncidentType, string> = {
+    const prefixes: Record<IncidentType, string> = {
       [IncidentType.CLINICAL]: 'CLI',
       [IncidentType.MEDICATION_ERROR]: 'MED',
       [IncidentType.FALL]: 'FALL',
@@ -672,14 +672,14 @@ export class IncidentManagementService {
 
   private shouldNotifyCQC(type: IncidentType, severity: IncidentSeverity): boolean {
     // CQC notification required for serious incidents
-    return severity === IncidentSeverity.SEVERE ||
+    returnseverity === IncidentSeverity.SEVERE ||
            severity === IncidentSeverity.CATASTROPHIC ||
            type === IncidentType.SAFEGUARDING ||
            type === IncidentType.CLINICAL;
   }
 
   private getRecommendedActions(type: IncidentType, severity: IncidentSeverity): string[] {
-    constactions: string[] = ['Document incident thoroughly', 'Notify management'];
+    const actions: string[] = ['Document incident thoroughly', 'Notify management'];
 
     if (severity === IncidentSeverity.SEVERE || severity === IncidentSeverity.CATASTROPHIC) {
       actions.push('Immediate safety review', 'CQC notification required');

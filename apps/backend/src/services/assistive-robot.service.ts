@@ -64,12 +64,12 @@ export class AssistiveRobotService {
   privateactiveRequests: Map<string, AssistanceRequest> = new Map();
   privaterobotCapabilities: Map<string, RobotCapabilities> = new Map();
 
-  constructor(
+  const ructor(
     
-    private readonly robotRepository: Repository<RobotEntity>,
+    private readonlyrobotRepository: Repository<RobotEntity>,
     
-    private readonly taskRepository: Repository<RobotTaskEntity>,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlytaskRepository: Repository<RobotTaskEntity>,
+    private readonlyeventEmitter: EventEmitter2,
   ) {
     this.initializeAssistiveRobots();
   }
@@ -79,7 +79,7 @@ export class AssistiveRobotService {
    */
   async requestAssistance(request: AssistanceRequest): Promise<{ success: boolean; robotId?: string; estimatedArrival?: number }> {
     try {
-      console.log(`Processing assistance request: ${request.assistanceType} for resident ${request.residentId}`);
+      console.log(`Processing assistancerequest: ${request.assistanceType} for resident ${request.residentId}`);
 
       // Find the best available robot for this request
       const robot = await this.findBestRobot(request);
@@ -126,7 +126,7 @@ export class AssistiveRobotService {
         estimatedArrival,
       };
     } catch (error: unknown) {
-      console.error(`Failed to process assistance request: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to process assistancerequest: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return { success: false };
     }
   }
@@ -173,7 +173,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to provide mobility support: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to provide mobilitysupport: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -230,7 +230,7 @@ export class AssistiveRobotService {
 
       return transferSuccess;
     } catch (error: unknown) {
-      console.error(`Failed to assist with transfer: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to assist withtransfer: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -293,7 +293,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to respond to fall emergency: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to respond to fallemergency: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -341,7 +341,7 @@ export class AssistiveRobotService {
 
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to assist with physical therapy: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to assist with physicaltherapy: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -397,7 +397,7 @@ export class AssistiveRobotService {
 
       return retrievalSuccess;
     } catch (error: unknown) {
-      console.error(`Failed to retrieve object: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to retrieveobject: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -431,7 +431,7 @@ export class AssistiveRobotService {
 
       return statusList;
     } catch (error: unknown) {
-      console.error(`Failed to get robot status: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get robotstatus: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -452,7 +452,7 @@ export class AssistiveRobotService {
         }
       }
     } catch (error: unknown) {
-      console.error(`Failed to process queued requests: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to process queuedrequests: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -482,7 +482,7 @@ export class AssistiveRobotService {
 
       console.log(`Initialized ${robots.length} assistive robots`);
     } catch (error: unknown) {
-      console.error(`Failed to initialize assistive robots: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to initialize assistiverobots: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -684,7 +684,7 @@ export class AssistiveRobotService {
   }
 
   private async locateObject(robot: RobotEntity, description: string): Promise<any> {
-    console.log(`Robot ${robot.id} locating object: ${description}`);
+    console.log(`Robot ${robot.id} locatingobject: ${description}`);
     return Math.random() > 0.1 ? { found: true, location: 'table' } : null; // 90% success rate
   }
 

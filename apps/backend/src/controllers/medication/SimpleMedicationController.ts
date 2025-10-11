@@ -14,7 +14,7 @@ import { body, param, query, validationResult } from 'express-validator';
 import { MedicationManagementService } from '../../services/medication/MedicationManagementService';
 
 export class SimpleMedicationController {
-  constructor(private medicationService: MedicationManagementService) {}
+  const ructor(private medicationService: MedicationManagementService) {}
 
   /**
    * Create new medication prescription

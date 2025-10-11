@@ -79,7 +79,7 @@ export class MachineLearningService {
   privateopenaiClient: OpenAI;
   privateanthropicClient: Anthropic;
 
-  constructor(private readonly eventEmitter: EventEmitter2) {
+  const ructor(private readonlyeventEmitter: EventEmitter2) {
     // Initialize real AI clients
     this.openaiClient = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
@@ -107,7 +107,7 @@ export class MachineLearningService {
       const model = await this.createModel(modelType);
       if (model) {
         this.models.set(model.id, model);
-        console.log(`Loaded ML model: ${model.name} v${model.version}`);
+        console.log(`Loaded MLmodel: ${model.name} v${model.version}`);
         
         this.eventEmitter.emit('ml.model.loaded', {
           modelId: model.id,
@@ -139,7 +139,7 @@ export class MachineLearningService {
       
       const processingTime = Date.now() - startTime;
       
-      constresult: PredictionResult = {
+      const result: PredictionResult = {
         predictionId: `pred_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         modelId: model.id,
         prediction: prediction.value,
@@ -195,7 +195,7 @@ export class MachineLearningService {
       const trainingTime = Date.now() - startTime;
       
       // Create model object
-      constmodel: MLModel = {
+      const model: MLModel = {
         id: `model_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         name: modelType,
         type: this.getModelType(modelType),
@@ -224,7 +224,7 @@ export class MachineLearningService {
         timestamp: new Date(),
       });
 
-      console.log(`Model trained successfully: ${model.name} (accuracy: ${model.accuracy})`);
+      console.log(`Model trainedsuccessfully: ${model.name} (accuracy: ${model.accuracy})`);
       
       return model;
     } catch (error: unknown) {
@@ -262,7 +262,7 @@ export class MachineLearningService {
         timestamp: new Date(),
       });
 
-      console.log(`Model evaluation completed: ${model.name} (accuracy: ${metrics.accuracy})`);
+      console.log(`Model evaluationcompleted: ${model.name} (accuracy: ${metrics.accuracy})`);
       
       return metrics;
     } catch (error: unknown) {
@@ -346,11 +346,11 @@ export class MachineLearningService {
     for (const [modelType, modelPath] of Object.entries(modelPaths)) {
       try {
         await this.loadRealModel(modelType, modelPath);
-        logger.info(`Successfully loaded real ML model: ${modelType}`);
+        logger.info(`Successfully loaded real MLmodel: ${modelType}`);
       } catch (error: unknown) {
         logger.error(`Failed to load real model ${modelType}:`, error);
         // In production, this should fail fast - no fake fallbacks
-        throw new Error(`Critical ML model ${modelType} failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        throw new Error(`Critical ML model ${modelType} failed toload: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   }
@@ -366,7 +366,7 @@ export class MachineLearningService {
       // Get model metadata
       const modelMetadata = await this.loadModelMetadata(modelPath);
       
-      constmodel: MLModel = {
+      const model: MLModel = {
         id: `real_model_${modelType}_${Date.now()}`,
         name: modelType,
         type: modelMetadata.type,
@@ -426,7 +426,7 @@ export class MachineLearningService {
    * Prepare features for TensorFlow model input
    */
   private prepareFeatures(features: Record<string, any>, expectedFeatures: string[]): number[] {
-    constfeatureArray: number[] = [];
+    const featureArray: number[] = [];
     
     for (const featureName of expectedFeatures) {
       const value = features[featureName];
@@ -482,7 +482,7 @@ export class MachineLearningService {
     features: Record<string, any>, 
     predictionData: Float32Array
   ): Promise<Record<string, any>> {
-    constfactors: Record<string, any> = {};
+    const factors: Record<string, any> = {};
     
     // Calculate feature importance (simplified SHAP-like analysis)
     const featureImportance = await this.calculateFeatureImportance(model, features);
@@ -515,7 +515,7 @@ export class MachineLearningService {
     model: MLModel, 
     features: Record<string, any>
   ): Promise<Record<string, number>> {
-    constimportance: Record<string, number> = {};
+    const importance: Record<string, number> = {};
     
     // This is a simplified feature importance calculation
     // In production, you'd use proper SHAP values or permutation importance
@@ -539,7 +539,7 @@ export class MachineLearningService {
     const riskScore = predictionData[0];
     
     // Convert risk score to time estimate (days)
-    // Higher risk = shorter time to event
+    // Higherrisk = shorter time to event
     const baseTime = 365; // 1 year baseline
     const timeToEvent = Math.floor(baseTime * (1 - riskScore));
     
@@ -613,7 +613,7 @@ export class MachineLearningService {
         modelId: model.id, 
         error: error.message 
       });
-      throw new Error(`Real ML prediction failed: ${error.message}`);
+      throw new Error(`Real ML predictionfailed: ${error.message}`);
     }
   }
 
@@ -666,7 +666,7 @@ export class MachineLearningService {
   private validateFeatures(model: MLModel, features: Record<string, any>): void {
     const missingFeatures = model.features.filter(feature => !(feature in features));
     if (missingFeatures.length > 0) {
-      throw new Error(`Missing required features: ${missingFeatures.join(', ')}`);
+      throw new Error(`Missing requiredfeatures: ${missingFeatures.join(', ')}`);
     }
   }
 
@@ -690,7 +690,7 @@ export class MachineLearningService {
    * Generate prediction factors
    */
   private generatePredictionFactors(model: MLModel, features: Record<string, any>, probability: number): Record<string, any> {
-    constfactors: Record<string, any> = {};
+    const factors: Record<string, any> = {};
     
     // Identify key contributing factors
     const sortedFeatures = Object.entries(features)
@@ -799,7 +799,7 @@ export class MachineLearningService {
 
     } catch (error) {
       logger.error('Real AI insight generation failed', { error: error.message });
-      throw new Error(`AI insight generation failed: ${error.message}`);
+      throw new Error(`AI insight generationfailed: ${error.message}`);
     }
   }
 
@@ -814,7 +814,7 @@ export class MachineLearningService {
         messages: [
           {
             role: "user",
-            content: `Analyze this healthcare text and extract key information: "${text}"`
+            content: `Analyze this healthcare text and extract keyinformation: "${text}"`
           }
         ]
       });
@@ -838,7 +838,7 @@ export class MachineLearningService {
 
     } catch (error) {
       logger.error('Real NLP processing failed', { error: error.message });
-      throw new Error(`NLP processing failed: ${error.message}`);
+      throw new Error(`NLP processingfailed: ${error.message}`);
     }
   }
 
@@ -903,7 +903,7 @@ export class MachineLearningService {
     // Dispose of TensorFlow models to free memory
     for (const [modelId, tfModel] of this.tensorflowModels.entries()) {
       tfModel.dispose();
-      logger.info(`Disposed TensorFlow model: ${modelId}`);
+      logger.info(`Disposed TensorFlowmodel: ${modelId}`);
     }
     
     this.tensorflowModels.clear();

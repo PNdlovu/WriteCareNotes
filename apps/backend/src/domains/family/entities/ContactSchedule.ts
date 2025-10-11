@@ -160,16 +160,16 @@ export class ContactSchedule {
   @Column({ name: 'supervision_level', type: 'enum', enum: SupervisionLevel, default: SupervisionLevel.NONE })
   supervisionLevel!: SupervisionLevel;
 
-  @Column({ name: 'supervisor_name', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'supervisor_name', type: 'var char', length: 200, nullable: true })
   supervisorName?: string;
 
-  @Column({ name: 'supervisor_role', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'supervisor_role', type: 'var char', length: 100, nullable: true })
   supervisorRole?: string;
 
-  @Column({ name: 'supervisor_organization', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'supervisor_organization', type: 'var char', length: 200, nullable: true })
   supervisorOrganization?: string;
 
-  @Column({ name: 'supervisor_contact', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'supervisor_contact', type: 'var char', length: 200, nullable: true })
   supervisorContact?: string;
 
   @Column({ name: 'supervision_requirements', type: 'text', nullable: true })
@@ -182,7 +182,7 @@ export class ContactSchedule {
   @Column({ name: 'duration_minutes', type: 'int' })
   durationMinutes!: number;
 
-  @Column({ name: 'preferred_day_of_week', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'preferred_day_of_week', type: 'var char', length: 20, nullable: true })
   preferredDayOfWeek?: string;
 
   @Column({ name: 'preferred_time', type: 'time', nullable: true })
@@ -198,25 +198,25 @@ export class ContactSchedule {
   // LOCATION & VENUE
   // ========================================
 
-  @Column({ name: 'location_type', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'location_type', type: 'var char', length: 100, nullable: true })
   locationType?: string;
 
-  @Column({ name: 'venue_name', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'venue_name', type: 'var char', length: 200, nullable: true })
   venueName?: string;
 
-  @Column({ name: 'venue_address_line_1', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'venue_address_line_1', type: 'var char', length: 200, nullable: true })
   venueAddressLine1?: string;
 
-  @Column({ name: 'venue_address_line_2', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'venue_address_line_2', type: 'var char', length: 200, nullable: true })
   venueAddressLine2?: string;
 
-  @Column({ name: 'venue_city', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'venue_city', type: 'var char', length: 100, nullable: true })
   venueCity?: string;
 
-  @Column({ name: 'venue_postcode', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'venue_postcode', type: 'var char', length: 20, nullable: true })
   venuePostcode?: string;
 
-  @Column({ name: 'venue_contact_number', type: 'varchar', length: 20, nullable: true })
+  @Column({ name: 'venue_contact_number', type: 'var char', length: 20, nullable: true })
   venueContactNumber?: string;
 
   @Column({ name: 'venue_notes', type: 'text', nullable: true })
@@ -229,13 +229,13 @@ export class ContactSchedule {
   @Column({ name: 'transport_required', type: 'boolean', default: false })
   transportRequired!: boolean;
 
-  @Column({ name: 'transport_provider', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'transport_provider', type: 'var char', length: 200, nullable: true })
   transportProvider?: string;
 
-  @Column({ name: 'transport_from', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'transport_from', type: 'var char', length: 200, nullable: true })
   transportFrom?: string;
 
-  @Column({ name: 'transport_to', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'transport_to', type: 'var char', length: 200, nullable: true })
   transportTo?: string;
 
   @Column({ name: 'transport_cost', type: 'decimal', precision: 10, scale: 2, nullable: true })
@@ -285,10 +285,10 @@ export class ContactSchedule {
   @Column({ name: 'court_ordered', type: 'boolean', default: false })
   courtOrdered!: boolean;
 
-  @Column({ name: 'court_order_reference', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'court_order_reference', type: 'var char', length: 100, nullable: true })
   courtOrderReference?: string;
 
-  @Column({ name: 'court_order_type', type: 'varchar', length: 100, nullable: true })
+  @Column({ name: 'court_order_type', type: 'var char', length: 100, nullable: true })
   courtOrderType?: string;
 
   @Column({ name: 'court_order_date', type: 'date', nullable: true })
@@ -313,7 +313,7 @@ export class ContactSchedule {
   @Column({ name: 'child_wishes_recorded_date', type: 'date', nullable: true })
   childWishesRecordedDate?: Date;
 
-  @Column({ name: 'child_wishes_recorded_by', type: 'varchar', length: 200, nullable: true })
+  @Column({ name: 'child_wishes_recorded_by', type: 'var char', length: 200, nullable: true })
   childWishesRecordedBy?: string;
 
   @Column({ name: 'child_consent_given', type: 'boolean', default: false })

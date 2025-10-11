@@ -43,7 +43,7 @@ export class MigrationController {
   privateauditService: AuditService;
   privatenotificationService: NotificationService;
 
-  constructor() {
+  const ructor() {
     this.migrationService = new AdvancedOnboardingDataMigrationService();
     this.fileImportService = new FileImportService();
     this.aiMappingService = new AIDataMappingService();
@@ -79,7 +79,7 @@ export class MigrationController {
         priority: 'high',
         recipients: [{ recipientId: 'migration_user', recipientType: 'user', contactMethods: [] }],
         subject: 'Migration Completed Successfully',
-        message: `Migration ${event.pipelineId} has completed successfully! 🎉`,
+        message: `Migration ${event.pipelineId} has completedsuccessfully! 🎉`,
         data: event,
         channels: ['in_app', 'email', 'sms']
       });
@@ -386,7 +386,7 @@ export class MigrationController {
           );
           sampleData = extractionResult.extractedData.slice(0, 5);
         } catch (error: unknown) {
-          console.warn('Sample data extraction failed:', error instanceof Error ? error.message : "Unknown error");
+          console.warn('Sample data extractionfailed:', error instanceof Error ? error.message : "Unknown error");
         }
       }
 
@@ -443,7 +443,7 @@ export class MigrationController {
         ...req.body
       };
 
-      // Safety check: Ensure user has appropriate permissions for rollback
+      // Safetycheck: Ensure user has appropriate permissions for rollback
       if (!req.user || !['admin', 'data_admin'].includes(req.user.role)) {
         return res.status(403).json({
           success: false,
@@ -795,7 +795,7 @@ export class MigrationController {
   // Helper methods
 
   private async generateMigrationRecommendations(pipeline: any): Promise<string[]> {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (pipeline.migrationStrategy.estimatedDuration > 60) {
       recommendations.push('Consider running during off-peak hours due to estimated duration');
@@ -821,7 +821,7 @@ export class MigrationController {
     qualityReport: any,
     aiMappings: any[]
   ): Promise<string[]> {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (qualityReport.overallScore < 80) {
       recommendations.push('Improve data quality before proceeding with migration');
@@ -846,7 +846,7 @@ export class MigrationController {
     connection: any,
     compatibilityReport: any
   ): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (compatibilityReport.migrationComplexity === 'high' || compatibilityReport.migrationComplexity === 'complex') {
       recommendations.push('Consider phased migration approach due to system complexity');
@@ -883,7 +883,7 @@ export class MigrationController {
   }
 
   private async generatePostMigrationRecommendations(progress: any): Promise<string[]> {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (progress.status === 'completed') {
       recommendations.push('Perform post-migration data validation checks');

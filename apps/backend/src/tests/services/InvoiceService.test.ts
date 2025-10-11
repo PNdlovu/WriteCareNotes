@@ -20,8 +20,8 @@ jest.mock('../../services/audit/AuditTrailService', () => ({
 }));
 
 describe('InvoiceService', () => {
-  letservice: InvoiceService;
-  letmockRepository: jest.Mocked<Repository<Invoice>>;
+  let service: InvoiceService;
+  let mockRepository: jest.Mocked<Repository<Invoice>>;
 
   beforeEach(() => {
     mockRepository = {

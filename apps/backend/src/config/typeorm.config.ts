@@ -172,7 +172,7 @@ export const initializeDatabase = async (): Promise<void> => {
       console.log('✅ Database connection established');
     }
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('❌ Database connectionfailed:', error);
     throw error;
   }
 };

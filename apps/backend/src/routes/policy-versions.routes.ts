@@ -9,7 +9,7 @@
  * @compliance
  * - GDPR Article 5: Accuracy and storage limitation through version control
  * - ISO 27001: Information security through audit trails
- * - British Isles Regulators: CQC, Care Inspectorate, CIW, RQIA, HIQA
+ * - British IslesRegulators: CQC, Care Inspectorate, CIW, RQIA, HIQA
  */
 
 import { Router, Request, Response } from 'express';
@@ -75,7 +75,7 @@ router.get('/:policyId/versions', async (req: Request, res: Response) => {
       data: versions
     });
   } catch (error: any) {
-    console.error('Error fetching policy versions:', error);
+    console.error('Error fetching policyversions:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message
@@ -116,7 +116,7 @@ router.get('/versions/:versionId', async (req: Request, res: Response) => {
       data: version
     });
   } catch (error: any) {
-    console.error('Error fetching version:', error);
+    console.error('Error fetchingversion:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message
@@ -127,7 +127,7 @@ router.get('/versions/:versionId', async (req: Request, res: Response) => {
 /**
  * GET /api/policies/versions/compare
  * Compare two policy versions
- * Query params: v1=uuid1&v2=uuid2
+ * Queryparams: v1=uuid1&v2=uuid2
  */
 router.get('/versions/compare', async (req: Request, res: Response) => {
   try {
@@ -167,7 +167,7 @@ router.get('/versions/compare', async (req: Request, res: Response) => {
       data: comparison
     });
   } catch (error: any) {
-    console.error('Error comparing versions:', error);
+    console.error('Error comparingversions:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message
@@ -209,7 +209,7 @@ router.get('/versions/:versionId/diff/:compareVersionId', async (req: Request, r
       data: comparison
     });
   } catch (error: any) {
-    console.error('Error getting diff:', error);
+    console.error('Error gettingdiff:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message
@@ -236,7 +236,7 @@ router.post('/versions/:versionId/rollback', async (req: Request, res: Response)
     }
 
     // Validate reason
-    if (!reason || typeof reason !== 'string') {
+    if (!reason || typeofreason !== 'string') {
       return res.status(400).json({
         error: 'Missing reason',
         message: 'Rollback reason is required'
@@ -305,7 +305,7 @@ router.post('/versions/:versionId/rollback', async (req: Request, res: Response)
       }
     });
   } catch (error: any) {
-    console.error('Error rolling back version:', error);
+    console.error('Error rolling backversion:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message
@@ -362,7 +362,7 @@ router.delete('/versions/:versionId', async (req: Request, res: Response) => {
       }
     });
   } catch (error: any) {
-    console.error('Error archiving version:', error);
+    console.error('Error archivingversion:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message

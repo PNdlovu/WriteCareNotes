@@ -19,7 +19,7 @@ export class GPConnectSession {
   @Column({ name: 'refresh_token', type: 'text', nullable: true })
   refreshToken: string;
 
-  @Column({ name: 'token_type', type: 'varchar', length: 50, default: 'Bearer' })
+  @Column({ name: 'token_type', type: 'var char', length: 50, default: 'Bearer' })
   tokenType: string;
 
   @Column({ name: 'expires_at', type: 'timestamp' })
@@ -28,10 +28,10 @@ export class GPConnectSession {
   @Column({ name: 'scope', type: 'simple-array' })
   scope: string[];
 
-  @Column({ name: 'client_id', type: 'varchar', length: 255 })
+  @Column({ name: 'client_id', type: 'var char', length: 255 })
   clientId: string;
 
-  @Column({ name: 'session_state', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'session_state', type: 'var char', length: 255, nullable: true })
   sessionState: string;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })

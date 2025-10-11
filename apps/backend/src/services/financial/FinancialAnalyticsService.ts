@@ -94,7 +94,7 @@ export interface FinancialAnalyticsServiceInterface {
 
 // Define error classes locally
 export class FinancialAnalyticsError extends Error {
-  constructor(
+  const ructor(
     message: string,
     publiccode: string,
     publiccorrelationId: string
@@ -147,15 +147,15 @@ class FinancialValidationService {
 
 class FinancialSecurityService {
   async validateTransactionSecurity(request: CreateTransactionRequest, userId: string): Promise<void> {
-    console.log('Validating transaction security for user:', userId);
+    console.log('Validating transaction security foruser:', userId);
   }
 
   async validateDataAccess(userId: string, operation: string): Promise<void> {
-    console.log('Validating data access for user:', userId, 'operation:', operation);
+    console.log('Validating data access foruser:', userId, 'operation:', operation);
   }
 
   async validateForecastAccess(userId: string): Promise<void> {
-    console.log('Validating forecast access for user:', userId);
+    console.log('Validating forecast access foruser:', userId);
   }
 
   async getUserPermissions(userId: string): Promise<string[]> {
@@ -171,7 +171,7 @@ class FinancialComplianceService {
 
 class DataSecurityService {
   async logSecurityIncident(incident: any): Promise<void> {
-    console.log('Logging security incident:', incident);
+    console.log('Logging securityincident:', incident);
   }
 }
 
@@ -181,36 +181,36 @@ class DataSecurityService {
  */
 @Injectable()
 export class FinancialAnalyticsService implements FinancialAnalyticsServiceInterface {
-  private readonly logger = new Logger(FinancialAnalyticsService.name);
+  private readonlylogger = new Logger(FinancialAnalyticsService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(FinancialTransaction)
-    private readonly transactionRepository: Repository<FinancialTransaction>,
+    private readonlytransactionRepository: Repository<FinancialTransaction>,
     
     @InjectRepository(ChartOfAccounts)
-    private readonly accountRepository: Repository<ChartOfAccounts>,
+    private readonlyaccountRepository: Repository<ChartOfAccounts>,
     
     @InjectRepository(FinancialPeriod)
-    private readonly periodRepository: Repository<FinancialPeriod>,
+    private readonlyperiodRepository: Repository<FinancialPeriod>,
     
     @InjectRepository(Budget)
-    private readonly budgetRepository: Repository<Budget>,
+    private readonlybudgetRepository: Repository<Budget>,
     
     @InjectRepository(Forecast)
-    private readonly forecastRepository: Repository<Forecast>,
+    private readonlyforecastRepository: Repository<Forecast>,
     
     @InjectRepository(FinancialKPI)
-    private readonly kpiRepository: Repository<FinancialKPI>,
+    private readonlykpiRepository: Repository<FinancialKPI>,
 
-    private readonly entityManager: EntityManager,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlyentityManager: EntityManager,
+    private readonlyeventEmitter: EventEmitter2,
 
     // Healthcare Compliance Services
-    private readonly auditService: AuditService,
-    private readonly gdprService: GDPRComplianceService,
-    private readonly encryptionService: FieldLevelEncryptionService,
-    private readonly eventService: EventPublishingService,
-    private readonly notificationService: NotificationService
+    private readonlyauditService: AuditService,
+    private readonlygdprService: GDPRComplianceService,
+    private readonlyencryptionService: FieldLevelEncryptionService,
+    private readonlyeventService: EventPublishingService,
+    private readonlynotificationService: NotificationService
   ) {
     // Initialize mock services - these should be replaced with actual implementations
     this.dataIngestionEngine = new DataIngestionEngine();
@@ -225,13 +225,13 @@ export class FinancialAnalyticsService implements FinancialAnalyticsServiceInter
   }
 
   // Initialize mock services as private properties
-  private readonly dataIngestionEngine: DataIngestionEngine;
-  private readonly forecastingEngine: ForecastingEngine;
-  private readonly analyticsEngine: AnalyticsEngine;
-  private readonly validationService: FinancialValidationService;
-  private readonly financialSecurityService: FinancialSecurityService;
-  private readonly financialComplianceService: FinancialComplianceService;
-  private readonly securityService: DataSecurityService;
+  private readonlydataIngestionEngine: DataIngestionEngine;
+  private readonlyforecastingEngine: ForecastingEngine;
+  private readonlyanalyticsEngine: AnalyticsEngine;
+  private readonlyvalidationService: FinancialValidationService;
+  private readonlyfinancialSecurityService: FinancialSecurityService;
+  private readonlyfinancialComplianceService: FinancialComplianceService;
+  private readonlysecurityService: DataSecurityService;
 
   /**
    * Create a new financial transaction with comprehensive validation and compliance
@@ -358,7 +358,7 @@ export class FinancialAnalyticsService implements FinancialAnalyticsServiceInter
       });
 
       throw new FinancialAnalyticsError(
-        `Failed to create financial transaction: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to create financialtransaction: ${error instanceof Error ? error.message : "Unknown error"}`,
         'TRANSACTION_CREATION_FAILED',
         correlationId
       );
@@ -467,7 +467,7 @@ export class FinancialAnalyticsService implements FinancialAnalyticsServiceInter
       });
 
       throw new FinancialAnalyticsError(
-        `Failed to retrieve transactions: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to retrievetransactions: ${error instanceof Error ? error.message : "Unknown error"}`,
         'TRANSACTION_RETRIEVAL_FAILED',
         correlationId
       );
@@ -579,7 +579,7 @@ export class FinancialAnalyticsService implements FinancialAnalyticsServiceInter
       });
 
       throw new FinancialAnalyticsError(
-        `Failed to generate forecast: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to generateforecast: ${error instanceof Error ? error.message : "Unknown error"}`,
         'FORECAST_GENERATION_FAILED',
         correlationId
       );

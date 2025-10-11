@@ -27,7 +27,7 @@ export class AgentReviewService {
   privatenotifications: NotificationService;
   privateaudit: AuditService;
 
-  constructor() {
+  const ructor() {
     this.repository = new PilotFeedbackAgentRepository();
     this.notifications = new NotificationService();
     this.audit = new AuditService();
@@ -62,7 +62,7 @@ export class AgentReviewService {
       AND r.requires_approval = true
     `;
 
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
 
     if (filters.priority) {
       query += ' AND r.priority = ?';
@@ -131,7 +131,7 @@ export class AgentReviewService {
       );
 
       // Create approval action record
-      constapprovalAction: AgentApprovalAction = {
+      const approvalAction: AgentApprovalAction = {
         recommendationId,
         tenantId: recommendation.tenantId,
         action,
@@ -236,9 +236,9 @@ export class AgentReviewService {
     const countsQuery = `
       SELECT 
         COUNT(*) as total,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
-        SUM(CASE WHEN status = 'dismissed' THEN 1 ELSE 0 END) as dismissed
+        SUM(CASE WHENstatus = 'pending' THEN 1 ELSE 0 END) as pending,
+        SUM(CASE WHENstatus = 'approved' THEN 1 ELSE 0 END) as approved,
+        SUM(CASE WHENstatus = 'dismissed' THEN 1 ELSE 0 END) as dismissed
       FROM agent_recommendations 
       WHERE tenant_id = ? AND created_at >= ?
     `;
@@ -317,7 +317,7 @@ export class AgentReviewService {
     action: 'create_ticket' | 'dismiss',
     notes?: string
   ): Promise<AgentApprovalAction[]> {
-    constresults: AgentApprovalAction[] = [];
+    const results: AgentApprovalAction[] = [];
 
     for (const recommendationId of recommendationIds) {
       try {
@@ -395,9 +395,9 @@ export class AgentReviewService {
         theme,
         COUNT(*) as count,
         AVG(CASE 
-          WHEN priority = 'critical' THEN 4
-          WHEN priority = 'high' THEN 3
-          WHEN priority = 'medium' THEN 2
+          WHENpriority = 'critical' THEN 4
+          WHENpriority = 'high' THEN 3
+          WHENpriority = 'medium' THEN 2
           ELSE 1
         END) as avgPriorityScore
       FROM agent_recommendations 
@@ -470,7 +470,7 @@ export class AgentReviewService {
     action: AgentApprovalAction, 
     recommendation: AgentRecommendation
   ): Promise<void> {
-    constnotification: AgentNotification = {
+    const notification: AgentNotification = {
       notificationId: uuidv4(),
       tenantId: action.tenantId,
       type: 'recommendation_approved',

@@ -223,7 +223,7 @@ export class PayrollService extends EventEmitter2 {
     employerUpper: 0.138
   };
 
-  constructor() {
+  const ructor() {
     super();
     this.employeeRepository = AppDataSource.getRepository('Employee');
     this.payrollRunRepository = AppDataSource.getRepository('PayrollRun');
@@ -242,7 +242,7 @@ export class PayrollService extends EventEmitter2 {
   ): Promise<PayrollRun> {
     const runNumber = await this.generateRunNumber(organizationId);
     
-    constpayrollRun: PayrollRun = {
+    const payrollRun: PayrollRun = {
       id: this.generateId(),
       runNumber,
       payPeriod: `${payPeriodStart.toISOString().slice(0, 10)} to ${payPeriodEnd.toISOString().slice(0, 10)}`,
@@ -312,7 +312,7 @@ export class PayrollService extends EventEmitter2 {
         where: { organizationId, isActive: true }
       });
 
-      constpayslips: Payslip[] = [];
+      const payslips: Payslip[] = [];
       let totalGross = 0;
       let totalNet = 0;
       let totalTax = 0;
@@ -408,7 +408,7 @@ export class PayrollService extends EventEmitter2 {
     // Get year-to-date figures
     const ytdFigures = await this.getYearToDateFigures(employee.id, payrollRun.payPeriodEnd);
 
-    constpayslip: Payslip = {
+    const payslip: Payslip = {
       id: this.generateId(),
       payrollRunId: payrollRun.id,
       employeeId: employee.id,
@@ -482,7 +482,7 @@ export class PayrollService extends EventEmitter2 {
     const personalAllowance = this.PERSONAL_ALLOWANCE;
     const taxableIncome = Math.max(0, annualizedPay - personalAllowance);
     
-    consttaxBands: TaxBand[] = [];
+    const taxBands: TaxBand[] = [];
     let totalTax = 0;
 
     // Basic rate (20%)

@@ -29,10 +29,10 @@ export class AIAgentCapability {
   @Column({ type: 'uuid' })
   agentId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   name: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   displayName: string;
 
   @Column({ type: 'text' })
@@ -44,7 +44,7 @@ export class AIAgentCapability {
   @Column({ type: 'enum', enum: CapabilityStatus, default: CapabilityStatus.AVAILABLE })
   status: CapabilityStatus;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   version: string;
 
   @Column({ type: 'json' })
@@ -53,10 +53,10 @@ export class AIAgentCapability {
   @Column({ type: 'json' })
   configuration: any; // Capability-specific configuration
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   endpoint: string; // Capability endpoint
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   documentation: string; // Documentation URL
 
   @Column({ type: 'json', nullable: true })
@@ -80,10 +80,10 @@ export class AIAgentCapability {
   @Column({ type: 'json', nullable: true })
   dependencies: string[]; // Dependent capabilities
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()
@@ -149,7 +149,7 @@ export class AIAgentCapability {
   }
 
   public validateParameters(parameters: any): { valid: boolean; errors: string[] } {
-    consterrors: string[] = [];
+    const errors: string[] = [];
     
     if (!this.parameters) {
       return { valid: true, errors: [] };
@@ -165,15 +165,15 @@ export class AIAgentCapability {
         const value = parameters[key];
         const paramDef = param as any;
         
-        if (paramDef.type === 'string' && typeof value !== 'string') {
+        if (paramDef.type === 'string' && typeofvalue !== 'string') {
           errors.push(`Parameter '${key}' must be a string`);
-        } else if (paramDef.type === 'number' && typeof value !== 'number') {
+        } else if (paramDef.type === 'number' && typeofvalue !== 'number') {
           errors.push(`Parameter '${key}' must be a number`);
-        } else if (paramDef.type === 'boolean' && typeof value !== 'boolean') {
+        } else if (paramDef.type === 'boolean' && typeofvalue !== 'boolean') {
           errors.push(`Parameter '${key}' must be a boolean`);
         } else if (paramDef.type === 'array' && !Array.isArray(value)) {
           errors.push(`Parameter '${key}' must be an array`);
-        } else if (paramDef.type === 'object' && typeof value !== 'object') {
+        } else if (paramDef.type === 'object' && typeofvalue !== 'object') {
           errors.push(`Parameter '${key}' must be an object`);
         }
       }

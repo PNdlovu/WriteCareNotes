@@ -34,7 +34,7 @@ export class HMRCService {
   privateaccessToken: string | null = null;
   privatetokenExpiry: Date | null = null;
 
-  constructor(
+  const ructor(
     @InjectRepository(HMRCSubmission)
     privatehmrcSubmissionRepository: Repository<HMRCSubmission>,
     @InjectRepository(PayrollRun)
@@ -69,13 +69,13 @@ export class HMRCService {
         },
       });
 
-      consttokenData: HMRCTokenResponse = response.data;
+      const tokenData: HMRCTokenResponse = response.data;
       this.accessToken = tokenData.access_token;
       this.tokenExpiry = new Date(Date.now() + (tokenData.expires_in * 1000));
 
       return this.accessToken;
     } catch (error) {
-      console.error('HMRC authentication failed:', error.response?.data || error.message);
+      console.error('HMRC authenticationfailed:', error.response?.data || error.message);
       throw new Error('Failed to authenticate with HMRC');
     }
   }
@@ -113,7 +113,7 @@ export class HMRCService {
         }
       );
 
-      consthmrcResponse: HMRCSubmissionResponse = {
+      const hmrcResponse: HMRCSubmissionResponse = {
         submissionId: response.data.submissionId,
         correlationId: response.data.correlationId,
         status: 'submitted',
@@ -128,13 +128,13 @@ export class HMRCService {
       return hmrcResponse;
 
     } catch (error) {
-      console.error('HMRC submission failed:', error.response?.data || error.message);
+      console.error('HMRC submissionfailed:', error.response?.data || error.message);
       
       // Update submission status
       submission.markAsRejected(error.response?.data?.message || error.message);
       await this.hmrcSubmissionRepository.save(submission);
 
-      throw new Error(`HMRC submission failed: ${error.response?.data?.message || error.message}`);
+      throw new Error(`HMRC submissionfailed: ${error.response?.data?.message || error.message}`);
     }
   }
 
@@ -222,7 +222,7 @@ export class HMRCService {
 
       return response.data;
     } catch (error) {
-      console.error('Failed to get submission status:', error.response?.data || error.message);
+      console.error('Failed to get submissionstatus:', error.response?.data || error.message);
       throw new Error('Failed to get submission status from HMRC');
     }
   }
@@ -296,7 +296,7 @@ export class HMRCService {
       await this.authenticate();
       return true;
     } catch (error) {
-      console.error('HMRC configuration validation failed:', error.message);
+      console.error('HMRC configuration validationfailed:', error.message);
       return false;
     }
   }

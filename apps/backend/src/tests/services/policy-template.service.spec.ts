@@ -15,11 +15,11 @@
  * - Performance testing for template processing
  * 
  * @coverage
- * - Unit tests: 100% code coverage
- * - Integration tests: All service interactions
- * - End-to-end tests: Complete policy lifecycle
- * - Security tests: Access control and data protection
- * - Performance tests: Template generation at scale
+ * - Unittests: 100% code coverage
+ * - Integrationtests: All service interactions
+ * - End-to-endtests: Complete policy lifecycle
+ * - Securitytests: Access control and data protection
+ * - Performancetests: Template generation at scale
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -181,13 +181,13 @@ Contact Number: {{contactNumber}}
 }
 
 describe('PolicyTemplateService', () => {
-  letservice: PolicyTemplateService;
-  letmodule: TestingModule;
-  letpolicyTemplateRepository: Repository<PolicyTemplate>;
-  letpolicyInstanceRepository: Repository<PolicyInstance>;
-  letauditTrailService: AuditService;
-  letvalidationService: ValidationService;
-  letorganizationService: OrganizationService;
+  let service: PolicyTemplateService;
+  let module: TestingModule;
+  let policyTemplateRepository: Repository<PolicyTemplate>;
+  let policyInstanceRepository: Repository<PolicyInstance>;
+  let auditTrailService: AuditService;
+  let validationService: ValidationService;
+  let organizationService: OrganizationService;
 
   // Mock implementations
   const mockPolicyTemplateRepository = {
@@ -235,7 +235,7 @@ describe('PolicyTemplateService', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         PolicyTemplateService,
         {
@@ -378,7 +378,7 @@ describe('PolicyTemplateService', () => {
             {
               name: 'definedVariable',
               type: 'text' as const,
-              label: 'Defined Variable',
+              label: 'Defined variable',
               description: 'This variable is defined',
               required: true
             }
@@ -483,7 +483,7 @@ describe('PolicyTemplateService', () => {
           templateId: template.id,
           organizationId: organization.id,
           variableValues: {
-            // Missing required variables: safeguardingLead, contactNumber, totalStaff
+            // Missing requiredvariables: safeguardingLead, contactNumber, totalStaff
           },
           approvedBy: 'Manager'
         };
@@ -898,8 +898,8 @@ describe('PolicyTemplateService', () => {
  * Tests the service with actual database connections and full workflow
  */
 describe('PolicyTemplateService Integration Tests', () => {
-  letapp: any;
-  letservice: PolicyTemplateService;
+  let app: any;
+  let service: PolicyTemplateService;
 
   beforeAll(async () => {
     // Set up test database and application context
@@ -1007,7 +1007,7 @@ describe('PolicyTemplateService Integration Tests', () => {
  * Tests service performance under load conditions
  */
 describe('PolicyTemplateService Performance Tests', () => {
-  letservice: PolicyTemplateService;
+  let service: PolicyTemplateService;
 
   beforeEach(() => {
     // Set up performance test environment

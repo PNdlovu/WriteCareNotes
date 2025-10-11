@@ -79,7 +79,7 @@ router.post(
       .isLength({ min: 1, max: 50 })
       .withMessage('Item code must be between 1 and 50 characters')
       .matches(/^[A-Z0-9-_]+$/)
-      .withMessage('Item code must contain only uppercase letters, numbers, hyphens, and underscores'),
+      .withMessage('Item code must contain only uppercase let ters, numbers, hyphens, and underscores'),
     
     body('itemName')
       .notEmpty()
@@ -228,12 +228,12 @@ router.get(
     query('stockStatus')
       .optional()
       .isIn(['in_stock', 'low_stock', 'out_of_stock', 'overstock'])
-      .withMessage('Stock status must be one of: in_stock, low_stock, out_of_stock, overstock'),
+      .withMessage('Stock status must be oneof: in_stock, low_stock, out_of_stock, overstock'),
     
     query('status')
       .optional()
       .isIn(['active', 'inactive', 'discontinued'])
-      .withMessage('Status must be one of: active, inactive, discontinued'),
+      .withMessage('Status must be oneof: active, inactive, discontinued'),
     
     query('searchTerm')
       .optional()
@@ -253,7 +253,7 @@ router.get(
     query('sortBy')
       .optional()
       .isIn(['itemName', 'itemCode', 'category', 'currentStock', 'createdAt', 'updatedAt'])
-      .withMessage('Sort by must be one of: itemName, itemCode, category, currentStock, createdAt, updatedAt'),
+      .withMessage('Sort by must be oneof: itemName, itemCode, category, currentStock, createdAt, updatedAt'),
     
     query('sortOrder')
       .optional()
@@ -306,7 +306,7 @@ router.put(
     body('status')
       .optional()
       .isIn(['active', 'inactive', 'discontinued'])
-      .withMessage('Status must be one of: active, inactive, discontinued')
+      .withMessage('Status must be oneof: active, inactive, discontinued')
   ],
   validationMiddleware,
   inventoryController.updateInventoryItem.bind(inventoryController)
@@ -353,7 +353,7 @@ router.post(
     body('priority')
       .optional()
       .isIn(['low', 'normal', 'high', 'urgent'])
-      .withMessage('Priority must be one of: low, normal, high, urgent'),
+      .withMessage('Priority must be oneof: low, normal, high, urgent'),
     
     body('expectedDeliveryDate')
       .optional()
@@ -519,7 +519,7 @@ router.post(
     
     body('supplierType')
       .isIn(['manufacturer', 'distributor', 'wholesaler', 'service_provider'])
-      .withMessage('Supplier type must be one of: manufacturer, distributor, wholesaler, service_provider'),
+      .withMessage('Supplier type must be oneof: manufacturer, distributor, wholesaler, service_provider'),
     
     body('primaryContact.name')
       .notEmpty()
@@ -676,7 +676,7 @@ router.get(
     query('format')
       .optional()
       .isIn(['pdf', 'excel', 'csv', 'json'])
-      .withMessage('Format must be one of: pdf, excel, csv, json'),
+      .withMessage('Format must be oneof: pdf, excel, csv, json'),
     
     query('includeDetails')
       .optional()
@@ -714,7 +714,7 @@ router.get(
     query('severity')
       .optional()
       .isIn(['low', 'medium', 'high', 'critical'])
-      .withMessage('Severity must be one of: low, medium, high, critical'),
+      .withMessage('Severity must be oneof: low, medium, high, critical'),
     
     query('isResolved')
       .optional()

@@ -8,7 +8,7 @@
  * @since 2.0.0 - Phase 2 Feature 2: Real-Time Collaboration
  * @license Proprietary - WriteCareNotes Platform
  * 
- * Key Features:
+ * KeyFeatures:
  * - Threaded comment discussions with parent-child relationships
  * - Position-based annotations using CSS selectors
  * - @mention support with user notifications
@@ -17,13 +17,13 @@
  * - Real-time comment broadcasting via WebSocket
  * - Comment editing and deletion with audit trail
  * 
- * Database Schema:
+ * DatabaseSchema:
  * - Table: policy_comments
- * - Primary Key: UUID (id)
- * - Foreign Keys: policy_id → policy_drafts, user_id → users, parent_comment_id → policy_comments (self-reference)
+ * - PrimaryKey: UUID (id)
+ * - ForeignKeys: policy_id → policy_drafts, user_id → users, parent_comment_id → policy_comments (self-reference)
  * - Indexes: policy_id, user_id, parent_comment_id, status, created_at
  * 
- * Related Entities:
+ * RelatedEntities:
  * - PolicyDraft: The policy being commented on
  * - User: Comment author
  * - Self-reference: Parent comment for threading
@@ -174,7 +174,7 @@ export class PolicyComment {
    * @default 'active'
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     default: CommentStatus.ACTIVE,
     name: 'status'
@@ -186,7 +186,7 @@ export class PolicyComment {
    * @default 'general'
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     default: CommentType.GENERAL,
     name: 'comment_type'
@@ -447,7 +447,7 @@ export class PolicyComment {
    */
   extractMentions(): string[] {
     const mentionPattern = /@\[([a-f0-9-]{36})\]/g;
-    constmentions: string[] = [];
+    const mentions: string[] = [];
     let match;
     
     while ((match = mentionPattern.exec(this.content)) !== null) {

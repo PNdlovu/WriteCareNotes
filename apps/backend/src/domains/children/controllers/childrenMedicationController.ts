@@ -5,7 +5,7 @@
  * @since 2025-10-10
  * 
  * @description
- * Production-ready REST API controller for children's medication management:
+ * Production-ready REST API controller for children's medicationmanagement:
  * - Prescribe medication with age-based dosing validation
  * - Consent tracking (parental, Gillick competence)
  * - Side effects monitoring
@@ -115,8 +115,8 @@ class RefuseMedicationDto {
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ChildrenMedicationController {
-  constructor(
-    private readonly childrenMedicationService: ChildrenMedicationService
+  const ructor(
+    private readonlychildrenMedicationService: ChildrenMedicationService
   ) {}
 
   // ==========================================

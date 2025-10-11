@@ -33,10 +33,10 @@ export class AttendanceRecord {
   @Column({ type: 'uuid' })
   activityId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   participantId: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   participantName: string;
 
   @Column({ type: 'enum', enum: AttendanceType })
@@ -81,17 +81,17 @@ export class AttendanceRecord {
   @Column({ type: 'json', nullable: true })
   behaviorNotes: any; // Any behavioral observations
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   recordedBy: string;
 
   @ManyToOne(() => StaffMember)
   @JoinColumn({ name: 'recordedBy' })
   recorder: StaffMember;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()

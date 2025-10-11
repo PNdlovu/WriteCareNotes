@@ -41,7 +41,7 @@ export class AIAgentConversation {
   messageSequence: number;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     default: 'USER_MESSAGE'
   })
@@ -80,7 +80,7 @@ export class AIAgentConversation {
   confidenceScore: number | null;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     nullable: true
   })
@@ -122,14 +122,14 @@ export class AIAgentConversation {
   isEncrypted: boolean;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 100,
     nullable: true
   })
   encryptionKeyId: string | null;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 50,
     default: 'STANDARD'
   })

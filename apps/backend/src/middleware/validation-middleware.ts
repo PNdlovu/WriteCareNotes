@@ -224,7 +224,7 @@ export const validationMiddleware = (schemaName: keyof typeof validationSchemas)
       if (!schema) {
         return res.status(500).json({
           success: false,
-          error: `Validation schema not found: ${schemaName}`,
+          error: `Validation schema notfound: ${schemaName}`,
           code: 'SCHEMA_NOT_FOUND'
         });
       }
@@ -254,7 +254,7 @@ export const validationMiddleware = (schemaName: keyof typeof validationSchemas)
       req.body = value;
       next();
     } catch (error: unknown) {
-      console.error('Validation middleware error:', error);
+      console.error('Validation middlewareerror:', error);
       res.status(500).json({
         success: false,
         error: 'Internal server error during validation',

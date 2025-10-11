@@ -263,7 +263,7 @@ export class AdvancedFormsService {
   privateforms: Map<string, FormDefinition> = new Map();
   privatesubmissions: Map<string, FormSubmission> = new Map();
 
-  constructor() {
+  const ructor() {
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
     this.encryptionService = new FieldLevelEncryptionService();
@@ -276,7 +276,7 @@ export class AdvancedFormsService {
    */
   async createForm(formData: Partial<FormDefinition>): Promise<FormDefinition> {
     try {
-      constform: FormDefinition = {
+      const form: FormDefinition = {
         formId: `form-${Date.now()}`,
         formName: formData.formName!,
         formTitle: formData.formTitle!,
@@ -363,7 +363,7 @@ export class AdvancedFormsService {
       const { encryptedData, encryptedFields } = await this.encryptSensitiveFormData(form, submissionData);
 
       // Create submission
-      constsubmission: FormSubmission = {
+      const submission: FormSubmission = {
         submissionId: `sub-${Date.now()}`,
         formId,
         formVersion: form.version,
@@ -467,7 +467,7 @@ export class AdvancedFormsService {
    * Create care home specific form templates
    */
   async createCareHomeFormTemplates(): Promise<FormDefinition[]> {
-    consttemplates: FormDefinition[] = [];
+    const templates: FormDefinition[] = [];
 
     // Resident Admission Form
     templates.push(await this.createResidentAdmissionForm());
@@ -575,7 +575,7 @@ export class AdvancedFormsService {
   }
 
   private async validateSubmission(form: FormDefinition, data: any): Promise<{ isValid: boolean; errors: string[] }> {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     for (const page of form.pages) {
       for (const field of page.fields) {
@@ -649,11 +649,11 @@ export class AdvancedFormsService {
       
       switch (condition.operator) {
         case 'equals':
-          return fieldValue === condition.value;
+          returnfieldValue === condition.value;
         case 'not_equals':
-          return fieldValue !== condition.value;
+          returnfieldValue !== condition.value;
         case 'contains':
-          return typeof fieldValue === 'string' && fieldValue.includes(condition.value);
+          return typeoffieldValue === 'string' && fieldValue.includes(condition.value);
         case 'greater_than':
           return Number(fieldValue) > Number(condition.value);
         case 'less_than':
@@ -666,7 +666,7 @@ export class AdvancedFormsService {
 
   private async encryptSensitiveFormData(form: FormDefinition, data: any): Promise<{ encryptedData: any; encryptedFields: string[] }> {
     const encryptedData = { ...data };
-    constencryptedFields: string[] = [];
+    const encryptedFields: string[] = [];
 
     for (const page of form.pages) {
       for (const field of page.fields) {
@@ -1044,7 +1044,7 @@ export class AdvancedFormsService {
   }
 
   private async generateFieldAnalytics(form: FormDefinition, submissions: FormSubmission[]): Promise<any[]> {
-    constfieldAnalytics: any[] = [];
+    const fieldAnalytics: any[] = [];
 
     for (const page of form.pages) {
       for (const field of page.fields) {

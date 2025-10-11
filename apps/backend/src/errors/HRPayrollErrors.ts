@@ -24,12 +24,12 @@ import { HttpException, HttpStatus } from '@nestjs/common';
  * Base class for all HR & Payroll related errors
  */
 export abstract class HRPayrollBaseError extends HttpException {
-  public readonly errorCode: string;
+  public readonlyerrorCode: string;
   public readonly details?: Record<string, any>;
-  public readonly timestamp: Date;
+  public readonlytimestamp: Date;
   public readonly correlationId?: string;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string,
     httpStatus: HttpStatus,
@@ -54,7 +54,7 @@ export abstract class HRPayrollBaseError extends HttpException {
     this.details = details;
     this.timestamp = new Date();
     this.correlationId = correlationId;
-    this.name = this.constructor.name;
+    this.name = this.const ructor.name;
 
     // Ensure proper prototype chain for instanceof checks
     Object.setPrototypeOf(this, new.target.prototype);
@@ -98,7 +98,7 @@ export abstract class HRPayrollBaseError extends HttpException {
  * Employee management validation errors
  */
 export class HRValidationError extends HRPayrollBaseError {
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'HR_VALIDATION_ERROR',
     details?: Record<string, any>,
@@ -112,7 +112,7 @@ export class HRValidationError extends HRPayrollBaseError {
  * Employee not found errors
  */
 export class EmployeeNotFoundError extends HRPayrollBaseError {
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'EMPLOYEE_NOT_FOUND',
     details?: Record<string, any>,
@@ -129,7 +129,7 @@ export class PayrollProcessingError extends HRPayrollBaseError {
   public readonly payrollPeriod?: string;
   public readonly affectedEmployees?: string[];
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'PAYROLL_PROCESSING_ERROR',
     details?: Record<string, any>,
@@ -166,7 +166,7 @@ export class TaxCalculationError extends HRPayrollBaseError {
   public readonly taxYear?: string;
   public readonly employeeId?: string;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'TAX_CALCULATION_ERROR',
     details?: Record<string, any>,
@@ -186,7 +186,7 @@ export class PensionCalculationError extends HRPayrollBaseError {
   public readonly pensionSchemeId?: string;
   public readonly employeeId?: string;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'PENSION_CALCULATION_ERROR',
     details?: Record<string, any>,
@@ -207,7 +207,7 @@ export class TrainingComplianceError extends HRPayrollBaseError {
   public readonly employeeId?: string;
   public readonly complianceViolations?: string[];
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'TRAINING_COMPLIANCE_ERROR',
     details?: Record<string, any>,
@@ -224,7 +224,7 @@ export class TrainingComplianceError extends HRPayrollBaseError {
    * Gets compliance remediation steps
    */
   public getRemediationSteps(): string[] {
-    conststeps: string[] = [];
+    const steps: string[] = [];
     
     if (this.complianceViolations) {
       this.complianceViolations.forEach(violation => {
@@ -257,7 +257,7 @@ export class ShiftSchedulingError extends HRPayrollBaseError {
   public readonly employeeId?: string;
   public readonly conflictType?: string;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'SHIFT_SCHEDULING_ERROR',
     details?: Record<string, any>,
@@ -274,7 +274,7 @@ export class ShiftSchedulingError extends HRPayrollBaseError {
    * Gets conflict resolution suggestions
    */
   public getConflictResolution(): string[] {
-    constresolutions: string[] = [];
+    const resolutions: string[] = [];
     
     switch (this.conflictType) {
       case 'DOUBLE_BOOKING':
@@ -310,7 +310,7 @@ export class PerformanceReviewError extends HRPayrollBaseError {
   public readonly employeeId?: string;
   public readonly reviewType?: string;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'PERFORMANCE_REVIEW_ERROR',
     details?: Record<string, any>,
@@ -332,7 +332,7 @@ export class EmploymentLawComplianceError extends HRPayrollBaseError {
   public readonly violationSeverity?: 'low' | 'medium' | 'high' | 'critical';
   public readonly legalRequirements?: string[];
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'EMPLOYMENT_LAW_COMPLIANCE_ERROR',
     details?: Record<string, any>,
@@ -349,7 +349,7 @@ export class EmploymentLawComplianceError extends HRPayrollBaseError {
    * Gets legal compliance actions required
    */
   public getComplianceActions(): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
     
     if (this.legalRequirements) {
       this.legalRequirements.forEach(requirement => {
@@ -386,7 +386,7 @@ export class HMRCSubmissionError extends HRPayrollBaseError {
   public readonly hmrcErrorCode?: string;
   public readonly payrollPeriod?: string;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'HMRC_SUBMISSION_ERROR',
     details?: Record<string, any>,
@@ -403,7 +403,7 @@ export class HMRCSubmissionError extends HRPayrollBaseError {
    * Gets HMRC error resolution steps
    */
   public getHMRCResolutionSteps(): string[] {
-    conststeps: string[] = [];
+    const steps: string[] = [];
     
     switch (this.hmrcErrorCode) {
       case 'INVALID_PAYE_REFERENCE':
@@ -437,7 +437,7 @@ export class DataProtectionError extends HRPayrollBaseError {
   public readonly gdprViolationType?: string;
   public readonly affectedEmployees?: string[];
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'DATA_PROTECTION_ERROR',
     details?: Record<string, any>,
@@ -454,7 +454,7 @@ export class DataProtectionError extends HRPayrollBaseError {
    * Gets GDPR compliance remediation steps
    */
   public getGDPRRemediationSteps(): string[] {
-    conststeps: string[] = [];
+    const steps: string[] = [];
     
     switch (this.gdprViolationType) {
       case 'UNAUTHORIZED_ACCESS':
@@ -491,7 +491,7 @@ export class AuditComplianceError extends HRPayrollBaseError {
   public readonly complianceFramework?: string;
   public readonly missingDocuments?: string[];
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'AUDIT_COMPLIANCE_ERROR',
     details?: Record<string, any>,
@@ -508,7 +508,7 @@ export class AuditComplianceError extends HRPayrollBaseError {
    * Gets audit preparation checklist
    */
   public getAuditPreparationChecklist(): string[] {
-    constchecklist: string[] = [];
+    const checklist: string[] = [];
     
     if (this.missingDocuments) {
       this.missingDocuments.forEach(document => {
@@ -545,7 +545,7 @@ export class HRSystemIntegrationError extends HRPayrollBaseError {
   public readonly integrationPoint?: string;
   public readonly retryable?: boolean;
 
-  constructor(
+  const ructor(
     message: string,
     errorCode: string = 'HR_SYSTEM_INTEGRATION_ERROR',
     details?: Record<string, any>,
@@ -562,7 +562,7 @@ export class HRSystemIntegrationError extends HRPayrollBaseError {
    * Gets integration recovery steps
    */
   public getIntegrationRecoverySteps(): string[] {
-    conststeps: string[] = [];
+    const steps: string[] = [];
     
     switch (this.systemName) {
       case 'HMRC_GATEWAY':

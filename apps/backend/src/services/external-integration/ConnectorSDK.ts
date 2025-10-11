@@ -223,7 +223,7 @@ export class ConnectorSDK {
   privateinstances: Map<string, ConnectorInstance> = new Map();
   privateexecutions: Map<string, ConnectorExecution> = new Map();
 
-  constructor() {
+  const ructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
     this.auditService = new AuditTrailService();
     this.encryptionService = new FieldLevelEncryptionService();
@@ -267,8 +267,8 @@ export class ConnectorSDK {
       });
 
     } catch (error) {
-      console.error('Connector registration failed:', error);
-      throw new Error(`Connector registration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Connector registrationfailed:', error);
+      throw new Error(`Connector registrationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -286,7 +286,7 @@ export class ConnectorSDK {
       // Get connector configuration
       const connector = this.connectors.get(connectorId);
       if (!connector) {
-        throw new Error(`Connector not found: ${connectorId}`);
+        throw new Error(`Connector notfound: ${connectorId}`);
       }
 
       // Validate configuration
@@ -296,7 +296,7 @@ export class ConnectorSDK {
       const encryptedCredentials = await this.encryptCredentials(credentials);
 
       // Create instance
-      constinstance: ConnectorInstance = {
+      const instance: ConnectorInstance = {
         id: `instance_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         connectorId,
         name,
@@ -331,8 +331,8 @@ export class ConnectorSDK {
 
       return instance;
     } catch (error) {
-      console.error('Instance creation failed:', error);
-      throw new Error(`Instance creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Instance creationfailed:', error);
+      throw new Error(`Instance creationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -352,22 +352,22 @@ export class ConnectorSDK {
       // Get instance and connector
       const instance = this.instances.get(instanceId);
       if (!instance) {
-        throw new Error(`Instance not found: ${instanceId}`);
+        throw new Error(`Instance notfound: ${instanceId}`);
       }
 
       const connector = this.connectors.get(instance.connectorId);
       if (!connector) {
-        throw new Error(`Connector not found: ${instance.connectorId}`);
+        throw new Error(`Connector notfound: ${instance.connectorId}`);
       }
 
       // Get endpoint configuration
       const endpoint = connector.endpoints.find(ep => ep.id === endpointId);
       if (!endpoint) {
-        throw new Error(`Endpoint not found: ${endpointId}`);
+        throw new Error(`Endpoint notfound: ${endpointId}`);
       }
 
       // Create execution record
-      constexecution: ConnectorExecution = {
+      const execution: ConnectorExecution = {
         id: executionId,
         instanceId,
         endpointId,
@@ -517,7 +517,7 @@ export class ConnectorSDK {
     try {
       const instance = this.instances.get(instanceId);
       if (!instance) {
-        throw new Error(`Instance not found: ${instanceId}`);
+        throw new Error(`Instance notfound: ${instanceId}`);
       }
 
       // Update instance
@@ -539,8 +539,8 @@ export class ConnectorSDK {
 
       return instance;
     } catch (error) {
-      console.error('Instance update failed:', error);
-      throw new Error(`Instance update failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Instance updatefailed:', error);
+      throw new Error(`Instance updatefailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -554,7 +554,7 @@ export class ConnectorSDK {
     try {
       const instance = this.instances.get(instanceId);
       if (!instance) {
-        throw new Error(`Instance not found: ${instanceId}`);
+        throw new Error(`Instance notfound: ${instanceId}`);
       }
 
       // Delete instance
@@ -574,8 +574,8 @@ export class ConnectorSDK {
       });
 
     } catch (error) {
-      console.error('Instance deletion failed:', error);
-      throw new Error(`Instance deletion failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Instance deletionfailed:', error);
+      throw new Error(`Instance deletionfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -584,7 +584,7 @@ export class ConnectorSDK {
    */
   private initializeDefaultConnectors(): void {
     // NHS GP Connect Connector
-    constnhsConnector: ConnectorConfig = {
+    const nhsConnector: ConnectorConfig = {
       id: 'nhs_gp_connect',
       name: 'NHS GP Connect',
       description: 'Connect to NHS GP systems for patient data and appointments',
@@ -756,7 +756,7 @@ export class ConnectorSDK {
     this.connectors.set(nhsConnector.id, nhsConnector);
 
     // IoT Wearables Connector
-    constiotConnector: ConnectorConfig = {
+    const iotConnector: ConnectorConfig = {
       id: 'iot_wearables',
       name: 'IoT Wearables',
       description: 'Connect to IoT devices and wearables for health monitoring',
@@ -954,7 +954,7 @@ export class ConnectorSDK {
     // Validate required configuration fields
     for (const [key, value] of Object.entries(connector.validation.required)) {
       if (!configuration[key]) {
-        throw new Error(`Required configuration field missing: ${key}`);
+        throw new Error(`Required configuration fieldmissing: ${key}`);
       }
     }
 
@@ -963,7 +963,7 @@ export class ConnectorSDK {
       if (configuration[field] !== undefined) {
         const actualType = typeof configuration[field];
         if (actualType !== expectedType) {
-          throw new Error(`Configuration field ${field} has wrong type: expected ${expectedType}, got ${actualType}`);
+          throw new Error(`Configuration field ${field} has wrongtype: expected ${expectedType}, got ${actualType}`);
         }
       }
     }
@@ -973,7 +973,7 @@ export class ConnectorSDK {
    * Encrypt credentials
    */
   private async encryptCredentials(credentials: Record<string, any>): Promise<Record<string, any>> {
-    constencrypted: Record<string, any> = {};
+    const encrypted: Record<string, any> = {};
     
     for (const [key, value] of Object.entries(credentials)) {
       if (typeof value === 'string') {
@@ -993,7 +993,7 @@ export class ConnectorSDK {
     // Validate required parameters
     for (const param of endpoint.parameters) {
       if (param.required && !input[param.name]) {
-        throw new Error(`Required parameter missing: ${param.name}`);
+        throw new Error(`Required parametermissing: ${param.name}`);
       }
     }
 
@@ -1117,10 +1117,10 @@ export class ConnectorSDK {
 
     // Replace variables in formula with actual values
     let formulaWithValues = formula;
-    for (const [varName, varField] of Object.entries(variables)) {
-      const value = data[varField as string];
+    for (const [var Name, var Field] of Object.entries(variables)) {
+      const value = data[var Field as string];
       if (value !== undefined) {
-        formulaWithValues = formulaWithValues.replace(new RegExp(varName, 'g'), value.toString());
+        formulaWithValues = formulaWithValues.replace(new RegExp(var Name, 'g'), value.toString());
       }
     }
 
@@ -1128,7 +1128,7 @@ export class ConnectorSDK {
     try {
       data[target] = eval(formulaWithValues);
     } catch (error) {
-      console.error('Formula evaluation failed:', error);
+      console.error('Formula evaluationfailed:', error);
       data[target] = 0;
     }
 

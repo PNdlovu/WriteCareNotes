@@ -13,7 +13,7 @@ router.post(
   '/graphql',
   [
     body('query').notEmpty().withMessage('Query is required'),
-    body('variables').optional().isObject().withMessage('Variables must be an object'),
+    body('variables').optional().isObject().withMessage('variables must be an object'),
     body('operationName').optional().isString().withMessage('Operation name must be a string')
   ],
   validateRequest,
@@ -27,7 +27,7 @@ router.post(
   '/graphql/mutations',
   [
     body('mutation').notEmpty().withMessage('Mutation is required'),
-    body('variables').optional().isObject().withMessage('Variables must be an object'),
+    body('variables').optional().isObject().withMessage('variables must be an object'),
     body('operationName').optional().isString().withMessage('Operation name must be a string')
   ],
   validateRequest,
@@ -41,7 +41,7 @@ router.post(
   '/graphql/subscriptions',
   [
     body('subscription').notEmpty().withMessage('Subscription is required'),
-    body('variables').optional().isObject().withMessage('Variables must be an object'),
+    body('variables').optional().isObject().withMessage('variables must be an object'),
     body('operationName').optional().isString().withMessage('Operation name must be a string')
   ],
   validateRequest,

@@ -48,7 +48,7 @@ import { ConsentType, ConsentGivenBy } from '../entities/MedicalConsent';
 export class HealthController {
   privatehealthService: HealthService;
 
-  constructor() {
+  const ructor() {
     this.healthService = new HealthService();
   }
 
@@ -76,7 +76,7 @@ export class HealthController {
       if (!childId || !organizationId) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: childId, organizationId'
+          message: 'Missing requiredfields: childId, organizationId'
         });
         return;
       }
@@ -93,7 +93,7 @@ export class HealthController {
         data: assessment
       });
     } catch (error) {
-      console.error('Error requesting Initial Health Assessment:', error);
+      console.error('Error requesting Initial HealthAssessment:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to request Initial Health Assessment',
@@ -122,7 +122,7 @@ export class HealthController {
       if (!childId || !organizationId || childAge === undefined) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: childId, organizationId, childAge'
+          message: 'Missing requiredfields: childId, organizationId, childAge'
         });
         return;
       }
@@ -140,7 +140,7 @@ export class HealthController {
         data: assessment
       });
     } catch (error) {
-      console.error('Error requesting Review Health Assessment:', error);
+      console.error('Error requesting Review HealthAssessment:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to request Review Health Assessment',
@@ -181,7 +181,7 @@ export class HealthController {
       if (!assessmentDate || !assessedByName || !assessedByRole || !updatedBy) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: assessmentDate, assessedByName, assessedByRole, updatedBy'
+          message: 'Missing requiredfields: assessmentDate, assessedByName, assessedByRole, updatedBy'
         });
         return;
       }
@@ -205,7 +205,7 @@ export class HealthController {
         data: assessment
       });
     } catch (error) {
-      console.error('Error completing health assessment:', error);
+      console.error('Error completing healthassessment:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to complete health assessment',
@@ -231,7 +231,7 @@ export class HealthController {
       if (!organizationId) {
         res.status(400).json({
           success: false,
-          message: 'Missing required parameter: organizationId'
+          message: 'Missing requiredparameter: organizationId'
         });
         return;
       }
@@ -247,7 +247,7 @@ export class HealthController {
         count: assessments.length
       });
     } catch (error) {
-      console.error('Error retrieving overdue assessments:', error);
+      console.error('Error retrieving overdueassessments:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve overdue assessments',
@@ -301,7 +301,7 @@ export class HealthController {
       if (!Object.values(ConsentType).includes(consentType)) {
         res.status(400).json({
           success: false,
-          message: `Invalid consent type. Must be one of: ${Object.values(ConsentType).join(', ')}`
+          message: `Invalid consent type. Must be oneof: ${Object.values(ConsentType).join(', ')}`
         });
         return;
       }
@@ -310,7 +310,7 @@ export class HealthController {
       if (!Object.values(ConsentGivenBy).includes(consentGivenBy)) {
         res.status(400).json({
           success: false,
-          message: `Invalid consentGivenBy. Must be one of: ${Object.values(ConsentGivenBy).join(', ')}`
+          message: `Invalid consentGivenBy. Must be oneof: ${Object.values(ConsentGivenBy).join(', ')}`
         });
         return;
       }
@@ -336,7 +336,7 @@ export class HealthController {
         data: consent
       });
     } catch (error) {
-      console.error('Error recording medical consent:', error);
+      console.error('Error recording medicalconsent:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to record medical consent',
@@ -371,7 +371,7 @@ export class HealthController {
       if (gillickCompetent === undefined || !assessedBy || !assessmentNotes || !criteriaMet) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: gillickCompetent, assessedBy, assessmentNotes, criteriaMet'
+          message: 'Missing requiredfields: gillickCompetent, assessedBy, assessmentNotes, criteriaMet'
         });
         return;
       }
@@ -408,7 +408,7 @@ export class HealthController {
         data: consent
       });
     } catch (error) {
-      console.error('Error assessing Gillick competence:', error);
+      console.error('Error assessing Gillickcompetence:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to assess Gillick competence',
@@ -438,7 +438,7 @@ export class HealthController {
       if (!withdrawnBy || !withdrawalReason) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: withdrawnBy, withdrawalReason'
+          message: 'Missing requiredfields: withdrawnBy, withdrawalReason'
         });
         return;
       }
@@ -454,7 +454,7 @@ export class HealthController {
         data: consent
       });
     } catch (error) {
-      console.error('Error withdrawing consent:', error);
+      console.error('Error withdrawingconsent:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to withdraw consent',
@@ -485,7 +485,7 @@ export class HealthController {
         count: consents.length
       });
     } catch (error) {
-      console.error('Error retrieving active consents:', error);
+      console.error('Error retrieving activeconsents:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve active consents',
@@ -511,7 +511,7 @@ export class HealthController {
       if (!organizationId) {
         res.status(400).json({
           success: false,
-          message: 'Missing required parameter: organizationId'
+          message: 'Missing requiredparameter: organizationId'
         });
         return;
       }
@@ -527,7 +527,7 @@ export class HealthController {
         count: consents.length
       });
     } catch (error) {
-      console.error('Error retrieving consents requiring review:', error);
+      console.error('Error retrieving consents requiringreview:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve consents requiring review',
@@ -557,7 +557,7 @@ export class HealthController {
       if (!organizationId) {
         res.status(400).json({
           success: false,
-          message: 'Missing required parameter: organizationId'
+          message: 'Missing requiredparameter: organizationId'
         });
         return;
       }
@@ -572,7 +572,7 @@ export class HealthController {
         data: statistics
       });
     } catch (error) {
-      console.error('Error retrieving health statistics:', error);
+      console.error('Error retrieving healthstatistics:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve health statistics',

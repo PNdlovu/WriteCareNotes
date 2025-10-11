@@ -21,13 +21,13 @@
  * Base class for all inventory-related errors
  */
 export class InventoryError extends Error {
-  public readonly code: string;
-  public readonly statusCode: number;
+  public readonlycode: string;
+  public readonlystatusCode: number;
   public readonly details?: Record<string, any>;
-  public readonly timestamp: Date;
+  public readonlytimestamp: Date;
   public readonly correlationId?: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     statusCode: number = 500,
@@ -35,7 +35,7 @@ export class InventoryError extends Error {
     correlationId?: string
   ) {
     super(message);
-    this.name = this.constructor.name;
+    this.name = this.const ructor.name;
     this.code = code;
     this.statusCode = statusCode;
     this.details = details;
@@ -44,7 +44,7 @@ export class InventoryError extends Error {
 
     // Maintains proper stack trace for where our error was thrown (only available on V8)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
+      Error.captureStackTrace(this, this.const ructor);
     }
   }
 
@@ -66,7 +66,7 @@ export class InventoryError extends Error {
  * Error thrown when inventory validation fails
  */
 export class InventoryValidationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -80,7 +80,7 @@ export class InventoryValidationError extends InventoryError {
  * Error thrown when inventory item is not found
  */
 export class InventoryNotFoundError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -94,7 +94,7 @@ export class InventoryNotFoundError extends InventoryError {
  * Error thrown when supplier is not found or inactive
  */
 export class SupplierNotFoundError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -108,7 +108,7 @@ export class SupplierNotFoundError extends InventoryError {
  * Error thrown when there is insufficient stock for an operation
  */
 export class StockInsufficientError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -122,7 +122,7 @@ export class StockInsufficientError extends InventoryError {
  * Error thrown when purchase order operations fail
  */
 export class PurchaseOrderError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -136,7 +136,7 @@ export class PurchaseOrderError extends InventoryError {
  * Error thrown when asset tracking operations fail
  */
 export class AssetTrackingError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -150,7 +150,7 @@ export class AssetTrackingError extends InventoryError {
  * Error thrown when compliance violations are detected
  */
 export class ComplianceViolationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -164,7 +164,7 @@ export class ComplianceViolationError extends InventoryError {
  * Error thrown when database operations fail
  */
 export class DatabaseOperationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -178,7 +178,7 @@ export class DatabaseOperationError extends InventoryError {
  * Error thrown when external service integrations fail
  */
 export class ExternalServiceError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -192,7 +192,7 @@ export class ExternalServiceError extends InventoryError {
  * Error thrown when authorization fails for inventory operations
  */
 export class InventoryAuthorizationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -206,7 +206,7 @@ export class InventoryAuthorizationError extends InventoryError {
  * Error thrown when rate limits are exceeded
  */
 export class InventoryRateLimitError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -220,7 +220,7 @@ export class InventoryRateLimitError extends InventoryError {
  * Error thrown when business rules are violated
  */
 export class BusinessRuleViolationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -234,7 +234,7 @@ export class BusinessRuleViolationError extends InventoryError {
  * Error thrown when data encryption/decryption fails
  */
 export class EncryptionError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -248,7 +248,7 @@ export class EncryptionError extends InventoryError {
  * Error thrown when audit trail operations fail
  */
 export class AuditTrailError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -262,7 +262,7 @@ export class AuditTrailError extends InventoryError {
  * Error thrown when notification operations fail
  */
 export class NotificationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -276,7 +276,7 @@ export class NotificationError extends InventoryError {
  * Error thrown when report generation fails
  */
 export class ReportGenerationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -290,7 +290,7 @@ export class ReportGenerationError extends InventoryError {
  * Error thrown when cache operations fail
  */
 export class CacheOperationError extends InventoryError {
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: Record<string, any>,
@@ -300,7 +300,7 @@ export class CacheOperationError extends InventoryError {
   }
 }
 
-// Error code constants for consistent error handling
+// Error code const ants for consistent error handling
 /**
  * TODO: Add proper documentation
  */

@@ -5,10 +5,10 @@ import { FamilyPortalService } from '../../services/family-portal.service';
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 describe('FamilyPortalService', () => {
-  letservice: FamilyPortalService;
-  letmockRepository: any;
-  letmockEventEmitter: any;
-  letmockAuditService: any;
+  let service: FamilyPortalService;
+  let mockRepository: any;
+  let mockEventEmitter: any;
+  let mockAuditService: any;
 
   beforeEach(async () => {
     mockRepository = {
@@ -27,7 +27,7 @@ describe('FamilyPortalService', () => {
       logEvent: jest.fn(),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         FamilyPortalService,
         {
@@ -363,7 +363,7 @@ describe('FamilyPortalService', () => {
       const description = 'Resident experienced chest pain';
       const location = 'Room 101';
       const immediateAction = 'Called emergency services';
-      const contactInfo = 'Emergency services: 999';
+      const contactInfo = 'Emergencyservices: 999';
 
       const result = await service.sendEmergencyNotification(
         residentId,

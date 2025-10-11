@@ -14,7 +14,7 @@ import { Request, Response } from 'express';
 import { Logger } from '@nestjs/common';
 
 export class HealthCheckController {
-  private logger = new Logger(HealthCheckController.name);
+  privatelogger = new Logger(HealthCheckController.name);
 
   /**
    * Basic health check
@@ -32,7 +32,7 @@ export class HealthCheckController {
 
       res.json(health);
     } catch (error) {
-      this.logger.error('Health check failed:', error);
+      this.logger.error('Health checkfailed:', error);
       res.status(500).json({
         status: 'ERROR',
         timestamp: new Date().toISOString(),
@@ -92,7 +92,7 @@ export class HealthCheckController {
       const statusCode = health.status === 'OK' ? 200 : 503;
       res.status(statusCode).json(health);
     } catch (error) {
-      this.logger.error('Comprehensive health check failed:', error);
+      this.logger.error('Comprehensive health checkfailed:', error);
       res.status(500).json({
         status: 'ERROR',
         timestamp: new Date().toISOString(),
@@ -110,7 +110,7 @@ export class HealthCheckController {
       const aiHealth = await this.checkAIFeaturesHealth();
       res.json(aiHealth);
     } catch (error) {
-      this.logger.error('AI features health check failed:', error);
+      this.logger.error('AI features health checkfailed:', error);
       res.status(500).json({
         status: 'ERROR',
         timestamp: new Date().toISOString(),

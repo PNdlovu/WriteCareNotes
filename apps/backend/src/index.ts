@@ -39,11 +39,11 @@ async function startServer() {
     // Start server
     server.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
-      console.log(`🌐 Health check: http://localhost:${PORT}/health`);
-      console.log(`📚 API docs: http://localhost:${PORT}/api/docs`);
+      console.log(`🌐 Healthcheck: http://localhost:${PORT}/health`);
+      console.log(`📚 APIdocs: http://localhost:${PORT}/api/docs`);
       console.log(`🏥 Compliance: http://localhost:${PORT}/health/compliance`);
       console.log('');
-      console.log('🛡️ Security Features Enabled:');
+      console.log('🛡️ Security FeaturesEnabled:');
       console.log('  ✅ CSRF Protection');
       console.log('  ✅ Input Sanitization');
       console.log('  ✅ Rate Limiting');
@@ -51,7 +51,7 @@ async function startServer() {
       console.log('  ✅ Audit Logging');
       console.log('  ✅ Error Handling');
       console.log('');
-      console.log('� Care Home Features:');
+      console.log('� Care HomeFeatures:');
       console.log('  ✅ Medication Management');
       console.log('  ✅ NHS Integration');
       console.log('  ✅ Consent Management');
@@ -62,11 +62,11 @@ async function startServer() {
       console.log('  ✅ System Metrics');
       console.log('  ✅ Performance Monitoring');
       console.log('');
-      console.log('🎯 Ready for production use!');
+      console.log('🎯 Ready for productionuse!');
     });
     
   } catch (error: unknown) {
-    console.error('❌ Failed to start server:', error);
+    console.error('❌ Failed to startserver:', error);
     process.exit(1);
   }
 }
@@ -85,7 +85,7 @@ process.on('SIGTERM', async () => {
     console.log('✅ Graceful shutdown completed');
     process.exit(0);
   } catch (error: unknown) {
-    console.error('❌ Error during shutdown:', error);
+    console.error('❌ Error duringshutdown:', error);
     process.exit(1);
   }
 });
@@ -103,19 +103,19 @@ process.on('SIGINT', async () => {
     console.log('✅ Graceful shutdown completed');
     process.exit(0);
   } catch (error: unknown) {
-    console.error('❌ Error during shutdown:', error);
+    console.error('❌ Error duringshutdown:', error);
     process.exit(1);
   }
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
+  console.error('❌ UncaughtException:', error);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('❌ Unhandled Rejectionat:', promise, 'reason:', reason);
   process.exit(1);
 });
 

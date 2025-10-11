@@ -78,11 +78,11 @@ export interface JerseyRegulatoryRequirement {
 export class JerseyCareCommissionService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly jerseyComplianceRepository: Repository<JerseyCompliance>,
-    private readonly auditTrailService: AuditService,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlyjerseyComplianceRepository: Repository<JerseyCompliance>,
+    private readonlyauditTrailService: AuditService,
+    private readonlyeventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -131,7 +131,7 @@ export class JerseyCareCommissionService {
 
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get Jersey compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get Jersey complianceassessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -336,7 +336,7 @@ export class JerseyCareCommissionService {
   }
 
   private async identifyComplianceGaps(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
     
     for (const [domain, score] of Object.entries(domainScores)) {
       if (score < 85) {
@@ -348,7 +348,7 @@ export class JerseyCareCommissionService {
   }
 
   private async generateRecommendations(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     for (const [domain, score] of Object.entries(domainScores)) {
       if (score < 95) {

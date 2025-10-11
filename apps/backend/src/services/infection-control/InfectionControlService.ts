@@ -38,7 +38,7 @@ class InfectionControlService {
   
   private async enforceHygieneSystem(facilityId: string): Promise<void> {
     // Enforce hygiene system for infection control compliance
-    console.log(`Enforcing hygiene system for facility: ${facilityId}`);
+    console.log(`Enforcing hygiene system forfacility: ${facilityId}`);
   }
 }
 

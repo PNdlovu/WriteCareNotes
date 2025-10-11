@@ -23,7 +23,7 @@ export class PalliativeCareService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.palliativeRepository = AppDataSource.getRepository(PalliativeCare);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -57,7 +57,7 @@ export class PalliativeCareService {
       
       return savedCare;
     } catch (error: unknown) {
-      console.error('Error creating advanced palliative care:', error);
+      console.error('Error creating advanced palliativecare:', error);
       throw error;
     }
   }
@@ -75,7 +75,7 @@ export class PalliativeCareService {
         familySatisfaction: this.calculateFamilySatisfaction(allCare)
       };
     } catch (error: unknown) {
-      console.error('Error getting palliative analytics:', error);
+      console.error('Error getting palliativeanalytics:', error);
       throw error;
     }
   }

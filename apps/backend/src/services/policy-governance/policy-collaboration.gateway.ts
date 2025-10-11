@@ -9,7 +9,7 @@
  * @since 2.0.0 - Phase 2 Feature 2: Real-Time Collaboration
  * @license Proprietary - WriteCareNotes Platform
  * 
- * Key Features:
+ * KeyFeatures:
  * - Real-time collaborative editing with WebSocket
  * - User presence tracking (who's online/editing)
  * - Live cursor position synchronization
@@ -19,7 +19,7 @@
  * - JWT authentication for secure connections
  * - Room-based isolation per policy document
  * 
- * WebSocket Events:
+ * WebSocketEvents:
  * - Client → Server:
  *   * join_policy: Join a policy editing room
  *   * leave_policy: Leave a policy room
@@ -40,7 +40,7 @@
  * Security:
  * - JWT token validation on connection
  * - Rate limiting (100 events/min per user)
- * - Room-based authorization (can user edit this policy?)
+ * - Room-based authorization (can user edit thispolicy?)
  * - Content sanitization for XSS prevention
  * - CORS configuration with allowed origins
  * 
@@ -148,7 +148,7 @@ export class PolicyCollaborationGateway {
    * @param httpServer - HTTP server instance to attach Socket.io
    * @param options - Socket.io server options
    */
-  constructor(
+  const ructor(
     httpServer: HttpServer,
     options: {
       cors?: {
@@ -225,11 +225,11 @@ export class PolicyCollaborationGateway {
 
         next();
       } catch (jwtError: any) {
-        console.error('JWT verification failed:', jwtError.message);
-        return next(new Error(`Invalid or expired token: ${jwtError.message}`));
+        console.error('JWT verificationfailed:', jwtError.message);
+        return next(new Error(`Invalid or expiredtoken: ${jwtError.message}`));
       }
     } catch (error) {
-      console.error('WebSocket authentication error:', error);
+      console.error('WebSocket authenticationerror:', error);
       next(new Error('Authentication failed'));
     }
   }
@@ -280,7 +280,7 @@ export class PolicyCollaborationGateway {
       }
 
       // Add user presence
-      constpresence: UserPresence = {
+      const presence: UserPresence = {
         userId,
         socketId: socket.id,
         isEditing: false,
@@ -324,7 +324,7 @@ export class PolicyCollaborationGateway {
 
       console.log(`📝 User ${userId} joined policy ${policyId}`);
     } catch (error) {
-      console.error('Error joining policy:', error);
+      console.error('Error joiningpolicy:', error);
       socket.emit('error', { message: 'Failed to join policy room' });
     }
   }
@@ -367,7 +367,7 @@ export class PolicyCollaborationGateway {
 
       console.log(`👋 User ${userId} left policy ${policyId}`);
     } catch (error) {
-      console.error('Error leaving policy:', error);
+      console.error('Error leavingpolicy:', error);
     }
   }
 
@@ -397,7 +397,7 @@ export class PolicyCollaborationGateway {
         timestamp: new Date()
       });
     } catch (error) {
-      console.error('Error handling cursor move:', error);
+      console.error('Error handling cursormove:', error);
     }
   }
 
@@ -429,7 +429,7 @@ export class PolicyCollaborationGateway {
 
       console.log(`✏️  User ${userId} edited policy ${policyId}`);
     } catch (error) {
-      console.error('Error handling text change:', error);
+      console.error('Error handling textchange:', error);
     }
   }
 
@@ -473,7 +473,7 @@ export class PolicyCollaborationGateway {
 
       console.log(`💬 User ${userId} commented on policy ${policyId} (${mentionedUsers.length} mentions)`);
     } catch (error) {
-      console.error('Error handling add comment:', error);
+      console.error('Error handling addcomment:', error);
       socket.emit('error', { message: 'Failed to add comment' });
     }
   }
@@ -485,7 +485,7 @@ export class PolicyCollaborationGateway {
    */
   private extractMentionedUsers(content: string): string[] {
     const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
-    constmentions: string[] = [];
+    const mentions: string[] = [];
     let match;
 
     while ((match = mentionRegex.exec(content)) !== null) {
@@ -522,7 +522,7 @@ export class PolicyCollaborationGateway {
 
       console.log(`📧 Sent mention notifications to ${mentionedUsers.length} users`);
     } catch (error) {
-      console.error('Error sending mention notifications:', error);
+      console.error('Error sending mentionnotifications:', error);
     }
   }
 
@@ -634,7 +634,7 @@ export class PolicyCollaborationGateway {
       // ).where('last_activity < :threshold', { threshold: new Date(now.getTime() - staleThreshold) });
 
     } catch (error) {
-      console.error('Error cleaning up stale sessions:', error);
+      console.error('Error cleaning up stalesessions:', error);
     }
   }
 

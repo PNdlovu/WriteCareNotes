@@ -88,7 +88,7 @@ export class DailyCareSchedule {
   @Max(100)
   estimatedWorkload: number; // percentage
 
-  @Column({ type: 'varchar', length: 50, default: 'active' })
+  @Column({ type: 'var char', length: 50, default: 'active' })
   @IsString()
   status: string;
 

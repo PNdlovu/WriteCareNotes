@@ -106,15 +106,15 @@ export interface NotificationRequest {
 
 @Injectable()
 export class NotificationService {
-  private readonly logger = new Logger(NotificationService.name);
+  private readonlylogger = new Logger(NotificationService.name);
   privateemailTransporter: nodemailer.Transporter;
   privatetwilioClient: twilio.Twilio;
   privatefirebaseApp: admin.app.App;
 
-  constructor(
+  const ructor(
     @InjectRepository(NotificationEntity)
-    private readonly notificationRepository: Repository<NotificationEntity>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlynotificationRepository: Repository<NotificationEntity>,
+    private readonlyeventEmitter: EventEmitter2
   ) {
     this.initializeProviders();
   }
@@ -156,7 +156,7 @@ export class NotificationService {
 
       this.logger.log('Notification providers initialized successfully');
     } catch (error) {
-      this.logger.error(`Failed to initialize notification providers: ${error.message}`, error.stack);
+      this.logger.error(`Failed to initialize notificationproviders: ${error.message}`, error.stack);
     }
   }
 
@@ -188,8 +188,8 @@ export class NotificationService {
 
       return this.mapEntityToNotification(savedNotification);
     } catch (error) {
-      this.logger.error(`Failed to send notification: ${error.message}`, error.stack);
-      throw new Error(`Failed to send notification: ${error.message}`);
+      this.logger.error(`Failed to sendnotification: ${error.message}`, error.stack);
+      throw new Error(`Failed to sendnotification: ${error.message}`);
     }
   }
 
@@ -199,8 +199,8 @@ export class NotificationService {
   private async processNotification(notification: NotificationEntity): Promise<void> {
     try {
       let success = false;
-      letexternalId: string | undefined;
-      leterrorMessage: string | undefined;
+      let externalId: string | undefined;
+      let errorMessage: string | undefined;
 
       switch (notification.type.toLowerCase()) {
         case 'email':
@@ -213,7 +213,7 @@ export class NotificationService {
           ({ success, externalId, errorMessage } = await this.sendPushNotificationInternal(notification));
           break;
         default:
-          throw new Error(`Unsupported notification type: ${notification.type}`);
+          throw new Error(`Unsupported notificationtype: ${notification.type}`);
       }
 
       // Update notification status
@@ -280,7 +280,7 @@ export class NotificationService {
         externalId: result.messageId
       };
     } catch (error) {
-      this.logger.error(`Failed to send email: ${error.message}`, error.stack);
+      this.logger.error(`Failed to sendemail: ${error.message}`, error.stack);
       return {
         success: false,
         errorMessage: error.message
@@ -316,7 +316,7 @@ export class NotificationService {
       const failed = results.filter(result => result.status === 'rejected');
 
       if (failed.length > 0) {
-        this.logger.warn(`Some SMS messages failed to send: ${failed.length}/${results.length}`);
+        this.logger.warn(`Some SMS messages failed tosend: ${failed.length}/${results.length}`);
       }
 
       return {
@@ -325,7 +325,7 @@ export class NotificationService {
         errorMessage: failed.length > 0 ? `${failed.length} messages failed` : undefined
       };
     } catch (error) {
-      this.logger.error(`Failed to send SMS: ${error.message}`, error.stack);
+      this.logger.error(`Failed to sendSMS: ${error.message}`, error.stack);
       return {
         success: false,
         errorMessage: error.message
@@ -365,7 +365,7 @@ export class NotificationService {
         errorMessage: response.failureCount > 0 ? `${response.failureCount} messages failed` : undefined
       };
     } catch (error) {
-      this.logger.error(`Failed to send push notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send pushnotification: ${error.message}`, error.stack);
       return {
         success: false,
         errorMessage: error.message
@@ -437,8 +437,8 @@ export class NotificationService {
       const notification = await this.notificationRepository.findOne({ where: { id } });
       return notification ? this.mapEntityToNotification(notification) : null;
     } catch (error) {
-      this.logger.error(`Failed to get notification: ${error.message}`, error.stack);
-      throw new Error(`Failed to get notification: ${error.message}`);
+      this.logger.error(`Failed to getnotification: ${error.message}`, error.stack);
+      throw new Error(`Failed to getnotification: ${error.message}`);
     }
   }
 
@@ -456,8 +456,8 @@ export class NotificationService {
 
       return notifications.map(this.mapEntityToNotification);
     } catch (error) {
-      this.logger.error(`Failed to get notifications for recipient: ${error.message}`, error.stack);
-      throw new Error(`Failed to get notifications for recipient: ${error.message}`);
+      this.logger.error(`Failed to get notifications forrecipient: ${error.message}`, error.stack);
+      throw new Error(`Failed to get notifications forrecipient: ${error.message}`);
     }
   }
 
@@ -483,8 +483,8 @@ export class NotificationService {
       this.logger.log(`Retried ${retriedCount} failed notifications`);
       return retriedCount;
     } catch (error) {
-      this.logger.error(`Failed to retry notifications: ${error.message}`, error.stack);
-      throw new Error(`Failed to retry notifications: ${error.message}`);
+      this.logger.error(`Failed to retrynotifications: ${error.message}`, error.stack);
+      throw new Error(`Failed to retrynotifications: ${error.message}`);
     }
   }
 
@@ -498,11 +498,11 @@ export class NotificationService {
     correlationId: string;
   }): Promise<void> {
     await this.sendNotification({
-      message: `High value transaction alert: ${alert.amount} for transaction ${alert.transactionId}`,
+      message: `High value transactionalert: ${alert.amount} for transaction ${alert.transactionId}`,
       type: 'email',
       recipients: ['finance@writecarenotes.com', 'compliance@writecarenotes.com'],
       subject: 'High Value Transaction Alert',
-      content: `A high value transaction has been processed. Transaction ID: ${alert.transactionId}, Amount: ${alert.amount}`,
+      content: `A high value transaction has been processed. TransactionID: ${alert.transactionId}, Amount: ${alert.amount}`,
       metadata: {
         transactionId: alert.transactionId,
         amount: alert.amount.toString(),

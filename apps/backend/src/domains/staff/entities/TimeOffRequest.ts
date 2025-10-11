@@ -44,7 +44,7 @@ export class TimeOffRequest {
   @Column({ type: 'uuid' })
   employeeProfileId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   requestNumber: string;
 
   @Column({ type: 'enum', enum: TimeOffType })
@@ -83,19 +83,19 @@ export class TimeOffRequest {
   @Column({ type: 'text', nullable: true })
   rejectionReason: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
   approvedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   rejectedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
   rejectedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   cancelledBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -104,10 +104,10 @@ export class TimeOffRequest {
   @Column({ type: 'boolean', default: false })
   requiresCover: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   coverEmployeeId: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   coverEmployeeName: string;
 
   @Column({ type: 'boolean', default: false })
@@ -116,7 +116,7 @@ export class TimeOffRequest {
   @Column({ type: 'boolean', default: false })
   isRecurring: boolean;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   recurringPattern: string; // daily, weekly, monthly, yearly
 
   @Column({ type: 'int', nullable: true })
@@ -125,10 +125,10 @@ export class TimeOffRequest {
   @Column({ type: 'date', nullable: true })
   recurringEndDate: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()
@@ -156,7 +156,7 @@ export class TimeOffRequest {
 
   public calculateTotalHours(): number {
     if (this.isHalfDay) {
-      return this.totalDays * 4; // Assuming 8-hour work day, half day = 4 hours
+      return this.totalDays * 4; // Assuming 8-hour work day, halfday = 4 hours
     }
     return this.totalDays * 8; // Assuming 8-hour work day
   }

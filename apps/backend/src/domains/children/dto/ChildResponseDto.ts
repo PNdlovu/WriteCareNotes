@@ -68,7 +68,7 @@ export class ChildResponseDto {
   createdAt: Date;
   updatedAt: Date;
   
-  constructor(child: Child) {
+  const ructor(child: Child) {
     this.id = child.id;
     this.firstName = child.firstName;
     this.middleNames = child.middleNames;
@@ -128,7 +128,7 @@ export interface ChildFilters {
   status?: ChildStatus;
   placementType?: PlacementType;
   legalStatus?: LegalStatus;
-  jurisdiction?: Jurisdiction; // BRITISH ISLES COMPLIANCE: Filter by jurisdiction
+  jurisdiction?: Jurisdiction; // BRITISH ISLESCOMPLIANCE: Filter by jurisdiction
   localAuthority?: string;
   socialWorkerEmail?: string;
   ageMin?: number;

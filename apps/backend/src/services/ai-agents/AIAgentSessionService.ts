@@ -135,13 +135,13 @@ interface ConversationEntry {
 
 @Injectable()
 export class AIAgentSessionService {
-  private readonly logger = new Logger(AIAgentSessionService.name);
+  private readonlylogger = new Logger(AIAgentSessionService.name);
   privateredis: Redis;
   privateconfig: SessionConfig;
 
-  constructor(
+  const ructor(
     @InjectRepository(AIAgentSession)
-    private readonly sessionRepository: Repository<AIAgentSession>,
+    private readonlysessionRepository: Repository<AIAgentSession>,
   ) {
     this.initializeRedis();
     this.initializeConfig();
@@ -178,7 +178,7 @@ export class AIAgentSessionService {
       });
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to initialize Redis: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to initializeRedis: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -247,12 +247,12 @@ export class AIAgentSessionService {
       // Cache in Redis
       await this.cacheSession(savedSession);
 
-      this.logger.log(`AI agent session created: ${sessionId} (${sessionType})`);
+      this.logger.log(`AI agent sessioncreated: ${sessionId} (${sessionType})`);
       return savedSession;
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to create AI agent session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
-      throw new Error(`Failed to create AI agent session: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Failed to create AI agentsession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      throw new Error(`Failed to create AI agentsession: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -281,7 +281,7 @@ export class AIAgentSessionService {
       return null;
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to get AI agent session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to get AI agentsession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return null;
     }
   }
@@ -303,7 +303,7 @@ export class AIAgentSessionService {
       }
 
       // Add conversation entry
-      constconversationEntry: ConversationEntry = {
+      const conversationEntry: ConversationEntry = {
         timestamp: new Date(),
         userMessage,
         agentResponse,
@@ -330,10 +330,10 @@ export class AIAgentSessionService {
       // Update cache
       await this.cacheSession(session);
 
-      this.logger.log(`Session conversation updated: ${sessionId} (${session.interactionCount} interactions)`);
+      this.logger.log(`Session conversationupdated: ${sessionId} (${session.interactionCount} interactions)`);
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to update session conversation: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to update sessionconversation: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -358,7 +358,7 @@ export class AIAgentSessionService {
       this.logger.log(`Session extended: ${sessionId} (+${additionalMinutes} minutes)`);
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to extend session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to extendsession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -383,7 +383,7 @@ export class AIAgentSessionService {
       this.logger.log(`Session terminated: ${sessionId} (${reason})`);
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to terminate session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to terminatesession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -406,7 +406,7 @@ export class AIAgentSessionService {
       return sessions.filter(session => session.isValid());
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to get active sessions for tenant: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to get active sessions fortenant: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return [];
     }
   }
@@ -425,7 +425,7 @@ export class AIAgentSessionService {
       }
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to cache session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to cachesession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -453,7 +453,7 @@ export class AIAgentSessionService {
       return null;
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to get cached session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to get cachedsession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return null;
     }
   }
@@ -466,7 +466,7 @@ export class AIAgentSessionService {
       const cacheKey = `session:${sessionId}`;
       await this.redis.del(cacheKey);
     } catch (error: unknown) {
-      this.logger.error(`Failed to remove cached session: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to remove cachedsession: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -541,7 +541,7 @@ export class AIAgentSessionService {
         }
       });
 
-      constexpiredSessionIds: string[] = [];
+      const expiredSessionIds: string[] = [];
       const now = new Date();
 
       for (const session of expiredSessions) {
@@ -562,11 +562,11 @@ export class AIAgentSessionService {
           await this.redis.del(...cacheKeys);
         }
 
-        this.logger.log(`Expired sessions cleaned up: ${expiredSessionIds.length} sessions`);
+        this.logger.log(`Expired sessions cleanedup: ${expiredSessionIds.length} sessions`);
       }
 
     } catch (error: unknown) {
-      this.logger.error(`Session cleanup failed: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Session cleanupfailed: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -581,7 +581,7 @@ export class AIAgentSessionService {
     topUserRoles: { role: string; count: number }[];
   }> {
     try {
-      constwhereConditions: any = {};
+      const whereConditions: any = {};
       if (tenantId) {
         whereConditions.tenantId = tenantId;
       }
@@ -634,7 +634,7 @@ export class AIAgentSessionService {
       };
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to get session statistics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to get sessionstatistics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
 
       return {
         activeSessions: 0,
@@ -656,7 +656,7 @@ export class AIAgentSessionService {
     reason: string;
   }): Promise<number> {
     try {
-      constwhereConditions: any = {
+      const whereConditions: any = {
         isActive: true,
         status: 'ACTIVE'
       };
@@ -692,11 +692,11 @@ export class AIAgentSessionService {
         await this.redis.del(...cacheKeys);
       }
 
-      this.logger.warn(`Bulk session termination completed: ${terminatedSessions.length} sessions terminated`);
+      this.logger.warn(`Bulk session terminationcompleted: ${terminatedSessions.length} sessions terminated`);
       return terminatedSessions.length;
 
     } catch (error: unknown) {
-      this.logger.error(`Bulk session termination failed: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Bulk session terminationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return 0;
     }
   }
@@ -741,7 +741,7 @@ export class AIAgentSessionService {
       };
 
     } catch (error: unknown) {
-      this.logger.error(`Failed to get session health status: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Failed to get session healthstatus: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
 
       return {
         redisConnected: false,
@@ -763,7 +763,7 @@ export class AIAgentSessionService {
       }
       this.logger.log('AI agent session service cleanup completed');
     } catch (error: unknown) {
-      this.logger.error(`Session service cleanup failed: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Session service cleanupfailed: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
     }
   }
 }

@@ -268,7 +268,7 @@ export class CareDomain {
       this.goals = [];
     }
     
-    constnewGoal: DomainGoal = {
+    const newGoal: DomainGoal = {
       ...goal,
       id: `goal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       progressNotes: []
@@ -302,7 +302,7 @@ export class CareDomain {
       this.riskFactors = [];
     }
     
-    constnewRiskFactor: RiskFactor = {
+    const newRiskFactor: RiskFactor = {
       ...riskFactor,
       id: `risk_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
@@ -325,7 +325,7 @@ export class CareDomain {
       this.equipmentNeeded = [];
     }
     
-    constnewEquipment: EquipmentRequirement = {
+    const newEquipment: EquipmentRequirement = {
       ...equipment,
       id: `equipment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };

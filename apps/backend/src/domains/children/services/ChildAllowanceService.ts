@@ -53,7 +53,7 @@ import { User } from '../../users/entities/User';
  */
 @Injectable()
 export class ChildAllowanceService {
-  constructor(
+  const ructor(
     @InjectRepository(PocketMoneyTransaction)
     privatepocketMoneyRepo: Repository<PocketMoneyTransaction>,
 
@@ -70,7 +70,7 @@ export class ChildAllowanceService {
     privatechildRepo: Repository<Child>,
   ) {}
 
-  // ==================== POCKET MONEY DISBURSEMENT ====================
+  // ==================== POCKET MONEYDISBURSEMENT ====================
 
   /**
    * Disburse weekly pocket money
@@ -231,7 +231,7 @@ export class ChildAllowanceService {
       endDate?: Date;
     },
   ): Promise<PocketMoneyTransaction[]> {
-    constwhere: any = { childId };
+    const where: any = { childId };
 
     if (options?.year) where.year = options.year;
     if (options?.status) where.status = options.status;
@@ -245,7 +245,7 @@ export class ChildAllowanceService {
     });
   }
 
-  // ==================== ALLOWANCE EXPENDITURE ====================
+  // ==================== ALLOWANCEEXPENDITURE ====================
 
   /**
    * Request allowance expenditure
@@ -415,7 +415,7 @@ export class ChildAllowanceService {
       quarter?: number;
     },
   ): Promise<AllowanceExpenditure[]> {
-    constwhere: any = { childId };
+    const where: any = { childId };
 
     if (options?.allowanceType) where.allowanceType = options.allowanceType;
     if (options?.category) where.category = options.category;
@@ -430,7 +430,7 @@ export class ChildAllowanceService {
     });
   }
 
-  // ==================== SAVINGS ACCOUNT ====================
+  // ==================== SAVINGSACCOUNT ====================
 
   /**
    * Open savings account
@@ -630,7 +630,7 @@ export class ChildAllowanceService {
     childId: string,
     accountType?: SavingsAccountType,
   ): Promise<ChildSavingsAccount | null> {
-    constwhere: any = { childId, status: 'ACTIVE' };
+    const where: any = { childId, status: 'ACTIVE' };
     if (accountType) where.accountType = accountType;
 
     return await this.savingsAccountRepo.findOne({ where });
@@ -647,7 +647,7 @@ export class ChildAllowanceService {
       endDate?: Date;
     },
   ): Promise<ChildSavingsTransaction[]> {
-    constwhere: any = { accountId };
+    const where: any = { accountId };
 
     if (options?.transactionType) where.transactionType = options.transactionType;
     if (options?.startDate && options?.endDate) {

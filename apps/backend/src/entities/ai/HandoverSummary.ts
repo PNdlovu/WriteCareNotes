@@ -33,7 +33,7 @@ export class HandoverSummary {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   summaryId: string;
 

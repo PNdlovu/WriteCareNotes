@@ -27,7 +27,7 @@ import { SecuritySystemService } from '../services/security-system.service';
  * Smart Home Integration Module
  * 
  * Provides comprehensive IoT device management and smart home automation
- * for care home environments including:
+ * for care home environmentsincluding:
  * - Voice assistants and smart speakers
  * - Environmental controls (lighting, temperature, air quality)
  * - Safety systems (fall detection, emergency alerts)

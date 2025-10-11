@@ -89,7 +89,7 @@ export class MaintenanceFacilitiesService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.assetRepository = AppDataSource.getRepository(Asset);
     this.workOrderRepository = AppDataSource.getRepository(WorkOrder);
     this.notificationService = new NotificationService(new EventEmitter2());
@@ -246,7 +246,7 @@ export class MaintenanceFacilitiesService {
 
   async schedulePreventiveMaintenance(): Promise<WorkOrder[]> {
     const overdueAssets = await this.getOverdueMaintenanceAssets();
-    constworkOrders: WorkOrder[] = [];
+    const workOrders: WorkOrder[] = [];
 
     for (const asset of overdueAssets) {
       const workOrder = await this.createWorkOrder({
@@ -326,7 +326,7 @@ export class MaintenanceFacilitiesService {
   // Facility Monitoring
   async getFacilityMonitoring(): Promise<FacilityMonitoring[]> {
     const locations = await this.getFacilityLocations();
-    constmonitoringData: FacilityMonitoring[] = [];
+    const monitoringData: FacilityMonitoring[] = [];
     
     for (const location of locations) {
       const environmentalData = await this.getEnvironmentalReadings(location.name);
@@ -375,7 +375,7 @@ export class MaintenanceFacilitiesService {
   }
 
   private async getEnvironmentalReadings(location: string): Promise<any> {
-    // Simulate IoT sensor readings with realistic variations
+    // Simulate IoT sensor readings with realistic var iations
     const baseReadings = {
       'Ground Floor - Reception': { temp: 22, humidity: 45, airQuality: 85, lighting: 350 },
       'Ground Floor - Dining Room': { temp: 21, humidity: 50, airQuality: 80, lighting: 450 },
@@ -387,7 +387,7 @@ export class MaintenanceFacilitiesService {
 
     const base = baseReadings[location] || { temp: 22, humidity: 45, airQuality: 85, lighting: 350 };
     
-    // Add realistic variations (±2°C, ±5% humidity, ±5% air quality, ±50 lux)
+    // Add realistic var iations (±2°C, ±5% humidity, ±5% air quality, ±50 lux)
     return {
       temperature: Math.round((base.temp + (Math.random() - 0.5) * 4) * 10) / 10,
       humidity: Math.round((base.humidity + (Math.random() - 0.5) * 10) * 10) / 10,
@@ -425,15 +425,15 @@ export class MaintenanceFacilitiesService {
     const alerts = [];
     
     if (readings.temperature < standards.temperature.min || readings.temperature > standards.temperature.max) {
-      alerts.push(`Temperature out of range: ${readings.temperature}°C (expected ${standards.temperature.min}-${standards.temperature.max}°C)`);
+      alerts.push(`Temperature out ofrange: ${readings.temperature}°C (expected ${standards.temperature.min}-${standards.temperature.max}°C)`);
     }
     
     if (readings.humidity < standards.humidity.min || readings.humidity > standards.humidity.max) {
-      alerts.push(`Humidity out of range: ${readings.humidity}% (expected ${standards.humidity.min}-${standards.humidity.max}%)`);
+      alerts.push(`Humidity out ofrange: ${readings.humidity}% (expected ${standards.humidity.min}-${standards.humidity.max}%)`);
     }
     
     if (readings.airQuality < 70) {
-      alerts.push(`Poor air quality detected: ${readings.airQuality}%`);
+      alerts.push(`Poor air qualitydetected: ${readings.airQuality}%`);
     }
     
     if (readings.lighting < standards.lighting.min) {
@@ -513,7 +513,7 @@ export class MaintenanceFacilitiesService {
     // Calculate previous period consumption for comparison
     // This would query historical energy data from the database
     const baseConsumption = 3200; // GBP
-    const seasonalVariation = Math.sin((new Date().getMonth() / 12) * 2 * Math.PI) * 0.1; // ±10% seasonal variation
+    const seasonalVariation = Math.sin((new Date().getMonth() / 12) * 2 * Math.PI) * 0.1; // ±10% seasonal var iation
     return baseConsumption * (1 + seasonalVariation);
   }
 

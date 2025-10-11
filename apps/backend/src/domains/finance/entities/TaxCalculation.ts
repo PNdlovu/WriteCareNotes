@@ -20,7 +20,7 @@ export class TaxCalculation {
   @Column({ type: 'uuid' })
   payslipId: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   taxCode: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
@@ -68,7 +68,7 @@ export class TaxCalculation {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   taxRefund: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   taxYear: string; // e.g., "2024-25"
 
   @Column({ type: 'date' })

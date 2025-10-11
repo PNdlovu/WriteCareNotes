@@ -48,7 +48,7 @@ import { logger } from '@/utils/logger';
 export class FinancialServiceController {
   privatefinancialService: FinancialService;
 
-  constructor() {
+  const ructor() {
     // Initialize dependencies
     const databaseService = new DatabaseService();
     const repository = new FinancialRepository(databaseService.getPool());
@@ -138,7 +138,7 @@ export class FinancialServiceController {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      constfilters: BillQueryFilters = {
+      const filters: BillQueryFilters = {
         residentId: req.query.residentId as string,
         careHomeId: req.query.careHomeId as string,
         status: req.query.status as any,
@@ -285,7 +285,7 @@ export class FinancialServiceController {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      constfilters: PaymentQueryFilters = {
+      const filters: PaymentQueryFilters = {
         residentId: req.query.residentId as string,
         careHomeId: req.query.careHomeId as string,
         billId: req.query.billId as string,
@@ -391,7 +391,7 @@ export class FinancialServiceController {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      constfilters: ClaimQueryFilters = {
+      const filters: ClaimQueryFilters = {
         residentId: req.query.residentId as string,
         careHomeId: req.query.careHomeId as string,
         insuranceProvider: req.query.insuranceProvider as string,

@@ -30,7 +30,7 @@ export class TenantAIAgentController {
   // Logger removed
   privateaiService: TenantCareAssistantAIService;
 
-  constructor() {
+  const ructor() {
     this.aiService = new TenantCareAssistantAIService();
   }
 
@@ -41,7 +41,7 @@ export class TenantAIAgentController {
     try {
       const { message, inquiryType, residentId, careContext, urgencyLevel, confidentialityLevel } = req.body;
 
-      if (!message || typeof message !== 'string') {
+      if (!message || typeofmessage !== 'string') {
         return res.status(400).json({
           error: 'Message is required',
           code: 'MISSING_MESSAGE'
@@ -55,7 +55,7 @@ export class TenantAIAgentController {
         });
       }
 
-      constinquiry: TenantCareInquiry = {
+      const inquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `tenant_session_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -121,7 +121,7 @@ export class TenantAIAgentController {
         });
       }
 
-      constinquiry: TenantCareInquiry = {
+      const inquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `care_rec_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -170,7 +170,7 @@ export class TenantAIAgentController {
    */
   async getComplianceAlerts(req: Request, res: Response): Promise<void> {
     try {
-      constinquiry: TenantCareInquiry = {
+      const inquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `compliance_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -218,7 +218,7 @@ export class TenantAIAgentController {
     try {
       const { documentType, currentContent, residentId } = req.body;
 
-      constinquiry: TenantCareInquiry = {
+      const inquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `doc_assist_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,
@@ -268,7 +268,7 @@ export class TenantAIAgentController {
     try {
       const { message, residentId, emergencyType } = req.body;
 
-      constinquiry: TenantCareInquiry = {
+      const inquiry: TenantCareInquiry = {
         sessionId: req.aiSecurity?.sessionId || `emergency_${Date.now()}`,
         tenantId: req.tenant.tenantId,
         userId: req.user.id,

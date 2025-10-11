@@ -168,7 +168,7 @@ import { ComplianceCheckService } from '../services/compliance/ComplianceCheckSe
   ]
 })
 export class ComplianceModule {
-  constructor() {
+  const ructor() {
     console.log('🏛️ British Isles Compliance Module initialized');
     console.log('✅ All jurisdiction-specific compliance services loaded');
     console.log('🔒 Cybersecurity and data protection compliance ready');

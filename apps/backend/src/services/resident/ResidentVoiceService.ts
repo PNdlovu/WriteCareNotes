@@ -311,7 +311,7 @@ export class ResidentVoiceService {
   privateadvocacyService: AdvocacyManagementService;
   privatequalityService: QualityOfLifeAssessmentService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('ResidentVoiceService');
     this.audit = new AuditService();
@@ -361,8 +361,8 @@ export class ResidentVoiceService {
           WHERE resident_id = $1 AND tenant_id = $2
         `, [residentId, tenantId]);
 
-        letprofileId: string;
-        letoperation: string;
+        let profileId: string;
+        let operation: string;
 
         if (existingProfile.rows.length > 0) {
           // Update existing profile
@@ -379,7 +379,7 @@ export class ResidentVoiceService {
               last_assessment = NOW(),
               updated_at = NOW(),
               updated_by = $7
-            WHERE id = $1 AND tenant_id = $2
+            WHEREid = $1 AND tenant_id = $2
           `;
 
           await client.query(updateQuery, [
@@ -563,7 +563,7 @@ export class ResidentVoiceService {
           await client.query(`
             UPDATE resident_feedback 
             SET assigned_to = $1, status = 'acknowledged', updated_at = NOW()
-            WHERE id = $2
+            WHEREid = $2
           `, [assignedTo, feedbackId]);
         }
 
@@ -599,7 +599,7 @@ export class ResidentVoiceService {
           submittedBy: userId
         });
 
-        constresponse: ResidentFeedback = {
+        const response: ResidentFeedback = {
           id: feedback.id,
           residentId: feedback.resident_id,
           tenantId: feedback.tenant_id,
@@ -690,7 +690,7 @@ export class ResidentVoiceService {
     const result = await this.db.query(summaryQuery, [profileId, tenantId]);
     
     // Process results into summary format
-    constfeedbackByType: Record<string, number> = {};
+    const feedbackByType: Record<string, number> = {};
     let totalFeedback = 0;
     let avgResponseTime = 0;
     let resolutionRate = 0;
@@ -706,7 +706,7 @@ export class ResidentVoiceService {
       if (row.avg_satisfaction) satisfactionScore = parseFloat(row.avg_satisfaction);
     });
 
-    constfeedbackHistory: FeedbackSummary = {
+    const feedbackHistory: FeedbackSummary = {
       totalFeedback,
       feedbackByType: feedbackByType as Record<FeedbackType, number>,
       averageResponseTime: Math.round(avgResponseTime * 10) / 10,
@@ -718,7 +718,7 @@ export class ResidentVoiceService {
     await this.db.query(`
       UPDATE resident_voice_profiles 
       SET feedback_history = $1, updated_at = NOW()
-      WHERE id = $2
+      WHEREid = $2
     `, [JSON.stringify(feedbackHistory), profileId]);
   }
 
@@ -729,7 +729,7 @@ export class ResidentVoiceService {
   ): Promise<void> {
     // Check for concerning quality of life scores (below 6/10)
     const concernThreshold = 6;
-    constconcernAreas: string[] = [];
+    const concernAreas: string[] = [];
 
     if (qualityMetrics.overallSatisfaction < concernThreshold) concernAreas.push('overall satisfaction');
     if (qualityMetrics.autonomyLevel < concernThreshold) concernAreas.push('autonomy');
@@ -752,7 +752,7 @@ export class ResidentVoiceService {
           userId: manager.id,
           type: 'quality_of_life_concern',
           title: 'Quality of Life Concerns Identified',
-          message: `Resident shows concerning scores in: ${concernAreas.join(', ')}`,
+          message: `Resident shows concerning scoresin: ${concernAreas.join(', ')}`,
           data: { 
             residentId, 
             concernAreas, 

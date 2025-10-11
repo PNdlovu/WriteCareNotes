@@ -50,7 +50,7 @@ export class FinancialAnalyticsRoutes {
   privaterouter: Router;
   privatefinancialService: FinancialAnalyticsService;
 
-  constructor(financialService: FinancialAnalyticsService) {
+  const ructor(financialService: FinancialAnalyticsService) {
     this.router = Router();
     this.financialService = financialService;
     this.setupMiddleware();
@@ -509,7 +509,7 @@ export class FinancialAnalyticsRoutes {
       const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
       const userId = req.user?.id;
 
-      constqueryParams: TransactionQueryParams = {
+      const queryParams: TransactionQueryParams = {
         accountId: req.query['accountId'] as string,
         category: req.query['category'] as TransactionCategory,
         status: req.query['status'] as TransactionStatus,

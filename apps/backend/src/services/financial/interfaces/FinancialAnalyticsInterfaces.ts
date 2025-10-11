@@ -237,7 +237,7 @@ export interface AnalyticsRequest {
 export enum AnalysisType {
   PROFITABILITY = 'profitability',
   COST_CENTER = 'cost_center',
-  VARIANCE = 'variance',
+  variance = 'variance',
   TREND = 'trend',
   BENCHMARK = 'benchmark',
   CASH_FLOW = 'cash_flow'

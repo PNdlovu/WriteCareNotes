@@ -50,7 +50,7 @@ export class TechnicalCommunicationService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
   }
@@ -62,7 +62,7 @@ export class TechnicalCommunicationService {
     internalMessagingConfiguration: any;
   }): Promise<TechnicalMessagingInfrastructure> {
     try {
-      constinfrastructure: TechnicalMessagingInfrastructure = {
+      const infrastructure: TechnicalMessagingInfrastructure = {
         smsServices: {
           bulkSMSSupport: true,
           deliveryReports: true,
@@ -97,7 +97,7 @@ export class TechnicalCommunicationService {
       
       return infrastructure;
     } catch (error: unknown) {
-      console.error('Error implementing technical messaging:', error);
+      console.error('Error implementing technicalmessaging:', error);
       throw error;
     }
   }

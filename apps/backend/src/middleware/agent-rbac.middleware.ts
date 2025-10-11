@@ -17,7 +17,7 @@ import { logger } from '../utils/logger';
 export class AgentRBACMiddleware {
   privaterbacService: AgentRBACService;
 
-  constructor() {
+  const ructor() {
     this.rbacService = new AgentRBACService();
   }
 

@@ -22,7 +22,7 @@ import { body, param, validationResult } from 'express-validator';
 export class TenantController {
   privatetenantService: TenantService;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.tenantService = new TenantService(dataSource);
   }
 
@@ -45,7 +45,7 @@ export class TenantController {
         return;
       }
 
-      constdto: CreateTenantDto = req.body;
+      const dto: CreateTenantDto = req.body;
       const tenant = await this.tenantService.create(dto);
 
       res.status(201).json({
@@ -187,7 +187,7 @@ export class TenantController {
       }
 
       const { id } = req.params;
-      constdto: UpdateTenantDto = req.body;
+      const dto: UpdateTenantDto = req.body;
 
       const tenant = await this.tenantService.update(id, dto);
 
@@ -305,7 +305,7 @@ export const createTenantValidation = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .matches(/^[a-z0-9-]+$/)
-    .withMessage('Subdomain must contain only lowercase letters, numbers, and hyphens'),
+    .withMessage('Subdomain must contain only lowercase let ters, numbers, and hyphens'),
   body('subscriptionPlan')
     .optional()
     .isIn(['starter', 'professional', 'enterprise'])
@@ -326,7 +326,7 @@ export const updateTenantValidation = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .matches(/^[a-z0-9-]+$/)
-    .withMessage('Subdomain must contain only lowercase letters, numbers, and hyphens'),
+    .withMessage('Subdomain must contain only lowercase let ters, numbers, and hyphens'),
   body('subscriptionPlan')
     .optional()
     .isIn(['starter', 'professional', 'enterprise'])

@@ -18,7 +18,7 @@ import { ProcurementSupplyChainService } from '../../services/procurement/Procur
 export class ProcurementSupplyChainController {
   privateprocurementService: ProcurementSupplyChainService;
 
-  constructor() {
+  const ructor() {
     this.procurementService = new ProcurementSupplyChainService();
   }
 

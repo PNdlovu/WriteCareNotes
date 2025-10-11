@@ -65,7 +65,7 @@ export class BedManagementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.bedRepository = AppDataSource.getRepository(Bed);
     this.roomRepository = AppDataSource.getRepository(Room);
     this.waitingListRepository = AppDataSource.getRepository(WaitingListEntry);
@@ -282,7 +282,7 @@ export class BedManagementService {
   async matchBedToWaitingList(): Promise<BedAllocationResult[]> {
     const availableBeds = await this.getAvailableBeds();
     const waitingList = await this.getPrioritizedWaitingList();
-    constresults: BedAllocationResult[] = [];
+    const results: BedAllocationResult[] = [];
 
     for (const entry of waitingList) {
       const suitableBed = availableBeds.find(bed => entry.canBeAccommodatedBy(bed));
@@ -335,7 +335,7 @@ export class BedManagementService {
 
   async getRevenueOptimizationSuggestions(): Promise<RevenueOptimizationSuggestion[]> {
     const beds = await this.getAllBeds();
-    constsuggestions: RevenueOptimizationSuggestion[] = [];
+    const suggestions: RevenueOptimizationSuggestion[] = [];
 
     for (const bed of beds) {
       // Simple revenue optimization logic

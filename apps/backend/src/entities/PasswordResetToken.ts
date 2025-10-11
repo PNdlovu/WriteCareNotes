@@ -9,7 +9,7 @@
  * 
  * @description
  * Entity for storing password reset tokens.
- * Implements security best practices:
+ * Implements security bestpractices:
  * - Tokens are hashed before storage
  * - Tokens expire after 1 hour
  * - Tokens can only be used once

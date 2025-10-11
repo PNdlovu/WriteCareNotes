@@ -52,10 +52,10 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
           },
           {
             name: 'dependent_type',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             isNullable: false,
-            comment: 'Type of dependent entity: workflow, module, template, assessment, training, document'
+            comment: 'Type of dependententity: workflow, module, template, assessment, training, document'
           },
           {
             name: 'dependent_id',
@@ -65,11 +65,11 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
           },
           {
             name: 'dependency_strength',
-            type: 'varchar',
+            type: 'var char',
             length: '20',
             isNullable: false,
             default: "'medium'",
-            comment: 'Strength of dependency: strong, medium, weak'
+            comment: 'Strength ofdependency: strong, medium, weak'
           },
           {
             name: 'metadata',
@@ -117,7 +117,7 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
     // 2. CREATE INDEXES for policy_dependencies
     // ============================================================
 
-    // Index for fast policy lookup (primary use case: "what depends on this policy?")
+    // Index for fast policy lookup (primary usecase: "what depends on thispolicy?")
     await queryRunner.createIndex(
       'policy_dependencies',
       new TableIndex({
@@ -126,7 +126,7 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
       })
     );
 
-    // Composite index for dependent entity lookup (use case: "which policies does this workflow depend on?")
+    // Composite index for dependent entity lookup (use case: "which policies does this workflow dependon?")
     await queryRunner.createIndex(
       'policy_dependencies',
       new TableIndex({
@@ -162,7 +162,7 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
       })
     );
 
-    // Unique constraint to prevent duplicate dependencies
+    // Unique const raint to prevent duplicate dependencies
     await queryRunner.createIndex(
       'policy_dependencies',
       new TableIndex({
@@ -309,34 +309,34 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
     );
 
     // ============================================================
-    // 7. ADD CHECK CONSTRAINTS
+    // 7. ADD CHECK CONST RAINTS
     // ============================================================
 
     // Ensure risk_score is in valid range (0-100)
     await queryRunner.query(`
       ALTER TABLE policy_impact_cache
-      ADD CONSTRAINT chk_impact_cache_risk_score 
+      ADD CONST RAINT chk_impact_cache_risk_score 
       CHECK (risk_score IS NULL OR (risk_score >= 0 AND risk_score <= 100))
     `);
 
     // Ensure affected_count is non-negative
     await queryRunner.query(`
       ALTER TABLE policy_impact_cache
-      ADD CONSTRAINT chk_impact_cache_affected_count 
+      ADD CONST RAINT chk_impact_cache_affected_count 
       CHECK (affected_count >= 0)
     `);
 
     // Ensure dependency_strength is valid
     await queryRunner.query(`
       ALTER TABLE policy_dependencies
-      ADD CONSTRAINT chk_dependencies_strength 
+      ADD CONST RAINT chk_dependencies_strength 
       CHECK (dependency_strength IN ('strong', 'medium', 'weak'))
     `);
 
     // Ensure dependent_type is valid
     await queryRunner.query(`
       ALTER TABLE policy_dependencies
-      ADD CONSTRAINT chk_dependencies_type 
+      ADD CONST RAINT chk_dependencies_type 
       CHECK (dependent_type IN ('workflow', 'module', 'template', 'assessment', 'training', 'document'))
     `);
 
@@ -373,13 +373,13 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
       RETURNS TABLE (
         dependency_id UUID,
         policy_id UUID,
-        dependent_type VARCHAR,
+        dependent_type VAR CHAR,
         dependent_id UUID,
-        dependency_strength VARCHAR,
+        dependency_strength VAR CHAR,
         depth INTEGER
       ) AS $$
       WITH RECURSIVE dependency_tree AS (
-        -- Base case: direct dependencies
+        -- Basecase: direct dependencies
         SELECT 
           id AS dependency_id,
           policy_id,
@@ -392,7 +392,7 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
         
         UNION ALL
         
-        -- Recursive case: dependencies of dependencies (for policies that are templates)
+        -- Recursivecase: dependencies of dependencies (for policies that are templates)
         SELECT 
           pd.id AS dependency_id,
           pd.policy_id,
@@ -444,10 +444,10 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
 
     console.log('✅ Created policy_dependencies table with 6 indexes');
     console.log('✅ Created policy_impact_cache table with 3 indexes');
-    console.log('✅ Created 4 check constraints for data validation');
+    console.log('✅ Created 4 check const raints for data validation');
     console.log('✅ Created 1 trigger for automatic updated_at');
     console.log('✅ Created 2 helper functions for impact analysis');
-    console.log('✅ Migration complete: Policy Impact Analysis schema ready');
+    console.log('✅ Migrationcomplete: Policy Impact Analysis schema ready');
   }
 
   /**
@@ -469,6 +469,6 @@ export class CreatePolicyDependenciesTables1696579400000 implements MigrationInt
     // Drop policy_dependencies table (includes all foreign keys and indexes)
     await queryRunner.dropTable('policy_dependencies', true);
 
-    console.log('✅ Rolled back: Dropped policy_dependencies and policy_impact_cache tables');
+    console.log('✅ Rolledback: Dropped policy_dependencies and policy_impact_cache tables');
   }
 }

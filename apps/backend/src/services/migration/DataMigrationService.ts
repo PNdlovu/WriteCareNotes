@@ -125,7 +125,7 @@ export class DataMigrationService {
   privatemigrationPlans: MigrationPlan[];
   privateprogress: MigrationProgress;
 
-  constructor(private config: MigrationConfig) {
+  const ructor(private config: MigrationConfig) {
     this.logger = createLogger('DataMigrationService');
     this.encryptionService = new EncryptionService();
     this.auditService = new AuditService();
@@ -184,7 +184,7 @@ export class DataMigrationService {
       this.logger.info('Database connections initialized successfully');
 
     } catch (error) {
-      this.logger.error('Failed to initialize database connections:', error);
+      this.logger.error('Failed to initialize databaseconnections:', error);
       throw error;
     }
   }
@@ -533,7 +533,7 @@ export class DataMigrationService {
     this.progress.status = 'in_progress';
     this.progress.startTime = new Date();
 
-    constresults: MigrationResult[] = [];
+    const results: MigrationResult[] = [];
 
     try {
       await this.auditService.log({
@@ -590,7 +590,7 @@ export class DataMigrationService {
 
     } catch (error) {
       this.progress.status = 'failed';
-      this.logger.error('Data migration failed:', error);
+      this.logger.error('Data migrationfailed:', error);
       
       await this.auditService.log({
         action: 'MIGRATION_FAILED',
@@ -620,10 +620,10 @@ export class DataMigrationService {
     
     const targetPool = this.targetPools.get(plan.serviceName);
     if (!targetPool) {
-      throw new Error(`Target database pool not found for service: ${plan.serviceName}`);
+      throw new Error(`Target database pool not found forservice: ${plan.serviceName}`);
     }
 
-    constresults: MigrationResult[] = [];
+    const results: MigrationResult[] = [];
 
     for (const tableConfig of plan.tables) {
       const result = await this.migrateTable(tableConfig, targetPool, plan.serviceName);
@@ -645,7 +645,7 @@ export class DataMigrationService {
     const startTime = Date.now();
     this.logger.info(`Migrating table: ${tableConfig.sourceTable} -> ${tableConfig.targetTable}`);
 
-    constresult: MigrationResult = {
+    const result: MigrationResult = {
       serviceName,
       tableName: tableConfig.targetTable,
       totalRecords: 0,
@@ -656,8 +656,8 @@ export class DataMigrationService {
       status: 'failed'
     };
 
-    letsourceClient: PoolClient | null = null;
-    lettargetClient: PoolClient | null = null;
+    let sourceClient: PoolClient | null = null;
+    let targetClient: PoolClient | null = null;
 
     try {
       sourceClient = await this.sourcePool.connect();
@@ -698,7 +698,7 @@ export class DataMigrationService {
       result.status = result.failedRecords === 0 ? 'completed' : 'partial';
       result.duration = Date.now() - startTime;
 
-      this.logger.info(`Table migration completed: ${tableConfig.sourceTable} (${result.migratedRecords}/${result.totalRecords} records)`);
+      this.logger.info(`Table migrationcompleted: ${tableConfig.sourceTable} (${result.migratedRecords}/${result.totalRecords} records)`);
 
       // Publish migration event
       await this.eventStoreService.appendEvent({
@@ -787,7 +787,7 @@ export class DataMigrationService {
         } catch (error) {
           this.logger.warn(`Failed to migrate record from ${tableConfig.sourceTable}:`, error);
           result.failed++;
-          result.validationErrors.push(`Record migration failed: ${error.message}`);
+          result.validationErrors.push(`Record migrationfailed: ${error.message}`);
         }
       }
 
@@ -809,7 +809,7 @@ export class DataMigrationService {
    * Transform record according to transformation rules
    */
   private transformRecord(sourceRecord: any, transformationRules: TransformationRule[]): any {
-    consttransformedRecord: any = {};
+    const transformedRecord: any = {};
 
     for (const rule of transformationRules) {
       const sourceValue = sourceRecord[rule.sourceColumn];
@@ -834,7 +834,7 @@ export class DataMigrationService {
    * Validate record according to validation rules
    */
   private validateRecord(record: any, validationRules: ValidationRule[]): { isValid: boolean; errors: string[] } {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     for (const rule of validationRules) {
       const value = record[rule.column];
@@ -937,7 +937,7 @@ export class DataMigrationService {
     const remainder = sum % 11;
     const calculatedCheckDigit = 11 - remainder;
     
-    return calculatedCheckDigit === checkDigit || 
+    returncalculatedCheckDigit === checkDigit || 
            (calculatedCheckDigit === 11 && checkDigit === 0);
   }
 
@@ -977,16 +977,16 @@ export class DataMigrationService {
    * Rollback migration for a specific service
    */
   async rollbackService(serviceName: string): Promise<void> {
-    this.logger.info(`Rolling back migration for service: ${serviceName}`);
+    this.logger.info(`Rolling back migration forservice: ${serviceName}`);
 
     const targetPool = this.targetPools.get(serviceName);
     if (!targetPool) {
-      throw new Error(`Target database pool not found for service: ${serviceName}`);
+      throw new Error(`Target database pool not found forservice: ${serviceName}`);
     }
 
     const plan = this.migrationPlans.find(p => p.serviceName === serviceName);
     if (!plan) {
-      throw new Error(`Migration plan not found for service: ${serviceName}`);
+      throw new Error(`Migration plan not found forservice: ${serviceName}`);
     }
 
     const client = await targetPool.connect();
@@ -1015,7 +1015,7 @@ export class DataMigrationService {
         correlationId: this.generateCorrelationId()
       });
 
-      this.logger.info(`Rollback completed for service: ${serviceName}`);
+      this.logger.info(`Rollback completed forservice: ${serviceName}`);
 
     } catch (error) {
       await client.query('ROLLBACK');
@@ -1049,7 +1049,7 @@ export class DataMigrationService {
       this.logger.info('Data migration service shutdown completed');
 
     } catch (error) {
-      this.logger.error('Error during migration service shutdown:', error);
+      this.logger.error('Error during migration serviceshutdown:', error);
     }
   }
 }

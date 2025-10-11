@@ -187,15 +187,15 @@ export interface BrandCustomization {
 @Index(['effectiveDate', 'expiryDate'])
 export class OrganizationBranding extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // Branding Identity
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   brandName!: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   brandCode?: string;
@@ -289,7 +289,7 @@ export class OrganizationBranding extends BaseEntity {
   approvalNotes?: string;
 
   // Version Control
-  @Column({ type: 'varchar', length: 20, default: '1.0.0' })
+  @Column({ type: 'var char', length: 20, default: '1.0.0' })
   @IsString()
   version!: string;
 
@@ -309,19 +309,19 @@ export class OrganizationBranding extends BaseEntity {
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   /**
    * Lifecycle hooks
@@ -534,7 +534,7 @@ export class OrganizationBranding extends BaseEntity {
    * Generate CSS variables from brand colors
    */
   generateCSSVariables(): Record<string, string> {
-    constcssVars: Record<string, string> = {};
+    const cssVars: Record<string, string> = {};
     
     // Primary colors
     cssVars['--color-primary'] = this.colors.primary;

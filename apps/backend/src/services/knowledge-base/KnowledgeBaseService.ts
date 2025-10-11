@@ -19,7 +19,7 @@ import { KnowledgeArticle, ArticleType, PublicationStatus } from '../../entities
 export class KnowledgeBaseService {
   privatearticleRepository: Repository<KnowledgeArticle>;
 
-  constructor() {
+  const ructor() {
     this.articleRepository = AppDataSource.getRepository(KnowledgeArticle);
   }
 
@@ -37,7 +37,7 @@ export class KnowledgeBaseService {
 
       return await this.articleRepository.save(article);
     } catch (error: unknown) {
-      console.error('Error creating article:', error);
+      console.error('Error creatingarticle:', error);
       throw error;
     }
   }
@@ -57,7 +57,7 @@ export class KnowledgeBaseService {
         }, {})
       };
     } catch (error: unknown) {
-      console.error('Error getting knowledge analytics:', error);
+      console.error('Error getting knowledgeanalytics:', error);
       throw error;
     }
   }

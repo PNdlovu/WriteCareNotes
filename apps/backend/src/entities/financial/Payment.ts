@@ -102,7 +102,7 @@ export class Payment extends BaseEntity {
   id!: string;
 
   // Payment Identification
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   @IsString()
   @Length(1, 100)
   paymentReference!: string;
@@ -135,7 +135,7 @@ export class Payment extends BaseEntity {
   @Transform(({ value }) => new Decimal(value))
   processingFee!: Decimal;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;
@@ -196,17 +196,17 @@ export class Payment extends BaseEntity {
   sortCode?: string;
 
   // External Payment Provider Information
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   providerTransactionId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   providerReference?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   providerName?: string;
@@ -221,7 +221,7 @@ export class Payment extends BaseEntity {
   @IsUUID()
   correlationId!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   regulatoryCode?: string;
@@ -260,7 +260,7 @@ export class Payment extends BaseEntity {
   requiresManualReview!: boolean;
 
   // Refund Information
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   refundReference?: string;

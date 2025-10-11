@@ -18,7 +18,7 @@ export class AdvancedPredictiveHealthController {
   privatepredictiveHealthService: AdvancedPredictiveHealthService;
   privatelogger: Logger;
 
-  constructor() {
+  const ructor() {
     this.predictiveHealthService = new AdvancedPredictiveHealthService();
     this.logger = new Logger(AdvancedPredictiveHealthController.name);
   }
@@ -50,7 +50,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(prediction);
     } catch (error) {
-      this.logger.error('Error generating health prediction:', error);
+      this.logger.error('Error generating healthprediction:', error);
       res.status(500).json({ error: 'Failed to generate health prediction' });
     }
   }
@@ -82,7 +82,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(trends);
     } catch (error) {
-      this.logger.error('Error analyzing health trends:', error);
+      this.logger.error('Error analyzing healthtrends:', error);
       res.status(500).json({ error: 'Failed to analyze health trends' });
     }
   }
@@ -109,7 +109,7 @@ export class AdvancedPredictiveHealthController {
       const insights = await this.predictiveHealthService.generateHealthInsights(residentId);
       res.json(insights);
     } catch (error) {
-      this.logger.error('Error generating health insights:', error);
+      this.logger.error('Error generating healthinsights:', error);
       res.status(500).json({ error: 'Failed to generate health insights' });
     }
   }
@@ -153,7 +153,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(alert);
     } catch (error) {
-      this.logger.error('Error creating health alert:', error);
+      this.logger.error('Error creating healthalert:', error);
       res.status(500).json({ error: 'Failed to create health alert' });
     }
   }
@@ -180,7 +180,7 @@ export class AdvancedPredictiveHealthController {
       const dashboard = await this.predictiveHealthService.getHealthDashboard(residentId);
       res.json(dashboard);
     } catch (error) {
-      this.logger.error('Error getting health dashboard:', error);
+      this.logger.error('Error getting healthdashboard:', error);
       res.status(500).json({ error: 'Failed to get health dashboard' });
     }
   }
@@ -212,7 +212,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(model);
     } catch (error) {
-      this.logger.error('Error training health model:', error);
+      this.logger.error('Error training healthmodel:', error);
       res.status(500).json({ error: 'Failed to train health model' });
     }
   }
@@ -247,7 +247,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(predictions);
     } catch (error) {
-      this.logger.error('Error getting health predictions:', error);
+      this.logger.error('Error getting healthpredictions:', error);
       res.status(500).json({ error: 'Failed to get health predictions' });
     }
   }
@@ -282,7 +282,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(alerts);
     } catch (error) {
-      this.logger.error('Error getting health alerts:', error);
+      this.logger.error('Error getting healthalerts:', error);
       res.status(500).json({ error: 'Failed to get health alerts' });
     }
   }
@@ -318,7 +318,7 @@ export class AdvancedPredictiveHealthController {
 
       res.json(updatedAlert);
     } catch (error) {
-      this.logger.error('Error updating health alert status:', error);
+      this.logger.error('Error updating health alertstatus:', error);
       res.status(500).json({ error: 'Failed to update health alert status' });
     }
   }
@@ -341,7 +341,7 @@ export class AdvancedPredictiveHealthController {
       const summary = await this.calculateHealthAnalyticsSummary(tenantId, period as string);
       res.json(summary);
     } catch (error) {
-      this.logger.error('Error getting health analytics summary:', error);
+      this.logger.error('Error getting health analyticssummary:', error);
       res.status(500).json({ error: 'Failed to get health analytics summary' });
     }
   }
@@ -377,7 +377,7 @@ export class AdvancedPredictiveHealthController {
       res.setHeader('Content-Disposition', `attachment; filename="health_data_${residentId}.${format}"`);
       res.json(exportData);
     } catch (error) {
-      this.logger.error('Error exporting health data:', error);
+      this.logger.error('Error exporting healthdata:', error);
       res.status(500).json({ error: 'Failed to export health data' });
     }
   }

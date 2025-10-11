@@ -29,7 +29,7 @@ export class EmailService {
   privatefromAddress: string;
   privatefromName: string;
 
-  constructor() {
+  const ructor() {
     this.fromAddress = process.env.EMAIL_FROM_ADDRESS || 'noreply@writecarenotes.com';
     this.fromName = process.env.EMAIL_FROM_NAME || 'WriteCareNotes';
 
@@ -118,15 +118,15 @@ export class EmailService {
             
             <p>We received a request to reset your password for your WriteCareNotes account.</p>
             
-            <p>Click the button below to reset your password:</p>
+            <p>Click the button below to reset yourpassword:</p>
             
             <a href="${data.resetLink}" class="button">Reset Password</a>
             
-            <p>Or copy and paste this link into your browser:</p>
+            <p>Or copy and paste this link into yourbrowser:</p>
             <p style="word-break: break-all; color: #0066cc;">${data.resetLink}</p>
             
             <div class="warning">
-              <strong>⚠️ Security Notice:</strong>
+              <strong>⚠️ SecurityNotice:</strong>
               <ul>
                 <li>This link will expire in ${expiryHours} hour${expiryHours > 1 ? 's' : ''}</li>
                 <li>This link can only be used once</li>
@@ -156,7 +156,7 @@ Hello ${data.firstName},
 
 We received a request to reset your password for your WriteCareNotes account.
 
-Click the link below to reset your password:
+Click the link below to reset yourpassword:
 ${data.resetLink}
 
 SECURITY NOTICE:

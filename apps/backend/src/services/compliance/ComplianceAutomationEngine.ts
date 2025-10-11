@@ -186,7 +186,7 @@ export class ComplianceAutomationEngine {
   privatescheduledChecks: Map<string, NodeJS.Timeout>;
   privatefacilityLocation: RegulatoryAuthority;
 
-  constructor(
+  const ructor(
     eventEmitter: EventEmitter2,
     auditTrailService: AuditService,
     notificationService: NotificationService,
@@ -295,7 +295,7 @@ export class ComplianceAutomationEngine {
       return assessmentResults;
 
     } catch (error) {
-      console.error('Error running compliance assessment:', error);
+      console.error('Error running complianceassessment:', error);
       throw new Error('Failed to run compliance assessment');
     }
   }
@@ -312,10 +312,10 @@ export class ComplianceAutomationEngine {
       const rules = this.complianceRules.get(standard);
 
       if (!rules) {
-        throw new Error(`No compliance rules defined for standard: ${standard}`);
+        throw new Error(`No compliance rules defined forstandard: ${standard}`);
       }
 
-      constcheck: ComplianceCheck = {
+      const check: ComplianceCheck = {
         checkId,
         authority,
         standard,
@@ -364,8 +364,8 @@ export class ComplianceAutomationEngine {
       return check;
 
     } catch (error) {
-      console.error('Error performing compliance check:', error);
-      throw new Error(`Failed to perform compliance check for standard: ${standard}`);
+      console.error('Error performing compliancecheck:', error);
+      throw new Error(`Failed to perform compliance check forstandard: ${standard}`);
     }
   }
 
@@ -385,7 +385,7 @@ export class ComplianceAutomationEngine {
       };
 
       // Gather compliance data
-      conststandardsAssessment: any = {};
+      const standardsAssessment: any = {};
       let totalChecks = 0;
       let compliant = 0;
       let nonCompliant = 0;
@@ -449,7 +449,7 @@ export class ComplianceAutomationEngine {
       // Generate recommendations
       const recommendations = await this.generateRecommendations(standardsAssessment, keyFindings);
 
-      constreport: ComplianceReport = {
+      const report: ComplianceReport = {
         reportId,
         authority,
         reportType,
@@ -495,7 +495,7 @@ export class ComplianceAutomationEngine {
       return report;
 
     } catch (error) {
-      console.error('Error generating compliance report:', error);
+      console.error('Error generating compliancereport:', error);
       throw new Error('Failed to generate compliance report');
     }
   }
@@ -531,7 +531,7 @@ export class ComplianceAutomationEngine {
       };
 
       // Identify critical issues
-      constcriticalIssues: string[] = [];
+      const criticalIssues: string[] = [];
       Object.entries(complianceAreas).forEach(([area, status]) => {
         if (status === ComplianceStatus.NON_COMPLIANT) {
           criticalIssues.push(`Non-compliant ${area.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
@@ -553,7 +553,7 @@ export class ComplianceAutomationEngine {
       };
 
     } catch (error) {
-      console.error('Error monitoring visitor management compliance:', error);
+      console.error('Error monitoring visitor managementcompliance:', error);
       throw new Error('Failed to monitor visitor management compliance');
     }
   }
@@ -649,7 +649,7 @@ export class ComplianceAutomationEngine {
       };
 
     } catch (error) {
-      console.error('Error getting compliance dashboard:', error);
+      console.error('Error getting compliancedashboard:', error);
       throw new Error('Failed to get compliance dashboard data');
     }
   }
@@ -730,7 +730,7 @@ export class ComplianceAutomationEngine {
       try {
         await this.runDailyComplianceChecks();
       } catch (error) {
-        console.error('Error in daily compliance monitoring:', error);
+        console.error('Error in daily compliancemonitoring:', error);
       }
     }, 24 * 60 * 60 * 1000); // Every 24 hours
 
@@ -739,7 +739,7 @@ export class ComplianceAutomationEngine {
       try {
         await this.runComplianceAssessment();
       } catch (error) {
-        console.error('Error in weekly compliance assessment:', error);
+        console.error('Error in weekly complianceassessment:', error);
       }
     }, 7 * 24 * 60 * 60 * 1000); // Every 7 days
   }
@@ -791,7 +791,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async collectEvidence(standard: ComplianceStandard, authority: RegulatoryAuthority): Promise<any[]> {
-    constevidence: any[] = [];
+    const evidence: any[] = [];
 
     switch (standard) {
       case ComplianceStandard.SAFEGUARDING:
@@ -835,7 +835,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async analyzeCompliance(standard: ComplianceStandard, evidence: any[], rules: any): Promise<any[]> {
-    constfindings: any[] = [];
+    const findings: any[] = [];
 
     switch (standard) {
       case ComplianceStandard.SAFEGUARDING:
@@ -923,7 +923,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async generateCorrectiveActions(findings: any[], standard: ComplianceStandard): Promise<any[]> {
-    constactions: any[] = [];
+    const actions: any[] = [];
 
     for (const finding of findings) {
       if (finding.type === 'non_compliance' || finding.severity === 'critical' || finding.severity === 'major') {
@@ -954,7 +954,7 @@ export class ComplianceAutomationEngine {
   }
 
   private getRequiredResources(finding: any, standard: ComplianceStandard): string[] {
-    constresources: string[] = [];
+    const resources: string[] = [];
 
     if (finding.description.includes('training')) {
       resources.push('staff_training', 'training_materials');
@@ -1093,7 +1093,7 @@ export class ComplianceAutomationEngine {
   }
 
   private async generateVisitorManagementRecommendations(complianceAreas: any): Promise<string[]> {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     Object.entries(complianceAreas).forEach(([area, status]) => {
       if (status !== ComplianceStatus.COMPLIANT) {
@@ -1226,7 +1226,7 @@ export class ComplianceAutomationEngine {
     try {
       await this.performComplianceCheck(ComplianceStandard.SAFEGUARDING, this.facilityLocation);
     } catch (error) {
-      console.error('Error checking safeguarding compliance after incident:', error);
+      console.error('Error checking safeguarding compliance afterincident:', error);
     }
   }
 
@@ -1235,7 +1235,7 @@ export class ComplianceAutomationEngine {
     try {
       await this.performComplianceCheck(ComplianceStandard.CQC_SAFE, this.facilityLocation);
     } catch (error) {
-      console.error('Error checking security compliance after breach:', error);
+      console.error('Error checking security compliance afterbreach:', error);
     }
   }
 
@@ -1244,7 +1244,7 @@ export class ComplianceAutomationEngine {
     try {
       await this.performComplianceCheck(ComplianceStandard.SAFEGUARDING, this.facilityLocation);
     } catch (error) {
-      console.error('Error checking compliance after failed background check:', error);
+      console.error('Error checking compliance after failed backgroundcheck:', error);
     }
   }
 }

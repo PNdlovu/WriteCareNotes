@@ -48,7 +48,7 @@ export interface AdministrationRequest {
 export class MedicationAdministrationService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
     privateadministrationRepository: Repository<MedicationAdministration>,
     privateauditService: AuditService

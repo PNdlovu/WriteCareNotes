@@ -79,7 +79,7 @@ export class HealthCheckService {
   privatemetrics: SystemMetrics[] = [];
   privatestartTime: Date;
 
-  constructor() {
+  const ructor() {
     this.auditService = new AuditTrailService();
     this.eventEmitter = new EventEmitter2();
     this.startTime = new Date();
@@ -96,7 +96,7 @@ export class HealthCheckService {
     checks: HealthCheckResult[];
     timestamp: Date;
   }> {
-    constchecks: HealthCheckResult[] = [];
+    const checks: HealthCheckResult[] = [];
 
     // Database health check
     checks.push(await this.checkDatabase());
@@ -438,7 +438,7 @@ export class HealthCheckService {
 
       return response.status === 200 && response.data.status === 'UP';
     } catch (error: unknown) {
-      console.error('GP Connect health check failed:', error instanceof Error ? error.message : 'Unknown error');
+      console.error('GP Connect health checkfailed:', error instanceof Error ? error.message : 'Unknown error');
       return false;
     }
   }
@@ -499,7 +499,7 @@ export class HealthCheckService {
 
       return response.status === 200 && response.data.data && Array.isArray(response.data.data);
     } catch (error: unknown) {
-      console.error('OpenAI adapter health check failed:', error instanceof Error ? error.message : 'Unknown error');
+      console.error('OpenAI adapter health checkfailed:', error instanceof Error ? error.message : 'Unknown error');
       return false;
     }
   }
@@ -641,7 +641,7 @@ export class HealthCheckService {
       try {
         await this.performHealthCheck();
       } catch (error) {
-        console.error('Health check failed:', error);
+        console.error('Health checkfailed:', error);
       }
     }, 30000); // Check every 30 seconds
   }
@@ -660,7 +660,7 @@ export class HealthCheckService {
           this.metrics = this.metrics.slice(-100);
         }
       } catch (error) {
-        console.error('Metrics collection failed:', error);
+        console.error('Metrics collectionfailed:', error);
       }
     }, 10000); // Collect every 10 seconds
   }

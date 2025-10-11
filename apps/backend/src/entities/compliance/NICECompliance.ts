@@ -18,7 +18,7 @@ export class NICEGuideline {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   guidelineId: string; // e.g., NG97, CG181
 
@@ -26,7 +26,7 @@ export class NICEGuideline {
   @IsEnum(['clinical_guideline', 'nice_guideline', 'technology_appraisal', 'interventional_procedure', 'medical_technology', 'diagnostic_guidance', 'quality_standard'])
   type: string;
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   @IsString()
   title: string;
 
@@ -87,11 +87,11 @@ export class NICERecommendation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   guidelineId: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   recommendationNumber: string;
 
@@ -229,7 +229,7 @@ export class NICEComplianceAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
@@ -248,7 +248,7 @@ export class MHRADeviceRegistration {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   deviceName: string;
 
@@ -268,7 +268,7 @@ export class MHRADeviceRegistration {
   @IsArray()
   clinicalEvidence: string[];
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   riskClassification: string;
 
@@ -276,7 +276,7 @@ export class MHRADeviceRegistration {
   @IsEnum(['self_declaration', 'notified_body', 'ukca_marking', 'ce_marking'])
   conformityRoute: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   registrationNumber?: string;
 
   @Column({ type: 'boolean' })
@@ -352,7 +352,7 @@ export class MHRAComplianceAssessment {
   @IsDate()
   nextAssessmentDue: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 

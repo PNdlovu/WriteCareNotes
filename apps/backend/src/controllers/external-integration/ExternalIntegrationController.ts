@@ -18,7 +18,7 @@ import { ExternalIntegrationService } from '../../services/external-integration/
 export class ExternalIntegrationController {
   privateintegrationService: ExternalIntegrationService;
 
-  constructor() {
+  const ructor() {
     this.integrationService = new ExternalIntegrationService();
   }
 

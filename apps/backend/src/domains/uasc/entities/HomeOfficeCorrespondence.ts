@@ -105,7 +105,7 @@ export class HomeOfficeCorrespondence {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   correspondenceNumber: string; // Format: HOC-YYYY-NNNN
 
   @ManyToOne(() => UASCProfile)
@@ -138,7 +138,7 @@ export class HomeOfficeCorrespondence {
   // CORRESPONDENCE DETAILS
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   subject: string;
 
   @Column({ type: 'text' })
@@ -160,41 +160,41 @@ export class HomeOfficeCorrespondence {
   // SENDER/RECIPIENT
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   fromOrganization: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   fromPerson: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   fromEmail: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   toOrganization: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   toPerson: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   toEmail: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   toAddress: string;
 
   // ========================================
   // HOME OFFICE DETAILS
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   homeOfficeReference: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   homeOfficeDepartment: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   homeOfficeCaseWorker: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   homeOfficeContact: string;
 
   // ========================================
@@ -204,10 +204,10 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'date', nullable: true })
   sentDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   sentBy: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   trackingNumber: string;
 
   @Column({ type: 'boolean', default: false })
@@ -226,10 +226,10 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'date', nullable: true })
   receivedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   receivedBy: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   receivedVia: string;
 
   // ========================================
@@ -258,13 +258,13 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'date', nullable: true })
   responseReceivedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   responseReference: string;
 
   @Column({ type: 'text', nullable: true })
   responseSummary: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   responseOutcome: string;
 
   // ========================================
@@ -303,16 +303,16 @@ export class HomeOfficeCorrespondence {
   // LEGAL REPRESENTATION
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   preparedBy: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorName: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorFirm: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorReference: string;
 
   // ========================================
@@ -328,7 +328,7 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'text', nullable: true })
   followUpAction: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   followUpResponsible: string;
 
   @Column({ type: 'boolean', default: false })
@@ -341,10 +341,10 @@ export class HomeOfficeCorrespondence {
   // RELATED CORRESPONDENCE
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   relatedToCorrespondenceId: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   previousCorrespondenceReference: string;
 
   @Column({ type: 'text', nullable: true })
@@ -360,7 +360,7 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'date', nullable: true })
   acknowledgmentDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   acknowledgmentReference: string;
 
   // ========================================
@@ -389,7 +389,7 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'boolean', default: false })
   reviewedByManager: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   reviewedBy: string;
 
   @Column({ type: 'date', nullable: true })
@@ -408,7 +408,7 @@ export class HomeOfficeCorrespondence {
   @Column({ type: 'date', nullable: true })
   childInformedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   childInformedBy: string;
 
   @Column({ type: 'text', nullable: true })
@@ -421,13 +421,13 @@ export class HomeOfficeCorrespondence {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()
@@ -467,7 +467,7 @@ export class HomeOfficeCorrespondence {
    */
   isDeadlineApproaching(): boolean {
     const daysUntil = this.getDaysUntilDeadline();
-    return daysUntil !== null && daysUntil <= 7 && daysUntil >= 0;
+    returndaysUntil !== null && daysUntil <= 7 && daysUntil >= 0;
   }
 
   /**
@@ -488,7 +488,7 @@ export class HomeOfficeCorrespondence {
     if (this.acknowledgmentReceived) return false;
     if (!this.sentDate) return false;
     const daysSinceSent = this.getDaysSinceSent();
-    return daysSinceSent !== null && daysSinceSent > 7;
+    returndaysSinceSent !== null && daysSinceSent > 7;
   }
 
   /**

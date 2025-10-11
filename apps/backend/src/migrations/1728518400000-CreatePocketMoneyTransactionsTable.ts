@@ -9,7 +9,7 @@ import { MigrationInterface, QueryRunner, Table, TableIndex, TableForeignKey } f
  * FEATURES:
  * - 8 British Isles jurisdictions with age-based rates
  * - Weekly disbursement tracking
- * - Variance tracking (expected vs actual)
+ * - variance tracking (expected vs actual)
  * - Child receipt confirmation
  * - Refusal tracking
  * - Withholding tracking (manager approval)
@@ -116,14 +116,14 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'ageRange',
-            type: 'varchar',
+            type: 'var char',
             length: '20',
             isNullable: false,
             comment: '5-7, 8-10, 11-15, 16-18',
           },
           {
             name: 'rateSource',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
             comment: 'Source of rate (statutory guidance, LA policy)',
@@ -161,7 +161,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
             type: 'text',
             isNullable: true,
           },
-          // Variance Tracking
+          // variance Tracking
           {
             name: 'variance',
             type: 'decimal',
@@ -176,7 +176,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'varianceReason',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -188,14 +188,14 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'childSignature',
-            type: 'varchar',
+            type: 'var char',
             length: '500',
             isNullable: true,
             comment: 'Digital signature or confirmation',
           },
           {
             name: 'childComment',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -207,7 +207,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'refusalReason',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -224,7 +224,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'withholdingReason',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -246,7 +246,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'deferralReason',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -271,7 +271,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           // Currency
           {
             name: 'currency',
-            type: 'varchar',
+            type: 'var char',
             length: '3',
             default: "'GBP'",
           },
@@ -289,13 +289,13 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           },
           {
             name: 'createdBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false,
           },
           {
             name: 'updatedBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },
@@ -427,7 +427,7 @@ export class CreatePocketMoneyTransactionsTable1728518400000 implements Migratio
           WHERE "childId" = NEW."childId"
             AND "weekNumber" = NEW."weekNumber"
             AND "year" = NEW."year"
-            AND id != NEW.id
+            ANDid != NEW.id
         ) THEN
           RAISE EXCEPTION 'Duplicate pocket money transaction for child % in week % of year %',
             NEW."childId", NEW."weekNumber", NEW."year";

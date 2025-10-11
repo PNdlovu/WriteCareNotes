@@ -31,7 +31,7 @@ const router = Router();
 const controller = new YoungPersonPortalController();
 
 /**
- * ALL ROUTES REQUIRE:
+ * ALL ROUTESREQUIRE:
  * 1. Authentication (JWT with childId)
  * 2. Age verification (16+)
  */

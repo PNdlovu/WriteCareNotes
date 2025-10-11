@@ -19,7 +19,7 @@ import { Employee } from '../../entities/hr/Employee';
 export class HRManagementController {
   privatehrService: HRManagementService;
 
-  constructor() {
+  const ructor() {
     this.hrService = new HRManagementService();
   }
 
@@ -89,7 +89,7 @@ export class HRManagementController {
 
   async searchEmployees(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: EmployeeSearchCriteria = {
+      const criteria: EmployeeSearchCriteria = {
         department: req.query['department'] as string,
         jobTitle: req.query['jobTitle'] as string,
         employmentStatus: req.query['employmentStatus'] as any,

@@ -51,11 +51,11 @@ export enum DisbursementStatus {
 /**
  * Age-Based Pocket Money Rates by Jurisdiction
  * 
- * Statutory guidance and local authority recommendations:
+ * Statutory guidance and local authorityrecommendations:
  * - England: Care Planning Regulations 2010 + LA guidance
  * - Scotland: Looked After Children Regulations 2009
  * - Wales: Care Planning Regulations 2015
- * - Northern Ireland: Children Order 1995
+ * - NorthernIreland: Children Order 1995
  * - Ireland: Tusla guidance
  */
 export const POCKET_MONEY_RATES: Record<
@@ -123,7 +123,7 @@ export const POCKET_MONEY_RATES: Record<
  * - Age-based rates (8 jurisdictions)
  * - Staff signature recording
  * - Child receipt confirmation
- * - Variance alerts (disbursement ≠ expected rate)
+ * - variance alerts (disbursement ≠ expected rate)
  * - Withholding tracking (behavior management)
  * - Deferral tracking (child absent)
  * - Refusal tracking (child refuses money)
@@ -179,7 +179,7 @@ export class PocketMoneyTransaction {
   })
   jurisdiction!: BritishIslesJurisdiction;
 
-  // ==================== WEEK TRACKING ====================
+  // ==================== WEEKTRACKING ====================
 
   @Column({ type: 'int' })
   weekNumber!: number; // 1-52 (ISO week number)
@@ -193,15 +193,15 @@ export class PocketMoneyTransaction {
   @Column({ type: 'date' })
   weekEndDate!: Date; // Sunday of the week
 
-  // ==================== EXPECTED AMOUNT ====================
+  // ==================== EXPECTEDAMOUNT ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   expectedAmount!: number; // Age-based rate from POCKET_MONEY_RATES
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'var char', length: 10 })
   ageRange!: string; // '5-7', '8-10', '11-15', '16-18'
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   expectedAmountSource?: string; // e.g., "England statutory guidance for ages 11-15"
 
   // ==================== DISBURSEMENT ====================
@@ -233,18 +233,18 @@ export class PocketMoneyTransaction {
   @JoinColumn({ name: 'disbursedByStaffId' })
   disbursedByStaff?: User;
 
-  // ==================== VARIANCE TRACKING ====================
+  // ==================== varianceTRACKING ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   variance!: number; // disbursedAmount - expectedAmount
 
   @Column({ type: 'boolean', default: false })
-  hasVariance!: boolean; // true if variance !== 0
+  hasVariance!: boolean; // true ifvariance !== 0
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   varianceReason?: string; // Explanation if disbursedAmount ≠ expectedAmount
 
-  // ==================== CHILD RECEIPT ====================
+  // ==================== CHILDRECEIPT ====================
 
   @Column({ type: 'boolean', default: false })
   childReceiptConfirmed!: boolean;
@@ -252,29 +252,29 @@ export class PocketMoneyTransaction {
   @Column({ type: 'timestamp', nullable: true })
   childReceiptConfirmedAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   childReceiptSignature?: string; // Child's signature (image URL or digital signature)
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   childComment?: string; // Child's comment/feedback
 
-  // ==================== REFUSAL TRACKING ====================
+  // ==================== REFUSALTRACKING ====================
 
   @Column({ type: 'boolean', default: false })
   wasRefused!: boolean;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   refusalReason?: string; // Why child refused money
 
   @Column({ type: 'timestamp', nullable: true })
   refusedAt?: Date;
 
-  // ==================== WITHHOLDING TRACKING ====================
+  // ==================== WITHHOLDINGTRACKING ====================
 
   @Column({ type: 'boolean', default: false })
   wasWithheld!: boolean;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   withholdingReason?: string; // Behavior management (requires manager approval)
 
   @Column({ type: 'uuid', nullable: true })
@@ -290,18 +290,18 @@ export class PocketMoneyTransaction {
   @Column({ type: 'boolean', default: false })
   withholdingApproved!: boolean; // Manager must approve withholding
 
-  // ==================== DEFERRAL TRACKING ====================
+  // ==================== DEFERRALTRACKING ====================
 
   @Column({ type: 'boolean', default: false })
   wasDeferred!: boolean;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   deferralReason?: string; // e.g., "Child on home visit", "Child in hospital"
 
   @Column({ type: 'date', nullable: true })
   deferredToDate?: Date; // Date when money will be disbursed
 
-  // ==================== SAVINGS TRANSFER ====================
+  // ==================== SAVINGSTRANSFER ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   transferredToSavings!: number; // Amount child chose to save
@@ -325,7 +325,7 @@ export class PocketMoneyTransaction {
     linkedTransactionIds?: string[]; // Related transactions (e.g., replacement disbursement)
   };
 
-  // ==================== AUDIT TRAIL ====================
+  // ==================== AUDITTRAIL ====================
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -333,13 +333,13 @@ export class PocketMoneyTransaction {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   createdBy!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   updatedBy?: string;
 
-  // ==================== BUSINESS METHODS ====================
+  // ==================== BUSINESSMETHODS ====================
 
   /**
    * Calculate expected pocket money amount based on child's age and jurisdiction
@@ -502,7 +502,7 @@ export class PocketMoneyTransaction {
   public needsManagerAttention(): boolean {
     return (
       this.wasWithheld ||
-      (this.hasVariance && Math.abs(this.variance) > 2.0) || // Variance > £2
+      (this.hasVariance && Math.abs(this.variance) > 2.0) || // variance > £2
       this.wasRefused
     );
   }

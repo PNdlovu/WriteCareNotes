@@ -7,7 +7,7 @@
  * @since 2025-10-07
  * 
  * @description
- * Comprehensive service for Policy Intelligence features including:
+ * Comprehensive service for Policy Intelligence featuresincluding:
  * - Gap analysis and policy coverage assessment
  * - Multi-factor risk scoring and alerts
  * - Effectiveness analytics and ROI metrics
@@ -114,11 +114,11 @@ export interface RiskAlert {
 
 @Injectable()
 export class PolicyIntelligenceService {
-  private readonly logger = new Logger('PolicyIntelligenceService');
+  private readonlylogger = new Logger('PolicyIntelligenceService');
 
-  constructor(
-    private readonly auditService: AuditService,
-    private readonly notificationService: NotificationService
+  const ructor(
+    private readonlyauditService: AuditService,
+    private readonlynotificationService: NotificationService
   ) {}
 
   // ========================================================================
@@ -145,7 +145,7 @@ export class PolicyIntelligenceService {
     serviceType: string
   ): Promise<GapAnalysisResult> {
     try {
-      this.logger.info(`Analyzing policy gaps for org: ${organizationId}, jurisdiction: ${jurisdiction}`);
+      this.logger.info(`Analyzing policy gaps fororg: ${organizationId}, jurisdiction: ${jurisdiction}`);
 
       // Get required policies based on jurisdiction and service type
       const requiredPolicies = this.getRequiredPolicies(jurisdiction as Jurisdiction, serviceType as ServiceType);
@@ -164,7 +164,7 @@ export class PolicyIntelligenceService {
       // Category breakdown
       const categoryBreakdown = this.calculateCategoryBreakdown(requiredPolicies, implementedPolicies);
 
-      constresult: GapAnalysisResult = {
+      const result: GapAnalysisResult = {
         totalRequired,
         implemented,
         missing: gaps.length,
@@ -202,7 +202,7 @@ export class PolicyIntelligenceService {
     }
   ): Promise<{ policyId: string; policyName: string }> {
     try {
-      this.logger.info(`Creating policy from template: ${templateId} for org: ${organizationId}`);
+      this.logger.info(`Creating policy fromtemplate: ${templateId} fororg: ${organizationId}`);
 
       // Get template
       const template = await this.getPolicyTemplate(templateId);
@@ -244,7 +244,7 @@ export class PolicyIntelligenceService {
   ): Promise<{ success: boolean }> {
     try {
       // Update gap record
-      // Update policy_gaps table: SET isAddressed = true, addressedByPolicyId = policyId
+      // Update policy_gapstable: SETisAddressed = true, addressedByPolicyId = policyId
       
       // Create remediation history
       // INSERT INTO gap_remediation_history
@@ -284,13 +284,13 @@ export class PolicyIntelligenceService {
     }
   ): Promise<PolicyRisk[]> {
     try {
-      this.logger.info(`Fetching policy risks for org: ${organizationId}`);
+      this.logger.info(`Fetching policy risks fororg: ${organizationId}`);
 
       // Get all policies for organization
       const policies = await this.getOrganizationPolicies(organizationId);
       
       // Calculate risk for each policy
-      constrisks: PolicyRisk[] = [];
+      const risks: PolicyRisk[] = [];
       
       for (const policy of policies) {
         const risk = await this.calculatePolicyRisk(policy);
@@ -316,11 +316,11 @@ export class PolicyIntelligenceService {
   /**
    * Calculate multi-factor risk score for a policy
    * 
-   * Risk Factors:
-   * 1. Age Score (25%): How old is the policy?
+   * RiskFactors:
+   * 1. Age Score (25%): How old is thepolicy?
    * 2. Acknowledgment Score (30%): Staff acknowledgment rate
    * 3. Violation Score (25%): Historical violations
-   * 4. Update Frequency Score (20%): How often is it updated?
+   * 4. Update Frequency Score (20%): How often is itupdated?
    */
   async calculatePolicyRisk(policy: any): Promise<PolicyRisk> {
     // Factor 1: Age Score (25%)
@@ -458,7 +458,7 @@ export class PolicyIntelligenceService {
     overallRisk: number,
     factors: { ageScore: number; acknowledgmentScore: number; violationScore: number; updateFrequencyScore: number }
   ): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
     
     if (factors.ageScore > 60) {
       recommendations.push('Policy is outdated - schedule immediate review');
@@ -492,10 +492,10 @@ export class PolicyIntelligenceService {
   ): Promise<RiskAlert[]> {
     try {
       // Query risk_alerts table
-      // SELECT * FROM risk_alerts WHERE organizationId = ? AND (includeAcknowledged OR acknowledged = false)
+      // SELECT * FROM risk_alerts WHEREorganizationId = ? AND (includeAcknowledged ORacknowledged = false)
       
       // For now, return mock data structure
-      constalerts: RiskAlert[] = [];
+      const alerts: RiskAlert[] = [];
       
       return alerts;
     } catch (error) {
@@ -513,7 +513,7 @@ export class PolicyIntelligenceService {
     notes?: string
   ): Promise<{ success: boolean }> {
     try {
-      // UPDATE risk_alerts SET acknowledged = true, acknowledgedBy = userId, acknowledgmentNotes = notes
+      // UPDATE risk_alerts SETacknowledged = true, acknowledgedBy = userId, acknowledgmentNotes = notes
       
       await this.auditService.log({
         action: 'RISK_ALERT_ACKNOWLEDGED',
@@ -542,7 +542,7 @@ export class PolicyIntelligenceService {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
       
-      // SELECT * FROM risk_trends WHERE organizationId = ? AND date >= ? ORDER BY date ASC
+      // SELECT * FROM risk_trends WHEREorganizationId = ? AND date >= ? ORDER BY date ASC
       
       // For now, return empty array
       return [];
@@ -564,12 +564,12 @@ export class PolicyIntelligenceService {
     period: string = '30days'
   ): Promise<any[]> {
     try {
-      this.logger.info(`Fetching policy effectiveness for org: ${organizationId}, period: ${period}`);
+      this.logger.info(`Fetching policy effectiveness fororg: ${organizationId}, period: ${period}`);
       
       const { startDate, endDate } = this.getPeriodDates(period as AnalyticsPeriod);
       
       // Query policy_effectiveness table
-      // SELECT * FROM policy_effectiveness WHERE organizationId = ? AND periodStart >= ? AND periodEnd <= ?
+      // SELECT * FROM policy_effectiveness WHEREorganizationId = ? AND periodStart >= ? AND periodEnd <= ?
       
       return [];
     } catch (error) {
@@ -586,14 +586,14 @@ export class PolicyIntelligenceService {
     period: string = '30days'
   ): Promise<any> {
     try {
-      this.logger.info(`Calculating ROI metrics for org: ${organizationId}, period: ${period}`);
+      this.logger.info(`Calculating ROI metrics fororg: ${organizationId}, period: ${period}`);
       
       const { startDate, endDate } = this.getPeriodDates(period as AnalyticsPeriod);
       
       // Query roi_metrics table
-      // SELECT * FROM roi_metrics WHERE organizationId = ? AND periodStart = ? AND periodEnd = ?
+      // SELECT * FROM roi_metrics WHEREorganizationId = ? ANDperiodStart = ? ANDperiodEnd = ?
       
-      // Calculate if not exists:
+      // Calculate if notexists:
       // - Time saved (automation + efficiency gains)
       // - Violations prevented (compared to baseline)
       // - Cost avoidance (regulatory fines + staff time)
@@ -625,7 +625,7 @@ export class PolicyIntelligenceService {
       const { startDate, endDate } = this.getPeriodDates(period as AnalyticsPeriod);
       
       // Query violation_patterns table
-      // SELECT * FROM violation_patterns WHERE organizationId = ? AND periodStart >= ? AND periodEnd <= ?
+      // SELECT * FROM violation_patterns WHEREorganizationId = ? AND periodStart >= ? AND periodEnd <= ?
       
       return [];
     } catch (error) {
@@ -644,7 +644,7 @@ export class PolicyIntelligenceService {
   ): Promise<Array<{ date: string; predicted: number; confidence: number }>> {
     try {
       // Query acknowledgment_forecasts table
-      // SELECT * FROM acknowledgment_forecasts WHERE organizationId = ? AND (policyId = ? OR policyId IS NULL) AND forecastDate >= CURRENT_DATE ORDER BY forecastDate ASC LIMIT ?
+      // SELECT * FROM acknowledgment_forecasts WHEREorganizationId = ? AND (policyId = ? OR policyId IS NULL) AND forecastDate >= CURRENT_DATE ORDER BY forecastDate ASC LIMIT ?
       
       // If no forecast exists, generate using ML model
       // This would integrate with Azure ML or similar service
@@ -664,7 +664,7 @@ export class PolicyIntelligenceService {
     period: string = '30days'
   ): Promise<any> {
     try {
-      this.logger.info(`Generating executive summary for org: ${organizationId}, period: ${period}`);
+      this.logger.info(`Generating executive summary fororg: ${organizationId}, period: ${period}`);
       
       const [effectiveness, roi, violations] = await Promise.all([
         this.getPolicyEffectiveness(organizationId, period),
@@ -817,7 +817,7 @@ export class PolicyIntelligenceService {
    */
   async cancelScheduledReport(scheduleId: string): Promise<{ success: boolean }> {
     try {
-      // UPDATE report_schedules SET active = false WHERE id = ?
+      // UPDATE report_schedules SETactive = false WHEREid = ?
       
       await this.auditService.log({
         action: 'REPORT_SCHEDULE_CANCELLED',
@@ -844,7 +844,7 @@ export class PolicyIntelligenceService {
       const { startDate, endDate } = this.getPeriodDates(period as AnalyticsPeriod);
       
       // Query category_performance table
-      // SELECT * FROM category_performance WHERE organizationId = ? AND periodStart >= ? AND periodEnd <= ?
+      // SELECT * FROM category_performance WHEREorganizationId = ? AND periodStart >= ? AND periodEnd <= ?
       
       return {};
     } catch (error) {
@@ -869,7 +869,7 @@ export class PolicyIntelligenceService {
   }>> {
     try {
       // Query gap_remediation_history table
-      // SELECT * FROM gap_remediation_history WHERE organizationId = ? ORDER BY addressedDate DESC LIMIT ?
+      // SELECT * FROM gap_remediation_history WHEREorganizationId = ? ORDER BY addressedDate DESC LIMIT ?
       
       return [];
     } catch (error) {
@@ -886,7 +886,7 @@ export class PolicyIntelligenceService {
     threshold: number
   ): Promise<{ threshold: number }> {
     try {
-      // UPDATE risk_threshold_config SET alertThreshold = ? WHERE organizationId = ?
+      // UPDATE risk_threshold_config SETalertThreshold = ? WHEREorganizationId = ?
       // If not exists, INSERT
       
       await this.auditService.log({
@@ -959,7 +959,7 @@ export class PolicyIntelligenceService {
    * Get jurisdiction-specific policy requirements
    */
   private getJurisdictionSpecificPolicies(jurisdiction: Jurisdiction): string[] {
-    constpolicies: Record<Jurisdiction, string[]> = {
+    const policies: Record<Jurisdiction, string[]> = {
       'england': ['CQC Fundamental Standards Compliance'],
       'wales': ['CIW Quality Standards Compliance'],
       'scotland': ['Care Inspectorate Standards'],
@@ -977,7 +977,7 @@ export class PolicyIntelligenceService {
    */
   private async getImplementedPolicies(organizationId: string): Promise<string[]> {
     // Query policies table
-    // SELECT name FROM policies WHERE organizationId = ? AND status = 'published'
+    // SELECT name FROM policies WHEREorganizationId = ? ANDstatus = 'published'
     return [];
   }
 
@@ -990,7 +990,7 @@ export class PolicyIntelligenceService {
     jurisdiction: string,
     serviceType: string
   ): PolicyGap[] {
-    constgaps: PolicyGap[] = [];
+    const gaps: PolicyGap[] = [];
     
     // This is a simplified version - in production, would use sophisticated matching
     for (const requiredPolicy of required) {
@@ -1092,7 +1092,7 @@ export class PolicyIntelligenceService {
   private categorizePolicyName(name: string): string { return 'General'; }
   private determinePriority(name: string): GapPriority { return name.includes('Safeguard') ? 'critical' : 'medium'; }
   private getRegulatorName(jurisdiction: string): string { 
-    constregulators: Record<string, string> = {
+    const regulators: Record<string, string> = {
       'england': 'CQC', 'wales': 'CIW', 'scotland': 'Care Inspectorate',
       'northern-ireland': 'RQIA', 'ireland': 'HIQA',
       'jersey': 'Jersey Care Commission', 'isle-of-man': 'Isle of Man Care'

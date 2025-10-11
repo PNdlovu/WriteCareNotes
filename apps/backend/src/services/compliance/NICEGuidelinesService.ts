@@ -96,10 +96,10 @@ export interface CreateComplianceCheckRequest {
 }
 
 export class NICEGuidelinesService {
-  private logger = logger;
+  privatelogger = logger;
   privatedb: Pool;
 
-  constructor(db: Pool) {
+  const ructor(db: Pool) {
     this.db = db;
   }
 
@@ -128,7 +128,7 @@ export class NICEGuidelinesService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get NICE guidelines: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get NICEguidelines: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -138,7 +138,7 @@ export class NICEGuidelinesService {
 
       const query = `
         SELECT * FROM nice_guidelines 
-        WHERE id = $1 AND organization_id = $2 AND deleted_at IS NULL
+        WHEREid = $1 AND organization_id = $2 AND deleted_at IS NULL
       `;
       const result = await this.db.query(query, [guidelineId, organizationId]);
 
@@ -157,7 +157,7 @@ export class NICEGuidelinesService {
         error: error instanceof Error ? error.message : "Unknown error", 
         guidelineId 
       });
-      throw new Error(`Failed to get NICE guideline: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get NICEguideline: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -187,7 +187,7 @@ export class NICEGuidelinesService {
       const recommendations = this.generateRecommendations(findings);
       const status = this.determineComplianceStatus(findings);
 
-      constcomplianceCheck: ComplianceCheck = {
+      const complianceCheck: ComplianceCheck = {
         id: checkId,
         guidelineId: request.guidelineId,
         residentId: request.residentId,
@@ -219,7 +219,7 @@ export class NICEGuidelinesService {
         error: error instanceof Error ? error.message : "Unknown error", 
         guidelineId: request.guidelineId 
       });
-      throw new Error(`Failed to perform compliance check: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to perform compliancecheck: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -251,7 +251,7 @@ export class NICEGuidelinesService {
       `;
       const checksResult = await this.db.query(checksQuery, [organizationId, limit, offset]);
 
-      constchecks: ComplianceCheck[] = checksResult.rows.map(row => this.mapDbRowToComplianceCheck(row));
+      const checks: ComplianceCheck[] = checksResult.rows.map(row => this.mapDbRowToComplianceCheck(row));
 
       const totalPages = Math.ceil(total / limit);
 
@@ -272,7 +272,7 @@ export class NICEGuidelinesService {
         error: error instanceof Error ? error.message : "Unknown error", 
         organizationId 
       });
-      throw new Error(`Failed to get compliance checks: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get compliancechecks: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -287,8 +287,8 @@ export class NICEGuidelinesService {
 
       const query = `
         UPDATE compliance_recommendations 
-        SET status = $1, notes = $2, updated_at = $3, updated_by = $4
-        WHERE id = $5 AND deleted_at IS NULL
+        SETstatus = $1, notes = $2, updated_at = $3, updated_by = $4
+        WHEREid = $5 AND deleted_at IS NULL
       `;
 
       await this.db.query(query, [status, notes, new Date(), userId, recommendationId]);
@@ -303,12 +303,12 @@ export class NICEGuidelinesService {
         error: error instanceof Error ? error.message : "Unknown error", 
         recommendationId 
       });
-      throw new Error(`Failed to update compliance recommendation: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to update compliancerecommendation: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private validateComplianceCheckRequest(request: CreateComplianceCheckRequest): void {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!request.guidelineId?.trim()) errors.push('Guideline ID is required');
     if (!request.organizationId?.trim()) errors.push('Organization ID is required');
@@ -325,7 +325,7 @@ export class NICEGuidelinesService {
     guideline: NICEGuideline
   ): Promise<ComplianceFinding[]> {
     try {
-      constfindings: ComplianceFinding[] = [];
+      const findings: ComplianceFinding[] = [];
 
       // Simulate compliance assessment based on check type
       switch (request.checkType) {
@@ -347,12 +347,12 @@ export class NICEGuidelinesService {
 
     } catch (error: unknown) {
       console.error('Failed to perform compliance assessment', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to perform compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to perform complianceassessment: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private assessMedicationCompliance(guideline: NICEGuideline): ComplianceFinding[] {
-    constfindings: ComplianceFinding[] = [];
+    const findings: ComplianceFinding[] = [];
 
     // Simulate medication compliance checks
     findings.push({
@@ -377,7 +377,7 @@ export class NICEGuidelinesService {
   }
 
   private assessCarePlanningCompliance(guideline: NICEGuideline): ComplianceFinding[] {
-    constfindings: ComplianceFinding[] = [];
+    const findings: ComplianceFinding[] = [];
 
     findings.push({
       id: uuidv4(),
@@ -392,7 +392,7 @@ export class NICEGuidelinesService {
   }
 
   private assessSafetyCompliance(guideline: NICEGuideline): ComplianceFinding[] {
-    constfindings: ComplianceFinding[] = [];
+    const findings: ComplianceFinding[] = [];
 
     findings.push({
       id: uuidv4(),
@@ -407,7 +407,7 @@ export class NICEGuidelinesService {
   }
 
   private assessQualityCompliance(guideline: NICEGuideline): ComplianceFinding[] {
-    constfindings: ComplianceFinding[] = [];
+    const findings: ComplianceFinding[] = [];
 
     findings.push({
       id: uuidv4(),
@@ -522,7 +522,7 @@ export class NICEGuidelinesService {
 
     } catch (error: unknown) {
       console.error('Failed to store compliance check', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to store compliance check: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to store compliancecheck: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

@@ -20,9 +20,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/voice-assistant')
 @UseGuards(JwtAuthGuard)
 export class VoiceAssistantController {
-  constructor(
-    private readonly voiceAssistantService: VoiceAssistantService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyvoiceAssistantService: VoiceAssistantService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -56,7 +56,7 @@ export class VoiceAssistantController {
         message: success ? 'Voice assistant device initialized successfully' : 'Failed to initialize device',
       };
     } catch (error) {
-      console.error('Error initializing voice assistant device:', error);
+      console.error('Error initializing voice assistantdevice:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -110,7 +110,7 @@ export class VoiceAssistantController {
         message: 'Voice command processed successfully',
       };
     } catch (error) {
-      console.error('Error processing voice command:', error);
+      console.error('Error processing voicecommand:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -157,7 +157,7 @@ export class VoiceAssistantController {
         message: success ? 'Message sent successfully' : 'Failed to send message',
       };
     } catch (error) {
-      console.error('Error sending voice message:', error);
+      console.error('Error sending voicemessage:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -203,7 +203,7 @@ export class VoiceAssistantController {
         message: success ? 'Music playback started successfully' : 'Failed to start music playback',
       };
     } catch (error) {
-      console.error('Error playing music:', error);
+      console.error('Error playingmusic:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -247,7 +247,7 @@ export class VoiceAssistantController {
         message: success ? 'Intercom established successfully' : 'Failed to establish intercom',
       };
     } catch (error) {
-      console.error('Error setting up intercom:', error);
+      console.error('Error setting upintercom:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -296,7 +296,7 @@ export class VoiceAssistantController {
         message: success ? 'Medication reminder sent successfully' : 'Failed to send medication reminder',
       };
     } catch (error) {
-      console.error('Error sending medication reminder:', error);
+      console.error('Error sending medicationreminder:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -343,7 +343,7 @@ export class VoiceAssistantController {
         message: success ? 'Emergency alert processed successfully' : 'Failed to process emergency alert',
       };
     } catch (error) {
-      console.error('Error handling emergency:', error);
+      console.error('Error handlingemergency:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -398,7 +398,7 @@ export class VoiceAssistantController {
         message: 'Device status retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting device status:', error);
+      console.error('Error getting devicestatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -463,7 +463,7 @@ export class VoiceAssistantController {
         message: 'Music playlists retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting music playlists:', error);
+      console.error('Error getting musicplaylists:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -494,7 +494,7 @@ export class VoiceAssistantController {
         },
         {
           id: 'cmd_002',
-          command: 'What time is it?',
+          command: 'What time isit?',
           intent: 'time_inquiry',
           confidence: 0.98,
           timestamp: new Date(Date.now() - 10 * 60 * 1000),
@@ -520,7 +520,7 @@ export class VoiceAssistantController {
         message: 'Command history retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting command history:', error);
+      console.error('Error getting commandhistory:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

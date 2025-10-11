@@ -132,7 +132,7 @@ export class TenantCareAssistantAIService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.knowledgeRepository = AppDataSource.getRepository(KnowledgeArticle);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -315,11 +315,11 @@ export class TenantCareAssistantAIService {
     urgentActions: string[];
   }> {
     try {
-      constcareNeeds: string[] = [];
-      constriskFactors: string[] = [];
-      constcomplianceGaps: string[] = [];
-      constimprovementOpportunities: string[] = [];
-      consturgentActions: string[] = [];
+      const careNeeds: string[] = [];
+      const riskFactors: string[] = [];
+      const complianceGaps: string[] = [];
+      const improvementOpportunities: string[] = [];
+      const urgentActions: string[] = [];
 
       // Analyze resident data for care needs
       if (knowledge.residentData) {
@@ -374,10 +374,10 @@ export class TenantCareAssistantAIService {
   ): Promise<TenantAIResponse> {
     try {
       let message = '';
-      constcareRecommendations: CareRecommendation[] = [];
-      constcomplianceAlerts: ComplianceAlert[] = [];
-      constactionItems: ActionItem[] = [];
-      constknowledgeSources: string[] = [];
+      const careRecommendations: CareRecommendation[] = [];
+      const complianceAlerts: ComplianceAlert[] = [];
+      const actionItems: ActionItem[] = [];
+      const knowledgeSources: string[] = [];
       let escalationRequired = false;
 
       // Generate response based on inquiry type
@@ -749,10 +749,10 @@ Please review and take appropriate action.`,
    * Generate care plan response
    */
   private async generateCarePlanResponse(careAnalysis: any, knowledge: any): Promise<string> {
-    let response = "Based on the care context and resident needs, I can provide the following care plan guidance:\n\n";
+    let response = "Based on the care context and resident needs, I can provide the following care planguidance:\n\n";
     
     if (careAnalysis.careNeeds.length > 0) {
-      response += "**Identified Care Needs:**\n";
+      response += "**Identified CareNeeds:**\n";
       careAnalysis.careNeeds.forEach(need => {
         response += `- ${need}\n`;
       });
@@ -760,7 +760,7 @@ Please review and take appropriate action.`,
     }
 
     if (careAnalysis.riskFactors.length > 0) {
-      response += "**Risk Factors to Address:**\n";
+      response += "**Risk Factors toAddress:**\n";
       careAnalysis.riskFactors.forEach(risk => {
         response += `- ${risk}\n`;
       });
@@ -782,7 +782,7 @@ Please review and take appropriate action.`,
    * Generate care recommendations
    */
   private generateCareRecommendations(careAnalysis: any): CareRecommendation[] {
-    constrecommendations: CareRecommendation[] = [];
+    const recommendations: CareRecommendation[] = [];
     
     if (careAnalysis.careNeeds.includes('Mobility assistance')) {
       recommendations.push({
@@ -837,7 +837,7 @@ Please review and take appropriate action.`,
    * Identify urgent actions
    */
   private identifyUrgentActions(inquiry: TenantCareInquiry, knowledge: any): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
     
     if (inquiry.urgencyLevel === 'CRITICAL') {
       actions.push('Immediate clinical review required');

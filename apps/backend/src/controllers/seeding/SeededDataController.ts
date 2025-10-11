@@ -18,7 +18,7 @@ import { SeededDataService } from '../../services/seeding/SeededDataService';
 export class SeededDataController {
   privateseededDataService: SeededDataService;
 
-  constructor() {
+  const ructor() {
     this.seededDataService = new SeededDataService();
   }
 

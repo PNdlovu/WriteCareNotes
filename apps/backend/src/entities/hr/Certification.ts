@@ -315,7 +315,7 @@ export class Certification extends BaseEntity {
   }
 
   getRequiredActions(): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
     
     if (this.isExpired()) {
       actions.push('Renew certification immediately');

@@ -671,7 +671,7 @@ export enum CalculationType {
   AVERAGE = 'average',
   PERCENTAGE = 'percentage',
   RATIO = 'ratio',
-  VARIANCE = 'variance',
+  variance = 'variance',
   GROWTH_RATE = 'growth_rate',
   CUSTOM = 'custom'
 }

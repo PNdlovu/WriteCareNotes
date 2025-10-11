@@ -56,7 +56,7 @@ export class WalesComplianceAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
@@ -87,11 +87,11 @@ export class CIWServiceRegistration {
   @IsEnum(['care_home_adults', 'domiciliary_care', 'adult_placement', 'advocacy'])
   serviceType: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   serviceName: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   registrationNumber: string;
 
@@ -201,11 +201,11 @@ export class SCWProfessionalRegistration {
   @IsString()
   staffId: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   scwRegistrationNumber: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   profession: string;
 

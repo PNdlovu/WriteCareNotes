@@ -85,16 +85,16 @@ class AgentManager {
 @Controller('api/agent-console')
 @UseGuards(AuthGuard)
 export class AgentConsoleController {
-  private readonly logger = new Logger(AgentConsoleController.name);
+  private readonlylogger = new Logger(AgentConsoleController.name);
 
-  constructor(
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyauditService: AuditService,
   ) {
     // Initialize AgentManager - in a real implementation, this would be injected
     this.agentManager = new AgentManager();
   }
 
-  private readonly agentManager: AgentManager;
+  private readonlyagentManager: AgentManager;
 
   /**
    * Get agent metrics
@@ -139,7 +139,7 @@ export class AgentConsoleController {
         message: 'Agent metrics retrieved successfully',
       };
     } catch (error) {
-      this.logger.error(`Error fetching agent metrics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Error fetching agentmetrics: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch agent metrics',
@@ -177,7 +177,7 @@ export class AgentConsoleController {
         message: 'Agent performance data retrieved successfully',
       };
     } catch (error) {
-      this.logger.error(`Error fetching agent performance: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Error fetching agentperformance: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch agent performance',
@@ -209,7 +209,7 @@ export class AgentConsoleController {
         message: 'Agent configurations retrieved successfully',
       };
     } catch (error) {
-      this.logger.error(`Error fetching agent configurations: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Error fetching agentconfigurations: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch agent configurations',
@@ -257,7 +257,7 @@ export class AgentConsoleController {
         message: 'System health retrieved successfully',
       };
     } catch (error) {
-      this.logger.error(`Error fetching system health: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
+      this.logger.error(`Error fetching systemhealth: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error.stack : undefined);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch system health',
@@ -296,7 +296,7 @@ export class AgentConsoleController {
         message: `Agent ${enabled ? 'enabled' : 'disabled'} successfully` 
       });
     } catch (error) {
-      this.logger.error('Error toggling agent:', error);
+      this.logger.error('Error togglingagent:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ 
         success: false,
         error: 'Failed to toggle agent' 
@@ -334,7 +334,7 @@ export class AgentConsoleController {
         message: 'Configuration updated successfully' 
       });
     } catch (error) {
-      this.logger.error('Error updating agent configuration:', error);
+      this.logger.error('Error updating agentconfiguration:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ 
         success: false,
         error: 'Failed to update agent configuration' 
@@ -373,7 +373,7 @@ export class AgentConsoleController {
         message: 'Agent logs retrieved successfully'
       });
     } catch (error) {
-      this.logger.error('Error fetching agent logs:', error);
+      this.logger.error('Error fetching agentlogs:', error);
       res?.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ 
         success: false,
         error: 'Failed to fetch agent logs' 

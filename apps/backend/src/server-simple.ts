@@ -180,19 +180,19 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('✅ Terminology: Care Home Standardized');
   console.log('✅ Compliance: CQC Ready');
-  console.log(`✅ Listening on: http://0.0.0.0:${PORT}`);
+  console.log(`✅ Listeningon: http://0.0.0.0:${PORT}`);
   console.log('');
-  console.log('🌐 Available Endpoints:');
-  console.log(`   Health Check: http://localhost:${PORT}/health`);
-  console.log(`   System Info:  http://localhost:${PORT}/api/v1/system/info`);
-  console.log(`   Care Home:    http://localhost:${PORT}/api/v1/care-home/status`);
-  console.log(`   API Docs:     http://localhost:${PORT}/api/v1/care-homes`);
+  console.log('🌐 AvailableEndpoints:');
+  console.log(`   HealthCheck: http://localhost:${PORT}/health`);
+  console.log(`   SystemInfo:  http://localhost:${PORT}/api/v1/system/info`);
+  console.log(`   CareHome:    http://localhost:${PORT}/api/v1/care-home/status`);
+  console.log(`   APIDocs:     http://localhost:${PORT}/api/v1/care-homes`);
   console.log('');
-  console.log('🎯 Ready for care home management operations!');
+  console.log('🎯 Ready for care home managementoperations!');
 });
 
 server.on('error', (err) => {
-  console.error('❌ Server error:', err);
+  console.error('❌ Servererror:', err);
   process.exit(1);
 });
 

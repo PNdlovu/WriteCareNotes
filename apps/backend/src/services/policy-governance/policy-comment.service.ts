@@ -20,7 +20,7 @@
  * @since 2.0.0 - Phase 2 Feature 2: Real-Time Collaboration
  * @license Proprietary - WriteCareNotes Platform
  * 
- * Key Features:
+ * KeyFeatures:
  * - Comment CRUD operations with threading support
  * - @mention extraction and user notification
  * - Position-based annotations on policy content
@@ -30,7 +30,7 @@
  * - Threaded reply management
  * - Bulk operations (delete all, resolve all)
  * 
- * Business Logic:
+ * BusinessLogic:
  * - Comments can be nested (parent-child relationships)
  * - @mentions automatically trigger notifications
  * - Resolving a parent comment resolves all child comments
@@ -38,7 +38,7 @@
  * - Comment authors can edit within 15 minutes
  * - Pinned comments appear at the top of threads
  * 
- * Database Operations:
+ * DatabaseOperations:
  * - Uses TypeORM Repository for PolicyComment entity
  * - Supports transactions for atomic operations
  * - Implements soft delete for comment archival
@@ -141,7 +141,7 @@ export class PolicyCommentService {
    * Initialize service with repository
    * @param commentRepository - TypeORM repository for PolicyComment
    */
-  constructor(private commentRepository: Repository<PolicyComment>) {}
+  const ructor(private commentRepository: Repository<PolicyComment>) {}
 
   /**
    * Create a new comment
@@ -174,7 +174,7 @@ export class PolicyCommentService {
 
       return savedComment;
     } catch (error) {
-      console.error('Error creating comment:', error);
+      console.error('Error creatingcomment:', error);
       throw new Error('Failed to create comment');
     }
   }
@@ -191,7 +191,7 @@ export class PolicyCommentService {
         relations: ['replies']
       });
     } catch (error) {
-      console.error('Error fetching comment:', error);
+      console.error('Error fetchingcomment:', error);
       throw new Error('Failed to fetch comment');
     }
   }
@@ -204,7 +204,7 @@ export class PolicyCommentService {
    */
   async getPolicyComments(policyId: string, includeResolved: boolean = true): Promise<PolicyComment[]> {
     try {
-      constwhereConditions: any = { policyId };
+      const whereConditions: any = { policyId };
       
       if (!includeResolved) {
         whereConditions.status = CommentStatus.ACTIVE;
@@ -219,7 +219,7 @@ export class PolicyCommentService {
         }
       });
     } catch (error) {
-      console.error('Error fetching policy comments:', error);
+      console.error('Error fetching policycomments:', error);
       throw new Error('Failed to fetch policy comments');
     }
   }
@@ -232,7 +232,7 @@ export class PolicyCommentService {
    */
   async getTopLevelComments(policyId: string, includeResolved: boolean = true): Promise<PolicyComment[]> {
     try {
-      constwhereConditions: any = {
+      const whereConditions: any = {
         policyId,
         parentCommentId: null
       };
@@ -270,7 +270,7 @@ export class PolicyCommentService {
         order: { createdAt: 'ASC' }
       });
     } catch (error) {
-      console.error('Error fetching replies:', error);
+      console.error('Error fetchingreplies:', error);
       throw new Error('Failed to fetch replies');
     }
   }
@@ -284,7 +284,7 @@ export class PolicyCommentService {
     try {
       const topLevel = await this.getTopLevelComments(policyId, true);
       
-      constthreads: CommentThread[] = [];
+      const threads: CommentThread[] = [];
 
       for (const parent of topLevel) {
         const replies = await this.getReplies(parent.id);
@@ -298,7 +298,7 @@ export class PolicyCommentService {
 
       return threads;
     } catch (error) {
-      console.error('Error fetching comment threads:', error);
+      console.error('Error fetching commentthreads:', error);
       throw new Error('Failed to fetch comment threads');
     }
   }
@@ -360,7 +360,7 @@ export class PolicyCommentService {
       console.log(`✏️  Updated comment ${commentId}`);
       return updatedComment;
     } catch (error) {
-      console.error('Error updating comment:', error);
+      console.error('Error updatingcomment:', error);
       throw error;
     }
   }
@@ -394,7 +394,7 @@ export class PolicyCommentService {
       console.log(`✅ Resolved comment ${commentId} and ${replies.length} replies`);
       return resolvedComment;
     } catch (error) {
-      console.error('Error resolving comment:', error);
+      console.error('Error resolvingcomment:', error);
       throw new Error('Failed to resolve comment');
     }
   }
@@ -418,7 +418,7 @@ export class PolicyCommentService {
       console.log(`🔓 Reopened comment ${commentId}`);
       return reopenedComment;
     } catch (error) {
-      console.error('Error reopening comment:', error);
+      console.error('Error reopeningcomment:', error);
       throw new Error('Failed to reopen comment');
     }
   }
@@ -451,7 +451,7 @@ export class PolicyCommentService {
       console.log(`🗑️  Deleted comment ${commentId} by ${userId} (admin: ${isAdmin})`);
       return deletedComment;
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      console.error('Error deletingcomment:', error);
       throw error;
     }
   }
@@ -473,7 +473,7 @@ export class PolicyCommentService {
       comment.addLike(userId);
       return await this.commentRepository.save(comment);
     } catch (error) {
-      console.error('Error liking comment:', error);
+      console.error('Error likingcomment:', error);
       throw new Error('Failed to like comment');
     }
   }
@@ -495,7 +495,7 @@ export class PolicyCommentService {
       comment.removeLike(userId);
       return await this.commentRepository.save(comment);
     } catch (error) {
-      console.error('Error unliking comment:', error);
+      console.error('Error unlikingcomment:', error);
       throw new Error('Failed to unlike comment');
     }
   }
@@ -519,7 +519,7 @@ export class PolicyCommentService {
       console.log(`📌 Pinned comment ${commentId}`);
       return pinnedComment;
     } catch (error) {
-      console.error('Error pinning comment:', error);
+      console.error('Error pinningcomment:', error);
       throw new Error('Failed to pin comment');
     }
   }
@@ -540,7 +540,7 @@ export class PolicyCommentService {
       comment.unpin();
       return await this.commentRepository.save(comment);
     } catch (error) {
-      console.error('Error unpinning comment:', error);
+      console.error('Error unpinningcomment:', error);
       throw new Error('Failed to unpin comment');
     }
   }
@@ -566,7 +566,7 @@ export class PolicyCommentService {
 
       return await queryBuilder.getMany();
     } catch (error) {
-      console.error('Error fetching user mentions:', error);
+      console.error('Error fetching usermentions:', error);
       throw new Error('Failed to fetch user mentions');
     }
   }
@@ -605,7 +605,7 @@ export class PolicyCommentService {
         averageRepliesPerComment: Math.round(averageReplies * 10) / 10
       };
     } catch (error) {
-      console.error('Error fetching comment stats:', error);
+      console.error('Error fetching commentstats:', error);
       throw new Error('Failed to fetch comment statistics');
     }
   }
@@ -633,7 +633,7 @@ export class PolicyCommentService {
       console.log(`✅ Resolved all ${activeComments.length} comments for policy ${policyId}`);
       return activeComments.length;
     } catch (error) {
-      console.error('Error resolving all comments:', error);
+      console.error('Error resolving allcomments:', error);
       throw new Error('Failed to resolve all comments');
     }
   }
@@ -658,7 +658,7 @@ export class PolicyCommentService {
       console.log(`🗑️  Deleted ${deletedCount} comments for policy ${policyId}`);
       return deletedCount;
     } catch (error) {
-      console.error('Error deleting all comments:', error);
+      console.error('Error deleting allcomments:', error);
       throw new Error('Failed to delete all comments');
     }
   }
@@ -700,7 +700,7 @@ export class PolicyCommentService {
       // });
 
     } catch (error) {
-      console.error('Error sending mention notifications:', error);
+      console.error('Error sending mentionnotifications:', error);
       // Don't throw - notifications are not critical
     }
   }

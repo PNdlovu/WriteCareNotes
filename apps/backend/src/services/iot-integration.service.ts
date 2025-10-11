@@ -40,7 +40,7 @@ export class IoTIntegrationService {
   privatedeviceProtocols: Map<ConnectivityType, DeviceProtocol> = new Map();
   privateconnectedDevices: Set<string> = new Set();
 
-  constructor(private readonly eventEmitter: EventEmitter2) {
+  const ructor(private readonlyeventEmitter: EventEmitter2) {
     this.initializeProtocols();
     this.initializeMQTT();
   }
@@ -52,7 +52,7 @@ export class IoTIntegrationService {
     try {
       const protocol = this.deviceProtocols.get(device.connectivityType);
       if (!protocol) {
-        console.error(`No protocol handler for connectivity type: ${device.connectivityType}`);
+        console.error(`No protocol handler for connectivitytype: ${device.connectivityType}`);
         return false;
       }
 
@@ -65,7 +65,7 @@ export class IoTIntegrationService {
           this.handleDeviceTelemetry(device.id, data);
         });
 
-        console.log(`Successfully connected to device: ${device.deviceName} (${device.id})`);
+        console.log(`Successfully connected todevice: ${device.deviceName} (${device.id})`);
         this.eventEmitter.emit('iot.device.connected', { device, timestamp: new Date() });
       }
 
@@ -89,7 +89,7 @@ export class IoTIntegrationService {
       const disconnected = await protocol.disconnect(device);
       if (disconnected) {
         this.connectedDevices.delete(device.id);
-        console.log(`Successfully disconnected from device: ${device.deviceName} (${device.id})`);
+        console.log(`Successfully disconnected fromdevice: ${device.deviceName} (${device.id})`);
         this.eventEmitter.emit('iot.device.disconnected', { device, timestamp: new Date() });
       }
 
@@ -186,7 +186,7 @@ export class IoTIntegrationService {
    * Get connection status for all devices
    */
   getConnectionStatus(): Record<string, boolean> {
-    conststatus: Record<string, boolean> = {};
+    const status: Record<string, boolean> = {};
     this.connectedDevices.forEach(deviceId => {
       status[deviceId] = true;
     });
@@ -198,7 +198,7 @@ export class IoTIntegrationService {
    */
   private handleDeviceTelemetry(deviceId: string, data: any): void {
     try {
-      constmessage: IoTMessage = {
+      const message: IoTMessage = {
         deviceId,
         messageType: 'telemetry',
         payload: data,
@@ -262,7 +262,7 @@ export class IoTIntegrationService {
       });
 
     } catch (error: unknown) {
-      console.error(`Failed to initialize MQTT: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to initializeMQTT: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -290,7 +290,7 @@ export class IoTIntegrationService {
         }
       }
     } catch (error: unknown) {
-      console.error(`Error processing MQTT message: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Error processing MQTTmessage: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -374,7 +374,7 @@ class WiFiProtocol implements DeviceProtocol {
           const telemetry = JSON.parse(data.toString());
           callback(telemetry);
         } catch (error: unknown) {
-          console.error(`Error parsing telemetry data: ${error instanceof Error ? error.message : "Unknown error"}`);
+          console.error(`Error parsing telemetrydata: ${error instanceof Error ? error.message : "Unknown error"}`);
         }
       });
 

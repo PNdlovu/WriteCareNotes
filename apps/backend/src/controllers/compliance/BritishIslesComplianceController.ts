@@ -37,16 +37,16 @@ import { IsleOfManHealthSocialCareService } from '../../services/compliance/Isle
 export class BritishIslesComplianceController {
   // Logger removed
   
-  private readonly orchestrationService: BritishIslesRegulatoryOrchestrationService;
-  private readonly cqcService: CQCDigitalStandardsService;
-  private readonly careInspectorateService: CareInspectorateScotlandService;
-  private readonly ciwService: CIWWalesComplianceService;
-  private readonly rqiaService: RQIANorthernIrelandService;
-  private readonly jerseyCareService: JerseyCareCommissionService;
-  private readonly guernseyService: GuernseyHealthSocialCareService;
-  private readonly iomService: IsleOfManHealthSocialCareService;
+  private readonlyorchestrationService: BritishIslesRegulatoryOrchestrationService;
+  private readonlycqcService: CQCDigitalStandardsService;
+  private readonlycareInspectorateService: CareInspectorateScotlandService;
+  private readonlyciwService: CIWWalesComplianceService;
+  private readonlyrqiaService: RQIANorthernIrelandService;
+  private readonlyjerseyCareService: JerseyCareCommissionService;
+  private readonlyguernseyService: GuernseyHealthSocialCareService;
+  private readonlyiomService: IsleOfManHealthSocialCareService;
 
-  constructor() {
+  const ructor() {
     this.orchestrationService = Container.get(BritishIslesRegulatoryOrchestrationService);
     this.cqcService = Container.get(CQCDigitalStandardsService);
     this.careInspectorateService = Container.get(CareInspectorateScotlandService);
@@ -78,7 +78,7 @@ export class BritishIslesComplianceController {
 
       res.json(overview);
     } catch (error: unknown) {
-      console.error(`Failed to get British Isles overview: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get British Islesoverview: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to get British Isles compliance overview',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -98,7 +98,7 @@ export class BritishIslesComplianceController {
       
       res.json(assessment.jurisdictions);
     } catch (error: unknown) {
-      console.error(`Failed to get jurisdiction compliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get jurisdictioncompliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to get jurisdiction compliance data',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -119,7 +119,7 @@ export class BritishIslesComplianceController {
       
       res.json(trends);
     } catch (error: unknown) {
-      console.error(`Failed to get compliance trends: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get compliancetrends: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to get compliance trends',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -157,7 +157,7 @@ export class BritishIslesComplianceController {
       
       res.json(report);
     } catch (error: unknown) {
-      console.error(`Failed to generate harmonized report: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to generate harmonizedreport: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to generate harmonized report',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -186,7 +186,7 @@ export class BritishIslesComplianceController {
 
       res.json(scheduledReview);
     } catch (error: unknown) {
-      console.error(`Failed to schedule review: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to schedulereview: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to schedule multi-jurisdictional review',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -203,7 +203,7 @@ export class BritishIslesComplianceController {
       
       res.json(updates);
     } catch (error: unknown) {
-      console.error(`Failed to get regulatory updates: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get regulatoryupdates: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to get regulatory updates',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -248,7 +248,7 @@ export class BritishIslesComplianceController {
 
       res.json(jurisdictionData);
     } catch (error: unknown) {
-      console.error(`Failed to get specific jurisdiction compliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get specific jurisdictioncompliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to get specific jurisdiction compliance',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -318,7 +318,7 @@ export class BritishIslesComplianceController {
 
       res.json(culturalRequirements);
     } catch (error: unknown) {
-      console.error(`Failed to get cultural compliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get culturalcompliance: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to get cultural compliance requirements',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -337,7 +337,7 @@ export class BritishIslesComplianceController {
       
       res.json(actionPlan);
     } catch (error: unknown) {
-      console.error(`Failed to generate unified action plan: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to generate unified actionplan: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to generate unified action plan',
         message: error instanceof Error ? error.message : "Unknown error" 
@@ -363,7 +363,7 @@ export class BritishIslesComplianceController {
         results: assessment,
       });
     } catch (error: unknown) {
-      console.error(`Failed to perform comprehensive assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to perform comprehensiveassessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       res.status(500).json({ 
         error: 'Failed to perform comprehensive assessment',
         message: error instanceof Error ? error.message : "Unknown error" 

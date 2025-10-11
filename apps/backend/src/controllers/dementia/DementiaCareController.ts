@@ -18,7 +18,7 @@ import { DementiaCareService } from '../../services/dementia/DementiaCareService
 export class DementiaCareController {
   privatedementiaCareService: DementiaCareService;
 
-  constructor() {
+  const ructor() {
     this.dementiaCareService = new DementiaCareService();
   }
 

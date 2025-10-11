@@ -322,7 +322,7 @@ export class SafeguardingConcern {
     
     const hoursSinceRaised = (new Date().getTime() - new Date(this.raisedDate).getTime()) / (1000 * 60 * 60);
     
-    // High severity: 4 hours, Medium: 24 hours, Low: 48 hours
+    // Highseverity: 4 hours, Medium: 24 hours, Low: 48 hours
     const thresholds = {
       [ConcernSeverity.HIGH]: 4,
       [ConcernSeverity.MEDIUM]: 24,

@@ -44,7 +44,7 @@ export class HealthPredictionEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   residentId: string;
 
@@ -86,11 +86,11 @@ export class HealthPredictionEntity {
   @IsJSON()
   interventions: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   modelVersion: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   algorithm: string;
 
@@ -119,11 +119,11 @@ export class HealthPredictionEntity {
   @IsJSON()
   outcomeData: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsNotEmpty()
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   reviewedBy: string;
 
@@ -142,7 +142,7 @@ export class HealthPredictionEntity {
   @IsOptional()
   actionTakenAt: Date;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   @IsOptional()
   actionTakenBy: string;
 

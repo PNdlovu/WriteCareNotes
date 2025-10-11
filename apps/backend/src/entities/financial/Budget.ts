@@ -78,12 +78,12 @@ export enum BudgetType {
 export class Budget extends BaseEntity {
 
   // Budget Identification
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   budgetName!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   budgetCode?: string;
 
@@ -96,7 +96,7 @@ export class Budget extends BaseEntity {
   description?: string;
 
   // Budget Period
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'var char', length: 10 })
   @IsString()
   @Length(4, 10)
   financialYear!: string;
@@ -157,7 +157,7 @@ export class Budget extends BaseEntity {
   @Transform(({ value }) => new Decimal(value))
   actualProfit!: Decimal;
 
-  // Variance Analysis
+  // variance Analysis
   @Column({ type: 'decimal', precision: 15, scale: 4, default: 0 })
   @IsDecimal({ decimal_digits: '0,4' })
   @Transform(({ value }) => new Decimal(value))
@@ -378,7 +378,7 @@ export class Budget extends BaseEntity {
     const revenuePerf = this.revenueVariancePercentage.toNumber();
     const expensePerf = this.expenseVariancePercentage.toNumber();
     
-    letoverallPerformance: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
+    let overallPerformance: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
     
     if (revenuePerf >= 5 && expensePerf <= -5) {
       overallPerformance = 'EXCELLENT';
@@ -519,7 +519,7 @@ export class Budget extends BaseEntity {
                        revenueRisk === 'MEDIUM' || expenseRisk === 'MEDIUM' ? 'MEDIUM' : 'LOW';
     
     // Generate recommendations
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
     
     if (this.revenueVariancePercentage.lessThan(-10)) {
       recommendations.push('Revenue is significantly below budget. Consider reviewing pricing or increasing marketing efforts.');

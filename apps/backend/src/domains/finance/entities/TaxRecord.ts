@@ -48,10 +48,10 @@ export class TaxRecord {
   @Column({ type: 'enum', enum: TaxRecordStatus, default: TaxRecordStatus.PENDING })
   status: TaxRecordStatus;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   taxYear: string; // e.g., "2024-25"
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'var char', length: 10 })
   payPeriod: string; // e.g., "01" for January
 
   @Column({ type: 'date' })
@@ -96,16 +96,16 @@ export class TaxRecord {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   ytdTotalContribution: number;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   taxCode: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   nationalInsuranceNumber: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   hmrcReference: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   submissionReference: string;
 
   @Column({ type: 'date', nullable: true })
@@ -123,10 +123,10 @@ export class TaxRecord {
   @Column({ type: 'text', nullable: true })
   errorMessage: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()

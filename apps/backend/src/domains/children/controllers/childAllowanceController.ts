@@ -320,9 +320,9 @@ class RequestWithdrawalDto {
 @Controller('api/children/allowances')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ChildAllowanceController {
-  constructor(private readonly allowanceService: ChildAllowanceService) {}
+  const ructor(private readonlyallowanceService: ChildAllowanceService) {}
 
-  // ==================== POCKET MONEY ENDPOINTS ====================
+  // ==================== POCKET MONEYENDPOINTS ====================
 
   /**
    * Disburse weekly pocket money
@@ -469,7 +469,7 @@ export class ChildAllowanceController {
     });
   }
 
-  // ==================== ALLOWANCE EXPENDITURE ENDPOINTS ====================
+  // ==================== ALLOWANCE EXPENDITUREENDPOINTS ====================
 
   /**
    * Request allowance expenditure
@@ -633,7 +633,7 @@ export class ChildAllowanceController {
     });
   }
 
-  // ==================== SAVINGS ACCOUNT ENDPOINTS ====================
+  // ==================== SAVINGS ACCOUNTENDPOINTS ====================
 
   /**
    * Open savings account
@@ -807,7 +807,7 @@ export class ChildAllowanceController {
     };
   }
 
-  // ==================== REPORTS & ANALYTICS ENDPOINTS ====================
+  // ==================== REPORTS & ANALYTICSENDPOINTS ====================
 
   /**
    * Get quarterly summary
@@ -840,7 +840,7 @@ export class ChildAllowanceController {
   @Get('reports/iro-dashboard')
   @Roles(UserRole.IRO, UserRole.MANAGER, UserRole.ADMIN)
   @ApiOperation({
-    summary: 'Get IRO dashboard (items requiring attention: pending approvals, missing receipts, etc.)',
+    summary: 'Get IRO dashboard (items requiringattention: pending approvals, missing receipts, etc.)',
   })
   @ApiResponse({ status: 200, description: 'Dashboard data retrieved successfully' })
   async getIRODashboard() {

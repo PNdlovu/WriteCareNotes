@@ -126,15 +126,15 @@ export interface PermissionAudit {
 @Index(['effectiveDate', 'expiryDate'])
 export class OrganizationPermission extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // Permission Identity
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   permissionName!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   @Length(1, 100)
   permissionCode!: string;
@@ -157,7 +157,7 @@ export class OrganizationPermission extends BaseEntity {
   @IsEnum(PermissionAction)
   action!: PermissionAction;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   @Length(1, 100)
   resource!: string;
@@ -179,12 +179,12 @@ export class OrganizationPermission extends BaseEntity {
   @IsUUID()
   userId!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   roleId?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   groupId?: string;
@@ -285,19 +285,19 @@ export class OrganizationPermission extends BaseEntity {
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   /**
    * Lifecycle hooks
@@ -375,7 +375,7 @@ export class OrganizationPermission extends BaseEntity {
 
     for (const condition of this.conditions) {
       if (!condition.field || !condition.operator || condition.value === undefined) {
-        throw new Error('Invalid permission condition: field, operator, and value are required');
+        throw new Error('Invalid permissioncondition: field, operator, and value are required');
       }
 
       // Validate operator-value compatibility
@@ -394,7 +394,7 @@ export class OrganizationPermission extends BaseEntity {
 
     for (const restriction of this.restrictions) {
       if (!restriction.restrictionType || restriction.restrictionValue === undefined) {
-        throw new Error('Invalid permission restriction: type and value are required');
+        throw new Error('Invalid permissionrestriction: type and value are required');
       }
 
       // Validate restriction type-specific rules
@@ -438,7 +438,7 @@ export class OrganizationPermission extends BaseEntity {
       for (const ip of ipValue) {
         const ipRegex = /^(\d{1,3}\.){3}\d{1,3}(\/\d{1,2})?$/;
         if (!ipRegex.test(ip)) {
-          throw new Error(`Invalid IP address format: ${ip}`);
+          throw new Error(`Invalid IP addressformat: ${ip}`);
         }
       }
     } else {
@@ -502,7 +502,7 @@ export class OrganizationPermission extends BaseEntity {
       this.auditTrail = [];
     }
 
-    constauditEntry: PermissionAudit = {
+    const auditEntry: PermissionAudit = {
       auditId: uuidv4(),
       action: action as any,
       timestamp: new Date(),
@@ -592,7 +592,7 @@ export class OrganizationPermission extends BaseEntity {
     if (!this.conditions) return true;
 
     return this.conditions.every(condition => {
-      letcontextValue: any;
+      let contextValue: any;
 
       switch (condition.context) {
         case 'user':
@@ -621,9 +621,9 @@ export class OrganizationPermission extends BaseEntity {
   private evaluateCondition(condition: PermissionCondition, contextValue: any): boolean {
     switch (condition.operator) {
       case 'equals':
-        return contextValue === condition.value;
+        returncontextValue === condition.value;
       case 'not_equals':
-        return contextValue !== condition.value;
+        returncontextValue !== condition.value;
       case 'in':
         return Array.isArray(condition.value) && condition.value.includes(contextValue);
       case 'not_in':
@@ -693,7 +693,7 @@ export class OrganizationPermission extends BaseEntity {
         return ipAddress.startsWith(network.split('.').slice(0, parseInt(mask) / 8).join('.'));
       } else {
         // Exact IP match
-        return ipAddress === allowedIP;
+        returnipAddress === allowedIP;
       }
     });
   }

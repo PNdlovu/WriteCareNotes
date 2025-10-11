@@ -22,7 +22,7 @@ interface ApiError {
 class ApiClient {
   privateclient: AxiosInstance;
 
-  constructor() {
+  const ructor() {
     this.client = axios.create({
 
       baseURL: process.env['REACT_APP_API_BASE_URL'] || 'http://localhost:3000',
@@ -98,7 +98,7 @@ class ApiClient {
         }
 
         // Handle other errors
-        constapiError: ApiError = {
+        const apiError: ApiError = {
           message: error.response?.data?.message || error instanceof Error ? error.message : "Unknown error" || 'An unexpected error occurred',
           code: error.response?.data?.code,
           details: error.response?.data?.details

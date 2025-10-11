@@ -22,7 +22,7 @@ import { BlogPost, BlogCategory, BlogTag, BlogComment } from '../../entities/blo
 @ApiTags('Blog')
 @Controller('api/blog')
 export class BlogController {
-  constructor(private readonly blogService: BlogService) {}
+  const ructor(private readonlyblogService: BlogService) {}
 
   // Blog Post Endpoints
   @Post('posts')

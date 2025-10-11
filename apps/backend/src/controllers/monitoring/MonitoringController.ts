@@ -16,7 +16,7 @@ import { HealthCheckService } from '../../services/monitoring/HealthCheckService
 export class MonitoringController {
   privatehealthCheckService: HealthCheckService;
 
-  constructor() {
+  const ructor() {
     this.healthCheckService = new HealthCheckService();
   }
 
@@ -32,7 +32,7 @@ export class MonitoringController {
         data: healthCheck
       });
     } catch (error) {
-      console.error('Health check failed:', error);
+      console.error('Health checkfailed:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -55,7 +55,7 @@ export class MonitoringController {
         }
       });
     } catch (error) {
-      console.error('Failed to get system metrics:', error);
+      console.error('Failed to get systemmetrics:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -83,7 +83,7 @@ export class MonitoringController {
         data: metrics
       });
     } catch (error) {
-      console.error('Failed to get latest metrics:', error);
+      console.error('Failed to get latestmetrics:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -101,7 +101,7 @@ export class MonitoringController {
       res.set('Content-Type', 'text/plain');
       res.send(prometheusMetrics.metrics);
     } catch (error) {
-      console.error('Failed to get Prometheus metrics:', error);
+      console.error('Failed to get Prometheusmetrics:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -139,7 +139,7 @@ export class MonitoringController {
         data: health
       });
     } catch (error) {
-      console.error('Failed to get service health:', error);
+      console.error('Failed to get servicehealth:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -162,7 +162,7 @@ export class MonitoringController {
         }
       });
     } catch (error) {
-      console.error('Failed to get health checks:', error);
+      console.error('Failed to get healthchecks:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -202,7 +202,7 @@ export class MonitoringController {
         data: status
       });
     } catch (error) {
-      console.error('Failed to get system status:', error);
+      console.error('Failed to get systemstatus:', error);
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'

@@ -10,11 +10,11 @@ import { logger } from '../utils/logger';
  * Application Error Class
  */
 export class AppError extends Error {
-  public readonly statusCode: number;
-  public readonly isOperational: boolean;
+  public readonlystatusCode: number;
+  public readonlyisOperational: boolean;
   public readonly code?: string;
 
-  constructor(
+  const ructor(
     message: string,
     statusCode: number = 500,
     isOperational: boolean = true,
@@ -25,7 +25,7 @@ export class AppError extends Error {
     this.isOperational = isOperational;
     this.code = code;
 
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.const ructor);
   }
 }
 
@@ -45,7 +45,7 @@ export const asyncHandler = (
  */
 export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
   const error = new AppError(
-    `Route not found: ${req.method} ${req.originalUrl}`,
+    `Route notfound: ${req.method} ${req.originalUrl}`,
     404,
     true,
     'ROUTE_NOT_FOUND'
@@ -128,7 +128,7 @@ export const errorHandler = (
   });
 
   // Send error response
-  consterrorResponse: any = {
+  const errorResponse: any = {
     success: false,
     error: {
       code,
@@ -203,7 +203,7 @@ export const circuitBreakerHandler = (error: Error): AppError => {
  * Database Connection Error Handler
  */
 export const databaseErrorHandler = (error: Error): AppError => {
-  logger.error('Database connection error:', error);
+  logger.error('Database connectionerror:', error);
   return new AppError(
     'Database connection failed',
     503,
@@ -216,7 +216,7 @@ export const databaseErrorHandler = (error: Error): AppError => {
  * Redis Connection Error Handler
  */
 export const redisErrorHandler = (error: Error): AppError => {
-  logger.error('Redis connection error:', error);
+  logger.error('Redis connectionerror:', error);
   return new AppError(
     'Cache service unavailable',
     503,

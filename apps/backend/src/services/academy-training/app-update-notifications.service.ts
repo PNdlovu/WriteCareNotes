@@ -28,7 +28,7 @@ export interface FeatureUpdate {
   improvements: string[];
   bugFixes: string[];
   affectedRoles: string[]; // Which roles need to know about this
-  isMandatory: boolean; // Must users complete training before using app?
+  isMandatory: boolean; // Must users complete training before usingapp?
   notificationType: 'email' | 'in_app' | 'both';
 }
 
@@ -119,14 +119,14 @@ export class UpdateCompletion {
 
 @Injectable()
 export class AppUpdateNotificationsService {
-  private readonly logger = new Logger(AppUpdateNotificationsService.name);
+  private readonlylogger = new Logger(AppUpdateNotificationsService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(UpdatePreference)
-    private readonly preferenceRepository: Repository<UpdatePreference>,
+    private readonlypreferenceRepository: Repository<UpdatePreference>,
     @InjectRepository(UpdateCompletion)
-    private readonly completionRepository: Repository<UpdateCompletion>,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlycompletionRepository: Repository<UpdateCompletion>,
+    private readonlyeventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -162,7 +162,7 @@ export class AppUpdateNotificationsService {
 
       this.logger.log(`Published update ${update.version} to ${targetUsers.length} users`);
     } catch (error) {
-      this.logger.error(`Failed to publish update notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to publish updatenotification: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -227,7 +227,7 @@ export class AppUpdateNotificationsService {
    * Extract learning objectives from features
    */
   private extractLearningObjectives(update: FeatureUpdate): string[] {
-    constobjectives: string[] = [];
+    const objectives: string[] = [];
 
     update.features.forEach(feature => {
       objectives.push(`Understand how to use the new ${feature.name} feature`);
@@ -248,7 +248,7 @@ export class AppUpdateNotificationsService {
    * Generate content sections from update details
    */
   private generateContentSections(update: FeatureUpdate): any[] {
-    constsections: any[] = [];
+    const sections: any[] = [];
     let order = 1;
 
     // Overview section
@@ -332,7 +332,7 @@ export class AppUpdateNotificationsService {
       markdown += `\n`;
     }
 
-    markdown += `## Need Help?\n\n`;
+    markdown += `## NeedHelp?\n\n`;
     markdown += `Contact your manager or email support@writecarenotes.com\n`;
 
     return markdown;
@@ -440,7 +440,7 @@ export class AppUpdateNotificationsService {
 
       this.logger.log(`Created notification for user ${user.id}, update ${update.version}`);
     } catch (error) {
-      this.logger.error(`Failed to create user notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create usernotification: ${error.message}`, error.stack);
       throw error;
     }
   }

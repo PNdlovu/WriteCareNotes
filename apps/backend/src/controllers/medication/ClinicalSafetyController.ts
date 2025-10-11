@@ -32,11 +32,11 @@ import { EventEmitter2 } from "eventemitter2";
  * - CQC (Care Quality Commission) - England: Medication management standards and clinical governance
  * - Care Inspectorate - Scotland: Clinical governance and medication safety requirements
  * - CIW (Care Inspectorate Wales) - Wales: Medication safety protocols and clinical oversight
- * - RQIA (Regulation and Quality Improvement Authority) - Northern Ireland: Clinical safety standards
- * - HIQA (Health Information and Quality Authority) - Republic of Ireland: Medication safety guidelines
- * - Isle of Man Department of Health and Social Care: Clinical governance and safety standards
- * - States of Guernsey Health and Social Care: Medication management and clinical safety protocols
- * - Government of Jersey Health and Community Services: Clinical safety and medication oversight requirements
+ * - RQIA (Regulation and Quality Improvement Authority) - NorthernIreland: Clinical safety standards
+ * - HIQA (Health Information and Quality Authority) - Republic ofIreland: Medication safety guidelines
+ * - Isle of Man Department of Health and SocialCare: Clinical governance and safety standards
+ * - States of Guernsey Health and SocialCare: Medication management and clinical safety protocols
+ * - Government of Jersey Health and CommunityServices: Clinical safety and medication oversight requirements
  * 
  * @security
  * - Implements role-based access control for clinical safety functions
@@ -159,8 +159,8 @@ export class ContraindicationCheckDto {
 @Controller('api/v1/clinical-safety')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ClinicalSafetyController {
-  constructor(
-    private readonly clinicalSafetyService: ClinicalSafetyService
+  const ructor(
+    private readonlyclinicalSafetyService: ClinicalSafetyService
   ) {}
 
   /**
@@ -236,7 +236,7 @@ export class ClinicalSafetyController {
       }
 
       // Convert DTO to service request
-      constsafetyCheckRequest: SafetyCheckRequest = {
+      const safetyCheckRequest: SafetyCheckRequest = {
         prescriptionId: safetyCheckDto.prescriptionId,
         residentId: safetyCheckDto.residentId,
         medicationId: safetyCheckDto.medicationId,

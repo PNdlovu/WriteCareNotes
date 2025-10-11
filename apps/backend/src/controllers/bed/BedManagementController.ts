@@ -22,7 +22,7 @@ import { authorize } from '../../middleware/rbac-middleware';
 export class BedManagementController {
   privatebedManagementService: BedManagementService;
 
-  constructor() {
+  const ructor() {
     this.bedManagementService = new BedManagementService();
   }
 
@@ -72,7 +72,7 @@ export class BedManagementController {
 
   async getAvailableBeds(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: BedSearchCriteria = {
+      const criteria: BedSearchCriteria = {
         careLevel: req.query['careLevel'] as any,
         roomType: req.query['roomType'] as string,
         floor: req.query['floor'] ? parseInt(req.query['floor'] as string) : undefined,
@@ -184,7 +184,7 @@ export class BedManagementController {
       if (missingFields.length > 0) {
         res.status(400).json({
           success: false,
-          message: `Missing required fields: ${missingFields.join(', ')}`
+          message: `Missing requiredfields: ${missingFields.join(', ')}`
         });
         return;
       }

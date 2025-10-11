@@ -13,19 +13,19 @@
  * Base Financial Error Class
  */
 export class FinancialError extends Error {
-  public readonly code: string;
+  public readonlycode: string;
   public readonly details?: any;
   public readonly correlationId?: string;
-  public readonly timestamp: Date;
+  public readonlytimestamp: Date;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: any,
     correlationId?: string
   ) {
     super(message);
-    this.name = this.constructor.name;
+    this.name = this.const ructor.name;
     this.code = code;
     this.details = details;
     this.correlationId = correlationId;
@@ -33,7 +33,7 @@ export class FinancialError extends Error {
 
     // Maintains proper stack trace for where our error was thrown (only available on V8)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
+      Error.captureStackTrace(this, this.const ructor);
     }
   }
 
@@ -60,15 +60,15 @@ export class FinancialError extends Error {
 export class FinancialValidationError extends FinancialError {
   public readonly field?: string;
   public readonly value?: any;
-  public readonly constraint?: string;
+  public readonly const raint?: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: {
       field?: string;
       value?: any;
-      constraint?: string;
+      const raint?: string;
       [key: string]: any;
     },
     correlationId?: string
@@ -76,7 +76,7 @@ export class FinancialValidationError extends FinancialError {
     super(message, code, details, correlationId);
     this.field = details?.field;
     this.value = details?.value;
-    this.constraint = details?.constraint;
+    this.const raint = details?.const raint;
   }
 }
 
@@ -86,10 +86,10 @@ export class FinancialValidationError extends FinancialError {
  */
 export class PaymentProcessingError extends FinancialError {
   public readonly gatewayError?: string;
-  public readonly retryable: boolean;
+  public readonlyretryable: boolean;
   public readonly retryAfter?: number; // Seconds
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     details?: {
@@ -112,11 +112,11 @@ export class PaymentProcessingError extends FinancialError {
  * Thrown when account has insufficient funds for a transaction
  */
 export class InsufficientFundsError extends FinancialError {
-  public readonly availableBalance: number;
-  public readonly requestedAmount: number;
-  public readonly shortfall: number;
+  public readonlyavailableBalance: number;
+  public readonlyrequestedAmount: number;
+  public readonlyshortfall: number;
 
-  constructor(
+  const ructor(
     message: string,
     availableBalance: number,
     requestedAmount: number,
@@ -144,10 +144,10 @@ export class InsufficientFundsError extends FinancialError {
  * Thrown when tax calculations fail
  */
 export class TaxCalculationError extends FinancialError {
-  public readonly taxType: string;
-  public readonly taxYear: number;
+  public readonlytaxType: string;
+  public readonlytaxYear: number;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     taxType: string,
@@ -166,11 +166,11 @@ export class TaxCalculationError extends FinancialError {
  * Thrown when financial operations violate compliance rules
  */
 export class ComplianceViolationError extends FinancialError {
-  public readonly violationType: string;
-  public readonly regulation: string;
-  public readonly severity: 'low' | 'medium' | 'high' | 'critical';
+  public readonlyviolationType: string;
+  public readonlyregulation: string;
+  public readonlyseverity: 'low' | 'medium' | 'high' | 'critical';
 
-  constructor(
+  const ructor(
     message: string,
     violationType: string,
     regulation: string,
@@ -201,10 +201,10 @@ export class ComplianceViolationError extends FinancialError {
  */
 export class InsuranceClaimError extends FinancialError {
   public readonly claimId?: string;
-  public readonly provider: string;
+  public readonlyprovider: string;
   public readonly policyNumber?: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     provider: string,
@@ -228,13 +228,13 @@ export class InsuranceClaimError extends FinancialError {
  */
 export class BillingError extends FinancialError {
   public readonly billId?: string;
-  public readonly residentId: string;
+  public readonlyresidentId: string;
   public readonly billingPeriod?: {
     start: Date;
     end: Date;
   };
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     residentId: string,
@@ -257,13 +257,13 @@ export class BillingError extends FinancialError {
  * Thrown when financial report generation fails
  */
 export class FinancialReportError extends FinancialError {
-  public readonly reportType: string;
-  public readonly period: {
+  public readonlyreportType: string;
+  public readonlyperiod: {
     start: Date;
     end: Date;
   };
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     reportType: string,
@@ -291,11 +291,11 @@ export class FinancialReportError extends FinancialError {
  * Thrown when bank integration operations fail
  */
 export class BankIntegrationError extends FinancialError {
-  public readonly bankName: string;
+  public readonlybankName: string;
   public readonly accountNumber?: string;
-  public readonly operationType: string;
+  public readonlyoperationType: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     bankName: string,
@@ -327,11 +327,11 @@ export class BankIntegrationError extends FinancialError {
  * Thrown when currency conversion fails
  */
 export class CurrencyConversionError extends FinancialError {
-  public readonly fromCurrency: string;
-  public readonly toCurrency: string;
-  public readonly amount: number;
+  public readonlyfromCurrency: string;
+  public readonlytoCurrency: string;
+  public readonlyamount: number;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     fromCurrency: string,
@@ -362,11 +362,11 @@ export class CurrencyConversionError extends FinancialError {
  * Thrown when recurring billing operations fail
  */
 export class RecurringBillingError extends FinancialError {
-  public readonly recurringBillingId: string;
-  public readonly frequency: string;
+  public readonlyrecurringBillingId: string;
+  public readonlyfrequency: string;
   public readonly nextBillingDate?: Date;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     recurringBillingId: string,
@@ -399,10 +399,10 @@ export class RecurringBillingError extends FinancialError {
  */
 export class BudgetError extends FinancialError {
   public readonly budgetId?: string;
-  public readonly budgetType: string;
-  public readonly financialYear: string;
+  public readonlybudgetType: string;
+  public readonlyfinancialYear: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     budgetType: string,
@@ -434,11 +434,11 @@ export class BudgetError extends FinancialError {
  * Thrown when audit trail operations fail
  */
 export class AuditTrailError extends FinancialError {
-  public readonly entityType: string;
-  public readonly entityId: string;
-  public readonly operation: string;
+  public readonlyentityType: string;
+  public readonlyentityId: string;
+  public readonlyoperation: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     entityType: string,
@@ -469,10 +469,10 @@ export class AuditTrailError extends FinancialError {
  * Thrown when financial data encryption/decryption fails
  */
 export class FinancialDataEncryptionError extends FinancialError {
-  public readonly dataType: string;
-  public readonly operation: 'encrypt' | 'decrypt';
+  public readonlydataType: string;
+  public readonlyoperation: 'encrypt' | 'decrypt';
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     dataType: string,
@@ -500,11 +500,11 @@ export class FinancialDataEncryptionError extends FinancialError {
  * Thrown when financial forecasting fails
  */
 export class FinancialForecastError extends FinancialError {
-  public readonly forecastType: string;
-  public readonly forecastPeriod: number;
-  public readonly methodology: string;
+  public readonlyforecastType: string;
+  public readonlyforecastPeriod: number;
+  public readonlymethodology: string;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     forecastType: string,
@@ -541,13 +541,13 @@ export class FinancialErrorFactory {
     message: string,
     field?: string,
     value?: any,
-    constraint?: string,
+    const raint?: string,
     correlationId?: string
   ): FinancialValidationError {
     return new FinancialValidationError(
       message,
       'VALIDATION_ERROR',
-      { field, value, constraint },
+      { field, value, const raint },
       correlationId
     );
   }
@@ -652,7 +652,7 @@ export class FinancialErrorHandler {
       return error.retryAfter;
     }
 
-    // Exponential backoff: 2^attempt seconds, max 300 seconds (5 minutes)
+    // Exponentialbackoff: 2^attempt seconds, max 300 seconds (5 minutes)
     return Math.min(Math.pow(2, attempt), 300);
   }
 
@@ -673,7 +673,7 @@ export class FinancialErrorHandler {
       return {
         ...sanitized,
         field: error.field,
-        constraint: error.constraint
+        const raint: error.const raint
         // Don't include the actual value for security
       };
     }

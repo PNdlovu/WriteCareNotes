@@ -487,7 +487,7 @@ export class Medication {
    * Get therapeutic alternatives
    */
   getTherapeuticAlternatives(): string[] {
-    constalternatives: string[] = [];
+    const alternatives: string[] = [];
     
     this.contraindications?.forEach(contraindication => {
       if (contraindication.alternatives) {

@@ -58,11 +58,11 @@ export const gdprComplianceMiddleware = (req: AuthenticatedRequest, res: Respons
     }
 
     // Log GDPR compliance check for audit
-    console.log(`GDPR compliance validated for user ${req.user?.userId} with purpose: ${req.gdprContext.dataProcessingPurpose}`);
+    console.log(`GDPR compliance validated for user ${req.user?.userId} withpurpose: ${req.gdprContext.dataProcessingPurpose}`);
 
     next();
   } catch (error: unknown) {
-    console.error('GDPR compliance middleware error:', error);
+    console.error('GDPR compliance middlewareerror:', error);
     res.status(500).json({
       success: false,
       error: 'Internal server error during GDPR validation',
@@ -137,8 +137,8 @@ function validateDataProcessing(context: GDPRContext, req: AuthenticatedRequest)
   violations: string[];
   remediation: string[];
 } {
-  constviolations: string[] = [];
-  constremediation: string[] = [];
+  const violations: string[] = [];
+  const remediation: string[] = [];
 
   // Check if lawful basis is appropriate for the purpose
   if (context.consentRequired && !context.lawfulBasis.includes('consent')) {

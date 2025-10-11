@@ -16,12 +16,12 @@ interface ShutdownOptions {
 }
 
 export class GracefulShutdown {
-  private isShuttingDown = false;
-  private readonly timeout: number;
-  private readonly signals: string[];
-  private readonly cleanupHandlers: Array<() => Promise<void>> = [];
+  privateisShuttingDown = false;
+  private readonlytimeout: number;
+  private readonlysignals: string[];
+  private readonlycleanupHandlers: Array<() => Promise<void>> = [];
 
-  constructor(options: ShutdownOptions = {}) {
+  const ructor(options: ShutdownOptions = {}) {
     this.timeout = options.timeout || 30000; // 30 seconds default
     this.signals = options.signals || ['SIGTERM', 'SIGINT'];
   }
@@ -113,7 +113,7 @@ export class GracefulShutdown {
       logger.info('✓ Graceful shutdown completed successfully');
       process.exit(0);
     } catch (error) {
-      logger.error('Error during graceful shutdown:', error);
+      logger.error('Error during gracefulshutdown:', error);
       clearTimeout(forceExitTimer);
       process.exit(1);
     }
@@ -126,7 +126,7 @@ export class GracefulShutdown {
     return new Promise((resolve, reject) => {
       server.close((err) => {
         if (err) {
-          logger.error('Error closing HTTP server:', err);
+          logger.error('Error closing HTTPserver:', err);
           reject(err);
         } else {
           logger.info('✓ HTTP server closed');
@@ -163,7 +163,7 @@ export class GracefulShutdown {
       await connection.close();
       logger.info('✓ Database connection closed');
     } catch (error) {
-      logger.error('Error closing database connection:', error);
+      logger.error('Error closing databaseconnection:', error);
       throw error;
     }
   }
@@ -176,7 +176,7 @@ export class GracefulShutdown {
       await client.quit();
       logger.info('✓ Redis connection closed');
     } catch (error) {
-      logger.error('Error closing Redis connection:', error);
+      logger.error('Error closing Redisconnection:', error);
       // Force disconnect if quit fails
       client.disconnect();
     }
@@ -190,7 +190,7 @@ export class GracefulShutdown {
       try {
         await handler();
       } catch (error) {
-        logger.error('Error in cleanup handler:', error);
+        logger.error('Error in cleanuphandler:', error);
       }
     }
     logger.info(`✓ Executed ${this.cleanupHandlers.length} cleanup handlers`);

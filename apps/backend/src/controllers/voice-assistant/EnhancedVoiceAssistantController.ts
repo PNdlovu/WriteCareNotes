@@ -18,7 +18,7 @@ export class EnhancedVoiceAssistantController {
   privatevoiceAssistantService: EnhancedVoiceAssistantService;
   privatelogger: Logger;
 
-  constructor() {
+  const ructor() {
     this.voiceAssistantService = new EnhancedVoiceAssistantService();
     this.logger = new Logger(EnhancedVoiceAssistantController.name);
   }
@@ -80,7 +80,7 @@ export class EnhancedVoiceAssistantController {
 
       res.json(result);
     } catch (error) {
-      this.logger.error('Error logging medication by voice:', error);
+      this.logger.error('Error logging medication byvoice:', error);
       res.status(500).json({ error: 'Failed to log medication by voice' });
     }
   }
@@ -113,7 +113,7 @@ export class EnhancedVoiceAssistantController {
 
       res.json(result);
     } catch (error) {
-      this.logger.error('Error updating care plan by voice:', error);
+      this.logger.error('Error updating care plan byvoice:', error);
       res.status(500).json({ error: 'Failed to update care plan by voice' });
     }
   }
@@ -147,7 +147,7 @@ export class EnhancedVoiceAssistantController {
 
       res.json(result);
     } catch (error) {
-      this.logger.error('Error activating emergency protocol:', error);
+      this.logger.error('Error activating emergencyprotocol:', error);
       res.status(500).json({ error: 'Failed to activate emergency protocol' });
     }
   }
@@ -180,7 +180,7 @@ export class EnhancedVoiceAssistantController {
 
       res.json(result);
     } catch (error) {
-      this.logger.error('Error querying resident info:', error);
+      this.logger.error('Error querying residentinfo:', error);
       res.status(500).json({ error: 'Failed to query resident information' });
     }
   }
@@ -201,7 +201,7 @@ export class EnhancedVoiceAssistantController {
       const settings = await this.voiceAssistantService.getVoiceSettings(userId, tenantId);
       res.json(settings);
     } catch (error) {
-      this.logger.error('Error getting voice settings:', error);
+      this.logger.error('Error getting voicesettings:', error);
       res.status(500).json({ error: 'Failed to get voice settings' });
     }
   }
@@ -228,7 +228,7 @@ export class EnhancedVoiceAssistantController {
 
       res.json(settings);
     } catch (error) {
-      this.logger.error('Error updating voice settings:', error);
+      this.logger.error('Error updating voicesettings:', error);
       res.status(500).json({ error: 'Failed to update voice settings' });
     }
   }
@@ -251,7 +251,7 @@ export class EnhancedVoiceAssistantController {
       const history = await this.getCommandHistory(userId, tenantId, parseInt(limit as string), parseInt(offset as string));
       res.json(history);
     } catch (error) {
-      this.logger.error('Error getting voice command history:', error);
+      this.logger.error('Error getting voice commandhistory:', error);
       res.status(500).json({ error: 'Failed to get voice command history' });
     }
   }
@@ -274,7 +274,7 @@ export class EnhancedVoiceAssistantController {
       const analytics = await this.calculateVoiceAnalytics(userId, tenantId, period as string);
       res.json(analytics);
     } catch (error) {
-      this.logger.error('Error getting voice analytics:', error);
+      this.logger.error('Error getting voiceanalytics:', error);
       res.status(500).json({ error: 'Failed to get voice analytics' });
     }
   }
@@ -302,7 +302,7 @@ export class EnhancedVoiceAssistantController {
       const result = await this.processAudioData(audioData, audioFormat, userId, tenantId);
       res.json(result);
     } catch (error) {
-      this.logger.error('Error testing voice recognition:', error);
+      this.logger.error('Error testing voicerecognition:', error);
       res.status(500).json({ error: 'Failed to test voice recognition' });
     }
   }

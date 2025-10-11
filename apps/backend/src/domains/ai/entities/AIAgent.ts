@@ -36,10 +36,10 @@ export class AIAgent {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   name: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   displayName: string;
 
   @Column({ type: 'text' })
@@ -54,10 +54,10 @@ export class AIAgent {
   @Column({ type: 'enum', enum: AIAgentPriority, default: AIAgentPriority.NORMAL })
   priority: AIAgentPriority;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   version: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   model: string; // e.g., 'gpt-4', 'claude-3', 'custom-model'
 
   @Column({ type: 'json' })
@@ -69,10 +69,10 @@ export class AIAgent {
   @Column({ type: 'json', nullable: true })
   metadata: any; // Additional metadata
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   endpoint: string; // Microservice endpoint
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   healthCheckUrl: string;
 
   @Column({ type: 'int', default: 0 })
@@ -105,10 +105,10 @@ export class AIAgent {
   @Column({ type: 'text', nullable: true })
   errorMessage: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   // Relationships

@@ -70,7 +70,7 @@ router.get('/transactions', [
       message: 'Cash transactions retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving cash transactions:', error);
+    logger.error('Error retrieving cashtransactions:', error);
     next(error);
   }
 });
@@ -100,7 +100,7 @@ router.get('/transactions/:id', [
       message: 'Cash transaction retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving cash transaction:', error);
+    logger.error('Error retrieving cashtransaction:', error);
     next(error);
   }
 });
@@ -150,7 +150,7 @@ router.post('/transactions', [
       message: 'Cash transaction created successfully'
     });
   } catch (error) {
-    logger.error('Error creating cash transaction:', error);
+    logger.error('Error creating cashtransaction:', error);
     next(error);
   }
 });
@@ -197,7 +197,7 @@ router.put('/transactions/:id', [
       message: 'Cash transaction updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating cash transaction:', error);
+    logger.error('Error updating cashtransaction:', error);
     next(error);
   }
 });
@@ -226,7 +226,7 @@ router.delete('/transactions/:id', [
       message: 'Cash transaction deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting cash transaction:', error);
+    logger.error('Error deleting cashtransaction:', error);
     next(error);
   }
 });
@@ -251,7 +251,7 @@ router.post('/transactions/:id/process', [
       message: 'Cash transaction processed successfully'
     });
   } catch (error) {
-    logger.error('Error processing cash transaction:', error);
+    logger.error('Error processing cashtransaction:', error);
     next(error);
   }
 });
@@ -274,7 +274,7 @@ router.post('/transactions/:id/complete', [
       message: 'Cash transaction completed successfully'
     });
   } catch (error) {
-    logger.error('Error completing cash transaction:', error);
+    logger.error('Error completing cashtransaction:', error);
     next(error);
   }
 });
@@ -302,7 +302,7 @@ router.post('/transactions/:id/fail', [
       message: 'Cash transaction failed successfully'
     });
   } catch (error) {
-    logger.error('Error failing cash transaction:', error);
+    logger.error('Error failing cashtransaction:', error);
     next(error);
   }
 });
@@ -330,7 +330,7 @@ router.post('/transactions/:id/reverse', [
       message: 'Cash transaction reversed successfully'
     });
   } catch (error) {
-    logger.error('Error reversing cash transaction:', error);
+    logger.error('Error reversing cashtransaction:', error);
     next(error);
   }
 });
@@ -358,7 +358,7 @@ router.post('/transactions/:id/cancel', [
       message: 'Cash transaction cancelled successfully'
     });
   } catch (error) {
-    logger.error('Error cancelling cash transaction:', error);
+    logger.error('Error cancelling cashtransaction:', error);
     next(error);
   }
 });
@@ -386,7 +386,7 @@ router.post('/transactions/:id/approve', [
       message: 'Cash transaction approved successfully'
     });
   } catch (error) {
-    logger.error('Error approving cash transaction:', error);
+    logger.error('Error approving cashtransaction:', error);
     next(error);
   }
 });
@@ -414,7 +414,7 @@ router.post('/transactions/:id/void', [
       message: 'Cash transaction voided successfully'
     });
   } catch (error) {
-    logger.error('Error voiding cash transaction:', error);
+    logger.error('Error voiding cashtransaction:', error);
     next(error);
   }
 });
@@ -443,7 +443,7 @@ router.get('/summary', [
       message: 'Cash summary retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving cash summary:', error);
+    logger.error('Error retrieving cashsummary:', error);
     next(error);
   }
 });
@@ -472,7 +472,7 @@ router.get('/flow-statement', [
       message: 'Cash flow statement retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving cash flow statement:', error);
+    logger.error('Error retrieving cash flowstatement:', error);
     next(error);
   }
 });
@@ -510,7 +510,7 @@ router.get('/transactions-by-account', [
       message: 'Transactions by account retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving transactions by account:', error);
+    logger.error('Error retrieving transactions byaccount:', error);
     next(error);
   }
 });
@@ -537,7 +537,7 @@ router.get('/reconciliation', [
       message: 'Cash reconciliation retrieved successfully'
     });
   } catch (error) {
-    logger.error('Error retrieving cash reconciliation:', error);
+    logger.error('Error retrieving cashreconciliation:', error);
     next(error);
   }
 });

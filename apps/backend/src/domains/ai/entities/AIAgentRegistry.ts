@@ -13,7 +13,7 @@ export class AIAgentRegistry {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   name: string;
 
   @Column({ type: 'text' })
@@ -22,16 +22,16 @@ export class AIAgentRegistry {
   @Column({ type: 'enum', enum: RegistryStatus, default: RegistryStatus.ACTIVE })
   status: RegistryStatus;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   version: string;
 
   @Column({ type: 'json' })
   configuration: any; // Registry configuration
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   endpoint: string; // Registry service endpoint
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   healthCheckUrl: string;
 
   @Column({ type: 'int', default: 0 })

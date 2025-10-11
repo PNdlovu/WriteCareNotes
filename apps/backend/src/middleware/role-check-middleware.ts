@@ -72,7 +72,7 @@ export const roleCheckMiddleware = (allowedRoles: string[]) => {
 
       next();
     } catch (error: unknown) {
-      console.error('Role check middleware error:', error);
+      console.error('Role check middlewareerror:', error);
       res.status(500).json({
         success: false,
         error: 'Internal server error during role validation',

@@ -10,7 +10,7 @@
  * @since 2025-01-10
  * 
  * @description
- * Defines request DTOs for family contact operations including:
+ * Defines request DTOs for family contact operationsincluding:
  * - Family member registration and updates
  * - Contact schedule creation and management
  * - Contact session recording and cancellation

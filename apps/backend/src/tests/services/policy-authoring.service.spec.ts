@@ -15,10 +15,10 @@
  * - Rich text content validation
  * 
  * @coverage
- * - Unit tests: 100% service logic
- * - Integration tests: Workflow end-to-end
- * - Security tests: Authorization and validation
- * - Performance tests: Large policy processing
+ * - Unittests: 100% service logic
+ * - Integrationtests: Workflow end-to-end
+ * - Securitytests: Authorization and validation
+ * - Performancetests: Large policy processing
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -220,16 +220,16 @@ class PolicyAuthoringTestDataFactory {
 }
 
 describe('PolicyAuthoringService', () => {
-  letservice: PolicyAuthoringService;
-  letmodule: TestingModule;
-  letpolicyDraftRepository: Repository<PolicyDraft>;
-  letpolicyTemplateRepository: Repository<PolicyTemplate>;
-  letpolicyImportRepository: Repository<PolicyImportJob>;
-  letacknowledgmentRepository: Repository<UserAcknowledgment>;
-  letauditEventRepository: Repository<AuditEvent>;
-  letauditTrailService: AuditService;
-  letnotificationService: NotificationService;
-  letfileProcessingService: FileProcessingService;
+  let service: PolicyAuthoringService;
+  let module: TestingModule;
+  let policyDraftRepository: Repository<PolicyDraft>;
+  let policyTemplateRepository: Repository<PolicyTemplate>;
+  let policyImportRepository: Repository<PolicyImportJob>;
+  let acknowledgmentRepository: Repository<UserAcknowledgment>;
+  let auditEventRepository: Repository<AuditEvent>;
+  let auditTrailService: AuditService;
+  let notificationService: NotificationService;
+  let fileProcessingService: FileProcessingService;
 
   // Mock implementations
   const mockPolicyDraftRepository = {
@@ -288,7 +288,7 @@ describe('PolicyAuthoringService', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         PolicyAuthoringService,
         {
@@ -933,7 +933,7 @@ describe('PolicyAuthoringService', () => {
         const user = PolicyAuthoringTestDataFactory.createUser();
         
         // Create large rich text content (simulating 10,000 word policy)
-        constlargeContent: RichTextContent = {
+        const largeContent: RichTextContent = {
           type: 'doc',
           content: Array.from({ length: 100 }, (_, i) => ({
             type: 'paragraph',
@@ -1061,8 +1061,8 @@ describe('PolicyAuthoringService', () => {
  * Tests complete workflows with actual database operations
  */
 describe('PolicyAuthoringService Integration Tests', () => {
-  letapp: any;
-  letservice: PolicyAuthoringService;
+  let app: any;
+  let service: PolicyAuthoringService;
 
   beforeAll(async () => {
     // Set up test database and application context

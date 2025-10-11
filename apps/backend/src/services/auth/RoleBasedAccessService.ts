@@ -282,7 +282,7 @@ export class RoleBasedAccessService {
     }]
   ]);
 
-  constructor() {
+  const ructor() {
     this.employeeRepository = AppDataSource.getRepository(Employee);
     this.auditService = new AuditTrailService();
   }
@@ -335,7 +335,7 @@ export class RoleBasedAccessService {
 
       return true;
     } catch (error: unknown) {
-      console.error('Error checking permission:', error);
+      console.error('Error checkingpermission:', error);
       return false;
     }
   }
@@ -379,7 +379,7 @@ export class RoleBasedAccessService {
       // For now, we'll derive it from job title or department
       return this.deriveRoleFromEmployee(employee);
     } catch (error: unknown) {
-      console.error('Error getting user role:', error);
+      console.error('Error getting userrole:', error);
       return null;
     }
   }
@@ -389,7 +389,7 @@ export class RoleBasedAccessService {
     if (!userRole) return [];
 
     const rolePermissions = this.ROLE_PERMISSIONS.get(userRole);
-    return rolePermissions?.permissions || [];
+    returnrolePermissions?.permissions || [];
   }
 
   async getRoleRestrictions(userId: string): Promise<any> {
@@ -397,7 +397,7 @@ export class RoleBasedAccessService {
     if (!userRole) return {};
 
     const rolePermissions = this.ROLE_PERMISSIONS.get(userRole);
-    return rolePermissions?.restrictions || {};
+    returnrolePermissions?.restrictions || {};
   }
 
   // Context-based Access Control
@@ -595,7 +595,7 @@ export class RoleBasedAccessService {
     return async (req: any, res: any, next: any) => {
       try {
         const userId = req.user?.id;
-        constcontext: AccessContext = {
+        const context: AccessContext = {
           userId,
           role: await this.getUserRole(userId),
           deviceType: req.headers['device-type'] === 'organization' ? 'organization' : 'personal',
@@ -629,7 +629,7 @@ export class RoleBasedAccessService {
         req.accessContext = context;
         next();
       } catch (error: unknown) {
-        console.error('Permission middleware error:', error);
+        console.error('Permission middlewareerror:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
     };

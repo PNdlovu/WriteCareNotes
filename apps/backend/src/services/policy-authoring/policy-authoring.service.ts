@@ -162,27 +162,27 @@ export interface ImportPolicyDto {
  */
 @Injectable()
 export class PolicyAuthoringService {
-  private readonly logger = new Logger(PolicyAuthoringService.name);
+  private readonlylogger = new Logger(PolicyAuthoringService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyDraft)
-    private readonly policyDraftRepository: Repository<PolicyDraft>,
+    private readonlypolicyDraftRepository: Repository<PolicyDraft>,
     
     @InjectRepository(PolicyTemplate)
-    private readonly policyTemplateRepository: Repository<PolicyTemplate>,
+    private readonlypolicyTemplateRepository: Repository<PolicyTemplate>,
     
     @InjectRepository(PolicyImportJob)
-    private readonly policyImportRepository: Repository<PolicyImportJob>,
+    private readonlypolicyImportRepository: Repository<PolicyImportJob>,
     
     @InjectRepository(UserAcknowledgment)
-    private readonly acknowledgmentRepository: Repository<UserAcknowledgment>,
+    private readonlyacknowledgmentRepository: Repository<UserAcknowledgment>,
     
     @InjectRepository(AuditEvent)
-    private readonly auditEventRepository: Repository<AuditEvent>,
+    private readonlyauditEventRepository: Repository<AuditEvent>,
     
-    private readonly auditTrailService: AuditService,
-    private readonly notificationService: NotificationService,
-    private readonly fileProcessingService: FileProcessingService
+    private readonlyauditTrailService: AuditService,
+    private readonlynotificationService: NotificationService,
+    private readonlyfileProcessingService: FileProcessingService
   ) {}
 
   /**
@@ -192,7 +192,7 @@ export class PolicyAuthoringService {
     createDto: CreatePolicyDraftDto,
     createdBy: User
   ): Promise<PolicyDraft> {
-    this.logger.log(`Creating policy draft: ${createDto.title}`);
+    this.logger.log(`Creating policydraft: ${createDto.title}`);
 
     try {
       // Validate jurisdiction and category combination
@@ -224,11 +224,11 @@ export class PolicyAuthoringService {
         }
       });
 
-      this.logger.log(`Policy draft created successfully: ${savedDraft.id}`);
+      this.logger.log(`Policy draft createdsuccessfully: ${savedDraft.id}`);
       return savedDraft;
 
     } catch (error) {
-      this.logger.error(`Failed to create policy draft: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create policydraft: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -241,7 +241,7 @@ export class PolicyAuthoringService {
     updateData: Partial<CreatePolicyDraftDto>,
     updatedBy: User
   ): Promise<PolicyDraft> {
-    this.logger.log(`Updating policy draft: ${policyId}`);
+    this.logger.log(`Updating policydraft: ${policyId}`);
 
     try {
       const existingDraft = await this.policyDraftRepository.findOne({
@@ -290,11 +290,11 @@ export class PolicyAuthoringService {
         }
       });
 
-      this.logger.log(`Policy draft updated successfully: ${policyId}`);
-      return updatedDraft!;
+      this.logger.log(`Policy draft updatedsuccessfully: ${policyId}`);
+      returnupdatedDraft!;
 
     } catch (error) {
-      this.logger.error(`Failed to update policy draft: ${error.message}`, error.stack);
+      this.logger.error(`Failed to update policydraft: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -307,7 +307,7 @@ export class PolicyAuthoringService {
     submittedBy: User,
     reviewNotes?: string
   ): Promise<PolicyDraft> {
-    this.logger.log(`Submitting policy for review: ${policyId}`);
+    this.logger.log(`Submitting policy forreview: ${policyId}`);
 
     try {
       const policy = await this.policyDraftRepository.findOne({
@@ -355,11 +355,11 @@ export class PolicyAuthoringService {
         where: { id: policyId }
       });
 
-      this.logger.log(`Policy submitted for review successfully: ${policyId}`);
-      return updatedPolicy!;
+      this.logger.log(`Policy submitted for reviewsuccessfully: ${policyId}`);
+      returnupdatedPolicy!;
 
     } catch (error) {
-      this.logger.error(`Failed to submit policy for review: ${error.message}`, error.stack);
+      this.logger.error(`Failed to submit policy forreview: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -422,11 +422,11 @@ export class PolicyAuthoringService {
         where: { id: policyId }
       });
 
-      this.logger.log(`Policy approved successfully: ${policyId}`);
-      return approvedPolicy!;
+      this.logger.log(`Policy approvedsuccessfully: ${policyId}`);
+      returnapprovedPolicy!;
 
     } catch (error) {
-      this.logger.error(`Failed to approve policy: ${error.message}`, error.stack);
+      this.logger.error(`Failed to approvepolicy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -504,11 +504,11 @@ export class PolicyAuthoringService {
         where: { id: publishDto.policyId }
       });
 
-      this.logger.log(`Policy published successfully: ${publishDto.policyId}`);
-      return publishedPolicy!;
+      this.logger.log(`Policy publishedsuccessfully: ${publishDto.policyId}`);
+      returnpublishedPolicy!;
 
     } catch (error) {
-      this.logger.error(`Failed to publish policy: ${error.message}`, error.stack);
+      this.logger.error(`Failed to publishpolicy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -520,7 +520,7 @@ export class PolicyAuthoringService {
     importDto: ImportPolicyDto,
     importedBy: User
   ): Promise<PolicyImportJob> {
-    this.logger.log(`Importing policy from file: ${importDto.file.originalname}`);
+    this.logger.log(`Importing policy fromfile: ${importDto.file.originalname}`);
 
     try {
       // Validate file type
@@ -562,11 +562,11 @@ export class PolicyAuthoringService {
         }
       });
 
-      this.logger.log(`Policy import job created: ${savedJob.id}`);
+      this.logger.log(`Policy import jobcreated: ${savedJob.id}`);
       return savedJob;
 
     } catch (error) {
-      this.logger.error(`Failed to import policy: ${error.message}`, error.stack);
+      this.logger.error(`Failed to importpolicy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -578,7 +578,7 @@ export class PolicyAuthoringService {
     category?: PolicyCategory,
     jurisdiction?: Jurisdiction
   ): Promise<PolicyTemplate[]> {
-    this.logger.log(`Retrieving policy templates: category=${category}, jurisdiction=${jurisdiction}`);
+    this.logger.log(`Retrieving policytemplates: category=${category}, jurisdiction=${jurisdiction}`);
 
     try {
       const queryBuilder = this.policyTemplateRepository.createQueryBuilder('template');
@@ -599,7 +599,7 @@ export class PolicyAuthoringService {
       return templates;
 
     } catch (error) {
-      this.logger.error(`Failed to retrieve policy templates: ${error.message}`, error.stack);
+      this.logger.error(`Failed to retrieve policytemplates: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -612,7 +612,7 @@ export class PolicyAuthoringService {
     title: string,
     createdBy: User
   ): Promise<PolicyDraft> {
-    this.logger.log(`Creating policy from template: ${templateId}`);
+    this.logger.log(`Creating policy fromtemplate: ${templateId}`);
 
     try {
       const template = await this.policyTemplateRepository.findOne({
@@ -655,11 +655,11 @@ export class PolicyAuthoringService {
         }
       });
 
-      this.logger.log(`Policy created from template successfully: ${savedDraft.id}`);
+      this.logger.log(`Policy created from templatesuccessfully: ${savedDraft.id}`);
       return savedDraft;
 
     } catch (error) {
-      this.logger.error(`Failed to create policy from template: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create policy fromtemplate: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -672,7 +672,7 @@ export class PolicyAuthoringService {
     userId: string,
     digitalSignature?: string
   ): Promise<UserAcknowledgment> {
-    this.logger.log(`Recording policy acknowledgment: policyId=${policyId}, userId=${userId}`);
+    this.logger.log(`Recording policyacknowledgment: policyId=${policyId}, userId=${userId}`);
 
     try {
       const policy = await this.policyDraftRepository.findOne({
@@ -716,11 +716,11 @@ export class PolicyAuthoringService {
         }
       });
 
-      this.logger.log(`Policy acknowledgment recorded: ${savedAck.id}`);
+      this.logger.log(`Policy acknowledgmentrecorded: ${savedAck.id}`);
       return savedAck;
 
     } catch (error) {
-      this.logger.error(`Failed to record policy acknowledgment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to record policyacknowledgment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -732,7 +732,7 @@ export class PolicyAuthoringService {
     organizationId: string,
     daysAhead: number = 30
   ): Promise<PolicyDraft[]> {
-    this.logger.log(`Getting policies for review: organizationId=${organizationId}, daysAhead=${daysAhead}`);
+    this.logger.log(`Getting policies forreview: organizationId=${organizationId}, daysAhead=${daysAhead}`);
 
     try {
       const cutoffDate = new Date();
@@ -750,7 +750,7 @@ export class PolicyAuthoringService {
       return policies;
 
     } catch (error) {
-      this.logger.error(`Failed to get policies for review: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get policies forreview: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -785,14 +785,14 @@ export class PolicyAuthoringService {
       
       if (!hasValidJurisdiction) {
         throw new BadRequestException(
-          `Category ${category} requires one of jurisdictions: ${validCombinations[category].join(', ')}`
+          `Category ${category} requires one ofjurisdictions: ${validCombinations[category].join(', ')}`
         );
       }
     }
   }
 
   private async validatePolicyCompleteness(policy: PolicyDraft): Promise<void> {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!policy.title || policy.title.trim().length === 0) {
       errors.push('Policy title is required');
@@ -811,7 +811,7 @@ export class PolicyAuthoringService {
     }
 
     if (errors.length > 0) {
-      throw new BadRequestException(`Policy validation failed: ${errors.join(', ')}`);
+      throw new BadRequestException(`Policy validationfailed: ${errors.join(', ')}`);
     }
   }
 
@@ -890,7 +890,7 @@ export class PolicyAuthoringService {
         updatedAt: new Date()
       });
 
-      this.logger.log(`Import job completed successfully: ${importJobId}`);
+      this.logger.log(`Import job completedsuccessfully: ${importJobId}`);
 
     } catch (error) {
       // Update job with error status
@@ -900,7 +900,7 @@ export class PolicyAuthoringService {
         updatedAt: new Date()
       });
 
-      this.logger.error(`Import job failed: ${importJobId} - ${error.message}`);
+      this.logger.error(`Import jobfailed: ${importJobId} - ${error.message}`);
       throw error;
     }
   }

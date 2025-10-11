@@ -75,7 +75,7 @@ export class AICopilotService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.summaryRepository = AppDataSource.getRepository(AISummary);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -134,7 +134,7 @@ export class AICopilotService {
 
       return assistance;
     } catch (error: unknown) {
-      console.error('Error providing real-time care note assistance:', error);
+      console.error('Error providing real-time care noteassistance:', error);
       throw error;
     }
   }
@@ -265,7 +265,7 @@ export class AICopilotService {
 
       return dashboard;
     } catch (error: unknown) {
-      console.error('Error generating AI insights dashboard:', error);
+      console.error('Error generating AI insightsdashboard:', error);
       throw error;
     }
   }
@@ -685,7 +685,7 @@ export class AICopilotService {
 
       return clinicalGuidance;
     } catch (error: unknown) {
-      console.error('Error providing real-time clinical guidance:', error);
+      console.error('Error providing real-time clinicalguidance:', error);
       throw error;
     }
   }

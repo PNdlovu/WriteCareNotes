@@ -7,7 +7,7 @@
  * @since 2025-10-07
  * 
  * @description
- * REST API routes for Policy Intelligence features including:
+ * REST API routes for Policy Intelligence featuresincluding:
  * - Gap Analysis
  * - Risk Scoring & Alerts
  * - Analytics & ROI Metrics

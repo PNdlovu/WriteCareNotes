@@ -16,7 +16,7 @@ import { Resident } from './Resident';
 
 @Entity('wcn_care_plans')
 export class CarePlan extends BaseEntity {
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   planName!: string;
 
   @Column({ type: 'text' })
@@ -31,7 +31,7 @@ export class CarePlan extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   endDate?: Date;
 
-  @Column({ type: 'varchar', length: 50, default: 'ACTIVE' })
+  @Column({ type: 'var char', length: 50, default: 'ACTIVE' })
   status!: string; // ACTIVE, COMPLETED, CANCELLED
 
   @ManyToOne(() => Resident, resident => resident.carePlans)

@@ -18,7 +18,7 @@ export class ClinicalRiskAssessment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   title: string;
 
@@ -53,11 +53,11 @@ export class ClinicalRiskAssessment {
   @IsDate()
   reviewDate: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   approvedBy: string;
 
@@ -65,7 +65,7 @@ export class ClinicalRiskAssessment {
   @IsString()
   organizationId: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   systemComponent: string;
 
@@ -84,15 +84,15 @@ export class ClinicalSafetyCaseReport {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   systemName: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   systemVersion: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   deploymentScope: string;
 
@@ -149,7 +149,7 @@ export class DSPTAssessment {
   @IsDate()
   assessmentDate: Date;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   assessmentVersion: string;
 
@@ -180,11 +180,11 @@ export class DSPTAssessment {
   @IsDate()
   nextAssessmentDue: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   approvedBy?: string;
 
   @CreateDateColumn()
@@ -202,11 +202,11 @@ export class ClinicalSafetyOfficer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   email: string;
 
@@ -249,15 +249,15 @@ export class DSPTEvidenceItem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   @IsString()
   standardId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   evidenceType: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   title: string;
 
@@ -265,10 +265,10 @@ export class DSPTEvidenceItem {
   @IsString()
   description: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   documentPath?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   url?: string;
 
   @Column({ type: 'timestamp' })
@@ -278,7 +278,7 @@ export class DSPTEvidenceItem {
   @Column({ type: 'timestamp', nullable: true })
   expiryDate?: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   verifiedBy: string;
 
@@ -336,7 +336,7 @@ export class NHSDigitalComplianceMonitoring {
   @IsEnum(['excellent', 'good', 'adequate', 'poor'])
   complianceGrade: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   monitoredBy: string;
 

@@ -9,7 +9,7 @@
  * @since 2024
  *
  * @description
- * Core entity for safeguarding incident management tracking:
+ * Core entity for safeguarding incident managementtracking:
  * - Unique incident numbering (SG-YYYY-NNNN format)
  * - Incident reporting with severity classification (LOW to CRITICAL)
  * - Multi-category tracking (physical, emotional, sexual, neglect, exploitation, etc.)

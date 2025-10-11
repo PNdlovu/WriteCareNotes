@@ -242,7 +242,7 @@ async function resolveTenantBySubdomain(subdomain: string): Promise<TenantContex
     const tenant = await this.tenantService.getTenantBySubdomain(subdomain);
     
     if (!tenant) {
-      throw new Error(`Tenant not found for subdomain: ${subdomain}`);
+      throw new Error(`Tenant not found forsubdomain: ${subdomain}`);
     }
     
     return {
@@ -275,20 +275,20 @@ async function validateTenantIsolation(
   violations: string[];
   allowedResources: string[];
 }> {
-  constviolations: string[] = [];
-  constallowedResources: string[] = [];
+  const violations: string[] = [];
+  const allowedResources: string[] = [];
 
   try {
     // Check user tenant alignment
     if (req.user && req.user.tenantId !== tenantContext.tenantId) {
-      violations.push(`User tenant mismatch: user=${req.user.tenantId}, context=${tenantContext.tenantId}`);
+      violations.push(`User tenantmismatch: user=${req.user.tenantId}, context=${tenantContext.tenantId}`);
     }
 
     // Check resource access patterns
     const resourceTenantId = extractResourceTenantId(req);
     if (resourceTenantId && resourceTenantId !== tenantContext.tenantId) {
       if (strictMode) {
-        violations.push(`Cross-tenant resource access: resource=${resourceTenantId}, context=${tenantContext.tenantId}`);
+        violations.push(`Cross-tenant resourceaccess: resource=${resourceTenantId}, context=${tenantContext.tenantId}`);
       } else {
         // In non-strict mode, log but allow with additional validation
         console.warn('Cross-tenant resource access detected', {
@@ -303,12 +303,12 @@ async function validateTenantIsolation(
     // Check data residency compliance
     const requestOrigin = req.headers['cf-ipcountry'] || req.headers['x-forwarded-for'] || req.ip;
     if (!isDataResidencyCompliant(requestOrigin, tenantContext.dataResidency)) {
-      violations.push(`Data residency violation: origin=${requestOrigin}, required=${tenantContext.dataResidency}`);
+      violations.push(`Data residencyviolation: origin=${requestOrigin}, required=${tenantContext.dataResidency}`);
     }
 
     // Check jurisdiction compliance
     if (!isJurisdictionCompliant(req, tenantContext.jurisdiction)) {
-      violations.push(`Jurisdiction compliance violation: required=${tenantContext.jurisdiction}`);
+      violations.push(`Jurisdiction complianceviolation: required=${tenantContext.jurisdiction}`);
     }
 
     // Build allowed resources list

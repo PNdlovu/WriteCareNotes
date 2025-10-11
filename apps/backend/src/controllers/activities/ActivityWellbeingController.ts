@@ -9,7 +9,7 @@ import { ActivityType, ActivityCategory } from '../../entities/activities/Activi
  * 11 endpoints for activity coordination and wellbeing tracking
  */
 export class ActivityWellbeingController {
-  constructor(private activityService: ActivityWellbeingService) {}
+  const ructor(private activityService: ActivityWellbeingService) {}
 
   /**
    * POST /activities
@@ -81,7 +81,7 @@ export class ActivityWellbeingController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: any = {};
+      const filters: any = {};
       if (req.query.activityType) filters.activityType = req.query.activityType;
       if (req.query.activityCategory) filters.activityCategory = req.query.activityCategory;
       if (req.query.startDate) filters.startDate = new Date(req.query.startDate as string);

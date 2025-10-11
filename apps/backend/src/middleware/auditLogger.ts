@@ -35,8 +35,8 @@ export interface AuditLogEntry {
 }
 
 export class AuditLogger {
-  private static auditLogs: AuditLogEntry[] = [];
-  private static maxLogs = 10000; // Keep last 10k audit logs in memory
+  private staticauditLogs: AuditLogEntry[] = [];
+  private staticmaxLogs = 10000; // Keep last 10k audit logs in memory
 
   /**
    * Log audit entry
@@ -53,7 +53,7 @@ export class AuditLogger {
     // Log to console (in production, this would go to a proper audit log service)
     console.log('AUDIT_LOG:', JSON.stringify(entry, null, 2));
     
-    // In a real implementation, this would also:
+    // In a real implementation, this wouldalso:
     // - Write to a secure audit log file
     // - Send to an audit service
     // - Store in a tamper-evident database

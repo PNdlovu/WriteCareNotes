@@ -56,7 +56,7 @@ export interface FinancialMetrics {
 
 @Injectable()
 export class FinancialService {
-  constructor(
+  const ructor(
     @InjectRepository(Invoice)
     privateinvoiceRepository: Repository<Invoice>,
     @InjectRepository(Payment)
@@ -367,11 +367,11 @@ export class FinancialService {
       .andWhere('billing.nextInvoiceDate <= :today', { today: new Date() })
       .getMany();
 
-    constgeneratedInvoices: Invoice[] = [];
+    const generatedInvoices: Invoice[] = [];
 
     for (const billing of residentBillings) {
       try {
-        constinvoiceRequest: CreateInvoiceRequest = {
+        const invoiceRequest: CreateInvoiceRequest = {
           type: InvoiceType.RESIDENT_BILLING,
           recipientName: billing.residentName,
           recipientAddress: billing.residentAddress,

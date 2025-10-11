@@ -325,7 +325,7 @@ export class OvertimeRequest extends BaseEntity {
   }
 
   getApprovalWorkflow(): string[] {
-    constworkflow: string[] = [];
+    const workflow: string[] = [];
     
     if (this.requiresManagerApproval) workflow.push('Manager Approval');
     if (this.requiresHRApproval) workflow.push('HR Approval');

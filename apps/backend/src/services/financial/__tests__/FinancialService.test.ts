@@ -53,12 +53,12 @@ jest.mock('@/services/notification/NotificationService');
 jest.mock('@/services/caching/CacheService');
 
 describe('FinancialService', () => {
-  letfinancialService: FinancialService;
-  letmockRepository: jest.Mocked<FinancialRepository>;
-  letmockAuditService: jest.Mocked<AuditService>;
-  letmockEncryptionService: jest.Mocked<EncryptionService>;
-  letmockNotificationService: jest.Mocked<NotificationService>;
-  letmockCacheService: jest.Mocked<CacheService>;
+  let financialService: FinancialService;
+  let mockRepository: jest.Mocked<FinancialRepository>;
+  let mockAuditService: jest.Mocked<AuditService>;
+  let mockEncryptionService: jest.Mocked<EncryptionService>;
+  let mockNotificationService: jest.Mocked<NotificationService>;
+  let mockCacheService: jest.Mocked<CacheService>;
 
   const mockUserId = uuidv4();
   const mockCorrelationId = uuidv4();
@@ -100,7 +100,7 @@ describe('FinancialService', () => {
   });
 
   describe('createResidentBill', () => {
-    constvalidBillRequest: CreateResidentBillRequest = {
+    const validBillRequest: CreateResidentBillRequest = {
       residentId: mockResidentId,
       careHomeId: mockCareHomeId,
       billingPeriodStart: new Date('2025-01-01'),
@@ -131,7 +131,7 @@ describe('FinancialService', () => {
 
     it('should create a resident bill successfully', async () => {
       // Arrange
-      constexpectedBill: ResidentBill = {
+      const expectedBill: ResidentBill = {
         id: uuidv4(),
         billNumber: 'BILL-TEST-2025-000001',
         residentId: mockResidentId,
@@ -296,7 +296,7 @@ describe('FinancialService', () => {
   });
 
   describe('processPayment', () => {
-    constvalidPaymentRequest: ProcessPaymentRequest = {
+    const validPaymentRequest: ProcessPaymentRequest = {
       residentId: mockResidentId,
       careHomeId: mockCareHomeId,
       amount: 1000.00,
@@ -308,13 +308,13 @@ describe('FinancialService', () => {
 
     it('should process payment successfully', async () => {
       // Arrange
-      constmockBill: ResidentBill = {
+      const mockBill: ResidentBill = {
         id: validPaymentRequest.billId!,
         totalAmount: 1000.00,
         status: BillingStatus.PENDING
       } as ResidentBill;
 
-      constexpectedPayment: Payment = {
+      const expectedPayment: Payment = {
         id: uuidv4(),
         paymentReference: 'PAY-TEST-123456',
         residentId: mockResidentId,
@@ -438,7 +438,7 @@ describe('FinancialService', () => {
   });
 
   describe('createInsuranceClaim', () => {
-    constvalidClaimRequest: CreateInsuranceClaimRequest = {
+    const validClaimRequest: CreateInsuranceClaimRequest = {
       residentId: mockResidentId,
       careHomeId: mockCareHomeId,
       insuranceProvider: 'NHS',
@@ -454,7 +454,7 @@ describe('FinancialService', () => {
 
     it('should create insurance claim successfully', async () => {
       // Arrange
-      constexpectedClaim: InsuranceClaim = {
+      const expectedClaim: InsuranceClaim = {
         id: uuidv4(),
         claimNumber: 'CLM-2025-00000001',
         residentId: mockResidentId,
@@ -539,7 +539,7 @@ describe('FinancialService', () => {
   });
 
   describe('generateFinancialReport', () => {
-    constvalidReportRequest: FinancialReportRequest = {
+    const validReportRequest: FinancialReportRequest = {
       reportType: ReportType.PROFIT_AND_LOSS,
       careHomeId: mockCareHomeId,
       startDate: new Date('2025-01-01'),
@@ -549,7 +549,7 @@ describe('FinancialService', () => {
 
     it('should generate financial report successfully', async () => {
       // Arrange
-      constexpectedReport: FinancialReport = {
+      const expectedReport: FinancialReport = {
         id: uuidv4(),
         reportType: ReportType.PROFIT_AND_LOSS,
         careHomeId: mockCareHomeId,
@@ -716,7 +716,7 @@ describe('FinancialService', () => {
   describe('Edge Cases and Error Handling', () => {
     it('should handle decimal precision correctly', async () => {
       // Arrange
-      constprecisionTestRequest: CreateResidentBillRequest = {
+      const precisionTestRequest: CreateResidentBillRequest = {
         residentId: mockResidentId,
         careHomeId: mockCareHomeId,
         billingPeriodStart: new Date('2025-01-01'),
@@ -754,7 +754,7 @@ describe('FinancialService', () => {
       // This test would verify that concurrent payments don't cause race conditions
       // In a real implementation, you might use database locks or other concurrency controls
       
-      constpaymentRequest: ProcessPaymentRequest = {
+      const paymentRequest: ProcessPaymentRequest = {
         residentId: mockResidentId,
         careHomeId: mockCareHomeId,
         amount: 1000.00,
@@ -784,7 +784,7 @@ describe('FinancialService', () => {
       timeoutError.name = 'TimeoutError';
       mockRepository.createBill.mockRejectedValue(timeoutError);
 
-      constbillRequest: CreateResidentBillRequest = {
+      const billRequest: CreateResidentBillRequest = {
         residentId: mockResidentId,
         careHomeId: mockCareHomeId,
         billingPeriodStart: new Date('2025-01-01'),
@@ -820,7 +820,7 @@ describe('FinancialService', () => {
   describe('Security and Compliance', () => {
     it('should encrypt sensitive financial data', async () => {
       // Arrange
-      constbillWithBankDetails: CreateResidentBillRequest = {
+      const billWithBankDetails: CreateResidentBillRequest = {
         residentId: mockResidentId,
         careHomeId: mockCareHomeId,
         billingPeriodStart: new Date('2025-01-01'),
@@ -862,7 +862,7 @@ describe('FinancialService', () => {
 
     it('should log all financial operations for audit compliance', async () => {
       // Arrange
-      constbillRequest: CreateResidentBillRequest = {
+      const billRequest: CreateResidentBillRequest = {
         residentId: mockResidentId,
         careHomeId: mockCareHomeId,
         billingPeriodStart: new Date('2025-01-01'),
@@ -905,7 +905,7 @@ describe('FinancialService', () => {
       // In the actual implementation, this would be handled by middleware
       // but the service should also validate permissions
 
-      constreportRequest: FinancialReportRequest = {
+      const reportRequest: FinancialReportRequest = {
         reportType: ReportType.PROFIT_AND_LOSS,
         careHomeId: mockCareHomeId,
         startDate: new Date('2025-01-01'),

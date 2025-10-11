@@ -145,7 +145,7 @@ export class SessionValidationService {
       const now = new Date();
       const expiresAt = new Date(now.getTime() + this.SESSION_TIMEOUT * 1000);
 
-      constsessionInfo: SessionInfo = {
+      const sessionInfo: SessionInfo = {
         sessionId,
         userId,
         deviceId,

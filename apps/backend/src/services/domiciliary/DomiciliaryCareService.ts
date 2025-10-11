@@ -74,7 +74,7 @@ export interface RouteOptimization {
     clientSatisfactionImpact: number; // percentage
     efficiencyGain: number; // percentage
   };
-  constraints: {
+  const raints: {
     clientTimePreferences: boolean;
     careWorkerSkills: boolean;
     travelTimeRealistic: boolean;
@@ -118,7 +118,7 @@ export class DomiciliaryCareService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.clientRepository = AppDataSource.getRepository(DomiciliaryClient);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -170,7 +170,7 @@ export class DomiciliaryCareService {
 
       return savedClient;
     } catch (error: unknown) {
-      console.error('Error creating advanced domiciliary client:', error);
+      console.error('Error creating advanced domiciliaryclient:', error);
       throw error;
     }
   }
@@ -180,7 +180,7 @@ export class DomiciliaryCareService {
     careWorkerId: string;
     date: Date;
     clients: string[];
-    constraints: any;
+    const raints: any;
     optimizationGoals: string[];
   }): Promise<RouteOptimization> {
     try {
@@ -191,19 +191,19 @@ export class DomiciliaryCareService {
       const originalRoute = await this.generateOriginalRoute(clients, optimizationRequest.date);
       
       // Apply AI optimization algorithms
-      const optimizedRoute = await this.applyAIOptimization(originalRoute, optimizationRequest.constraints);
+      const optimizedRoute = await this.applyAIOptimization(originalRoute, optimizationRequest.const raints);
       
       // Calculate optimization metrics
       const metrics = await this.calculateOptimizationMetrics(originalRoute, optimizedRoute);
 
-      constoptimization: RouteOptimization = {
+      const optimization: RouteOptimization = {
         optimizationId: crypto.randomUUID(),
         careWorkerId: optimizationRequest.careWorkerId,
         optimizationDate: optimizationRequest.date,
         originalRoute,
         optimizedRoute,
         optimizationMetrics: metrics,
-        constraints: {
+        const raints: {
           clientTimePreferences: true,
           careWorkerSkills: true,
           travelTimeRealistic: true,
@@ -229,7 +229,7 @@ export class DomiciliaryCareService {
 
       return optimization;
     } catch (error: unknown) {
-      console.error('Error optimizing advanced routes:', error);
+      console.error('Error optimizing advancedroutes:', error);
       throw error;
     }
   }
@@ -242,7 +242,7 @@ export class DomiciliaryCareService {
     safetyRequirements: string[];
   }): Promise<LoneWorkerSafetySystem> {
     try {
-      constsafetySystem: LoneWorkerSafetySystem = {
+      const safetySystem: LoneWorkerSafetySystem = {
         safetyProtocols: {
           checkInFrequency: this.calculateCheckInFrequency(safetyRequest.riskLevel),
           automaticAlerts: true,
@@ -280,7 +280,7 @@ export class DomiciliaryCareService {
 
       return safetySystem;
     } catch (error: unknown) {
-      console.error('Error implementing advanced lone worker safety:', error);
+      console.error('Error implementing advanced lone workersafety:', error);
       throw error;
     }
   }
@@ -325,7 +325,7 @@ export class DomiciliaryCareService {
 
       return qualityMetrics;
     } catch (error: unknown) {
-      console.error('Error performing advanced quality assurance:', error);
+      console.error('Error performing advanced qualityassurance:', error);
       throw error;
     }
   }
@@ -607,7 +607,7 @@ export class DomiciliaryCareService {
     }));
   }
 
-  private async applyAIOptimization(originalRoute: any[], constraints: any): Promise<any[]> {
+  private async applyAIOptimization(originalRoute: any[], const raints: any): Promise<any[]> {
     // AI-powered route optimization
     return originalRoute.map(visit => ({
       clientId: visit.clientId,

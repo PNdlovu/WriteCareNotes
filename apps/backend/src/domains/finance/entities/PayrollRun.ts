@@ -23,10 +23,10 @@ export class PayrollRun {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   runName: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   payPeriod: string; // e.g., "2024-01" for January 2024
 
   @Column({ type: 'date' })
@@ -65,13 +65,13 @@ export class PayrollRun {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   processedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
   processedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })

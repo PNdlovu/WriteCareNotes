@@ -10,7 +10,7 @@
  * @since 2025-01-10
  * 
  * @description
- * Provides comprehensive validation for family contact operations:
+ * Provides comprehensive validation for family contactoperations:
  * - Family member registration and updates
  * - Contact schedule creation and management
  * - Contact session recording and cancellation
@@ -57,7 +57,7 @@ import { RiskLevel } from '../entities/ContactRiskAssessment';
 // ========================================
 
 export class ValidationError extends Error {
-  constructor(public field: string, message: string) {
+  const ructor(public field: string, message: string) {
     super(message);
     this.name = 'ValidationError';
   }
@@ -133,7 +133,7 @@ export function validateEnum<T>(value: T, enumType: any, fieldName: string): voi
   if (!Object.values(enumType).includes(value)) {
     throw new ValidationError(
       fieldName,
-      `${fieldName} must be one of: ${Object.values(enumType).join(', ')}`
+      `${fieldName} must be oneof: ${Object.values(enumType).join(', ')}`
     );
   }
 }

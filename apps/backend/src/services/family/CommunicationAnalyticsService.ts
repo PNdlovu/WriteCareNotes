@@ -183,7 +183,7 @@ export class CommunicationAnalyticsService {
   privatelogger: Logger;
   privateai: AIService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('CommunicationAnalyticsService');
     this.ai = new AIService();
@@ -217,7 +217,7 @@ export class CommunicationAnalyticsService {
         this.analyzeSatisfactionTrends(tenantId, familyMemberId, days)
       ]);
 
-      constanalysisData: AnalysisData = {
+      const analysisData: AnalysisData = {
         messageVolume,
         responsePatterns,
         sentimentAnalysis,
@@ -393,7 +393,7 @@ export class CommunicationAnalyticsService {
     // Detect concern indicators
     const concernIndicators = await this.detectConcernIndicators(messagesResult.rows);
 
-    letoverallSentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
+    let overallSentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
     if (averageSentiment > 0.1) overallSentiment = 'positive';
     else if (averageSentiment < -0.1) overallSentiment = 'negative';
 
@@ -431,8 +431,8 @@ export class CommunicationAnalyticsService {
     }
 
     // Extract and count topics
-    consttopicCounts: Record<string, number> = {};
-    constcategoryMap: Record<string, { count: number; responseTime: number; satisfaction: number }> = {};
+    const topicCounts: Record<string, number> = {};
+    const categoryMap: Record<string, { count: number; responseTime: number; satisfaction: number }> = {};
 
     topicsResult.rows.forEach(row => {
       const topics = row.topics ? JSON.parse(row.topics) : [];
@@ -443,7 +443,7 @@ export class CommunicationAnalyticsService {
 
     const totalTopics = Object.values(topicCounts).reduce((sum, count) => sum + count, 0);
     
-    constfrequentTopics: TopicFrequency[] = Object.entries(topicCounts)
+    const frequentTopics: TopicFrequency[] = Object.entries(topicCounts)
       .map(([topic, count]) => ({
         topic,
         count,
@@ -489,7 +489,7 @@ export class CommunicationAnalyticsService {
     // Get event participation
     const eventQuery = `
       SELECT 
-        COUNT(CASE WHEN attended = true THEN 1 END) as attended_events,
+        COUNT(CASE WHENattended = true THEN 1 END) as attended_events,
         COUNT(*) as total_events
       FROM family_event_participation 
       WHERE family_member_id = $1 AND tenant_id = $2
@@ -560,7 +560,7 @@ export class CommunicationAnalyticsService {
     analysisData: AnalysisData,
     familyMemberId: string
   ): Promise<CommunicationInsight[]> {
-    constinsights: CommunicationInsight[] = [];
+    const insights: CommunicationInsight[] = [];
 
     // Check for response time issues
     if (analysisData.responsePatterns.averageResponseTime > 24) {
@@ -620,7 +620,7 @@ export class CommunicationAnalyticsService {
     insights: CommunicationInsight[],
     familyMemberId: string
   ): Promise<CommunicationRecommendation[]> {
-    constrecommendations: CommunicationRecommendation[] = [];
+    const recommendations: CommunicationRecommendation[] = [];
 
     // Response time improvement
     if (analysisData.responsePatterns.averageResponseTime > 24) {
@@ -672,7 +672,7 @@ export class CommunicationAnalyticsService {
       await this.db.query(`
         UPDATE family_communications 
         SET sentiment_score = $1 
-        WHERE id = $2
+        WHEREid = $2
       `, [sentiment.score, message.id]);
     }
   }
@@ -683,15 +683,15 @@ export class CommunicationAnalyticsService {
       const topics = await this.ai.extractTopics(message.content);
       await this.db.query(`
         UPDATE family_communications 
-        SET topics = $1 
-        WHERE id = $2
+        SETtopics = $1 
+        WHEREid = $2
       `, [JSON.stringify(topics), message.id]);
     }
   }
 
   private createSentimentTrend(messages: any[], days: number): SentimentTrendPoint[] {
     // Group messages by week and calculate average sentiment
-    constweeklyData: Record<string, { sentiment: number; count: number }> = {};
+    const weeklyData: Record<string, { sentiment: number; count: number }> = {};
     
     messages.forEach(message => {
       const weekStart = new Date(message.created_at);
@@ -714,7 +714,7 @@ export class CommunicationAnalyticsService {
   }
 
   private async detectConcernIndicators(messages: any[]): Promise<ConcernIndicator[]> {
-    constindicators: ConcernIndicator[] = [];
+    const indicators: ConcernIndicator[] = [];
     
     // Simple keyword-based concern detection
     const concernKeywords = {
@@ -746,7 +746,7 @@ export class CommunicationAnalyticsService {
   }
 
   private parseTimeframe(timeframe: string): number {
-    consttimeframeMap: Record<string, number> = {
+    const timeframeMap: Record<string, number> = {
       '7d': 7,
       '30d': 30,
       '90d': 90,

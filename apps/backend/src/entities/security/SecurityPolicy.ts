@@ -90,16 +90,16 @@ export interface PolicyMetrics {
 
 @Entity('security_policies')
 export class SecurityPolicy extends BaseEntity {
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   policyName!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   description!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   policyType!: 'access_control' | 'data_protection' | 'incident_response' | 'audit' | 'compliance' | 'network' | 'application';
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   category!: 'authentication' | 'authorization' | 'data_access' | 'network_access' | 'device_access' | 'api_access' | 'file_access';
 
   @Column({ type: 'jsonb' })
@@ -108,7 +108,7 @@ export class SecurityPolicy extends BaseEntity {
   @Column({ type: 'jsonb' })
   actions!: PolicyActions;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   enforcementLevel!: 'advisory' | 'mandatory' | 'critical';
 
   @Column({ type: 'boolean', default: true })
@@ -129,16 +129,16 @@ export class SecurityPolicy extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true })
   metrics?: PolicyMetrics;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   approvedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   approvedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   lastModifiedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -166,7 +166,7 @@ export class SecurityPolicy extends BaseEntity {
     implementation: string;
   }[];
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -243,7 +243,7 @@ export class SecurityPolicy extends BaseEntity {
     }
 
     // Determine actions based on policy
-    constactions: string[] = [];
+    const actions: string[] = [];
     
     if (this.actions.allow) actions.push('allow');
     if (this.actions.deny) actions.push('deny');

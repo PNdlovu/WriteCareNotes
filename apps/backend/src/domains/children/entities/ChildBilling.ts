@@ -127,7 +127,7 @@ export interface PaymentRecord {
  * in residential care across all British Isles jurisdictions
  * 
  * This is SEPARATE from ResidentBilling (which is for elderly/adults)
- * Children's billing has unique requirements:
+ * Children's billing has uniquerequirements:
  * - Local authority funding (not self-funded)
  * - Personal allowances tracked separately
  * - Different regulations per jurisdiction
@@ -162,10 +162,10 @@ export class ChildBilling {
   })
   primaryFundingSource: ChildFundingSource;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   primaryFunderName: string; // e.g., "Birmingham City Council"
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   localAuthorityCode: string; // e.g., "E08000025" for Birmingham
 
   // Placement costs
@@ -236,51 +236,51 @@ export class ChildBilling {
   @Column({ type: 'date', nullable: true })
   placementEndDate: Date; // Null = ongoing
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   purchaseOrderNumber: string; // LA purchase order
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   contractReference: string;
 
   // Contact details
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   socialWorkerName: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   socialWorkerEmail: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   socialWorkerPhone: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   commissioningOfficerName: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   commissioningOfficerEmail: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   commissioningOfficerPhone: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   financeContactName: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   financeContactEmail: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   financeContactPhone: string;
 
   // Invoicing address
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'var char', length: 300 })
   invoiceAddress: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   invoicePostcode: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   invoiceEmail: string; // For electronic invoicing
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   invoicePortalUrl: string; // Some LAs use supplier portals
 
   // Status
@@ -320,10 +320,10 @@ export class ChildBilling {
   }[];
 
   // Audit fields
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   updatedBy: string;
 
   @CreateDateColumn()

@@ -74,15 +74,15 @@ export interface ConversationIntent {
 
 @Injectable()
 export class AIPolicyChatService {
-  private readonly logger = new Logger(AIPolicyChatService.name);
+  private readonlylogger = new Logger(AIPolicyChatService.name);
   privateopenai: OpenAI;
-  private activeSessions = new Map<string, ChatSession>();
+  privateactiveSessions = new Map<string, ChatSession>();
 
-  constructor(
-    private readonly aiAssistant: AIPolicyAssistantService,
-    private readonly policyService: PolicyAuthoringService,
-    private readonly auditService: AuditService,
-    private readonly configService: ConfigService
+  const ructor(
+    private readonlyaiAssistant: AIPolicyAssistantService,
+    private readonlypolicyService: PolicyAuthoringService,
+    private readonlyauditService: AuditService,
+    private readonlyconfigService: ConfigService
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -95,7 +95,7 @@ export class AIPolicyChatService {
   async startChatSession(data: { userId: string; organizationId: string }): Promise<{ sessionId: string; welcomeMessage: ChatMessage }> {
     const sessionId = this.generateSessionId();
     
-    constsession: ChatSession = {
+    const session: ChatSession = {
       id: sessionId,
       userId: data.userId,
       organizationId: data.organizationId,
@@ -111,21 +111,21 @@ export class AIPolicyChatService {
 
     this.activeSessions.set(sessionId, session);
 
-    constwelcomeMessage: ChatMessage = {
+    const welcomeMessage: ChatMessage = {
       id: this.generateMessageId(),
       type: 'assistant',
-      content: `Hello! I'm your AI policy assistant, specializing in healthcare compliance across all British Isles jurisdictions. I can help you with:
+      content: `Hello! I'm your AI policy assistant, specializing in healthcare compliance across all British Isles jurisdictions. I can help youwith:
 
 🏥 **Policy Creation** - Generate comprehensive policies from your requirements
 📋 **Policy Analysis** - Review existing policies for compliance gaps
 💬 **Compliance Guidance** - Answer questions about regulatory requirements
 📝 **Template Recommendations** - Suggest the best policy templates for your needs
 
-I have expertise in all regulatory frameworks:
+I have expertise in all regulatoryframeworks:
 • CQC (England) • Care Inspectorate (Scotland) • CIW (Wales) • RQIA (Northern Ireland)
 • JCC (Jersey) • GCRB (Guernsey) • DHSC (Isle of Man)
 
-How can I help you today?`,
+How can I help youtoday?`,
       timestamp: new Date(),
       suggestedActions: [
         {
@@ -177,7 +177,7 @@ How can I help you today?`,
     }
 
     // Add user message to session
-    constuserMessage: ChatMessage = {
+    const userMessage: ChatMessage = {
       id: this.generateMessageId(),
       type: 'user',
       content: message,
@@ -212,12 +212,12 @@ How can I help you today?`,
       return aiResponse;
 
     } catch (error) {
-      this.logger.error(`Error processing message: ${error.message}`);
+      this.logger.error(`Error processingmessage: ${error.message}`);
       
-      consterrorResponse: ChatMessage = {
+      const errorResponse: ChatMessage = {
         id: this.generateMessageId(),
         type: 'assistant',
-        content: 'I apologize, but I encountered an error processing your message. Could you please try rephrasing your request?',
+        content: 'I apologize, but I encountered an error processing your message. Could you please try rephrasing yourrequest?',
         timestamp: new Date()
       };
 
@@ -240,7 +240,7 @@ How can I help you today?`,
     }
 
     try {
-      letresponse: ChatMessage;
+      let response: ChatMessage;
 
       switch (actionId) {
         case 'action_create_policy':
@@ -259,7 +259,7 @@ How can I help you today?`,
           response = {
             id: this.generateMessageId(),
             type: 'assistant',
-            content: 'I don\'t recognize that action. Could you try selecting from the available options?',
+            content: 'I don\'t recognize that action. Could you try selecting from the availableoptions?',
             timestamp: new Date()
           };
       }
@@ -278,7 +278,7 @@ How can I help you today?`,
     } catch (error) {
       this.logger.error(`Error executing action ${actionId}: ${error.message}`);
       
-      consterrorResponse: ChatMessage = {
+      const errorResponse: ChatMessage = {
         id: this.generateMessageId(),
         type: 'assistant',
         content: 'I encountered an error executing that action. Please try again or contact support if the issue persists.',
@@ -338,7 +338,7 @@ How can I help you today?`,
           },
           {
             role: 'user',
-            content: `Analyze this message and return JSON with intent, confidence (0-1), entities, and requirements:
+            content: `Analyze this message and return JSON with intent, confidence (0-1), entities, andrequirements:
             
             Message: "${message}"
             Sessioncontext: ${JSON.stringify(session.context)}`
@@ -350,7 +350,7 @@ How can I help you today?`,
 
       return JSON.parse(response.choices[0].message.content || '{"intent": "general", "confidence": 0.5, "entities": []}');
     } catch (error) {
-      this.logger.error(`Intent analysis failed: ${error.message}`);
+      this.logger.error(`Intent analysisfailed: ${error.message}`);
       return {
         intent: 'general',
         confidence: 0.5,
@@ -370,14 +370,14 @@ How can I help you today?`,
 
     const prompt = `You are a helpful AI assistant specializing in care home policy management across the entire British Isles. 
 
-You have comprehensive expertise in ALL regulatory frameworks:
+You have comprehensive expertise in ALL regulatoryframeworks:
 - CQC (England): Fundamental Standards 9-20, KLOEs (Safe, Effective, Caring, Responsive, Well-Led)
 - Care Inspectorate (Scotland): National Care Standards 1-15, Health and Social Care Standards
 - CIW (Wales): Six Quality Standards (Well-being, Voice & Control, Good Care, Right Staff, Safe Environment, Governance)
 - RQIA (Northern Ireland): Seven Minimum Standards (Rights, Management, Support, Healthcare, Nutrition, Environment, Safeguarding)
 - JCC (Jersey): Six Care Standards (Rights & Dignity, Management, Staffing, Care & Support, Safeguarding, Premises)
 - GCRB (Guernsey): Guernsey Care Home Standards under Health Service Law 2013
-- DHSC Isle of Man: Manx Care Home Standards under Care Services Act 2006
+- DHSC Isle ofMan: Manx Care Home Standards under Care Services Act 2006
 
 Conversation History:
 ${conversationHistory}
@@ -386,7 +386,7 @@ User Message: "${userMessage}"
 User Intent: ${JSON.stringify(intent)}
 Session Context: ${JSON.stringify(session.context)}
 
-Generate a helpful, conversational response that:
+Generate a helpful, conversational responsethat:
 1. Addresses the user's specific need with jurisdiction-specific expertise
 2. Asks relevant follow-up questions if needed
 3. Provides specific guidance for policy management across applicable jurisdictions
@@ -402,7 +402,7 @@ Focus on providing accurate, jurisdiction-specific advice for all British Isles 
         messages: [
           {
             role: 'system',
-            content: 'You are a knowledgeable, helpful AI assistant for care home policy management across the entire British Isles with expertise in all seven regulatory frameworks: CQC (England), Care Inspectorate (Scotland), CIW (Wales), RQIA (Northern Ireland), JCC (Jersey), GCRB (Guernsey), and DHSC Isle of Man. Provide jurisdiction-specific guidance and consider multi-jurisdictional compliance requirements.'
+            content: 'You are a knowledgeable, helpful AI assistant for care home policy management across the entire British Isles with expertise in all seven regulatoryframeworks: CQC (England), Care Inspectorate (Scotland), CIW (Wales), RQIA (Northern Ireland), JCC (Jersey), GCRB (Guernsey), and DHSC Isle of Man. Provide jurisdiction-specific guidance and consider multi-jurisdictional compliance requirements.'
           },
           {
             role: 'user',
@@ -425,11 +425,11 @@ Focus on providing accurate, jurisdiction-specific advice for all British Isles 
       };
 
     } catch (error) {
-      this.logger.error(`Response generation failed: ${error.message}`);
+      this.logger.error(`Response generationfailed: ${error.message}`);
       return {
         id: this.generateMessageId(),
         type: 'assistant',
-        content: 'I had trouble generating a response. Could you please try rephrasing your question?',
+        content: 'I had trouble generating a response. Could you please try rephrasing yourquestion?',
         timestamp: new Date()
       };
     }
@@ -441,7 +441,7 @@ Focus on providing accurate, jurisdiction-specific advice for all British Isles 
         return {
           id: this.generateMessageId(),
           type: 'assistant',
-          content: 'I\'d be happy to help you create a policy! Could you tell me:\n\n1. What type of policy do you need?\n2. Which jurisdiction(s) should it comply with?\n3. Any specific requirements or focus areas?',
+          content: 'I\'d be happy to help you create a policy! Could you tellme:\n\n1. What type of policy do youneed?\n2. Which jurisdiction(s) should it complywith?\n3. Any specific requirements or focusareas?',
           timestamp: new Date(),
           suggestedActions: [
             {
@@ -480,12 +480,12 @@ Focus on providing accurate, jurisdiction-specific advice for all British Isles 
         type: 'assistant',
         content: `Great! I've created a comprehensive ${generatedPolicy.title} for you. The policy includes all necessary sections for compliance with your specified jurisdiction(s) and covers the requirements you mentioned.
 
-The policy has been saved as a draft and is ready for your review. You can now:
+The policy has been saved as a draft and is ready for your review. You cannow:
 - Review and edit the content
 - Add additional sections if needed  
 - Submit for approval when ready
 
-Would you like me to analyze the policy for any potential improvements or help you with anything else?`,
+Would you like me to analyze the policy for any potential improvements or help you with anythingelse?`,
         timestamp: new Date(),
         metadata: {
           attachments: [{
@@ -499,11 +499,11 @@ Would you like me to analyze the policy for any potential improvements or help y
       };
 
     } catch (error) {
-      this.logger.error(`Policy creation failed: ${error.message}`);
+      this.logger.error(`Policy creationfailed: ${error.message}`);
       return {
         id: this.generateMessageId(),
         type: 'assistant',
-        content: 'I encountered an issue creating that policy. Could you try again with more specific requirements?',
+        content: 'I encountered an issue creating that policy. Could you try again with more specificrequirements?',
         timestamp: new Date()
       };
     }
@@ -515,7 +515,7 @@ Would you like me to analyze the policy for any potential improvements or help y
         return {
           id: this.generateMessageId(),
           type: 'assistant',
-          content: 'I\'d be happy to analyze a policy for you! Please provide the policy ID or select a policy to analyze.',
+          content: 'I\'d be happy to analyze a policy foryou! Please provide the policy ID or select a policy to analyze.',
           timestamp: new Date()
         };
       }
@@ -530,11 +530,11 @@ Would you like me to analyze the policy for any potential improvements or help y
       };
 
     } catch (error) {
-      this.logger.error(`Policy analysis failed: ${error.message}`);
+      this.logger.error(`Policy analysisfailed: ${error.message}`);
       return {
         id: this.generateMessageId(),
         type: 'assistant',
-        content: 'I had trouble analyzing that policy. Could you try again?',
+        content: 'I had trouble analyzing that policy. Could you tryagain?',
         timestamp: new Date()
       };
     }
@@ -545,7 +545,7 @@ Would you like me to analyze the policy for any potential improvements or help y
     return {
       id: this.generateMessageId(),
       type: 'assistant',
-      content: 'I can help you find the perfect policy template! Based on your organization profile, here are some recommended templates:\n\n🏥 **Core Policies**\n• Safeguarding Adults Policy\n• Medication Management Policy\n• Health & Safety Policy\n\n📋 **Compliance Policies**\n• Data Protection Policy\n• Complaints Management Policy\n• Staff Training Policy\n\nWhich type of policy template interests you most?',
+      content: 'I can help you find the perfect policytemplate! Based on your organization profile, here are some recommendedtemplates:\n\n🏥 **Core Policies**\n• Safeguarding Adults Policy\n• Medication Management Policy\n• Health & Safety Policy\n\n📋 **Compliance Policies**\n• Data Protection Policy\n• Complaints Management Policy\n• Staff Training Policy\n\nWhich type of policy template interests youmost?',
       timestamp: new Date(),
       suggestedActions: [
         {
@@ -568,7 +568,7 @@ Would you like me to analyze the policy for any potential improvements or help y
     return {
       id: this.generateMessageId(),
       type: 'assistant',
-      content: 'I\'m here to answer any questions about care home policies and compliance! I can help with:\n\n🏛️ **Regulatory Questions**\n• CQC, Care Inspectorate, CIW, RQIA requirements\n• Jersey, Guernsey, Isle of Man regulations\n\n📝 **Policy Questions**\n• Best practices and compliance standards\n• Implementation guidance\n• Review and audit procedures\n\n❓ **Common Questions**\n• "What policies do I need for inspection?"\n• "How often should policies be reviewed?"\n• "What are the key safeguarding requirements?"\n\nWhat would you like to know?',
+      content: 'I\'m here to answer any questions about care home policies andcompliance! I can helpwith:\n\n🏛️ **Regulatory Questions**\n• CQC, Care Inspectorate, CIW, RQIA requirements\n• Jersey, Guernsey, Isle of Man regulations\n\n📝 **Policy Questions**\n• Best practices and compliance standards\n• Implementation guidance\n• Review and audit procedures\n\n❓ **Common Questions**\n• "What policies do I need forinspection?"\n• "How often should policies bereviewed?"\n• "What are the key safeguardingrequirements?"\n\nWhat would you like toknow?',
       timestamp: new Date()
     };
   }

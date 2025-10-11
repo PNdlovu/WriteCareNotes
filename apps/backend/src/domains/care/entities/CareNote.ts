@@ -123,7 +123,7 @@ export class CareNote {
   })
   status!: CareNoteStatus;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   title!: string;
 
   @Column({ type: 'text' })
@@ -142,7 +142,7 @@ export class CareNote {
   @Column({ type: 'timestamp', name: 'note_date', default: () => 'CURRENT_TIMESTAMP' })
   noteDate!: Date;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   shift?: string; // e.g., "morning", "afternoon", "evening", "night"
 
   @Column({ type: 'simple-json', nullable: true })
@@ -173,7 +173,7 @@ export class CareNote {
   @Column({ type: 'boolean', name: 'is_flagged', default: false })
   isFlagged!: boolean;
 
-  @Column({ type: 'varchar', length: 500, name: 'flag_reason', nullable: true })
+  @Column({ type: 'var char', length: 500, name: 'flag_reason', nullable: true })
   flagReason?: string;
 
   @Column({ type: 'boolean', name: 'is_confidential', default: false })

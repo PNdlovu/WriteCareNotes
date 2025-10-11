@@ -3,7 +3,7 @@
  * Data transfer object for creating a new child profile
  * 
  * @description
- * Supports all British Isles jurisdictions:
+ * Supports all British Islesjurisdictions:
  * - England (OFSTED)
  * - Wales (CIW)
  * - Scotland (Care Inspectorate)
@@ -32,7 +32,7 @@ export class CreateChildDto {
   // British Isles Jurisdiction
   /**
    * Jurisdiction determines which regulatory framework applies.
-   * Must be one of: ENGLAND, WALES, SCOTLAND, NORTHERN_IRELAND, IRELAND, JERSEY, GUERNSEY, ISLE_OF_MAN
+   * Must be oneof: ENGLAND, WALES, SCOTLAND, NORTHERN_IRELAND, IRELAND, JERSEY, GUERNSEY, ISLE_OF_MAN
    * Legal status must be valid for the selected jurisdiction.
    */
   jurisdiction: Jurisdiction;

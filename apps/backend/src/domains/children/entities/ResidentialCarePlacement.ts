@@ -3,7 +3,7 @@
  * 
  * MANAGES CHILDREN'S HOME PLACEMENTS (NOT FOSTER CARE)
  * 
- * RESIDENTIAL CARE TYPES:
+ * RESIDENTIAL CARETYPES:
  * - Children's Home (small group home)
  * - Secure Children's Home (locked facility)
  * - Residential School (education + residential care)
@@ -17,7 +17,7 @@
  * - Children's Homes Regulations (Northern Ireland) 1996
  * - OFSTED/Care Inspectorate inspection standards
  * 
- * KEY DIFFERENCES FROM FOSTER CARE:
+ * KEY DIFFERENCES FROM FOSTERCARE:
  * - Professional care staff (not family-based)
  * - 24/7 shift-based staffing
  * - Group living environment
@@ -75,38 +75,38 @@ export class ResidentialCarePlacement {
   @JoinColumn({ name: 'childId' })
   child!: Child;
 
-  // ==================== CARE HOME DETAILS ====================
+  // ==================== CARE HOMEDETAILS ====================
 
   @Column({ type: 'uuid' })
   careHomeId!: string; // Links to CareHome entity
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   careHomeName!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   careHomeType!: ResidentialCareType;
 
   @Column({ type: 'text' })
   careHomeAddress!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   careHomePostcode?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   careHomeLocalAuthority?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   ofstedRegistrationNumber?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   ofstedRating?: string; // Outstanding, Good, Requires Improvement, Inadequate
 
-  // ==================== ROOM ASSIGNMENT ====================
+  // ==================== ROOMASSIGNMENT ====================
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   roomNumber?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   roomType?: string; // single, shared, ensuite
 
   @Column({ type: 'int', nullable: true })
@@ -118,7 +118,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'boolean', default: false })
   accessibleRoom!: boolean; // Wheelchair accessible
 
-  // ==================== PLACEMENT DATES ====================
+  // ==================== PLACEMENTDATES ====================
 
   @Column({ type: 'timestamptz' })
   startDate!: Date;
@@ -126,7 +126,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'timestamptz', nullable: true })
   endDate?: Date;
 
-  @Column({ type: 'varchar', length: 50, default: PlacementStatus.PLANNED })
+  @Column({ type: 'var char', length: 50, default: PlacementStatus.PLANNED })
   status!: PlacementStatus;
 
   @Column({ type: 'boolean', default: false })
@@ -135,7 +135,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'timestamptz', nullable: true })
   plannedEndDate?: Date;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   endReason?: EndReason;
 
   @Column({ type: 'text', nullable: true })
@@ -155,30 +155,30 @@ export class ResidentialCarePlacement {
   @Column({ type: 'boolean', default: true })
   has24HourCare!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   registeredManager?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   registeredManagerContact?: string;
 
-  // ==================== KEY WORKER ====================
+  // ==================== KEYWORKER ====================
 
   @Column({ type: 'uuid', nullable: true })
   keyWorkerId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   keyWorkerName?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   keyWorkerEmail?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   keyWorkerPhone?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deputyKeyWorkerName?: string;
 
-  // ==================== PEER GROUP ====================
+  // ==================== PEERGROUP ====================
 
   @Column({ type: 'jsonb', nullable: true })
   peerGroup?: Array<{
@@ -192,18 +192,18 @@ export class ResidentialCarePlacement {
   @Column({ type: 'int', default: 0 })
   numberOfPeers!: number;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   peerGroupAgeRange?: string; // e.g., "12-15"
 
   @Column({ type: 'boolean', default: false })
   mixedGenderHome!: boolean;
 
-  // ==================== PLACEMENT STABILITY ====================
+  // ==================== PLACEMENTSTABILITY ====================
 
   @Column({ type: 'int', default: 0 })
   numberOfPreviousPlacementBreakdowns!: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   placementStabilityRating?: string; // stable, at_risk, breaking_down
 
   @Column({ type: 'jsonb', nullable: true })
@@ -231,7 +231,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'timestamptz', nullable: true })
   secureOrderExpiryDate?: Date;
 
-  // ==================== PLACEMENT PLAN ====================
+  // ==================== PLACEMENTPLAN ====================
 
   @Column({ type: 'text', nullable: true })
   placementPurpose?: string; // Why this placement
@@ -239,7 +239,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'jsonb', nullable: true })
   placementObjectives?: string[]; // What child should achieve
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   expectedDuration?: string; // short_term, medium_term, long_term
 
   @Column({ type: 'text', nullable: true })
@@ -269,7 +269,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   weeklyPocketMoney!: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   fundingLocalAuthority?: string; // Who pays
 
   // ==================== SAFEGUARDING ====================
@@ -296,7 +296,7 @@ export class ResidentialCarePlacement {
   @Column({ type: 'timestamptz', nullable: true })
   nextReviewDate?: Date;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   reviewOutcome?: string; // placement_continues, placement_ends, changes_needed
 
   @Column({ type: 'text', nullable: true })

@@ -200,7 +200,7 @@ export class GraphQLGatewayService {
     topErrors: []
   };
 
-  constructor() {
+  const ructor() {
     this.auditService = new AuditTrailService();
     this.encryptionService = new FieldLevelEncryptionService();
     this.eventEmitter = new EventEmitter2();
@@ -242,8 +242,8 @@ export class GraphQLGatewayService {
       });
 
     } catch (error) {
-      console.error('Schema registration failed:', error);
-      throw new Error(`Schema registration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Schema registrationfailed:', error);
+      throw new Error(`Schema registrationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -261,7 +261,7 @@ export class GraphQLGatewayService {
 
     try {
       // Create execution record
-      constexecution: GraphQLExecution = {
+      const execution: GraphQLExecution = {
         id: executionId,
         query,
         variables,
@@ -372,7 +372,7 @@ export class GraphQLGatewayService {
 
     try {
       // Create execution record
-      constexecution: GraphQLExecution = {
+      const execution: GraphQLExecution = {
         id: executionId,
         query: mutation,
         variables,
@@ -490,8 +490,8 @@ export class GraphQLGatewayService {
 
       return subscriptionId;
     } catch (error) {
-      console.error('Subscription creation failed:', error);
-      throw new Error(`Subscription creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Subscription creationfailed:', error);
+      throw new Error(`Subscription creationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -561,7 +561,7 @@ export class GraphQLGatewayService {
    */
   private initializeDefaultSchemas(): void {
     // Financial Schema
-    constfinancialSchema: GraphQLSchema = {
+    const financialSchema: GraphQLSchema = {
       id: 'financial_schema',
       name: 'Financial Schema',
       version: '1.0.0',

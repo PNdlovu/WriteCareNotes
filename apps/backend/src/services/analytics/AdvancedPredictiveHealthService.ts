@@ -182,11 +182,11 @@ export interface HealthDashboard {
 
 @Injectable()
 export class AdvancedPredictiveHealthService {
-  private readonly logger = new Logger(AdvancedPredictiveHealthService.name);
+  private readonlylogger = new Logger(AdvancedPredictiveHealthService.name);
   privateeventEmitter: EventEmitter2;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.eventEmitter = new EventEmitter2();
     this.auditService = new AuditTrailService();
   }
@@ -203,7 +203,7 @@ export class AdvancedPredictiveHealthService {
       // Get active model for prediction type
       const model = await this.getActiveModel(predictionType);
       if (!model) {
-        throw new Error(`No active model found for prediction type: ${predictionType}`);
+        throw new Error(`No active model found for predictiontype: ${predictionType}`);
       }
 
       // Get resident data and factors
@@ -215,7 +215,7 @@ export class AdvancedPredictiveHealthService {
       const confidence = this.calculateConfidence(model, factors);
       const riskLevel = this.determineRiskLevel(predictedValue, confidence, predictionType);
 
-      constprediction: HealthPrediction = {
+      const prediction: HealthPrediction = {
         id: `prediction_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         residentId,
         predictionType,
@@ -264,11 +264,11 @@ export class AdvancedPredictiveHealthService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Generated health prediction: ${predictionType} for resident ${residentId}`);
+      this.logger.log(`Generated healthprediction: ${predictionType} for resident ${residentId}`);
       return prediction;
 
     } catch (error) {
-      this.logger.error(`Error generating health prediction: ${error.message}`, error.stack);
+      this.logger.error(`Error generating healthprediction: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -278,7 +278,7 @@ export class AdvancedPredictiveHealthService {
    */
   async analyzeHealthTrends(residentId: string, period: string = '30d'): Promise<HealthTrend[]> {
     try {
-      consttrends: HealthTrend[] = [];
+      const trends: HealthTrend[] = [];
       
       // Get historical health data
       const healthData = await this.getHistoricalHealthData(residentId, period);
@@ -317,7 +317,7 @@ export class AdvancedPredictiveHealthService {
       return trends;
 
     } catch (error) {
-      this.logger.error(`Error analyzing health trends: ${error.message}`, error.stack);
+      this.logger.error(`Error analyzing healthtrends: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -327,7 +327,7 @@ export class AdvancedPredictiveHealthService {
    */
   async generateHealthInsights(residentId: string): Promise<HealthInsight[]> {
     try {
-      constinsights: HealthInsight[] = [];
+      const insights: HealthInsight[] = [];
       
       // Get recent health data
       const healthData = await this.getRecentHealthData(residentId);
@@ -374,7 +374,7 @@ export class AdvancedPredictiveHealthService {
       return insights;
 
     } catch (error) {
-      this.logger.error(`Error generating health insights: ${error.message}`, error.stack);
+      this.logger.error(`Error generating healthinsights: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -392,7 +392,7 @@ export class AdvancedPredictiveHealthService {
     recommendations: string[]
   ): Promise<HealthAlert> {
     try {
-      constalert: HealthAlert = {
+      const alert: HealthAlert = {
         id: `alert_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         residentId,
         alertType,
@@ -438,11 +438,11 @@ export class AdvancedPredictiveHealthService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Created health alert: ${title} for resident ${residentId}`);
+      this.logger.log(`Created healthalert: ${title} for resident ${residentId}`);
       return alert;
 
     } catch (error) {
-      this.logger.error(`Error creating health alert: ${error.message}`, error.stack);
+      this.logger.error(`Error creating healthalert: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -465,7 +465,7 @@ export class AdvancedPredictiveHealthService {
       // Determine risk level
       const riskLevel = this.determineOverallRiskLevel(predictions, alerts);
 
-      constdashboard: HealthDashboard = {
+      const dashboard: HealthDashboard = {
         residentId,
         overallHealthScore,
         riskLevel,
@@ -500,7 +500,7 @@ export class AdvancedPredictiveHealthService {
       return dashboard;
 
     } catch (error) {
-      this.logger.error(`Error getting health dashboard: ${error.message}`, error.stack);
+      this.logger.error(`Error getting healthdashboard: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -517,14 +517,14 @@ export class AdvancedPredictiveHealthService {
       // Get existing model
       const model = await this.getHealthModel(modelId);
       if (!model) {
-        throw new Error(`Model not found: ${modelId}`);
+        throw new Error(`Model notfound: ${modelId}`);
       }
 
       // Train model with new data
       const trainingResult = await this.performModelTraining(model, trainingData, parameters);
       
       // Update model with training results
-      constupdatedModel: HealthModel = {
+      const updatedModel: HealthModel = {
         ...model,
         parameters: { ...model.parameters, ...parameters },
         accuracy: trainingResult.accuracy,
@@ -571,11 +571,11 @@ export class AdvancedPredictiveHealthService {
         timestamp: new Date()
       });
 
-      this.logger.log(`Trained health model ${modelId} with accuracy: ${trainingResult.accuracy}`);
+      this.logger.log(`Trained health model ${modelId} withaccuracy: ${trainingResult.accuracy}`);
       return updatedModel;
 
     } catch (error) {
-      this.logger.error(`Error training health model: ${error.message}`, error.stack);
+      this.logger.error(`Error training healthmodel: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -585,7 +585,7 @@ export class AdvancedPredictiveHealthService {
    */
   private async getHealthFactors(residentId: string, predictionType: string): Promise<HealthFactor[]> {
     // In a real implementation, this would query the database for resident health data
-    constfactors: HealthFactor[] = [];
+    const factors: HealthFactor[] = [];
     
     // Mock health factors based on prediction type
     if (predictionType === 'health_deterioration') {
@@ -640,7 +640,7 @@ export class AdvancedPredictiveHealthService {
     predictionType: string,
     factors: HealthFactor[]
   ): Promise<HealthRecommendation[]> {
-    constrecommendations: HealthRecommendation[] = [];
+    const recommendations: HealthRecommendation[] = [];
     
     if (predictionType === 'health_deterioration') {
       recommendations.push({
@@ -830,7 +830,7 @@ export class AdvancedPredictiveHealthService {
 
   private async saveHealthPrediction(prediction: HealthPrediction): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving health prediction:', prediction.id);
+    console.log('Saving healthprediction:', prediction.id);
   }
 
   private async getHistoricalHealthData(residentId: string, period: string): Promise<any[]> {
@@ -857,7 +857,7 @@ export class AdvancedPredictiveHealthService {
 
   private async saveHealthTrend(trend: HealthTrend): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving health trend:', trend.id);
+    console.log('Saving healthtrend:', trend.id);
   }
 
   private async getRecentHealthData(residentId: string): Promise<any[]> {
@@ -887,17 +887,17 @@ export class AdvancedPredictiveHealthService {
 
   private async saveHealthInsight(insight: HealthInsight): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving health insight:', insight.id);
+    console.log('Saving healthinsight:', insight.id);
   }
 
   private async saveHealthAlert(alert: HealthAlert): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving health alert:', alert.id);
+    console.log('Saving healthalert:', alert.id);
   }
 
   private async notifyHealthAlert(alert: HealthAlert): Promise<void> {
     // In a real implementation, this would send notifications
-    console.log('Notifying health alert:', alert.id);
+    console.log('Notifying healthalert:', alert.id);
   }
 
   private async getActivePredictions(residentId: string): Promise<HealthPrediction[]> {
@@ -945,7 +945,7 @@ export class AdvancedPredictiveHealthService {
 
   private async saveHealthModel(model: HealthModel): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving health model:', model.id);
+    console.log('Saving healthmodel:', model.id);
   }
 }
 

@@ -38,7 +38,7 @@ import { logger } from '../../utils/logger'; * @version 1.0.0
 
 export class ResidentController { * @since 2025-01-01
 
-  constructor(private residentService: ResidentService) {} * 
+  const ructor(private residentService: ResidentService) {} * 
 
  * @description REST API controller for resident management with comprehensive
 
@@ -84,7 +84,7 @@ export class ResidentController { * @since 2025-01-01
 
       // Create DTOimport { ResidentService, CreateResidentRequest, UpdateResidentRequest, ResidentSearchFilters } from '@/services/resident/ResidentService';
 
-      constdto: CreateResidentDto = {import { AuthenticatedRequest } from '@/middleware/auth-middleware';
+      const dto: CreateResidentDto = {import { AuthenticatedRequest } from '@/middleware/auth-middleware';
 
         ...req.body,import { requirePermission, Permission } from '@/middleware/auth-middleware';
 
@@ -110,7 +110,7 @@ import { healthcareLogger } from '@/utils/logger';
 
       });export class ResidentController {
 
-  constructor(private readonly residentService: ResidentService) {}
+  const ructor(private readonlyresidentService: ResidentService) {}
 
       res.status(201).json(resident);
 
@@ -138,7 +138,7 @@ import { healthcareLogger } from '@/utils/logger';
 
   /**    description: 'Resident created successfully',
 
-   * Get resident by ID    schema: {
+   * Get resident by IDschema: {
 
    * GET /residents/:id      type: 'object',
 
@@ -214,7 +214,7 @@ import { healthcareLogger } from '@/utils/logger';
 
   /**      healthcareLogger.performance('info', 'Resident creation completed', {
 
-   * Search residents with filters        residentId: resident.id,
+   * Search residents with filtersresidentId: resident.id,
 
    * GET /residents        duration,
 
@@ -350,7 +350,7 @@ import { healthcareLogger } from '@/utils/logger';
 
       const { id } = req.params;    @Query('organizationId') organizationId: string,
 
-      constdto: UpdateResidentDto = req.body;    @Req() req: AuthenticatedRequest,
+      const dto: UpdateResidentDto = req.body;    @Req() req: AuthenticatedRequest,
 
     @Res() res: Response
 
@@ -506,7 +506,7 @@ import { healthcareLogger } from '@/utils/logger';
 
   /**          correlationId,
 
-   * Restore soft-deleted resident          timestamp: new Date().toISOString()
+   * Restore soft-deleted residenttimestamp: new Date().toISOString()
 
    * POST /residents/:id/restore        }
 
@@ -604,7 +604,7 @@ import { healthcareLogger } from '@/utils/logger';
 
   /**        data: {
 
-   * Update resident status          type: 'object',
+   * Update resident statustype: 'object',
 
    * PUT /residents/:id/status          properties: {
 
@@ -832,7 +832,7 @@ import { healthcareLogger } from '@/utils/logger';
 
       res.status(statusCode).json({
 
-// Validation rules for create resident        success: false,
+// Validation rules for create residentsuccess: false,
 
 export const createResidentValidation = [        error: {
 
@@ -884,7 +884,7 @@ export const updateResidentValidation = [  @ApiOperation({
 
       type: 'object',
 
-// Validation rules for update status      properties: {
+// Validation rules for update statusproperties: {
 
 export const updateStatusValidation = [        success: { type: 'boolean', example: true },
 
@@ -896,13 +896,13 @@ export const updateStatusValidation = [        success: { type: 'boolean', examp
 
             totalResidents: { type: 'number' },
 
-// Validation rules for get by ID            activeResidents: { type: 'number' },
+// Validation rules for get by IDactiveResidents: { type: 'number' },
 
 export const getByIdValidation = [param('id').isUUID()];            dischargedResidents: { type: 'number' },
 
             careDistribution: { type: 'object' },
 
-// Validation rules for delete            highRiskResidents: { type: 'number' },
+// Validation rules for deletehighRiskResidents: { type: 'number' },
 
 export const deleteValidation = [param('id').isUUID()];            averageAge: { type: 'number' },
 

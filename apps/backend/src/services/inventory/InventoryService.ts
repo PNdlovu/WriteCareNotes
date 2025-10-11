@@ -130,13 +130,13 @@ export class InventoryService {
   private readonly CRITICAL_STOCK_PERCENTAGE = new Decimal(0.10); // 10% of max stock
   private readonly EXPIRY_WARNING_DAYS = 90; // 90 days before expiry
 
-  private readonly logger = new Logger(InventoryService.name);
+  private readonlylogger = new Logger(InventoryService.name);
 
-  constructor(
-    private readonly repository: InventoryRepository,
-    private readonly auditService: AuditService,
-    private readonly notificationService: NotificationService,
-    private readonly cacheService: CacheService
+  const ructor(
+    private readonlyrepository: InventoryRepository,
+    private readonlyauditService: AuditService,
+    private readonlynotificationService: NotificationService,
+    private readonlycacheService: CacheService
   ) {}
 
   /**
@@ -488,7 +488,7 @@ export class InventoryService {
           break;
         default:
           throw new BarcodeError(
-            `Unsupported barcode operation: ${request.operation}`,
+            `Unsupported barcodeoperation: ${request.operation}`,
             'UNSUPPORTED_OPERATION'
           );
       }
@@ -568,7 +568,7 @@ export class InventoryService {
       // Generate report data based on type
       const reportData = await this.generateReportData(request);
 
-      constinventoryReport: InventoryReport = {
+      const inventoryReport: InventoryReport = {
         id: uuidv4(),
         reportType: request.reportType,
         careHomeId: request.careHomeId,
@@ -675,7 +675,7 @@ export class InventoryService {
   }
 
   private getCategoryCode(category: string): string {
-    constcategoryMap: Record<string, string> = {
+    const categoryMap: Record<string, string> = {
       'medical_supplies': '01',
       'medications': '02',
       'equipment': '03',

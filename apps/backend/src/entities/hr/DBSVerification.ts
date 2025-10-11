@@ -105,19 +105,19 @@ export class DBSVerification extends BaseEntity {
   priority!: DBSPriority;
 
   // DBS Reference Numbers
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 50)
   dbsReferenceNumber?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 50)
   applicationReference?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 50)
@@ -183,7 +183,7 @@ export class DBSVerification extends BaseEntity {
   checkCount!: number;
 
   // Risk Assessment
-  @Column({ type: 'varchar', length: 20, default: 'low' })
+  @Column({ type: 'var char', length: 20, default: 'low' })
   @IsString()
   @Length(1, 20)
   riskLevel!: string;
@@ -199,13 +199,13 @@ export class DBSVerification extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   department?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -225,7 +225,7 @@ export class DBSVerification extends BaseEntity {
   @Transform(({ value }) => value ? parseFloat(value) : null)
   applicationCost?: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;

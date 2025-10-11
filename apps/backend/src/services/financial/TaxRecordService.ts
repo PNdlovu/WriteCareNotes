@@ -142,9 +142,9 @@ export interface TaxCalculationResult {
 
 @Injectable()
 export class TaxRecordService {
-  private readonly logger = new Logger(TaxRecordService.name);
+  private readonlylogger = new Logger(TaxRecordService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(TaxRecord)
     privatetaxRecordRepository: Repository<TaxRecord>,
     @InjectRepository(ChartOfAccounts)
@@ -200,11 +200,11 @@ export class TaxRecordService {
       // Create financial transaction
       await this.createFinancialTransaction(savedTaxRecord);
 
-      this.logger.log(`Tax record created successfully: ${savedTaxRecord.id}`);
+      this.logger.log(`Tax record createdsuccessfully: ${savedTaxRecord.id}`);
       return savedTaxRecord;
 
     } catch (error) {
-      this.logger.error(`Failed to create tax record: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create taxrecord: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -213,7 +213,7 @@ export class TaxRecordService {
    * Update an existing tax record
    */
   async updateTaxRecord(taxRecordId: string, request: UpdateTaxRecordRequest): Promise<TaxRecord> {
-    this.logger.log(`Updating tax record: ${taxRecordId}`);
+    this.logger.log(`Updating taxrecord: ${taxRecordId}`);
     
     try {
       const taxRecord = await this.getTaxRecordById(taxRecordId);
@@ -237,11 +237,11 @@ export class TaxRecordService {
 
       const updatedTaxRecord = await this.taxRecordRepository.save(taxRecord);
 
-      this.logger.log(`Tax record updated successfully: ${taxRecordId}`);
+      this.logger.log(`Tax record updatedsuccessfully: ${taxRecordId}`);
       return updatedTaxRecord;
 
     } catch (error) {
-      this.logger.error(`Failed to update tax record: ${error.message}`, error.stack);
+      this.logger.error(`Failed to update taxrecord: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -250,7 +250,7 @@ export class TaxRecordService {
    * Calculate tax for a tax record
    */
   async calculateTax(taxRecordId: string, calculatedBy: string): Promise<TaxRecord> {
-    this.logger.log(`Calculating tax for record: ${taxRecordId}`);
+    this.logger.log(`Calculating tax forrecord: ${taxRecordId}`);
     
     try {
       const taxRecord = await this.getTaxRecordById(taxRecordId);
@@ -283,11 +283,11 @@ export class TaxRecordService {
 
       const updatedTaxRecord = await this.taxRecordRepository.save(taxRecord);
 
-      this.logger.log(`Tax calculated successfully: ${taxRecordId}`);
+      this.logger.log(`Tax calculatedsuccessfully: ${taxRecordId}`);
       return updatedTaxRecord;
 
     } catch (error) {
-      this.logger.error(`Failed to calculate tax: ${error.message}`, error.stack);
+      this.logger.error(`Failed to calculatetax: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -296,7 +296,7 @@ export class TaxRecordService {
    * Submit tax record to HMRC
    */
   async submitTaxRecord(request: SubmitTaxRecordRequest): Promise<TaxRecord> {
-    this.logger.log(`Submitting tax record: ${request.taxRecordId}`);
+    this.logger.log(`Submitting taxrecord: ${request.taxRecordId}`);
     
     try {
       const taxRecord = await this.getTaxRecordById(request.taxRecordId);
@@ -316,11 +316,11 @@ export class TaxRecordService {
 
       const updatedTaxRecord = await this.taxRecordRepository.save(taxRecord);
 
-      this.logger.log(`Tax record submitted successfully: ${request.taxRecordId}`);
+      this.logger.log(`Tax record submittedsuccessfully: ${request.taxRecordId}`);
       return updatedTaxRecord;
 
     } catch (error) {
-      this.logger.error(`Failed to submit tax record: ${error.message}`, error.stack);
+      this.logger.error(`Failed to submit taxrecord: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -329,7 +329,7 @@ export class TaxRecordService {
    * Process payment for tax record
    */
   async processPayment(request: ProcessPaymentRequest): Promise<TaxRecord> {
-    this.logger.log(`Processing payment for tax record: ${request.taxRecordId}`);
+    this.logger.log(`Processing payment for taxrecord: ${request.taxRecordId}`);
     
     try {
       const taxRecord = await this.getTaxRecordById(request.taxRecordId);
@@ -354,11 +354,11 @@ export class TaxRecordService {
       // Create payment transaction
       await this.createPaymentTransaction(updatedTaxRecord, paymentAmount, request.paymentReference);
 
-      this.logger.log(`Payment processed successfully: ${request.taxRecordId}`);
+      this.logger.log(`Payment processedsuccessfully: ${request.taxRecordId}`);
       return updatedTaxRecord;
 
     } catch (error) {
-      this.logger.error(`Failed to process payment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to processpayment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -474,7 +474,7 @@ export class TaxRecordService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to list tax records: ${error.message}`, error.stack);
+      this.logger.error(`Failed to list taxrecords: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -529,7 +529,7 @@ export class TaxRecordService {
     let totalAmount = new Decimal(0);
     let paidAmount = new Decimal(0);
     let overdueAmount = new Decimal(0);
-    consttypeTotals: Record<string, Decimal> = {};
+    const typeTotals: Record<string, Decimal> = {};
 
     taxRecords.forEach(taxRecord => {
       totalAmount = totalAmount.plus(taxRecord.totalAmount);
@@ -606,16 +606,16 @@ export class TaxRecordService {
     
     if (taxablePay.greaterThan(0)) {
       if (taxablePay.lessThanOrEqualTo(basicRateThreshold.minus(personalAllowance))) {
-        // Basic rate: 20%
+        // Basicrate: 20%
         basicRateAmount = taxablePay;
         taxAmount = taxablePay.times(0.20);
       } else if (taxablePay.lessThanOrEqualTo(higherRateThreshold.minus(personalAllowance))) {
-        // Basic rate + Higher rate: 20% + 40%
+        // Basic rate + Higherrate: 20% + 40%
         basicRateAmount = basicRateThreshold.minus(personalAllowance);
         higherRateAmount = taxablePay.minus(basicRateAmount);
         taxAmount = basicRateAmount.times(0.20).plus(higherRateAmount.times(0.40));
       } else {
-        // All rates: 20% + 40% + 45%
+        // Allrates: 20% + 40% + 45%
         basicRateAmount = basicRateThreshold.minus(personalAllowance);
         higherRateAmount = higherRateThreshold.minus(basicRateThreshold);
         additionalRateAmount = taxablePay.minus(higherRateThreshold.minus(personalAllowance));
@@ -710,13 +710,13 @@ export class TaxRecordService {
     let taxAmount = new Decimal(0);
     
     if (taxableAmount.lessThanOrEqualTo(smallProfitsThreshold)) {
-      // Small profits rate: 19%
+      // Small profitsrate: 19%
       taxAmount = taxableAmount.times(0.19);
     } else if (taxableAmount.lessThanOrEqualTo(largeProfitsThreshold)) {
       // Marginal relief calculation (simplified)
       taxAmount = taxableAmount.times(0.25);
     } else {
-      // Large profits rate: 25%
+      // Large profitsrate: 25%
       taxAmount = taxableAmount.times(0.25);
     }
     

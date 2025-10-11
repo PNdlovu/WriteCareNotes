@@ -35,14 +35,14 @@ export interface ComplianceCheck {
 }
 
 export class ComplianceService {
-  private readonly logger = new Logger(ComplianceService.name);
+  private readonlylogger = new Logger(ComplianceService.name);
 
   async checkCompliance(tenantId: string, regulation: string): Promise<ComplianceCheck[]> {
     try {
       this.logger.log(`Checking compliance for tenant ${tenantId} with regulation ${regulation}`);
       
       // In a real implementation, this would perform actual compliance checks
-      constchecks: ComplianceCheck[] = [
+      const checks: ComplianceCheck[] = [
         {
           id: 'check_001',
           name: 'Data Protection Compliance',
@@ -62,7 +62,7 @@ export class ComplianceService {
 
       return checks;
     } catch (error) {
-      this.logger.error('Failed to check compliance:', error);
+      this.logger.error('Failed to checkcompliance:', error);
       return [];
     }
   }
@@ -80,7 +80,7 @@ export class ComplianceService {
       const totalCount = checks.length;
       const score = totalCount > 0 ? (compliantCount / totalCount) * 100 : 0;
       
-      letoverallStatus: 'compliant' | 'non_compliant' | 'warning' = 'compliant';
+      let overallStatus: 'compliant' | 'non_compliant' | 'warning' = 'compliant';
       if (score < 70) {
         overallStatus = 'non_compliant';
       } else if (score < 90) {
@@ -94,7 +94,7 @@ export class ComplianceService {
         lastUpdated: new Date()
       };
     } catch (error) {
-      this.logger.error('Failed to get compliance status:', error);
+      this.logger.error('Failed to get compliancestatus:', error);
       return {
         overallStatus: 'non_compliant',
         score: 0,

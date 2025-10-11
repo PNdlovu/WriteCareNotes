@@ -30,7 +30,7 @@ export class JerseyCompliance {
   @Column('decimal', { precision: 5, scale: 2 })
   overallScore: number;
 
-  @Column('varchar', { length: 50 })
+  @Column('var char', { length: 50 })
   rating: string; // excellent, good, satisfactory, requires_improvement, inadequate
 
   @Column('jsonb')

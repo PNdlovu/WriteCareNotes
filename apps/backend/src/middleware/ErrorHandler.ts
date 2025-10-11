@@ -25,7 +25,7 @@ export class ErrorHandler {
   /**
    * Global error handling middleware
    */
-  static handleError = (error: Error, req: Request, res: Response, next: NextFunction): void => {
+  statichandleError = (error: Error, req: Request, res: Response, next: NextFunction): void => {
     console.error('Error occurred', {
       error: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
@@ -37,7 +37,7 @@ export class ErrorHandler {
     // Default error response
     let statusCode = 500;
     let message = 'Internal server error';
-    letdetails: any = undefined;
+    let details: any = undefined;
 
     // Handle specific error types
     if (error.name === 'ValidationError') {
@@ -78,7 +78,7 @@ export class ErrorHandler {
   /**
    * Async error wrapper
    */
-  static asyncHandler = (fn: Function) => {
+  staticasyncHandler = (fn: Function) => {
     return (req: Request, res: Response, next: NextFunction) => {
       Promise.resolve(fn(req, res, next)).catch(next);
     };
@@ -87,7 +87,7 @@ export class ErrorHandler {
   /**
    * Validation middleware
    */
-  static validateRequest = (schema: any) => {
+  staticvalidateRequest = (schema: any) => {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         // Simple validation - in a real app, you'd use Joi or similar
@@ -114,7 +114,7 @@ export class ErrorHandler {
   /**
    * 404 handler
    */
-  static notFound = (req: Request, res: Response, next: NextFunction): void => {
+  staticnotFound = (req: Request, res: Response, next: NextFunction): void => {
     const error = new Error(`Not found - ${req.originalUrl}`);
     (error as any).name = 'NotFoundError';
     next(error);

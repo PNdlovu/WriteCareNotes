@@ -73,7 +73,7 @@ export interface FinancialReportFilter {
  * Comprehensive finance service for children's residential care across all 8 British Isles jurisdictions.
  * Integrates ChildBilling with existing finance services while maintaining clean separation of concerns.
  * 
- * Key Features:
+ * KeyFeatures:
  * - Auto-generate local authority invoices (monthly/quarterly)
  * - Calculate placement costs with service charges
  * - Track payment status and arrears
@@ -83,14 +83,14 @@ export interface FinancialReportFilter {
  * - Support multi-funder (jointly funded) placements
  * - Compliance tracking per jurisdiction
  * 
- * IMPORTANT: This service INTEGRATES with existing services, does NOT duplicate them:
+ * IMPORTANT: This service INTEGRATES with existing services, does NOT duplicatethem:
  * - Uses InvoiceService for invoice generation (not duplicating)
  * - Uses Child entity for child data (not duplicating)
  * - Uses LeavingCareFinances for 16+ transition (not duplicating)
  */
 @Injectable()
 export class ChildFinanceIntegrationService {
-  constructor(
+  const ructor(
     @InjectRepository(ChildBilling)
     privatechildBillingRepository: Repository<ChildBilling>,
     @InjectRepository(Child)
@@ -283,7 +283,7 @@ export class ChildFinanceIntegrationService {
 
     // Calculate invoice amount based on billing frequency
     let invoiceAmount = 0;
-    constlineItems: any[] = [];
+    const lineItems: any[] = [];
 
     switch (billing.billingFrequency) {
       case BillingFrequency.WEEKLY:
@@ -375,7 +375,7 @@ export class ChildFinanceIntegrationService {
         invoiceDate: request.invoiceDate,
         dueDate: dueDate,
         notes: request.notes || `Invoice for ${billing.child.firstName} ${billing.child.lastName} - ${billing.jurisdiction} placement`,
-        terms: `Payment due within ${billing.paymentTermsDays} days. Purchase Order: ${billing.purchaseOrderNumber || 'N/A'}`,
+        terms: `Payment due within ${billing.paymentTermsDays} days. PurchaseOrder: ${billing.purchaseOrderNumber || 'N/A'}`,
         lineItems: lineItems,
       },
       request.createdBy
@@ -425,7 +425,7 @@ export class ChildFinanceIntegrationService {
 
     console.log(`Found ${billings.length} billings ready for invoicing`);
 
-    constgeneratedInvoices: Invoice[] = [];
+    const generatedInvoices: Invoice[] = [];
 
     for (const billing of billings) {
       try {

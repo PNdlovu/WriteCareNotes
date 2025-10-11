@@ -97,7 +97,7 @@ export class DBSVerificationService {
   privatenotificationService: NotificationService;
   privateeventEmitter: EventEmitter2;
 
-  constructor() {
+  const ructor() {
     this.dbsVerificationRepository = AppDataSource.getRepository(DBSVerification);
     this.dbsDocumentRepository = AppDataSource.getRepository(DBSDocument);
     this.dbsNotificationRepository = AppDataSource.getRepository(DBSNotification);

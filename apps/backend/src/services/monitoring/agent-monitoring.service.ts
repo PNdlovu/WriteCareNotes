@@ -26,7 +26,7 @@ export class AgentMonitoringService {
   privatehealthChecks: Map<string, AgentHealthCheck> = new Map();
   privatealertThresholds: Map<string, any> = new Map();
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.notifications = new NotificationService();
     this.initializeAlertThresholds();
@@ -37,7 +37,7 @@ export class AgentMonitoringService {
    */
   async performHealthCheck(): Promise<AgentHealthCheck> {
     const startTime = Date.now();
-    consthealthCheck: AgentHealthCheck = {
+    const healthCheck: AgentHealthCheck = {
       service: 'pilot-feedback-agent',
       status: 'healthy',
       checks: {
@@ -237,7 +237,7 @@ export class AgentMonitoringService {
   async acknowledgeAlert(alertId: string, acknowledgedBy: string): Promise<void> {
     const query = `
       UPDATE agent_alerts 
-      SET status = 'acknowledged', acknowledged_by = ?, acknowledged_at = ?
+      SETstatus = 'acknowledged', acknowledged_by = ?, acknowledged_at = ?
       WHERE alert_id = ?
     `;
 
@@ -252,7 +252,7 @@ export class AgentMonitoringService {
   async resolveAlert(alertId: string, resolvedBy: string, resolution: string): Promise<void> {
     const query = `
       UPDATE agent_alerts 
-      SET status = 'resolved', resolved_by = ?, resolved_at = ?, resolution = ?
+      SETstatus = 'resolved', resolved_by = ?, resolved_at = ?, resolution = ?
       WHERE alert_id = ?
     `;
 
@@ -278,13 +278,13 @@ export class AgentMonitoringService {
     const queueSize = rows[0].queue_size;
     
     if (queueSize > 1000) {
-      throw new Error(`Queue size too large: ${queueSize}`);
+      throw new Error(`Queue size toolarge: ${queueSize}`);
     }
   }
 
   private async checkMaskingHealth(): Promise<void> {
     // Test PII masking functionality
-    const testText = 'Test email: test@example.com';
+    const testText = 'Testemail: test@example.com';
     // This would call the actual masking service
     // For now, just check if the service is available
   }
@@ -429,8 +429,8 @@ export class AgentMonitoringService {
         (SELECT COUNT(*) FROM agent_summaries WHERE tenant_id = ? AND created_at BETWEEN ? AND ?) as summariesGenerated,
         (SELECT COUNT(*) FROM agent_clusters WHERE tenant_id = ? AND created_at BETWEEN ? AND ?) as clustersCreated,
         (SELECT COUNT(*) FROM agent_recommendations WHERE tenant_id = ? AND created_at BETWEEN ? AND ?) as recommendationsGenerated,
-        (SELECT COUNT(*) FROM agent_recommendations WHERE tenant_id = ? AND status = 'approved' AND created_at BETWEEN ? AND ?) as recommendationsApproved,
-        (SELECT COUNT(*) FROM agent_recommendations WHERE tenant_id = ? AND status = 'dismissed' AND created_at BETWEEN ? AND ?) as recommendationsDismissed
+        (SELECT COUNT(*) FROM agent_recommendations WHERE tenant_id = ? ANDstatus = 'approved' AND created_at BETWEEN ? AND ?) as recommendationsApproved,
+        (SELECT COUNT(*) FROM agent_recommendations WHERE tenant_id = ? ANDstatus = 'dismissed' AND created_at BETWEEN ? AND ?) as recommendationsDismissed
     `;
 
     const rows = await this.db.query(query, [
@@ -481,7 +481,7 @@ export class AgentMonitoringService {
   }
 
   private async detectAlerts(tenantId?: string): Promise<any[]> {
-    constalerts: any[] = [];
+    const alerts: any[] = [];
     
     // Check error rate
     const errorRate = await this.getErrorRate();
@@ -535,7 +535,7 @@ export class AgentMonitoringService {
     await this.db.query(query, values);
 
     // Send notification
-    constnotification: AgentNotification = {
+    const notification: AgentNotification = {
       notificationId: uuidv4(),
       tenantId: alert.tenantId || 'system',
       type: 'processing_error',
@@ -569,7 +569,7 @@ export class AgentMonitoringService {
       WHERE status IN ('open', 'acknowledged')
     `;
 
-    constparams: any[] = [];
+    const params: any[] = [];
     if (tenantId) {
       query += ' AND tenant_id = ?';
       params.push(tenantId);

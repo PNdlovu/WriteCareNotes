@@ -20,7 +20,7 @@ export class AgentAuditService {
   privateauditQueue: AgentAuditRecord[] = [];
   privateisProcessing: boolean = false;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
   }
 
@@ -28,7 +28,7 @@ export class AgentAuditService {
    * Log agent event with full audit trail
    */
   async logAgentEvent(event: Omit<AgentAuditRecord, 'auditId' | 'timestamp'>): Promise<void> {
-    constauditRecord: AgentAuditRecord = {
+    const auditRecord: AgentAuditRecord = {
       ...event,
       auditId: uuidv4(),
       timestamp: new Date()
@@ -134,7 +134,7 @@ export class AgentAuditService {
       WHERE tenant_id = ?
     `;
 
-    constparams: any[] = [tenantId];
+    const params: any[] = [tenantId];
 
     if (filters.from) {
       query += ' AND timestamp >= ?';
@@ -147,7 +147,7 @@ export class AgentAuditService {
     }
 
     if (filters.action) {
-      query += ' AND action = ?';
+      query += ' ANDaction = ?';
       params.push(filters.action);
     }
 
@@ -263,7 +263,7 @@ export class AgentAuditService {
         COUNT(*) as eventsProcessed,
         SUM(CASE WHEN metadata LIKE '%pii_masked%' THEN 1 ELSE 0 END) as piiMasked,
         SUM(CASE WHEN metadata LIKE '%phi_leakage%' THEN 1 ELSE 0 END) as phileakageDetected,
-        SUM(CASE WHEN action = 'EVENT_RECEIVED' AND metadata LIKE '%hasConsent:true%' THEN 1 ELSE 0 END) as consentVerified
+        SUM(CASE WHENaction = 'EVENT_RECEIVED' AND metadata LIKE '%hasConsent:true%' THEN 1 ELSE 0 END) as consentVerified
       FROM agent_audit_log 
       WHERE tenant_id = ? 
       AND timestamp BETWEEN ? AND ?
@@ -318,10 +318,10 @@ export class AgentAuditService {
   ): Promise<AgentComplianceReport['dataSubjectRights']> {
     const query = `
       SELECT 
-        SUM(CASE WHEN action = 'SAR_REQUEST' THEN 1 ELSE 0 END) as sarRequests,
-        SUM(CASE WHEN action = 'ERASURE_REQUEST' THEN 1 ELSE 0 END) as erasureRequests,
-        SUM(CASE WHEN action = 'RECTIFICATION_REQUEST' THEN 1 ELSE 0 END) as rectificationRequests,
-        SUM(CASE WHEN action = 'PORTABILITY_REQUEST' THEN 1 ELSE 0 END) as portabilityRequests
+        SUM(CASE WHENaction = 'SAR_REQUEST' THEN 1 ELSE 0 END) as sarRequests,
+        SUM(CASE WHENaction = 'ERASURE_REQUEST' THEN 1 ELSE 0 END) as erasureRequests,
+        SUM(CASE WHENaction = 'RECTIFICATION_REQUEST' THEN 1 ELSE 0 END) as rectificationRequests,
+        SUM(CASE WHENaction = 'PORTABILITY_REQUEST' THEN 1 ELSE 0 END) as portabilityRequests
       FROM agent_audit_log 
       WHERE tenant_id = ? 
       AND timestamp BETWEEN ? AND ?
@@ -349,9 +349,9 @@ export class AgentAuditService {
     const query = `
       SELECT 
         COUNT(*) as accessAttempts,
-        SUM(CASE WHEN action = 'UNAUTHORIZED_ACCESS' THEN 1 ELSE 0 END) as unauthorizedAccess,
-        SUM(CASE WHEN action = 'DATA_BREACH' THEN 1 ELSE 0 END) as dataBreaches,
-        SUM(CASE WHEN action = 'POLICY_VIOLATION' THEN 1 ELSE 0 END) as policyViolations
+        SUM(CASE WHENaction = 'UNAUTHORIZED_ACCESS' THEN 1 ELSE 0 END) as unauthorizedAccess,
+        SUM(CASE WHENaction = 'DATA_BREACH' THEN 1 ELSE 0 END) as dataBreaches,
+        SUM(CASE WHENaction = 'POLICY_VIOLATION' THEN 1 ELSE 0 END) as policyViolations
       FROM agent_audit_log 
       WHERE tenant_id = ? 
       AND timestamp BETWEEN ? AND ?

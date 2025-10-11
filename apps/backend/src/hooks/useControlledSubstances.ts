@@ -288,7 +288,7 @@ export const useControlledSubstances = (
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load controlled substances data';
       setError(errorMessage);
-      console.error('Error loading controlled substances:', err);
+      console.error('Error loading controlledsubstances:', err);
     } finally {
       setLoading(false);
     }
@@ -348,10 +348,10 @@ export const useControlledSubstances = (
             break;
             
           default:
-            console.log('Unknown update type:', update.type);
+            console.log('Unknown updatetype:', update.type);
         }
       } catch (err) {
-        console.error('Error processing WebSocket message:', err);
+        console.error('Error processing WebSocketmessage:', err);
       }
     };
 

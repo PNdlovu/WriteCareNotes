@@ -23,7 +23,7 @@
  * - Children table with 80+ fields
  * - Indexes for performance optimization
  * - Foreign keys for referential integrity
- * - Constraints for data validation
+ * - Const raints for data validation
  * 
  * @author WCNotes Development Team
  * @copyright 2025 WCNotes. All rights reserved.
@@ -55,13 +55,13 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'childNumber',
-            type: 'varchar',
+            type: 'var char',
             isUnique: true,
             isNullable: false
           },
           {
             name: 'legalId',
-            type: 'varchar',
+            type: 'var char',
             isUnique: true,
             isNullable: false
           },
@@ -76,25 +76,25 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'firstName',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: false
           },
           {
             name: 'middleName',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
           {
             name: 'lastName',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: false
           },
           {
             name: 'preferredName',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
@@ -105,31 +105,31 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           },
           {
             name: 'gender',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             isNullable: false
           },
           {
             name: 'ethnicity',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
           {
             name: 'nationality',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
           {
             name: 'religion',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
           {
             name: 'firstLanguage',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
@@ -139,7 +139,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'legalStatus',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             isNullable: false
           },
@@ -164,7 +164,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'currentPlacementType',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true
           },
@@ -184,13 +184,13 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'email',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
           {
             name: 'phone',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             isNullable: true
           },
@@ -205,7 +205,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           },
           {
             name: 'allocatedSocialWorkerName',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
@@ -215,7 +215,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'independentReviewingOfficer',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
@@ -235,13 +235,13 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'schoolName',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
           {
             name: 'designatedTeacher',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
@@ -256,13 +256,13 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'gpName',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
           {
             name: 'gpPractice',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },
@@ -315,7 +315,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'status',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             default: "'ACTIVE'"
           },
@@ -335,7 +335,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           // ========================================
           {
             name: 'createdBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false
           },
@@ -346,7 +346,7 @@ export class CreateChildProfile1704988800000 implements MigrationInterface {
           },
           {
             name: 'updatedBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true
           },

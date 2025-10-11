@@ -19,7 +19,7 @@ import { Vehicle, VehicleType } from '../../entities/transport/Vehicle';
 export class TransportLogisticsController {
   privatetransportService: TransportLogisticsService;
 
-  constructor() {
+  const ructor() {
     this.transportService = new TransportLogisticsService();
   }
 

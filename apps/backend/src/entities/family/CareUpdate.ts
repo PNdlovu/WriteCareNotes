@@ -220,19 +220,19 @@ export class CareUpdate {
     notes?: string;
   }>;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   staffId!: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   staffName?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   staffRole?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   shiftType?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   department?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -241,13 +241,13 @@ export class CareUpdate {
   @Column({ type: 'boolean', default: false })
   isReviewed!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   reviewedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   reviewNotes?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -256,7 +256,7 @@ export class CareUpdate {
   @Column({ type: 'timestamp', nullable: true })
   sharedWithFamilyAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   sharedBy?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -265,10 +265,10 @@ export class CareUpdate {
   @Column({ type: 'timestamp', nullable: true })
   familyAcknowledgedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   acknowledgedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   familyComments?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -298,10 +298,10 @@ export class CareUpdate {
   @Column({ type: 'timestamp', nullable: true })
   archivedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   archivedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   archiveReason?: string;
 
   @CreateDateColumn()

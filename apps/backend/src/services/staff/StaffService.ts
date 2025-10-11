@@ -100,7 +100,7 @@ interface AvailabilityUpdateDTO {
 export class StaffService {
   privatestaffRepository: Repository<StaffMember>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.staffRepository = this.dataSource.getRepository(StaffMember);
   }
 
@@ -438,7 +438,7 @@ export class StaffService {
 
     const staffMembers = await query.getMany();
 
-    constresult: Array<{
+    const result: Array<{
       staff: StaffMember;
       expiringCertifications: Array<{ name: string; expiryDate: Date }>;
     }> = [];
@@ -611,7 +611,7 @@ export class StaffService {
     const staff = await this.staffRepository.findOne({
       where: { id: staffId, organizationId, tenantId },
     });
-    return staff !== null;
+    returnstaff !== null;
   }
 }
 

@@ -58,8 +58,8 @@ class CheckInteractionsDto {
 @ApiTags('NHS dm+d Medications')
 @Controller('api/dmd')
 export class NHSDmdMedicationController {
-  constructor(
-    private readonly dmdService: NHSDmdIntegrationService
+  const ructor(
+    private readonlydmdService: NHSDmdIntegrationService
   ) {}
 
   // ==========================================

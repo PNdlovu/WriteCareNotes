@@ -147,15 +147,15 @@ export interface PolicyDashboardMetrics {
 
 @Injectable()
 export class PolicyTrackerService {
-  private readonly logger = new Logger(PolicyTrackerService.name);
+  private readonlylogger = new Logger(PolicyTrackerService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyTracking)
-    private readonly policyRepository: Repository<PolicyTracking>,
+    private readonlypolicyRepository: Repository<PolicyTracking>,
     @InjectRepository(PolicyStatusTransition)
-    private readonly transitionRepository: Repository<PolicyStatusTransition>,
-    private readonly auditService: AuditService,
-    private readonly notificationService: NotificationService
+    private readonlytransitionRepository: Repository<PolicyStatusTransition>,
+    private readonlyauditService: AuditService,
+    private readonlynotificationService: NotificationService
   ) {}
 
   /**
@@ -241,7 +241,7 @@ export class PolicyTrackerService {
       this.validateStatusTransition(oldStatus, newStatus);
 
       // Record the transition
-      consttransition: StatusTransition = {
+      const transition: StatusTransition = {
         id: this.generateId(),
         policyId,
         fromStatus: oldStatus,
@@ -518,7 +518,7 @@ export class PolicyTrackerService {
   }
 
   private validateStatusTransition(from: PolicyStatus, to: PolicyStatus): void {
-    constvalidTransitions: Record<PolicyStatus, PolicyStatus[]> = {
+    const validTransitions: Record<PolicyStatus, PolicyStatus[]> = {
       [PolicyStatus.DRAFT]: [PolicyStatus.UNDER_REVIEW, PolicyStatus.ARCHIVED],
       [PolicyStatus.UNDER_REVIEW]: [PolicyStatus.APPROVED, PolicyStatus.REJECTED, PolicyStatus.DRAFT],
       [PolicyStatus.APPROVED]: [PolicyStatus.PUBLISHED, PolicyStatus.REQUIRES_UPDATE],
@@ -590,7 +590,7 @@ export class PolicyTrackerService {
       // Calculate estimation based on historical data and current progress
       if (statusHistory.length === 0) return undefined;
 
-      conststatusTimes: Record<PolicyStatus, number[]> = {
+      const statusTimes: Record<PolicyStatus, number[]> = {
         [PolicyStatus.DRAFT]: [],
         [PolicyStatus.UNDER_REVIEW]: [],
         [PolicyStatus.APPROVED]: [],
@@ -618,7 +618,7 @@ export class PolicyTrackerService {
       const now = new Date();
       
       // Default time estimates (in days) if no historical data
-      constdefaultEstimates: Record<PolicyStatus, number> = {
+      const defaultEstimates: Record<PolicyStatus, number> = {
         [PolicyStatus.DRAFT]: 7,
         [PolicyStatus.UNDER_REVIEW]: 14,
         [PolicyStatus.APPROVED]: 3,

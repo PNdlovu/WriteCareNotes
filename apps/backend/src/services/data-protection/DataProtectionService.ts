@@ -38,7 +38,7 @@ class DataProtectionService {
   
   private async implementPrivacyPolicy(dataSubject: string): Promise<void> {
     // Implement privacy policy for GDPR compliance
-    console.log(`Implementing privacy policy for data subject: ${dataSubject}`);
+    console.log(`Implementing privacy policy for datasubject: ${dataSubject}`);
   }
 }
 

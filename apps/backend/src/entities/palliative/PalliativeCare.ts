@@ -33,7 +33,7 @@ export interface AdvancedSymptomManagement {
     symptomId: string;
     symptomName: string;
     severity: SymptomSeverity;
-    frequency: 'rare' | 'occasional' | 'frequent' | 'constant';
+    frequency: 'rare' | 'occasional' | 'frequent' | 'const ant';
     triggers: string[];
     relievingFactors: string[];
     impactOnQuality: number; // 1-10
@@ -49,7 +49,7 @@ export interface AdvancedSymptomManagement {
   painManagement: {
     painScale: 'numeric' | 'faces' | 'behavioral';
     currentPainLevel: number; // 0-10
-    painPattern: 'constant' | 'intermittent' | 'breakthrough';
+    painPattern: 'const ant' | 'intermittent' | 'breakthrough';
     painMedications: Array<{
       medication: string;
       route: string;
@@ -385,7 +385,7 @@ export class PalliativeCare extends BaseEntity {
   getFamilyInvolvementLevel(): 'minimal' | 'moderate' | 'high' | 'very_high' {
     const involvement = this.endOfLifePreferences.familyInvolvement;
     
-    if (involvement.familyMeetingFrequency === 'daily' || involvement.visitingArrangements.includes('constant_presence')) {
+    if (involvement.familyMeetingFrequency === 'daily' || involvement.visitingArrangements.includes('const ant_presence')) {
       return 'very_high';
     }
     if (involvement.familyMeetingFrequency === 'weekly' || involvement.visitingArrangements.includes('daily_visits')) {

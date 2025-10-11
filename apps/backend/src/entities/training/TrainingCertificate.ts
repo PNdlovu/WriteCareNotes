@@ -10,7 +10,7 @@ export class TrainingCertificate extends BaseEntity {
   @Column({ type: 'uuid' })
   userId!: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   certificateNumber!: string;
 
   @Column({ type: 'timestamp' })
@@ -22,10 +22,10 @@ export class TrainingCertificate extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   verificationCode!: string;
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   pdfPath!: string;
 
   @Column({ type: 'json', nullable: true })

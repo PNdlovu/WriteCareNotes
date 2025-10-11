@@ -24,7 +24,7 @@ import { OrganizationType } from '../../entities/Organization';
 export class OrganizationController {
   privateorganizationService: OrganizationService;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.organizationService = new OrganizationService(dataSource);
   }
 
@@ -56,7 +56,7 @@ export class OrganizationController {
         return;
       }
 
-      constdto: CreateOrganizationDto = {
+      const dto: CreateOrganizationDto = {
         ...req.body,
         tenantId: tenantContext.tenantId,
         createdBy: tenantContext.userId,
@@ -171,7 +171,7 @@ export class OrganizationController {
       const tenantContext = getTenantContext(req);
       const { id } = req.params;
 
-      constdto: UpdateOrganizationDto = {
+      const dto: UpdateOrganizationDto = {
         ...req.body,
         updatedBy: tenantContext?.userId,
       };

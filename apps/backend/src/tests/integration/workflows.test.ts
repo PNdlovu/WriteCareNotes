@@ -22,14 +22,14 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('Workflow Service', () => {
-  letservice: WorkflowService;
-  letdbsVerificationRepository: Repository<DBSVerification>;
-  letrightToWorkCheckRepository: Repository<RightToWorkCheck>;
-  letdvlaCheckRepository: Repository<DVLACheck>;
-  letcashTransactionRepository: Repository<CashTransaction>;
-  letbudgetRepository: Repository<Budget>;
-  letledgerAccountRepository: Repository<LedgerAccount>;
-  letemployeeRepository: Repository<Employee>;
+  let service: WorkflowService;
+  let dbsVerificationRepository: Repository<DBSVerification>;
+  let rightToWorkCheckRepository: Repository<RightToWorkCheck>;
+  let dvlaCheckRepository: Repository<DVLACheck>;
+  let cashTransactionRepository: Repository<CashTransaction>;
+  let budgetRepository: Repository<Budget>;
+  let ledgerAccountRepository: Repository<LedgerAccount>;
+  let employeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -180,7 +180,7 @@ describe('Workflow Service', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         WorkflowService,
         {
@@ -548,8 +548,8 @@ describe('Workflow Service', () => {
 });
 
 describe('Workflow Integration Tests', () => {
-  letapp: any;
-  letworkflowService: WorkflowService;
+  let app: any;
+  let workflowService: WorkflowService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -651,7 +651,7 @@ describe('Workflow Integration Tests', () => {
 });
 
 describe('Workflow E2E Tests', () => {
-  letapp: any;
+  let app: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

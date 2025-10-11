@@ -3,7 +3,7 @@
  * Data transfer object for updating a child profile
  * 
  * @description
- * Supports all British Isles jurisdictions:
+ * Supports all British Islesjurisdictions:
  * - England (OFSTED)
  * - Wales (CIW)
  * - Scotland (Care Inspectorate)

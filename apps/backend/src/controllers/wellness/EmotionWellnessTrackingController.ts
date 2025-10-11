@@ -18,7 +18,7 @@ export class EmotionWellnessTrackingController {
   privatewellnessService: EmotionWellnessTrackingService;
   privatelogger: Logger;
 
-  constructor() {
+  const ructor() {
     this.wellnessService = new EmotionWellnessTrackingService();
     this.logger = new Logger(EmotionWellnessTrackingController.name);
   }
@@ -72,7 +72,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(emotionReading);
     } catch (error) {
-      this.logger.error('Error recording emotion reading:', error);
+      this.logger.error('Error recording emotionreading:', error);
       res.status(500).json({ error: 'Failed to record emotion reading' });
     }
   }
@@ -104,7 +104,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(sentimentAnalysis);
     } catch (error) {
-      this.logger.error('Error analyzing sentiment:', error);
+      this.logger.error('Error analyzingsentiment:', error);
       res.status(500).json({ error: 'Failed to analyze sentiment' });
     }
   }
@@ -150,7 +150,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(wellnessMetric);
     } catch (error) {
-      this.logger.error('Error tracking wellness metric:', error);
+      this.logger.error('Error tracking wellnessmetric:', error);
       res.status(500).json({ error: 'Failed to track wellness metric' });
     }
   }
@@ -177,7 +177,7 @@ export class EmotionWellnessTrackingController {
       const insights = await this.wellnessService.generateWellnessInsights(residentId);
       res.json(insights);
     } catch (error) {
-      this.logger.error('Error generating wellness insights:', error);
+      this.logger.error('Error generating wellnessinsights:', error);
       res.status(500).json({ error: 'Failed to generate wellness insights' });
     }
   }
@@ -204,7 +204,7 @@ export class EmotionWellnessTrackingController {
       const dashboard = await this.wellnessService.getWellnessDashboard(residentId);
       res.json(dashboard);
     } catch (error) {
-      this.logger.error('Error getting wellness dashboard:', error);
+      this.logger.error('Error getting wellnessdashboard:', error);
       res.status(500).json({ error: 'Failed to get wellness dashboard' });
     }
   }
@@ -236,7 +236,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(recommendations);
     } catch (error) {
-      this.logger.error('Error generating activity recommendations:', error);
+      this.logger.error('Error generating activityrecommendations:', error);
       res.status(500).json({ error: 'Failed to generate activity recommendations' });
     }
   }
@@ -271,7 +271,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(emotionHistory);
     } catch (error) {
-      this.logger.error('Error getting emotion history:', error);
+      this.logger.error('Error getting emotionhistory:', error);
       res.status(500).json({ error: 'Failed to get emotion history' });
     }
   }
@@ -305,7 +305,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(metricsHistory);
     } catch (error) {
-      this.logger.error('Error getting wellness metrics history:', error);
+      this.logger.error('Error getting wellness metricshistory:', error);
       res.status(500).json({ error: 'Failed to get wellness metrics history' });
     }
   }
@@ -339,7 +339,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(patterns);
     } catch (error) {
-      this.logger.error('Error getting behavioral patterns:', error);
+      this.logger.error('Error getting behavioralpatterns:', error);
       res.status(500).json({ error: 'Failed to get behavioral patterns' });
     }
   }
@@ -375,7 +375,7 @@ export class EmotionWellnessTrackingController {
 
       res.json(updatedAlert);
     } catch (error) {
-      this.logger.error('Error updating wellness alert status:', error);
+      this.logger.error('Error updating wellness alertstatus:', error);
       res.status(500).json({ error: 'Failed to update wellness alert status' });
     }
   }
@@ -398,7 +398,7 @@ export class EmotionWellnessTrackingController {
       const analytics = await this.calculateWellnessAnalytics(tenantId, period as string);
       res.json(analytics);
     } catch (error) {
-      this.logger.error('Error getting wellness analytics:', error);
+      this.logger.error('Error getting wellnessanalytics:', error);
       res.status(500).json({ error: 'Failed to get wellness analytics' });
     }
   }
@@ -435,7 +435,7 @@ export class EmotionWellnessTrackingController {
       res.setHeader('Content-Disposition', `attachment; filename="wellness_data_${residentId}.${format}"`);
       res.json(exportData);
     } catch (error) {
-      this.logger.error('Error exporting wellness data:', error);
+      this.logger.error('Error exporting wellnessdata:', error);
       res.status(500).json({ error: 'Failed to export wellness data' });
     }
   }

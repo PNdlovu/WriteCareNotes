@@ -102,7 +102,7 @@ export class DVLAService extends BaseEntity {
   priority!: DVLAServicePriority;
 
   // Service Configuration
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   serviceName!: string;
@@ -112,12 +112,12 @@ export class DVLAService extends BaseEntity {
   @IsOptional()
   description?: string;
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   @IsString()
   @Length(1, 500)
   endpointUrl!: string;
 
-  @Column({ type: 'varchar', length: 50, default: 'POST' })
+  @Column({ type: 'var char', length: 50, default: 'POST' })
   @IsString()
   @Length(1, 50)
   httpMethod!: string;
@@ -178,7 +178,7 @@ export class DVLAService extends BaseEntity {
   @IsOptional()
   errorDetails?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -189,13 +189,13 @@ export class DVLAService extends BaseEntity {
   @IsOptional()
   metadata?: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
   serviceVersion?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -207,7 +207,7 @@ export class DVLAService extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -227,7 +227,7 @@ export class DVLAService extends BaseEntity {
   @Transform(({ value }) => value ? parseFloat(value) : null)
   serviceCost?: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;

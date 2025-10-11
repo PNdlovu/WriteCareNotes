@@ -89,11 +89,11 @@ export class ComplianceRiskRequest {
 @UseGuards(AuthGuard)
 @ApiBearerAuth()
 export class AIPolicyController {
-  private readonly logger = new Logger(AIPolicyController.name);
+  private readonlylogger = new Logger(AIPolicyController.name);
 
-  constructor(
-    private readonly aiAssistant: AIPolicyAssistantService,
-    private readonly policyService: PolicyAuthoringService
+  const ructor(
+    private readonlyaiAssistant: AIPolicyAssistantService,
+    private readonlypolicyService: PolicyAuthoringService
   ) {}
 
   /**
@@ -138,7 +138,7 @@ export class AIPolicyController {
     @CurrentUser() user: User
   ) {
     try {
-      this.logger.log(`AI analysis requested for policy: ${request.policyId} by user: ${user.id}`);
+      this.logger.log(`AI analysis requested forpolicy: ${request.policyId} byuser: ${user.id}`);
 
       // Get policy (with organization validation)
       const policy = await this.policyService.getPolicyDraft(request.policyId, user);
@@ -150,7 +150,7 @@ export class AIPolicyController {
       // Perform AI analysis
       const analysis = await this.aiAssistant.analyzePolicyContent(policy);
 
-      this.logger.log(`AI analysis completed for policy: ${request.policyId}`);
+      this.logger.log(`AI analysis completed forpolicy: ${request.policyId}`);
       
       return {
         success: true,
@@ -164,7 +164,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`AI analysis failed: ${error.message}`, error.stack);
+      this.logger.error(`AI analysisfailed: ${error.message}`, error.stack);
       
       if (error instanceof HttpException) {
         throw error;
@@ -207,7 +207,7 @@ export class AIPolicyController {
     @CurrentUser() user: User
   ) {
     try {
-      this.logger.log(`AI policy generation requested: ${request.title} by user: ${user.id}`);
+      this.logger.log(`AI policy generationrequested: ${request.title} byuser: ${user.id}`);
 
       // Validate request
       if (!request.title || !request.category || !request.jurisdiction?.length) {
@@ -242,7 +242,7 @@ export class AIPolicyController {
         reviewDue: reviewDate
       }, user);
 
-      this.logger.log(`AI policy generated and saved: ${policyDraft.id}`);
+      this.logger.log(`AI policy generated andsaved: ${policyDraft.id}`);
 
       return {
         success: true,
@@ -260,7 +260,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`AI policy generation failed: ${error.message}`, error.stack);
+      this.logger.error(`AI policy generationfailed: ${error.message}`, error.stack);
       
       if (error instanceof HttpException) {
         throw error;
@@ -300,7 +300,7 @@ export class AIPolicyController {
     @CurrentUser() user: User
   ) {
     try {
-      this.logger.log(`Processing NL query: ${request.query.substring(0, 100)}... by user: ${user.id}`);
+      this.logger.log(`Processing NLquery: ${request.query.substring(0, 100)}... byuser: ${user.id}`);
 
       // Process query using AI
       const queryResult = await this.aiAssistant.processNaturalLanguageQuery(
@@ -320,7 +320,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`NL query processing failed: ${error.message}`, error.stack);
+      this.logger.error(`NL query processingfailed: ${error.message}`, error.stack);
       
       throw new HttpException(
         'Query processing failed. Please try rephrasing your question.',
@@ -349,7 +349,7 @@ export class AIPolicyController {
     @CurrentUser() user: User
   ) {
     try {
-      this.logger.log(`AI template suggestions requested by user: ${user.id}`);
+      this.logger.log(`AI template suggestions requested byuser: ${user.id}`);
 
       const suggestions = await this.aiAssistant.suggestTemplates({
         type: request.organizationType,
@@ -370,7 +370,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`Template suggestion failed: ${error.message}`, error.stack);
+      this.logger.error(`Template suggestionfailed: ${error.message}`, error.stack);
       
       throw new HttpException(
         'Template suggestion failed. Please try again.',
@@ -401,7 +401,7 @@ export class AIPolicyController {
     @CurrentUser() user: User
   ) {
     try {
-      this.logger.log(`AI policy improvement requested for: ${policyId} by user: ${user.id}`);
+      this.logger.log(`AI policy improvement requestedfor: ${policyId} byuser: ${user.id}`);
 
       // Get policy
       const policy = await this.policyService.getPolicyDraft(policyId, user);
@@ -427,7 +427,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`Policy improvement failed: ${error.message}`, error.stack);
+      this.logger.error(`Policy improvementfailed: ${error.message}`, error.stack);
       
       if (error instanceof HttpException) {
         throw error;
@@ -460,7 +460,7 @@ export class AIPolicyController {
     @CurrentUser() user: User
   ) {
     try {
-      this.logger.log(`AI compliance risk assessment requested by user: ${user.id}`);
+      this.logger.log(`AI compliance risk assessment requested byuser: ${user.id}`);
 
       // Get organization policies
       const policies = await this.policyService.getPoliciesByOrganization(user.organizationId);
@@ -490,7 +490,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`Compliance risk assessment failed: ${error.message}`, error.stack);
+      this.logger.error(`Compliance risk assessmentfailed: ${error.message}`, error.stack);
       
       throw new HttpException(
         'Risk assessment failed. Please try again.',
@@ -595,7 +595,7 @@ export class AIPolicyController {
       };
 
     } catch (error) {
-      this.logger.error(`AI analytics retrieval failed: ${error.message}`, error.stack);
+      this.logger.error(`AI analytics retrievalfailed: ${error.message}`, error.stack);
       
       throw new HttpException(
         'Analytics retrieval failed.',

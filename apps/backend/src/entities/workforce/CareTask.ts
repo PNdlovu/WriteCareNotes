@@ -60,7 +60,7 @@ export class CareTask {
   @IsEnum(TaskCategory)
   category: TaskCategory;
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   @IsString()
   description: string;
 
@@ -81,7 +81,7 @@ export class CareTask {
   @Max(480)
   actualDuration?: number; // minutes
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   skillLevelRequired: string;
 
@@ -128,7 +128,7 @@ export class CareTask {
   @IsString()
   notes?: string; // Encrypted
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   outcome?: string;

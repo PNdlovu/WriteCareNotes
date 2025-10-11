@@ -19,7 +19,7 @@ export class RobotMaintenance extends BaseEntity {
   })
   type!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   title!: string;
 
   @Column({ type: 'text' })

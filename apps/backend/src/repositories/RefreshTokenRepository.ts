@@ -9,7 +9,7 @@
  * 
  * @description
  * Repository pattern for RefreshToken entity operations.
- * Handles token lifecycle management including:
+ * Handles token lifecycle managementincluding:
  * - Token creation and storage
  * - Token validation and revocation
  * - Token cleanup (expired tokens)
@@ -30,7 +30,7 @@ export interface CreateRefreshTokenData {
 export class RefreshTokenRepository {
   privaterepository: Repository<RefreshToken>;
 
-  constructor(dataSource: DataSource) {
+  const ructor(dataSource: DataSource) {
     this.repository = dataSource.getRepository(RefreshToken);
   }
 

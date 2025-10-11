@@ -23,7 +23,7 @@ export class EnhancedBedRoomManagementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.roomRepository = AppDataSource.getRepository(EnhancedBedRoomManagement);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -86,7 +86,7 @@ export class EnhancedBedRoomManagementService {
 
       return savedRoom;
     } catch (error: unknown) {
-      console.error('Error creating enhanced room:', error);
+      console.error('Error creating enhancedroom:', error);
       throw error;
     }
   }
@@ -107,7 +107,7 @@ export class EnhancedBedRoomManagementService {
         averageSatisfaction: allRooms.reduce((sum, room) => sum + room.getAverageSatisfactionRating(), 0) / allRooms.length
       };
     } catch (error: unknown) {
-      console.error('Error getting room analytics:', error);
+      console.error('Error getting roomanalytics:', error);
       throw error;
     }
   }

@@ -21,7 +21,7 @@ export class PaymentRoutes {
   privaterouter: Router;
   privatepaymentController: PaymentController;
 
-  constructor(paymentController: PaymentController) {
+  const ructor(paymentController: PaymentController) {
     this.router = Router();
     this.paymentController = paymentController;
     this.setupMiddleware();

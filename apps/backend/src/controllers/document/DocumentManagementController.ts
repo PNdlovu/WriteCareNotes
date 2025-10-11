@@ -92,8 +92,8 @@ export interface CreateDocumentDTO {
 @Controller('api/v1/documents')
 @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
 export class DocumentManagementController {
-  constructor(
-    private readonly documentService: EnterpriseDocumentManagementService
+  const ructor(
+    private readonlydocumentService: EnterpriseDocumentManagementService
   ) {}
 
   @Post('upload')

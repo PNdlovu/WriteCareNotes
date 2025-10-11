@@ -27,7 +27,7 @@ export interface SynthesizedSuggestion {
 
 @Injectable()
 export class ClauseSynthesizerService {
-  private readonly logger = new Logger(ClauseSynthesizerService.name);
+  private readonlylogger = new Logger(ClauseSynthesizerService.name);
 
   /**
    * 🧩 MAIN SYNTHESIS METHOD
@@ -54,7 +54,7 @@ export class ClauseSynthesizerService {
         return this.synthesizeImprovementList(documents, prompt);
       
       default:
-        throw new Error(`Unknown output format: ${prompt.outputFormat}`);
+        throw new Error(`Unknown outputformat: ${prompt.outputFormat}`);
     }
   }
 
@@ -242,7 +242,7 @@ export class ClauseSynthesizerService {
       /-\s+([^\n]+)/g,       // Dash list
     ];
 
-    constclauses: string[] = [];
+    const clauses: string[] = [];
 
     for (const pattern of clausePatterns) {
       const matches = content.matchAll(pattern);
@@ -334,7 +334,7 @@ export class ClauseSynthesizerService {
   private calculateConfidence(documents: RetrievedDocument[], synthesisType: string): number {
     if (documents.length === 0) return 0;
 
-    // Factors affecting confidence:
+    // Factors affectingconfidence:
     // 1. Average relevance score (0-0.4)
     const avgRelevance = documents.reduce((sum, d) => sum + d.relevanceScore, 0) / documents.length;
     const relevanceScore = avgRelevance * 0.4;
@@ -360,7 +360,7 @@ export class ClauseSynthesizerService {
    * ⚠️ GENERATE WARNINGS
    */
   private generateWarnings(documents: RetrievedDocument[], confidence: number): string[] {
-    constwarnings: string[] = [];
+    const warnings: string[] = [];
 
     if (confidence < 0.7) {
       warnings.push('Low confidence - human review strongly recommended');

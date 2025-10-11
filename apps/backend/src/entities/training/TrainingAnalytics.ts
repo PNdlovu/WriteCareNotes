@@ -11,10 +11,10 @@ export class TrainingAnalytics {
   @Column({ type: 'uuid', nullable: true })
   userId?: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   metricType!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   metricName!: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })

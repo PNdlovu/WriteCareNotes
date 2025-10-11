@@ -47,7 +47,7 @@ export class MedicationInteractionController {
   privateinteractionService: MedicationInteractionService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.interactionService = new MedicationInteractionService();
     this.auditService = new AuditTrailService();
   }
@@ -74,7 +74,7 @@ export class MedicationInteractionController {
         return;
       }
 
-      constrequest: InteractionCheckRequest = {
+      const request: InteractionCheckRequest = {
         residentId,
         medications: req.body['medications'] || [],
         newMedication: req.body['newMedication'],
@@ -209,7 +209,7 @@ export class MedicationInteractionController {
           success: false,
           error: {
             code: 'INVALID_SOURCE',
-            message: `Invalid source. Must be one of: ${validSources.join(', ')}`
+            message: `Invalid source. Must be oneof: ${validSources.join(', ')}`
           }
         });
         return;

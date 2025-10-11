@@ -120,7 +120,7 @@ export class RightToWorkNotification extends BaseEntity {
   @IsEnum(RightToWorkNotificationStatus)
   status!: RightToWorkNotificationStatus;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   title!: string;
@@ -139,17 +139,17 @@ export class RightToWorkNotification extends BaseEntity {
   @IsUUID()
   recipientId!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   recipientName!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   recipientEmail!: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 20)
@@ -202,13 +202,13 @@ export class RightToWorkNotification extends BaseEntity {
   @IsOptional()
   actionData?: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 500)
   actionUrl?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -220,7 +220,7 @@ export class RightToWorkNotification extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)

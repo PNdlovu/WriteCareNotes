@@ -5,10 +5,10 @@ import { IoTIntegrationService } from '../../services/iot-integration.service';
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 describe('IoTIntegrationService', () => {
-  letservice: IoTIntegrationService;
-  letmockRepository: any;
-  letmockEventEmitter: any;
-  letmockAuditService: any;
+  let service: IoTIntegrationService;
+  let mockRepository: any;
+  let mockEventEmitter: any;
+  let mockAuditService: any;
 
   beforeEach(async () => {
     mockRepository = {
@@ -27,7 +27,7 @@ describe('IoTIntegrationService', () => {
       logEvent: jest.fn(),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         IoTIntegrationService,
         {

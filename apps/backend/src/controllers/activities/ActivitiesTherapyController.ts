@@ -19,7 +19,7 @@ import { Activity } from '../../entities/activities/Activity';
 export class ActivitiesTherapyController {
   privateactivitiesService: ActivitiesTherapyService;
 
-  constructor() {
+  const ructor() {
     this.activitiesService = new ActivitiesTherapyService();
   }
 
@@ -82,7 +82,7 @@ export class ActivitiesTherapyController {
 
   async searchActivities(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: ActivitySearchCriteria = {
+      const criteria: ActivitySearchCriteria = {
         activityType: req.query['activityType'] as any,
         category: req.query['category'] as any,
         facilitator: req.query['facilitator'] as string,

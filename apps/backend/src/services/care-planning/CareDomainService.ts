@@ -95,7 +95,7 @@ export interface DomainRiskAnalysis {
 }
 
 export class CareDomainValidationError extends Error {
-  constructor(
+  const ructor(
     message: string,
     publicvalidationErrors: ValidationError[]
   ) {
@@ -105,7 +105,7 @@ export class CareDomainValidationError extends Error {
 }
 
 export class CareDomainNotFoundError extends Error {
-  constructor(domainId: string) {
+  const ructor(domainId: string) {
     super(`Care domain with ID ${domainId} not found`);
     this.name = 'CareDomainNotFoundError';
   }
@@ -115,7 +115,7 @@ export class CareDomainService {
   privatecareDomainRepository: Repository<CareDomain>;
   privatecarePlanRepository: Repository<CarePlan>;
 
-  constructor(
+  const ructor(
     privatedataSource: DataSource,
     privateauditService: AuditService,
     privateencryptionService: FieldLevelEncryptionService,
@@ -743,7 +743,7 @@ export class CareDomainService {
   }
 
   private generateMitigationStrategies(careDomain: CareDomain): string[] {
-    conststrategies: string[] = [];
+    const strategies: string[] = [];
 
     // Base strategies by domain type
     switch (careDomain.domainType) {
@@ -778,7 +778,7 @@ export class CareDomainService {
   }
 
   private generateRecommendedActions(careDomain: CareDomain): string[] {
-    constactions: string[] = [];
+    const actions: string[] = [];
 
     // Actions based on risk level
     switch (careDomain.riskLevel) {

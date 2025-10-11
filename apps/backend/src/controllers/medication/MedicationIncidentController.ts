@@ -27,9 +27,9 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: CQC Medication Incident Reporting, MHRA Yellow Card Scheme
  * - Scotland: Care Inspectorate Incident Management, MHRA Yellow Card Scheme
  * - Wales: CIW Incident Reporting Requirements, MHRA Yellow Card Scheme
- * - Northern Ireland: RQIA Incident Management Standards, MHRA Yellow Card Scheme
- * - Republic of Ireland: HIQA Incident Management Framework, IMB Adverse Event Reporting
- * - Isle of Man: DHSC Incident Reporting Guidelines
+ * - NorthernIreland: RQIA Incident Management Standards, MHRA Yellow Card Scheme
+ * - Republic ofIreland: HIQA Incident Management Framework, IMB Adverse Event Reporting
+ * - Isle ofMan: DHSC Incident Reporting Guidelines
  * - Guernsey: Committee for Health & Social Care Incident Standards
  * - Jersey: Care Commission Incident Requirements
  * - MHRA Pharmacovigilance Guidelines
@@ -62,7 +62,7 @@ import { logger } from '../../utils/logger';
 export class MedicationIncidentController {
   privateincidentService: MedicationIncidentService;
 
-  constructor() {
+  const ructor() {
     this.incidentService = new MedicationIncidentService();
   }
 
@@ -115,7 +115,7 @@ export class MedicationIncidentController {
           !discoveredDate || !location || !description || !immediateActions ||
           !reportedBy || !reporterRole || !jurisdiction) {
         res.status(400).json({ 
-          error: 'Missing required fields: incidentType, severity, category, incidentDate, discoveredDate, location, description, immediateActions, reportedBy, reporterRole, jurisdiction' 
+          error: 'Missing requiredfields: incidentType, severity, category, incidentDate, discoveredDate, location, description, immediateActions, reportedBy, reporterRole, jurisdiction' 
         });
         return;
       }
@@ -128,7 +128,7 @@ export class MedicationIncidentController {
       ];
       if (!validIncidentTypes.includes(incidentType)) {
         res.status(400).json({ 
-          error: 'Invalid incident type. Must be one of: ' + validIncidentTypes.join(', ')
+          error: 'Invalid incident type. Must be oneof: ' + validIncidentTypes.join(', ')
         });
         return;
       }
@@ -137,7 +137,7 @@ export class MedicationIncidentController {
       const validSeverities = ['no_harm', 'minor_harm', 'moderate_harm', 'severe_harm', 'death'];
       if (!validSeverities.includes(severity)) {
         res.status(400).json({ 
-          error: 'Invalid severity. Must be one of: ' + validSeverities.join(', ')
+          error: 'Invalid severity. Must be oneof: ' + validSeverities.join(', ')
         });
         return;
       }
@@ -146,7 +146,7 @@ export class MedicationIncidentController {
       const validCategories = ['prescribing', 'dispensing', 'administration', 'monitoring', 'patient_related', 'system_related'];
       if (!validCategories.includes(category)) {
         res.status(400).json({ 
-          error: 'Invalid category. Must be one of: ' + validCategories.join(', ')
+          error: 'Invalid category. Must be oneof: ' + validCategories.join(', ')
         });
         return;
       }
@@ -158,7 +158,7 @@ export class MedicationIncidentController {
       ];
       if (!validJurisdictions.includes(jurisdiction)) {
         res.status(400).json({ 
-          error: 'Invalid jurisdiction. Must be one of: ' + validJurisdictions.join(', ')
+          error: 'Invalid jurisdiction. Must be oneof: ' + validJurisdictions.join(', ')
         });
         return;
       }
@@ -178,8 +178,8 @@ export class MedicationIncidentController {
       }
 
       // Validate intended/actual times if provided
-      letintendedDateTime: Date | undefined;
-      letactualDateTime: Date | undefined;
+      let intendedDateTime: Date | undefined;
+      let actualDateTime: Date | undefined;
 
       if (intendedTime) {
         intendedDateTime = new Date(intendedTime);
@@ -289,7 +289,7 @@ export class MedicationIncidentController {
       // Validate required fields
       if (!methodology || !primaryCause || !analysedBy) {
         res.status(400).json({ 
-          error: 'Missing required fields: methodology, primaryCause, analysedBy' 
+          error: 'Missing requiredfields: methodology, primaryCause, analysedBy' 
         });
         return;
       }
@@ -298,7 +298,7 @@ export class MedicationIncidentController {
       const validMethodologies = ['fishbone', 'five_whys', 'fault_tree', 'barrier_analysis', 'timeline_analysis'];
       if (!validMethodologies.includes(methodology)) {
         res.status(400).json({ 
-          error: 'Invalid methodology. Must be one of: ' + validMethodologies.join(', ')
+          error: 'Invalid methodology. Must be oneof: ' + validMethodologies.join(', ')
         });
         return;
       }
@@ -311,13 +311,13 @@ export class MedicationIncidentController {
         for (const factor of contributingFactors) {
           if (!factor.category || !validCategories.includes(factor.category)) {
             res.status(400).json({ 
-              error: 'Invalid contributing factor category. Must be one of: ' + validCategories.join(', ')
+              error: 'Invalid contributing factor category. Must be oneof: ' + validCategories.join(', ')
             });
             return;
           }
           if (!factor.impact || !validImpacts.includes(factor.impact)) {
             res.status(400).json({ 
-              error: 'Invalid contributing factor impact. Must be one of: ' + validImpacts.join(', ')
+              error: 'Invalid contributing factor impact. Must be oneof: ' + validImpacts.join(', ')
             });
             return;
           }
@@ -396,7 +396,7 @@ export class MedicationIncidentController {
       // Validate required fields
       if (!authority || !notificationType || !submittedBy) {
         res.status(400).json({ 
-          error: 'Missing required fields: authority, notificationType, submittedBy' 
+          error: 'Missing requiredfields: authority, notificationType, submittedBy' 
         });
         return;
       }
@@ -408,7 +408,7 @@ export class MedicationIncidentController {
       ];
       if (!validAuthorities.includes(authority)) {
         res.status(400).json({ 
-          error: 'Invalid authority. Must be one of: ' + validAuthorities.join(', ')
+          error: 'Invalid authority. Must be oneof: ' + validAuthorities.join(', ')
         });
         return;
       }
@@ -419,7 +419,7 @@ export class MedicationIncidentController {
       ];
       if (!validNotificationTypes.includes(notificationType)) {
         res.status(400).json({ 
-          error: 'Invalid notification type. Must be one of: ' + validNotificationTypes.join(', ')
+          error: 'Invalid notification type. Must be oneof: ' + validNotificationTypes.join(', ')
         });
         return;
       }
@@ -491,7 +491,7 @@ export class MedicationIncidentController {
         ];
         if (!validJurisdictions.includes(jurisdiction)) {
           res.status(400).json({ 
-            error: 'Invalid jurisdiction. Must be one of: ' + validJurisdictions.join(', ')
+            error: 'Invalid jurisdiction. Must be oneof: ' + validJurisdictions.join(', ')
           });
           return;
         }
@@ -553,7 +553,7 @@ export class MedicationIncidentController {
         ];
         if (!validJurisdictions.includes(jurisdiction)) {
           res.status(400).json({ 
-            error: 'Invalid jurisdiction. Must be one of: ' + validJurisdictions.join(', ')
+            error: 'Invalid jurisdiction. Must be oneof: ' + validJurisdictions.join(', ')
           });
           return;
         }
@@ -600,7 +600,7 @@ export class MedicationIncidentController {
       const page = parseInt(req.query['page'] as string) || 1;
       const limit = Math.min(parseInt(req.query['limit'] as string) || 20, 100);
 
-      constfilters: IncidentFilters = {};
+      const filters: IncidentFilters = {};
 
       // Apply filters from query parameters
       if (req.query['incidentType']) {

@@ -51,7 +51,7 @@ interface CarePlanFilters {
 export class CarePlanningService {
   privatecarePlanRepository: Repository<CarePlan>;
 
-  constructor(private dataSource: DataSource) {
+  const ructor(private dataSource: DataSource) {
     this.carePlanRepository = this.dataSource.getRepository(CarePlan);
   }
 

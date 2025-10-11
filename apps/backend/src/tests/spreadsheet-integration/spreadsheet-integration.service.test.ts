@@ -5,14 +5,14 @@ import { SpreadsheetIntegrationService } from '../../services/spreadsheet-integr
 import { AuditTrailService } from '../../services/audit/AuditTrailService';
 
 describe('SpreadsheetIntegrationService', () => {
-  letservice: SpreadsheetIntegrationService;
-  letmockTemplateRepository: any;
-  letmockExportRepository: any;
-  letmockImportRepository: any;
-  letmockDataRepository: any;
-  letmockReportRepository: any;
-  letmockEventEmitter: any;
-  letmockAuditService: any;
+  let service: SpreadsheetIntegrationService;
+  let mockTemplateRepository: any;
+  let mockExportRepository: any;
+  let mockImportRepository: any;
+  let mockDataRepository: any;
+  let mockReportRepository: any;
+  let mockEventEmitter: any;
+  let mockAuditService: any;
 
   beforeEach(async () => {
     mockTemplateRepository = {
@@ -63,7 +63,7 @@ describe('SpreadsheetIntegrationService', () => {
       logEvent: jest.fn(),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         SpreadsheetIntegrationService,
         {

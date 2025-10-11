@@ -38,7 +38,7 @@ import { LeavingCareStatus } from '../entities/PathwayPlan';
 export class LeavingCareController {
   privateleavingCareService: LeavingCareService;
 
-  constructor() {
+  const ructor() {
     this.leavingCareService = new LeavingCareService();
   }
 
@@ -68,7 +68,7 @@ export class LeavingCareController {
       if (!Object.values(LeavingCareStatus).includes(leavingCareStatus)) {
         res.status(400).json({
           success: false,
-          message: `Invalid leaving care status. Must be one of: ${Object.values(LeavingCareStatus).join(', ')}`
+          message: `Invalid leaving care status. Must be oneof: ${Object.values(LeavingCareStatus).join(', ')}`
         });
         return;
       }
@@ -81,7 +81,7 @@ export class LeavingCareController {
         data: pathwayPlan
       });
     } catch (error) {
-      console.error('Error creating pathway plan:', error);
+      console.error('Error creating pathwayplan:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to create pathway plan',
@@ -114,7 +114,7 @@ export class LeavingCareController {
         count: plans.length
       });
     } catch (error) {
-      console.error('Error retrieving pathway plans:', error);
+      console.error('Error retrieving pathwayplans:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve pathway plans',
@@ -139,7 +139,7 @@ export class LeavingCareController {
         data: pathwayPlan
       });
     } catch (error) {
-      console.error('Error updating pathway plan:', error);
+      console.error('Error updating pathwayplan:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to update pathway plan',
@@ -164,7 +164,7 @@ export class LeavingCareController {
         data: pathwayPlan
       });
     } catch (error) {
-      console.error('Error activating pathway plan:', error);
+      console.error('Error activating pathwayplan:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to activate pathway plan',
@@ -209,7 +209,7 @@ export class LeavingCareController {
         data: pathwayPlan
       });
     } catch (error) {
-      console.error('Error completing review:', error);
+      console.error('Error completingreview:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to complete review',
@@ -244,7 +244,7 @@ export class LeavingCareController {
         data: statistics
       });
     } catch (error) {
-      console.error('Error retrieving statistics:', error);
+      console.error('Error retrievingstatistics:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve statistics',

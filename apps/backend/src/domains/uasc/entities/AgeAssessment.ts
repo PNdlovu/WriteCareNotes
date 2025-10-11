@@ -92,7 +92,7 @@ export class AgeAssessment {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   assessmentNumber: string; // Format: AA-YYYY-NNNN
 
   @ManyToOne(() => UASCProfile)
@@ -119,7 +119,7 @@ export class AgeAssessment {
   @Column({ type: 'date', nullable: true })
   completedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   assessmentLocation: string;
 
   @Column({ type: 'simple-json' })
@@ -142,25 +142,25 @@ export class AgeAssessment {
   // ASSESSMENT TEAM
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   leadAssessorName: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   leadAssessorRole: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   secondAssessorName: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   secondAssessorRole: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   interpreterPresent: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   interpreterLanguage: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appropriateAdultPresent: string;
 
   // ========================================
@@ -363,10 +363,10 @@ export class AgeAssessment {
   @Column({ type: 'date', nullable: true })
   decisionNotifiedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   decisionNotifiedTo: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   decisionNotificationMethod: string;
 
   @Column({ type: 'text', nullable: true })
@@ -388,7 +388,7 @@ export class AgeAssessment {
   @Column({ type: 'date', nullable: true })
   appealLodgedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appealReferenceNumber: string;
 
   @Column({ type: 'text', nullable: true })
@@ -397,7 +397,7 @@ export class AgeAssessment {
   @Column({ type: 'date', nullable: true })
   appealHearingDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appealOutcome: string;
 
   @Column({ type: 'date', nullable: true })
@@ -416,7 +416,7 @@ export class AgeAssessment {
   @Column({ type: 'date', nullable: true })
   judicialReviewDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   judicialReviewOutcome: string;
 
   // ========================================
@@ -438,13 +438,13 @@ export class AgeAssessment {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

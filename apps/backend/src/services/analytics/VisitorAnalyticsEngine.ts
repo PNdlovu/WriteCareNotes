@@ -176,7 +176,7 @@ export class VisitorAnalyticsEngine {
   privateanalyticsCache: Map<string, { data: any; timestamp: Date; ttl: number }>;
   privaterealTimeSubscribers: Set<WebSocket>;
 
-  constructor(
+  const ructor(
     eventEmitter: EventEmitter2,
     auditTrailService: AuditService,
     notificationService: NotificationService
@@ -249,7 +249,7 @@ export class VisitorAnalyticsEngine {
         ? visitDurations.reduce((sum, duration) => sum + duration, 0) / visitDurations.length 
         : 0;
 
-      constmetrics: VisitorAnalyticsMetrics = {
+      const metrics: VisitorAnalyticsMetrics = {
         totalVisitors,
         activeVisitors,
         visitorsOnSite,
@@ -265,7 +265,7 @@ export class VisitorAnalyticsEngine {
       return metrics;
 
     } catch (error) {
-      console.error('Error generating visitor metrics:', error);
+      console.error('Error generating visitormetrics:', error);
       throw new Error('Failed to generate visitor analytics metrics');
     }
   }
@@ -289,7 +289,7 @@ export class VisitorAnalyticsEngine {
       const peakHoursAnalysis = await this.calculatePeakHoursAnalysis(visitors);
       const seasonalPatterns = await this.calculateSeasonalPatterns(visitors);
 
-      constanalysis: VisitorTrendAnalysis = {
+      const analysis: VisitorTrendAnalysis = {
         visitFrequencyTrends,
         visitorTypeTrends,
         peakHoursAnalysis,
@@ -300,7 +300,7 @@ export class VisitorAnalyticsEngine {
       return analysis;
 
     } catch (error) {
-      console.error('Error generating trend analysis:', error);
+      console.error('Error generating trendanalysis:', error);
       throw new Error('Failed to generate visitor trend analysis');
     }
   }
@@ -327,7 +327,7 @@ export class VisitorAnalyticsEngine {
       const complianceMetrics = await this.calculateComplianceMetrics(visitors);
       const emergencyPreparedness = await this.calculateEmergencyPreparedness(visitors);
 
-      constanalytics: VisitorSecurityAnalytics = {
+      const analytics: VisitorSecurityAnalytics = {
         securityMetrics,
         riskAssessment,
         complianceMetrics,
@@ -338,7 +338,7 @@ export class VisitorAnalyticsEngine {
       return analytics;
 
     } catch (error) {
-      console.error('Error generating security analytics:', error);
+      console.error('Error generating securityanalytics:', error);
       throw new Error('Failed to generate security analytics');
     }
   }
@@ -365,7 +365,7 @@ export class VisitorAnalyticsEngine {
       const feedbackAnalysis = await this.analyzeFeedback(visitors);
       const actionableInsights = await this.generateActionableInsights(visitors);
 
-      constanalytics: VisitorSatisfactionAnalytics = {
+      const analytics: VisitorSatisfactionAnalytics = {
         satisfactionMetrics,
         satisfactionByCategory,
         feedbackAnalysis,
@@ -376,7 +376,7 @@ export class VisitorAnalyticsEngine {
       return analytics;
 
     } catch (error) {
-      console.error('Error generating satisfaction analytics:', error);
+      console.error('Error generating satisfactionanalytics:', error);
       throw new Error('Failed to generate satisfaction analytics');
     }
   }
@@ -402,7 +402,7 @@ export class VisitorAnalyticsEngine {
       const diversity = await this.calculateDiversity(visitors);
       const engagementPatterns = await this.calculateEngagementPatterns(visitors);
 
-      constanalytics: VisitorDemographicsAnalytics = {
+      const analytics: VisitorDemographicsAnalytics = {
         demographics,
         diversity,
         engagementPatterns
@@ -412,7 +412,7 @@ export class VisitorAnalyticsEngine {
       return analytics;
 
     } catch (error) {
-      console.error('Error generating demographics analytics:', error);
+      console.error('Error generating demographicsanalytics:', error);
       throw new Error('Failed to generate demographics analytics');
     }
   }
@@ -435,7 +435,7 @@ export class VisitorAnalyticsEngine {
       };
 
     } catch (error) {
-      console.error('Error generating real-time dashboard data:', error);
+      console.error('Error generating real-time dashboarddata:', error);
       throw new Error('Failed to generate real-time dashboard data');
     }
   }
@@ -503,7 +503,7 @@ export class VisitorAnalyticsEngine {
       };
 
     } catch (error) {
-      console.error('Error generating comprehensive report:', error);
+      console.error('Error generating comprehensivereport:', error);
       throw new Error('Failed to generate comprehensive analytics report');
     }
   }
@@ -548,7 +548,7 @@ export class VisitorAnalyticsEngine {
       };
 
     } catch (error) {
-      console.error('Error generating predictive analytics:', error);
+      console.error('Error generating predictiveanalytics:', error);
       throw new Error('Failed to generate predictive analytics');
     }
   }
@@ -700,7 +700,7 @@ export class VisitorAnalyticsEngine {
   }
 
   private async calculateVisitorTypeTrends(visitors: VisitorManagement[]): Promise<any> {
-    consttrends: any = {};
+    const trends: any = {};
     
     Object.values(VisitorType).forEach(type => {
       const typeVisitors = visitors.filter(v => v.visitorType === type);
@@ -740,7 +740,7 @@ export class VisitorAnalyticsEngine {
       avgDuration: 0
     }));
 
-    consthourlyData: { [hour: number]: { visits: number; durations: number[] } } = {};
+    const hourlyData: { [hour: number]: { visits: number; durations: number[] } } = {};
 
     visitors.forEach(visitor => {
       visitor.visitHistory.forEach(visit => {
@@ -786,7 +786,7 @@ export class VisitorAnalyticsEngine {
         { quarter: 'Q1', visits: 0, pattern: 'Lower activity due to winter weather' },
         { quarter: 'Q2', visits: 0, pattern: 'Increased activity with better weather' },
         { quarter: 'Q3', visits: 0, pattern: 'Peak summer visiting period' },
-        { quarter: 'Q4', visits: 0, pattern: 'Holiday season variations' }
+        { quarter: 'Q4', visits: 0, pattern: 'Holiday season var iations' }
       ],
       holidays: [
         { holiday: 'Christmas', impact: 'increase' as const, percentage: 25 },
@@ -805,8 +805,8 @@ export class VisitorAnalyticsEngine {
       sum + v.visitHistory.reduce((visitSum, visit) => visitSum + visit.incidentsReported.length, 0), 0
     );
 
-    constincidentTypes: { [type: string]: number } = {};
-    constriskDistribution: { [level: string]: number } = {};
+    const incidentTypes: { [type: string]: number } = {};
+    const riskDistribution: { [level: string]: number } = {};
 
     visitors.forEach(visitor => {
       const riskLevel = visitor.riskLevel;
@@ -1199,7 +1199,7 @@ export class VisitorAnalyticsEngine {
       const date = new Date();
       date.setDate(date.getDate() + i);
       
-      const predictedSatisfaction = baseSatisfaction + (Math.random() - 0.5) * 0.4; // ±0.2 variation
+      const predictedSatisfaction = baseSatisfaction + (Math.random() - 0.5) * 0.4; // ±0.2 var iation
       
       predictions.push({
         date,

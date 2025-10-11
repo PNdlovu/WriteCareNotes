@@ -8,9 +8,9 @@ import { DataMigration } from '../../../entities/onboarding/DataMigration';
 import { MigrationMapping } from '../../../entities/onboarding/MigrationMapping';
 
 describe('OnboardingDataMigrationService', () => {
-  letservice: OnboardingDataMigrationService;
-  letdataMigrationRepository: Repository<DataMigration>;
-  letmigrationMappingRepository: Repository<MigrationMapping>;
+  let service: OnboardingDataMigrationService;
+  let dataMigrationRepository: Repository<DataMigration>;
+  let migrationMappingRepository: Repository<MigrationMapping>;
 
   const mockDataMigrationRepository = {
     find: jest.fn(),
@@ -31,7 +31,7 @@ describe('OnboardingDataMigrationService', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         OnboardingDataMigrationService,
         {

@@ -39,7 +39,7 @@ import {
 
 @Injectable()
 export class HRPayrollRepository {
-  constructor(private readonly pool: Pool) {}
+  const ructor(private readonlypool: Pool) {}
 
   // Employee operations
 
@@ -203,7 +203,7 @@ export class HRPayrollRepository {
 
   async searchEmployees(filters: EmployeeSearchFilters): Promise<{ employees: Employee[], total: number }> {
     let whereConditions = ['e.deleted_at IS NULL'];
-    letqueryParams: any[] = [];
+    let queryParams: any[] = [];
     let paramIndex = 1;
 
     // Build WHERE conditions
@@ -424,7 +424,7 @@ export class HRPayrollRepository {
       FROM shifts 
       WHERE employee_id = $1 
       AND DATE_TRUNC('month', shift_date) = DATE_TRUNC('month', $2::date)
-      AND status = 'completed'
+      ANDstatus = 'completed'
       AND deleted_at IS NULL
     `;
 
@@ -563,7 +563,7 @@ export class HRPayrollRepository {
     const query = `
       SELECT 
         COUNT(*) as total,
-        COUNT(CASE WHEN status = 'active' THEN 1 END) as active,
+        COUNT(CASE WHENstatus = 'active' THEN 1 END) as active,
         COUNT(CASE WHEN start_date >= DATE_TRUNC('month', CURRENT_DATE) THEN 1 END) as new_hires,
         COUNT(CASE WHEN termination_date >= DATE_TRUNC('month', CURRENT_DATE) THEN 1 END) as leavers
       FROM employees 

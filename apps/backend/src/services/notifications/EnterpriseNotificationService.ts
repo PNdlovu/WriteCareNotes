@@ -85,7 +85,7 @@ export class EnterpriseNotificationService {
   privatechannelRepository: Repository<NotificationChannel>;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.channelRepository = AppDataSource.getRepository(NotificationChannel);
     this.auditService = new AuditTrailService();
   }
@@ -199,7 +199,7 @@ export class EnterpriseNotificationService {
         deliveryTime: new Date()
       };
     } catch (error: unknown) {
-      console.error('Error sending enterprise notification:', error);
+      console.error('Error sending enterprisenotification:', error);
       throw error;
     }
   }
@@ -209,7 +209,7 @@ export class EnterpriseNotificationService {
     try {
       const campaignId = crypto.randomUUID();
       
-      constcampaign: NotificationCampaign = {
+      const campaign: NotificationCampaign = {
         campaignId,
         campaignName: campaignData.campaignName || 'Untitled Campaign',
         campaignType: campaignData.campaignType || 'routine',
@@ -248,7 +248,7 @@ export class EnterpriseNotificationService {
       
       return campaign;
     } catch (error: unknown) {
-      console.error('Error creating notification campaign:', error);
+      console.error('Error creating notificationcampaign:', error);
       throw error;
     }
   }
@@ -275,7 +275,7 @@ export class EnterpriseNotificationService {
       
       return analytics;
     } catch (error: unknown) {
-      console.error('Error getting notification analytics:', error);
+      console.error('Error getting notificationanalytics:', error);
       throw error;
     }
   }
@@ -366,7 +366,7 @@ export class EnterpriseNotificationService {
         status
       };
     } catch (error: unknown) {
-      console.error('Error delivering through channel:', error);
+      console.error('Error delivering throughchannel:', error);
       return {
         channelId: channel.channelId,
         channelType: channel.channelType,

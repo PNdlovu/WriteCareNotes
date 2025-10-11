@@ -84,7 +84,7 @@ export class CashTransactionService {
   privatenotificationService: NotificationService;
   privateeventEmitter: EventEmitter2;
 
-  constructor() {
+  const ructor() {
     this.cashTransactionRepository = AppDataSource.getRepository(CashTransaction);
     this.ledgerAccountRepository = AppDataSource.getRepository(LedgerAccount);
     this.auditService = new AuditTrailService();

@@ -1,45 +1,88 @@
-import { Router } from 'express';
+import { Router } from 'express';import { Router } from 'express';
 
-// Import working route modules
-import hrRoutes from './hr';
-import financialRoutes from './financial';
 import healthRoutes from './health.routes';
-import policyVersionRoutes from './policy-versions.routes';
-import collaborationRoutes from './collaboration.routes';
+
+import authRoutes from './auth.routes';// Import working route modules
+
+import hrRoutes from './hr';
+
+const router = Router();import financialRoutes from './financial';
+
+import healthRoutes from './health.routes';
+
+// Health check routesimport policyVersionRoutes from './policy-versions.routes';
+
+router.use('/health', healthRoutes);import collaborationRoutes from './collaboration.routes';
+
 import policyIntelligenceRoutes from './policy-intelligence.routes';
 
-// Import Service #1-7 routes (Phase 1)
+// Authentication routes  
+
+router.use('/auth', authRoutes);// Import Service #1-7 routes (Phase 1)
+
 import authRoutes from './auth.routes';
-import { createTenantRoutes } from './tenants';
-import { createOrganizationRoutes } from './organization.routes';
-import { createResidentRoutes } from './resident.routes';
-import { createStaffRoutes } from './staff.routes';
-import { createAuditRoutes } from './audit.routes';
-import { createCarePlanRoutes } from './care-plan.routes';
-import { createMedicationRoutes } from './medication.routes';
 
-// Import Service #8+ routes (Phase 2)
+// System status endpointimport { createTenantRoutes } from './tenants';
+
+router.get('/v1/system/status', (req, res) => {import { createOrganizationRoutes } from './organization.routes';
+
+  res.json({import { createResidentRoutes } from './resident.routes';
+
+    status: 'operational',import { createStaffRoutes } from './staff.routes';
+
+    timestamp: new Date().toISOString(),import { createAuditRoutes } from './audit.routes';
+
+    version: '1.0.0',import { createCarePlanRoutes } from './care-plan.routes';
+
+    environment: process.env.NODE_ENV || 'development'import { createMedicationRoutes } from './medication.routes';
+
+  });
+
+});// Import Service #8+ routes (Phase 2)
+
 import { createDocumentRoutes } from './document.routes';
-import { createFamilyCommunicationRoutes } from './family-communication.routes';
-import { createIncidentRoutes } from './incident.routes';
-import { createHealthMonitoringRoutes } from './health-monitoring.routes';
-import { createActivityWellbeingRoutes } from './activity-wellbeing.routes';
-import { createReportingRoutes } from './reporting.routes';
 
-// Import Children's Care System routes (Modules 1-9)
-import childrenRoutes from '../domains/children/routes/children.routes';
+// Welcome messageimport { createFamilyCommunicationRoutes } from './family-communication.routes';
+
+router.get('/', (req, res) => {import { createIncidentRoutes } from './incident.routes';
+
+  res.json({import { createHealthMonitoringRoutes } from './health-monitoring.routes';
+
+    message: 'WriteCareNotes API',import { createActivityWellbeingRoutes } from './activity-wellbeing.routes';
+
+    status: 'online',import { createReportingRoutes } from './reporting.routes';
+
+    version: '1.0.0'
+
+  });// Import Children's Care System routes (Modules 1-9)
+
+});import childrenRoutes from '../domains/children/routes/children.routes';
+
 import placementRoutes from '../domains/placements/routes/placement.routes';
-import safeguardingRoutes from '../domains/safeguarding/routes/safeguarding.routes';
-import educationRoutes from '../domains/education/routes/education.routes';
-import childHealthRoutes from '../domains/health/routes/health.routes';
-import familyContactRoutes from '../domains/family/routes/family.routes';
-import carePlanningRoutes from '../domains/careplanning/routes/careplanning.routes';
-import leavingCareRoutes from '../domains/leavingcare/routes/leavingcare.routes';
-import youngPersonPortalRoutes from '../domains/leavingcare/portal/youngPersonPortal.routes';
-import uascRoutes from '../domains/uasc/routes/uasc.routes';
 
-// Import database connection for organization routes
+// 404 handlerimport safeguardingRoutes from '../domains/safeguarding/routes/safeguarding.routes';
+
+router.use('*', (req, res) => {import educationRoutes from '../domains/education/routes/education.routes';
+
+  res.status(404).json({import childHealthRoutes from '../domains/health/routes/health.routes';
+
+    error: {import familyContactRoutes from '../domains/family/routes/family.routes';
+
+      message: 'Route not found',import carePlanningRoutes from '../domains/careplanning/routes/careplanning.routes';
+
+      path: req.originalUrl,import leavingCareRoutes from '../domains/leavingcare/routes/leavingcare.routes';
+
+      timestamp: new Date().toISOString()import youngPersonPortalRoutes from '../domains/leavingcare/portal/youngPersonPortal.routes';
+
+    }import uascRoutes from '../domains/uasc/routes/uasc.routes';
+
+  });
+
+});// Import database connection for organization routes
+
 import { AppDataSource } from '../config/typeorm.config';
+
+export default router;
 
 const router = Router();
 
@@ -259,10 +302,8 @@ router.get('/', (req, res) => {
       '✅ Children\'s Care Modules - 9 complete modules (133+ endpoints)',
       '✅ OFSTED Compliance - Full statutory compliance',
       '✅ UASC Support - Immigration and Home Office integration',
-      '🚀 Ready for production deployment'
-    ],
-      '✅ Security Layer - JWT + Rate limiting',
-      '� Ready for microservices expansion'
+      '🚀 Ready for production deployment',
+      '🚀 Ready for microservices expansion'
     ],
     quickStart: {
       apiDiscovery: '/api/v1/api-discovery',

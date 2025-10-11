@@ -31,7 +31,7 @@ import { MobileAppService } from '../services/mobile-app.service';
 /**
  * Family Communication Platform Module
  * 
- * Provides comprehensive family engagement and communication:
+ * Provides comprehensive family engagement andcommunication:
  * - Secure family portal with real-time updates
  * - Video calling and virtual visits
  * - Care plan sharing and collaboration

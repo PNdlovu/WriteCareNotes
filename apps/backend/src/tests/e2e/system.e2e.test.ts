@@ -23,10 +23,10 @@ import * as request from 'supertest';
  */
 
 describe('System E2E Tests', () => {
-  letapp: INestApplication;
+  let app: INestApplication;
 
   beforeAll(async () => {
-    constmoduleFixture: TestingModule = await Test.createTestingModule({
+    const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',

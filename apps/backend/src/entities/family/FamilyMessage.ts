@@ -67,7 +67,7 @@ export class FamilyMessage {
   @JoinColumn({ name: 'residentId' })
   resident!: Resident;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   subject!: string;
 
   @Column({ type: 'text' })
@@ -97,7 +97,7 @@ export class FamilyMessage {
   @Column({ type: 'timestamp', nullable: true })
   acknowledgedAt?: Date;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   acknowledgmentNotes?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -124,34 +124,34 @@ export class FamilyMessage {
     department?: string;
   };
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   senderName?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   senderEmail?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   senderPhone?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   senderRole?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   recipientName?: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   recipientEmail?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   recipientPhone?: string;
 
   @Column({ type: 'boolean', default: false })
   isEncrypted!: boolean;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   encryptionKey?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   encryptionAlgorithm?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -160,7 +160,7 @@ export class FamilyMessage {
   @Column({ type: 'timestamp', nullable: true })
   archivedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   archivedBy?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -169,10 +169,10 @@ export class FamilyMessage {
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deletedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   deletionReason?: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -181,16 +181,16 @@ export class FamilyMessage {
   @Column({ type: 'boolean', default: false })
   isScheduled!: boolean;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   templateId?: string;
 
   @Column({ type: 'jsonb', nullable: true })
   templateVariables?: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   language?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   timezone?: string;
 
   @Column({ type: 'jsonb', nullable: true })

@@ -12,14 +12,14 @@ const options: swaggerJsdoc.Options = {
       description: `
         WriteCareConnect is a comprehensive healthcare communication and supervision platform.
         
-        This API provides endpoints for:
+        This API provides endpointsfor:
         - Patient management and care notes
         - Real-time communication and video sessions
         - AI-powered supervision and compliance monitoring
         - Audit trails and performance analytics
         
         ## Authentication
-        Most endpoints require JWT authentication. Include the token in the Authorization header:
+        Most endpoints require JWT authentication. Include the token in the Authorizationheader:
         \`Authorization: Bearer <your-jwt-token>\`
         
         ## Rate Limiting

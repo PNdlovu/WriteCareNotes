@@ -63,7 +63,7 @@ export class AgentManager {
   privateprocessingQueue: AgentInvocation[] = [];
   privateisProcessing: boolean = false;
 
-  constructor() {
+  const ructor() {
     this.eventEmitter = new EventEmitter2();
     this.openAIAdapter = new OpenAIAdapter();
     this.llmService = new LLMIntegrationService();
@@ -142,7 +142,7 @@ export class AgentManager {
   async registerAgent(config: AgentConfig): Promise<void> {
     try {
       // Create agent instance based on type
-      letagent: any;
+      let agent: any;
       
       switch (config.type) {
         case 'voice_to_note':
@@ -155,7 +155,7 @@ export class AgentManager {
           agent = await this.createRiskFlagAgent(config);
           break;
         default:
-          throw new Error(`Unknown agent type: ${config.type}`);
+          throw new Error(`Unknown agenttype: ${config.type}`);
       }
 
       this.agents.set(config.id, agent);
@@ -169,7 +169,7 @@ export class AgentManager {
         data: { config }
       });
 
-      console.log(`✅ Agent registered: ${config.name} (${config.id})`);
+      console.log(`✅ Agentregistered: ${config.name} (${config.id})`);
     } catch (error) {
       console.error(`❌ Failed to register agent ${config.id}:`, error);
       throw error;
@@ -245,7 +245,7 @@ export class AgentManager {
       const result = await this.processAgentInvocation(invocation);
       const processingTime = Date.now() - startTime;
 
-      constresponse: AgentResponse = {
+      const response: AgentResponse = {
         agentId: invocation.agentId,
         success: true,
         result,
@@ -267,7 +267,7 @@ export class AgentManager {
       const processingTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-      constresponse: AgentResponse = {
+      const response: AgentResponse = {
         agentId: invocation.agentId,
         success: false,
         error: errorMessage,
@@ -294,12 +294,12 @@ export class AgentManager {
   private async processAgentInvocation(invocation: AgentInvocation): Promise<any> {
     const agent = this.agents.get(invocation.agentId);
     if (!agent) {
-      throw new Error(`Agent not found: ${invocation.agentId}`);
+      throw new Error(`Agent notfound: ${invocation.agentId}`);
     }
 
     const config = this.agentConfigs.get(invocation.agentId);
     if (!config || !config.enabled) {
-      throw new Error(`Agent not enabled: ${invocation.agentId}`);
+      throw new Error(`Agent notenabled: ${invocation.agentId}`);
     }
 
     // Set timeout
@@ -331,7 +331,7 @@ export class AgentManager {
     invocation: AgentInvocation,
     retryAttempts: number
   ): Promise<any> {
-    letlastError: Error | null = null;
+    let lastError: Error | null = null;
 
     for (let attempt = 0; attempt <= retryAttempts; attempt++) {
       try {
@@ -581,7 +581,7 @@ export class AgentManager {
    */
   getAgentCapabilities(agentId: string): string[] {
     const config = this.agentConfigs.get(agentId);
-    return config?.capabilities || [];
+    returnconfig?.capabilities || [];
   }
 
   /**

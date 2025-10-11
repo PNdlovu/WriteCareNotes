@@ -18,7 +18,7 @@ import { logger } from '../../utils/logger';
 export class PilotController {
   privatepilotService: PilotService;
 
-  constructor() {
+  const ructor() {
     this.pilotService = new PilotService();
   }
 
@@ -28,7 +28,7 @@ export class PilotController {
    */
   async registerPilot(req: Request, res: Response): Promise<void> {
     try {
-      constpilotData: CreatePilotDto = req.body;
+      const pilotData: CreatePilotDto = req.body;
       const result = await this.pilotService.registerPilot(pilotData);
       
       logger.info('Pilot registered successfully', { 
@@ -83,7 +83,7 @@ export class PilotController {
    */
   async submitFeedback(req: Request, res: Response): Promise<void> {
     try {
-      constfeedbackData: PilotFeedbackDto = req.body;
+      const feedbackData: PilotFeedbackDto = req.body;
       const result = await this.pilotService.submitFeedback(feedbackData);
       
       logger.info('Pilot feedback submitted', { 

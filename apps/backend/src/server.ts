@@ -14,9 +14,9 @@ const startServer = async () => {
     const server = app.listen(config.port, () => {
       logger.info(`🚀 Server running on port ${config.port}`);
       logger.info(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-      logger.info(`🔐 Authentication endpoints: /api/auth/*`);
-      logger.info(`🏢 Organization endpoints: /api/organizations/*`);
-      logger.info(`💚 Health check: /api/health`);
+      logger.info(`🔐 Authenticationendpoints: /api/auth/*`);
+      logger.info(`🏢 Organizationendpoints: /api/organizations/*`);
+      logger.info(`💚 Healthcheck: /api/health`);
     });
 
     // Graceful shutdown
@@ -56,7 +56,7 @@ const startServer = async () => {
 
     return server;
   } catch (error) {
-    logger.error('❌ Failed to start server:', error);
+    logger.error('❌ Failed to startserver:', error);
     process.exit(1);
   }
 };

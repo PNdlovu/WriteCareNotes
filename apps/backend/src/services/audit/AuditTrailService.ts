@@ -26,7 +26,7 @@ export class AuditTrailService extends EnterpriseAuditService {
   // This class simply extends EnterpriseAuditService
   // to maintain backward compatibility with existing code
   
-  constructor() {
+  const ructor() {
     super();
   }
 

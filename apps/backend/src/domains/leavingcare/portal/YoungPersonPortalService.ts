@@ -111,7 +111,7 @@ export class YoungPersonPortalService {
   privatefinancesRepository: Repository<LeavingCareFinances>;
   privatelifeSkillsRepository: Repository<LifeSkillsProgress>;
 
-  constructor() {
+  const ructor() {
     // Repositories will be injected via dependency injection
     // For now, assume they're available via AppDataSource
   }
@@ -431,7 +431,7 @@ export class YoungPersonPortalService {
     return child.age >= 16;
   }
 
-  // ==================== HELPER METHODS ====================
+  // ==================== HELPERMETHODS ====================
 
   private async getChild(childId: string): Promise<Child> {
     const child = await this.childRepository.findOne({

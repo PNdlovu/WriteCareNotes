@@ -66,7 +66,7 @@ router.use(authMiddleware);
 router.use(complianceMiddleware);
 router.use(auditMiddleware);
 
-// ==================== MEDICATION ROUTES ====================
+// ==================== MEDICATIONROUTES ====================
 
 /**
  * @swagger
@@ -218,7 +218,7 @@ router.get('/',
   controller.getMedications.bind(controller)
 );
 
-// ==================== PRESCRIPTION ROUTES ====================
+// ==================== PRESCRIPTIONROUTES ====================
 
 /**
  * @swagger
@@ -354,7 +354,7 @@ router.get('/prescriptions/residents/:residentId',
   controller.getPrescriptions.bind(controller)
 );
 
-// ==================== MEDICATION ADMINISTRATION ROUTES ====================
+// ==================== MEDICATION ADMINISTRATIONROUTES ====================
 
 /**
  * @swagger
@@ -505,7 +505,7 @@ router.get('/medication-administration/residents/:residentId/mar',
   controller.getMedicationAdministrationRecord.bind(controller)
 );
 
-// ==================== DRUG INTERACTION ROUTES ====================
+// ==================== DRUG INTERACTIONROUTES ====================
 
 /**
  * @swagger
@@ -596,7 +596,7 @@ router.get('/drug-interactions/residents/:residentId/medications/:medicationId/c
   controller.checkDrugInteractions.bind(controller)
 );
 
-// ==================== MEDICATION RECONCILIATION ROUTES ====================
+// ==================== MEDICATION RECONCILIATIONROUTES ====================
 
 /**
  * @swagger
@@ -703,7 +703,7 @@ router.post('/medication-reconciliation/residents/:residentId',
   controller.performMedicationReconciliation.bind(controller)
 );
 
-// ==================== CONTROLLED SUBSTANCE ROUTES ====================
+// ==================== CONTROLLED SUBSTANCEROUTES ====================
 
 /**
  * @swagger

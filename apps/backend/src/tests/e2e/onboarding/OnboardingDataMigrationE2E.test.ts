@@ -8,11 +8,11 @@ import { DataMigration } from '../../../entities/onboarding/DataMigration';
 import { MigrationMapping } from '../../../entities/onboarding/MigrationMapping';
 
 describe('Onboarding Data Migration E2E Tests', () => {
-  letapp: INestApplication;
-  letservice: OnboardingDataMigrationService;
+  let app: INestApplication;
+  let service: OnboardingDataMigrationService;
 
   beforeAll(async () => {
-    constmoduleFixture: TestingModule = await Test.createTestingModule({
+    const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',

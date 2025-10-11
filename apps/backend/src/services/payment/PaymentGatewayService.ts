@@ -75,12 +75,12 @@ interface Refund {
  * Provides integration with Stripe for payment processing
  */
 export class PaymentGatewayService {
-  private static instance: PaymentGatewayService;
+  private staticinstance: PaymentGatewayService;
   privatestripe: Stripe;
   privateprometheusService: PrometheusService;
   privatesentryService: SentryService;
 
-  private constructor() {
+  private const ructor() {
     this.prometheusService = PrometheusService.getInstance();
     this.sentryService = SentryService.getInstance();
     

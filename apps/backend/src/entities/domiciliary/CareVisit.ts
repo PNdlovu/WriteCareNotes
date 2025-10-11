@@ -416,7 +416,7 @@ export class CareVisit extends BaseEntity {
   }
 
   getNextVisitRecommendations(): string[] {
-    constrecommendations: any[] = [];
+    const recommendations: any[] = [];
     
     if (this.getDurationVariance() > 15) {
       recommendations.push('Consider extending scheduled duration');

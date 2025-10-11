@@ -123,7 +123,7 @@ interface PRNUsagePattern {
 
 @Injectable()
 export class MedicationScheduleService {
-  private readonly logger = new Logger(MedicationScheduleService.name);
+  private readonlylogger = new Logger(MedicationScheduleService.name);
 
   // Dose time templates (optimized for children's routines)
   private readonly DOSE_TIME_TEMPLATES: DoseTimeTemplate[] = [
@@ -170,14 +170,14 @@ export class MedicationScheduleService {
     }
   ];
 
-  constructor(
+  const ructor(
     @InjectRepository(MedicationRecord)
-    private readonly medicationRepository: Repository<MedicationRecord>,
+    private readonlymedicationRepository: Repository<MedicationRecord>,
     
     @InjectRepository(Child)
-    private readonly childRepository: Repository<Child>,
+    private readonlychildRepository: Repository<Child>,
     
-    private readonly eventEmitter: EventEmitter2
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   // ==========================================
@@ -204,7 +204,7 @@ export class MedicationScheduleService {
     });
 
     if (!medication) {
-      throw new BadRequestException(`Medication not found: ${medicationId}`);
+      throw new BadRequestException(`Medication notfound: ${medicationId}`);
     }
 
     // Get dose time template for frequency
@@ -212,7 +212,7 @@ export class MedicationScheduleService {
 
     if (medication.frequency === MedicationFrequency.PRN) {
       // PRN medications don't have fixed schedule
-      this.logger.log(`PRN medication - no fixed schedule: ${medication.medicationName}`);
+      this.logger.log(`PRN medication - no fixedschedule: ${medication.medicationName}`);
       return [];
     }
 
@@ -222,7 +222,7 @@ export class MedicationScheduleService {
     }
 
     // Generate recurring doses
-    constscheduledDoses: ScheduledDose[] = [];
+    const scheduledDoses: ScheduledDose[] = [];
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + durationDays);
 
@@ -357,7 +357,7 @@ export class MedicationScheduleService {
       { reminderSent: true }
     );
 
-    this.logger.log(`Proactive reminder sent: ${medication.medicationName} for ${medication.child.firstName} (${minutesUntilDose} min)`);
+    this.logger.log(`Proactive remindersent: ${medication.medicationName} for ${medication.child.firstName} (${minutesUntilDose} min)`);
   }
 
   // ==========================================
@@ -395,7 +395,7 @@ export class MedicationScheduleService {
 
     const medications = await queryBuilder.getMany();
 
-    constmetricsArray: AdherenceMetrics[] = [];
+    const metricsArray: AdherenceMetrics[] = [];
 
     for (const med of medications) {
       // Count doses (in production, query from scheduled_doses table)
@@ -455,7 +455,7 @@ export class MedicationScheduleService {
     refusedDoses: number,
     trend: 'improving' | 'stable' | 'declining'
   ): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     if (adherenceRate < 90) {
       if (missedDoses > refusedDoses * 2) {
@@ -506,7 +506,7 @@ export class MedicationScheduleService {
     });
 
     if (!medication) {
-      throw new BadRequestException(`Medication not found: ${medicationId}`);
+      throw new BadRequestException(`Medication notfound: ${medicationId}`);
     }
 
     if (medication.frequency !== MedicationFrequency.PRN) {
@@ -539,7 +539,7 @@ export class MedicationScheduleService {
 
     return {
       canAdminister: false,
-      reason: `Minimum ${minIntervalHours} hour interval not met. Last dose: ${lastDose.toLocaleString()}`,
+      reason: `Minimum ${minIntervalHours} hour interval not met. Lastdose: ${lastDose.toLocaleString()}`,
       nextAvailableTime,
       lastAdministered: lastDose
     };
@@ -565,7 +565,7 @@ export class MedicationScheduleService {
       }
     });
 
-    constpatterns: PRNUsagePattern[] = [];
+    const patterns: PRNUsagePattern[] = [];
 
     for (const med of prnMeds) {
       // Analyze usage (in production, query administration records)

@@ -17,7 +17,7 @@ import { logger } from '../../utils/logger';
 export class DBSVerificationController {
   privatedbsVerificationService: DBSVerificationService;
 
-  constructor() {
+  const ructor() {
     this.dbsVerificationService = new DBSVerificationService();
   }
 
@@ -26,7 +26,7 @@ export class DBSVerificationController {
    */
   async createDBSVerification(req: Request, res: Response): Promise<void> {
     try {
-      constrequest: DBSVerificationRequest = req.body;
+      const request: DBSVerificationRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const verification = await this.dbsVerificationService.createDBSVerification(request, createdBy);
@@ -114,7 +114,7 @@ export class DBSVerificationController {
    */
   async searchDBSVerifications(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: DBSVerificationSearchCriteria = req.query;
+      const criteria: DBSVerificationSearchCriteria = req.query;
 
       const verifications = await this.dbsVerificationService.searchDBSVerifications(criteria);
 
@@ -142,7 +142,7 @@ export class DBSVerificationController {
   async updateDBSVerification(req: Request, res: Response): Promise<void> {
     try {
       const { verificationId } = req.params;
-      constupdates: DBSVerificationUpdate = req.body;
+      const updates: DBSVerificationUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const verification = await this.dbsVerificationService.updateDBSVerification(
@@ -263,7 +263,7 @@ export class DBSVerificationController {
       const { certificateNumber, isCleared, notes } = req.body;
       const completedBy = req.user?.id || 'system';
 
-      if (!certificateNumber || typeof isCleared !== 'boolean') {
+      if (!certificateNumber || typeofisCleared !== 'boolean') {
         res.status(400).json({
           success: false,
           message: 'Certificate number and isCleared status are required'

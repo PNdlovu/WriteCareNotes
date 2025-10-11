@@ -28,7 +28,7 @@ import { RiskAssessmentService } from '../services/risk-assessment.service';
 /**
  * AI & Analytics Module
  * 
- * Provides comprehensive artificial intelligence and analytics capabilities:
+ * Provides comprehensive artificial intelligence and analyticscapabilities:
  * - Predictive health analytics using machine learning
  * - Personalized care recommendations
  * - Risk assessment and early warning systems

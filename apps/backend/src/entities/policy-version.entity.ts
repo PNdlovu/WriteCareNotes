@@ -28,7 +28,7 @@ import { Organization } from './organization.entity';
 /**
  * PolicyVersion Entity
  * 
- * Stores historical snapshots of policy versions for:
+ * Stores historical snapshots of policy versionsfor:
  * - Version comparison
  * - Audit trails
  * - Rollback functionality
@@ -52,13 +52,13 @@ export class PolicyVersion {
    * Version number at the time of snapshot
    * @example "1.2.3"
    */
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   version: string;
 
   /**
    * Policy title at the time of snapshot
    */
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   title: string;
 
   /**
@@ -104,13 +104,13 @@ export class PolicyVersion {
   /**
    * Tags at this version
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   tags: string[];
 
   /**
    * Linked modules at this version
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   linkedModules: string[];
 
   /**
@@ -218,7 +218,7 @@ export class PolicyVersion {
    * Compare this version with another
    */
   getDifferencesWith(otherVersion: PolicyVersion): string[] {
-    constdifferences: string[] = [];
+    const differences: string[] = [];
 
     if (this.title !== otherVersion.title) {
       differences.push('title');

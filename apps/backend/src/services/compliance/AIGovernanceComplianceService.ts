@@ -192,8 +192,8 @@ export interface AIMonitoringRequirement {
 export class AIGovernanceComplianceService {
   // Logger removed
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -205,7 +205,7 @@ export class AIGovernanceComplianceService {
     const assessmentId = request.assessmentId || uuidv4();
     
     try {
-      console.log(`Starting AI governance assessment: ${assessmentId}`);
+      console.log(`Starting AI governanceassessment: ${assessmentId}`);
 
       // Perform compliance checks based on framework
       const complianceChecks = await this.performComplianceChecks(request);
@@ -222,7 +222,7 @@ export class AIGovernanceComplianceService {
       // Check if certification is required
       const certificationRequired = await this.checkCertificationRequirements(request);
 
-      constresult: AIComplianceAssessmentResult = {
+      const result: AIComplianceAssessmentResult = {
         assessmentId,
         systemName: request.systemName,
         framework: request.framework,
@@ -244,11 +244,11 @@ export class AIGovernanceComplianceService {
         organizationId: request.organizationId
       });
 
-      console.log(`AI governance assessment completed: ${assessmentId}`);
+      console.log(`AI governance assessmentcompleted: ${assessmentId}`);
       return result;
 
     } catch (error: unknown) {
-      console.error(`AI governance assessment failed: ${assessmentId}`, error);
+      console.error(`AI governance assessmentfailed: ${assessmentId}`, error);
       throw error;
     }
   }
@@ -259,7 +259,7 @@ export class AIGovernanceComplianceService {
   private async performComplianceChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    constchecks: AIComplianceCheck[] = [];
+    const checks: AIComplianceCheck[] = [];
 
     switch (request.framework) {
       case AIComplianceFramework.EU_AI_ACT:
@@ -287,7 +287,7 @@ export class AIGovernanceComplianceService {
   private async performEUAIActChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    constchecks: AIComplianceCheck[] = [];
+    const checks: AIComplianceCheck[] = [];
 
     // Risk management system
     checks.push({
@@ -366,7 +366,7 @@ export class AIGovernanceComplianceService {
   private async performUKAIWhitePaperChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    constchecks: AIComplianceCheck[] = [];
+    const checks: AIComplianceCheck[] = [];
 
     // Innovation-friendly approach
     checks.push({
@@ -404,7 +404,7 @@ export class AIGovernanceComplianceService {
   private async performNHSAILabChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    constchecks: AIComplianceCheck[] = [];
+    const checks: AIComplianceCheck[] = [];
 
     // Clinical safety
     checks.push({
@@ -442,7 +442,7 @@ export class AIGovernanceComplianceService {
   private async performMHRASoftwareMedicalDeviceChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    constchecks: AIComplianceCheck[] = [];
+    const checks: AIComplianceCheck[] = [];
 
     // Medical device classification
     checks.push({
@@ -480,7 +480,7 @@ export class AIGovernanceComplianceService {
   private async performGeneralAIGovernanceChecks(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIComplianceCheck[]> {
-    constchecks: AIComplianceCheck[] = [];
+    const checks: AIComplianceCheck[] = [];
 
     // Ethical AI principles
     checks.push({
@@ -586,7 +586,7 @@ export class AIGovernanceComplianceService {
     request: AIGovernanceAssessmentRequest,
     checks: AIComplianceCheck[]
   ): Promise<AIComplianceRecommendation[]> {
-    constrecommendations: AIComplianceRecommendation[] = [];
+    const recommendations: AIComplianceRecommendation[] = [];
 
     const failedChecks = checks.filter(check => check.status === 'failed');
     const warningChecks = checks.filter(check => check.status === 'warning');
@@ -597,7 +597,7 @@ export class AIGovernanceComplianceService {
         id: uuidv4(),
         priority: 'critical',
         category: 'Compliance Violation',
-        description: `Address failed compliance check: ${check.requirement}`,
+        description: `Address failed compliancecheck: ${check.requirement}`,
         actionItems: [check.remediation || 'Implement corrective measures'],
         timeline: '30 days',
         resources: ['Compliance team', 'Technical team']
@@ -610,7 +610,7 @@ export class AIGovernanceComplianceService {
         id: uuidv4(),
         priority: 'high',
         category: 'Compliance Improvement',
-        description: `Improve compliance for: ${check.requirement}`,
+        description: `Improve compliancefor: ${check.requirement}`,
         actionItems: [check.remediation || 'Enhance current measures'],
         timeline: '60 days',
         resources: ['Technical team']
@@ -643,7 +643,7 @@ export class AIGovernanceComplianceService {
   private async determineMonitoringRequirements(
     request: AIGovernanceAssessmentRequest
   ): Promise<AIMonitoringRequirement[]> {
-    constrequirements: AIMonitoringRequirement[] = [];
+    const requirements: AIMonitoringRequirement[] = [];
 
     // Performance monitoring
     requirements.push({
@@ -754,7 +754,7 @@ export class AIGovernanceComplianceService {
   ): Promise<AIComplianceAssessmentResult | null> {
     // Implementation would retrieve from database
     // This is a placeholder for the actual database query
-    console.log(`Retrieving compliance status for AI system: ${systemName}`);
+    console.log(`Retrieving compliance status for AIsystem: ${systemName}`);
     return null;
   }
 
@@ -766,7 +766,7 @@ export class AIGovernanceComplianceService {
     updates: Partial<AIComplianceAssessmentResult>
   ): Promise<void> {
     // Implementation would update database
-    console.log(`Updating AI compliance assessment: ${assessmentId}`);
+    console.log(`Updating AI complianceassessment: ${assessmentId}`);
   }
 
   /**
@@ -777,7 +777,7 @@ export class AIGovernanceComplianceService {
     framework?: AIComplianceFramework
   ): Promise<any> {
     // Implementation would generate comprehensive compliance report
-    console.log(`Generating AI compliance report for organization: ${organizationId}`);
+    console.log(`Generating AI compliance report fororganization: ${organizationId}`);
     return {
       organizationId,
       framework,

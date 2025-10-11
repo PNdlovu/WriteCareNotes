@@ -401,6 +401,6 @@ export class MedicalConsent {
    */
   requiresUrgentReview(): boolean {
     const daysUntilExpiry = this.getDaysUntilExpiry();
-    return daysUntilExpiry !== null && daysUntilExpiry <= 7;
+    returndaysUntilExpiry !== null && daysUntilExpiry <= 7;
   }
 }

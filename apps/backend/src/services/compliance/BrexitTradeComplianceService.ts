@@ -268,18 +268,18 @@ export interface BrexitAction {
 export class BrexitTradeComplianceService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly documentationRepository: Repository<BrexitTradeDocumentation>,
+    private readonlydocumentationRepository: Repository<BrexitTradeDocumentation>,
     
-    private readonly eoriRepository: Repository<EORIRegistration>,
+    private readonlyeoriRepository: Repository<EORIRegistration>,
     
-    private readonly conformityRepository: Repository<UKConformityAssessment>,
+    private readonlyconformityRepository: Repository<UKConformityAssessment>,
     
-    private readonly declarationRepository: Repository<CustomsDeclaration>,
+    private readonlydeclarationRepository: Repository<CustomsDeclaration>,
     
-    private readonly assessmentRepository: Repository<BrexitComplianceAssessment>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlyassessmentRepository: Repository<BrexitComplianceAssessment>,
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -290,7 +290,7 @@ export class BrexitTradeComplianceService {
     assessedBy: string
   ): Promise<BrexitComplianceAssessment> {
     try {
-      console.log(`Starting Brexit trade compliance assessment for: ${organizationId}`);
+      console.log(`Starting Brexit trade compliance assessmentfor: ${organizationId}`);
 
       // Assess trade documentation compliance
       const tradeDocumentationCompliance = await this.assessTradeDocumentationCompliance(organizationId);
@@ -340,7 +340,7 @@ export class BrexitTradeComplianceService {
         organizationId
       );
 
-      constassessment: BrexitComplianceAssessment = {
+      const assessment: BrexitComplianceAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentDate: new Date(),
@@ -368,11 +368,11 @@ export class BrexitTradeComplianceService {
         criticalIssues: criticalIssues.length
       });
 
-      console.log(`Brexit compliance assessment completed: ${savedAssessment.id} (${overallComplianceScore}%)`);
+      console.log(`Brexit compliance assessmentcompleted: ${savedAssessment.id} (${overallComplianceScore}%)`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Brexit compliance assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Brexit compliance assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -385,9 +385,9 @@ export class BrexitTradeComplianceService {
     organizationDetails: any
   ): Promise<EORIRegistration> {
     try {
-      console.log(`Registering EORI number for organization: ${organizationId}`);
+      console.log(`Registering EORI number fororganization: ${organizationId}`);
 
-      consteoriRegistration: EORIRegistration = {
+      const eoriRegistration: EORIRegistration = {
         id: this.generateEORIId(),
         organizationId,
         eoriNumber: this.generateEORINumber(organizationDetails.countryCode),
@@ -416,11 +416,11 @@ export class BrexitTradeComplianceService {
         registrationDate: savedRegistration.registrationDate
       });
 
-      console.log(`EORI number registered: ${savedRegistration.eoriNumber}`);
+      console.log(`EORI numberregistered: ${savedRegistration.eoriNumber}`);
       return savedRegistration;
 
     } catch (error: unknown) {
-      console.error(`EORI registration failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`EORI registrationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -463,7 +463,7 @@ export class BrexitTradeComplianceService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess UKCA marking compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to assess UKCA markingcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -523,7 +523,7 @@ export class BrexitTradeComplianceService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess trade documentation compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to assess trade documentationcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -599,7 +599,7 @@ export class BrexitTradeComplianceService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess customs compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to assess customscompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -653,7 +653,7 @@ export class BrexitTradeComplianceService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess data flow compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to assess data flowcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -666,7 +666,7 @@ export class BrexitTradeComplianceService {
     declarationData: any
   ): Promise<CustomsDeclaration> {
     try {
-      console.log(`Generating customs declaration for: ${organizationId}`);
+      console.log(`Generating customs declarationfor: ${organizationId}`);
 
       // Classify commodity
       const commodityCode = await this.classifyCommodity(declarationData.productDescription);
@@ -682,7 +682,7 @@ export class BrexitTradeComplianceService {
       const dutyRate = await this.calculateDutyRate(commodityCode, declarationData.originCountry);
       const vatRate = await this.calculateVATRate(commodityCode);
 
-      constdeclaration: CustomsDeclaration = {
+      const declaration: CustomsDeclaration = {
         id: this.generateDeclarationId(),
         organizationId,
         declarationType: declarationData.type || 'import',
@@ -713,11 +713,11 @@ export class BrexitTradeComplianceService {
         organizationId
       });
 
-      console.log(`Customs declaration submitted: ${savedDeclaration.referenceNumber}`);
+      console.log(`Customs declarationsubmitted: ${savedDeclaration.referenceNumber}`);
       return savedDeclaration;
 
     } catch (error: unknown) {
-      console.error(`Customs declaration generation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Customs declaration generationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -730,9 +730,9 @@ export class BrexitTradeComplianceService {
     productDetails: any
   ): Promise<UKConformityAssessment> {
     try {
-      console.log(`Implementing UKCA marking transition for: ${productDetails.productName}`);
+      console.log(`Implementing UKCA marking transitionfor: ${productDetails.productName}`);
 
-      constconformityAssessment: UKConformityAssessment = {
+      const conformityAssessment: UKConformityAssessment = {
         id: this.generateConformityId(),
         organizationId,
         productName: productDetails.productName || 'WriteCareNotes Healthcare Software',
@@ -767,11 +767,11 @@ export class BrexitTradeComplianceService {
         organizationId
       });
 
-      console.log(`UKCA marking transition completed: ${savedAssessment.id}`);
+      console.log(`UKCA marking transitioncompleted: ${savedAssessment.id}`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`UKCA marking transition failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`UKCA marking transitionfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -781,7 +781,7 @@ export class BrexitTradeComplianceService {
    */
   async generateBrexitCompliancePackage(organizationId: string): Promise<any> {
     try {
-      console.log(`Generating Brexit compliance package for: ${organizationId}`);
+      console.log(`Generating Brexit compliance packagefor: ${organizationId}`);
 
       const compliancePackage = {
         organizationId,
@@ -829,7 +829,7 @@ export class BrexitTradeComplianceService {
       return compliancePackage;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate Brexit compliance package: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to generate Brexit compliancepackage: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -871,7 +871,7 @@ export class BrexitTradeComplianceService {
       return monitoring;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor Brexit compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to monitor Brexitcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -1004,7 +1004,7 @@ export class BrexitTradeComplianceService {
     dataFlow: DataFlowCompliance,
     organizationId: string
   ): Promise<BrexitActionPlan> {
-    constactions: BrexitAction[] = [];
+    const actions: BrexitAction[] = [];
 
     // Documentation actions
     if (!tradeDocumentation.eoriRegistration) {
@@ -1075,7 +1075,7 @@ export class BrexitTradeComplianceService {
       });
     }
 
-    constactionPlan: BrexitActionPlan = {
+    const actionPlan: BrexitActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,

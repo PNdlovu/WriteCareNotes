@@ -18,10 +18,10 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('DVLA Service', () => {
-  letservice: DVLAService;
-  letdvlaCheckRepository: Repository<DVLACheck>;
-  letdvlaServiceRepository: Repository<DVLAServiceEntity>;
-  letemployeeRepository: Repository<Employee>;
+  let service: DVLAService;
+  let dvlaCheckRepository: Repository<DVLACheck>;
+  let dvlaServiceRepository: Repository<DVLAServiceEntity>;
+  let employeeRepository: Repository<Employee>;
 
   const mockEmployee = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -77,7 +77,7 @@ describe('DVLA Service', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         DVLAService,
         {
@@ -374,9 +374,9 @@ describe('DVLA Service', () => {
       const licenseNumber = 'INVALID1234567890';
       const dateOfBirth = new Date('1990-01-01');
 
-      jest.spyOn(service, 'checkLicenseWithDVLA').mockRejectedValue(new Error('DVLA API error: Invalid license number'));
+      jest.spyOn(service, 'checkLicenseWithDVLA').mockRejectedValue(new Error('DVLA APIerror: Invalid license number'));
 
-      await expect(service.checkLicenseWithDVLA(licenseNumber, dateOfBirth)).rejects.toThrow('DVLA API error: Invalid license number');
+      await expect(service.checkLicenseWithDVLA(licenseNumber, dateOfBirth)).rejects.toThrow('DVLA APIerror: Invalid license number');
     });
   });
 
@@ -479,8 +479,8 @@ describe('DVLA Service', () => {
 });
 
 describe('DVLA Integration Tests', () => {
-  letapp: any;
-  letdvlaService: DVLAService;
+  let app: any;
+  let dvlaService: DVLAService;
 
   beforeAll(async () => {
     // Setup test database and application
@@ -544,7 +544,7 @@ describe('DVLA Integration Tests', () => {
 });
 
 describe('DVLA E2E Tests', () => {
-  letapp: any;
+  let app: any;
 
   beforeAll(async () => {
     // Setup test application with full stack

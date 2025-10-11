@@ -10,7 +10,7 @@
  * @since 2024
  *
  * @description
- * Core service managing the lifecycle of children in care including:
+ * Core service managing the lifecycle of children in careincluding:
  * - Child profile creation with duplicate checking and validation
  * - Unique child number generation (YYYY-NNNN format)
  * - Admission processing with placement creation
@@ -23,15 +23,15 @@
  * - Overdue tracking (health assessments, PEP reviews, LAC reviews)
  *
  * @compliance
- * BRITISH ISLES COMPLIANCE - All 8 jurisdictions supported:
+ * BRITISH ISLES COMPLIANCE - All 8 jurisdictionssupported:
  * - England: OFSTED Regulation 17, 40; Children Act 1989; Care Planning Regulations 2010
  * - Wales: CIW; Social Services and Well-being (Wales) Act 2014
  * - Scotland: Care Inspectorate Scotland; Children (Scotland) Act 1995
- * - Northern Ireland: RQIA; Children (NI) Order 1995
- * - Republic of Ireland: HIQA; Child Care Act 1991
+ * - NorthernIreland: RQIA; Children (NI) Order 1995
+ * - Republic ofIreland: HIQA; Child Care Act 1991
  * - Jersey: Jersey Care Commission; Children (Jersey) Law 2002
  * - Guernsey: Health & Social Care; Children (Guernsey) Law 2008
- * - Isle of Man: Registration & Inspection; Children and Young Persons Act 2001
+ * - Isle ofMan: Registration & Inspection; Children and Young Persons Act 2001
  * - Missing from Care Protocol (72-hour reporting)
  * - Data Protection Act 2018 / GDPR (UK & EU)
  *
@@ -87,7 +87,7 @@ export interface ChildStatistics {
 
 @Injectable()
 export class ChildService {
-  constructor(
+  const ructor(
     @InjectRepository(Child)
     privatechildRepository: Repository<Child>,
   ) {}
@@ -98,13 +98,13 @@ export class ChildService {
    * Includes British Isles jurisdiction-specific compliance validation
    */
   async createChild(dto: CreateChildDto, createdBy: string): Promise<Child> {
-    // BRITISH ISLES COMPLIANCE: Validate legal status for jurisdiction
+    // BRITISH ISLESCOMPLIANCE: Validate legal status for jurisdiction
     if (!BritishIslesComplianceUtil.isLegalStatusValidForJurisdiction(dto.legalStatus, dto.jurisdiction)) {
       const validStatuses = BritishIslesComplianceUtil.getValidLegalStatuses(dto.jurisdiction);
       const jurisdictionName = BritishIslesComplianceUtil.getJurisdictionDisplayName(dto.jurisdiction);
       throw new BadRequestException(
         `Legal status '${dto.legalStatus}' is not valid for ${jurisdictionName}. ` +
-        `Valid statuses for this jurisdiction are: ${validStatuses.join(', ')}`
+        `Valid statuses for this jurisdictionare: ${validStatuses.join(', ')}`
       );
     }
 
@@ -171,7 +171,7 @@ export class ChildService {
   async updateChild(id: string, dto: UpdateChildDto, updatedBy: string): Promise<Child> {
     const child = await this.getChild(id);
 
-    // BRITISH ISLES COMPLIANCE: Validate legal status for jurisdiction if either is being updated
+    // BRITISH ISLESCOMPLIANCE: Validate legal status for jurisdiction if either is being updated
     if (dto.legalStatus || dto.jurisdiction) {
       const targetJurisdiction = dto.jurisdiction || child.jurisdiction;
       const targetLegalStatus = dto.legalStatus || child.legalStatus;
@@ -181,7 +181,7 @@ export class ChildService {
         const jurisdictionName = BritishIslesComplianceUtil.getJurisdictionDisplayName(targetJurisdiction);
         throw new BadRequestException(
           `Legal status '${targetLegalStatus}' is not valid for ${jurisdictionName}. ` +
-          `Valid statuses for this jurisdiction are: ${validStatuses.join(', ')}`
+          `Valid statuses for this jurisdictionare: ${validStatuses.join(', ')}`
         );
       }
 
@@ -320,7 +320,7 @@ export class ChildService {
       queryBuilder.andWhere('child.legalStatus = :legalStatus', { legalStatus });
     }
 
-    // BRITISH ISLES COMPLIANCE: Filter by jurisdiction
+    // BRITISH ISLESCOMPLIANCE: Filter by jurisdiction
     if (jurisdiction) {
       queryBuilder.andWhere('child.jurisdiction = :jurisdiction', { jurisdiction });
     }
@@ -418,7 +418,7 @@ export class ChildService {
       throw new BadRequestException('Child is already admitted');
     }
 
-    // BRITISH ISLES COMPLIANCE: Validate legal status for jurisdiction
+    // BRITISH ISLESCOMPLIANCE: Validate legal status for jurisdiction
     if (!BritishIslesComplianceUtil.isLegalStatusValidForJurisdiction(
       dto.legalStatus, 
       child.jurisdiction
@@ -427,7 +427,7 @@ export class ChildService {
       const jurisdictionName = BritishIslesComplianceUtil.getJurisdictionDisplayName(child.jurisdiction);
       throw new BadRequestException(
         `Legal status '${dto.legalStatus}' is not valid for ${jurisdictionName}. ` +
-        `Valid statuses for this jurisdiction are: ${validStatuses.join(', ')}`
+        `Valid statuses for this jurisdictionare: ${validStatuses.join(', ')}`
       );
     }
 
@@ -515,7 +515,7 @@ export class ChildService {
       throw new BadRequestException(`Child with status ${child.status} cannot be transferred`);
     }
 
-    // BRITISH ISLES COMPLIANCE: Handle cross-border transfers
+    // BRITISH ISLESCOMPLIANCE: Handle cross-border transfers
     if (dto.destinationJurisdiction && dto.destinationJurisdiction !== child.jurisdiction) {
       // Validate legal status is valid in destination jurisdiction
       if (!BritishIslesComplianceUtil.isLegalStatusValidForJurisdiction(
@@ -526,9 +526,9 @@ export class ChildService {
         const destName = BritishIslesComplianceUtil.getJurisdictionDisplayName(dto.destinationJurisdiction);
         const sourceName = BritishIslesComplianceUtil.getJurisdictionDisplayName(child.jurisdiction);
         throw new BadRequestException(
-          `Cross-border transfer failed: Legal status '${child.legalStatus}' is not valid in ${destName}. ` +
+          `Cross-border transferfailed: Legal status '${child.legalStatus}' is not valid in ${destName}. ` +
           `Child is transferring from ${sourceName} to ${destName}. ` +
-          `Please update legal status to one of these before transferring: ${validStatuses.join(', ')}`
+          `Please update legal status to one of these beforetransferring: ${validStatuses.join(', ')}`
         );
       }
 
@@ -929,9 +929,9 @@ export class ChildService {
   /**
    * Calculate next LAC review date (jurisdiction-specific)
    * Uses British Isles Compliance Utility for jurisdiction-specific timescales
-   * First review: 20-28 days (varies by jurisdiction)
-   * Second review: 3 months after first
-   * Subsequent reviews: every 6 months
+   * Firstreview: 20-28 days (var ies by jurisdiction)
+   * Secondreview: 3 months after first
+   * Subsequentreviews: every 6 months
    */
   private calculateNextLACReview(fromDate: Date, jurisdiction: Jurisdiction): Date {
     return BritishIslesComplianceUtil.calculateNextReviewDate(jurisdiction, fromDate, 1);
@@ -948,26 +948,26 @@ export class ChildService {
   /**
    * Validate legal status transition
    * 
-   * BRITISH ISLES COMPLIANCE NOTE:
+   * BRITISH ISLES COMPLIANCENOTE:
    * Current transition rules primarily reflect England & Wales regulations under Children Act 1989.
-   * Scotland, Northern Ireland, Ireland, Isle of Man, Jersey, and Guernsey have different:
+   * Scotland, Northern Ireland, Ireland, Isle of Man, Jersey, and Guernsey havedifferent:
    * - Legal order names and types
    * - Transition pathways between orders
    * - Court processes and timelines
    * 
-   * For cross-jurisdiction compliance, this validation should be enhanced to:
+   * For cross-jurisdiction compliance, this validation should be enhancedto:
    * - Accept jurisdiction parameter
    * - Apply jurisdiction-specific transition rules
    * - Validate based on local legislation
    * 
-   * Current implementation: Use for England/Wales children only
+   * Currentimplementation: Use for England/Wales children only
    */
   private validateLegalStatusTransition(
     currentStatus: LegalStatus,
     newStatus: LegalStatus
   ): void {
     // Define allowed transitions
-    constallowedTransitions: Record<LegalStatus, LegalStatus[]> = {
+    const allowedTransitions: Record<LegalStatus, LegalStatus[]> = {
       [LegalStatus.SECTION_20]: [
         LegalStatus.SECTION_31,
         LegalStatus.SECTION_38,

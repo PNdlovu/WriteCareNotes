@@ -149,10 +149,10 @@ interface AppConfig {
 }
 
 class ConfigurationService {
-  private static instance: ConfigurationService;
+  private staticinstance: ConfigurationService;
   privateconfig: AppConfig;
 
-  private constructor() {
+  private const ructor() {
     this.config = this.loadConfiguration();
     this.validateConfiguration();
   }
@@ -291,7 +291,7 @@ class ConfigurationService {
   }
 
   private validateConfiguration(): void {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (this.config.nodeEnv === 'production') {
       const requiredVars = [
@@ -321,7 +321,7 @@ class ConfigurationService {
     }
 
     if (errors.length > 0) {
-      throw new Error(`Configuration validation failed:\n${errors.join('\n')}`);
+      throw new Error(`Configuration validationfailed:\n${errors.join('\n')}`);
     }
   }
 

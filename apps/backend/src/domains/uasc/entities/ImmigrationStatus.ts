@@ -110,7 +110,7 @@ export class ImmigrationStatus {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   statusNumber: string; // Format: IS-YYYY-NNNN
 
   @ManyToOne(() => UASCProfile)
@@ -136,16 +136,16 @@ export class ImmigrationStatus {
   // HOME OFFICE DETAILS
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   homeOfficeReference: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   portReferenceNumber: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   applicationReferenceNumber: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   uniqueApplicationNumber: string; // UAN
 
   // ========================================
@@ -175,7 +175,7 @@ export class ImmigrationStatus {
   @Column({ type: 'date', nullable: true })
   screeningInterviewDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   screeningInterviewLocation: string;
 
   @Column({ type: 'boolean', default: false })
@@ -191,7 +191,7 @@ export class ImmigrationStatus {
   @Column({ type: 'date', nullable: true })
   substantiveInterviewDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   substantiveInterviewLocation: string;
 
   @Column({ type: 'boolean', default: false })
@@ -200,13 +200,13 @@ export class ImmigrationStatus {
   @Column({ type: 'text', nullable: true })
   substantiveInterviewNotes: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   interpreterLanguage: string;
 
   @Column({ type: 'boolean', default: false })
   appropriateAdultPresent: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appropriateAdultName: string;
 
   // ========================================
@@ -216,7 +216,7 @@ export class ImmigrationStatus {
   @Column({ type: 'date', nullable: true })
   decisionDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   decisionType: string;
 
   @Column({ type: 'text', nullable: true })
@@ -232,7 +232,7 @@ export class ImmigrationStatus {
   // LEAVE TO REMAIN
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   leaveToRemainType: string;
 
   @Column({ type: 'date', nullable: true })
@@ -257,7 +257,7 @@ export class ImmigrationStatus {
   @Column({ type: 'boolean', default: false })
   biometricResidencePermit: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   brpNumber: string;
 
   @Column({ type: 'date', nullable: true })
@@ -269,7 +269,7 @@ export class ImmigrationStatus {
   @Column({ type: 'date', nullable: true })
   brpCollectionDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   brpCollectionLocation: string;
 
   // ========================================
@@ -296,7 +296,7 @@ export class ImmigrationStatus {
   })
   appealStage: AppealStage;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appealReferenceNumber: string;
 
   @Column({ type: 'text', nullable: true })
@@ -305,13 +305,13 @@ export class ImmigrationStatus {
   @Column({ type: 'date', nullable: true })
   appealHearingDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appealHearingLocation: string;
 
   @Column({ type: 'date', nullable: true })
   appealDecisionDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   appealOutcome: string;
 
   @Column({ type: 'text', nullable: true })
@@ -330,7 +330,7 @@ export class ImmigrationStatus {
   @Column({ type: 'text', nullable: true })
   furtherSubmissionsDetails: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   furtherSubmissionsOutcome: string;
 
   // ========================================
@@ -346,26 +346,26 @@ export class ImmigrationStatus {
   @Column({ type: 'text', nullable: true })
   freshClaimBasis: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   freshClaimStatus: string;
 
   // ========================================
   // LEGAL REPRESENTATION
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorName: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorFirm: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorEmail: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   solicitorPhone: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   legalAidReference: string;
 
   @Column({ type: 'boolean', default: false })
@@ -425,7 +425,7 @@ export class ImmigrationStatus {
   @Column({ type: 'date', nullable: true })
   detentionStartDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   detentionLocation: string;
 
   @Column({ type: 'text', nullable: true })
@@ -438,13 +438,13 @@ export class ImmigrationStatus {
   // NATIONALITY AND TRAVEL DOCUMENTS
   // ========================================
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   nationality: string;
 
   @Column({ type: 'boolean', default: false })
   hasPassport: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   passportNumber: string;
 
   @Column({ type: 'date', nullable: true })
@@ -453,10 +453,10 @@ export class ImmigrationStatus {
   @Column({ type: 'boolean', default: false })
   travelDocumentIssued: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   travelDocumentType: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   travelDocumentNumber: string;
 
   @Column({ type: 'date', nullable: true })
@@ -466,13 +466,13 @@ export class ImmigrationStatus {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

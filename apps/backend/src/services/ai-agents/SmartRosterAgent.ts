@@ -146,7 +146,7 @@ export interface RosterMetadata {
   tokensUsed: number;
   model: string;
   optimizationIterations: number;
-  constraintsSatisfied: number;
+  const raintsSatisfied: number;
   totalConstraints: number;
 }
 
@@ -155,7 +155,7 @@ export class SmartRosterAgent {
   privatellmService: LLMIntegrationService;
   privatesessionService: AIAgentSessionService;
 
-  constructor() {
+  const ructor() {
     this.openAIAdapter = new OpenAIAdapter();
     this.llmService = new LLMIntegrationService();
     this.sessionService = new AIAgentSessionService();
@@ -208,13 +208,13 @@ export class SmartRosterAgent {
           tokensUsed: result.tokensUsed,
           model: result.metadata.model,
           optimizationIterations: 1,
-          constraintsSatisfied: this.countSatisfiedConstraints(optimizedRoster, request),
+          const raintsSatisfied: this.countSatisfiedConstraints(optimizedRoster, request),
           totalConstraints: this.countTotalConstraints(request)
         }
       };
     } catch (error) {
-      console.error('Roster optimization failed:', error);
-      throw new Error(`Roster optimization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Roster optimizationfailed:', error);
+      throw new Error(`Roster optimizationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -245,7 +245,7 @@ export class SmartRosterAgent {
       // For now, we'll create a mock optimized roster
       return this.generateMockOptimizedRoster();
     } catch (error) {
-      console.error('Failed to parse optimized roster:', error);
+      console.error('Failed to parse optimizedroster:', error);
       return [];
     }
   }
@@ -397,7 +397,7 @@ export class SmartRosterAgent {
    * Count roles in roster
    */
   private countRoles(roster: OptimizedRosterEntry[]): Record<string, number> {
-    constcounts: Record<string, number> = {};
+    const counts: Record<string, number> = {};
     roster.forEach(entry => {
       counts[entry.role] = (counts[entry.role] || 0) + 1;
     });
@@ -411,7 +411,7 @@ export class SmartRosterAgent {
     roster: OptimizedRosterEntry[],
     request: RosterOptimizationRequest
   ): RosterRecommendation[] {
-    constrecommendations: RosterRecommendation[] = [];
+    const recommendations: RosterRecommendation[] = [];
 
     // Cost optimization recommendations
     if (request.budgetConstraints.maxWeeklyCost > 0) {
@@ -460,7 +460,7 @@ export class SmartRosterAgent {
         type: 'scheduling',
         priority: 'medium',
         title: 'Missing Skills',
-        description: `Required skills not covered: ${missingSkills.join(', ')}`,
+        description: `Required skills notcovered: ${missingSkills.join(', ')}`,
         impact: 'Service quality risk',
         actionRequired: 'Assign staff with required skills or provide training'
       });
@@ -476,7 +476,7 @@ export class SmartRosterAgent {
     roster: OptimizedRosterEntry[],
     request: RosterOptimizationRequest
   ): RosterWarning[] {
-    constwarnings: RosterWarning[] = [];
+    const warnings: RosterWarning[] = [];
 
     // Check for overtime warnings
     const overtimeEntries = roster.filter(entry => entry.isOvertime);
@@ -506,7 +506,7 @@ export class SmartRosterAgent {
   }
 
   /**
-   * Count satisfied constraints
+   * Count satisfied const raints
    */
   private countSatisfiedConstraints(
     roster: OptimizedRosterEntry[],
@@ -544,7 +544,7 @@ export class SmartRosterAgent {
   }
 
   /**
-   * Count total constraints
+   * Count total const raints
    */
   private countTotalConstraints(request: RosterOptimizationRequest): number {
     return request.staffRequirements.length + 1; // +1 for skill coverage
@@ -594,7 +594,7 @@ export class SmartRosterAgent {
    * Analyze skill distribution
    */
   private analyzeSkillDistribution(roster: OptimizedRosterEntry[]): Record<string, number> {
-    constskillCounts: Record<string, number> = {};
+    const skillCounts: Record<string, number> = {};
     roster.forEach(entry => {
       entry.skills.forEach(skill => {
         skillCounts[skill] = (skillCounts[skill] || 0) + 1;

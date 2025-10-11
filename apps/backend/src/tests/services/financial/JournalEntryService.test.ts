@@ -31,9 +31,9 @@ jest.mock('eventemitter2', () => ({
 }));
 
 describe('JournalEntryService', () => {
-  letservice: JournalEntryService;
-  letmockJournalEntryRepository: any;
-  letmockLedgerAccountRepository: any;
+  let service: JournalEntryService;
+  let mockJournalEntryRepository: any;
+  let mockLedgerAccountRepository: any;
 
   beforeEach(() => {
     mockJournalEntryRepository = {

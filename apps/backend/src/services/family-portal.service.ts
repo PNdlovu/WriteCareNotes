@@ -222,12 +222,12 @@ export class FamilyPortalService {
   privateportalSessions: Map<string, any> = new Map();
   privaterealTimeConnections: Map<string, any> = new Map();
 
-  constructor(
+  const ructor(
     
-    private readonly familyRepository: Repository<FamilyMemberEntity>,
+    private readonlyfamilyRepository: Repository<FamilyMemberEntity>,
     
-    private readonly communicationRepository: Repository<CommunicationEntity>,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlycommunicationRepository: Repository<CommunicationEntity>,
+    private readonlyeventEmitter: EventEmitter2,
   ) {
     this.initializeFamilyPortal();
   }
@@ -261,7 +261,7 @@ export class FamilyPortalService {
         this.getPendingSurvey(familyMemberId),
       ]);
 
-      constdashboard: FamilyPortalDashboard = {
+      const dashboard: FamilyPortalDashboard = {
         residentId,
         residentName: await this.getResidentName(residentId),
         lastUpdated: new Date(),
@@ -287,7 +287,7 @@ export class FamilyPortalService {
 
       return dashboard;
     } catch (error: unknown) {
-      console.error(`Failed to get family dashboard: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get familydashboard: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -301,7 +301,7 @@ export class FamilyPortalService {
     familyMemberIds: string[]
   ): Promise<boolean> {
     try {
-      constupdate: PortalUpdate = {
+      const update: PortalUpdate = {
         id: `care_update_${Date.now()}`,
         type: 'care',
         title: 'Care Plan Updated',
@@ -330,7 +330,7 @@ export class FamilyPortalService {
       console.log(`Care plan update shared with ${familyMemberIds.length} family members`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to share care plan update: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to share care planupdate: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -345,10 +345,10 @@ export class FamilyPortalService {
     caption?: string
   ): Promise<PhotoUpdate[]> {
     try {
-      constphotoUpdates: PhotoUpdate[] = [];
+      const photoUpdates: PhotoUpdate[] = [];
 
       for (const photo of photos) {
-        constphotoUpdate: PhotoUpdate = {
+        const photoUpdate: PhotoUpdate = {
           id: `photo_${Date.now()}_${Math.random()}`,
           url: photo.url,
           thumbnail: photo.thumbnail || photo.url,
@@ -367,7 +367,7 @@ export class FamilyPortalService {
         const familyMembers = await this.getFamilyMembersForResident(residentId);
         for (const familyMember of familyMembers) {
           if (familyMember.preferences?.photoSharing) {
-            constupdate: PortalUpdate = {
+            const update: PortalUpdate = {
               id: `photo_share_${Date.now()}`,
               type: 'photo',
               title: 'New Photos Shared',
@@ -393,7 +393,7 @@ export class FamilyPortalService {
       console.log(`Shared ${photoUpdates.length} photos for resident ${residentId}`);
       return photoUpdates;
     } catch (error: unknown) {
-      console.error(`Failed to share photos: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to sharephotos: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -436,7 +436,7 @@ export class FamilyPortalService {
     try {
       const familyMembers = await this.getFamilyMembersForResident(residentId);
       
-      constemergencyUpdate: PortalUpdate = {
+      const emergencyUpdate: PortalUpdate = {
         id: `emergency_${Date.now()}`,
         type: 'health',
         title: `Emergency: ${emergencyType}`,
@@ -478,7 +478,7 @@ export class FamilyPortalService {
       console.log(`Emergency notification sent to ${familyMembers.length} family members`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to send emergency notification: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to send emergencynotification: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -524,7 +524,7 @@ export class FamilyPortalService {
       console.log(`Feedback received from family member ${familyMemberId}: ${feedbackType}`);
       return true;
     } catch (error: unknown) {
-      console.error(`Failed to collect feedback: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to collectfeedback: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       return false;
     }
   }
@@ -579,10 +579,10 @@ export class FamilyPortalService {
         timestamp: new Date(),
       });
 
-      console.log(`Family meeting scheduled: ${meeting.id} with ${invitations.length} invitations`);
+      console.log(`Family meetingscheduled: ${meeting.id} with ${invitations.length} invitations`);
       return { meetingId: meeting.id, invitations };
     } catch (error: unknown) {
-      console.error(`Failed to schedule family meeting: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to schedule familymeeting: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -601,7 +601,7 @@ export class FamilyPortalService {
       }
 
       // Update preferences
-      constupdatedPreferences: FamilyPreferences = {
+      const updatedPreferences: FamilyPreferences = {
         ...familyMember.preferences,
         ...preferences,
       };
@@ -618,7 +618,7 @@ export class FamilyPortalService {
       console.log(`Updated preferences for family member ${familyMemberId}`);
       return updatedPreferences;
     } catch (error: unknown) {
-      console.error(`Failed to update family preferences: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to update familypreferences: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -630,7 +630,7 @@ export class FamilyPortalService {
       // Initialize portal services
       console.log('Family portal service initialized');
     } catch (error: unknown) {
-      console.error(`Failed to initialize family portal: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to initialize familyportal: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
     }
   }
 
@@ -891,7 +891,7 @@ export class FamilyPortalService {
 
   private async alertStaffToFeedback(feedbackRecord: any): Promise<void> {
     // Alert appropriate staff to feedback
-    console.log(`Alerting staff to feedback: ${feedbackRecord.id}`);
+    console.log(`Alerting staff tofeedback: ${feedbackRecord.id}`);
   }
 
   private async sendMeetingInvitation(familyMemberId: string, meeting: any): Promise<void> {
@@ -901,6 +901,6 @@ export class FamilyPortalService {
 
   private async storeFamilyMeeting(meeting: any, invitations: any[]): Promise<void> {
     // Store meeting and invitations in database
-    console.log(`Storing family meeting: ${meeting.id} with ${invitations.length} invitations`);
+    console.log(`Storing familymeeting: ${meeting.id} with ${invitations.length} invitations`);
   }
 }

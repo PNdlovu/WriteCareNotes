@@ -137,7 +137,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'rating',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },
@@ -222,7 +222,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'rating',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },
@@ -313,7 +313,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'rating',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },
@@ -406,19 +406,19 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'jurisdiction',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },
         {
           name: 'regulatoryBody',
-          type: 'varchar',
+          type: 'var char',
           length: '100',
           isNullable: false,
         },
         {
           name: 'title',
-          type: 'varchar',
+          type: 'var char',
           length: '255',
           isNullable: false,
         },
@@ -439,7 +439,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'impact',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },
@@ -456,7 +456,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'documentUrl',
-          type: 'varchar',
+          type: 'var char',
           length: '500',
           isNullable: true,
         },
@@ -504,7 +504,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
       columnNames: ['jurisdiction', 'effectiveDate'],
     }));
 
-    // Create foreign key constraints
+    // Create foreign key const raints
     await queryRunner.createForeignKey('british_isles_compliance', new ForeignKey({
       columnNames: ['organizationId'],
       referencedColumnNames: ['id'],
@@ -563,19 +563,19 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'jurisdiction',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },
         {
           name: 'regulatoryBody',
-          type: 'varchar',
+          type: 'var char',
           length: '100',
           isNullable: false,
         },
         {
           name: 'registrationNumber',
-          type: 'varchar',
+          type: 'var char',
           length: '100',
           isNullable: true,
         },
@@ -596,7 +596,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'currentRating',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: true,
         },
@@ -651,7 +651,7 @@ export class BritishIslesMultiJurisdictionalCompliance1704067200000 implements M
         },
         {
           name: 'jurisdiction',
-          type: 'varchar',
+          type: 'var char',
           length: '50',
           isNullable: false,
         },

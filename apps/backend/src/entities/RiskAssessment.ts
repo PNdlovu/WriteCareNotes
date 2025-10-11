@@ -16,10 +16,10 @@ import { Resident } from './Resident';
 
 @Entity('wcn_risk_assessments')
 export class RiskAssessment extends BaseEntity {
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   riskType!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   riskLevel!: string; // LOW, MEDIUM, HIGH, CRITICAL
 
   @Column({ type: 'text' })

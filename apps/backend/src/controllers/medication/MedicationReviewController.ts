@@ -27,9 +27,9 @@ import { EventEmitter2 } from "eventemitter2";
  * - England: NICE Medication Review Guidelines, CQC Medication Standards
  * - Scotland: NICE Guidelines, Care Inspectorate Medication Review Standards
  * - Wales: NICE Guidelines, CIW Medication Review Requirements
- * - Northern Ireland: NICE Guidelines, RQIA Medication Review Standards
- * - Republic of Ireland: HIQA Medication Review Framework, HSE Guidelines
- * - Isle of Man: DHSC Medication Review Guidelines
+ * - NorthernIreland: NICE Guidelines, RQIA Medication Review Standards
+ * - Republic ofIreland: HIQA Medication Review Framework, HSE Guidelines
+ * - Isle ofMan: DHSC Medication Review Guidelines
  * - Guernsey: Committee for Health & Social Care Review Standards
  * - Jersey: Care Commission Medication Review Requirements
  * - GMC Good Practice in Prescribing and Managing Medicines
@@ -62,7 +62,7 @@ import { logger } from '../../utils/logger';
 export class MedicationReviewController {
   privatereviewService: MedicationReviewService;
 
-  constructor() {
+  const ructor() {
     this.reviewService = new MedicationReviewService();
   }
 
@@ -98,7 +98,7 @@ export class MedicationReviewController {
       // Validate required fields
       if (!reviewType || !reviewedBy || !reviewerRole || !clinicalIndications) {
         res.status(400).json({ 
-          error: 'Missing required fields: reviewType, reviewedBy, reviewerRole, clinicalIndications' 
+          error: 'Missing requiredfields: reviewType, reviewedBy, reviewerRole, clinicalIndications' 
         });
         return;
       }
@@ -107,13 +107,13 @@ export class MedicationReviewController {
       const validReviewTypes = ['routine', 'clinical_change', 'adverse_event', 'polypharmacy', 'admission', 'discharge'];
       if (!validReviewTypes.includes(reviewType)) {
         res.status(400).json({ 
-          error: 'Invalid review type. Must be one of: ' + validReviewTypes.join(', ')
+          error: 'Invalid review type. Must be oneof: ' + validReviewTypes.join(', ')
         });
         return;
       }
 
       // Validate follow-up date if required
-      letfollowUpDateTime: Date | undefined;
+      let followUpDateTime: Date | undefined;
       if (followUpRequired && followUpDate) {
         followUpDateTime = new Date(followUpDate);
         if (isNaN(followUpDateTime.getTime())) {
@@ -418,7 +418,7 @@ export class MedicationReviewController {
       const validStatuses = ['draft', 'completed', 'approved', 'implemented'];
       if (!validStatuses.includes(status)) {
         res.status(400).json({ 
-          error: 'Invalid status. Must be one of: ' + validStatuses.join(', ')
+          error: 'Invalid status. Must be oneof: ' + validStatuses.join(', ')
         });
         return;
       }

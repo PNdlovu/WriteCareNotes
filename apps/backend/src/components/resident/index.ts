@@ -23,7 +23,7 @@ export { ResidentDashboard } from './ResidentDashboard';
 export { ResidentProfile } from './ResidentProfile';
 export { ResidentAdmission } from './ResidentAdmission';
 
-// Additional components to be implemented:
+// Additional components to beimplemented:
 // export { CarePlanManagement } from './CarePlanManagement';
 // export { ResidentReporting } from './ResidentReporting';
 // export { FamilyPortal } from './FamilyPortal';

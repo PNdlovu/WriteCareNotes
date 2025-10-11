@@ -335,7 +335,7 @@ type OptimizationDomain = 'care_delivery' | 'resource_utilization' | 'staff_effi
 type OptimizationType = 'process_optimization' | 'resource_optimization' | 'workflow_optimization' | 'technology_optimization' | 'staff_optimization';
 
 export class CareQualityIntelligenceService {
-  private router = express.Router();
+  privaterouter = express.Router();
   privatedb: DatabaseService;
   privatelogger: Logger;
   privateauditService: AuditService;
@@ -343,7 +343,7 @@ export class CareQualityIntelligenceService {
   privatenotificationService: NotificationService;
   privateanalyticsService: AnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.db = DatabaseService.getInstance();
     this.logger = Logger.getInstance();
     this.auditService = AuditService.getInstance();
@@ -422,7 +422,7 @@ export class CareQualityIntelligenceService {
       } = req.body;
 
       const metricId = uuidv4();
-      constmetric: QualityMetric = {
+      const metric: QualityMetric = {
         id: metricId,
         tenantId,
         metricType,
@@ -484,7 +484,7 @@ export class CareQualityIntelligenceService {
         SELECT * FROM care_quality.metrics
         WHERE tenant_id = $1
       `;
-      constparams: any[] = [tenantId];
+      const params: any[] = [tenantId];
       let paramCount = 1;
 
       if (metricType) {
@@ -493,7 +493,7 @@ export class CareQualityIntelligenceService {
       }
 
       if (category) {
-        query += ` AND category = $${++paramCount}`;
+        query += ` ANDcategory = $${++paramCount}`;
         params.push(category);
       }
 
@@ -566,7 +566,7 @@ export class CareQualityIntelligenceService {
       const dataQuality = await this.calculateDataQuality(rawData, value, source);
 
       const measurementId = uuidv4();
-      constmeasurement: QualityMeasurement = {
+      const measurement: QualityMeasurement = {
         id: measurementId,
         tenantId,
         metricId,
@@ -664,7 +664,7 @@ export class CareQualityIntelligenceService {
       const userId = req.headers['x-user-id'] as string;
       const { modelIds, entityIds, timeHorizon = '7d' } = req.body;
 
-      constpredictions: PredictiveAlert[] = [];
+      const predictions: PredictiveAlert[] = [];
 
       for (const modelId of modelIds || await this.getActiveModelIds(tenantId)) {
         const model = await this.getPredictiveModelById(tenantId, modelId);
@@ -714,9 +714,9 @@ export class CareQualityIntelligenceService {
         SELECT 
           standard,
           COUNT(*) as total_requirements,
-          COUNT(CASE WHEN status = 'compliant' THEN 1 END) as compliant,
-          COUNT(CASE WHEN status = 'partially_compliant' THEN 1 END) as partially_compliant,
-          COUNT(CASE WHEN status = 'non_compliant' THEN 1 END) as non_compliant,
+          COUNT(CASE WHENstatus = 'compliant' THEN 1 END) as compliant,
+          COUNT(CASE WHENstatus = 'partially_compliant' THEN 1 END) as partially_compliant,
+          COUNT(CASE WHENstatus = 'non_compliant' THEN 1 END) as non_compliant,
           AVG(score) as average_score
         FROM care_quality.compliance_monitoring
         WHERE tenant_id = $1
@@ -830,7 +830,7 @@ export class CareQualityIntelligenceService {
 
   private async analyzeQualityTrends(tenantId: string, measurements: any[], focus?: string): Promise<QualityInsight[]> {
     // Implement AI-powered trend analysis
-    constinsights: QualityInsight[] = [];
+    const insights: QualityInsight[] = [];
 
     // Use AI service to analyze patterns
     const aiAnalysis = await this.aiService.analyzeQualityData({
@@ -842,7 +842,7 @@ export class CareQualityIntelligenceService {
 
     // Convert AI analysis to structured insights
     for (const analysis of aiAnalysis.insights) {
-      constinsight: QualityInsight = {
+      const insight: QualityInsight = {
         id: uuidv4(),
         tenantId,
         insightType: analysis.type,
@@ -898,7 +898,7 @@ export class CareQualityIntelligenceService {
 
   private async getQualityMetricById(tenantId: string, metricId: string): Promise<QualityMetric | null> {
     const result = await this.db.query(
-      'SELECT * FROM care_quality.metrics WHERE tenant_id = $1 AND id = $2',
+      'SELECT * FROM care_quality.metrics WHERE tenant_id = $1 ANDid = $2',
       [tenantId, metricId]
     );
 
@@ -930,7 +930,7 @@ export class CareQualityIntelligenceService {
       type: 'quality_critical',
       priority: 'critical',
       title: 'Critical Quality Metric Alert',
-      message: `Quality metric has reached critical threshold: ${value}`,
+      message: `Quality metric has reached criticalthreshold: ${value}`,
       metadata: { measurementId, metricId, value }
     });
   }
@@ -983,7 +983,7 @@ export class CareQualityIntelligenceService {
   // Additional helper methods would be implemented here...
   private async getActiveModelIds(tenantId: string): Promise<string[]> {
     const result = await this.db.query(
-      'SELECT id FROM care_quality.predictive_models WHERE tenant_id = $1 AND status = $2',
+      'SELECT id FROM care_quality.predictive_models WHERE tenant_id = $1 ANDstatus = $2',
       [tenantId, 'active']
     );
     return result.rows.map(row => row.id);

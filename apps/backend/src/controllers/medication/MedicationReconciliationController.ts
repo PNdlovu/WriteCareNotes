@@ -51,7 +51,7 @@ import { logger } from '../../utils/logger';
 export class MedicationReconciliationController {
   privatereconciliationService: MedicationReconciliationService;
 
-  constructor() {
+  const ructor() {
     this.reconciliationService = new MedicationReconciliationService();
   }
 
@@ -202,7 +202,7 @@ export class MedicationReconciliationController {
         return;
       }
 
-      constreconciliationRequest: ReconciliationRequest = {
+      const reconciliationRequest: ReconciliationRequest = {
         ...value,
         organizationId: req.user.organizationId
       };

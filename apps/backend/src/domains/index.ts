@@ -20,12 +20,12 @@ export * from './types/DomainModule';
 
 // Domain initialization helper
 export class DomainSystem {
-  private static instance: DomainSystem;
+  private staticinstance: DomainSystem;
   privatefactory: DomainFactory;
   privateregistry: DomainRegistry;
   privateconfigManager: DomainConfigManager;
 
-  private constructor() {
+  private const ructor() {
     this.factory = DomainFactory.getInstance();
     this.registry = DomainRegistry.getInstance();
     this.configManager = DomainConfigManager.getInstance();
@@ -55,13 +55,13 @@ export class DomainSystem {
         .map(([name, _]) => name);
 
       if (unhealthyDomains.length > 0) {
-        console.warn(`⚠️  Unhealthy domains: ${unhealthyDomains.join(', ')}`);
+        console.warn(`⚠️  Unhealthydomains: ${unhealthyDomains.join(', ')}`);
       }
 
       console.log('✅ Domain System initialized successfully');
       
     } catch (error) {
-      console.error('❌ Failed to initialize Domain System:', error);
+      console.error('❌ Failed to initialize DomainSystem:', error);
       throw error;
     }
   }
@@ -76,7 +76,7 @@ export class DomainSystem {
       await this.factory.shutdownAllDomains();
       console.log('✅ Domain System shutdown successfully');
     } catch (error) {
-      console.error('❌ Failed to shutdown Domain System:', error);
+      console.error('❌ Failed to shutdown DomainSystem:', error);
       throw error;
     }
   }

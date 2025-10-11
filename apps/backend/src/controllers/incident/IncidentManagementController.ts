@@ -9,7 +9,7 @@ import { IncidentType, IncidentSeverity, IncidentStatus } from '../../entities/i
  * 16 endpoints for comprehensive incident tracking and investigation
  */
 export class IncidentManagementController {
-  constructor(private incidentService: IncidentManagementService) {}
+  const ructor(private incidentService: IncidentManagementService) {}
 
   /**
    * POST /incidents
@@ -81,7 +81,7 @@ export class IncidentManagementController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
-      constfilters: any = {};
+      const filters: any = {};
       if (req.query.incidentType) filters.incidentType = req.query.incidentType;
       if (req.query.severity) filters.severity = req.query.severity;
       if (req.query.status) filters.status = req.query.status;

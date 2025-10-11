@@ -169,7 +169,7 @@ export class GPConnectService {
   privateeventEmitter: EventEmitter2;
   privateconfig: GPConnectConfig;
 
-  constructor() {
+  const ructor() {
     this.systemRepository = AppDataSource.getRepository(ExternalSystem);
     this.auditService = new AuditTrailService();
     this.notificationService = new NotificationService();
@@ -261,8 +261,8 @@ export class GPConnectService {
 
       return system;
     } catch (error) {
-      console.error('Failed to initialize GP Connect:', error);
-      throw new Error(`GP Connect initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Failed to initialize GPConnect:', error);
+      throw new Error(`GP Connect initializationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -275,7 +275,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('GET', '/metadata');
       return response.status === 200;
     } catch (error) {
-      console.error('GP Connect connection test failed:', error);
+      console.error('GP Connect connection testfailed:', error);
       return false;
     }
   }
@@ -312,7 +312,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('POST', '/appointments', payload);
 
       // Process response
-      constappointmentResponse: AppointmentBookingResponse = {
+      const appointmentResponse: AppointmentBookingResponse = {
         appointmentId: response.data.appointmentId,
         status: response.data.status,
         appointmentDate: response.data.appointmentDate,
@@ -367,8 +367,8 @@ export class GPConnectService {
 
       return appointmentResponse;
     } catch (error) {
-      console.error('Appointment booking failed:', error);
-      throw new Error(`Appointment booking failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Appointment bookingfailed:', error);
+      throw new Error(`Appointment bookingfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -397,7 +397,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('GET', '/patient-record', payload);
 
       // Process response
-      constpatientRecord: PatientRecordResponse = {
+      const patientRecord: PatientRecordResponse = {
         patientId: request.patientId,
         nhsNumber: request.nhsNumber,
         demographics: response.data.demographics,
@@ -425,8 +425,8 @@ export class GPConnectService {
 
       return patientRecord;
     } catch (error) {
-      console.error('Patient record fetch failed:', error);
-      throw new Error(`Patient record fetch failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Patient record fetchfailed:', error);
+      throw new Error(`Patient record fetchfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -450,7 +450,7 @@ export class GPConnectService {
       const response = await this.makeAPICall('POST', '/callbacks', payload);
 
       // Process response
-      constcallbackResponse: AsyncCallbackResponse = {
+      const callbackResponse: AsyncCallbackResponse = {
         callbackId: response.data.callbackId,
         status: response.data.status,
         webhookUrl: response.data.webhookUrl,
@@ -474,8 +474,8 @@ export class GPConnectService {
 
       return callbackResponse;
     } catch (error) {
-      console.error('Async callback registration failed:', error);
-      throw new Error(`Async callback registration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Async callback registrationfailed:', error);
+      throw new Error(`Async callback registrationfailed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -506,7 +506,7 @@ export class GPConnectService {
           await this.handleMedicationChange(eventData);
           break;
         default:
-          console.log(`Unhandled event type: ${eventData.eventType}`);
+          console.log(`Unhandled eventtype: ${eventData.eventType}`);
       }
 
       // Emit event
@@ -518,7 +518,7 @@ export class GPConnectService {
       });
 
     } catch (error) {
-      console.error('Async callback handling failed:', error);
+      console.error('Async callback handlingfailed:', error);
       throw error;
     }
   }
@@ -550,7 +550,7 @@ export class GPConnectService {
         failedTransactions: system.failedTransactions
       };
     } catch (error) {
-      console.error('Failed to get integration status:', error);
+      console.error('Failed to get integrationstatus:', error);
       throw error;
     }
   }
@@ -594,7 +594,7 @@ export class GPConnectService {
 
       return mockResponse;
     } catch (error) {
-      console.error('GP Connect API call failed:', error);
+      console.error('GP Connect API callfailed:', error);
       throw error;
     }
   }
@@ -650,7 +650,7 @@ export class GPConnectService {
    * Handle appointment update
    */
   private async handleAppointmentUpdate(eventData: any): Promise<void> {
-    console.log('Handling appointment update:', eventData);
+    console.log('Handling appointmentupdate:', eventData);
     // Implement appointment update logic
   }
 
@@ -658,7 +658,7 @@ export class GPConnectService {
    * Handle patient record update
    */
   private async handlePatientRecordUpdate(eventData: any): Promise<void> {
-    console.log('Handling patient record update:', eventData);
+    console.log('Handling patient recordupdate:', eventData);
     // Implement patient record update logic
   }
 
@@ -666,7 +666,7 @@ export class GPConnectService {
    * Handle medication change
    */
   private async handleMedicationChange(eventData: any): Promise<void> {
-    console.log('Handling medication change:', eventData);
+    console.log('Handling medicationchange:', eventData);
     // Implement medication change logic
   }
 }

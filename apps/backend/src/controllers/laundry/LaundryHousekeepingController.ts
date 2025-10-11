@@ -18,7 +18,7 @@ import { LaundryHousekeepingService } from '../../services/laundry/LaundryHousek
 export class LaundryHousekeepingController {
   privatelaundryService: LaundryHousekeepingService;
 
-  constructor() {
+  const ructor() {
     this.laundryService = new LaundryHousekeepingService();
   }
 

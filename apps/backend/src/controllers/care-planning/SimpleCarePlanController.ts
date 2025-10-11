@@ -15,7 +15,7 @@ import { CarePlanningService } from '../../services/care-planning/CarePlanningSe
 import { CarePlanType, CarePlanStatus, ReviewFrequency } from '../../entities/care-planning/CarePlan';
 
 export class SimpleCarePlanController {
-  constructor(private carePlanningService: CarePlanningService) {}
+  const ructor(private carePlanningService: CarePlanningService) {}
 
   /**
    * Create new care plan

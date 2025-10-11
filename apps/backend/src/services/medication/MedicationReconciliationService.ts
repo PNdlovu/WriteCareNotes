@@ -193,7 +193,7 @@ export class MedicationReconciliationService {
   privatenotificationService: NotificationService;
   privateeventService: EventPublishingService;
 
-  constructor() {
+  const ructor() {
     this.auditService = new AuditTrailService();
     this.notificationService = new NotificationService(new EventEmitter2());
     this.eventService = new EventPublishingService();
@@ -230,7 +230,7 @@ export class MedicationReconciliationService {
       // Determine if pharmacist review is required
       const requiresPharmacistReview = this.requiresPharmacistReview(discrepancies);
 
-      constreconciliationRecord: MedicationReconciliationRecord = {
+      const reconciliationRecord: MedicationReconciliationRecord = {
         id: reconciliationId,
         residentId: request.residentId,
         reconciliationType: request.reconciliationType,
@@ -309,7 +309,7 @@ export class MedicationReconciliationService {
       const resolutionId = this.generateUniqueId();
       const resolvedDate = new Date();
 
-      constdiscrepancyResolution: DiscrepancyResolution = {
+      const discrepancyResolution: DiscrepancyResolution = {
         id: resolutionId,
         discrepancyId,
         resolvedDate,
@@ -388,7 +388,7 @@ export class MedicationReconciliationService {
     try {
       const reviewDate = new Date();
 
-      constpharmacistReview: PharmacistReview = {
+      const pharmacistReview: PharmacistReview = {
         ...review,
         reviewDate,
         pharmacistId: userId
@@ -526,9 +526,9 @@ export class MedicationReconciliationService {
       let pharmacistReviews = 0;
       let criticalIssues = 0;
 
-      constdiscrepancyTypes: { [key: string]: number } = {};
-      constresolutionTypes: { [key: string]: number } = {};
-      constcompletionTimes: number[] = [];
+      const discrepancyTypes: { [key: string]: number } = {};
+      const resolutionTypes: { [key: string]: number } = {};
+      const completionTimes: number[] = [];
 
       reconciliations.forEach((rec: any) => {
         const discrepancies = JSON.parse(rec.discrepancies || '[]');
@@ -598,7 +598,7 @@ export class MedicationReconciliationService {
 
   private async validateReconciliationRequest(request: ReconciliationRequest): Promise<void> {
     if (!request.residentId || !request.reconciliationType || !request.sourceList) {
-      throw new Error('Invalid reconciliation request: missing required fields');
+      throw new Error('Invalid reconciliationrequest: missing required fields');
     }
 
     if (!request.sourceList.medications || request.sourceList.medications.length === 0) {
@@ -607,7 +607,7 @@ export class MedicationReconciliationService {
 
     // Validate resident exists
     const resident = await AppDataSource.query(`
-      SELECT id FROM residents WHERE id = $1 AND organization_id = $2
+      SELECT id FROM residents WHEREid = $1 AND organization_id = $2
     `, [request.residentId, request.organizationId]);
 
     if (!resident.length) {
@@ -631,7 +631,7 @@ export class MedicationReconciliationService {
       ORDER BY p.created_at DESC
     `, [residentId, organizationId]);
 
-    constmedications: ReconciliationMedication[] = currentMedications.map((med: any) => ({
+    const medications: ReconciliationMedication[] = currentMedications.map((med: any) => ({
       id: med.id,
       name: med.name,
       genericName: med.generic_name,
@@ -663,7 +663,7 @@ export class MedicationReconciliationService {
     reconciliationId: string,
     userId: string
   ): Promise<MedicationDiscrepancy[]> {
-    constdiscrepancies: MedicationDiscrepancy[] = [];
+    const discrepancies: MedicationDiscrepancy[] = [];
 
     // Create maps for easier comparison
     const sourceMap = new Map(sourceList.medications.map(med => [med.activeIngredient.toLowerCase(), med]));
@@ -791,7 +791,7 @@ export class MedicationReconciliationService {
     const isHighRisk = highRiskMedications.some(drug => medicationName.includes(drug));
 
     if (isHighRisk) {
-      return discrepancyType === 'omission' ? 'critical' : 'high';
+      returndiscrepancyType === 'omission' ? 'critical' : 'high';
     }
 
     // Assess based on discrepancy type
@@ -947,7 +947,7 @@ export class MedicationReconciliationService {
       SET 
         resolutions = COALESCE(resolutions, '[]'::json) || $1::json,
         updated_at = $2
-      WHERE id = $3 AND organization_id = $4
+      WHEREid = $3 AND organization_id = $4
     `, [JSON.stringify([resolution]), new Date(), reconciliationId, organizationId]);
   }
 
@@ -965,7 +965,7 @@ export class MedicationReconciliationService {
   ): Promise<MedicationReconciliationRecord> {
     const result = await AppDataSource.query(`
       SELECT * FROM medication_reconciliation_records
-      WHERE id = $1 AND organization_id = $2
+      WHEREid = $1 AND organization_id = $2
     `, [reconciliationId, organizationId]);
 
     if (!result.length) {
@@ -1000,8 +1000,8 @@ export class MedicationReconciliationService {
   ): Promise<void> {
     await AppDataSource.query(`
       UPDATE medication_reconciliation_records
-      SET status = $1, updated_at = $2
-      WHERE id = $3 AND organization_id = $4
+      SETstatus = $1, updated_at = $2
+      WHEREid = $3 AND organization_id = $4
     `, [status, new Date(), reconciliationId, organizationId]);
   }
 
@@ -1087,7 +1087,7 @@ export class MedicationReconciliationService {
         pharmacist_review = $1,
         reviewed_by = $2,
         updated_at = $3
-      WHERE id = $4 AND organization_id = $5
+      WHEREid = $4 AND organization_id = $5
     `, [JSON.stringify(review), review.pharmacistId, new Date(), reconciliationId, organizationId]);
   }
 

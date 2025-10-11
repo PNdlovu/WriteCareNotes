@@ -50,7 +50,7 @@ export function createHealthMonitoringRoutes(dataSource: DataSource): Router {
   /**
    * GET /health/assessments
    * List all assessments with filtering
-   * Query params: residentId, assessmentType, startDate, endDate, page, limit
+   * Queryparams: residentId, assessmentType, startDate, endDate, page, limit
    */
   router.get('/assessments', (req, res) => healthController.getAssessments(req, res));
 
@@ -75,14 +75,14 @@ export function createHealthMonitoringRoutes(dataSource: DataSource): Router {
   /**
    * GET /health/vital-signs/trends/:residentId
    * Get vital signs trend
-   * Query params: vitalType, days
+   * Queryparams: vitalType, days
    */
   router.get('/vital-signs/trends/:residentId', (req, res) => healthController.getVitalSignsTrend(req, res));
 
   /**
    * GET /health/weight/trends/:residentId
    * Get weight trend
-   * Query params: months
+   * Queryparams: months
    */
   router.get('/weight/trends/:residentId', (req, res) => healthController.getWeightTrend(req, res));
 

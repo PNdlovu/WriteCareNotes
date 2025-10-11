@@ -36,7 +36,7 @@ export function createActivityWellbeingRoutes(dataSource: DataSource): Router {
   /**
    * GET /activities
    * List all activities with filtering
-   * Query params: activityType, activityCategory, startDate, endDate, page, limit
+   * Queryparams: activityType, activityCategory, startDate, endDate, page, limit
    */
   router.get('/', (req, res) => activityController.getActivities(req, res));
 
@@ -67,7 +67,7 @@ export function createActivityWellbeingRoutes(dataSource: DataSource): Router {
   /**
    * GET /activities/resident/:residentId/attendance
    * Get attendance by resident
-   * Query params: days
+   * Queryparams: days
    */
   router.get('/resident/:residentId/attendance', (req, res) =>
     activityController.getAttendanceByResident(req, res)
@@ -76,21 +76,21 @@ export function createActivityWellbeingRoutes(dataSource: DataSource): Router {
   /**
    * GET /activities/upcoming
    * Get upcoming activities
-   * Query params: days
+   * Queryparams: days
    */
   router.get('/upcoming', (req, res) => activityController.getUpcomingActivities(req, res));
 
   /**
    * GET /activities/participation-stats
    * Get participation statistics
-   * Query params: startDate, endDate
+   * Queryparams: startDate, endDate
    */
   router.get('/participation-stats', (req, res) => activityController.getParticipationStats(req, res));
 
   /**
    * GET /activities/wellbeing-trends/:residentId
    * Get wellbeing trends for resident
-   * Query params: months
+   * Queryparams: months
    */
   router.get('/wellbeing-trends/:residentId', (req, res) => activityController.getWellbeingTrends(req, res));
 

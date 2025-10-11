@@ -10,33 +10,33 @@ export class CreateSecurityTables1704067380000 implements MigrationInterface {
         await queryRunner.query(`
             CREATE TABLE "security_policies" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-                "policyName" character varying(100) NOT NULL,
-                "description" character varying(255) NOT NULL,
-                "policyType" character varying(50) NOT NULL,
-                "category" character varying(50) NOT NULL,
+                "policyName" character var ying(100) NOT NULL,
+                "description" character var ying(255) NOT NULL,
+                "policyType" character var ying(50) NOT NULL,
+                "category" character var ying(50) NOT NULL,
                 "conditions" jsonb NOT NULL,
                 "actions" jsonb NOT NULL,
-                "enforcementLevel" character varying(20) NOT NULL,
+                "enforcementLevel" character var ying(20) NOT NULL,
                 "isActive" boolean NOT NULL DEFAULT true,
                 "priority" integer NOT NULL DEFAULT 0,
                 "effectiveDate" TIMESTAMP,
                 "expiryDate" TIMESTAMP,
                 "rules" jsonb,
                 "metrics" jsonb,
-                "createdBy" character varying(100),
-                "approvedBy" character varying(100),
+                "createdBy" character var ying(100),
+                "approvedBy" character var ying(100),
                 "approvedAt" TIMESTAMP,
-                "lastModifiedBy" character varying(100),
+                "lastModifiedBy" character var ying(100),
                 "lastModifiedAt" TIMESTAMP,
                 "exceptions" jsonb,
                 "complianceMapping" jsonb,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "requiresApproval" boolean NOT NULL DEFAULT false,
                 "approvalWorkflow" jsonb,
                 "testingResults" jsonb,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_security_policies" PRIMARY KEY ("id")
+                CONST RAINT "PK_security_policies" PRIMARY KEY ("id")
             )
         `);
 
@@ -44,37 +44,37 @@ export class CreateSecurityTables1704067380000 implements MigrationInterface {
         await queryRunner.query(`
             CREATE TABLE "security_incidents" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-                "incidentType" character varying(50) NOT NULL,
-                "severity" character varying(20) NOT NULL,
-                "title" character varying(255) NOT NULL,
+                "incidentType" character var ying(50) NOT NULL,
+                "severity" character var ying(20) NOT NULL,
+                "title" character var ying(255) NOT NULL,
                 "description" text NOT NULL,
                 "details" jsonb NOT NULL,
-                "status" character varying(20) NOT NULL DEFAULT 'reported',
+                "status" character var ying(20) NOT NULL DEFAULT 'reported',
                 "detectedAt" TIMESTAMP NOT NULL,
                 "reportedAt" TIMESTAMP,
                 "containedAt" TIMESTAMP,
                 "resolvedAt" TIMESTAMP,
                 "closedAt" TIMESTAMP,
-                "reportedBy" character varying(100),
-                "assignedTo" character varying(100),
+                "reportedBy" character var ying(100),
+                "assignedTo" character var ying(100),
                 "investigationNotes" jsonb,
                 "remediationActions" jsonb,
                 "impact" jsonb,
                 "complianceReporting" jsonb,
                 "policyId" uuid,
-                "detectionMethod" character varying(50),
+                "detectionMethod" character var ying(50),
                 "evidence" jsonb,
                 "threatIntelligence" jsonb,
                 "communicationLog" jsonb,
-                "rootCause" character varying(500),
-                "lessonsLearned" character varying(500),
+                "rootCause" character var ying(500),
+                "lessonsLearned" character var ying(500),
                 "metrics" jsonb,
                 "requiresExternalNotification" boolean NOT NULL DEFAULT false,
                 "requiresLegalReview" boolean NOT NULL DEFAULT false,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_security_incidents" PRIMARY KEY ("id")
+                CONST RAINT "PK_security_incidents" PRIMARY KEY ("id")
             )
         `);
 
@@ -97,17 +97,17 @@ export class CreateSecurityTables1704067380000 implements MigrationInterface {
         await queryRunner.query(`CREATE INDEX "IDX_security_incidents_policyId" ON "security_incidents" ("policyId")`);
         await queryRunner.query(`CREATE INDEX "IDX_security_incidents_createdAt" ON "security_incidents" ("createdAt")`);
 
-        // Add foreign key constraints
+        // Add foreign key const raints
         await queryRunner.query(`
             ALTER TABLE "security_incidents" 
-            ADD CONSTRAINT "FK_security_incidents_policyId" 
+            ADD CONST RAINT "FK_security_incidents_policyId" 
             FOREIGN KEY ("policyId") REFERENCES "security_policies"("id") ON DELETE SET NULL ON UPDATE NO ACTION
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop foreign key constraints
-        await queryRunner.query(`ALTER TABLE "security_incidents" DROP CONSTRAINT "FK_security_incidents_policyId"`);
+        // Drop foreign key const raints
+        await queryRunner.query(`ALTER TABLE "security_incidents" DROP CONST RAINT "FK_security_incidents_policyId"`);
 
         // Drop indexes
         await queryRunner.query(`DROP INDEX "IDX_security_incidents_createdAt"`);

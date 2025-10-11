@@ -128,31 +128,31 @@ export interface AccessRequest {
  */
 @Injectable()
 export class EnterpriseSecurityService {
-  private readonly logger = new Logger(EnterpriseSecurityService.name);
-  private readonly saltRounds = 12;
-  private readonly maxLoginAttempts = 5;
-  private readonly lockoutDuration = 30 * 60 * 1000; // 30 minutes
+  private readonlylogger = new Logger(EnterpriseSecurityService.name);
+  private readonlysaltRounds = 12;
+  private readonlymaxLoginAttempts = 5;
+  private readonlylockoutDuration = 30 * 60 * 1000; // 30 minutes
 
-  constructor(
+  const ructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonlyuserRepository: Repository<User>,
 
     @InjectRepository(Organization)
-    private readonly organizationRepository: Repository<Organization>,
+    private readonlyorganizationRepository: Repository<Organization>,
 
     // @InjectRepository(SecurityEvent) // TODO: Create SecurityEvent entity
-    // private readonly securityEventRepository: Repository<SecurityEvent>,
+    // private readonlysecurityEventRepository: Repository<SecurityEvent>,
     
     // @InjectRepository(AccessPolicy) // TODO: Create AccessPolicy entity
-    // private readonly accessPolicyRepository: Repository<AccessPolicy>,
+    // private readonlyaccessPolicyRepository: Repository<AccessPolicy>,
     
     // @InjectRepository(BiometricData) // TODO: Create BiometricData entity
-    // private readonly biometricRepository: Repository<BiometricData>,
+    // private readonlybiometricRepository: Repository<BiometricData>,
     
-    // private readonly jwtService: JwtService, // TODO: Install @nestjs/jwt
-    private readonly auditTrailService: AuditTrailService,
-    private readonly notificationService: NotificationService,
-    // private readonly threatDetectionService: ThreatDetectionService // TODO: Create service
+    // private readonlyjwtService: JwtService, // TODO: Install @nestjs/jwt
+    private readonlyauditTrailService: AuditTrailService,
+    private readonlynotificationService: NotificationService,
+    // private readonlythreatDetectionService: ThreatDetectionService // TODO: Create service
   ) {}  /**
    * Authenticate user with multi-factor support
    */
@@ -177,7 +177,7 @@ export class EnterpriseSecurityService {
       factors: string[];
     };
   }> {
-    this.logger.log(`Authentication attempt for user: ${identifier}`);
+    this.logger.log(`Authentication attempt foruser: ${identifier}`);
 
     try {
       // Find user by email or username
@@ -235,7 +235,7 @@ export class EnterpriseSecurityService {
       // Log successful authentication
       await this.logSecurityEvent('AUTHENTICATION_SUCCESS', 'User authenticated successfully', { userId: user.id }, authContext);
 
-      this.logger.log(`User authenticated successfully: ${user.id}`);
+      this.logger.log(`User authenticatedsuccessfully: ${user.id}`);
 
       return {
         success: true,
@@ -265,7 +265,7 @@ export class EnterpriseSecurityService {
       expiresIn: number;
     };
   }> {
-    this.logger.log(`Completing 2FA for user: ${userId}`);
+    this.logger.log(`Completing 2FA foruser: ${userId}`);
 
     try {
       const user = await this.userRepository.findOne({
@@ -305,7 +305,7 @@ export class EnterpriseSecurityService {
       };
 
     } catch (error) {
-      this.logger.error(`2FA completion failed: ${error.message}`, error.stack);
+      this.logger.error(`2FA completionfailed: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -327,7 +327,7 @@ export class EnterpriseSecurityService {
     };
     confidence: number;
   }> {
-    this.logger.log(`Completing biometric authentication for user: ${userId}`);
+    this.logger.log(`Completing biometric authentication foruser: ${userId}`);
 
     try {
       // Retrieve stored biometric templates
@@ -372,7 +372,7 @@ export class EnterpriseSecurityService {
       };
 
     } catch (error) {
-      this.logger.error(`Biometric authentication failed: ${error.message}`, error.stack);
+      this.logger.error(`Biometric authenticationfailed: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -450,7 +450,7 @@ export class EnterpriseSecurityService {
     qrCodeUrl: string;
     backupCodes: string[];
   }> {
-    this.logger.log(`Setting up 2FA for user: ${userId}`);
+    this.logger.log(`Setting up 2FA foruser: ${userId}`);
 
     try {
       const user = await this.userRepository.findOne({
@@ -499,7 +499,7 @@ export class EnterpriseSecurityService {
       };
 
     } catch (error) {
-      this.logger.error(`2FA setup failed: ${error.message}`, error.stack);
+      this.logger.error(`2FA setupfailed: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -516,7 +516,7 @@ export class EnterpriseSecurityService {
     id: string;
     enrollmentQuality: number;
   }> {
-    this.logger.log(`Registering biometric for user: ${userId}`);
+    this.logger.log(`Registering biometric foruser: ${userId}`);
 
     try {
       // Process and validate biometric data
@@ -556,7 +556,7 @@ export class EnterpriseSecurityService {
       };
 
     } catch (error) {
-      this.logger.error(`Biometric registration failed: ${error.message}`, error.stack);
+      this.logger.error(`Biometric registrationfailed: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -586,7 +586,7 @@ export class EnterpriseSecurityService {
       this.logger.log('Security threat monitoring completed');
 
     } catch (error) {
-      this.logger.error(`Security monitoring failed: ${error.message}`, error.stack);
+      this.logger.error(`Security monitoringfailed: ${error.message}`, error.stack);
     }
   }
 
@@ -618,7 +618,7 @@ export class EnterpriseSecurityService {
     };
     recommendations: string[];
   }> {
-    this.logger.log(`Generating compliance report for organization: ${organizationId}`);
+    this.logger.log(`Generating compliance report fororganization: ${organizationId}`);
 
     try {
       const organization = await this.organizationRepository.findOne({
@@ -647,7 +647,7 @@ export class EnterpriseSecurityService {
       };
 
     } catch (error) {
-      this.logger.error(`Compliance report generation failed: ${error.message}`, error.stack);
+      this.logger.error(`Compliance report generationfailed: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -664,7 +664,7 @@ export class EnterpriseSecurityService {
     level: ThreatLevel;
     factors: string[];
   }> {
-    constriskFactors: string[] = [];
+    const riskFactors: string[] = [];
     let riskScore = 0;
 
     // Check for unusual location
@@ -697,11 +697,11 @@ export class EnterpriseSecurityService {
     }
 
     // Determine threat level
-    letlevel: ThreatLevel;
+    let level: ThreatLevel;
     if (riskScore >= 70) level = ThreatLevel.CRITICAL;
     else if (riskScore >= 50) level = ThreatLevel.HIGH;
     else if (riskScore >= 25) level = ThreatLevel.MEDIUM;
-    else level = ThreatLevel.LOW;
+    elselevel = ThreatLevel.LOW;
 
     return { score: riskScore, level, factors: riskFactors };
   }
@@ -810,7 +810,7 @@ export class EnterpriseSecurityService {
       if (await this.evaluatePolicy(policy, user, request)) {
         return {
           decision: AccessDecision.ALLOW,
-          reason: `Granted by policy: ${policy.name}`
+          reason: `Granted bypolicy: ${policy.name}`
         };
       }
     }
@@ -890,7 +890,7 @@ export class EnterpriseSecurityService {
   }
 
   private generateBackupCodes(): string[] {
-    constcodes: string[] = [];
+    const codes: string[] = [];
     for (let i = 0; i < 10; i++) {
       codes.push(require('crypto').randomBytes(4).toString('hex').toUpperCase());
     }
@@ -931,7 +931,7 @@ export class EnterpriseSecurityService {
     if (!user) return;
 
     const failedAttempts = (user.failedLoginAttempts || 0) + 1;
-    constupdateData: any = { failedLoginAttempts: failedAttempts };
+    const updateData: any = { failedLoginAttempts: failedAttempts };
 
     if (failedAttempts >= this.maxLoginAttempts) {
       updateData.lockedUntil = new Date(Date.now() + this.lockoutDuration);
@@ -952,7 +952,7 @@ export class EnterpriseSecurityService {
   }
 
   private async updateUserLogin(user: User, authContext: Partial<AuthContext>): Promise<void> {
-    constupdateData: any = {
+    const updateData: any = {
       lastLoginAt: new Date(),
       lastLoginIp: authContext.ipAddress,
       failedLoginAttempts: 0,

@@ -33,7 +33,7 @@ export interface ExportReportDTO {
 /**
  * Service #14: Reporting & Analytics Service
  * 
- * Comprehensive reporting and analytics platform with:
+ * Comprehensive reporting and analytics platformwith:
  * - Custom report builder
  * - Dashboard KPIs and metrics
  * - Compliance reports (CQC, regulatory)
@@ -44,7 +44,7 @@ export interface ExportReportDTO {
  * Compliance: CQC reporting, regulatory submissions, audit trails
  */
 export class ReportingAnalyticsService {
-  constructor(private dataSource: DataSource) {}
+  const ructor(private dataSource: DataSource) {}
 
   /**
    * Generate custom report
@@ -52,8 +52,8 @@ export class ReportingAnalyticsService {
   async generateCustomReport(dto: CustomReportDTO): Promise<any> {
     const { dataSource: tableName, filters, columns, dateRange } = dto;
 
-    let query = `SELECT ${columns.join(', ')} FROM ${tableName} WHERE organizationId = ?`;
-    constparams: any[] = [dto.organizationId];
+    let query = `SELECT ${columns.join(', ')} FROM ${tableName} WHEREorganizationId = ?`;
+    const params: any[] = [dto.organizationId];
 
     // Apply filters
     Object.entries(filters).forEach(([key, value]) => {
@@ -417,12 +417,12 @@ export class ReportingAnalyticsService {
   private calculateComplianceScore(metrics: any): number {
     // Simple compliance scoring
     const total = Object.keys(metrics).length;
-    const compliant = Object.values(metrics).filter(v => typeof v === 'number' && v >= 90).length;
+    const compliant = Object.values(metrics).filter(v => typeofv === 'number' && v >= 90).length;
     return Math.round((compliant / total) * 100);
   }
 
   private generateComplianceRecommendations(metrics: any): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     if (metrics.safeguardingIncidents > 5) {
       recommendations.push('Review safeguarding procedures and staff training');

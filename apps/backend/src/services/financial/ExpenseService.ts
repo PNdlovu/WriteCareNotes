@@ -153,9 +153,9 @@ export interface ExpenseListResponse {
 
 @Injectable()
 export class ExpenseService {
-  private readonly logger = new Logger(ExpenseService.name);
+  private readonlylogger = new Logger(ExpenseService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(Expense)
     privateexpenseRepository: Repository<Expense>,
     @InjectRepository(ChartOfAccounts)
@@ -177,7 +177,7 @@ export class ExpenseService {
       // Get default account for expense category
       const account = await this.getAccountForExpenseCategory(request.category);
       if (!account) {
-        throw new Error(`No account found for expense category: ${request.category}`);
+        throw new Error(`No account found for expensecategory: ${request.category}`);
       }
 
       // Create expense
@@ -215,11 +215,11 @@ export class ExpenseService {
       // Create financial transaction
       await this.createFinancialTransaction(savedExpense);
 
-      this.logger.log(`Expense created successfully: ${savedExpense.id}`);
+      this.logger.log(`Expense createdsuccessfully: ${savedExpense.id}`);
       return savedExpense;
 
     } catch (error) {
-      this.logger.error(`Failed to create expense: ${error.message}`, error.stack);
+      this.logger.error(`Failed to createexpense: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -261,11 +261,11 @@ export class ExpenseService {
 
       const updatedExpense = await this.expenseRepository.save(expense);
 
-      this.logger.log(`Expense updated successfully: ${expenseId}`);
+      this.logger.log(`Expense updatedsuccessfully: ${expenseId}`);
       return updatedExpense;
 
     } catch (error) {
-      this.logger.error(`Failed to update expense: ${error.message}`, error.stack);
+      this.logger.error(`Failed to updateexpense: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -274,7 +274,7 @@ export class ExpenseService {
    * Submit expense for approval
    */
   async submitExpense(request: SubmitExpenseRequest): Promise<Expense> {
-    this.logger.log(`Submitting expense for approval: ${request.expenseId}`);
+    this.logger.log(`Submitting expense forapproval: ${request.expenseId}`);
     
     try {
       const expense = await this.getExpenseById(request.expenseId);
@@ -293,11 +293,11 @@ export class ExpenseService {
 
       const updatedExpense = await this.expenseRepository.save(expense);
 
-      this.logger.log(`Expense submitted successfully: ${request.expenseId}`);
+      this.logger.log(`Expense submittedsuccessfully: ${request.expenseId}`);
       return updatedExpense;
 
     } catch (error) {
-      this.logger.error(`Failed to submit expense: ${error.message}`, error.stack);
+      this.logger.error(`Failed to submitexpense: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -322,11 +322,11 @@ export class ExpenseService {
 
       const updatedExpense = await this.expenseRepository.save(expense);
 
-      this.logger.log(`Expense approved successfully: ${request.expenseId}`);
+      this.logger.log(`Expense approvedsuccessfully: ${request.expenseId}`);
       return updatedExpense;
 
     } catch (error) {
-      this.logger.error(`Failed to approve expense: ${error.message}`, error.stack);
+      this.logger.error(`Failed to approveexpense: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -351,11 +351,11 @@ export class ExpenseService {
 
       const updatedExpense = await this.expenseRepository.save(expense);
 
-      this.logger.log(`Expense rejected successfully: ${request.expenseId}`);
+      this.logger.log(`Expense rejectedsuccessfully: ${request.expenseId}`);
       return updatedExpense;
 
     } catch (error) {
-      this.logger.error(`Failed to reject expense: ${error.message}`, error.stack);
+      this.logger.error(`Failed to rejectexpense: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -364,7 +364,7 @@ export class ExpenseService {
    * Process reimbursement for expense
    */
   async processReimbursement(request: ProcessReimbursementRequest): Promise<Expense> {
-    this.logger.log(`Processing reimbursement for expense: ${request.expenseId}`);
+    this.logger.log(`Processing reimbursement forexpense: ${request.expenseId}`);
     
     try {
       const expense = await this.getExpenseById(request.expenseId);
@@ -396,11 +396,11 @@ export class ExpenseService {
       // Create reimbursement transaction
       await this.createReimbursementTransaction(updatedExpense, reimbursementAmount);
 
-      this.logger.log(`Reimbursement processed successfully: ${request.expenseId}`);
+      this.logger.log(`Reimbursement processedsuccessfully: ${request.expenseId}`);
       return updatedExpense;
 
     } catch (error) {
-      this.logger.error(`Failed to process reimbursement: ${error.message}`, error.stack);
+      this.logger.error(`Failed to processreimbursement: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -528,7 +528,7 @@ export class ExpenseService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to list expenses: ${error.message}`, error.stack);
+      this.logger.error(`Failed to listexpenses: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -585,7 +585,7 @@ export class ExpenseService {
     let totalAmount = new Decimal(0);
     let reimbursedAmount = new Decimal(0);
     let vatAmount = new Decimal(0);
-    constcategoryTotals: Record<string, Decimal> = {};
+    const categoryTotals: Record<string, Decimal> = {};
 
     expenses.forEach(expense => {
       totalAmount = totalAmount.plus(expense.totalAmount);

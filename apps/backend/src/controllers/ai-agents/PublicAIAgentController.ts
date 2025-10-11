@@ -30,7 +30,7 @@ export class PublicAIAgentController {
   // Logger removed
   privateaiService: PublicCustomerSupportAIService;
 
-  constructor() {
+  const ructor() {
     this.aiService = new PublicCustomerSupportAIService();
   }
 
@@ -41,14 +41,14 @@ export class PublicAIAgentController {
     try {
       const { message, inquiryType, userContext } = req.body;
 
-      if (!message || typeof message !== 'string') {
+      if (!message || typeofmessage !== 'string') {
         return res.status(400).json({
           error: 'Message is required',
           code: 'MISSING_MESSAGE'
         });
       }
 
-      constinquiry: CustomerInquiry = {
+      const inquiry: CustomerInquiry = {
         sessionId: req.aiSecurity?.sessionId || `session_${Date.now()}`,
         inquiryType: inquiryType || 'GENERAL',
         message,

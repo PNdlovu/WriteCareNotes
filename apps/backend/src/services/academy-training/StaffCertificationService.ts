@@ -200,19 +200,19 @@ export class MicroLearning {
 
 @Injectable()
 export class StaffCertificationService {
-  private readonly logger = new Logger(StaffCertificationService.name);
+  private readonlylogger = new Logger(StaffCertificationService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(TrainingModule)
-    private readonly trainingModuleRepository: Repository<TrainingModule>,
+    private readonlytrainingModuleRepository: Repository<TrainingModule>,
     @InjectRepository(StaffCertification)
-    private readonly staffCertificationRepository: Repository<StaffCertification>,
+    private readonlystaffCertificationRepository: Repository<StaffCertification>,
     @InjectRepository(LearningPath)
-    private readonly learningPathRepository: Repository<LearningPath>,
+    private readonlylearningPathRepository: Repository<LearningPath>,
     @InjectRepository(MicroLearning)
-    private readonly microLearningRepository: Repository<MicroLearning>,
-    private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditService,
+    private readonlymicroLearningRepository: Repository<MicroLearning>,
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -244,13 +244,13 @@ export class StaffCertificationService {
         timestamp: new Date(),
       });
 
-      this.logger.log(`Training module created: ${savedModule.title} (${savedModule.id})`);
+      this.logger.log(`Training modulecreated: ${savedModule.title} (${savedModule.id})`);
       return savedModule;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to create training module: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to create training module: ${errorMessage}`);
+      this.logger.error(`Failed to create trainingmodule: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to create trainingmodule: ${errorMessage}`);
     }
   }
 
@@ -270,8 +270,8 @@ export class StaffCertificationService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to get training modules: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get training modules: ${errorMessage}`);
+      this.logger.error(`Failed to get trainingmodules: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to get trainingmodules: ${errorMessage}`);
     }
   }
 
@@ -340,8 +340,8 @@ export class StaffCertificationService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to assign training: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to assign training: ${errorMessage}`);
+      this.logger.error(`Failed to assigntraining: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to assigntraining: ${errorMessage}`);
     }
   }
 
@@ -391,8 +391,8 @@ export class StaffCertificationService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to start training: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to start training: ${errorMessage}`);
+      this.logger.error(`Failed to starttraining: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to starttraining: ${errorMessage}`);
     }
   }
 
@@ -446,13 +446,13 @@ export class StaffCertificationService {
         timestamp: new Date(),
       });
 
-      this.logger.log(`Training progress updated: ${certificationId} - ${progress}%`);
+      this.logger.log(`Training progressupdated: ${certificationId} - ${progress}%`);
       return updatedCertification;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to update progress: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to update progress: ${errorMessage}`);
+      this.logger.error(`Failed to updateprogress: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to updateprogress: ${errorMessage}`);
     }
   }
 
@@ -530,8 +530,8 @@ export class StaffCertificationService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to submit assessment: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to submit assessment: ${errorMessage}`);
+      this.logger.error(`Failed to submitassessment: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to submitassessment: ${errorMessage}`);
     }
   }
 
@@ -550,8 +550,8 @@ export class StaffCertificationService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to get staff certifications: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to get staff certifications: ${errorMessage}`);
+      this.logger.error(`Failed to get staffcertifications: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to get staffcertifications: ${errorMessage}`);
     }
   }
 
@@ -583,13 +583,13 @@ export class StaffCertificationService {
         timestamp: new Date(),
       });
 
-      this.logger.log(`Learning path created: ${savedPath.name} (${savedPath.id})`);
+      this.logger.log(`Learning pathcreated: ${savedPath.name} (${savedPath.id})`);
       return savedPath;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
-      this.logger.error(`Failed to create learning path: ${errorMessage}`, errorStack);
-      throw new Error(`Failed to create learning path: ${errorMessage}`);
+      this.logger.error(`Failed to create learningpath: ${errorMessage}`, errorStack);
+      throw new Error(`Failed to create learningpath: ${errorMessage}`);
     }
   }
 

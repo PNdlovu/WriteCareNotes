@@ -145,10 +145,10 @@ export interface DeviceToken {
 
 @Injectable()
 export class FirebaseService {
-  private readonly logger = new Logger(FirebaseService.name);
+  private readonlylogger = new Logger(FirebaseService.name);
   privateapp: admin.app.App;
 
-  constructor(private readonly configService: ConfigService) {
+  const ructor(private readonlyconfigService: ConfigService) {
     this.initializeFirebase();
   }
 
@@ -175,7 +175,7 @@ export class FirebaseService {
 
       this.logger.log('Firebase Admin SDK initialized successfully');
     } catch (error: any) {
-      this.logger.error(`Failed to initialize Firebase: ${error.message}`, error.stack);
+      this.logger.error(`Failed to initializeFirebase: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -188,7 +188,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<string> {
     try {
-      constmessage: admin.messaging.Message = {
+      const message: admin.messaging.Message = {
         token,
         notification: {
           title: notification.title,
@@ -221,10 +221,10 @@ export class FirebaseService {
       };
 
       const response = await admin.messaging().send(message);
-      this.logger.log(`Notification sent successfully: ${response}`);
+      this.logger.log(`Notification sentsuccessfully: ${response}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to send notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to sendnotification: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -237,7 +237,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<admin.messaging.BatchResponse> {
     try {
-      constmessage: admin.messaging.MulticastMessage = {
+      const message: admin.messaging.MulticastMessage = {
         tokens,
         notification: {
           title: notification.title,
@@ -270,10 +270,10 @@ export class FirebaseService {
       };
 
       const response = await admin.messaging().sendMulticast(message);
-      this.logger.log(`Multicast notification sent: ${response.successCount}/${tokens.length} successful`);
+      this.logger.log(`Multicast notificationsent: ${response.successCount}/${tokens.length} successful`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to send multicast notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send multicastnotification: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -286,7 +286,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<string> {
     try {
-      constmessage: admin.messaging.Message = {
+      const message: admin.messaging.Message = {
         topic,
         notification: {
           title: notification.title,
@@ -319,10 +319,10 @@ export class FirebaseService {
       };
 
       const response = await admin.messaging().send(message);
-      this.logger.log(`Topic notification sent successfully: ${response}`);
+      this.logger.log(`Topic notification sentsuccessfully: ${response}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to send topic notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send topicnotification: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -335,7 +335,7 @@ export class FirebaseService {
     notification: PushNotification
   ): Promise<string> {
     try {
-      constmessage: admin.messaging.Message = {
+      const message: admin.messaging.Message = {
         condition,
         notification: {
           title: notification.title,
@@ -368,10 +368,10 @@ export class FirebaseService {
       };
 
       const response = await admin.messaging().send(message);
-      this.logger.log(`Conditional notification sent successfully: ${response}`);
+      this.logger.log(`Conditional notification sentsuccessfully: ${response}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to send conditional notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send conditionalnotification: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -382,10 +382,10 @@ export class FirebaseService {
   async subscribeToTopic(tokens: string[], topic: string): Promise<admin.messaging.MessagingTopicManagementResponse> {
     try {
       const response = await admin.messaging().subscribeToTopic(tokens, topic);
-      this.logger.log(`Subscribed ${tokens.length} tokens to topic: ${topic}`);
+      this.logger.log(`Subscribed ${tokens.length} tokens totopic: ${topic}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to subscribe to topic: ${error.message}`, error.stack);
+      this.logger.error(`Failed to subscribe totopic: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -396,10 +396,10 @@ export class FirebaseService {
   async unsubscribeFromTopic(tokens: string[], topic: string): Promise<admin.messaging.MessagingTopicManagementResponse> {
     try {
       const response = await admin.messaging().unsubscribeFromTopic(tokens, topic);
-      this.logger.log(`Unsubscribed ${tokens.length} tokens from topic: ${topic}`);
+      this.logger.log(`Unsubscribed ${tokens.length} tokens fromtopic: ${topic}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to unsubscribe from topic: ${error.message}`, error.stack);
+      this.logger.error(`Failed to unsubscribe fromtopic: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -411,14 +411,14 @@ export class FirebaseService {
     try {
       // Note: Firebase Admin SDK doesn't have a direct method to get topic info
       // This would typically be handled by your own topic management system
-      this.logger.log(`Getting topic info for: ${topic}`);
+      this.logger.log(`Getting topic infofor: ${topic}`);
       return {
         successCount: 0,
         failureCount: 0,
         errors: [],
       };
     } catch (error: any) {
-      this.logger.error(`Failed to get topic info: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get topicinfo: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -429,7 +429,7 @@ export class FirebaseService {
   async validateToken(token: string): Promise<boolean> {
     try {
       // Send a test message to validate the token
-      constmessage: admin.messaging.Message = {
+      const message: admin.messaging.Message = {
         token,
         data: {
           test: 'true',
@@ -443,7 +443,7 @@ export class FirebaseService {
           error.code === 'messaging/registration-token-not-registered') {
         return false;
       }
-      this.logger.error(`Failed to validate token: ${error.message}`, error.stack);
+      this.logger.error(`Failed to validatetoken: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -456,7 +456,7 @@ export class FirebaseService {
     data: Record<string, string>
   ): Promise<string> {
     try {
-      constmessage: admin.messaging.Message = {
+      const message: admin.messaging.Message = {
         token,
         data,
         android: {
@@ -472,10 +472,10 @@ export class FirebaseService {
       };
 
       const response = await admin.messaging().send(message);
-      this.logger.log(`Data message sent successfully: ${response}`);
+      this.logger.log(`Data message sentsuccessfully: ${response}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to send data message: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send datamessage: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -488,16 +488,16 @@ export class FirebaseService {
     payload: any
   ): Promise<string> {
     try {
-      constmessage: admin.messaging.Message = {
+      const message: admin.messaging.Message = {
         token,
         ...payload,
       };
 
       const response = await admin.messaging().send(message);
-      this.logger.log(`Custom notification sent successfully: ${response}`);
+      this.logger.log(`Custom notification sentsuccessfully: ${response}`);
       return response;
     } catch (error: any) {
-      this.logger.error(`Failed to send custom notification: ${error.message}`, error.stack);
+      this.logger.error(`Failed to send customnotification: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -582,7 +582,7 @@ export class FirebaseService {
     body: string,
     data: Record<string, string> = {}
   ): Promise<admin.messaging.BatchResponse> {
-    constnotification: PushNotification = {
+    const notification: PushNotification = {
       title: `🚨 URGENT: ${title}`,
       body,
       data: {
@@ -659,7 +659,7 @@ export class FirebaseService {
     updateType: string,
     data: Record<string, string> = {}
   ): Promise<admin.messaging.BatchResponse> {
-    constnotification: PushNotification = {
+    const notification: PushNotification = {
       title: `Care Update: ${residentName}`,
       body: `New ${updateType} update is available`,
       data: {
@@ -723,7 +723,7 @@ export class FirebaseService {
     photoCount: number,
     data: Record<string, string> = {}
   ): Promise<admin.messaging.BatchResponse> {
-    constnotification: PushNotification = {
+    const notification: PushNotification = {
       title: `New Photos: ${residentName}`,
       body: `${photoCount} new photo${photoCount > 1 ? 's' : ''} shared`,
       data: {
@@ -782,8 +782,8 @@ export class FirebaseService {
    * Clean up invalid tokens
    */
   async cleanupInvalidTokens(tokens: string[]): Promise<string[]> {
-    constvalidTokens: string[] = [];
-    constinvalidTokens: string[] = [];
+    const validTokens: string[] = [];
+    const invalidTokens: string[] = [];
 
     for (const token of tokens) {
       try {
@@ -794,7 +794,7 @@ export class FirebaseService {
           invalidTokens.push(token);
         }
       } catch (error: any) {
-        this.logger.warn(`Token validation failed: ${token} - ${error.message}`);
+        this.logger.warn(`Token validationfailed: ${token} - ${error.message}`);
         invalidTokens.push(token);
       }
     }
@@ -822,12 +822,12 @@ export class FirebaseService {
       const projectId = this.app.options.projectId;
       return {
         status: 'healthy',
-        message: `Firebase connected to project: ${projectId}`,
+        message: `Firebase connected toproject: ${projectId}`,
       };
     } catch (error: any) {
       return {
         status: 'unhealthy',
-        message: `Firebase connection failed: ${error.message}`,
+        message: `Firebase connectionfailed: ${error.message}`,
       };
     }
   }

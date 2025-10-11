@@ -73,7 +73,7 @@ export interface RollbackResult {
 /**
  * Policy Version Service
  * 
- * Provides comprehensive version management for policies including:
+ * Provides comprehensive version management for policiesincluding:
  * - Version history tracking
  * - Side-by-side comparison with visual diff
  * - One-click rollback to previous versions
@@ -81,16 +81,16 @@ export interface RollbackResult {
  */
 @Injectable()
 export class PolicyVersionService {
-  private readonly logger = new Logger(PolicyVersionService.name);
+  private readonlylogger = new Logger(PolicyVersionService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(PolicyVersion)
-    private readonly versionRepository: Repository<PolicyVersion>,
+    private readonlyversionRepository: Repository<PolicyVersion>,
 
     @InjectRepository(PolicyDraft)
-    private readonly policyDraftRepository: Repository<PolicyDraft>,
+    private readonlypolicyDraftRepository: Repository<PolicyDraft>,
 
-    private readonly auditTrailService: AuditTrailService
+    private readonlyauditTrailService: AuditTrailService
   ) {}
 
   /**
@@ -101,7 +101,7 @@ export class PolicyVersionService {
     createdBy: User,
     changeDescription?: string
   ): Promise<PolicyVersion> {
-    this.logger.log(`Creating version snapshot for policy: ${policy.id}`);
+    this.logger.log(`Creating version snapshot forpolicy: ${policy.id}`);
 
     try {
       const version = this.versionRepository.create({
@@ -141,11 +141,11 @@ export class PolicyVersionService {
         }
       });
 
-      this.logger.log(`Version snapshot created: ${savedVersion.id}`);
+      this.logger.log(`Version snapshotcreated: ${savedVersion.id}`);
       return savedVersion;
 
     } catch (error) {
-      this.logger.error(`Failed to create version snapshot: ${error.message}`, error.stack);
+      this.logger.error(`Failed to create versionsnapshot: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -157,7 +157,7 @@ export class PolicyVersionService {
     policyId: string,
     organizationId: string
   ): Promise<PolicyVersion[]> {
-    this.logger.log(`Getting versions for policy: ${policyId}`);
+    this.logger.log(`Getting versions forpolicy: ${policyId}`);
 
     try {
       const versions = await this.versionRepository.find({
@@ -173,7 +173,7 @@ export class PolicyVersionService {
       return versions;
 
     } catch (error) {
-      this.logger.error(`Failed to get policy versions: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get policyversions: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -237,7 +237,7 @@ export class PolicyVersionService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to compare versions: ${error.message}`, error.stack);
+      this.logger.error(`Failed to compareversions: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -325,7 +325,7 @@ export class PolicyVersionService {
         }
       });
 
-      this.logger.log(`Policy rolled back successfully: ${policyId}`);
+      this.logger.log(`Policy rolled backsuccessfully: ${policyId}`);
 
       return {
         success: true,
@@ -335,7 +335,7 @@ export class PolicyVersionService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to rollback policy: ${error.message}`, error.stack);
+      this.logger.error(`Failed to rollbackpolicy: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -347,7 +347,7 @@ export class PolicyVersionService {
     policyId: string,
     organizationId: string
   ): Promise<any[]> {
-    this.logger.log(`Getting version timeline for policy: ${policyId}`);
+    this.logger.log(`Getting version timeline forpolicy: ${policyId}`);
 
     try {
       const versions = await this.getPolicyVersions(policyId, organizationId);
@@ -367,19 +367,19 @@ export class PolicyVersionService {
       }));
 
     } catch (error) {
-      this.logger.error(`Failed to get version timeline: ${error.message}`, error.stack);
+      this.logger.error(`Failed to get versiontimeline: ${error.message}`, error.stack);
       throw error;
     }
   }
 
   /**
-   * Private helper: Generate content diffs between two versions
+   * Privatehelper: Generate content diffs between two versions
    */
   private generateContentDiffs(
     oldVersion: PolicyVersion,
     newVersion: PolicyVersion
   ): ContentDiff[] {
-    constdiffs: ContentDiff[] = [];
+    const diffs: ContentDiff[] = [];
 
     // Compare title
     if (oldVersion.title !== newVersion.title) {
@@ -466,10 +466,10 @@ export class PolicyVersionService {
   }
 
   /**
-   * Private helper: Compare rich text content
+   * Privatehelper: Compare rich text content
    */
   private compareRichTextContent(oldContent: any, newContent: any): ContentDiff[] {
-    constdiffs: ContentDiff[] = [];
+    const diffs: ContentDiff[] = [];
 
     // Extract text from rich content
     const oldText = this.extractTextFromRichContent(oldContent);
@@ -516,7 +516,7 @@ export class PolicyVersionService {
   }
 
   /**
-   * Private helper: Extract plain text from rich content
+   * Privatehelper: Extract plain text from rich content
    */
   private extractTextFromRichContent(content: any): string {
     if (!content || !content.content) return '';
@@ -542,7 +542,7 @@ export class PolicyVersionService {
   }
 
   /**
-   * Private helper: Get word count from content
+   * Privatehelper: Get word count from content
    */
   private getWordCount(content: any): number {
     const text = this.extractTextFromRichContent(content);
@@ -550,7 +550,7 @@ export class PolicyVersionService {
   }
 
   /**
-   * Private helper: Increment version number
+   * Privatehelper: Increment version number
    */
   private incrementVersion(currentVersion: string): string {
     const parts = currentVersion.split('.');

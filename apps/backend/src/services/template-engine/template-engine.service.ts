@@ -19,7 +19,7 @@
  * @lastModified 2025-01-06
  * 
  * @features
- * - Variable substitution with type validation
+ * - variable substitution with type validation
  * - Conditional content blocks
  * - Loop processing for arrays
  * - Mathematical calculations
@@ -89,10 +89,10 @@ export interface TemplateFunction {
  */
 @Injectable()
 export class TemplateEngineService {
-  private readonly logger = new Logger(TemplateEngineService.name);
-  private readonly customFunctions = new Map<string, TemplateFunction>();
+  private readonlylogger = new Logger(TemplateEngineService.name);
+  private readonlycustomFunctions = new Map<string, TemplateFunction>();
 
-  constructor() {
+  const ructor() {
     this.registerDefaultFunctions();
   }
 
@@ -141,8 +141,8 @@ export class TemplateEngineService {
       return processedContent;
 
     } catch (error) {
-      this.logger.error(`Template processing failed: ${error.message}`, error.stack);
-      throw new BadRequestException(`Template processing error: ${error.message}`);
+      this.logger.error(`Template processingfailed: ${error.message}`, error.stack);
+      throw new BadRequestException(`Template processingerror: ${error.message}`);
     }
   }
 
@@ -159,9 +159,9 @@ export class TemplateEngineService {
     requiredVariables: string[];
     foundVariables: string[];
   }> {
-    consterrors: string[] = [];
-    constwarnings: string[] = [];
-    constfoundVariables: string[] = [];
+    const errors: string[] = [];
+    const warnings: string[] = [];
+    const foundVariables: string[] = [];
 
     try {
       // Extract all variable references
@@ -173,7 +173,7 @@ export class TemplateEngineService {
 
         // Validate variable syntax
         if (!this.isValidVariablePath(variablePath)) {
-          errors.push(`Invalid variable syntax: ${match}`);
+          errors.push(`Invalid variablesyntax: ${match}`);
         }
       }
 
@@ -181,7 +181,7 @@ export class TemplateEngineService {
       const conditionalMatches = content.match(/\{\{#if\s+([^}]+)\}\}[\s\S]*?\{\{\/if\}\}/g) || [];
       for (const match of conditionalMatches) {
         if (!this.isValidConditional(match)) {
-          errors.push(`Invalid conditional syntax: ${match}`);
+          errors.push(`Invalid conditionalsyntax: ${match}`);
         }
       }
 
@@ -189,7 +189,7 @@ export class TemplateEngineService {
       const loopMatches = content.match(/\{\{#each\s+([^}]+)\}\}[\s\S]*?\{\{\/each\}\}/g) || [];
       for (const match of loopMatches) {
         if (!this.isValidLoop(match)) {
-          errors.push(`Invalid loop syntax: ${match}`);
+          errors.push(`Invalid loopsyntax: ${match}`);
         }
       }
 
@@ -249,7 +249,7 @@ export class TemplateEngineService {
     }>;
     compliance: string[];
   }> {
-    this.logger.log(`Generating template for policy type: ${policyType}`);
+    this.logger.log(`Generating template for policytype: ${policyType}`);
 
     const templates = {
       safeguarding: this.generateSafeguardingTemplate(jurisdiction),
@@ -261,7 +261,7 @@ export class TemplateEngineService {
 
     const template = templates[policyType as keyof typeof templates];
     if (!template) {
-      throw new BadRequestException(`Unknown policy type: ${policyType}`);
+      throw new BadRequestException(`Unknown policytype: ${policyType}`);
     }
 
     return await template;
@@ -272,7 +272,7 @@ export class TemplateEngineService {
    */
   registerFunction(func: TemplateFunction): void {
     this.customFunctions.set(func.name, func);
-    this.logger.log(`Registered custom function: ${func.name}`);
+    this.logger.log(`Registered customfunction: ${func.name}`);
   }
 
   /**
@@ -343,7 +343,7 @@ export class TemplateEngineService {
         const conditionResult = this.evaluateCondition(condition.trim(), context);
         return conditionResult ? ifContent : elseContent;
       } catch (error) {
-        this.logger.warn(`Conditional evaluation warning: ${error.message}`);
+        this.logger.warn(`Conditional evaluationwarning: ${error.message}`);
         return '';
       }
     });
@@ -361,7 +361,7 @@ export class TemplateEngineService {
         const array = this.resolveVariablePath(arrayPath, context);
         
         if (!Array.isArray(array)) {
-          this.logger.warn(`Loop variable is not an array: ${arrayPath}`);
+          this.logger.warn(`Loop variable is not anarray: ${arrayPath}`);
           return '';
         }
         
@@ -381,7 +381,7 @@ export class TemplateEngineService {
         }).join('');
         
       } catch (error) {
-        this.logger.warn(`Loop processing warning: ${error.message}`);
+        this.logger.warn(`Loop processingwarning: ${error.message}`);
         return '';
       }
     });
@@ -406,7 +406,7 @@ export class TemplateEngineService {
         
         return String(result);
       } catch (error) {
-        this.logger.warn(`Function execution warning: ${error.message}`);
+        this.logger.warn(`Function executionwarning: ${error.message}`);
         return match;
       }
     });
@@ -423,7 +423,7 @@ export class TemplateEngineService {
 
   private resolveVariablePath(path: string, context: TemplateContext): any {
     const parts = path.split('.');
-    letcurrent: any = context;
+    let current: any = context;
     
     for (const part of parts) {
       if (current === null || current === undefined) {
@@ -443,14 +443,14 @@ export class TemplateEngineService {
       const [left, right] = condition.split('==').map(s => s.trim());
       const leftValue = this.resolveVariablePath(left, context);
       const rightValue = right.startsWith('"') ? right.slice(1, -1) : this.resolveVariablePath(right, context);
-      return leftValue == rightValue;
+      returnleftValue == rightValue;
     }
     
     if (condition.includes('!=')) {
       const [left, right] = condition.split('!=').map(s => s.trim());
       const leftValue = this.resolveVariablePath(left, context);
       const rightValue = right.startsWith('"') ? right.slice(1, -1) : this.resolveVariablePath(right, context);
-      return leftValue != rightValue;
+      returnleftValue != rightValue;
     }
     
     // Simple truthy check
@@ -473,7 +473,7 @@ export class TemplateEngineService {
         return Number(trimmed);
       }
       
-      // Variable reference
+      // variable reference
       return this.resolveVariablePath(trimmed, context);
     });
   }
@@ -588,7 +588,7 @@ This policy applies to all staff, volunteers, and visitors at {{organization.nam
 
 {{#if hasSpecialistUnits}}
 ### Specialist Units
-This policy covers our specialist units including:
+This policy covers our specialist unitsincluding:
 {{#each specialistUnits as unit}}
 - {{unit.name}} ({{unit.type}})
 {{/each}}
@@ -603,7 +603,7 @@ This policy covers our specialist units including:
 - Accountability and transparency
 
 ## 4. Types of Abuse
-Staff must be aware of the following types of abuse:
+Staff must be aware of the following types ofabuse:
 - Physical abuse
 - Sexual abuse
 - Psychological/emotional abuse
@@ -618,13 +618,13 @@ Staff must be aware of the following types of abuse:
 1. Ensure the person is safe
 2. Seek medical attention if required
 3. Preserve evidence
-4. Report to the designated safeguarding lead: {{safeguardingLead}}
+4. Report to the designated safeguardinglead: {{safeguardingLead}}
 
 **Contact Information:**
-- Local Authority: {{localAuthority.phone}}
-- Emergency Services: 999
+- LocalAuthority: {{localAuthority.phone}}
+- EmergencyServices: 999
 - Police: {{police.nonEmergency}}
-- Care Quality Commission: {{cqc.phone}}
+- Care QualityCommission: {{cqc.phone}}
 
 ## 6. Staff Training
 All staff must complete safeguarding training within {{trainingTimeframe}} of employment and refresh annually.
@@ -655,7 +655,7 @@ All safeguarding concerns must be documented using form {{safeguardingFormRef}} 
           name: 'hasSpecialistUnits',
           type: 'boolean',
           label: 'Has Specialist Units',
-          description: 'Does the organization have specialist care units?',
+          description: 'Does the organization have specialist careunits?',
           required: false,
           defaultValue: false
         },
@@ -698,31 +698,31 @@ All safeguarding concerns must be documented using form {{safeguardingFormRef}} 
 **Approved By:** {{approvedBy}}
 
 ## 2. Medication Administration
-Only qualified staff may administer medications:
+Only qualified staff may administermedications:
 {{#each qualifiedStaffRoles as role}}
 - {{role}}
 {{/each}}
 
 ## 3. Storage Requirements
-- Controlled drugs: {{controlledDrugStorage}}
-- Refrigerated medications: {{refrigeratedStorage}}
-- Room temperature: {{roomTempStorage}}
+- Controlleddrugs: {{controlledDrugStorage}}
+- Refrigeratedmedications: {{refrigeratedStorage}}
+- Roomtemperature: {{roomTempStorage}}
 
 ## 4. Documentation
-All medication administration must be recorded on the MAR chart with:
+All medication administration must be recorded on the MAR chartwith:
 - Date and time
 - Medication name and dose
 - Staff signature
 - Any observations
 
 ## 5. Medication Reviews
-- GP reviews: Every {{gpReviewFrequency}}
-- Pharmacy reviews: Every {{pharmacyReviewFrequency}}
-- Internal reviews: {{internalReviewFrequency}}
+- GPreviews: Every {{gpReviewFrequency}}
+- Pharmacyreviews: Every {{pharmacyReviewFrequency}}
+- Internalreviews: {{internalReviewFrequency}}
 
 ## 6. Error Reporting
-All medication errors must be reported to:
-- Care Home Manager: {{managerContact}}
+All medication errors must be reportedto:
+- Care HomeManager: {{managerContact}}
 - GP: {{gpContact}}
 - {{#if cqcReporting}}CQC (if required): {{cqc.phone}}{{/if}}
 
@@ -778,7 +778,7 @@ All medication errors must be reported to:
 **Approved By:** {{approvedBy}}
 
 ## 2. Key Responsibilities
-**Infection Control Lead:** {{infectionControlLead}}
+**Infection ControlLead:** {{infectionControlLead}}
 **Deputy:** {{infectionControlDeputy}}
 
 ## 3. Standard Precautions
@@ -796,15 +796,15 @@ All medication errors must be reported to:
 {{/each}}
 
 ## 5. Notification Requirements
-Report outbreaks to:
-- Local Health Protection Team: {{hptContact}}
+Report outbreaksto:
+- Local Health ProtectionTeam: {{hptContact}}
 - {{#if cqcReporting}}CQC: {{cqc.phone}}{{/if}}
 - {{organization.name}} Management
 
 ## 6. Training Requirements
-All staff must complete infection control training:
-- Initial training: Within {{initialTrainingPeriod}}
-- Refresher training: Every {{refresherTrainingPeriod}}
+All staff must complete infection controltraining:
+- Initialtraining: Within {{initialTrainingPeriod}}
+- Refreshertraining: Every {{refresherTrainingPeriod}}
 
 ---
 **Document Reference:** {{documentReference}}
@@ -821,7 +821,7 @@ All staff must complete infection control training:
           name: 'outbreakDefinition',
           type: 'text',
           label: 'Outbreak Definition',
-          description: 'Definition of what constitutes an outbreak',
+          description: 'Definition of what const itutes an outbreak',
           required: true,
           defaultValue: '2 or more related cases of infection within 72 hours'
         },
@@ -860,13 +860,13 @@ All staff must complete infection control training:
 **Email:** {{dpoEmail}}
 
 ## 3. Legal Basis for Processing
-We process personal data under:
+We process personal dataunder:
 {{#each legalBases as basis}}
 - {{basis}}
 {{/each}}
 
 ## 4. Data Subject Rights
-Individuals have the right to:
+Individuals have the rightto:
 - Access their personal data
 - Rectification of inaccurate data
 - Erasure of data
@@ -875,10 +875,10 @@ Individuals have the right to:
 - Object to processing
 
 ## 5. Data Retention
-- Care records: {{careRecordRetention}}
-- Staff records: {{staffRecordRetention}}
-- Financial records: {{financialRecordRetention}}
-- CCTV footage: {{cctvRetention}}
+- Carerecords: {{careRecordRetention}}
+- Staffrecords: {{staffRecordRetention}}
+- Financialrecords: {{financialRecordRetention}}
+- CCTVfootage: {{cctvRetention}}
 
 ## 6. Data Breach Response
 All breaches must be reported to the DPO within {{breachReportingTime}}.
@@ -887,7 +887,7 @@ Serious breaches will be reported to the ICO within 72 hours.
 {{/if}}
 
 ## 7. Third Party Sharing
-We may share data with:
+We may share datawith:
 {{#each thirdParties as party}}
 - {{party.name}}: {{party.purpose}}
 {{/each}}
@@ -953,7 +953,7 @@ We may share data with:
 **Fire Officer:** {{fireOfficer}}
 **Assembly Point:** {{assemblyPoint}}
 
-**In case of fire:**
+**In case offire:**
 1. Raise the alarm
 2. Call 999
 3. Evacuate residents using PEEP plans
@@ -961,18 +961,18 @@ We may share data with:
 5. Report to assembly point
 
 ## 4. Medical Emergencies
-**Qualified First Aiders:**
+**Qualified FirstAiders:**
 {{#each firstAiders as aider}}
 - {{aider.name}} ({{aider.qualification}})
 {{/each}}
 
 **Nearest Hospital:** {{nearestHospital}}
-**GP Out of Hours:** {{gpOutOfHours}}
+**GP Out ofHours:** {{gpOutOfHours}}
 
 ## 5. Power Failure
 **Generator Location:** {{generatorLocation}}
 **Backup Duration:** {{backupDuration}}
-**Electricity Supplier Emergency:** {{electricitySupplier}}
+**Electricity SupplierEmergency:** {{electricitySupplier}}
 
 ## 6. Severe Weather
 {{#if floodRisk}}
@@ -983,13 +983,13 @@ We may share data with:
 {{/if}}
 
 ## 7. Security Incidents
-**Intruder alarm code:** {{alarmCode}}
+**Intruder alarmcode:** {{alarmCode}}
 **CCTV monitoring:** {{cctvMonitoring}}
 **Police:** 999 or {{policeNonEmergency}}
 
 ## 8. Business Continuity
 **Alternative accommodation:** {{alternativeAccommodation}}
-**Data backup location:** {{dataBackupLocation}}
+**Data backuplocation:** {{dataBackupLocation}}
 **Key suppliers:**
 {{#each keySuppliers as supplier}}
 - {{supplier.service}}: {{supplier.contact}}
@@ -1024,7 +1024,7 @@ We may share data with:
           name: 'floodRisk',
           type: 'boolean',
           label: 'Flood Risk Area',
-          description: 'Is the care home in a flood risk area?',
+          description: 'Is the care home in a flood riskarea?',
           required: false,
           defaultValue: false
         },

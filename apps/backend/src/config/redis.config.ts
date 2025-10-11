@@ -55,7 +55,7 @@ export const redisConfig: RedisConfig = {
 };
 
 export class RedisConnection {
-  private static instance: Redis;
+  private staticinstance: Redis;
 
   static getInstance(): Redis {
     if (!this.instance) {
@@ -66,7 +66,7 @@ export class RedisConnection {
       });
       
       this.instance.on('error', (error) => {
-        console.error('Redis connection error:', error);
+        console.error('Redis connectionerror:', error);
       });
       
       this.instance.on('close', () => {

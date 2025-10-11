@@ -77,11 +77,11 @@ export interface GuernseySpecificRequirement {
 export class GuernseyHealthSocialCareService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly guernseyComplianceRepository: Repository<GuernseyCompliance>,
-    private readonly auditTrailService: AuditService,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlyguernseyComplianceRepository: Repository<GuernseyCompliance>,
+    private readonlyauditTrailService: AuditService,
+    private readonlyeventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -131,7 +131,7 @@ export class GuernseyHealthSocialCareService {
 
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get Guernsey compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get Guernsey complianceassessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -276,7 +276,7 @@ export class GuernseyHealthSocialCareService {
   }
 
   private async identifyGuernseyGaps(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
     
     for (const [domain, score] of Object.entries(domainScores)) {
       if (score < 85) {
@@ -288,7 +288,7 @@ export class GuernseyHealthSocialCareService {
   }
 
   private async generateGuernseyRecommendations(organizationId: string, domainScores: Record<string, number>): Promise<string[]> {
-    constrecommendations: string[] = [
+    const recommendations: string[] = [
       'Strengthen community links with local Guernsey organizations',
       'Enhance cultural heritage programs',
       'Improve environmental sustainability practices',

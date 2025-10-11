@@ -23,9 +23,9 @@ import { Employee } from '../../entities/hr/Employee';
  */
 
 describe('SystemModule', () => {
-  letmodule: TestingModule;
-  letsystemController: SystemController;
-  letsystemService: SystemService;
+  let module: TestingModule;
+  let systemController: SystemController;
+  let systemService: SystemService;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({

@@ -23,7 +23,7 @@ export class PainManagementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.painAssessmentRepository = AppDataSource.getRepository(PainAssessment);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -88,7 +88,7 @@ export class PainManagementService {
       
       return savedAssessment;
     } catch (error: unknown) {
-      console.error('Error creating advanced pain assessment:', error);
+      console.error('Error creating advanced painassessment:', error);
       throw error;
     }
   }
@@ -121,7 +121,7 @@ export class PainManagementService {
         }
       };
     } catch (error: unknown) {
-      console.error('Error generating 3D pain visualization:', error);
+      console.error('Error generating 3D painvisualization:', error);
       throw error;
     }
   }
@@ -148,7 +148,7 @@ export class PainManagementService {
         bodyRegionAnalysis: this.analyzeBodyRegions(assessments)
       };
     } catch (error: unknown) {
-      console.error('Error getting pain analytics:', error);
+      console.error('Error getting painanalytics:', error);
       throw error;
     }
   }

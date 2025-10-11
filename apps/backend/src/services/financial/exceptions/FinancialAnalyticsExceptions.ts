@@ -15,12 +15,12 @@ import { EventEmitter2 } from "eventemitter2";
  * Base Financial Analytics Error
  */
 export class FinancialAnalyticsError extends Error {
-  public readonly code: string;
-  public readonly correlationId: string;
-  public readonly timestamp: Date;
+  public readonlycode: string;
+  public readonlycorrelationId: string;
+  public readonlytimestamp: Date;
   public readonly context?: Record<string, any>;
 
-  constructor(
+  const ructor(
     message: string,
     code: string,
     correlationId: string,
@@ -59,9 +59,9 @@ export class FinancialAnalyticsError extends Error {
  * Transaction Validation Error
  */
 export class TransactionValidationError extends FinancialAnalyticsError {
-  public readonly validationErrors: ValidationError[];
+  public readonlyvalidationErrors: ValidationError[];
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     validationErrors: ValidationError[],
@@ -87,9 +87,9 @@ export class TransactionValidationError extends FinancialAnalyticsError {
  */
 export class BudgetValidationError extends FinancialAnalyticsError {
   public readonly budgetId?: string;
-  public readonly validationErrors: ValidationError[];
+  public readonlyvalidationErrors: ValidationError[];
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     validationErrors: ValidationError[],
@@ -107,10 +107,10 @@ export class BudgetValidationError extends FinancialAnalyticsError {
  * Forecast Generation Error
  */
 export class ForecastGenerationError extends FinancialAnalyticsError {
-  public readonly forecastType: string;
+  public readonlyforecastType: string;
   public readonly methodology?: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     forecastType: string,
@@ -128,10 +128,10 @@ export class ForecastGenerationError extends FinancialAnalyticsError {
  * Analytics Processing Error
  */
 export class AnalyticsProcessingError extends FinancialAnalyticsError {
-  public readonly analysisType: string;
+  public readonlyanalysisType: string;
   public readonly dataPoints?: number;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     analysisType: string,
@@ -149,10 +149,10 @@ export class AnalyticsProcessingError extends FinancialAnalyticsError {
  * Report Generation Error
  */
 export class ReportGenerationError extends FinancialAnalyticsError {
-  public readonly reportType: string;
-  public readonly format: string;
+  public readonlyreportType: string;
+  public readonlyformat: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     reportType: string,
@@ -170,11 +170,11 @@ export class ReportGenerationError extends FinancialAnalyticsError {
  * Compliance Violation Error
  */
 export class ComplianceViolationError extends FinancialAnalyticsError {
-  public readonly complianceType: ComplianceType;
-  public readonly violationDetails: ComplianceViolation[];
-  public readonly severity: ComplianceSeverity;
+  public readonlycomplianceType: ComplianceType;
+  public readonlyviolationDetails: ComplianceViolation[];
+  public readonlyseverity: ComplianceSeverity;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     complianceType: ComplianceType,
@@ -201,12 +201,12 @@ export class ComplianceViolationError extends FinancialAnalyticsError {
  * Security Violation Error
  */
 export class SecurityViolationError extends FinancialAnalyticsError {
-  public readonly securityType: SecurityViolationType;
-  public readonly userId: string;
+  public readonlysecurityType: SecurityViolationType;
+  public readonlyuserId: string;
   public readonly ipAddress?: string;
   public readonly userAgent?: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     securityType: SecurityViolationType,
@@ -244,12 +244,12 @@ export class SecurityViolationError extends FinancialAnalyticsError {
  * Data Access Error
  */
 export class DataAccessError extends FinancialAnalyticsError {
-  public readonly entityType: string;
+  public readonlyentityType: string;
   public readonly entityId?: string;
-  public readonly accessType: DataAccessType;
-  public readonly userId: string;
+  public readonlyaccessType: DataAccessType;
+  public readonlyuserId: string;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     entityType: string,
@@ -271,12 +271,12 @@ export class DataAccessError extends FinancialAnalyticsError {
  * Integration Error
  */
 export class IntegrationError extends FinancialAnalyticsError {
-  public readonly integrationName: string;
-  public readonly operationType: string;
+  public readonlyintegrationName: string;
+  public readonlyoperationType: string;
   public readonly externalErrorCode?: string;
-  public readonly retryable: boolean;
+  public readonlyretryable: boolean;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     integrationName: string,
@@ -298,11 +298,11 @@ export class IntegrationError extends FinancialAnalyticsError {
  * Performance Error
  */
 export class PerformanceError extends FinancialAnalyticsError {
-  public readonly operationType: string;
-  public readonly executionTime: number;
-  public readonly threshold: number;
+  public readonlyoperationType: string;
+  public readonlyexecutionTime: number;
+  public readonlythreshold: number;
 
-  constructor(
+  const ructor(
     message: string,
     correlationId: string,
     operationType: string,
@@ -416,7 +416,7 @@ export class FinancialErrorFactory {
     validationErrors: ValidationError[],
     context?: Record<string, any>
   ): TransactionValidationError {
-    const message = `Transaction validation failed: ${validationErrors.length} errors found`;
+    const message = `Transaction validationfailed: ${validationErrors.length} errors found`;
     return new TransactionValidationError(message, correlationId, validationErrors, context);
   }
 
@@ -429,7 +429,7 @@ export class FinancialErrorFactory {
     budgetId?: string,
     context?: Record<string, any>
   ): BudgetValidationError {
-    const message = `Budget validation failed: ${validationErrors.length} errors found`;
+    const message = `Budget validationfailed: ${validationErrors.length} errors found`;
     return new BudgetValidationError(message, correlationId, validationErrors, budgetId, context);
   }
 
@@ -468,7 +468,7 @@ export class FinancialErrorFactory {
     userAgent?: string,
     context?: Record<string, any>
   ): SecurityViolationError {
-    const message = `Security violation detected: ${securityType}`;
+    const message = `Security violationdetected: ${securityType}`;
     return new SecurityViolationError(
       message,
       correlationId,

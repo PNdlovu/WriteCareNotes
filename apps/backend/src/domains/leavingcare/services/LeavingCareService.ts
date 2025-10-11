@@ -44,7 +44,7 @@ export class LeavingCareService {
   privatepathwayPlanRepository: Repository<PathwayPlan>;
   privatechildRepository: Repository<Child>;
 
-  constructor() {
+  const ructor() {
     this.pathwayPlanRepository = AppDataSource.getRepository(PathwayPlan);
     this.childRepository = AppDataSource.getRepository(Child);
   }

@@ -23,7 +23,7 @@ export class InventoryManagementService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.inventoryRepository = AppDataSource.getRepository(InventoryItem);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -107,7 +107,7 @@ export class InventoryManagementService {
 
       return savedItem;
     } catch (error: unknown) {
-      console.error('Error creating advanced inventory item:', error);
+      console.error('Error creating advanced inventoryitem:', error);
       throw error;
     }
   }
@@ -133,7 +133,7 @@ export class InventoryManagementService {
         lastScan: new Date()
       };
     } catch (error: unknown) {
-      console.error('Error performing RFID scan:', error);
+      console.error('Error performing RFIDscan:', error);
       throw error;
     }
   }
@@ -158,7 +158,7 @@ export class InventoryManagementService {
         aiOptimizedItems: items.filter(item => item.aiOptimization.demandForecastAccuracy > 80).length
       };
     } catch (error: unknown) {
-      console.error('Error getting inventory analytics:', error);
+      console.error('Error getting inventoryanalytics:', error);
       throw error;
     }
   }

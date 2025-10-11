@@ -60,10 +60,10 @@ export interface ProjectionFactor {
 @Index(['periodStart', 'periodEnd'])
 export class Forecast extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // Forecast Identification
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   forecastName!: string;
@@ -104,7 +104,7 @@ export class Forecast extends BaseEntity {
   status!: ForecastStatus;
 
   // Entity Context
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   entityType!: string;
 
@@ -228,19 +228,19 @@ export class Forecast extends BaseEntity {
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   /**
    * Validate forecast before insert

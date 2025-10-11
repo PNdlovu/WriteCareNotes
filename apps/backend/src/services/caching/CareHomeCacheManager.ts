@@ -90,7 +90,7 @@ export class CareHomeCacheManager {
   privateauditService: AuditService;
   privatecachePatterns: Map<string, HealthcareCachePattern>;
 
-  constructor() {
+  const ructor() {
     this.cacheService = new CacheService();
     this.logger = createLogger('CareHomeCacheManager');
     this.auditService = new AuditService();
@@ -191,7 +191,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('resident')!;
     const key = `${pattern.keyPrefix}:${resident.id}`;
     
-    constoptions: CacheOptions = {
+    const options: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -210,7 +210,7 @@ export class CareHomeCacheManager {
         { ...options, containsPII: false }
       );
 
-      this.logger.info(`Cached resident data for ID: ${resident.id}`);
+      this.logger.info(`Cached resident data forID: ${resident.id}`);
     }
 
     return success;
@@ -251,7 +251,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('medication')!;
     const key = `${pattern.keyPrefix}:schedule:${residentId}`;
     
-    constoptions: CacheOptions = {
+    const options: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -262,7 +262,7 @@ export class CareHomeCacheManager {
     const success = await this.cacheService.set(key, medicationData, options.ttl!, options);
     
     if (success) {
-      this.logger.info(`Cached medication schedule for resident: ${residentId}`);
+      this.logger.info(`Cached medication schedule forresident: ${residentId}`);
     }
 
     return success;
@@ -288,7 +288,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('care-plan')!;
     const key = `${pattern.keyPrefix}:${residentId}`;
     
-    constoptions: CacheOptions = {
+    const options: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -299,7 +299,7 @@ export class CareHomeCacheManager {
     const success = await this.cacheService.set(key, carePlanData, options.ttl!, options);
     
     if (success) {
-      this.logger.info(`Cached care plan for resident: ${residentId}`);
+      this.logger.info(`Cached care plan forresident: ${residentId}`);
     }
 
     return success;
@@ -325,7 +325,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('staff')!;
     const key = `${pattern.keyPrefix}:${staff.id}`;
     
-    constoptions: CacheOptions = {
+    const options: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -336,7 +336,7 @@ export class CareHomeCacheManager {
     const success = await this.cacheService.set(key, staff, options.ttl!, options);
     
     if (success) {
-      this.logger.info(`Cached staff data for ID: ${staff.id}`);
+      this.logger.info(`Cached staff data forID: ${staff.id}`);
     }
 
     return success;
@@ -362,7 +362,7 @@ export class CareHomeCacheManager {
     const pattern = this.cachePatterns.get('report')!;
     const key = `${pattern.keyPrefix}:${reportId}`;
     
-    constoptions: CacheOptions = {
+    const options: CacheOptions = {
       ttl: customTTL || pattern.defaultTTL,
       tags: pattern.tags,
       containsPII: pattern.containsPII,
@@ -373,7 +373,7 @@ export class CareHomeCacheManager {
     const success = await this.cacheService.set(key, reportData, options.ttl!, options);
     
     if (success) {
-      this.logger.info(`Cached report data for ID: ${reportId}`);
+      this.logger.info(`Cached report data forID: ${reportId}`);
     }
 
     return success;
@@ -511,7 +511,7 @@ export class CareHomeCacheManager {
       }
     }
 
-    this.logger.info(`Healthcare cache warmed: ${successful}/${total} items successful`);
+    this.logger.info(`Healthcare cachewarmed: ${successful}/${total} items successful`);
     return { total, successful };
   }
 
@@ -522,7 +522,7 @@ export class CareHomeCacheManager {
     const baseStats = await this.cacheService.getStats();
     
     // Get pattern-specific statistics
-    constpatternStats: any = {};
+    const patternStats: any = {};
     
     for (const [patternName, pattern] of this.cachePatterns) {
       try {

@@ -382,12 +382,12 @@ export interface ProfessionalStandardsAction {
 export class ProfessionalStandardsService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly registrationRepository: Repository<ProfessionalRegistration>,
+    private readonlyregistrationRepository: Repository<ProfessionalRegistration>,
     
-    private readonly assessmentRepository: Repository<ProfessionalStandardsAssessment>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlyassessmentRepository: Repository<ProfessionalStandardsAssessment>,
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -398,7 +398,7 @@ export class ProfessionalStandardsService {
     assessedBy: string
   ): Promise<ProfessionalStandardsAssessment> {
     try {
-      console.log(`Starting professional standards assessment for organization: ${organizationId}`);
+      console.log(`Starting professional standards assessment fororganization: ${organizationId}`);
 
       // Get all staff registrations
       const allRegistrations = await this.registrationRepository.find({
@@ -409,8 +409,8 @@ export class ProfessionalStandardsService {
       const staffRegistrations = this.groupRegistrationsByStaff(allRegistrations);
 
       // Assess each staff member
-      conststaffAssessments: StaffProfessionalAssessment[] = [];
-      constcomplianceByBody: Record<ProfessionalBody, number> = {} as any;
+      const staffAssessments: StaffProfessionalAssessment[] = [];
+      const complianceByBody: Record<ProfessionalBody, number> = {} as any;
 
       for (const [staffId, registrations] of staffRegistrations.entries()) {
         const staffAssessment = await this.assessStaffProfessionalCompliance(staffId, registrations);
@@ -426,7 +426,7 @@ export class ProfessionalStandardsService {
       }
 
       // Calculate averages by professional body
-      constbodyCounts: Record<ProfessionalBody, number> = {} as any;
+      const bodyCounts: Record<ProfessionalBody, number> = {} as any;
       for (const registration of allRegistrations) {
         bodyCounts[registration.professionalBody] = (bodyCounts[registration.professionalBody] || 0) + 1;
       }
@@ -449,7 +449,7 @@ export class ProfessionalStandardsService {
       // Generate action plan
       const actionPlan = await this.generateProfessionalStandardsActionPlan(staffAssessments, organizationId);
 
-      constassessment: ProfessionalStandardsAssessment = {
+      const assessment: ProfessionalStandardsAssessment = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentDate: new Date(),
@@ -473,11 +473,11 @@ export class ProfessionalStandardsService {
         staffCount: staffAssessments.length
       });
 
-      console.log(`Professional standards assessment completed: ${savedAssessment.id}`);
+      console.log(`Professional standards assessmentcompleted: ${savedAssessment.id}`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`Professional standards assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Professional standards assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -490,8 +490,8 @@ export class ProfessionalStandardsService {
     registrations: ProfessionalRegistration[]
   ): Promise<StaffProfessionalAssessment> {
     try {
-      constissues: string[] = [];
-      constrecommendations: any[] = [];
+      const issues: string[] = [];
+      const recommendations: any[] = [];
       let totalScore = 0;
 
       for (const registration of registrations) {
@@ -516,7 +516,7 @@ export class ProfessionalStandardsService {
       };
 
     } catch (error: unknown) {
-      console.error(`Failed to assess staff professional compliance: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to assess staff professionalcompliance: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -535,13 +535,13 @@ export class ProfessionalStandardsService {
 
     // Check registration status
     if (registration.status !== RegistrationStatus.ACTIVE) {
-      assessment.issues.push(`Registration not active: ${registration.status}`);
+      assessment.issues.push(`Registration notactive: ${registration.status}`);
       assessment.score -= 50;
     }
 
     // Check fitness to practise
     if (registration.fitnessToPractise !== FitnessToPractiseStatus.CLEAR) {
-      assessment.issues.push(`Fitness to practise concern: ${registration.fitnessToPractise}`);
+      assessment.issues.push(`Fitness to practiseconcern: ${registration.fitnessToPractise}`);
       assessment.score -= 30;
     }
 
@@ -626,7 +626,7 @@ export class ProfessionalStandardsService {
     const totalCPDHours = recentCPD.reduce((sum, cpd) => sum + cpd.hoursCompleted, 0);
 
     if (totalCPDHours < 35) {
-      assessment.issues.push(`Insufficient CPD hours: ${totalCPDHours}/35 required`);
+      assessment.issues.push(`Insufficient CPDhours: ${totalCPDHours}/35 required`);
       assessment.score -= 20;
     } else {
       assessment.score += 20;
@@ -680,7 +680,7 @@ export class ProfessionalStandardsService {
     const totalCPDHours = recentCPD.reduce((sum, cpd) => sum + cpd.hoursCompleted, 0);
 
     if (totalCPDHours < 50) {
-      assessment.issues.push(`Insufficient GMC CPD hours: ${totalCPDHours}/50 required`);
+      assessment.issues.push(`Insufficient GMC CPDhours: ${totalCPDHours}/50 required`);
       assessment.score -= 25;
     } else {
       assessment.score += 25;
@@ -761,7 +761,7 @@ export class ProfessionalStandardsService {
       return monitoring;
 
     } catch (error: unknown) {
-      console.error(`Failed to monitor professional registrations: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to monitor professionalregistrations: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -806,7 +806,7 @@ export class ProfessionalStandardsService {
       return developmentPlan;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate professional development plan: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to generate professional developmentplan: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -844,7 +844,7 @@ export class ProfessionalStandardsService {
       return validation;
 
     } catch (error: unknown) {
-      console.error(`Failed to validate professional registration: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to validate professionalregistration: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }
@@ -866,7 +866,7 @@ export class ProfessionalStandardsService {
   }
 
   private countRegistrationsByBody(registrations: ProfessionalRegistration[]): Record<ProfessionalBody, number> {
-    constcounts: Record<ProfessionalBody, number> = {} as any;
+    const counts: Record<ProfessionalBody, number> = {} as any;
     
     for (const registration of registrations) {
       counts[registration.professionalBody] = (counts[registration.professionalBody] || 0) + 1;
@@ -913,7 +913,7 @@ export class ProfessionalStandardsService {
     staffAssessments: StaffProfessionalAssessment[],
     organizationId: string
   ): Promise<ProfessionalStandardsActionPlan> {
-    constactions: ProfessionalStandardsAction[] = [];
+    const actions: ProfessionalStandardsAction[] = [];
 
     for (const staff of staffAssessments) {
       if (!staff.overallCompliance) {
@@ -934,7 +934,7 @@ export class ProfessionalStandardsService {
       }
     }
 
-    constactionPlan: ProfessionalStandardsActionPlan = {
+    const actionPlan: ProfessionalStandardsActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,

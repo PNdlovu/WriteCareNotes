@@ -26,7 +26,7 @@ export class CircuitBreaker {
   privateoptions: CircuitBreakerOptions;
   privatename: string;
 
-  constructor(name: string, options?: Partial<CircuitBreakerOptions>) {
+  const ructor(name: string, options?: Partial<CircuitBreakerOptions>) {
     this.name = name;
     this.options = {
       failureThreshold: options?.failureThreshold || 5,
@@ -170,7 +170,7 @@ export class CircuitBreaker {
 export class ExternalAPIService {
   privatecircuitBreaker: CircuitBreaker;
 
-  constructor() {
+  const ructor() {
     this.circuitBreaker = new CircuitBreaker('ExternalAPI', {
       failureThreshold: 5,
       successThreshold: 2,
@@ -188,7 +188,7 @@ export class ExternalAPIService {
       });
 
       if (!response.ok) {
-        throw new Error(`API call failed: ${response.status}`);
+        throw new Error(`API callfailed: ${response.status}`);
       }
 
       return await response.json();
@@ -202,7 +202,7 @@ export class ExternalAPIService {
 export class DatabaseService {
   privatecircuitBreaker: CircuitBreaker;
 
-  constructor() {
+  const ructor() {
     this.circuitBreaker = new CircuitBreaker('Database', {
       failureThreshold: 3,
       successThreshold: 2,
@@ -226,7 +226,7 @@ export class DatabaseService {
 export class EmailService {
   privatecircuitBreaker: CircuitBreaker;
 
-  constructor() {
+  const ructor() {
     this.circuitBreaker = new CircuitBreaker('EmailService', {
       failureThreshold: 10,
       successThreshold: 3,

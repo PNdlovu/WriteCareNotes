@@ -29,13 +29,13 @@ jest.mock('../../../utils/logger', () => ({
 }));
 
 describe('ResidentService', () => {
-  letresidentService: ResidentService;
-  letmockPool: jest.Mocked<Pool>;
-  letmockClient: jest.Mocked<PoolClient>;
-  letmockEncryptionService: jest.Mocked<EncryptionService>;
-  letmockAuditService: jest.Mocked<AuditService>;
-  letmockEventStoreService: jest.Mocked<EventStoreService>;
-  letmockCacheManager: jest.Mocked<CareHomeCacheManager>;
+  let residentService: ResidentService;
+  let mockPool: jest.Mocked<Pool>;
+  let mockClient: jest.Mocked<PoolClient>;
+  let mockEncryptionService: jest.Mocked<EncryptionService>;
+  let mockAuditService: jest.Mocked<AuditService>;
+  let mockEventStoreService: jest.Mocked<EventStoreService>;
+  let mockCacheManager: jest.Mocked<CareHomeCacheManager>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -320,7 +320,7 @@ describe('ResidentService', () => {
 
   describe('admitResident', () => {
     it('should admit resident successfully', async () => {
-      constadmissionData: AdmissionData = {
+      const admissionData: AdmissionData = {
         admissionDate: new Date(),
         careLevel: 'residential',
         roomNumber: '101',
@@ -370,7 +370,7 @@ describe('ResidentService', () => {
     });
 
     it('should reject admission if resident already admitted', async () => {
-      constadmissionData: AdmissionData = {
+      const admissionData: AdmissionData = {
         admissionDate: new Date(),
         careLevel: 'residential',
         roomNumber: '101',
@@ -408,7 +408,7 @@ describe('ResidentService', () => {
     });
 
     it('should reject admission if room is occupied', async () => {
-      constadmissionData: AdmissionData = {
+      const admissionData: AdmissionData = {
         admissionDate: new Date(),
         careLevel: 'residential',
         roomNumber: '101',
@@ -449,7 +449,7 @@ describe('ResidentService', () => {
 
   describe('dischargeResident', () => {
     it('should discharge resident successfully', async () => {
-      constdischargeData: DischargeData = {
+      const dischargeData: DischargeData = {
         dischargeDate: new Date(),
         dischargeReason: 'Moved to family home',
         dischargeDestination: 'Family home',
@@ -493,7 +493,7 @@ describe('ResidentService', () => {
     });
 
     it('should reject discharge if resident not admitted', async () => {
-      constdischargeData: DischargeData = {
+      const dischargeData: DischargeData = {
         dischargeDate: new Date(),
         dischargeReason: 'Moved to family home',
         dischargeDestination: 'Family home',
@@ -528,7 +528,7 @@ describe('ResidentService', () => {
 
   describe('transferResident', () => {
     it('should transfer resident successfully', async () => {
-      consttransferData: TransferData = {
+      const transferData: TransferData = {
         transferDate: new Date(),
         fromRoom: '101',
         toRoom: '102',
@@ -575,7 +575,7 @@ describe('ResidentService', () => {
     });
 
     it('should reject transfer if destination room occupied', async () => {
-      consttransferData: TransferData = {
+      const transferData: TransferData = {
         transferDate: new Date(),
         fromRoom: '101',
         toRoom: '102',

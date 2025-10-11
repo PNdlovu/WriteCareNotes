@@ -96,7 +96,7 @@ export class TaxRecord extends BaseEntity {
   id!: string;
 
   // Tax Identification
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'var char', length: 10 })
   @IsString()
   @Length(4, 10)
   taxYear!: string;
@@ -172,7 +172,7 @@ export class TaxRecord extends BaseEntity {
   @Transform(({ value }) => new Decimal(value))
   balanceAmount!: Decimal;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   @IsString()
   @Length(3, 3)
   currency!: string;
@@ -183,28 +183,28 @@ export class TaxRecord extends BaseEntity {
   @IsUUID()
   employeeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   employeeName?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   nationalInsuranceNumber?: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   utr?: string; // Unique Taxpayer Reference
 
   // HMRC Integration
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   hmrcReference?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsOptional()
   @IsString()
   hmrcSubmissionId?: string;
@@ -214,7 +214,7 @@ export class TaxRecord extends BaseEntity {
   @IsString()
   hmrcResponse?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   hmrcStatus?: string;
@@ -256,7 +256,7 @@ export class TaxRecord extends BaseEntity {
   additionalRate!: Decimal;
 
   // VAT Specific Fields
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsOptional()
   @IsString()
   vatNumber?: string;
@@ -281,7 +281,7 @@ export class TaxRecord extends BaseEntity {
   @IsUUID()
   correlationId!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsOptional()
   @IsString()
   regulatoryCode?: string;
@@ -459,12 +459,12 @@ export class TaxRecord extends BaseEntity {
       const taxableIncome = this.taxableAmount.minus(personalAllowance);
       
       if (taxableIncome.lessThanOrEqualTo(basicRateThreshold.minus(personalAllowance))) {
-        // Basic rate: 20%
+        // Basicrate: 20%
         tax = taxableIncome.times(0.20);
         this.basicRateAmount = taxableIncome;
         this.basicRate = new Decimal(0.20);
       } else if (taxableIncome.lessThanOrEqualTo(higherRateThreshold.minus(personalAllowance))) {
-        // Basic rate + Higher rate: 20% + 40%
+        // Basic rate + Higherrate: 20% + 40%
         const basicRateAmount = basicRateThreshold.minus(personalAllowance);
         const higherRateAmount = taxableIncome.minus(basicRateAmount);
         
@@ -474,7 +474,7 @@ export class TaxRecord extends BaseEntity {
         this.basicRate = new Decimal(0.20);
         this.higherRate = new Decimal(0.40);
       } else {
-        // All rates: 20% + 40% + 45%
+        // Allrates: 20% + 40% + 45%
         const basicRateAmount = basicRateThreshold.minus(personalAllowance);
         const higherRateAmount = higherRateThreshold.minus(basicRateThreshold);
         const additionalRateAmount = taxableIncome.minus(higherRateThreshold.minus(personalAllowance));
@@ -537,15 +537,15 @@ export class TaxRecord extends BaseEntity {
    * Calculate Corporation Tax (simplified UK calculation)
    */
   private calculateCorporationTax(): void {
-    // Corporation tax rate: 25% for profits over £250,000 (2023/24)
-    // Small profits rate: 19% for profits up to £50,000
+    // Corporation taxrate: 25% for profits over £250,000 (2023/24)
+    // Small profitsrate: 19% for profits up to £50,000
     // Marginal relief for profits between £50,000 and £250,000
     
     const smallProfitsThreshold = new Decimal(50000);
     const largeProfitsThreshold = new Decimal(250000);
     
     if (this.taxableAmount.lessThanOrEqualTo(smallProfitsThreshold)) {
-      // Small profits rate: 19%
+      // Small profitsrate: 19%
       this.taxAmount = this.taxableAmount.times(0.19);
       this.taxRate = new Decimal(0.19);
     } else if (this.taxableAmount.lessThanOrEqualTo(largeProfitsThreshold)) {
@@ -553,7 +553,7 @@ export class TaxRecord extends BaseEntity {
       this.taxAmount = this.taxableAmount.times(0.25);
       this.taxRate = new Decimal(0.25);
     } else {
-      // Large profits rate: 25%
+      // Large profitsrate: 25%
       this.taxAmount = this.taxableAmount.times(0.25);
       this.taxRate = new Decimal(0.25);
     }

@@ -257,7 +257,7 @@ export class OnCallRota extends BaseEntity {
    */
   canHandleCallType(callType: CallType): boolean {
     // Map call types to required capabilities
-    constcallTypeCapabilities: Record<CallType, string[]> = {
+    const callTypeCapabilities: Record<CallType, string[]> = {
       [CallType.MEDICAL_EMERGENCY]: ['medical_response', 'first_aid'],
       [CallType.MEDICATION_REQUEST]: ['medication_administration'],
       [CallType.PAIN_MANAGEMENT]: ['pain_assessment', 'clinical_skills'],
@@ -333,7 +333,7 @@ export class OnCallRota extends BaseEntity {
   } {
     return {
       efficiency: this.shiftMetrics.callsResolved / Math.max(this.shiftMetrics.callsReceived, 1) * 100,
-      responsiveness: Math.max(0, 100 - (this.shiftMetrics.averageResponseTime * 10)), // Lower response time = higher score
+      responsiveness: Math.max(0, 100 - (this.shiftMetrics.averageResponseTime * 10)), // Lower responsetime = higher score
       workload: this.getWorkloadPercentage(),
       compliance: this.isCompliantWithWorkingTimeRegs()
     };
@@ -505,7 +505,7 @@ export class OnCallRota extends BaseEntity {
   }
 
   private generateNextShiftRecommendations(): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
     
     if (this.shiftMetrics.averageResponseTime > 10) {
       recommendations.push('Consider additional staff for faster response times');

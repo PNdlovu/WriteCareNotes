@@ -10,7 +10,7 @@
  * @since 2024
  *
  * @description
- * Core service managing placement operations including:
+ * Core service managing placement operationsincluding:
  * - Placement request creation and lifecycle management
  * - Unique placement numbering (PL-YYYY-NNNN format)
  * - Placement creation with facility matching and capacity validation
@@ -105,7 +105,7 @@ export interface CreatePlacementRequestDto {
 
 @Injectable()
 export class PlacementService {
-  constructor(
+  const ructor(
     @InjectRepository(Placement)
     privateplacementRepository: Repository<Placement>,
     

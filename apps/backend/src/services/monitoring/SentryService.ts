@@ -19,10 +19,10 @@ import { logger } from '../../utils/logger';
  * Provides comprehensive error tracking and performance monitoring
  */
 export class SentryService {
-  private static instance: SentryService;
+  private staticinstance: SentryService;
   privateisInitialized: boolean = false;
 
-  private constructor() {
+  private const ructor() {
     this.initializeSentry();
   }
 

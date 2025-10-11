@@ -62,7 +62,7 @@ import {
 export class FamilyContactController {
   privatefamilyContactService: FamilyContactService;
 
-  constructor() {
+  const ructor() {
     this.familyContactService = new FamilyContactService();
   }
 
@@ -95,7 +95,7 @@ export class FamilyContactController {
         });
         return;
       }
-      console.error('Error registering family member:', error);
+      console.error('Error registering familymember:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to register family member',
@@ -127,7 +127,7 @@ export class FamilyContactController {
         count: members.length
       });
     } catch (error) {
-      console.error('Error retrieving family members:', error);
+      console.error('Error retrieving familymembers:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve family members',
@@ -153,7 +153,7 @@ export class FamilyContactController {
         data: member
       });
     } catch (error) {
-      console.error('Error updating family member:', error);
+      console.error('Error updating familymember:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to update family member',
@@ -198,7 +198,7 @@ export class FamilyContactController {
       if (!Object.values(ContactFrequency).includes(contactFrequency)) {
         res.status(400).json({
           success: false,
-          message: `Invalid contact frequency. Must be one of: ${Object.values(ContactFrequency).join(', ')}`
+          message: `Invalid contact frequency. Must be oneof: ${Object.values(ContactFrequency).join(', ')}`
         });
         return;
       }
@@ -221,7 +221,7 @@ export class FamilyContactController {
         data: schedule
       });
     } catch (error) {
-      console.error('Error creating contact schedule:', error);
+      console.error('Error creating contactschedule:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to create contact schedule',
@@ -253,7 +253,7 @@ export class FamilyContactController {
         count: schedules.length
       });
     } catch (error) {
-      console.error('Error retrieving contact schedules:', error);
+      console.error('Error retrieving contactschedules:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve contact schedules',
@@ -274,7 +274,7 @@ export class FamilyContactController {
       if (!reason || !updatedBy) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: reason, updatedBy'
+          message: 'Missing requiredfields: reason, updatedBy'
         });
         return;
       }
@@ -287,7 +287,7 @@ export class FamilyContactController {
         data: schedule
       });
     } catch (error) {
-      console.error('Error suspending contact schedule:', error);
+      console.error('Error suspending contactschedule:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to suspend contact schedule',
@@ -346,7 +346,7 @@ export class FamilyContactController {
         data: session
       });
     } catch (error) {
-      console.error('Error scheduling contact session:', error);
+      console.error('Error scheduling contactsession:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to schedule contact session',
@@ -398,7 +398,7 @@ export class FamilyContactController {
         data: session
       });
     } catch (error) {
-      console.error('Error recording contact session:', error);
+      console.error('Error recording contactsession:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to record contact session',
@@ -419,7 +419,7 @@ export class FamilyContactController {
       if (!cancelledBy || !cancellationReason) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: cancelledBy, cancellationReason'
+          message: 'Missing requiredfields: cancelledBy, cancellationReason'
         });
         return;
       }
@@ -437,7 +437,7 @@ export class FamilyContactController {
         data: session
       });
     } catch (error) {
-      console.error('Error cancelling contact session:', error);
+      console.error('Error cancelling contactsession:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to cancel contact session',
@@ -468,7 +468,7 @@ export class FamilyContactController {
         count: sessions.length
       });
     } catch (error) {
-      console.error('Error retrieving contact sessions:', error);
+      console.error('Error retrieving contactsessions:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve contact sessions',
@@ -517,7 +517,7 @@ export class FamilyContactController {
       if (!Object.values(RiskLevel).includes(overallRiskLevel)) {
         res.status(400).json({
           success: false,
-          message: `Invalid risk level. Must be one of: ${Object.values(RiskLevel).join(', ')}`
+          message: `Invalid risk level. Must be oneof: ${Object.values(RiskLevel).join(', ')}`
         });
         return;
       }
@@ -543,7 +543,7 @@ export class FamilyContactController {
         data: assessment
       });
     } catch (error) {
-      console.error('Error creating risk assessment:', error);
+      console.error('Error creating riskassessment:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to create risk assessment',
@@ -564,7 +564,7 @@ export class FamilyContactController {
       if (!approvedBy || !approvedByName || !approvedByRole) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: approvedBy, approvedByName, approvedByRole'
+          message: 'Missing requiredfields: approvedBy, approvedByName, approvedByRole'
         });
         return;
       }
@@ -582,7 +582,7 @@ export class FamilyContactController {
         data: assessment
       });
     } catch (error) {
-      console.error('Error approving risk assessment:', error);
+      console.error('Error approving riskassessment:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to approve risk assessment',
@@ -606,7 +606,7 @@ export class FamilyContactController {
       if (!organizationId) {
         res.status(400).json({
           success: false,
-          message: 'Missing required parameter: organizationId'
+          message: 'Missing requiredparameter: organizationId'
         });
         return;
       }
@@ -621,7 +621,7 @@ export class FamilyContactController {
         data: statistics
       });
     } catch (error) {
-      console.error('Error retrieving statistics:', error);
+      console.error('Error retrievingstatistics:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve statistics',

@@ -47,19 +47,19 @@ export interface MaintenanceSchedule {
 
 @Entity('bed_rooms')
 export class BedRoom extends BaseEntity {
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   roomNumber!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   roomType!: 'single' | 'double' | 'suite' | 'specialized' | 'deluxe' | 'family';
 
   @Column({ type: 'decimal', precision: 8, scale: 2 })
   roomSize!: number;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   floor!: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   wing!: string;
 
   @Column({ type: 'jsonb' })
@@ -68,7 +68,7 @@ export class BedRoom extends BaseEntity {
   @Column({ type: 'jsonb' })
   equipment!: RoomEquipment;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   status!: 'available' | 'occupied' | 'maintenance' | 'quarantine' | 'reserved' | 'out_of_order';
 
   @Column({ type: 'uuid' })
@@ -89,7 +89,7 @@ export class BedRoom extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   dailyRate?: number;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   notes?: string;
 
   @Column({ type: 'jsonb', nullable: true })

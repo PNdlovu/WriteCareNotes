@@ -18,13 +18,13 @@
  * Teaches staff how to use the app effectively based on their responsibilities.
  * Covers ALL microservices including self-serve portal, document management, rotas, etc.
  * 
- * Supports care homes across: England, Scotland, Wales, Northern Ireland, Jersey, 
+ * Supports care homesacross: England, Scotland, Wales, Northern Ireland, Jersey, 
  * Guernsey, and Isle of Man - all with appropriate regulatory compliance.
  * 
- * @important VIDEO PLACEHOLDERS: Video URLs are placeholders. System will show "Coming soon"
+ * @important VIDEOPLACEHOLDERS: Video URLs are placeholders. System will show "Coming soon"
  * until actual videos are recorded. Text/interactive content works without videos.
  * 
- * @note ADDING CONTENT: Before database seeding, edit this file. After seeding, use admin panel
+ * @note ADDINGCONTENT: Before database seeding, edit this file. After seeding, use admin panel
  * or API to add/update training content and quizzes.
  */
 
@@ -156,7 +156,7 @@ export const APP_TRAINING_MODULES = {
           {
             id: 'q1',
             type: 'multiple_choice' as const,
-            question: 'When should you record a care note?',
+            question: 'When should you record a carenote?',
             options: [
               'Only at the end of your shift',
               'Immediately after providing care',
@@ -171,7 +171,7 @@ export const APP_TRAINING_MODULES = {
           {
             id: 'q2',
             type: 'multiple_choice' as const,
-            question: 'What should you do if you spot a medication error?',
+            question: 'What should you do if you spot a medicationerror?',
             options: [
               'Ignore it if it\'s minor',
               'Report it immediately through the app',
@@ -235,7 +235,7 @@ export const APP_TRAINING_MODULES = {
         description: 'Complex regimens, PRN medications, and controlled drugs',
         content: {
           topics: [
-            'Variable dose medications',
+            'variable dose medications',
             'PRN administration and recording',
             'Controlled drug management',
             'Medication reviews and interactions',
@@ -285,7 +285,7 @@ export const APP_TRAINING_MODULES = {
           {
             id: 'nq1',
             type: 'scenario' as const,
-            question: 'A resident shows signs of deterioration. What should you do first in the app?',
+            question: 'A resident shows signs of deterioration. What should you do first in theapp?',
             options: [
               'Record observations and raise an alert',
               'Wait for the doctor\'s visit',
@@ -429,7 +429,7 @@ export const APP_TRAINING_MODULES = {
           {
             id: 'cm1',
             type: 'scenario' as const,
-            question: 'CQC inspection in 2 days. How do you use WriteCarenotes to prepare?',
+            question: 'CQC inspection in 2 days. How do you use WriteCarenotes toprepare?',
             options: [
               'Generate all reports last minute',
               'Run compliance dashboard, review red flags, generate evidence reports, brief team',
@@ -437,7 +437,7 @@ export const APP_TRAINING_MODULES = {
               'Just wing it'
             ],
             correctAnswer: 'Run compliance dashboard, review red flags, generate evidence reports, brief team',
-            explanation: 'The app provides continuous compliance monitoring - use it proactively!',
+            explanation: 'The app provides continuous compliance monitoring - use itproactively!',
             points: 20,
             order: 1
           }
@@ -636,7 +636,7 @@ export const APP_TRAINING_MODULES = {
           steps: [
             'Tap your profile photo/initials in top-right corner',
             'Select "My Profile" from dropdown menu',
-            'Explore the different sections: Profile, Security, Preferences, Training, Documents',
+            'Explore the differentsections: Profile, Security, Preferences, Training, Documents',
             'Bookmark this page for quick access'
           ],
           tips: [
@@ -669,7 +669,7 @@ export const APP_TRAINING_MODULES = {
               fields: ['Upload professional photo', 'Helps residents and families recognize you']
             }
           ],
-          important: 'Keep your contact details up-to-date - especially emergency contacts!'
+          important: 'Keep your contact details up-to-date - especially emergencycontacts!'
         },
         duration: 5,
         order: 2,
@@ -856,7 +856,7 @@ export const APP_TRAINING_MODULES = {
           ],
           allowedFormats: ['PDF', 'Word', 'Excel', 'Images (JPG, PNG)', 'Videos (MP4)'],
           restrictions: [
-            'Max file size: 50MB',
+            'Max filesize: 50MB',
             'Sensitive documents require encryption',
             'Manager approval needed for policies'
           ]
@@ -891,7 +891,7 @@ export const APP_TRAINING_MODULES = {
         description: 'Legal requirements for document storage',
         content: {
           retentionPeriods: [
-            'Resident care records: 7 years after last contact',
+            'Resident carerecords: 7 years after last contact',
             'Staff records: 6 years after employment ends',
             'Incident reports: Permanently (or as required by regulator)',
             'Training records: 3 years minimum'
@@ -996,7 +996,7 @@ export const APP_TRAINING_MODULES = {
             'Review hours worked',
             'Add notes if needed (late arrival reason, etc.)'
           ],
-          compliance: 'Required for payroll and compliance with Working Time Regulations (applies across British Isles with local variations)'
+          compliance: 'Required for payroll and compliance with Working Time Regulations (applies across British Isles with local var iations)'
         },
         duration: 4,
         order: 3,
@@ -1125,7 +1125,7 @@ export const APP_TRAINING_MODULES = {
     targetAudience: ['care_assistant', 'nurse', 'care_manager'],
     isMandatory: true,
     learningObjectives: [
-      'Recognize what constitutes an incident',
+      'Recognize what const itutes an incident',
       'Report incidents immediately using the app',
       'Complete incident forms correctly',
       'Understand safeguarding reporting requirements',
@@ -1165,7 +1165,7 @@ export const APP_TRAINING_MODULES = {
               examples: ['Aggression', 'Self-harm', 'Absconding attempts']
             }
           ],
-          rule: 'If in doubt, report it! Better to over-report than miss something important.'
+          rule: 'If in doubt, reportit! Better to over-report than miss something important.'
         },
         duration: 8,
         order: 1,
@@ -1187,7 +1187,7 @@ export const APP_TRAINING_MODULES = {
             '1. Open app and go to "Incidents"',
             '2. Tap "New Incident Report"',
             '3. Select incident type and severity',
-            '4. Complete all required fields:',
+            '4. Complete all requiredfields:',
             '   - Date/time (exact)',
             '   - Location (specific room/area)',
             '   - People involved',
@@ -1273,7 +1273,7 @@ export const APP_TRAINING_MODULES = {
           {
             id: 'iq1',
             type: 'multiple_choice' as const,
-            question: 'A resident has a minor fall with no injuries. What should you do?',
+            question: 'A resident has a minor fall with no injuries. What should youdo?',
             options: [
               'Ignore it - no harm done',
               'Report it immediately using the app',
@@ -1288,7 +1288,7 @@ export const APP_TRAINING_MODULES = {
           {
             id: 'iq2',
             type: 'multiple_choice' as const,
-            question: 'You suspect a resident is being financially exploited by a family member. What do you do?',
+            question: 'You suspect a resident is being financially exploited by a family member. What do youdo?',
             options: [
               'Confront the family member',
               'Tell other staff members',
@@ -1365,7 +1365,7 @@ export const APP_TRAINING_MODULES = {
 2. Step 2
 3. Step 3
 
-### Need Help?
+### NeedHelp?
 Contact your manager or email support@writecarenotes.com
           `
         },

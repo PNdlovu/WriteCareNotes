@@ -167,7 +167,7 @@ export class DementiaCareService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.carePlanRepository = AppDataSource.getRepository(DementiaCarePlan);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -232,7 +232,7 @@ export class DementiaCareService {
 
       return savedPlan;
     } catch (error: unknown) {
-      console.error('Error creating advanced dementia care plan:', error);
+      console.error('Error creating advanced dementia careplan:', error);
       throw error;
     }
   }
@@ -280,7 +280,7 @@ export class DementiaCareService {
 
       return prediction;
     } catch (error: unknown) {
-      console.error('Error predicting cognitive decline trajectory:', error);
+      console.error('Error predicting cognitive declinetrajectory:', error);
       throw error;
     }
   }
@@ -288,7 +288,7 @@ export class DementiaCareService {
   // Advanced Wandering Prevention with IoT Integration
   async implementAdvancedWanderingPrevention(residentId: string, riskLevel: WanderingRiskLevel): Promise<WanderingPreventionSystem> {
     try {
-      constpreventionSystem: WanderingPreventionSystem = {
+      const preventionSystem: WanderingPreventionSystem = {
         technologySolutions: {
           wearableDevices: await this.configureWearableDevices(riskLevel),
           environmentalSensors: await this.configureEnvironmentalSensors(riskLevel),
@@ -309,7 +309,7 @@ export class DementiaCareService {
 
       return preventionSystem;
     } catch (error: unknown) {
-      console.error('Error implementing advanced wandering prevention:', error);
+      console.error('Error implementing advanced wanderingprevention:', error);
       throw error;
     }
   }
@@ -348,7 +348,7 @@ export class DementiaCareService {
         familyEngagementMetrics: await this.analyzeFamilyEngagement(allCarePlans)
       };
     } catch (error: unknown) {
-      console.error('Error getting advanced dementia analytics:', error);
+      console.error('Error getting advanced dementiaanalytics:', error);
       throw error;
     }
   }
@@ -363,7 +363,7 @@ export class DementiaCareService {
   }): Promise<CognitiveStimulatonProgram> {
     try {
       // Evidence-based cognitive stimulation program creation
-      constprogram: CognitiveStimulatonProgram = {
+      const program: CognitiveStimulatonProgram = {
         programId: crypto.randomUUID(),
         programName: `Personalized Cognitive Stimulation - ${programData.personalInterests[0] || 'General'}`,
         evidenceBase: 'Cochrane Review 2023, NICE Guidelines CG42, Spector et al. 2003',
@@ -392,7 +392,7 @@ export class DementiaCareService {
             successCriteria: ['Completes 60% of tasks', 'Shows engagement for 20 minutes']
           },
           severe: {
-            modifications: ['One-step instructions', 'Sensory stimulation', 'Constant support'],
+            modifications: ['One-step instructions', 'Sensory stimulation', 'Const ant support'],
             successCriteria: ['Shows recognition', 'Demonstrates pleasure/comfort']
           }
         },
@@ -409,7 +409,7 @@ export class DementiaCareService {
 
       return program;
     } catch (error: unknown) {
-      console.error('Error creating advanced cognitive stimulation program:', error);
+      console.error('Error creating advanced cognitive stimulationprogram:', error);
       throw error;
     }
   }
@@ -496,12 +496,12 @@ export class DementiaCareService {
 
     const riskScore = this.calculateWanderingRiskScore(riskFactors, planData.stage);
     
-    letriskLevel: WanderingRiskLevel;
+    let riskLevel: WanderingRiskLevel;
     if (riskScore >= 80) riskLevel = WanderingRiskLevel.EXTREME;
     else if (riskScore >= 60) riskLevel = WanderingRiskLevel.HIGH;
     else if (riskScore >= 40) riskLevel = WanderingRiskLevel.MODERATE;
     else if (riskScore >= 20) riskLevel = WanderingRiskLevel.LOW;
-    else riskLevel = WanderingRiskLevel.MINIMAL;
+    elseriskLevel = WanderingRiskLevel.MINIMAL;
 
     return {
       riskLevel,

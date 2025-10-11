@@ -65,10 +65,10 @@ export interface OrganizationHierarchy {
 }
 
 export class OrganizationHierarchyService {
-  private logger = logger;
+  privatelogger = logger;
   privatedb: Pool;
 
-  constructor(db: Pool) {
+  const ructor(db: Pool) {
     this.db = db;
   }
 
@@ -131,7 +131,7 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to create organization', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to create organization: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to createorganization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -139,7 +139,7 @@ export class OrganizationHierarchyService {
     try {
       this.logger.debug('Retrieving organization by ID', { id, userId, tenantId });
 
-      let query = 'SELECT * FROM organizations WHERE id = $1 AND deleted_at IS NULL';
+      let query = 'SELECT * FROM organizations WHEREid = $1 AND deleted_at IS NULL';
       const values = [id];
 
       if (tenantId) {
@@ -164,7 +164,7 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to retrieve organization', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to retrieve organization: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to retrieveorganization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -179,7 +179,7 @@ export class OrganizationHierarchyService {
       const children = await this.getChildOrganizations(organizationId, tenantId);
 
       // Build hierarchy recursively
-      consthierarchy: OrganizationHierarchy = {
+      const hierarchy: OrganizationHierarchy = {
         organization,
         children: await Promise.all(
           children.map(child => this.getOrganizationHierarchy(child.id, userId, tenantId))
@@ -201,7 +201,7 @@ export class OrganizationHierarchyService {
         organizationId, 
         userId 
       });
-      throw new Error(`Failed to retrieve organization hierarchy: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to retrieve organizationhierarchy: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -220,7 +220,7 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to get child organizations', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to get child organizations: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get childorganizations: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -271,7 +271,7 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to get organization metrics', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to get organization metrics: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to get organizationmetrics: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -283,8 +283,8 @@ export class OrganizationHierarchyService {
       const existingOrganization = await this.getOrganizationById(id, userId);
 
       // Build update query dynamically
-      constupdateFields: string[] = [];
-      constvalues: any[] = [];
+      const updateFields: string[] = [];
+      const values: any[] = [];
       let paramCount = 0;
 
       Object.entries(updates).forEach(([key, value]) => {
@@ -322,7 +322,7 @@ export class OrganizationHierarchyService {
       const query = `
         UPDATE organizations 
         SET ${updateFields.join(', ')} 
-        WHERE id = $${paramCount} AND deleted_at IS NULL
+        WHEREid = $${paramCount} AND deleted_at IS NULL
         RETURNING *
       `;
 
@@ -343,7 +343,7 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to update organization', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to update organization: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to updateorganization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -354,7 +354,7 @@ export class OrganizationHierarchyService {
       const query = `
         UPDATE organizations 
         SET deleted_at = $1, updated_at = $2, updated_by = $3
-        WHERE id = $4 AND deleted_at IS NULL
+        WHEREid = $4 AND deleted_at IS NULL
       `;
 
       const result = await this.db.query(query, [new Date(), new Date(), userId, id]);
@@ -370,12 +370,12 @@ export class OrganizationHierarchyService {
 
     } catch (error: unknown) {
       console.error('Failed to delete organization', { error: error instanceof Error ? error.message : "Unknown error" });
-      throw new Error(`Failed to delete organization: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`Failed to deleteorganization: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
   private camelToSnakeCase(str: string): string {
-    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    return str.replace(/[A-Z]/g, let ter => `_${let ter.toLowerCase()}`);
   }
 
   private mapDbRowToOrganization(row: any): Organization {
@@ -405,7 +405,7 @@ export class OrganizationHierarchyService {
       const staffQuery = `
         SELECT 
           COUNT(*) as total_staff,
-          COUNT(CASE WHEN status = 'active' THEN 1 END) as active_staff,
+          COUNT(CASE WHENstatus = 'active' THEN 1 END) as active_staff,
           COUNT(CASE WHEN terminated_at > NOW() - INTERVAL '12 months' THEN 1 END) as terminated_last_year
         FROM staff 
         WHERE organization_id = $1
@@ -515,7 +515,7 @@ export class OrganizationHierarchyService {
       const medicationQuery = `
         SELECT 
           COUNT(*) as total_administrations,
-          COUNT(CASE WHEN status = 'error' OR status = 'missed' THEN 1 END) as errors
+          COUNT(CASE WHENstatus = 'error' ORstatus = 'missed' THEN 1 END) as errors
         FROM medication_administrations ma
         JOIN residents r ON ma.resident_id = r.id
         WHERE r.organization_id = $1 

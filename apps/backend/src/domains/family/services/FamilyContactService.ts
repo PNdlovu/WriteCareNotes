@@ -57,7 +57,7 @@ export class FamilyContactService {
   privatecontactRiskAssessmentRepository: Repository<ContactRiskAssessment>;
   privatechildRepository: Repository<Child>;
 
-  constructor() {
+  const ructor() {
     this.familyMemberRepository = AppDataSource.getRepository(FamilyMember);
     this.contactScheduleRepository = AppDataSource.getRepository(ContactSchedule);
     this.contactSessionRepository = AppDataSource.getRepository(ContactSession);
@@ -403,7 +403,7 @@ export class FamilyContactService {
       familyMemberId?: string;
     }
   ): Promise<ContactSession[]> {
-    constwhere: any = { childId };
+    const where: any = { childId };
 
     if (options?.familyMemberId) {
       where.familyMemberId = options.familyMemberId;

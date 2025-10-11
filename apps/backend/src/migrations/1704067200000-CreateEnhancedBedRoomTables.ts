@@ -10,29 +10,29 @@ export class CreateEnhancedBedRoomTables1704067200000 implements MigrationInterf
         await queryRunner.query(`
             CREATE TABLE "bed_rooms" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-                "roomNumber" character varying(100) NOT NULL,
-                "roomType" character varying(50) NOT NULL,
+                "roomNumber" character var ying(100) NOT NULL,
+                "roomType" character var ying(50) NOT NULL,
                 "roomSize" numeric(8,2) NOT NULL,
-                "floor" character varying(20) NOT NULL,
-                "wing" character varying(20) NOT NULL,
+                "floor" character var ying(20) NOT NULL,
+                "wing" character var ying(20) NOT NULL,
                 "amenities" jsonb NOT NULL,
                 "equipment" jsonb NOT NULL,
-                "status" character varying(20) NOT NULL DEFAULT 'available',
+                "status" character var ying(20) NOT NULL DEFAULT 'available',
                 "careHomeId" uuid NOT NULL,
                 "currentResidentId" uuid,
                 "lastCleanedAt" TIMESTAMP,
                 "lastMaintenanceAt" TIMESTAMP,
                 "maintenanceSchedule" jsonb NOT NULL,
                 "dailyRate" numeric(10,2),
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "roomPhotos" jsonb,
                 "isActive" boolean NOT NULL DEFAULT true,
                 "accessibilityFeatures" jsonb,
                 "environmentalControls" jsonb,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "UQ_bed_rooms_roomNumber" UNIQUE ("roomNumber"),
-                CONSTRAINT "PK_bed_rooms" PRIMARY KEY ("id")
+                CONST RAINT "UQ_bed_rooms_roomNumber" UNIQUE ("roomNumber"),
+                CONST RAINT "PK_bed_rooms" PRIMARY KEY ("id")
             )
         `);
 
@@ -44,19 +44,19 @@ export class CreateEnhancedBedRoomTables1704067200000 implements MigrationInterf
                 "residentId" uuid NOT NULL,
                 "checkInDate" TIMESTAMP NOT NULL,
                 "checkOutDate" TIMESTAMP,
-                "status" character varying(20) NOT NULL,
+                "status" character var ying(20) NOT NULL,
                 "occupancyDetails" jsonb NOT NULL,
                 "charges" jsonb NOT NULL,
-                "notes" character varying(500),
+                "notes" character var ying(500),
                 "roomCondition" jsonb,
                 "specialArrangements" jsonb,
                 "isEmergencyAdmission" boolean NOT NULL DEFAULT false,
-                "admissionSource" character varying(100),
-                "dischargeDestination" character varying(100),
+                "admissionSource" character var ying(100),
+                "dischargeDestination" character var ying(100),
                 "occupancyHistory" jsonb,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_room_occupancy" PRIMARY KEY ("id")
+                CONST RAINT "PK_room_occupancy" PRIMARY KEY ("id")
             )
         `);
 
@@ -72,17 +72,17 @@ export class CreateEnhancedBedRoomTables1704067200000 implements MigrationInterf
         await queryRunner.query(`CREATE INDEX "IDX_room_occupancy_status" ON "room_occupancy" ("status")`);
         await queryRunner.query(`CREATE INDEX "IDX_room_occupancy_checkInDate" ON "room_occupancy" ("checkInDate")`);
 
-        // Add foreign key constraints
+        // Add foreign key const raints
         await queryRunner.query(`
             ALTER TABLE "room_occupancy" 
-            ADD CONSTRAINT "FK_room_occupancy_roomId" 
+            ADD CONST RAINT "FK_room_occupancy_roomId" 
             FOREIGN KEY ("roomId") REFERENCES "bed_rooms"("id") ON DELETE CASCADE ON UPDATE NO ACTION
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop foreign key constraints
-        await queryRunner.query(`ALTER TABLE "room_occupancy" DROP CONSTRAINT "FK_room_occupancy_roomId"`);
+        // Drop foreign key const raints
+        await queryRunner.query(`ALTER TABLE "room_occupancy" DROP CONST RAINT "FK_room_occupancy_roomId"`);
 
         // Drop indexes
         await queryRunner.query(`DROP INDEX "IDX_room_occupancy_checkInDate"`);

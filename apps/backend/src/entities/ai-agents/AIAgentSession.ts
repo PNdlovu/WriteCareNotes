@@ -24,7 +24,7 @@ export class AIAgentSession {
   id: string;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     nullable: false
   })
@@ -45,7 +45,7 @@ export class AIAgentSession {
   userId: string | null;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     default: 'ACTIVE'
   })
@@ -65,21 +65,21 @@ export class AIAgentSession {
   };
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 50,
     nullable: true
   })
   userRole: string | null;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 50,
     default: 'STANDARD'
   })
   confidentialityLevel: string;
 
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 100,
     nullable: true
   })

@@ -5,7 +5,7 @@
  * @since 2025-10-10
  * 
  * @description
- * Production-ready medication service with comprehensive children's safety features:
+ * Production-ready medication service with comprehensive children's safetyfeatures:
  * - Age-based dosing validation using BNF for Children
  * - Automatic consent requirement determination
  * - Gillick competence assessment tracking
@@ -77,15 +77,15 @@ interface DosingValidation {
 
 @Injectable()
 export class ChildrenMedicationService {
-  constructor(
+  const ructor(
     @InjectRepository(MedicationRecord)
-    private readonly medicationRepository: Repository<MedicationRecord>,
+    private readonlymedicationRepository: Repository<MedicationRecord>,
     
     @InjectRepository(Child)
-    private readonly childRepository: Repository<Child>,
+    private readonlychildRepository: Repository<Child>,
     
     @InjectRepository(Resident)
-    private readonly residentRepository: Repository<Resident>
+    private readonlyresidentRepository: Repository<Resident>
   ) {}
 
   // ==========================================
@@ -264,8 +264,8 @@ export class ChildrenMedicationService {
     patientWeightKg?: number,
     patientHeightCm?: number
   ): Promise<DosingValidation> {
-    constwarnings: string[] = [];
-    consterrors: string[] = [];
+    const warnings: string[] = [];
+    const errors: string[] = [];
 
     // For children, weight is REQUIRED for dosing calculations
     if (patientType !== PatientType.ADULT && patientType !== PatientType.CARE_LEAVER_18_25) {
@@ -325,7 +325,7 @@ export class ChildrenMedicationService {
 
   /**
    * Validate Paracetamol dosing for children
-   * BNF for Children guidance: 15mg/kg every 4-6 hours, max 60mg/kg/day
+   * BNF for Childrenguidance: 15mg/kg every 4-6 hours, max 60mg/kg/day
    */
   private validateParacetamolDosing(
     dosage: string,
@@ -338,7 +338,7 @@ export class ChildrenMedicationService {
     const doseMatch = dosage.match(/(\d+\.?\d*)\s*mg/i);
     const proposedDoseMg = doseMatch ? parseFloat(doseMatch[1]) : 0;
 
-    // Calculate recommended dose: 15mg/kg
+    // Calculate recommendeddose: 15mg/kg
     const recommendedDoseMg = weightKg * 15;
     const maxSingleDoseMg = weightKg * 20; // Max 20mg/kg single dose
     const maxDailyDoseMg = weightKg * 60;  // Max 60mg/kg/day
@@ -369,7 +369,7 @@ export class ChildrenMedicationService {
 
   /**
    * Validate Ibuprofen dosing for children
-   * BNF for Children guidance: 10mg/kg every 6-8 hours, max 30mg/kg/day
+   * BNF for Childrenguidance: 10mg/kg every 6-8 hours, max 30mg/kg/day
    */
   private validateIbuprofenDosing(
     dosage: string,
@@ -394,7 +394,7 @@ export class ChildrenMedicationService {
       };
     }
 
-    // Calculate recommended dose: 10mg/kg
+    // Calculate recommendeddose: 10mg/kg
     const recommendedDoseMg = weightKg * 10;
     const maxSingleDoseMg = weightKg * 10;
     const maxDailyDoseMg = weightKg * 30;
@@ -454,7 +454,7 @@ export class ChildrenMedicationService {
     // Find child
     const child = await this.childRepository.findOne({ where: { id: childId } });
     if (!child) {
-      throw new NotFoundException(`Child not found: ${childId}`);
+      throw new NotFoundException(`Child notfound: ${childId}`);
     }
 
     // Calculate age and determine patient type
@@ -541,7 +541,7 @@ export class ChildrenMedicationService {
   ): Promise<MedicationRecord> {
     const medication = await this.medicationRepository.findOne({ where: { id: medicationId } });
     if (!medication) {
-      throw new NotFoundException(`Medication record not found: ${medicationId}`);
+      throw new NotFoundException(`Medication record notfound: ${medicationId}`);
     }
 
     medication.gillickCompetenceResult = result;
@@ -577,7 +577,7 @@ export class ChildrenMedicationService {
       order: { prescribedDate: 'DESC' }
     });
 
-    constsafetyAlerts: string[] = [];
+    const safetyAlerts: string[] = [];
 
     // Check for safety issues
     for (const med of medications) {
@@ -622,7 +622,7 @@ export class ChildrenMedicationService {
   ): Promise<MedicationRecord> {
     const medication = await this.medicationRepository.findOne({ where: { id: medicationId } });
     if (!medication) {
-      throw new NotFoundException(`Medication record not found: ${medicationId}`);
+      throw new NotFoundException(`Medication record notfound: ${medicationId}`);
     }
 
     const sideEffects = medication.sideEffectsObserved || [];

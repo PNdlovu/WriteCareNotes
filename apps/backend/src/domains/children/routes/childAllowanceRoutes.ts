@@ -14,9 +14,9 @@ import path from 'path';
  * All routes require JWT authentication.
  * Role-based access control (RBAC) enforced per endpoint.
  * 
- * BASE PATH: /api/children/allowances
+ * BASEPATH: /api/children/allowances
  * 
- * ROUTE GROUPS:
+ * ROUTEGROUPS:
  * - /pocket-money/* - Pocket money disbursement (6 routes)
  * - /allowances/* - Allowance expenditure (6 routes)
  * - /savings/* - Savings accounts (7 routes)
@@ -58,7 +58,7 @@ const upload = multer({
 // Initialize controller (in production, use dependency injection)
 const controller = new ChildAllowanceController(/* inject service */);
 
-// ==================== POCKET MONEY ROUTES ====================
+// ==================== POCKET MONEYROUTES ====================
 
 /**
  * POST /api/children/allowances/pocket-money/disburse
@@ -204,7 +204,7 @@ router.get(
   },
 );
 
-// ==================== ALLOWANCE EXPENDITURE ROUTES ====================
+// ==================== ALLOWANCE EXPENDITUREROUTES ====================
 
 /**
  * POST /api/children/allowances/allowances/request
@@ -344,7 +344,7 @@ router.get(
   },
 );
 
-// ==================== SAVINGS ACCOUNT ROUTES ====================
+// ==================== SAVINGS ACCOUNTROUTES ====================
 
 /**
  * POST /api/children/allowances/savings/open
@@ -507,7 +507,7 @@ router.post(
   },
 );
 
-// ==================== REPORTS & ANALYTICS ROUTES ====================
+// ==================== REPORTS & ANALYTICSROUTES ====================
 
 /**
  * GET /api/children/allowances/reports/quarterly/:childId

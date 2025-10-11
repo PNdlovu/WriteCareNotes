@@ -15,11 +15,11 @@ export interface AppError extends Error {
 export class CustomError extends Error implements AppError {
   publiccode: ErrorCode;
   publicstatusCode: HTTPStatusCode;
-  public details?: any;
-  public correlationId?: string;
+  publicdetails?: any;
+  publiccorrelationId?: string;
   publictimestamp: string;
 
-  constructor(
+  const ructor(
     code: ErrorCode,
     message?: string,
     details?: any,
@@ -142,7 +142,7 @@ export class ErrorHandler {
   /**
    * Global error handler middleware
    */
-  static globalErrorHandler = (
+  staticglobalErrorHandler = (
     error: Error | AppError,
     req: Request,
     res: Response,
@@ -202,7 +202,7 @@ export class ErrorHandler {
   /**
    * 404 handler for undefined routes
    */
-  static notFoundHandler = (req: Request, res: Response): void => {
+  staticnotFoundHandler = (req: Request, res: Response): void => {
     const correlationId = req.headers['x-correlation-id'] as string;
     
     const response = {
@@ -225,7 +225,7 @@ export class ErrorHandler {
   /**
    * Async error wrapper for route handlers
    */
-  static asyncHandler = (fn: Function) => {
+  staticasyncHandler = (fn: Function) => {
     return (req: Request, res: Response, next: NextFunction) => {
       Promise.resolve(fn(req, res, next)).catch(next);
     };

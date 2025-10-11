@@ -10,14 +10,14 @@ import { RobotPerformance } from '../../entities/robotics/RobotPerformance';
 import { RobotMaintenance } from '../../entities/robotics/RobotMaintenance';
 
 describe('AssistiveRoboticsService', () => {
-  letservice: AssistiveRoboticsService;
-  letmockRobotRepository: any;
-  letmockTaskRepository: any;
-  letmockCommandRepository: any;
-  letmockPerformanceRepository: any;
-  letmockMaintenanceRepository: any;
-  letmockEventEmitter: any;
-  letmockAuditService: any;
+  let service: AssistiveRoboticsService;
+  let mockRobotRepository: any;
+  let mockTaskRepository: any;
+  let mockCommandRepository: any;
+  let mockPerformanceRepository: any;
+  let mockMaintenanceRepository: any;
+  let mockEventEmitter: any;
+  let mockAuditService: any;
 
   beforeEach(async () => {
     mockRobotRepository = {
@@ -68,7 +68,7 @@ describe('AssistiveRoboticsService', () => {
       logEvent: jest.fn(),
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         AssistiveRoboticsService,
         {

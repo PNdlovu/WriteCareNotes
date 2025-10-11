@@ -21,7 +21,7 @@
  * @compliance
  * - GDPR Article 5: Accuracy and storage limitation through version control
  * - ISO 27001: Information security through audit trails
- * - British Isles Regulators: CQC, Care Inspectorate, CIW, RQIA, HIQA
+ * - British IslesRegulators: CQC, Care Inspectorate, CIW, RQIA, HIQA
  * 
  * @endpoints
  * GET    /api/policies/:policyId/versions - Get all versions for a policy
@@ -82,7 +82,7 @@ class CompareQueryDto {
 /**
  * Policy Version Controller
  * 
- * Provides REST endpoints for:
+ * Provides REST endpointsfor:
  * - Fetching policy version history
  * - Comparing versions (visual diff)
  * - Rolling back to previous versions
@@ -93,8 +93,8 @@ class CompareQueryDto {
 // @UseGuards(JwtAuthGuard, RolesGuard) // TODO: Enable when auth module is ready
 @ApiBearerAuth()
 export class PolicyVersionController {
-  constructor(
-    private readonly policyVersionService: PolicyVersionService
+  const ructor(
+    private readonlypolicyVersionService: PolicyVersionService
   ) {}
 
   /**
@@ -150,7 +150,7 @@ export class PolicyVersionController {
         throw error;
       }
       throw new HttpException(
-        `Failed to fetch policy versions: ${error.message}`,
+        `Failed to fetch policyversions: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -205,7 +205,7 @@ export class PolicyVersionController {
         throw error;
       }
       throw new HttpException(
-        `Failed to fetch version: ${error.message}`,
+        `Failed to fetchversion: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -305,7 +305,7 @@ export class PolicyVersionController {
         throw error;
       }
       throw new HttpException(
-        `Failed to compare versions: ${error.message}`,
+        `Failed to compareversions: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -478,7 +478,7 @@ export class PolicyVersionController {
         throw error;
       }
       throw new HttpException(
-        `Failed to rollback policy: ${error.message}`,
+        `Failed to rollbackpolicy: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -562,7 +562,7 @@ export class PolicyVersionController {
         throw error;
       }
       throw new HttpException(
-        `Failed to archive version: ${error.message}`,
+        `Failed to archiveversion: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }

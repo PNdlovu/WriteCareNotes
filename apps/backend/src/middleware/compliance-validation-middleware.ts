@@ -78,7 +78,7 @@ interface ComplianceWarning {
 export class ComplianceValidationMiddleware {
   // Logger removed
 
-  constructor(private readonly eventEmitter: EventEmitter2) {}
+  const ructor(private readonlyeventEmitter: EventEmitter2) {}
 
   /**
    * Main compliance validation middleware
@@ -122,7 +122,7 @@ export class ComplianceValidationMiddleware {
       next();
 
     } catch (error: unknown) {
-      console.error(`Compliance validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Compliance validationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       return res.status(500).json({
         success: false,
         message: 'Compliance validation error',
@@ -160,7 +160,7 @@ export class ComplianceValidationMiddleware {
         next();
 
       } catch (error: unknown) {
-        console.error(`${jurisdiction} compliance validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+        console.error(`${jurisdiction} compliance validationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
         return res.status(500).json({
           success: false,
           message: `${jurisdiction} compliance validation error`,
@@ -199,7 +199,7 @@ export class ComplianceValidationMiddleware {
         next();
 
       } catch (error: unknown) {
-        console.error(`Professional standards validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+        console.error(`Professional standards validationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
         return res.status(500).json({
           success: false,
           message: 'Professional standards validation error',
@@ -233,7 +233,7 @@ export class ComplianceValidationMiddleware {
       next();
 
     } catch (error: unknown) {
-      console.error(`Data protection validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Data protection validationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       return res.status(500).json({
         success: false,
         message: 'Data protection validation error',
@@ -266,7 +266,7 @@ export class ComplianceValidationMiddleware {
       next();
 
     } catch (error: unknown) {
-      console.error(`Clinical safety validation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Clinical safety validationfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
       return res.status(500).json({
         success: false,
         message: 'Clinical safety validation error',
@@ -294,9 +294,9 @@ export class ComplianceValidationMiddleware {
    * Perform comprehensive compliance validation
    */
   private async performComplianceValidation(context: ComplianceValidationContext): Promise<ComplianceValidationResult> {
-    constviolations: ComplianceViolation[] = [];
-    constwarnings: ComplianceWarning[] = [];
-    constrequiredActions: string[] = [];
+    const violations: ComplianceViolation[] = [];
+    const warnings: ComplianceWarning[] = [];
+    const requiredActions: string[] = [];
 
     // Validate regulatory compliance
     const regulatoryViolations = await this.validateRegulatoryCompliance(context);
@@ -343,7 +343,7 @@ export class ComplianceValidationMiddleware {
    * Perform jurisdiction-specific validation
    */
   private async performJurisdictionValidation(context: ComplianceValidationContext): Promise<ComplianceValidationResult> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     switch (context.jurisdiction) {
       case 'england':
@@ -373,7 +373,7 @@ export class ComplianceValidationMiddleware {
    * Validate regulatory compliance
    */
   private async validateRegulatoryCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check NHS Digital compliance
     const nhsDigitalValid = await this.checkNHSDigitalCompliance(context.organizationId);
@@ -408,7 +408,7 @@ export class ComplianceValidationMiddleware {
    * Validate professional compliance
    */
   private async validateProfessionalCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check actual professional standards compliance
     const professionalStandardsViolations = await this.professionalStandardsService.validateCompliance(context);
@@ -421,7 +421,7 @@ export class ComplianceValidationMiddleware {
    * Validate data protection compliance
    */
   private async validateDataProtectionCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check GDPR compliance for data processing actions
     if (context.action.includes('data') || context.action.includes('personal')) {
@@ -444,7 +444,7 @@ export class ComplianceValidationMiddleware {
    * Validate clinical safety compliance
    */
   private async validateClinicalSafetyCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check clinical safety for clinical actions
     if (context.action.includes('clinical') || context.action.includes('medication') || context.action.includes('care')) {
@@ -467,7 +467,7 @@ export class ComplianceValidationMiddleware {
    * Validate CQC compliance (England)
    */
   private async validateCQCCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check CQC registration
     const cqcRegistered = await this.checkCQCRegistration(context.organizationId);
@@ -500,7 +500,7 @@ export class ComplianceValidationMiddleware {
    * Validate Scotland compliance
    */
   private async validateScotlandCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check Care Inspectorate registration
     const scotlandRegistered = await this.checkScotlandRegistration(context.organizationId);
@@ -521,7 +521,7 @@ export class ComplianceValidationMiddleware {
    * Validate Wales compliance
    */
   private async validateWalesCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check CIW registration
     const walesRegistered = await this.checkWalesRegistration(context.organizationId);
@@ -554,7 +554,7 @@ export class ComplianceValidationMiddleware {
    * Validate Northern Ireland compliance
    */
   private async validateNorthernIrelandCompliance(context: ComplianceValidationContext): Promise<ComplianceViolation[]> {
-    constviolations: ComplianceViolation[] = [];
+    const violations: ComplianceViolation[] = [];
 
     // Check RQIA registration
     const rqiaRegistered = await this.checkRQIARegistration(context.organizationId);
@@ -587,14 +587,14 @@ export class ComplianceValidationMiddleware {
    * Generate compliance warnings
    */
   private async generateComplianceWarnings(context: ComplianceValidationContext): Promise<ComplianceWarning[]> {
-    constwarnings: ComplianceWarning[] = [];
+    const warnings: ComplianceWarning[] = [];
 
     // Check for approaching deadlines
     const approachingDeadlines = await this.checkApproachingDeadlines(context.organizationId);
     for (const deadline of approachingDeadlines) {
       warnings.push({
         type: 'approaching_deadline',
-        message: `${deadline.type} deadline approaching: ${deadline.description}`,
+        message: `${deadline.type} deadlineapproaching: ${deadline.description}`,
         recommendedAction: `Prepare for ${deadline.type} renewal`,
         priority: deadline.priority
       });

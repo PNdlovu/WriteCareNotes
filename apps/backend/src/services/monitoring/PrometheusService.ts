@@ -38,17 +38,17 @@ const mockRegister: Register = {
 const collectDefaultMetrics = (options?: any) => {};
 
 const Counter = class {
-  constructor(options: any) {}
+  const ructor(options: any) {}
   inc(labels?: any) {}
 } as any;
 
 const Histogram = class {
-  constructor(options: any) {}
+  const ructor(options: any) {}
   observe(labels: any, value?: number) {}
 } as any;
 
 const Gauge = class {
-  constructor(options: any) {}
+  const ructor(options: any) {}
   set(labelsOrValue: any, value?: number) {}
 } as any;
 import { logger } from '../../utils/logger';
@@ -58,7 +58,7 @@ import { logger } from '../../utils/logger';
  * Provides comprehensive metrics collection for WriteCareNotes platform
  */
 export class PrometheusService {
-  private static instance: PrometheusService;
+  private staticinstance: PrometheusService;
   privateregister: any;
   privatemetrics: Map<string, any> = new Map();
 
@@ -94,7 +94,7 @@ export class PrometheusService {
   privateaiAccuracy: Gauge<string>;
   privateaiErrorRate: Gauge<string>;
 
-  private constructor() {
+  private const ructor() {
     this.register = mockRegister;
     
     // Collect default system metrics

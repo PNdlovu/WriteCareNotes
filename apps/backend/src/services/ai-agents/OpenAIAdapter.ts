@@ -45,7 +45,7 @@ export class OpenAIAdapter {
   privatepromptTemplates: Map<string, PromptTemplate>;
   privatecapabilities: AgentCapabilities;
 
-  constructor() {
+  const ructor() {
     this.llmService = new LLMIntegrationService();
     this.promptTemplates = new Map();
     this.capabilities = {
@@ -121,20 +121,20 @@ Care Note:`,
     this.addPromptTemplate({
       id: 'roster_optimization',
       name: 'Roster Optimization',
-      description: 'Optimize staff scheduling based on requirements and constraints',
-      template: `You are a workforce optimization specialist. Analyze the following roster requirements and constraints to suggest an optimal schedule.
+      description: 'Optimize staff scheduling based on requirements and const raints',
+      template: `You are a workforce optimization specialist. Analyze the following roster requirements and const raints to suggest an optimal schedule.
 
 Requirements:
-- Staff needed: {staff_requirements}
-- Shift times: {shift_times}
-- Skills required: {required_skills}
-- Budget constraints: {budget_constraints}
+- Staffneeded: {staff_requirements}
+- Shifttimes: {shift_times}
+- Skillsrequired: {required_skills}
+- Budgetconstraints: {budget_constraints}
 
-Constraints:
-- Staff availability: {staff_availability}
-- Maximum hours per staff: {max_hours}
-- Minimum rest between shifts: {min_rest_hours}
-- Compliance requirements: {compliance_requirements}
+Const raints:
+- Staffavailability: {staff_availability}
+- Maximum hours perstaff: {max_hours}
+- Minimum rest betweenshifts: {min_rest_hours}
+- Compliancerequirements: {compliance_requirements}
 
 Current roster: {current_roster}
 
@@ -162,22 +162,22 @@ Optimized Roster:`,
       template: `You are a healthcare risk assessment specialist. Analyze the following data to assess potential risks and provide recommendations.
 
 IoT Data:
-- Vital signs: {vital_signs}
-- Movement patterns: {movement_data}
-- Environmental data: {environmental_data}
-- Alert history: {alert_history}
+- Vitalsigns: {vital_signs}
+- Movementpatterns: {movement_data}
+- Environmentaldata: {environmental_data}
+- Alerthistory: {alert_history}
 
 Care Observations:
-- Recent notes: {recent_notes}
-- Medication changes: {medication_changes}
-- Behavioral observations: {behavioral_observations}
-- Family concerns: {family_concerns}
+- Recentnotes: {recent_notes}
+- Medicationchanges: {medication_changes}
+- Behavioralobservations: {behavioral_observations}
+- Familyconcerns: {family_concerns}
 
 Resident Profile:
 - Age: {age}
-- Medical conditions: {medical_conditions}
-- Mobility status: {mobility_status}
-- Cognitive status: {cognitive_status}
+- Medicalconditions: {medical_conditions}
+- Mobilitystatus: {mobility_status}
+- Cognitivestatus: {cognitive_status}
 
 Instructions:
 - Assess risk level (low, medium, high, critical)
@@ -200,7 +200,7 @@ Risk Assessment:`,
       id: 'sentiment_analysis',
       name: 'Sentiment Analysis',
       description: 'Analyze sentiment and emotional tone in text',
-      template: `Analyze the sentiment and emotional tone of the following text:
+      template: `Analyze the sentiment and emotional tone of the followingtext:
 
 Text: {text}
 Context: {context}
@@ -224,10 +224,10 @@ Sentiment Analysis:`,
       id: 'entity_extraction',
       name: 'Entity Extraction',
       description: 'Extract key entities and information from text',
-      template: `Extract key entities and information from the following text:
+      template: `Extract key entities and information from the followingtext:
 
 Text: {text}
-Entity types to extract: {entity_types}
+Entity types toextract: {entity_types}
 
 Instructions:
 - Extract people, places, medications, conditions, times, actions
@@ -274,7 +274,7 @@ Entity Extraction:`,
   ): Promise<PromptResult> {
     const template = this.getPromptTemplate(templateId);
     if (!template) {
-      throw new Error(`Prompt template not found: ${templateId}`);
+      throw new Error(`Prompt template notfound: ${templateId}`);
     }
 
     // Validate required variables
@@ -287,7 +287,7 @@ Entity Extraction:`,
     const systemPrompt = this.getSystemPrompt(template.category);
 
     // Create LLM request
-    constllmRequest: LLMRequest = {
+    const llmRequest: LLMRequest = {
       provider: this.llmService.getDefaultProvider(options.securityLevel === 'TENANT' ? 'TENANT' : 'PUBLIC'),
       systemPrompt,
       userMessage: renderedPrompt,
@@ -300,7 +300,7 @@ Entity Extraction:`,
 
     // Execute the request
     const startTime = Date.now();
-    constresponse: LLMResponse = await this.llmService.generateResponse(llmRequest);
+    const response: LLMResponse = await this.llmService.generateResponse(llmRequest);
     const processingTime = Date.now() - startTime;
 
     return {
@@ -478,7 +478,7 @@ Entity Extraction:`,
     const missingVariables = template.variables.filter(variable => !(variable in context));
     
     if (missingVariables.length > 0) {
-      throw new Error(`Missing required variables: ${missingVariables.join(', ')}`);
+      throw new Error(`Missing requiredvariables: ${missingVariables.join(', ')}`);
     }
   }
 

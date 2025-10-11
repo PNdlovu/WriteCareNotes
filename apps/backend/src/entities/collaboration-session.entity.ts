@@ -8,7 +8,7 @@
  * @since 2.0.0 - Phase 2 Feature 2: Real-Time Collaboration
  * @license Proprietary - WriteCareNotes Platform
  * 
- * Key Features:
+ * KeyFeatures:
  * - Real-time session management with WebSocket integration
  * - User presence tracking with last activity timestamps
  * - Cursor position and selection range tracking
@@ -16,13 +16,13 @@
  * - Session lifecycle management (active/idle/ended states)
  * - Automatic cleanup of stale sessions
  * 
- * Database Schema:
+ * DatabaseSchema:
  * - Table: collaboration_sessions
- * - Primary Key: UUID (id)
- * - Foreign Keys: policy_id → policy_drafts, user_id → users
+ * - PrimaryKey: UUID (id)
+ * - ForeignKeys: policy_id → policy_drafts, user_id → users
  * - Indexes: policy_id, user_id, policy_id+user_id (composite), last_activity
  * 
- * Related Entities:
+ * RelatedEntities:
  * - PolicyDraft: The policy being collaboratively edited
  * - User: The collaborating user
  * - PolicyComment: Comments created during the session
@@ -137,7 +137,7 @@ export class CollaborationSession {
    * @unique
    * @required
    */
-  @Column({ type: 'varchar', length: 255, unique: true, name: 'session_token' })
+  @Column({ type: 'var char', length: 255, unique: true, name: 'session_token' })
   sessionToken: string;
 
   /**
@@ -177,7 +177,7 @@ export class CollaborationSession {
    * @default 'active'
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     length: 20,
     default: SessionStatus.ACTIVE,
     name: 'status'
@@ -196,14 +196,14 @@ export class CollaborationSession {
    * User's device type for the session
    * @nullable
    */
-  @Column({ type: 'varchar', length: 50, nullable: true, name: 'device_type' })
+  @Column({ type: 'var char', length: 50, nullable: true, name: 'device_type' })
   deviceType: string | null;
 
   /**
    * User's browser information
    * @nullable
    */
-  @Column({ type: 'varchar', length: 100, nullable: true, name: 'browser' })
+  @Column({ type: 'var char', length: 100, nullable: true, name: 'browser' })
   browser: string | null;
 
   /**
@@ -211,7 +211,7 @@ export class CollaborationSession {
    * Used to map sessions to active WebSocket connections
    * @nullable
    */
-  @Column({ type: 'varchar', length: 255, nullable: true, name: 'socket_id' })
+  @Column({ type: 'var char', length: 255, nullable: true, name: 'socket_id' })
   socketId: string | null;
 
   /**

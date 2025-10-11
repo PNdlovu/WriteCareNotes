@@ -48,7 +48,7 @@ export interface DigitalSecurityFramework {
 export class DigitalSecurityService {
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.auditService = new AuditTrailService();
   }
 
@@ -59,7 +59,7 @@ export class DigitalSecurityService {
     organizationSize: 'small' | 'medium' | 'large' | 'enterprise';
   }): Promise<DigitalSecurityFramework> {
     try {
-      constframework: DigitalSecurityFramework = {
+      const framework: DigitalSecurityFramework = {
         identityAndAccessManagement: {
           userLifecycleManagement: true,
           identityFederation: securityConfig.securityLevel !== 'standard',
@@ -94,7 +94,7 @@ export class DigitalSecurityService {
       
       return framework;
     } catch (error: unknown) {
-      console.error('Error implementing digital security framework:', error);
+      console.error('Error implementing digital securityframework:', error);
       throw error;
     }
   }

@@ -100,7 +100,7 @@ app.get('/ai-agents/status', (req, res) => {
 app.post('/voice-assistant/command', (req, res) => {
   const { command, userId, residentId } = req.body;
   
-  logger.log(`Voice command received: ${command} from user ${userId} for resident ${residentId}`);
+  logger.log(`Voice commandreceived: ${command} from user ${userId} for resident ${residentId}`);
   
   res.json({
     success: true,
@@ -202,13 +202,13 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   logger.log(`WriteCareNotes AI-Enhanced Server running on port ${PORT}`);
-  logger.log('AI Features Status:');
-  logger.log('✓ Agentic AI Layer: Active');
-  logger.log('✓ Predictive Health Analytics: Active');
+  logger.log('AI FeaturesStatus:');
+  logger.log('✓ Agentic AILayer: Active');
+  logger.log('✓ Predictive HealthAnalytics: Active');
   logger.log('✓ Voice-First Interface: Active');
   logger.log('✓ AI-Powered Documentation: Active');
-  logger.log('✓ Resident Emotion & Wellness Tracking: Active');
-  logger.log('✓ Agent Console for Admins: Active');
+  logger.log('✓ Resident Emotion & WellnessTracking: Active');
+  logger.log('✓ Agent Console forAdmins: Active');
 });
 
 export default app;

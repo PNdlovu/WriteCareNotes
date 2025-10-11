@@ -18,7 +18,7 @@ import { FinancialAnalyticsService } from '../../services/financial/FinancialAna
 export class FinancialController {
   privatefinancialService: FinancialAnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.financialService = new FinancialAnalyticsService();
   }
 

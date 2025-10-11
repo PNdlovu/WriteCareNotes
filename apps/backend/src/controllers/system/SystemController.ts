@@ -26,7 +26,7 @@ import { SystemService, SystemTestResult, E2ETestResult, SmokeTestResult, Regres
 
 @Controller('api/system')
 export class SystemController {
-  constructor(private readonly systemService: SystemService) {}
+  const ructor(private readonlysystemService: SystemService) {}
 
   /**
    * Run comprehensive system tests

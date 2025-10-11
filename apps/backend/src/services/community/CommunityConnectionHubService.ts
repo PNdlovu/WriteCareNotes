@@ -502,7 +502,7 @@ type PromotionChannel = 'website' | 'email' | 'social_media' | 'flyers' | 'local
 type MaterialType = 'flyer' | 'poster' | 'email' | 'social_post' | 'press_release' | 'video' | 'brochure';
 
 export class CommunityConnectionHubService {
-  private router = express.Router();
+  privaterouter = express.Router();
   privatedb: DatabaseService;
   privatelogger: Logger;
   privateauditService: AuditService;
@@ -510,7 +510,7 @@ export class CommunityConnectionHubService {
   privateaiService: AIService;
   privateeventService: EventService;
 
-  constructor() {
+  const ructor() {
     this.db = DatabaseService.getInstance();
     this.logger = Logger.getInstance();
     this.auditService = AuditService.getInstance();
@@ -612,7 +612,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const groupId = uuidv4();
-      constgroup: CommunityGroup = {
+      const group: CommunityGroup = {
         id: groupId,
         tenantId,
         name,
@@ -698,7 +698,7 @@ export class CommunityConnectionHubService {
         LEFT JOIN residents r ON gm.resident_id = r.id
         WHERE g.tenant_id = $1
       `;
-      constparams: any[] = [tenantId];
+      const params: any[] = [tenantId];
       let paramCount = 1;
 
       if (groupType) {
@@ -794,7 +794,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const activityId = uuidv4();
-      constactivity: CommunityActivity = {
+      const activity: CommunityActivity = {
         id: activityId,
         tenantId,
         groupId,
@@ -849,7 +849,7 @@ export class CommunityConnectionHubService {
         type: 'activity_created',
         recipients: facilitators,
         title: 'New Activity Scheduled',
-        message: `You have been assigned to facilitate: ${title}`,
+        message: `You have been assigned tofacilitate: ${title}`,
         metadata: { activityId, scheduledStart, location }
       });
 
@@ -893,7 +893,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const volunteerId = uuidv4();
-      constvolunteer: Volunteer = {
+      const volunteer: Volunteer = {
         id: volunteerId,
         tenantId,
         firstName,
@@ -1009,7 +1009,7 @@ export class CommunityConnectionHubService {
       } = req.body;
 
       const eventId = uuidv4();
-      constevent: CommunityEvent = {
+      const event: CommunityEvent = {
         id: eventId,
         tenantId,
         title,
@@ -1222,7 +1222,7 @@ export class CommunityConnectionHubService {
     recurringGroupId: string,
     weeksAhead: number = 12
   ): CommunityActivity[] {
-    constactivities: CommunityActivity[] = [];
+    const activities: CommunityActivity[] = [];
     const startDate = new Date();
     
     for (let week = 0; week < weeksAhead; week++) {
@@ -1298,7 +1298,7 @@ export class CommunityConnectionHubService {
 
     // Add activity coordinators
     const coordinators = await this.db.query(
-      'SELECT user_id FROM user_roles WHERE tenant_id = $1 AND role = $2',
+      'SELECT user_id FROM user_roles WHERE tenant_id = $1 ANDrole = $2',
       [tenantId, 'activity_coordinator']
     );
     

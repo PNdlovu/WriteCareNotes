@@ -18,7 +18,7 @@ import { RehabilitationService } from '../../services/rehabilitation/Rehabilitat
 export class RehabilitationController {
   privaterehabilitationService: RehabilitationService;
 
-  constructor() {
+  const ructor() {
     this.rehabilitationService = new RehabilitationService();
   }
 

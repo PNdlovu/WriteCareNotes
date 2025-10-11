@@ -29,7 +29,7 @@ import { DeliveryRobotService } from '../services/delivery-robot.service';
 /**
  * Robotics & Automation Module
  * 
- * Provides comprehensive robotics and automation capabilities:
+ * Provides comprehensive robotics and automationcapabilities:
  * - Assistive robots for resident support and mobility aid
  * - Companion robots for social interaction and entertainment
  * - Medical robots for health monitoring and medication delivery

@@ -24,9 +24,9 @@ import { PlacementReviewType } from '../entities/PlacementReview';
 
 @Controller('api/v1/placements')
 export class PlacementController {
-  constructor(
-    private readonly placementService: PlacementService,
-    private readonly matchingService: PlacementMatchingService
+  const ructor(
+    private readonlyplacementService: PlacementService,
+    private readonlymatchingService: PlacementMatchingService
   ) {}
 
   /**

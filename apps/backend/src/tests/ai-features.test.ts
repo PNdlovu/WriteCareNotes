@@ -5,10 +5,10 @@ import { AdvancedPredictiveHealthController } from '../controllers/analytics/Adv
 import { EmotionWellnessTrackingController } from '../controllers/wellness/EmotionWellnessTrackingController';
 
 describe('AI Features Integration Tests', () => {
-  letagentConsoleController: AgentConsoleController;
-  letvoiceAssistantController: EnhancedVoiceAssistantController;
-  letpredictiveHealthController: AdvancedPredictiveHealthController;
-  letwellnessController: EmotionWellnessTrackingController;
+  let agentConsoleController: AgentConsoleController;
+  let voiceAssistantController: EnhancedVoiceAssistantController;
+  let predictiveHealthController: AdvancedPredictiveHealthController;
+  let wellnessController: EmotionWellnessTrackingController;
 
   beforeEach(() => {
     agentConsoleController = new AgentConsoleController();
@@ -271,7 +271,7 @@ describe('AI Features Integration Tests', () => {
 
   describe('Integration Tests', () => {
     it('should handle complete AI workflow', async () => {
-      // Test complete workflow: Voice command -> Emotion analysis -> Health prediction -> Recommendations
+      // Test completeworkflow: Voice command -> Emotion analysis -> Health prediction -> Recommendations
       const mockReq = {
         body: {
           command: 'I feel anxious about my medication',

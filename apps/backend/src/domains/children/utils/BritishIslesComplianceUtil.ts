@@ -10,7 +10,7 @@
  *
  * @description
  * This utility ensures the Children's Care System complies with regulatory
- * requirements across all British Isles jurisdictions:
+ * requirements across all British Islesjurisdictions:
  * - England (OFSTED)
  * - Wales (Care Inspectorate Wales - CIW)
  * - Scotland (Care Inspectorate Scotland)
@@ -146,7 +146,7 @@ export const VALID_LEGAL_STATUSES: Record<Jurisdiction, LegalStatus[]> = {
 export const REVIEW_TIMESCALES = {
   [Jurisdiction.ENGLAND]: { first: 20, second: 90, subsequent: 180 },
   [Jurisdiction.WALES]: { first: 20, second: 90, subsequent: 180 },
-  [Jurisdiction.SCOTLAND]: { first: 28, second: 90, subsequent: 180 }, // Varies by Children's Hearings
+  [Jurisdiction.SCOTLAND]: { first: 28, second: 90, subsequent: 180 }, // Var ies by Children's Hearings
   [Jurisdiction.NORTHERN_IRELAND]: { first: 28, second: 90, subsequent: 180 },
   [Jurisdiction.IRELAND]: { first: 28, second: 90, subsequent: 180 },
   [Jurisdiction.JERSEY]: { first: 28, second: 90, subsequent: 180 },
@@ -252,7 +252,7 @@ export class BritishIslesComplianceUtil {
     reviewNumber: number
   ): Date {
     const timescales = this.getReviewTimescales(jurisdiction);
-    letdaysToAdd: number;
+    let daysToAdd: number;
 
     if (reviewNumber === 1) {
       daysToAdd = timescales.first;
@@ -328,7 +328,7 @@ export class BritishIslesComplianceUtil {
     isCompliant: boolean;
     violations: string[];
   } {
-    constviolations: string[] = [];
+    const violations: string[] = [];
 
     // Check legal status validity
     if (!this.isLegalStatusValidForJurisdiction(data.legalStatus, data.jurisdiction)) {

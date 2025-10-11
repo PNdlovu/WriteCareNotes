@@ -56,7 +56,7 @@ export class NorthernIrelandComplianceAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
@@ -87,11 +87,11 @@ export class RQIAServiceRegistration {
   @IsEnum(['residential_care', 'nursing_home', 'domiciliary_care', 'supported_living'])
   serviceType: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   serviceName: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   registrationNumber: string;
 
@@ -173,7 +173,7 @@ export class HumanRightsAssessment {
   @IsArray()
   recommendations: string[];
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
@@ -200,11 +200,11 @@ export class NISCCProfessionalRegistration {
   @IsString()
   staffId: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   nisccRegistrationNumber: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @IsString()
   profession: string;
 

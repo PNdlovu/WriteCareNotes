@@ -4,14 +4,14 @@ export interface Toast {
   id: string;
   title: string;
   description?: string;
-  variant: 'default' | 'success' | 'error' | 'warning' | 'info' | 'destructive';
+  var iant: 'default' | 'success' | 'error' | 'warning' | 'info' | 'destructive';
   duration?: number;
 }
 
 interface ToastOptions {
   title: string;
   description?: string;
-  variant?: Toast['variant'];
+  var iant?: Toast['var iant'];
   duration?: number;
 }
 
@@ -22,11 +22,11 @@ export const useToast = () => {
 
   const showToast = useCallback((options: ToastOptions) => {
     const id = (++toastCount).toString();
-    constnewToast: Toast = {
+    const newToast: Toast = {
       id,
       title: options.title,
       description: options.description,
-      variant: options.variant || 'default',
+      var iant: options.var iant || 'default',
       duration: options.duration || 5000
     };
 
@@ -53,13 +53,13 @@ export const useToast = () => {
     },
     {
       success: (title: string, description?: string) => 
-        showToast({ title, description, variant: 'success' as const }),
+        showToast({ title, description, var iant: 'success' as const }),
       error: (title: string, description?: string) => 
-        showToast({ title, description, variant: 'error' as const }),
+        showToast({ title, description, var iant: 'error' as const }),
       warning: (title: string, description?: string) => 
-        showToast({ title, description, variant: 'warning' as const }),
+        showToast({ title, description, var iant: 'warning' as const }),
       info: (title: string, description?: string) => 
-        showToast({ title, description, variant: 'info' as const })
+        showToast({ title, description, var iant: 'info' as const })
     }
   );
 

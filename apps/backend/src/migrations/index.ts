@@ -27,10 +27,10 @@ export { CreateChildProfile1704988800000 } from './001-CreateChildProfile';
 export { CreateChildrenCareSystem1704988900000 } from './002-CreateChildrenCareSystem';
 
 /**
- * Migration Execution Order:
+ * Migration ExecutionOrder:
  * 
  * 1. CreateChildProfile (001) - Creates children table with all child profile fields
- * 2. CreateChildrenCareSystem (002) - Creates all related tables:
+ * 2. CreateChildrenCareSystem (002) - Creates all relatedtables:
  *    - placements
  *    - safeguarding_incidents  
  *    - personal_education_plans
@@ -46,12 +46,12 @@ export { CreateChildrenCareSystem1704988900000 } from './002-CreateChildrenCareS
  *    - home_office_correspondence
  *    - audit_log
  * 
- * To run migrations:
- * npm run migration:run
+ * To runmigrations:
+ * npm runmigration:run
  * 
- * To revert last migration:
- * npm run migration:revert
+ * To revert lastmigration:
+ * npm runmigration:revert
  * 
- * To generate new migration:
- * npm run migration:generate -- -n MigrationName
+ * To generate newmigration:
+ * npm runmigration:generate -- -n MigrationName
  */

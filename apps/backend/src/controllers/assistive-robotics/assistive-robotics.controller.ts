@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/assistive-robotics')
 @UseGuards(JwtAuthGuard)
 export class AssistiveRoboticsController {
-  constructor(
-    private readonly assistiveRoboticsService: AssistiveRoboticsService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyassistiveRoboticsService: AssistiveRoboticsService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -73,7 +73,7 @@ export class AssistiveRoboticsController {
         message: 'Robot registered successfully',
       };
     } catch (error) {
-      console.error('Error registering robot:', error);
+      console.error('Error registeringrobot:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -93,7 +93,7 @@ export class AssistiveRoboticsController {
     @Request() req: any,
   ) {
     try {
-      letrobots: AssistiveRobot[];
+      let robots: AssistiveRobot[];
 
       if (type) {
         robots = await this.assistiveRoboticsService.getRobotsByType(type as any);
@@ -127,7 +127,7 @@ export class AssistiveRoboticsController {
         message: 'Robots retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robots:', error);
+      console.error('Error gettingrobots:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -173,7 +173,7 @@ export class AssistiveRoboticsController {
         message: 'Robot retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robot:', error);
+      console.error('Error gettingrobot:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -212,7 +212,7 @@ export class AssistiveRoboticsController {
         message: success ? 'Robot status updated successfully' : 'Failed to update robot status',
       };
     } catch (error) {
-      console.error('Error updating robot status:', error);
+      console.error('Error updating robotstatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -266,7 +266,7 @@ export class AssistiveRoboticsController {
         message: 'Task assigned successfully',
       };
     } catch (error) {
-      console.error('Error assigning task:', error);
+      console.error('Error assigningtask:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -306,7 +306,7 @@ export class AssistiveRoboticsController {
         message: 'Robot tasks retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robot tasks:', error);
+      console.error('Error getting robottasks:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -354,7 +354,7 @@ export class AssistiveRoboticsController {
         message: success ? 'Task status updated successfully' : 'Failed to update task status',
       };
     } catch (error) {
-      console.error('Error updating task status:', error);
+      console.error('Error updating taskstatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -401,7 +401,7 @@ export class AssistiveRoboticsController {
         message: 'Command executed successfully',
       };
     } catch (error) {
-      console.error('Error executing command:', error);
+      console.error('Error executingcommand:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -444,7 +444,7 @@ export class AssistiveRoboticsController {
         message: 'Robot performance retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robot performance:', error);
+      console.error('Error getting robotperformance:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -497,7 +497,7 @@ export class AssistiveRoboticsController {
         message: 'Maintenance scheduled successfully',
       };
     } catch (error) {
-      console.error('Error scheduling maintenance:', error);
+      console.error('Error schedulingmaintenance:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -535,7 +535,7 @@ export class AssistiveRoboticsController {
         message: 'Robot maintenance history retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robot maintenance history:', error);
+      console.error('Error getting robot maintenancehistory:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -569,7 +569,7 @@ export class AssistiveRoboticsController {
         message: 'Robots requiring maintenance retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robots requiring maintenance:', error);
+      console.error('Error getting robots requiringmaintenance:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -606,7 +606,7 @@ export class AssistiveRoboticsController {
         message: 'Assistive robotics statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting assistive robotics statistics:', error);
+      console.error('Error getting assistive roboticsstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -676,7 +676,7 @@ export class AssistiveRoboticsController {
         message: 'Robot types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting robot types:', error);
+      console.error('Error getting robottypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -759,7 +759,7 @@ export class AssistiveRoboticsController {
         message: 'Task types retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting task types:', error);
+      console.error('Error getting tasktypes:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

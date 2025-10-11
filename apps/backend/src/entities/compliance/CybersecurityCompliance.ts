@@ -60,11 +60,11 @@ export class CyberEssentialsAssessment {
   @Column({ type: 'json' })
   actionPlan: any;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   assessedBy: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   certificationBody?: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -96,7 +96,7 @@ export class VulnerabilityFinding {
   @IsNumber()
   cvssScore: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   title: string;
 
@@ -112,7 +112,7 @@ export class VulnerabilityFinding {
   @IsString()
   impact: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   @IsString()
   likelihood: string;
 
@@ -162,7 +162,7 @@ export class PenetrationTestResult {
   @IsDate()
   testDate: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   tester: string;
 

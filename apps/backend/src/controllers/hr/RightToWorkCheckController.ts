@@ -17,7 +17,7 @@ import { logger } from '../../utils/logger';
 export class RightToWorkCheckController {
   privaterightToWorkCheckService: RightToWorkCheckService;
 
-  constructor() {
+  const ructor() {
     this.rightToWorkCheckService = new RightToWorkCheckService();
   }
 
@@ -26,7 +26,7 @@ export class RightToWorkCheckController {
    */
   async createRightToWorkCheck(req: Request, res: Response): Promise<void> {
     try {
-      constrequest: RightToWorkCheckRequest = req.body;
+      const request: RightToWorkCheckRequest = req.body;
       const createdBy = req.user?.id || 'system';
 
       const check = await this.rightToWorkCheckService.createRightToWorkCheck(request, createdBy);
@@ -114,7 +114,7 @@ export class RightToWorkCheckController {
    */
   async searchRightToWorkChecks(req: Request, res: Response): Promise<void> {
     try {
-      constcriteria: RightToWorkCheckSearchCriteria = req.query;
+      const criteria: RightToWorkCheckSearchCriteria = req.query;
 
       const checks = await this.rightToWorkCheckService.searchRightToWorkChecks(criteria);
 
@@ -142,7 +142,7 @@ export class RightToWorkCheckController {
   async updateRightToWorkCheck(req: Request, res: Response): Promise<void> {
     try {
       const { checkId } = req.params;
-      constupdates: RightToWorkCheckUpdate = req.body;
+      const updates: RightToWorkCheckUpdate = req.body;
       const updatedBy = req.user?.id || 'system';
 
       const check = await this.rightToWorkCheckService.updateRightToWorkCheck(

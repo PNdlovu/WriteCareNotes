@@ -18,7 +18,7 @@ import { FacilitiesManagementService } from '../../services/facilities/Facilitie
 export class FacilitiesController {
   privatefacilitiesService: FacilitiesManagementService;
 
-  constructor() {
+  const ructor() {
     this.facilitiesService = new FacilitiesManagementService();
   }
 

@@ -101,7 +101,7 @@ export interface CarePlanVersionInfo {
 }
 
 export class CarePlanValidationError extends Error {
-  constructor(
+  const ructor(
     message: string,
     publicvalidationErrors: ValidationError[]
   ) {
@@ -111,14 +111,14 @@ export class CarePlanValidationError extends Error {
 }
 
 export class CarePlanNotFoundError extends Error {
-  constructor(carePlanId: string) {
+  const ructor(carePlanId: string) {
     super(`Care plan with ID ${carePlanId} not found`);
     this.name = 'CarePlanNotFoundError';
   }
 }
 
 export class CarePlanApprovalError extends Error {
-  constructor(message: string) {
+  const ructor(message: string) {
     super(message);
     this.name = 'CarePlanApprovalError';
   }
@@ -129,7 +129,7 @@ export class CarePlanService {
   privatecareDomainRepository: Repository<CareDomain>;
   privateresidentRepository: Repository<Resident>;
 
-  constructor(
+  const ructor(
     privatedataSource: DataSource,
     privateauditService: AuditService,
     privateencryptionService: FieldLevelEncryptionService,
@@ -1020,7 +1020,7 @@ export class CarePlanService {
 
   private async validateCarePlanCompleteness(carePlan: CarePlan): Promise<void> {
     logger.info(`Operation started: ${arguments.callee.name}`, { timestamp: new Date().toISOString() });
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!carePlan.planName || carePlan.planName.trim().length === 0) {
       errors.push('Plan name is required');
@@ -1048,12 +1048,12 @@ export class CarePlanService {
     }
 
     if (errors.length > 0) {
-      throw new CarePlanApprovalError(`Care plan is incomplete: ${errors.join(', ')}`);
+      throw new CarePlanApprovalError(`Care plan isincomplete: ${errors.join(', ')}`);
     }
   }
 
   private extractChanges(current: CarePlan, previous?: CarePlan): string[] {
-    constchanges: string[] = [];
+    const changes: string[] = [];
 
     if (!previous) {
       changes.push('Initial version created');

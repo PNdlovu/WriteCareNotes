@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/family-portal')
 @UseGuards(JwtAuthGuard)
 export class FamilyPortalController {
-  constructor(
-    private readonly familyPortalService: FamilyPortalService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyfamilyPortalService: FamilyPortalService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -54,7 +54,7 @@ export class FamilyPortalController {
         message: 'Family dashboard retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting family dashboard:', error);
+      console.error('Error getting familydashboard:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -80,7 +80,7 @@ export class FamilyPortalController {
     @Request() req: any,
   ) {
     try {
-      constupdate: PortalUpdate = {
+      const update: PortalUpdate = {
         id: `update_${Date.now()}`,
         residentId: updateData.residentId,
         updateType: updateData.updateType,
@@ -115,7 +115,7 @@ export class FamilyPortalController {
         message: success ? 'Care plan update shared successfully' : 'Failed to share care plan update',
       };
     } catch (error) {
-      console.error('Error sharing care plan update:', error);
+      console.error('Error sharing care planupdate:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -144,7 +144,7 @@ export class FamilyPortalController {
     @Request() req: any,
   ) {
     try {
-      constphotoUpdate: PhotoUpdate = {
+      const photoUpdate: PhotoUpdate = {
         id: `photo_update_${Date.now()}`,
         residentId: photoData.residentId,
         photos: photoData.photos,
@@ -175,7 +175,7 @@ export class FamilyPortalController {
         message: success ? 'Photos shared successfully' : 'Failed to share photos',
       };
     } catch (error) {
-      console.error('Error sharing photos:', error);
+      console.error('Error sharingphotos:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -279,7 +279,7 @@ export class FamilyPortalController {
         message: success ? 'Emergency notification sent successfully' : 'Failed to send emergency notification',
       };
     } catch (error) {
-      console.error('Error sending emergency notification:', error);
+      console.error('Error sending emergencynotification:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -332,7 +332,7 @@ export class FamilyPortalController {
         message: success ? 'Feedback collected successfully' : 'Failed to collect feedback',
       };
     } catch (error) {
-      console.error('Error collecting feedback:', error);
+      console.error('Error collectingfeedback:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -397,7 +397,7 @@ export class FamilyPortalController {
         message: success ? 'Family meeting scheduled successfully' : 'Failed to schedule family meeting',
       };
     } catch (error) {
-      console.error('Error scheduling family meeting:', error);
+      console.error('Error scheduling familymeeting:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -444,7 +444,7 @@ export class FamilyPortalController {
     @Request() req: any,
   ) {
     try {
-      constpreferences: FamilyPreferences = {
+      const preferences: FamilyPreferences = {
         residentId,
         communicationPreferences: preferencesData.communicationPreferences,
         notificationSettings: preferencesData.notificationSettings,
@@ -473,7 +473,7 @@ export class FamilyPortalController {
         message: success ? 'Family preferences updated successfully' : 'Failed to update family preferences',
       };
     } catch (error) {
-      console.error('Error updating family preferences:', error);
+      console.error('Error updating familypreferences:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -511,7 +511,7 @@ export class FamilyPortalController {
         message: 'Family preferences retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting family preferences:', error);
+      console.error('Error getting familypreferences:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -573,7 +573,7 @@ export class FamilyPortalController {
         message: 'Family portal statistics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting family portal statistics:', error);
+      console.error('Error getting family portalstatistics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -643,7 +643,7 @@ export class FamilyPortalController {
         message: 'Family members retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting family members:', error);
+      console.error('Error getting familymembers:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -727,7 +727,7 @@ export class FamilyPortalController {
         message: 'Recent updates retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting recent updates:', error);
+      console.error('Error getting recentupdates:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

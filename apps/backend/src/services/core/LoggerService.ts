@@ -27,12 +27,12 @@ interface LogContext {
 }
 
 class LoggerService {
-  private static instance: LoggerService;
+  private staticinstance: LoggerService;
   privatelogger: winston.Logger;
   privateauditLogger: winston.Logger;
   privatesecurityLogger: winston.Logger;
 
-  private constructor() {
+  private const ructor() {
     this.logger = this.createMainLogger();
     this.auditLogger = this.createAuditLogger();
     this.securityLogger = this.createSecurityLogger();
@@ -71,7 +71,7 @@ class LoggerService {
       );
     }
 
-    consttransports: winston.transport[] = [];
+    const transports: winston.transport[] = [];
 
     // Console transport
     transports.push(new winston.transports.Console({
@@ -318,7 +318,7 @@ class LoggerService {
 
   // Helper methods
   private calculateChanges(oldData: any, newData: any): any {
-    constchanges: any = {};
+    const changes: any = {};
     
     if (!oldData || !newData) return changes;
 
@@ -346,7 +346,7 @@ class LoggerService {
 }
 
 class ChildLogger {
-  constructor(
+  const ructor(
     privateparent: LoggerService,
     privatedefaultContext: LogContext
   ) {}

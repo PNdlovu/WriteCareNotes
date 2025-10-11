@@ -145,7 +145,7 @@ export class AllowanceExpenditure {
   @JoinColumn({ name: 'childId' })
   child!: Child;
 
-  // ==================== ALLOWANCE TYPE ====================
+  // ==================== ALLOWANCETYPE ====================
 
   @Column({
     type: 'enum',
@@ -153,7 +153,7 @@ export class AllowanceExpenditure {
   })
   allowanceType!: AllowanceType;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   category!: string; // 'CLOTHING', 'BIRTHDAY', 'FESTIVAL', 'EDUCATION', etc.
 
   // ==================== AMOUNT ====================
@@ -161,10 +161,10 @@ export class AllowanceExpenditure {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount!: number;
 
-  @Column({ type: 'varchar', length: 3, default: 'GBP' })
+  @Column({ type: 'var char', length: 3, default: 'GBP' })
   currency!: string; // GBP or EUR (for Ireland)
 
-  // ==================== BUDGET TRACKING ====================
+  // ==================== BUDGETTRACKING ====================
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   budgetAmount?: number; // From ChildBilling.personalAllowances
@@ -175,12 +175,12 @@ export class AllowanceExpenditure {
   @Column({ type: 'boolean', default: false })
   exceedsBudget!: boolean; // true if amount > budgetRemaining
 
-  // ==================== PURCHASE DETAILS ====================
+  // ==================== PURCHASEDETAILS ====================
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   itemDescription!: string; // What was purchased
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   vendor?: string; // Where purchased (e.g., "Next", "Primark", "Amazon")
 
   @Column({ type: 'date' })
@@ -192,7 +192,7 @@ export class AllowanceExpenditure {
   @Column({ type: 'int', nullable: true })
   year?: number; // e.g., 2025
 
-  // ==================== APPROVAL WORKFLOW ====================
+  // ==================== APPROVALWORKFLOW ====================
 
   @Column({
     type: 'enum',
@@ -221,7 +221,7 @@ export class AllowanceExpenditure {
   @Column({ type: 'timestamp', nullable: true })
   approvedAt?: Date;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   approvalNotes?: string;
 
   // High-value escalation
@@ -235,7 +235,7 @@ export class AllowanceExpenditure {
   @JoinColumn({ name: 'escalatedToManagerId' })
   escalatedToManager?: User;
 
-  // ==================== RECEIPT MANAGEMENT ====================
+  // ==================== RECEIPTMANAGEMENT ====================
 
   @Column({
     type: 'enum',
@@ -244,7 +244,7 @@ export class AllowanceExpenditure {
   })
   receiptStatus!: ReceiptStatus;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   receiptImageUrl?: string; // S3/blob storage URL
 
   @Column({ type: 'jsonb', nullable: true })
@@ -270,10 +270,10 @@ export class AllowanceExpenditure {
   @JoinColumn({ name: 'receiptVerifiedByStaffId' })
   receiptVerifiedByStaff?: User;
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   receiptRejectionReason?: string;
 
-  // ==================== CHILD INVOLVEMENT ====================
+  // ==================== CHILDINVOLVEMENT ====================
 
   @Column({ type: 'boolean', default: false })
   childWasPresent!: boolean; // Child present during purchase
@@ -281,7 +281,7 @@ export class AllowanceExpenditure {
   @Column({ type: 'boolean', default: false })
   childChose!: boolean; // Child chose the item
 
-  @Column({ type: 'varchar', length: 1000, nullable: true })
+  @Column({ type: 'var char', length: 1000, nullable: true })
   childFeedback?: string; // Child's comment about purchase
 
   // ==================== CULTURAL/RELIGIOUS ====================
@@ -292,10 +292,10 @@ export class AllowanceExpenditure {
   @Column({ type: 'boolean', default: false })
   isReligiousNeed!: boolean; // Religious need (Equality Act 2010)
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   culturalReligiousContext?: string; // Explanation (e.g., "Eid celebration", "Diwali clothes")
 
-  // ==================== LINKED TRANSACTIONS ====================
+  // ==================== LINKEDTRANSACTIONS ====================
 
   @Column({ type: 'uuid', nullable: true })
   linkedPocketMoneyTransactionId?: string; // If paid from pocket money
@@ -318,7 +318,7 @@ export class AllowanceExpenditure {
     color?: string; // Color
   };
 
-  // ==================== AUDIT TRAIL ====================
+  // ==================== AUDITTRAIL ====================
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -326,13 +326,13 @@ export class AllowanceExpenditure {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   createdBy!: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   updatedBy?: string;
 
-  // ==================== BUSINESS METHODS ====================
+  // ==================== BUSINESSMETHODS ====================
 
   /**
    * Request purchase (staff initiates)

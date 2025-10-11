@@ -16,7 +16,7 @@ import { Resident } from './Resident';
 
 @Entity('wcn_care_records')
 export class CareRecord extends BaseEntity {
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   careType!: string;
 
   @Column({ type: 'text' })
@@ -25,7 +25,7 @@ export class CareRecord extends BaseEntity {
   @Column({ type: 'timestamp' })
   careDate!: Date;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'var char', length: 255, nullable: true })
   caregiverName?: string;
 
   @ManyToOne(() => Resident, resident => resident.careRecords)

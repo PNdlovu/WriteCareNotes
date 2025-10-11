@@ -123,7 +123,7 @@ export class MentalHealthService {
   privatenotificationService: NotificationService;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.assessmentRepository = AppDataSource.getRepository(MentalHealthAssessment);
     this.notificationService = new NotificationService(new EventEmitter2());
     this.auditService = new AuditTrailService();
@@ -187,7 +187,7 @@ export class MentalHealthService {
 
       return savedAssessment;
     } catch (error: unknown) {
-      console.error('Error conducting comprehensive mental health assessment:', error);
+      console.error('Error conducting comprehensive mental healthassessment:', error);
       throw error;
     }
   }
@@ -255,7 +255,7 @@ export class MentalHealthService {
 
       return crisisAnalysis;
     } catch (error: unknown) {
-      console.error('Error performing AI crisis detection:', error);
+      console.error('Error performing AI crisisdetection:', error);
       throw error;
     }
   }
@@ -273,7 +273,7 @@ export class MentalHealthService {
       // AI-powered program personalization
       const personalizedProgram = await this.generatePersonalizedProgram(programData);
       
-      constprogram: TherapeuticProgram = {
+      const program: TherapeuticProgram = {
         programId: crypto.randomUUID(),
         programName: personalizedProgram.name,
         programType: personalizedProgram.type,
@@ -315,7 +315,7 @@ export class MentalHealthService {
 
       return program;
     } catch (error: unknown) {
-      console.error('Error creating personalized therapeutic program:', error);
+      console.error('Error creating personalized therapeuticprogram:', error);
       throw error;
     }
   }
@@ -363,7 +363,7 @@ export class MentalHealthService {
         interventionEffectiveness
       };
     } catch (error: unknown) {
-      console.error('Error getting advanced mental health analytics:', error);
+      console.error('Error getting advanced mental healthanalytics:', error);
       throw error;
     }
   }
@@ -399,7 +399,7 @@ export class MentalHealthService {
         followUpRequired: response.followUpRequired
       };
     } catch (error: unknown) {
-      console.error('Error managing crisis intervention:', error);
+      console.error('Error managing crisisintervention:', error);
       throw error;
     }
   }
@@ -457,7 +457,7 @@ export class MentalHealthService {
         attention: { sustained: 80, selective: 75, divided: 60 },
         executiveFunction: { planning: 65, problemSolving: 70, flexibility: 60 },
         language: { comprehension: 85, expression: 80, naming: 75 },
-        visuospatial: { construction: 70, perception: 75, navigation: 65 }
+        visuospatial: { const ruction: 70, perception: 75, navigation: 65 }
       },
       functionalImpact: {
         adlsAffected: ['Complex meal preparation', 'Financial management'],

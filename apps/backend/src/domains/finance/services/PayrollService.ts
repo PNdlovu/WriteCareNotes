@@ -31,7 +31,7 @@ export interface PayslipData {
 
 @Injectable()
 export class PayrollService {
-  constructor(
+  const ructor(
     @InjectRepository(PayrollRun)
     privatepayrollRunRepository: Repository<PayrollRun>,
     @InjectRepository(Payslip)

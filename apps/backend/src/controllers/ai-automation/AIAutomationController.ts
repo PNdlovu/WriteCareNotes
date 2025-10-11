@@ -20,7 +20,7 @@ export class AIAutomationController {
   privateaiService: AIAutomationService;
   privatecopilotService: AICopilotService;
 
-  constructor() {
+  const ructor() {
     this.aiService = new AIAutomationService();
     this.copilotService = new AICopilotService();
   }

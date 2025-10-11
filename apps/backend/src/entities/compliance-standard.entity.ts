@@ -4,7 +4,7 @@
  * Represents compliance standards for the knowledge base (GDPR, CQC, ISO 27001, etc.)
  * Used by VerifiedRetrieverService for RAG-based policy suggestions
  * 
- * Key Features:
+ * KeyFeatures:
  * - Multi-jurisdictional support (all 7 British Isles regulatory bodies)
  * - Version tracking for regulatory updates
  * - Structured requirements for machine-readable compliance
@@ -74,14 +74,14 @@ export class ComplianceStandard {
   /**
    * 🔑 STANDARD CODE (e.g., "GDPR", "CQC-S1", "ISO27001")
    */
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'var char', length: 50, unique: true })
   @Index()
   code: string;
 
   /**
    * 📝 STANDARD TITLE
    */
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'var char', length: 500 })
   title: string;
 
   /**
@@ -93,21 +93,21 @@ export class ComplianceStandard {
   /**
    * 🏷️ CATEGORY (e.g., "Data Protection", "Safeguarding", "Quality Care")
    */
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   @Index()
   category: string;
 
   /**
    * 🔢 VERSION (e.g., "2.0", "2018/1")
    */
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   version: string;
 
   /**
    * 🌍 JURISDICTION (Array of regulatory bodies)
    */
   @Column({
-    type: 'varchar',
+    type: 'var char',
     array: true,
     default: [],
   })
@@ -117,7 +117,7 @@ export class ComplianceStandard {
   /**
    * 🏛️ REGULATORY BODY (e.g., "Care Quality Commission", "ICO")
    */
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   regulatoryBody: string;
 
   /**
@@ -167,7 +167,7 @@ export class ComplianceStandard {
    * 🔗 RELATED STANDARDS
    * Array of related standard codes
    */
-  @Column({ type: 'varchar', array: true, default: [] })
+  @Column({ type: 'var char', array: true, default: [] })
   relatedStandards: string[];
 
   /**
@@ -288,7 +288,7 @@ export class ComplianceStandard {
    * Get human-readable jurisdiction list
    */
   getJurisdictionNames(): string[] {
-    constnames: { [key in RegulatoryJurisdiction]: string } = {
+    const names: { [key in RegulatoryJurisdiction]: string } = {
       [RegulatoryJurisdiction.ENGLAND_CQC]: 'England (CQC)',
       [RegulatoryJurisdiction.SCOTLAND_CARE_INSPECTORATE]: 'Scotland (Care Inspectorate)',
       [RegulatoryJurisdiction.WALES_CIW]: 'Wales (CIW)',

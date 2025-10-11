@@ -195,11 +195,11 @@ export interface DocumentationAnalytics {
 
 @Injectable()
 export class AIPoweredDocumentationService {
-  private readonly logger = new Logger(AIPoweredDocumentationService.name);
+  private readonlylogger = new Logger(AIPoweredDocumentationService.name);
   privateeventEmitter: EventEmitter2;
   privateauditService: AuditService;
 
-  constructor() {
+  const ructor() {
     this.eventEmitter = new EventEmitter2();
     this.auditService = new AuditTrailService();
   }
@@ -275,7 +275,7 @@ export class AIPoweredDocumentationService {
       // Calculate quality score
       const qualityScore = this.calculateQualityScore(summaryContent, keyPoints, recommendations);
       
-      constcareSummary: CareSummary = {
+      const careSummary: CareSummary = {
         id: `summary_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         residentId,
         summaryType,
@@ -331,11 +331,11 @@ export class AIPoweredDocumentationService {
         timestamp: new Date()
       });
       
-      this.logger.log(`Generated care summary: ${summaryType} for resident ${residentId}`);
+      this.logger.log(`Generated caresummary: ${summaryType} for resident ${residentId}`);
       return careSummary;
       
     } catch (error) {
-      this.logger.error(`Error generating care summary: ${error.message}`, error.stack);
+      this.logger.error(`Error generating caresummary: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -387,7 +387,7 @@ export class AIPoweredDocumentationService {
       // Calculate confidence
       const confidence = this.calculateConfidence(processedData, reportContent);
       
-      constintelligentReport: IntelligentReport = {
+      const intelligentReport: IntelligentReport = {
         id: `report_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
         reportType,
         residentId,
@@ -438,11 +438,11 @@ export class AIPoweredDocumentationService {
         timestamp: new Date()
       });
       
-      this.logger.log(`Generated intelligent report: ${reportType} for resident ${residentId || 'system'}`);
+      this.logger.log(`Generated intelligentreport: ${reportType} for resident ${residentId || 'system'}`);
       return intelligentReport;
       
     } catch (error) {
-      this.logger.error(`Error generating intelligent report: ${error.message}`, error.stack);
+      this.logger.error(`Error generating intelligentreport: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -486,7 +486,7 @@ export class AIPoweredDocumentationService {
       return familyUpdate;
       
     } catch (error) {
-      this.logger.error(`Error generating family updates: ${error.message}`, error.stack);
+      this.logger.error(`Error generating familyupdates: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -499,7 +499,7 @@ export class AIPoweredDocumentationService {
     regulations: string[] = ['CQC', 'GDPR', 'NHS', 'DSPT']
   ): Promise<ComplianceFlag[]> {
     try {
-      constcomplianceFlags: ComplianceFlag[] = [];
+      const complianceFlags: ComplianceFlag[] = [];
       
       for (const regulation of regulations) {
         const flags = await this.checkRegulationCompliance(data, regulation);
@@ -529,7 +529,7 @@ export class AIPoweredDocumentationService {
       return complianceFlags;
       
     } catch (error) {
-      this.logger.error(`Error detecting compliance gaps: ${error.message}`, error.stack);
+      this.logger.error(`Error detecting compliancegaps: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -605,7 +605,7 @@ export class AIPoweredDocumentationService {
       return qualityScore;
       
     } catch (error) {
-      this.logger.error(`Error scoring documentation quality: ${error.message}`, error.stack);
+      this.logger.error(`Error scoring documentationquality: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -619,7 +619,7 @@ export class AIPoweredDocumentationService {
   ): Promise<DocumentationAnalytics> {
     try {
       // In a real implementation, this would calculate analytics from database
-      constanalytics: DocumentationAnalytics = {
+      const analytics: DocumentationAnalytics = {
         totalDocuments: 1250,
         aiGeneratedDocuments: 980,
         averageQualityScore: 87.5,
@@ -654,7 +654,7 @@ export class AIPoweredDocumentationService {
       return analytics;
       
     } catch (error) {
-      this.logger.error(`Error getting documentation analytics: ${error.message}`, error.stack);
+      this.logger.error(`Error getting documentationanalytics: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -771,7 +771,7 @@ export class AIPoweredDocumentationService {
 
   private async saveCareSummary(summary: CareSummary): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving care summary:', summary.id);
+    console.log('Saving caresummary:', summary.id);
   }
 
   private async generateReportContent(data: any, reportType: string, template: any): Promise<string> {
@@ -842,7 +842,7 @@ export class AIPoweredDocumentationService {
 
   private async saveIntelligentReport(report: IntelligentReport): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving intelligent report:', report.id);
+    console.log('Saving intelligentreport:', report.id);
   }
 
   private async getDocumentationTemplate(templateId: string): Promise<DocumentationTemplate | null> {
@@ -877,7 +877,7 @@ export class AIPoweredDocumentationService {
 
   private async saveComplianceFlag(flag: ComplianceFlag): Promise<void> {
     // In a real implementation, this would save to database
-    console.log('Saving compliance flag:', flag.id);
+    console.log('Saving complianceflag:', flag.id);
   }
 
   private async analyzeCompleteness(document: any): Promise<number> {

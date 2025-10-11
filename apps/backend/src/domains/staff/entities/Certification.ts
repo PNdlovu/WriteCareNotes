@@ -47,10 +47,10 @@ export class Certification {
   @Column({ type: 'uuid' })
   employeeProfileId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   name: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   displayName: string;
 
   @Column({ type: 'enum', enum: CertificationType })
@@ -62,13 +62,13 @@ export class Certification {
   @Column({ type: 'enum', enum: CertificationStatus, default: CertificationStatus.PENDING })
   status: CertificationStatus;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   issuingBody: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   certificateNumber: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   certificateUrl: string;
 
   @Column({ type: 'date' })
@@ -83,7 +83,7 @@ export class Certification {
   @Column({ type: 'decimal', precision: 5, scale: 2, nullable: true })
   score: number; // If applicable
 
-  @Column({ type: 'varchar', length: 10, nullable: true })
+  @Column({ type: 'var char', length: 10, nullable: true })
   grade: string; // A, B, C, Pass, Fail, etc.
 
   @Column({ type: 'text', nullable: true })
@@ -92,10 +92,10 @@ export class Certification {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   trainingProvider: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'var char', length: 200, nullable: true })
   courseUrl: string;
 
   @Column({ type: 'int', nullable: true })
@@ -110,16 +110,16 @@ export class Certification {
   @Column({ type: 'int', default: 0 })
   renewalReminderDays: number; // Days before expiry to send reminder
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   verifiedBy: string;
 
   @Column({ type: 'timestamp', nullable: true })
   verifiedAt: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy: string;
 
   @CreateDateColumn()

@@ -64,7 +64,7 @@ interface DateFilter {
 export class PilotRepository {
   privateauditLogger: AuditLogger;
 
-  constructor() {
+  const ructor() {
     this.auditLogger = new AuditLogger();
   }
 
@@ -117,7 +117,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         pilotData: { id: pilotData.id, tenantId: pilotData.tenantId }
       });
-      throw new Error(`Failed to create pilot: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to createpilot: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -146,7 +146,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         tenantId 
       });
-      throw new Error(`Failed to retrieve pilot: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to retrievepilot: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -156,7 +156,7 @@ export class PilotRepository {
   async getAllPilots(filters: { status?: string; region?: string }): Promise<PilotData[]> {
     try {
       const repository = getRepository('pilots');
-      constwhereConditions: any = {};
+      const whereConditions: any = {};
 
       if (filters.status) {
         whereConditions.status = filters.status;
@@ -177,7 +177,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         filters 
       });
-      throw new Error(`Failed to retrieve pilots: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to retrievepilots: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -199,7 +199,7 @@ export class PilotRepository {
       }
 
       // Prepare update data with database field names
-      constdbUpdateData: any = {
+      const dbUpdateData: any = {
         updated_at: new Date()
       };
 
@@ -227,7 +227,7 @@ export class PilotRepository {
       if (updateData.status) {
         const validStatuses = ['active', 'inactive', 'pending', 'completed', 'cancelled'];
         if (!validStatuses.includes(updateData.status)) {
-          throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+          throw new Error(`Invalid status. Must be oneof: ${validStatuses.join(', ')}`);
         }
         dbUpdateData.status = updateData.status;
       }
@@ -258,7 +258,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         tenantId 
       });
-      throw new Error(`Failed to update pilot: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to updatepilot: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -314,7 +314,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         feedbackData: { id: feedbackData.id, tenantId: feedbackData.tenantId }
       });
-      throw new Error(`Failed to create feedback: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to createfeedback: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -341,7 +341,7 @@ export class PilotRepository {
         tenantId, 
         limit 
       });
-      throw new Error(`Failed to retrieve feedback: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to retrievefeedback: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -397,7 +397,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         tenantId 
       });
-      throw new Error(`Failed to initialize pilot metrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to initialize pilotmetrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -406,7 +406,7 @@ export class PilotRepository {
    */
   async getPilotMetrics(tenantId: string, startDate?: string, endDate?: string): Promise<any> {
     let query = 'SELECT * FROM pilot_metrics WHERE tenant_id = ?';
-    constvalues: any[] = [tenantId];
+    const values: any[] = [tenantId];
 
     if (startDate) {
       query += ' AND created_at >= ?';
@@ -449,7 +449,7 @@ export class PilotRepository {
         this.db.query(`
           SELECT COUNT(*) as total_logins
           FROM user_sessions 
-          WHERE tenant_id = ? AND action = 'login' ${dateFilter.clause}
+          WHERE tenant_id = ? ANDaction = 'login' ${dateFilter.clause}
         `, [tenantId, ...dateFilter.params]),
         
         this.db.query(`
@@ -481,7 +481,7 @@ export class PilotRepository {
       };
     } catch (error) {
       logger.error('Failed to get engagement metrics', { error: error.message, tenantId });
-      throw new Error(`Failed to retrieve engagement metrics: ${error.message}`);
+      throw new Error(`Failed to retrieve engagementmetrics: ${error.message}`);
     }
   }
 
@@ -497,7 +497,7 @@ export class PilotRepository {
         getRepository('audit_logs').query(`
           SELECT 
             COUNT(*) as total_actions,
-            COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_actions
+            COUNT(CASE WHENstatus = 'completed' THEN 1 END) as completed_actions
           FROM audit_logs 
           WHERE tenant_id = ? ${dateFilter.clause}
         `, [tenantId, ...dateFilter.params]),
@@ -505,13 +505,13 @@ export class PilotRepository {
         getRepository('consent_records').query(`
           SELECT COUNT(*) as consent_records
           FROM consent_records 
-          WHERE tenant_id = ? AND status = 'active' ${dateFilter.clause}
+          WHERE tenant_id = ? ANDstatus = 'active' ${dateFilter.clause}
         `, [tenantId, ...dateFilter.params]),
         
         getRepository('nhs_sync_logs').query(`
           SELECT 
             COUNT(*) as total_syncs,
-            COUNT(CASE WHEN status = 'success' THEN 1 END) as successful_syncs
+            COUNT(CASE WHENstatus = 'success' THEN 1 END) as successful_syncs
           FROM nhs_sync_logs 
           WHERE tenant_id = ? ${dateFilter.clause}
         `, [tenantId, ...dateFilter.params]),
@@ -519,7 +519,7 @@ export class PilotRepository {
         getRepository('gdpr_compliance_checks').query(`
           SELECT 
             COUNT(*) as total_checks,
-            COUNT(CASE WHEN compliant = true THEN 1 END) as compliant_checks
+            COUNT(CASE WHENcompliant = true THEN 1 END) as compliant_checks
           FROM gdpr_compliance_checks 
           WHERE tenant_id = ? ${dateFilter.clause}
         `, [tenantId, ...dateFilter.params]),
@@ -555,7 +555,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         tenantId 
       });
-      throw new Error(`Failed to retrieve compliance metrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to retrieve compliancemetrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -583,7 +583,7 @@ export class PilotRepository {
         getRepository('care_plans').query(`
           SELECT COUNT(*) as care_plans
           FROM care_plans 
-          WHERE tenant_id = ? AND status = 'active' ${dateFilter.clause}
+          WHERE tenant_id = ? ANDstatus = 'active' ${dateFilter.clause}
         `, [tenantId, ...dateFilter.params]),
         
         getRepository('consent_events').query(`
@@ -611,7 +611,7 @@ export class PilotRepository {
         error: error instanceof Error ? error.message : 'Unknown error',
         tenantId 
       });
-      throw new Error(`Failed to retrieve adoption metrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to retrieve adoptionmetrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -632,7 +632,7 @@ export class PilotRepository {
 
       if (metrics) {
         // Update feedback count and severity-specific counters
-        constupdateData: any = {
+        const updateData: any = {
           total_feedback: metrics.total_feedback + 1,
           updated_at: new Date()
         };
@@ -669,7 +669,7 @@ export class PilotRepository {
         tenantId, 
         severity 
       });
-      throw new Error(`Failed to update feedback metrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to update feedbackmetrics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -722,7 +722,7 @@ export class PilotRepository {
    */
   private buildDateFilter(startDate?: string, endDate?: string): DateFilter {
     let clause = '';
-    constparams: any[] = [];
+    const params: any[] = [];
 
     if (startDate) {
       clause += ' AND created_at >= ?';
@@ -748,7 +748,7 @@ export class PilotRepository {
 
     for (const field of requiredFields) {
       if (!pilotData[field as keyof PilotData]) {
-        throw new Error(`Required field missing: ${field}`);
+        throw new Error(`Required fieldmissing: ${field}`);
       }
     }
 
@@ -767,7 +767,7 @@ export class PilotRepository {
     // Validate status
     const validStatuses = ['active', 'inactive', 'pending', 'completed', 'cancelled'];
     if (!validStatuses.includes(pilotData.status)) {
-      throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+      throw new Error(`Invalid status. Must be oneof: ${validStatuses.join(', ')}`);
     }
   }
 
@@ -781,20 +781,20 @@ export class PilotRepository {
 
     for (const field of requiredFields) {
       if (!feedbackData[field as keyof FeedbackData]) {
-        throw new Error(`Required field missing: ${field}`);
+        throw new Error(`Required fieldmissing: ${field}`);
       }
     }
 
     // Validate severity
     const validSeverities = ['critical', 'high', 'medium', 'low'];
     if (!validSeverities.includes(feedbackData.severity.toLowerCase())) {
-      throw new Error(`Invalid severity. Must be one of: ${validSeverities.join(', ')}`);
+      throw new Error(`Invalid severity. Must be oneof: ${validSeverities.join(', ')}`);
     }
 
     // Validate status
     const validStatuses = ['open', 'in_progress', 'resolved', 'closed'];
     if (!validStatuses.includes(feedbackData.status)) {
-      throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+      throw new Error(`Invalid status. Must be oneof: ${validStatuses.join(', ')}`);
     }
 
     // Validate description length

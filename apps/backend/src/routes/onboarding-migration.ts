@@ -639,7 +639,7 @@ router.post('/validation/data',
 
 // Error handling middleware
 router.use((error: any, req: any, res: any, next: any) => {
-  console.error('Migration API Error:', error);
+  console.error('Migration APIError:', error);
   
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {

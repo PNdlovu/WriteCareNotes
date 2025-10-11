@@ -35,7 +35,7 @@ import { Request, Response, NextFunction } from 'express';
  * @remarks
  * - Permissions are checked against req.user.permissions array
  * - User must have ALL required permissions (AND logic)
- * - Permissions follow format: '{role}:{resource}:{action}'
+ * - Permissions followformat: '{role}:{resource}:{action}'
  * - Admin users with 'admin:*:*' permission bypass all checks
  */
 export const checkPermissions = (requiredPermissions: string[]) => {

@@ -40,10 +40,10 @@ export interface DomainConfiguration {
 }
 
 export class DomainConfigManager {
-  private static instance: DomainConfigManager;
+  private staticinstance: DomainConfigManager;
   privateconfigurations: Map<string, DomainConfiguration> = new Map();
 
-  private constructor() {
+  private const ructor() {
     this.loadDefaultConfigurations();
   }
 
@@ -313,22 +313,22 @@ export class DomainConfigManager {
 
   public isDomainEnabled(domainName: string): boolean {
     const config = this.configurations.get(domainName);
-    return config?.enabled ?? false;
+    returnconfig?.enabled ?? false;
   }
 
   public getDomainDependencies(domainName: string): string[] {
     const config = this.configurations.get(domainName);
-    return config?.dependencies ?? [];
+    returnconfig?.dependencies ?? [];
   }
 
   public getDomainMiddleware(domainName: string): string[] {
     const config = this.configurations.get(domainName);
-    return config?.middleware ?? [];
+    returnconfig?.middleware ?? [];
   }
 
   public getDomainRoutes(domainName: string): any {
     const config = this.configurations.get(domainName);
-    return config?.routes ?? {};
+    returnconfig?.routes ?? {};
   }
 }
 

@@ -31,11 +31,11 @@ interface ConnectionStats {
 }
 
 class DatabaseService {
-  private static instance: DatabaseService;
+  private staticinstance: DatabaseService;
   privatepool: Pool;
   privateisConnected: boolean = false;
 
-  private constructor() {
+  private const ructor() {
     this.pool = this.createPool();
     this.setupEventHandlers();
   }
@@ -127,7 +127,7 @@ class DatabaseService {
         paramCount: params?.length || 0 
       });
 
-      letresult: QueryResult<T>;
+      let result: QueryResult<T>;
       
       if (options?.retries && options.retries > 0) {
         result = await this.queryWithRetry(text, params, options);
@@ -352,7 +352,7 @@ class DatabaseService {
     id: string | number, 
     columns: string[] = ['*']
   ): Promise<T | null> {
-    const query = `SELECT ${columns.join(', ')} FROM ${table} WHERE id = $1`;
+    const query = `SELECT ${columns.join(', ')} FROM ${table} WHEREid = $1`;
     const result = await this.query<T>(query, [id], { name: `findById_${table}` });
     return result.rows[0] || null;
   }
@@ -414,7 +414,7 @@ class DatabaseService {
     const query = `
       UPDATE ${table}
       SET ${setClause}, updated_at = NOW()
-      WHERE id = $${values.length + 1}
+      WHEREid = $${values.length + 1}
       RETURNING ${returning.join(', ')}
     `;
 
@@ -426,7 +426,7 @@ class DatabaseService {
   }
 
   public async delete(table: string, id: string | number): Promise<boolean> {
-    const query = `DELETE FROM ${table} WHERE id = $1`;
+    const query = `DELETE FROM ${table} WHEREid = $1`;
     const result = await this.query(query, [id], { name: `delete_${table}` });
     return (result.rowCount || 0) > 0;
   }
@@ -435,7 +435,7 @@ class DatabaseService {
     const query = `
       UPDATE ${table} 
       SET deleted_at = NOW(), updated_at = NOW() 
-      WHERE id = $1 AND deleted_at IS NULL
+      WHEREid = $1 AND deleted_at IS NULL
     `;
     
     const result = await this.query(query, [id], { name: `softDelete_${table}` });

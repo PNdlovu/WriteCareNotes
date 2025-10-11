@@ -91,11 +91,11 @@ export interface IsleOfManComplianceFramework {
 export class IsleOfManHealthSocialCareService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly iomComplianceRepository: Repository<IsleOfManCompliance>,
-    private readonly auditTrailService: AuditService,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlyiomComplianceRepository: Repository<IsleOfManCompliance>,
+    private readonlyauditTrailService: AuditService,
+    private readonlyeventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -158,7 +158,7 @@ export class IsleOfManHealthSocialCareService {
 
       return assessment;
     } catch (error: unknown) {
-      console.error(`Failed to get Isle of Man compliance assessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get Isle of Man complianceassessment: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -363,7 +363,7 @@ export class IsleOfManHealthSocialCareService {
   }
 
   private async identifyIsleOfManGaps(organizationId: string, assessment: any): Promise<string[]> {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
     
     // Check standard scores
     for (const [domain, score] of Object.entries(assessment.domainScores)) {
@@ -383,7 +383,7 @@ export class IsleOfManHealthSocialCareService {
   }
 
   private async generateIsleOfManRecommendations(organizationId: string, assessment: any): Promise<string[]> {
-    constrecommendations: string[] = [
+    const recommendations: string[] = [
       'Enhance Manx Gaelic language support and awareness',
       'Strengthen participation in traditional Manx festivals',
       'Develop stronger links with Culture Vannin',

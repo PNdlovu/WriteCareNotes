@@ -29,8 +29,8 @@ jest.mock('eventemitter2', () => ({
 }));
 
 describe('DBSVerificationService', () => {
-  letservice: DBSVerificationService;
-  letmockRepository: any;
+  let service: DBSVerificationService;
+  let mockRepository: any;
 
   beforeEach(() => {
     mockRepository = {

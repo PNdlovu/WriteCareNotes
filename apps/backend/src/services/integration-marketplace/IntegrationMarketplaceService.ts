@@ -59,7 +59,7 @@ export class IntegrationMarketplaceService {
   // Logger removed
 
   // Pre-defined integration catalog
-  private readonly integrationCatalog: AvailableIntegration[] = [
+  private readonlyintegrationCatalog: AvailableIntegration[] = [
     // Healthcare Systems
     {
       id: 'atlas-emar',
@@ -270,14 +270,14 @@ export class IntegrationMarketplaceService {
     },
   ];
 
-  constructor(
+  const ructor(
     
-    private readonly integrationConfigRepository: Repository<IntegrationConfig>,
+    private readonlyintegrationConfigRepository: Repository<IntegrationConfig>,
     
-    private readonly integrationLogRepository: Repository<IntegrationLog>,
+    private readonlyintegrationLogRepository: Repository<IntegrationLog>,
     
-    private readonly organizationIntegrationRepository: Repository<OrganizationIntegration>,
-    private readonly eventEmitter: EventEmitter2,
+    private readonlyorganizationIntegrationRepository: Repository<OrganizationIntegration>,
+    private readonlyeventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -298,7 +298,7 @@ export class IntegrationMarketplaceService {
         status: installedIds.includes(integration.id) ? 'installed' : 'available',
       }));
     } catch (error: unknown) {
-      console.error(`Failed to get available integrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get availableintegrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw new HttpException('Failed to fetch integrations', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -312,7 +312,7 @@ export class IntegrationMarketplaceService {
         category === 'all' || integration.category === category
       );
     } catch (error: unknown) {
-      console.error(`Failed to get integrations by category: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get integrations bycategory: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -337,7 +337,7 @@ export class IntegrationMarketplaceService {
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6);
     } catch (error: unknown) {
-      console.error(`Failed to get recommended integrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get recommendedintegrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -414,7 +414,7 @@ export class IntegrationMarketplaceService {
       console.log(`Integration ${integrationId} installed for organization ${organizationId}`);
       return savedOrgIntegration;
     } catch (error: unknown) {
-      console.error(`Failed to install integration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to installintegration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       
       // Log failed installation
       await this.logIntegrationEvent({
@@ -498,7 +498,7 @@ export class IntegrationMarketplaceService {
         throw new HttpException(`Configuration failed: ${testResult.error}`, HttpStatus.BAD_REQUEST);
       }
     } catch (error: unknown) {
-      console.error(`Failed to configure integration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to configureintegration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -535,7 +535,7 @@ export class IntegrationMarketplaceService {
 
       return testResult;
     } catch (error: unknown) {
-      console.error(`Failed to test integration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to testintegration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -561,7 +561,7 @@ export class IntegrationMarketplaceService {
         };
       });
     } catch (error: unknown) {
-      console.error(`Failed to get installed integrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get installedintegrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -605,7 +605,7 @@ export class IntegrationMarketplaceService {
 
       console.log(`Integration ${integrationId} uninstalled for organization ${organizationId}`);
     } catch (error: unknown) {
-      console.error(`Failed to uninstall integration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to uninstallintegration: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -636,7 +636,7 @@ export class IntegrationMarketplaceService {
           .slice(0, 3),
       }));
     } catch (error: unknown) {
-      console.error(`Failed to get integration categories: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get integrationcategories: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -660,7 +660,7 @@ export class IntegrationMarketplaceService {
         return matchesQuery && matchesCategory;
       });
     } catch (error: unknown) {
-      console.error(`Failed to search integrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to searchintegrations: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -691,7 +691,7 @@ export class IntegrationMarketplaceService {
 
       return analytics;
     } catch (error: unknown) {
-      console.error(`Failed to get integration analytics: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to get integrationanalytics: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       throw error;
     }
   }
@@ -738,7 +738,7 @@ export class IntegrationMarketplaceService {
 
       await this.integrationLogRepository.save(log);
     } catch (error: unknown) {
-      console.error(`Failed to log integration event: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
+      console.error(`Failed to log integrationevent: ${error instanceof Error ? error.message : "Unknown error"}`, error instanceof Error ? error.stack : undefined);
       // Don't throw error for logging failures
     }
   }

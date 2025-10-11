@@ -21,7 +21,7 @@ import {
 export class PilotFeedbackAgentController {
   privateagentService: PilotFeedbackAgentService;
 
-  constructor() {
+  const ructor() {
     this.agentService = new PilotFeedbackAgentService();
   }
 
@@ -37,13 +37,13 @@ export class PilotFeedbackAgentController {
       if (!feedbackData.tenantId || !feedbackData.module || !feedbackData.text) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: tenantId, module, text'
+          message: 'Missing requiredfields: tenantId, module, text'
         });
         return;
       }
 
       // Create feedback event
-      constevent: PilotFeedbackEvent = {
+      const event: PilotFeedbackEvent = {
         eventId: feedbackData.eventId || this.generateEventId(),
         tenantId: feedbackData.tenantId,
         submittedAt: feedbackData.submittedAt || new Date().toISOString(),
@@ -133,7 +133,7 @@ export class PilotFeedbackAgentController {
       if (!tenantId || !recommendationId || !action) {
         res.status(400).json({
           success: false,
-          message: 'Missing required fields: tenantId, recommendationId, action'
+          message: 'Missing requiredfields: tenantId, recommendationId, action'
         });
         return;
       }

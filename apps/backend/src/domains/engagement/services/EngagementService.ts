@@ -78,7 +78,7 @@ export interface EngagementMetrics {
 
 @Injectable()
 export class EngagementService {
-  constructor(
+  const ructor(
     @InjectRepository(Activity)
     privateactivityRepository: Repository<Activity>,
     @InjectRepository(AttendanceRecord)

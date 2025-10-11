@@ -76,11 +76,11 @@ export interface WorkflowStep {
 export class AdvancedDocumentWorkflowService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly documentRepository: Repository<DocumentManagement>,
-    private readonly notificationService: NotificationService,
-    private readonly auditService: AuditTrailService
+    private readonlydocumentRepository: Repository<DocumentManagement>,
+    private readonlynotificationService: NotificationService,
+    private readonlyauditService: AuditTrailService
   ) {
     console.log('Advanced Document Workflow Service initialized');
   }
@@ -103,13 +103,13 @@ export class AdvancedDocumentWorkflowService {
       });
 
       if (!document) {
-        throw new Error(`Document not found: ${documentId}`);
+        throw new Error(`Document notfound: ${documentId}`);
       }
 
       const workflowId = uuidv4();
       const steps = this.generateWorkflowSteps(workflowType, document.documentType, assignedTo, deadline);
 
-      constworkflow: DocumentWorkflow = {
+      const workflow: DocumentWorkflow = {
         id: workflowId,
         documentId,
         workflowType,
@@ -191,12 +191,12 @@ export class AdvancedDocumentWorkflowService {
       const workflow = await this.getWorkflow(workflowId, tenantId);
       
       if (!workflow) {
-        throw new Error(`Workflow not found: ${workflowId}`);
+        throw new Error(`Workflow notfound: ${workflowId}`);
       }
 
       const step = workflow.steps.find(s => s.stepNumber === stepNumber);
       if (!step) {
-        throw new Error(`Workflow step not found: ${stepNumber}`);
+        throw new Error(`Workflow step notfound: ${stepNumber}`);
       }
 
       if (step.assignee !== userId && action !== 'delegate') {
@@ -249,7 +249,7 @@ export class AdvancedDocumentWorkflowService {
     deadline: Date
   ): WorkflowStep[] {
     const baseDeadline = new Date(deadline);
-    conststeps: WorkflowStep[] = [];
+    const steps: WorkflowStep[] = [];
 
     switch (workflowType) {
       case 'approval':
@@ -325,7 +325,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private getRoleFromAssignee(assignee: string): string {
-    constroleMap: Record<string, string> = {
+    const roleMap: Record<string, string> = {
       'reviewer': 'Document Reviewer',
       'technical_reviewer': 'Technical Specialist',
       'manager': 'Department Manager',
@@ -347,7 +347,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private getStepRequirements(stepName: string): string[] {
-    constrequirements: Record<string, string[]> = {
+    const requirements: Record<string, string[]> = {
       'Initial Review': ['Review document content', 'Check formatting standards', 'Validate metadata'],
       'Technical Review': ['Verify technical accuracy', 'Check references', 'Validate data'],
       'Management Approval': ['Review business impact', 'Approve resource allocation', 'Sign off on publication'],
@@ -365,7 +365,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private getStepDeliverables(stepName: string): string[] {
-    constdeliverables: Record<string, string[]> = {
+    const deliverables: Record<string, string[]> = {
       'Initial Review': ['Review report', 'Formatting corrections', 'Metadata validation'],
       'Technical Review': ['Technical validation report', 'Reference verification', 'Data accuracy confirmation'],
       'Management Approval': ['Management sign-off', 'Business approval', 'Publication authorization'],
@@ -395,7 +395,7 @@ export class AdvancedDocumentWorkflowService {
   }
 
   private calculateEstimatedDuration(workflowType: string, stepCount: number): number {
-    constbaseDuration: Record<string, number> = {
+    const baseDuration: Record<string, number> = {
       'approval': 24,
       'review': 16,
       'compliance_check': 48,
@@ -502,7 +502,7 @@ export class AdvancedDocumentWorkflowService {
           message: 'Notification: WORKFLOW INITIATED',
         type: 'WORKFLOW_INITIATED',
           priority: workflow.priority.toUpperCase() as any,
-          title: `Document Workflow Initiated: ${workflow.workflowType}`,
+          title: `Document WorkflowInitiated: ${workflow.workflowType}`,
           message: `New ${workflow.workflowType} workflow assigned for document ${workflow.documentId}`,
           recipientId: currentStep?.assignee,
           data: { workflowId: workflow.id, documentId: workflow.documentId }
@@ -516,7 +516,7 @@ export class AdvancedDocumentWorkflowService {
             message: 'Notification: WORKFLOW STEP ASSIGNED',
         type: 'WORKFLOW_STEP_ASSIGNED',
             priority: 'MEDIUM',
-            title: `Workflow Step Assignment: ${nextStep.stepName}`,
+            title: `Workflow StepAssignment: ${nextStep.stepName}`,
             message: `You have been assigned step ${nextStep.stepNumber}: ${nextStep.stepName}`,
             recipientId: nextStep.assignee,
             data: { workflowId: workflow.id, stepNumber: nextStep.stepNumber }

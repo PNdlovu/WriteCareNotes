@@ -102,16 +102,16 @@ export interface VisitorAnalytics {
 
 @Injectable()
 export class VisitorManagementService {
-  private readonly logger = new Logger(VisitorManagementService.name);
+  private readonlylogger = new Logger(VisitorManagementService.name);
   privatevisitorRepository: Repository<VisitorManagement>;
 
-  constructor(
-    private readonly eventEmitter: EventEmitter2,
-    private readonly notificationService: NotificationService,
-    private readonly auditService: AuditService,
-    private readonly securityService: SecurityIntegrationService,
-    private readonly backgroundCheckService: BackgroundCheckService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlynotificationService: NotificationService,
+    private readonlyauditService: AuditService,
+    private readonlysecurityService: SecurityIntegrationService,
+    private readonlybackgroundCheckService: BackgroundCheckService,
+    private readonlycomplianceService: ComplianceService
   ) {
     this.visitorRepository = AppDataSource.getRepository(VisitorManagement);
   }
@@ -120,7 +120,7 @@ export class VisitorManagementService {
    * Register a new visitor with comprehensive screening and validation
    */
   async registerAdvancedVisitor(request: VisitorRegistrationRequest, registeredBy: string): Promise<VisitorManagement> {
-    this.logger.log(`Registering new visitor: ${request.firstName} ${request.lastName}`);
+    this.logger.log(`Registering newvisitor: ${request.firstName} ${request.lastName}`);
 
     try {
       // Generate unique visitor ID
@@ -230,12 +230,12 @@ export class VisitorManagementService {
         registeredBy
       });
 
-      this.logger.log(`Visitor registered successfully: ${savedVisitor.visitorId}`);
+      this.logger.log(`Visitor registeredsuccessfully: ${savedVisitor.visitorId}`);
       return savedVisitor;
 
     } catch (error) {
-      this.logger.error(`Failed to register visitor: ${error.message}`, error.stack);
-      throw new Error(`Visitor registration failed: ${error.message}`);
+      this.logger.error(`Failed to registervisitor: ${error.message}`, error.stack);
+      throw new Error(`Visitor registrationfailed: ${error.message}`);
     }
   }
 
@@ -249,7 +249,7 @@ export class VisitorManagementService {
     escortedBy?: string;
     specialInstructions?: string;
   }, checkedInBy: string): Promise<string> {
-    this.logger.log(`Processing check-in for visitor: ${visitorId}`);
+    this.logger.log(`Processing check-in forvisitor: ${visitorId}`);
 
     try {
       const visitor = await this.visitorRepository.findOne({
@@ -257,18 +257,18 @@ export class VisitorManagementService {
       });
 
       if (!visitor) {
-        throw new Error(`Visitor not found: ${visitorId}`);
+        throw new Error(`Visitor notfound: ${visitorId}`);
       }
 
       // Validate visitor authorization
       if (!visitor.isAuthorizedToVisit()) {
-        throw new Error(`Visitor not authorized: ${visitorId}`);
+        throw new Error(`Visitor notauthorized: ${visitorId}`);
       }
 
       // Perform real-time security check
       const securityCheck = await this.performRealTimeSecurityCheck(visitor);
       if (!securityCheck.approved) {
-        throw new Error(`Security check failed: ${securityCheck.reason}`);
+        throw new Error(`Security checkfailed: ${securityCheck.reason}`);
       }
 
       // Generate visit ID
@@ -331,11 +331,11 @@ export class VisitorManagementService {
         riskLevel: visitor.advancedScreening.securityScreening.riskAssessment
       });
 
-      this.logger.log(`Visitor checked in successfully: ${visitId}`);
+      this.logger.log(`Visitor checked insuccessfully: ${visitId}`);
       return visitId;
 
     } catch (error) {
-      this.logger.error(`Failed to check in visitor: ${error.message}`, error.stack);
+      this.logger.error(`Failed to check invisitor: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -349,7 +349,7 @@ export class VisitorManagementService {
     satisfactionRating?: number;
     areasAccessed?: string[];
   }, checkedOutBy: string): Promise<void> {
-    this.logger.log(`Processing check-out for visit: ${visitId}`);
+    this.logger.log(`Processing check-out forvisit: ${visitId}`);
 
     try {
       const visitor = await this.visitorRepository.createQueryBuilder('visitor')
@@ -357,13 +357,13 @@ export class VisitorManagementService {
         .getOne();
 
       if (!visitor) {
-        throw new Error(`Visit not found: ${visitId}`);
+        throw new Error(`Visit notfound: ${visitId}`);
       }
 
       // Find the specific visit
       const visitIndex = visitor.visitHistory.findIndex(v => v.visitId === visitId);
       if (visitIndex === -1) {
-        throw new Error(`Visit record not found: ${visitId}`);
+        throw new Error(`Visit record notfound: ${visitId}`);
       }
 
       // Update visit record
@@ -414,10 +414,10 @@ export class VisitorManagementService {
         visitDuration: visitor.visitHistory[visitIndex].visitDuration
       });
 
-      this.logger.log(`Visitor checked out successfully: ${visitId}`);
+      this.logger.log(`Visitor checked outsuccessfully: ${visitId}`);
 
     } catch (error) {
-      this.logger.error(`Failed to check out visitor: ${error.message}`, error.stack);
+      this.logger.error(`Failed to check outvisitor: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -465,7 +465,7 @@ export class VisitorManagementService {
       // Compliance metrics
       const complianceMetrics = await this.calculateComplianceMetrics(visitors);
 
-      constanalytics: VisitorAnalytics = {
+      const analytics: VisitorAnalytics = {
         totalRegistrations,
         activeVisitors,
         averageVisitDuration,
@@ -480,7 +480,7 @@ export class VisitorManagementService {
       return analytics;
 
     } catch (error) {
-      this.logger.error(`Failed to generate visitor analytics: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate visitoranalytics: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -499,7 +499,7 @@ export class VisitorManagementService {
     urgencyLevel: 'low' | 'medium' | 'high' | 'critical';
     expectedDuration: number;
   }, processedBy: string): Promise<{ visitId: string; accessCode: string; restrictions: string[] }> {
-    this.logger.log(`Processing emergency visitor registration: ${emergencyRequest.emergencyType}`);
+    this.logger.log(`Processing emergency visitorregistration: ${emergencyRequest.emergencyType}`);
 
     try {
       // Generate emergency visit ID
@@ -555,7 +555,7 @@ export class VisitorManagementService {
         processedBy
       });
 
-      this.logger.log(`Emergency visitor registered: ${visitId}`);
+      this.logger.log(`Emergency visitorregistered: ${visitId}`);
 
       return {
         visitId,
@@ -564,7 +564,7 @@ export class VisitorManagementService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to register emergency visitor: ${error.message}`, error.stack);
+      this.logger.error(`Failed to register emergencyvisitor: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -580,7 +580,7 @@ export class VisitorManagementService {
     reason: string;
     expectedDuration?: number;
   }): Promise<{ lockdownId: string; affectedVisitors: number; evacuationRequired: boolean }> {
-    this.logger.log(`Triggering emergency lockdown: ${lockdownRequest.lockdownType} - ${lockdownRequest.severity}`);
+    this.logger.log(`Triggering emergencylockdown: ${lockdownRequest.lockdownType} - ${lockdownRequest.severity}`);
 
     try {
       const lockdownId = `LOCK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -639,7 +639,7 @@ export class VisitorManagementService {
         initiatedBy: lockdownRequest.initiatedBy
       });
 
-      this.logger.log(`Emergency lockdown activated: ${lockdownId}`);
+      this.logger.log(`Emergency lockdownactivated: ${lockdownId}`);
 
       return {
         lockdownId,
@@ -648,7 +648,7 @@ export class VisitorManagementService {
       };
 
     } catch (error) {
-      this.logger.error(`Failed to trigger emergency lockdown: ${error.message}`, error.stack);
+      this.logger.error(`Failed to trigger emergencylockdown: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -690,7 +690,7 @@ export class VisitorManagementService {
       riskFactors.push('background_check_alerts');
     }
 
-    letriskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
     
     if (riskFactors.length === 0) {
       riskLevel = 'low';
@@ -1083,7 +1083,7 @@ export class VisitorManagementService {
         where: { visitorId }
       });
     } catch (error) {
-      this.logger.error(`Failed to retrieve visitor: ${error.message}`, error.stack);
+      this.logger.error(`Failed to retrievevisitor: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1106,7 +1106,7 @@ export class VisitorManagementService {
         return activeVisits.length > 0;
       });
     } catch (error) {
-      this.logger.error(`Failed to retrieve current visitors: ${error.message}`, error.stack);
+      this.logger.error(`Failed to retrieve currentvisitors: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1121,7 +1121,7 @@ export class VisitorManagementService {
     assessedBy: string;
     notes?: string;
   }, updatedBy: string): Promise<any> {
-    this.logger.log(`Updating risk assessment for visitor: ${visitorId}`);
+    this.logger.log(`Updating risk assessment forvisitor: ${visitorId}`);
 
     try {
       const visitor = await this.visitorRepository.findOne({
@@ -1129,7 +1129,7 @@ export class VisitorManagementService {
       });
 
       if (!visitor) {
-        throw new Error(`Visitor not found: ${visitorId}`);
+        throw new Error(`Visitor notfound: ${visitorId}`);
       }
 
       // Update security screening risk assessment
@@ -1166,7 +1166,7 @@ export class VisitorManagementService {
 
       return updatedAssessment;
     } catch (error) {
-      this.logger.error(`Failed to update risk assessment: ${error.message}`, error.stack);
+      this.logger.error(`Failed to update riskassessment: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1175,7 +1175,7 @@ export class VisitorManagementService {
    * Get security profile for a visitor
    */
   async getSecurityProfile(visitorId: string): Promise<any> {
-    this.logger.log(`Retrieving security profile for visitor: ${visitorId}`);
+    this.logger.log(`Retrieving security profile forvisitor: ${visitorId}`);
 
     try {
       const visitor = await this.visitorRepository.findOne({
@@ -1183,7 +1183,7 @@ export class VisitorManagementService {
       });
 
       if (!visitor) {
-        throw new Error(`Visitor not found: ${visitorId}`);
+        throw new Error(`Visitor notfound: ${visitorId}`);
       }
 
       return {
@@ -1200,7 +1200,7 @@ export class VisitorManagementService {
         recommendations: this.generateSecurityRecommendations(visitor)
       };
     } catch (error) {
-      this.logger.error(`Failed to retrieve security profile: ${error.message}`, error.stack);
+      this.logger.error(`Failed to retrieve securityprofile: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1242,7 +1242,7 @@ export class VisitorManagementService {
         systemStatus: await this.securityService.checkCurrentSecurityStatus()
       };
     } catch (error) {
-      this.logger.error(`Failed to generate security metrics: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate securitymetrics: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1294,7 +1294,7 @@ export class VisitorManagementService {
         actionItems: this.generateComplianceActionItems(complianceMetrics)
       };
     } catch (error) {
-      this.logger.error(`Failed to generate compliance report: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate compliancereport: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1320,7 +1320,7 @@ export class VisitorManagementService {
 
       return patterns;
     } catch (error) {
-      this.logger.error(`Failed to analyze visit frequency patterns: ${error.message}`, error.stack);
+      this.logger.error(`Failed to analyze visit frequencypatterns: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1342,7 +1342,7 @@ export class VisitorManagementService {
         engagementLevels: this.analyzeEngagementLevels(visitors)
       };
     } catch (error) {
-      this.logger.error(`Failed to analyze visitor demographics: ${error.message}`, error.stack);
+      this.logger.error(`Failed to analyze visitordemographics: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1351,7 +1351,7 @@ export class VisitorManagementService {
    * Get contact tracing data for a visit
    */
   async getContactTracingData(visitId: string): Promise<any> {
-    this.logger.log(`Retrieving contact tracing data for visit: ${visitId}`);
+    this.logger.log(`Retrieving contact tracing data forvisit: ${visitId}`);
 
     try {
       const visitor = await this.visitorRepository.createQueryBuilder('visitor')
@@ -1359,12 +1359,12 @@ export class VisitorManagementService {
         .getOne();
 
       if (!visitor) {
-        throw new Error(`Visit not found: ${visitId}`);
+        throw new Error(`Visit notfound: ${visitId}`);
       }
 
       const visit = visitor.visitHistory.find(v => v.visitId === visitId);
       if (!visit) {
-        throw new Error(`Visit record not found: ${visitId}`);
+        throw new Error(`Visit record notfound: ${visitId}`);
       }
 
       return {
@@ -1382,7 +1382,7 @@ export class VisitorManagementService {
         recommendations: this.generateContactTracingRecommendations(visit)
       };
     } catch (error) {
-      this.logger.error(`Failed to retrieve contact tracing data: ${error.message}`, error.stack);
+      this.logger.error(`Failed to retrieve contact tracingdata: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1398,7 +1398,7 @@ export class VisitorManagementService {
     description: string;
     severity: 'low' | 'medium' | 'high' | 'critical';
   }, processedBy: string): Promise<void> {
-    this.logger.log(`Processing health alert: ${alert.alertType}`);
+    this.logger.log(`Processing healthalert: ${alert.alertType}`);
 
     try {
       const affectedVisits = await this.identifyAffectedVisits(alert);
@@ -1425,7 +1425,7 @@ export class VisitorManagementService {
         severity: alert.severity === 'critical' ? 'critical' : 'medium'
       });
     } catch (error) {
-      this.logger.error(`Failed to process health alert: ${error.message}`, error.stack);
+      this.logger.error(`Failed to process healthalert: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1434,7 +1434,7 @@ export class VisitorManagementService {
    * Get visitor audit trail
    */
   async getVisitorAuditTrail(visitorId: string): Promise<any> {
-    this.logger.log(`Retrieving audit trail for visitor: ${visitorId}`);
+    this.logger.log(`Retrieving audit trail forvisitor: ${visitorId}`);
 
     try {
       return {
@@ -1456,7 +1456,7 @@ export class VisitorManagementService {
         }
       };
     } catch (error) {
-      this.logger.error(`Failed to retrieve audit trail: ${error.message}`, error.stack);
+      this.logger.error(`Failed to retrieve audittrail: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1510,7 +1510,7 @@ export class VisitorManagementService {
 
       return report;
     } catch (error) {
-      this.logger.error(`Failed to generate GDPR compliance report: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate GDPR compliancereport: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1527,7 +1527,7 @@ export class VisitorManagementService {
     recommendations?: string[];
     wouldRecommend: boolean;
   }, recordedBy: string): Promise<void> {
-    this.logger.log(`Recording feedback for visitor: ${visitorId}`);
+    this.logger.log(`Recording feedback forvisitor: ${visitorId}`);
 
     try {
       const visitor = await this.visitorRepository.findOne({
@@ -1535,7 +1535,7 @@ export class VisitorManagementService {
       });
 
       if (!visitor) {
-        throw new Error(`Visitor not found: ${visitorId}`);
+        throw new Error(`Visitor notfound: ${visitorId}`);
       }
 
       const feedbackRecord = {
@@ -1565,7 +1565,7 @@ export class VisitorManagementService {
         timestamp: new Date()
       });
     } catch (error) {
-      this.logger.error(`Failed to record visitor feedback: ${error.message}`, error.stack);
+      this.logger.error(`Failed to record visitorfeedback: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -1611,7 +1611,7 @@ export class VisitorManagementService {
         recommendations: this.generateSatisfactionRecommendations(averageRating, ratingDistribution)
       };
     } catch (error) {
-      this.logger.error(`Failed to calculate satisfaction metrics: ${error.message}`, error.stack);
+      this.logger.error(`Failed to calculate satisfactionmetrics: ${error.message}`, error.stack);
       throw error;
     }
   }

@@ -18,7 +18,7 @@ import { IntegrationOrchestrationService } from '../../services/integration-orch
 export class IntegrationOrchestrationController {
   privateorchestrationService: IntegrationOrchestrationService;
 
-  constructor() {
+  const ructor() {
     this.orchestrationService = new IntegrationOrchestrationService();
   }
 

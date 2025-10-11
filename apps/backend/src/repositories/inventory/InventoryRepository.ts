@@ -47,7 +47,7 @@ import {
 
 @Injectable()
 export class InventoryRepository {
-  constructor(private readonly dbPool: Pool) {}
+  const ructor(private readonlydbPool: Pool) {}
 
   /**
    * Creates a new inventory item with full validation and audit trail
@@ -164,7 +164,7 @@ export class InventoryRepository {
     try {
       const query = `
         SELECT * FROM inventory_items 
-        WHERE id = $1 AND status != 'deleted'
+        WHEREid = $1 ANDstatus != 'deleted'
       `;
       
       const result = await this.dbPool.query(query, [id]);
@@ -195,7 +195,7 @@ export class InventoryRepository {
     try {
       const query = `
         SELECT * FROM inventory_items 
-        WHERE item_code = $1 AND status != 'deleted'
+        WHERE item_code = $1 ANDstatus != 'deleted'
       `;
       
       const result = await this.dbPool.query(query, [itemCode]);
@@ -257,7 +257,7 @@ export class InventoryRepository {
       const query = `
         UPDATE inventory_items 
         SET ${updateFields.join(', ')}
-        WHERE id = $${paramCount} AND status != 'deleted'
+        WHEREid = $${paramCount} ANDstatus != 'deleted'
         RETURNING *
       `;
       
@@ -577,7 +577,7 @@ export class InventoryRepository {
     try {
       const query = `
         SELECT * FROM suppliers 
-        WHERE id = $1 AND status != 'deleted'
+        WHEREid = $1 ANDstatus != 'deleted'
       `;
       
       const result = await this.dbPool.query(query, [id]);
@@ -663,7 +663,7 @@ export class InventoryRepository {
           COUNT(CASE WHEN current_stock = 0 THEN 1 END) as out_of_stock_items,
           COUNT(CASE WHEN current_stock > max_stock THEN 1 END) as overstock_items
         FROM inventory_items 
-        WHERE care_home_id = $1 AND status = 'active'
+        WHERE care_home_id = $1 ANDstatus = 'active'
       `;
       
       const result = await this.dbPool.query(query, [careHomeId]);
@@ -683,7 +683,7 @@ export class InventoryRepository {
           AVG(total_value) as average_value,
           AVG(unit_cost) as average_cost_per_item
         FROM inventory_items 
-        WHERE care_home_id = $1 AND status = 'active'
+        WHERE care_home_id = $1 ANDstatus = 'active'
       `;
       
       const result = await this.dbPool.query(query, [careHomeId]);
@@ -970,6 +970,6 @@ export class InventoryRepository {
   }
 
   private camelToSnakeCase(str: string): string {
-    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    return str.replace(/[A-Z]/g, let ter => `_${let ter.toLowerCase()}`);
   }
 }

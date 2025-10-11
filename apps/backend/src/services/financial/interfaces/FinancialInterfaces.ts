@@ -437,7 +437,7 @@ export interface FinancialError {
 export interface ValidationError extends FinancialError {
   field?: string;
   value?: any;
-  constraint?: string;
+  const raint?: string;
 }
 
 export interface ProcessingError extends FinancialError {

@@ -156,7 +156,7 @@ export interface ValidationRule {
   field: string;
   type: 'string' | 'number' | 'boolean' | 'array' | 'object' | 'date';
   required: boolean;
-  constraints?: {
+  const raints?: {
     minLength?: number;
     maxLength?: number;
     min?: number;
@@ -263,15 +263,15 @@ export interface AuditFinding {
 @Index(['inheritanceType', 'priority'])
 export class OrganizationConfiguration extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  override id!: string;
+  overrideid!: string;
 
   // Configuration Identity
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   configurationName!: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'var char', length: 100, unique: true })
   @IsString()
   @Length(1, 100)
   configurationKey!: string;
@@ -401,19 +401,19 @@ export class OrganizationConfiguration extends BaseEntity {
 
   // Audit Fields
   @CreateDateColumn()
-  override createdAt!: Date;
+  overridecreatedAt!: Date;
 
   @UpdateDateColumn()
-  override updatedAt!: Date;
+  overrideupdatedAt!: Date;
 
   @DeleteDateColumn()
-  override deletedAt?: Date;
+  overridedeletedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  override createdBy?: string;
+  overridecreatedBy?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  override updatedBy?: string;
+  overrideupdatedBy?: string;
 
   /**
    * Lifecycle hooks
@@ -483,13 +483,13 @@ export class OrganizationConfiguration extends BaseEntity {
         if (typeof value !== 'string') {
           throw new Error(`Field ${rule.field} must be a string`);
         }
-        if (rule.constraints?.minLength && value.length < rule.constraints.minLength) {
-          throw new Error(`Field ${rule.field} must be at least ${rule.constraints.minLength} characters`);
+        if (rule.const raints?.minLength && value.length < rule.const raints.minLength) {
+          throw new Error(`Field ${rule.field} must be at least ${rule.const raints.minLength} characters`);
         }
-        if (rule.constraints?.maxLength && value.length > rule.constraints.maxLength) {
-          throw new Error(`Field ${rule.field} must be at most ${rule.constraints.maxLength} characters`);
+        if (rule.const raints?.maxLength && value.length > rule.const raints.maxLength) {
+          throw new Error(`Field ${rule.field} must be at most ${rule.const raints.maxLength} characters`);
         }
-        if (rule.constraints?.pattern && !new RegExp(rule.constraints.pattern).test(value)) {
+        if (rule.const raints?.pattern && !new RegExp(rule.const raints.pattern).test(value)) {
           throw new Error(`Field ${rule.field} does not match required pattern`);
         }
         break;
@@ -498,11 +498,11 @@ export class OrganizationConfiguration extends BaseEntity {
         if (typeof value !== 'number') {
           throw new Error(`Field ${rule.field} must be a number`);
         }
-        if (rule.constraints?.min && value < rule.constraints.min) {
-          throw new Error(`Field ${rule.field} must be at least ${rule.constraints.min}`);
+        if (rule.const raints?.min && value < rule.const raints.min) {
+          throw new Error(`Field ${rule.field} must be at least ${rule.const raints.min}`);
         }
-        if (rule.constraints?.max && value > rule.constraints.max) {
-          throw new Error(`Field ${rule.field} must be at most ${rule.constraints.max}`);
+        if (rule.const raints?.max && value > rule.const raints.max) {
+          throw new Error(`Field ${rule.field} must be at most ${rule.const raints.max}`);
         }
         break;
         
@@ -525,8 +525,8 @@ export class OrganizationConfiguration extends BaseEntity {
         break;
     }
     
-    if (rule.constraints?.enum && !rule.constraints.enum.includes(value)) {
-      throw new Error(`Field ${rule.field} must be one of: ${rule.constraints.enum.join(', ')}`);
+    if (rule.const raints?.enum && !rule.const raints.enum.includes(value)) {
+      throw new Error(`Field ${rule.field} must be oneof: ${rule.const raints.enum.join(', ')}`);
     }
   }
 

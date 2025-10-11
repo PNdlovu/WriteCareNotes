@@ -122,7 +122,7 @@ export class DBSNotification extends BaseEntity {
   @IsEnum(DBSNotificationStatus)
   status!: DBSNotificationStatus;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   title!: string;
@@ -141,17 +141,17 @@ export class DBSNotification extends BaseEntity {
   @IsUUID()
   recipientId!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   recipientName!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   recipientEmail!: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 20)
@@ -204,13 +204,13 @@ export class DBSNotification extends BaseEntity {
   @IsOptional()
   actionData?: Record<string, any>;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 500)
   actionUrl?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)
@@ -222,7 +222,7 @@ export class DBSNotification extends BaseEntity {
   @IsOptional()
   careHomeId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   @IsOptional()
   @Length(1, 100)

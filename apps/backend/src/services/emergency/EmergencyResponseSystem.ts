@@ -186,7 +186,7 @@ export class EmergencyResponseSystem {
   privateemergencyProtocols: Map<EmergencyType, any>;
   privatesystemStatus: 'normal' | 'alert' | 'emergency' | 'lockdown';
 
-  constructor(
+  const ructor(
     eventEmitter: EventEmitter2,
     securityService: SecurityIntegrationService,
     auditTrailService: AuditService,
@@ -243,7 +243,7 @@ export class EmergencyResponseSystem {
       const responseId = `RESP-${Date.now()}-${Math.random().toString(36).substr(2, 8)}`.toUpperCase();
 
       // Create emergency incident
-      constincident: EmergencyIncident = {
+      const incident: EmergencyIncident = {
         incidentId,
         type: emergencyDetails.type,
         priority: emergencyDetails.priority,
@@ -349,7 +349,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error declaring emergency:', error);
+      console.error('Error declaringemergency:', error);
       throw new Error('Failed to declare emergency incident');
     }
   }
@@ -450,7 +450,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error initiating lockdown:', error);
+      console.error('Error initiatinglockdown:', error);
       throw new Error('Failed to initiate emergency lockdown');
     }
   }
@@ -548,7 +548,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error initiating evacuation:', error);
+      console.error('Error initiatingevacuation:', error);
       throw new Error('Failed to initiate emergency evacuation');
     }
   }
@@ -663,7 +663,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error updating incident status:', error);
+      console.error('Error updating incidentstatus:', error);
       throw new Error('Failed to update emergency incident status');
     }
   }
@@ -684,7 +684,7 @@ export class EmergencyResponseSystem {
       }
 
       const resolvedAt = new Date();
-      constrestorationActions: string[] = [];
+      const restorationActions: string[] = [];
 
       // End lockdown if active
       if (incident.lockdownData && !incident.lockdownData.lockdownEndTime) {
@@ -755,7 +755,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error resolving emergency:', error);
+      console.error('Error resolvingemergency:', error);
       throw new Error('Failed to resolve emergency incident');
     }
   }
@@ -799,7 +799,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error getting emergency status:', error);
+      console.error('Error getting emergencystatus:', error);
       throw new Error('Failed to get emergency status');
     }
   }
@@ -822,14 +822,14 @@ export class EmergencyResponseSystem {
       const testId = `TEST-${Date.now()}-${Math.random().toString(36).substr(2, 8)}`.toUpperCase();
       const testStartTime = new Date();
 
-      lettestResults: any = {
+      let testResults: any = {
         systemsResponded: [],
         responseTime: 0,
         successRate: 0,
         issuesIdentified: []
       };
 
-      letrecommendations: string[] = [];
+      let recommendations: string[] = [];
 
       switch (testType) {
         case 'lockdown':
@@ -874,7 +874,7 @@ export class EmergencyResponseSystem {
       };
 
     } catch (error) {
-      console.error('Error testing emergency system:', error);
+      console.error('Error testing emergencysystem:', error);
       throw new Error('Failed to test emergency system');
     }
   }
@@ -943,13 +943,13 @@ export class EmergencyResponseSystem {
         await this.checkSystemHealth();
         await this.validateEmergencyReadiness();
       } catch (error) {
-        console.error('Error in system monitoring:', error);
+        console.error('Error in systemmonitoring:', error);
       }
     }, 60000); // Check every minute
   }
 
   private async initiateAutomatedResponse(incident: EmergencyIncident, protocol: any): Promise<string[]> {
-    constactionsTriggered: string[] = [];
+    const actionsTriggered: string[] = [];
 
     if (protocol?.autoActions) {
       for (const action of protocol.autoActions) {
@@ -1251,7 +1251,7 @@ export class EmergencyResponseSystem {
     await this.notificationService.sendEmergencyNotification({
       priority: 'critical',
       title: `Lockdown Initiated - Level ${level}`,
-      message: `Emergency lockdown has been initiated. Affected areas: ${areas.join(', ')}. Follow lockdown procedures.`,
+      message: `Emergency lockdown has been initiated. Affectedareas: ${areas.join(', ')}. Follow lockdown procedures.`,
       recipients: ['all_persons_on_site'],
       channels: ['pa_system', 'push', 'sms']
     });
@@ -1261,7 +1261,7 @@ export class EmergencyResponseSystem {
     await this.notificationService.sendEmergencyNotification({
       priority: 'critical',
       title: 'Evacuation Order',
-      message: `Immediate evacuation required from zones: ${zones.join(', ')}. Use routes: ${routes.join(', ')}. Proceed to assembly points: ${assemblyPoints.join(', ')}.`,
+      message: `Immediate evacuation required fromzones: ${zones.join(', ')}. Useroutes: ${routes.join(', ')}. Proceed to assemblypoints: ${assemblyPoints.join(', ')}.`,
       recipients: ['all_persons_in_zones'],
       channels: ['pa_system', 'evacuation_alarms', 'push']
     });
@@ -1277,7 +1277,7 @@ export class EmergencyResponseSystem {
     });
   }
 
-  // Additional helper methods would be implemented here for:
+  // Additional helper methods would be implemented herefor:
   // - getEvacuationZones()
   // - getEvacuationRoutes()
   // - getAssemblyPoints()
@@ -1323,7 +1323,7 @@ export class EmergencyResponseSystem {
 
   private async dispatchEvacuationWardens(zones: string[]): Promise<void> {
     // Implementation to dispatch evacuation wardens to zones
-    console.log(`Dispatching evacuation wardens to zones: ${zones.join(', ')}`);
+    console.log(`Dispatching evacuation wardens tozones: ${zones.join(', ')}`);
   }
 
   private startEvacuationTracking(evacuationId: string, zones: string[], assemblyPoints: string[]): void {
@@ -1487,7 +1487,7 @@ export class EmergencyResponseSystem {
   }
 
   private generateTestRecommendations(testResults: any): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     if (testResults.successRate < 100) {
       recommendations.push('Address identified system issues to achieve 100% success rate');
@@ -1498,7 +1498,7 @@ export class EmergencyResponseSystem {
     }
 
     if (testResults.issuesIdentified.length > 0) {
-      recommendations.push(`Resolve specific issues: ${testResults.issuesIdentified.join(', ')}`);
+      recommendations.push(`Resolve specificissues: ${testResults.issuesIdentified.join(', ')}`);
     }
 
     recommendations.push('Schedule regular emergency system testing');

@@ -312,7 +312,7 @@ export class StaffRevolutionService {
   privateai: AIService;
   privateanalytics: AnalyticsService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('StaffRevolutionService');
     this.audit = new AuditService();
@@ -339,7 +339,7 @@ export class StaffRevolutionService {
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
       const staffId = req.params.staffId;
-      constwellnessData: WellnessProfile = req.body;
+      const wellnessData: WellnessProfile = req.body;
 
       // Validate staff member exists and user has permission
       const staffAccess = await this.validateStaffAccess(tenantId, userId, staffId);
@@ -428,7 +428,7 @@ export class StaffRevolutionService {
         await client.query(`
           UPDATE staff_members 
           SET burnout_risk_score = $1, last_assessment = NOW(), updated_at = NOW()
-          WHERE id = $2 AND tenant_id = $3
+          WHEREid = $2 AND tenant_id = $3
         `, [burnoutRisk, staffId, tenantId]);
 
         // Check for high-risk alerts
@@ -571,7 +571,7 @@ export class StaffRevolutionService {
         await client.query(`
           UPDATE staff_members 
           SET last_assessment = NOW(), updated_at = NOW()
-          WHERE id = $1 AND tenant_id = $2
+          WHEREid = $1 AND tenant_id = $2
         `, [staffId, tenantId]);
 
         // Create notifications for high-risk cases
@@ -605,7 +605,7 @@ export class StaffRevolutionService {
           assessedBy: userId
         });
 
-        constresponse: BurnoutAssessment = {
+        const response: BurnoutAssessment = {
           id: assessment.id,
           staffId: assessment.staff_id,
           tenantId: assessment.tenant_id,
@@ -720,7 +720,7 @@ export class StaffRevolutionService {
         createdBy: userId
       });
 
-      constresponse: SupportNetwork = {
+      const response: SupportNetwork = {
         id: network.id,
         tenantId: network.tenant_id,
         networkType: network.network_type,
@@ -830,7 +830,7 @@ export class StaffRevolutionService {
         alertCount: alerts.length
       });
 
-      constresponse: WorkloadAnalysis = {
+      const response: WorkloadAnalysis = {
         id: analysis.id,
         staffId: analysis.staff_id,
         tenantId: analysis.tenant_id,
@@ -930,7 +930,7 @@ export class StaffRevolutionService {
         createdBy: userId
       });
 
-      constresponse: WellnessProgram = {
+      const response: WellnessProgram = {
         id: program.id,
         tenantId: program.tenant_id,
         programName: program.program_name,
@@ -1082,7 +1082,7 @@ export class StaffRevolutionService {
     riskLevel: RiskLevel,
     staffId: string
   ): Promise<Recommendation[]> {
-    constrecommendations: Recommendation[] = [];
+    const recommendations: Recommendation[] = [];
 
     if (scores.emotionalExhaustion >= 27) {
       recommendations.push({
@@ -1306,7 +1306,7 @@ export class StaffRevolutionService {
   }
 
   private generateWorkloadAlerts(metrics: WorkloadMetrics, trends: WorkloadTrend[]): WorkloadAlert[] {
-    constalerts: WorkloadAlert[] = [];
+    const alerts: WorkloadAlert[] = [];
 
     if (metrics.averageHoursPerWeek > 50) {
       alerts.push({
@@ -1343,7 +1343,7 @@ export class StaffRevolutionService {
 
   private async getStaffRole(staffId: string): Promise<string> {
     const result = await this.db.query(
-      'SELECT role FROM staff_members WHERE id = $1',
+      'SELECT role FROM staff_members WHEREid = $1',
       [staffId]
     );
     return result.rows[0]?.role || 'unknown';

@@ -41,7 +41,7 @@ import { ChildResponseDto, ChildFilters } from '../dto/ChildResponseDto';
 
 @Controller('api/v1/children')
 export class ChildProfileController {
-  constructor(private readonly childService: ChildService) {}
+  const ructor(private readonlychildService: ChildService) {}
 
   /**
    * POST /api/v1/children
@@ -266,7 +266,7 @@ export class ChildProfileController {
       const child = await this.childService.getChild(id);
       
       /**
-       * Timeline aggregation requires integration with multiple services:
+       * Timeline aggregation requires integration with multipleservices:
        * - PlacementService.getPlacementsByChild() for placement history
        * - CarePlanningService.getReviewsByChild() for LAC reviews
        * - HealthService.getAssessmentsByChild() for health assessments

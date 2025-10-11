@@ -89,7 +89,7 @@ export class FamilyFeedback {
   @Column({ type: 'enum', enum: FeedbackCategory })
   category!: FeedbackCategory;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'var char', length: 200 })
   subject!: string;
 
   @Column({ type: 'text' })
@@ -118,46 +118,46 @@ export class FamilyFeedback {
   @Column({ type: 'boolean', default: false })
   anonymous!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   anonymousId?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   submittedBy?: string;
 
   @Column({ type: 'timestamp' })
   submittedAt!: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   acknowledgedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   acknowledgedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   assignedTo?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   assignedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   resolvedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   resolvedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   closedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   closedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   escalatedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   escalatedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   escalatedTo?: string;
 
   @Column({ type: 'text', nullable: true })
@@ -169,13 +169,13 @@ export class FamilyFeedback {
   @Column({ type: 'text', nullable: true })
   encryptedFollowUp?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   internalNotes?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   resolutionNotes?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   escalationReason?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -239,10 +239,10 @@ export class FamilyFeedback {
   @Column({ type: 'timestamp', nullable: true })
   archivedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   archivedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   archiveReason?: string;
 
   @Column({ type: 'boolean', default: false })
@@ -251,25 +251,25 @@ export class FamilyFeedback {
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deletedBy?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   deletionReason?: string;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'var char', length: 45, nullable: true })
   ipAddress?: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   userAgent?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deviceId?: string;
 
-  @Column({ type: 'varchar', length: 10, nullable: true })
+  @Column({ type: 'var char', length: 10, nullable: true })
   language?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   timezone?: string;
 
   @CreateDateColumn()
@@ -334,7 +334,7 @@ export class FamilyFeedback {
     if (!this.ratings) return this.getOverallRating();
     
     const ratingValues = Object.values(this.ratings).filter(
-      (value): value is number => typeof value === 'number'
+      (value): value isnumber => typeofvalue === 'number'
     );
     
     if (ratingValues.length === 0) return this.getOverallRating();
@@ -344,12 +344,12 @@ export class FamilyFeedback {
 
   isPositiveFeedback(): boolean {
     const rating = this.getOverallRating();
-    return rating !== null && rating >= 4;
+    returnrating !== null && rating >= 4;
   }
 
   isNegativeFeedback(): boolean {
     const rating = this.getOverallRating();
-    return rating !== null && rating <= 2;
+    returnrating !== null && rating <= 2;
   }
 
   acknowledge(acknowledgedBy: string): void {

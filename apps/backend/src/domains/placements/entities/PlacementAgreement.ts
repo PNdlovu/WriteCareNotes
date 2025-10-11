@@ -1,7 +1,7 @@
 /**
  * Placement Agreement Entity
  * Represents the formal placement agreement between LA and care provider
- * Compliant with: OFSTED Regulation 11, Children Act 1989 Section 23
+ * Compliantwith: OFSTED Regulation 11, Children Act 1989 Section 23
  */
 
 import {

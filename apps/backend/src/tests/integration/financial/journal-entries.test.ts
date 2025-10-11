@@ -29,7 +29,7 @@ jest.mock('../../../middleware/enhanced-rbac-audit', () => ({
 }));
 
 describe('Journal Entry API Integration Tests', () => {
-  letmockService: jest.Mocked<JournalEntryService>;
+  let mockService: jest.Mocked<JournalEntryService>;
 
   beforeEach(() => {
     mockService = new MockedJournalEntryService() as jest.Mocked<JournalEntryService>;

@@ -19,9 +19,9 @@ import { AuditTrailService } from '../../services/audit/AuditTrailService';
 @Controller('api/vr-training')
 @UseGuards(JwtAuthGuard)
 export class VRTrainingController {
-  constructor(
-    private readonly vrTrainingService: VirtualRealityTrainingService,
-    private readonly auditService: AuditService,
+  const ructor(
+    private readonlyvrTrainingService: VirtualRealityTrainingService,
+    private readonlyauditService: AuditService,
   ) {}
 
   /**
@@ -63,7 +63,7 @@ export class VRTrainingController {
         message: 'VR training session started successfully',
       };
     } catch (error) {
-      console.error('Error starting VR training session:', error);
+      console.error('Error starting VR trainingsession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -102,7 +102,7 @@ export class VRTrainingController {
         message: 'VR training session completed successfully',
       };
     } catch (error) {
-      console.error('Error completing VR training session:', error);
+      console.error('Error completing VR trainingsession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -140,7 +140,7 @@ export class VRTrainingController {
         message: 'Training data processed successfully',
       };
     } catch (error) {
-      console.error('Error processing training data:', error);
+      console.error('Error processing trainingdata:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -179,7 +179,7 @@ export class VRTrainingController {
         message: 'Custom VR scenario created successfully',
       };
     } catch (error) {
-      console.error('Error creating custom scenario:', error);
+      console.error('Error creating customscenario:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -217,7 +217,7 @@ export class VRTrainingController {
         message: 'VR training analytics retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting VR training analytics:', error);
+      console.error('Error getting VR traininganalytics:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -251,7 +251,7 @@ export class VRTrainingController {
         message: 'VR hardware status retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting VR hardware status:', error);
+      console.error('Error getting VR hardwarestatus:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -315,7 +315,7 @@ export class VRTrainingController {
         message: 'Available VR scenarios retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting available scenarios:', error);
+      console.error('Error getting availablescenarios:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -380,7 +380,7 @@ export class VRTrainingController {
         message: 'VR training session retrieved successfully',
       };
     } catch (error) {
-      console.error('Error getting training session:', error);
+      console.error('Error getting trainingsession:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

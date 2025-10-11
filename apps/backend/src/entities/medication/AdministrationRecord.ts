@@ -478,7 +478,7 @@ export class AdministrationRecord {
    * Generate administration report summary
    */
   generateAdministrationReport(): string {
-    constlines: string[] = [];
+    const lines: string[] = [];
     
     lines.push(`Medication: ${this.medication?.fullName}`);
     lines.push(`Resident: ${this.resident?.fullName}`);
@@ -494,7 +494,7 @@ export class AdministrationRecord {
     }
     
     if (this.timingVariance !== 0) {
-      lines.push(`Timing Variance: ${this.timingVariance} minutes`);
+      lines.push(`Timing variance: ${this.timingVariance} minutes`);
     }
     
     if (this.hasAdverseEffects) {

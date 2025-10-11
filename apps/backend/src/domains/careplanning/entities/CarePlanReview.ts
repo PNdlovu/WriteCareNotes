@@ -103,7 +103,7 @@ export class CarePlanReview {
   // BASIC INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'var char', unique: true })
   reviewNumber: string; // Format: CPR-YYYY-NNNNN
 
   @ManyToOne(() => Child)
@@ -150,7 +150,7 @@ export class CarePlanReview {
   @Column({ type: 'date', nullable: true })
   actualDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   venue: string;
 
   @Column({ type: 'text', nullable: true })
@@ -159,17 +159,17 @@ export class CarePlanReview {
   @Column({ type: 'boolean', default: false })
   virtualMeeting: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   meetingLink: string;
 
   // ========================================
   // IRO INFORMATION
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   independentReviewingOfficer: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   iroContactDetails: string;
 
   @Column({ type: 'boolean', default: false })
@@ -228,7 +228,7 @@ export class CarePlanReview {
   @Column({ type: 'boolean', default: false })
   advocateAttended: boolean;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   advocateName: string;
 
   // ========================================
@@ -274,7 +274,7 @@ export class CarePlanReview {
   })
   currentCarerAttendance: ParticipantAttendance;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   currentCarerName: string;
 
   @Column({ type: 'text', nullable: true })
@@ -290,7 +290,7 @@ export class CarePlanReview {
   // PROFESSIONAL ATTENDANCE
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   socialWorkerName: string;
 
   @Column({
@@ -442,7 +442,7 @@ export class CarePlanReview {
   @Column({ type: 'date', nullable: true })
   minutesCompletedDate: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   minutesCompletedBy: string;
 
   @Column({ type: 'boolean', default: false })
@@ -489,13 +489,13 @@ export class CarePlanReview {
   // AUDIT TRAIL
   // ========================================
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'var char' })
   createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'var char', nullable: true })
   updatedBy: string;
 
   @UpdateDateColumn()

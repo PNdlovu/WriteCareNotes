@@ -61,8 +61,8 @@ import { TenantGuard } from '../../guards/tenant.guard';
 @Controller('api/v1/consent')
 @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
 export class ConsentController {
-  constructor(
-    private readonly consentService: EnterpriseConsentManagementService
+  const ructor(
+    private readonlyconsentService: EnterpriseConsentManagementService
   ) {}
 
   @Post()

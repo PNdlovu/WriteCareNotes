@@ -61,29 +61,29 @@ export class StaffMember {
   id!: string;
 
   // Personal Information
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   firstName!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   lastName!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   preferredName?: string;
 
   @Column({ type: 'date' })
   dateOfBirth!: Date;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'var char', length: 20, nullable: true })
   gender?: string;
 
   // Contact Information
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'var char', length: 255, unique: true })
   email!: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   phone?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   mobilePhone?: string;
 
   @Column({ type: 'text', nullable: true })
@@ -99,10 +99,10 @@ export class StaffMember {
   @Column({ type: 'enum', enum: StaffRole })
   role!: StaffRole;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   department?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   employeeNumber?: string;
 
   @Column({ type: 'date' })
@@ -112,13 +112,13 @@ export class StaffMember {
   terminationDate?: Date;
 
   // Professional Information
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   professionalRegistration?: string;
 
   @Column({ type: 'date', nullable: true })
   registrationExpiry?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   dbsNumber?: string;
 
   @Column({ type: 'date', nullable: true })
@@ -157,10 +157,10 @@ export class StaffMember {
   userId?: string;
 
   // Metadata
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   createdBy?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   updatedBy?: string;
 
   @CreateDateColumn()
@@ -173,17 +173,17 @@ export class StaffMember {
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: Date;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   deletedBy?: string;
 
   // Additional Information
   @Column({ type: 'text', nullable: true })
   emergencyContactName?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   emergencyContactRelationship?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   emergencyContactPhone?: string;
 
   @Column({ type: 'jsonb', nullable: true })
@@ -290,7 +290,7 @@ export class StaffMember {
    * Validate before save
    */
   validate(): { valid: boolean; errors: string[] } {
-    consterrors: string[] = [];
+    const errors: string[] = [];
 
     if (!this.firstName || this.firstName.trim() === '') {
       errors.push('First name is required');

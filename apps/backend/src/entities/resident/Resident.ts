@@ -459,7 +459,7 @@ export class Resident {
     const remainder = sum % 11;
     const calculatedCheckDigit = 11 - remainder;
     
-    return calculatedCheckDigit === checkDigit || 
+    returncalculatedCheckDigit === checkDigit || 
            (calculatedCheckDigit === 11 && checkDigit === 0);
   }
 

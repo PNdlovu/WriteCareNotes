@@ -85,12 +85,12 @@ export class ChartOfAccounts extends BaseEntity {
   id!: string;
 
   // Account Identification
-  @Column({ type: 'varchar', length: 20, unique: true })
+  @Column({ type: 'var char', length: 20, unique: true })
   @IsString()
   @Length(1, 20)
   accountCode!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'var char', length: 255 })
   @IsString()
   @Length(1, 255)
   accountName!: string;
@@ -121,7 +121,7 @@ export class ChartOfAccounts extends BaseEntity {
   @Column({ type: 'integer', default: 0 })
   level!: number;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'var char', length: 500, nullable: true })
   path?: string;
 
   // Financial Information
@@ -162,15 +162,15 @@ export class ChartOfAccounts extends BaseEntity {
   isSystemAccount!: boolean;
 
   // Healthcare-Specific Fields
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   costCenter?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   department?: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'var char', length: 50, nullable: true })
   @IsString()
   regulatoryCategory?: string;
 
@@ -188,7 +188,7 @@ export class ChartOfAccounts extends BaseEntity {
   defaultVATRate?: Decimal;
 
   // Reporting Configuration
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'var char', length: 100, nullable: true })
   @IsString()
   reportingCategory?: string;
 
@@ -349,7 +349,7 @@ export class ChartOfAccounts extends BaseEntity {
    * Validate account code format
    */
   validateAccountCode(): boolean {
-    // Healthcare-specific account code format: XXXX-XX-XX
+    // Healthcare-specific account codeformat: XXXX-XX-XX
     const codePattern = /^\d{4}-\d{2}-\d{2}$/;
     return codePattern.test(this.accountCode);
   }

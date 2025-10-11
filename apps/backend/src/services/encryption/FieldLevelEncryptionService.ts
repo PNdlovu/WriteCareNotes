@@ -57,13 +57,13 @@ export interface EncryptionKey {
 
 export class FieldLevelEncryptionService {
   // Logger removed
-  private readonly algorithm = 'aes-256-gcm';
-  private readonly keyLength = 32; // 256 bits
-  private readonly ivLength = 16; // 128 bits
+  private readonlyalgorithm = 'aes-256-gcm';
+  private readonlykeyLength = 32; // 256 bits
+  private readonlyivLength = 16; // 128 bits
   privateencryptionKeys: Map<string, EncryptionKey> = new Map();
   privatecurrentKeyId: string;
 
-  constructor(private readonly configService: ConfigService) {
+  const ructor(private readonlyconfigService: ConfigService) {
     this.initializeEncryptionKeys();
     console.log('Field Level Encryption Service initialized with AES-256-GCM');
   }
@@ -88,7 +88,7 @@ export class FieldLevelEncryptionService {
       
       const authTag = cipher.getAuthTag();
 
-      constresult: EncryptionResult = {
+      const result: EncryptionResult = {
         encryptedData: encrypted,
         keyId: key.keyId,
         algorithm: this.algorithm,
@@ -123,13 +123,13 @@ export class FieldLevelEncryptionService {
         return encryptedValue;
       }
 
-      constdecryptionRequest: DecryptionRequest = JSON.parse(
+      const decryptionRequest: DecryptionRequest = JSON.parse(
         Buffer.from(encryptedValue, 'base64').toString('utf8')
       );
 
       const key = this.getEncryptionKey(decryptionRequest.keyId);
       if (!key) {
-        throw new Error(`Encryption key not found: ${decryptionRequest.keyId}`);
+        throw new Error(`Encryption key notfound: ${decryptionRequest.keyId}`);
       }
 
       const decipher = crypto.createDecipher(decryptionRequest.algorithm, key.key);
@@ -218,7 +218,7 @@ export class FieldLevelEncryptionService {
       const keyId = `key_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
       const key = crypto.randomBytes(this.keyLength);
       
-      constencryptionKey: EncryptionKey = {
+      const encryptionKey: EncryptionKey = {
         keyId,
         key,
         algorithm: this.algorithm,
@@ -328,7 +328,7 @@ export class FieldLevelEncryptionService {
       const keyId = `initial_${purpose}_${Date.now()}`;
       const key = crypto.scryptSync(masterKey, `salt_${purpose}`, this.keyLength);
       
-      constencryptionKey: EncryptionKey = {
+      const encryptionKey: EncryptionKey = {
         keyId,
         key,
         algorithm: this.algorithm,
@@ -360,12 +360,12 @@ export class FieldLevelEncryptionService {
       .find(k => k.purpose === purpose && k.isActive);
 
     if (!key) {
-      throw new Error(`No active encryption key found for purpose: ${purpose}`);
+      throw new Error(`No active encryption key found forpurpose: ${purpose}`);
     }
 
     // Check if key is expired
     if (key.expiresAt && key.expiresAt < new Date()) {
-      throw new Error(`Encryption key expired: ${key.keyId}`);
+      throw new Error(`Encryption keyexpired: ${key.keyId}`);
     }
 
     return key;

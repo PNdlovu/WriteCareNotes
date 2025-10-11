@@ -18,7 +18,7 @@ export class Payslip {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'var char', length: 50 })
   payslipNumber: string;
 
   @ManyToOne(() => PayrollRun, payrollRun => payrollRun.payslips)
@@ -35,16 +35,16 @@ export class Payslip {
   @Column({ type: 'uuid' })
   staffMemberId: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'var char', length: 100 })
   employeeName: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   employeeNumber: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   nationalInsuranceNumber: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'var char', length: 20 })
   taxCode: string;
 
   @Column({ type: 'date' })

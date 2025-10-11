@@ -65,7 +65,7 @@ router.use(authMiddleware);
 router.use(complianceMiddleware);
 router.use(auditMiddleware);
 
-// ==================== CARE PLAN ROUTES ====================
+// ==================== CARE PLANROUTES ====================
 
 /**
  * @swagger
@@ -578,7 +578,7 @@ router.post('/generate',
   controller.generateCarePlan.bind(controller)
 );
 
-// ==================== CARE DOMAIN ROUTES ====================
+// ==================== CARE DOMAINROUTES ====================
 
 /**
  * @swagger

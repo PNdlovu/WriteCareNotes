@@ -141,7 +141,7 @@ router.get('/',
       });
 
     } catch (error: any) {
-      logger.error('Error retrieving organizations:', error);
+      logger.error('Error retrievingorganizations:', error);
       return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to retrieve organizations' 
@@ -245,7 +245,7 @@ router.post('/',
       });
 
     } catch (error: any) {
-      logger.error('Error creating organization:', error);
+      logger.error('Error creatingorganization:', error);
       return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to create organization' 
@@ -339,7 +339,7 @@ router.get('/:id',
       });
 
     } catch (error: any) {
-      logger.error('Error retrieving organization:', error);
+      logger.error('Error retrievingorganization:', error);
       return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to retrieve organization' 
@@ -428,7 +428,7 @@ router.put('/:id',
       });
 
     } catch (error: any) {
-      logger.error('Error updating organization:', error);
+      logger.error('Error updatingorganization:', error);
       return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to update organization' 
@@ -503,7 +503,7 @@ router.delete('/:id',
         }
       });
     } catch (error: any) {
-      logger.error('Error archiving organization:', error);
+      logger.error('Error archivingorganization:', error);
       return res.status(500).json({ 
         error: 'Internal server error', 
         message: 'Failed to archive organization' 

@@ -8,9 +8,9 @@ import { BedRoom } from '../../../entities/enhanced-bed-room/BedRoom';
 import { RoomOccupancy } from '../../../entities/enhanced-bed-room/RoomOccupancy';
 
 describe('EnhancedBedRoomService', () => {
-  letservice: EnhancedBedRoomService;
-  letbedRoomRepository: Repository<BedRoom>;
-  letroomOccupancyRepository: Repository<RoomOccupancy>;
+  let service: EnhancedBedRoomService;
+  let bedRoomRepository: Repository<BedRoom>;
+  let roomOccupancyRepository: Repository<RoomOccupancy>;
 
   const mockBedRoomRepository = {
     find: jest.fn(),
@@ -31,7 +31,7 @@ describe('EnhancedBedRoomService', () => {
   };
 
   beforeEach(async () => {
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         EnhancedBedRoomService,
         {

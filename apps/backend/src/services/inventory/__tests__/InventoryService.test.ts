@@ -49,12 +49,12 @@ import {
 } from '@/errors/InventoryErrors';
 
 describe('InventoryService', () => {
-  letservice: InventoryService;
-  letrepository: jest.Mocked<InventoryRepository>;
-  letauditService: jest.Mocked<AuditService>;
-  letencryptionService: jest.Mocked<EncryptionService>;
-  letnotificationService: jest.Mocked<NotificationService>;
-  letcacheService: jest.Mocked<CacheService>;
+  let service: InventoryService;
+  let repository: jest.Mocked<InventoryRepository>;
+  let auditService: jest.Mocked<AuditService>;
+  let encryptionService: jest.Mocked<EncryptionService>;
+  let notificationService: jest.Mocked<NotificationService>;
+  let cacheService: jest.Mocked<CacheService>;
 
   const mockCareHomeId = uuidv4();
   const mockUserId = uuidv4();
@@ -107,7 +107,7 @@ describe('InventoryService', () => {
       clear: jest.fn()
     };
 
-    constmodule: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         InventoryService,
         { provide: InventoryRepository, useValue: mockRepository },
@@ -131,7 +131,7 @@ describe('InventoryService', () => {
   });
 
   describe('createInventoryItem', () => {
-    constvalidInventoryItemRequest: CreateInventoryItemRequest = {
+    const validInventoryItemRequest: CreateInventoryItemRequest = {
       itemCode: 'MED-001',
       itemName: 'Paracetamol 500mg',
       description: 'Pain relief medication',
@@ -158,7 +158,7 @@ describe('InventoryService', () => {
       createdBy: mockUserId
     };
 
-    constmockInventoryItem: InventoryItem = {
+    const mockInventoryItem: InventoryItem = {
       id: uuidv4(),
       itemCode: 'MED-001',
       itemName: 'Paracetamol 500mg',
@@ -321,7 +321,7 @@ describe('InventoryService', () => {
     const mockSupplierId = uuidv4();
     const mockInventoryItemId = uuidv4();
 
-    constvalidPurchaseOrderRequest: CreatePurchaseOrderRequest = {
+    const validPurchaseOrderRequest: CreatePurchaseOrderRequest = {
       supplierId: mockSupplierId,
       careHomeId: mockCareHomeId,
       orderItems: [
@@ -338,7 +338,7 @@ describe('InventoryService', () => {
       createdBy: mockUserId
     };
 
-    constmockSupplier: Supplier = {
+    const mockSupplier: Supplier = {
       id: mockSupplierId,
       supplierName: 'MedSupply Ltd',
       supplierType: 'distributor',
@@ -377,7 +377,7 @@ describe('InventoryService', () => {
       updatedBy: mockUserId
     };
 
-    constmockPurchaseOrder: PurchaseOrder = {
+    const mockPurchaseOrder: PurchaseOrder = {
       id: uuidv4(),
       orderNumber: 'PO-2025-000001',
       supplierId: mockSupplierId,
@@ -511,7 +511,7 @@ describe('InventoryService', () => {
   describe('recordStockMovement', () => {
     const mockInventoryItemId = uuidv4();
 
-    constvalidStockMovementRequest: StockMovementRequest = {
+    const validStockMovementRequest: StockMovementRequest = {
       inventoryItemId: mockInventoryItemId,
       movementType: 'usage',
       quantity: 10,
@@ -522,7 +522,7 @@ describe('InventoryService', () => {
       performedBy: mockUserId
     };
 
-    constmockStockMovement: StockMovement = {
+    const mockStockMovement: StockMovement = {
       id: uuidv4(),
       inventoryItemId: mockInventoryItemId,
       movementType: 'usage',
@@ -609,7 +609,7 @@ describe('InventoryService', () => {
   });
 
   describe('createSupplier', () => {
-    constvalidSupplierRequest: CreateSupplierRequest = {
+    const validSupplierRequest: CreateSupplierRequest = {
       supplierName: 'MedSupply Ltd',
       supplierType: 'distributor',
       registrationNumber: 'REG123456',
@@ -636,7 +636,7 @@ describe('InventoryService', () => {
       createdBy: mockUserId
     };
 
-    constmockSupplier: Supplier = {
+    const mockSupplier: Supplier = {
       id: uuidv4(),
       ...validSupplierRequest,
       alternativeContacts: [],
@@ -690,7 +690,7 @@ describe('InventoryService', () => {
   });
 
   describe('getInventoryMetrics', () => {
-    constvalidMetricsRequest: InventoryMetricsRequest = {
+    const validMetricsRequest: InventoryMetricsRequest = {
       careHomeId: mockCareHomeId,
       period: 'current_month',
       includeStockMetrics: true,
@@ -700,7 +700,7 @@ describe('InventoryService', () => {
       includeCostMetrics: true
     };
 
-    constmockMetrics: InventoryMetrics = {
+    const mockMetrics: InventoryMetrics = {
       careHomeId: mockCareHomeId,
       period: 'current_month',
       generatedAt: new Date(),
@@ -802,7 +802,7 @@ describe('InventoryService', () => {
       const dbError = new Error('Database connection failed');
       repository.createInventoryItem.mockRejectedValue(dbError);
 
-      constvalidRequest: CreateInventoryItemRequest = {
+      const validRequest: CreateInventoryItemRequest = {
         itemCode: 'TEST-001',
         itemName: 'Test Item',
         category: 'Test',
@@ -822,7 +822,7 @@ describe('InventoryService', () => {
       const encryptionError = new Error('Encryption failed');
       encryptionService.encrypt.mockRejectedValue(encryptionError);
 
-      constvalidSupplierRequest: CreateSupplierRequest = {
+      const validSupplierRequest: CreateSupplierRequest = {
         supplierName: 'Test Supplier',
         supplierType: 'distributor',
         primaryContact: {
@@ -854,7 +854,7 @@ describe('InventoryService', () => {
 
   describe('Compliance Validation', () => {
     it('should enforce MHRA license requirement for medical devices', async () => {
-      constmedicalDeviceRequest: CreateInventoryItemRequest = {
+      const medicalDeviceRequest: CreateInventoryItemRequest = {
         itemCode: 'MD-001',
         itemName: 'Blood Pressure Monitor',
         category: 'Medical Devices',
@@ -875,7 +875,7 @@ describe('InventoryService', () => {
     });
 
     it('should enforce controlled substance license requirement', async () => {
-      constcontrolledSubstanceRequest: CreateInventoryItemRequest = {
+      const controlledSubstanceRequest: CreateInventoryItemRequest = {
         itemCode: 'CS-001',
         itemName: 'Morphine 10mg',
         category: 'Controlled Substances',
@@ -896,7 +896,7 @@ describe('InventoryService', () => {
     });
 
     it('should enforce hazardous handling instructions requirement', async () => {
-      consthazardousRequest: CreateInventoryItemRequest = {
+      const hazardousRequest: CreateInventoryItemRequest = {
         itemCode: 'HAZ-001',
         itemName: 'Cleaning Chemical',
         category: 'Cleaning Supplies',
@@ -926,7 +926,7 @@ describe('InventoryService', () => {
         autoReorder: true
       };
 
-      conststockMovementRequest: StockMovementRequest = {
+      const stockMovementRequest: StockMovementRequest = {
         inventoryItemId: lowStockItem.id,
         movementType: 'usage',
         quantity: 60,
@@ -955,7 +955,7 @@ describe('InventoryService', () => {
         autoReorder: true
       };
 
-      conststockMovementRequest: StockMovementRequest = {
+      const stockMovementRequest: StockMovementRequest = {
         inventoryItemId: lowStockItem.id,
         movementType: 'usage',
         quantity: 60,

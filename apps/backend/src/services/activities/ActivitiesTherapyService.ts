@@ -136,16 +136,16 @@ export interface ActivityPlanningResult {
 
 @Injectable()
 export class ActivitiesTherapyService {
-  private readonly logger = new Logger(ActivitiesTherapyService.name);
+  private readonlylogger = new Logger(ActivitiesTherapyService.name);
 
-  constructor(
+  const ructor(
     @InjectRepository(Activity)
-    private readonly activityRepository: Repository<Activity>,
+    private readonlyactivityRepository: Repository<Activity>,
     @InjectRepository(TherapySession)
-    private readonly therapySessionRepository: Repository<TherapySession>,
-    private readonly eventEmitter: EventEmitter2,
-    private readonly auditService: AuditService,
-    private readonly notificationService: NotificationService,
+    private readonlytherapySessionRepository: Repository<TherapySession>,
+    private readonlyeventEmitter: EventEmitter2,
+    private readonlyauditService: AuditService,
+    private readonlynotificationService: NotificationService,
   ) {}
 
   // Activity Management
@@ -174,7 +174,7 @@ export class ActivitiesTherapyService {
 
       // Send notification to facilitator
       await this.notificationService.sendNotification({
-        message: `New activity scheduled: ${savedActivity.activityName}`,
+        message: `New activityscheduled: ${savedActivity.activityName}`,
         type: 'activity_scheduled',
         recipients: [savedActivity.facilitator],
         subject: 'Activity Scheduled',
@@ -198,8 +198,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Activity created: ${savedActivity.activityName} (${savedActivity.id})`);
       return savedActivity;
     } catch (error) {
-      this.logger.error(`Failed to create activity: ${error.message}`, error.stack);
-      throw new Error(`Failed to create activity: ${error.message}`);
+      this.logger.error(`Failed to createactivity: ${error.message}`, error.stack);
+      throw new Error(`Failed to createactivity: ${error.message}`);
     }
   }
 
@@ -212,8 +212,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Retrieved ${activities.length} activities`);
       return activities;
     } catch (error) {
-      this.logger.error(`Failed to get activities: ${error.message}`, error.stack);
-      throw new Error(`Failed to get activities: ${error.message}`);
+      this.logger.error(`Failed to getactivities: ${error.message}`, error.stack);
+      throw new Error(`Failed to getactivities: ${error.message}`);
     }
   }
 
@@ -230,7 +230,7 @@ export class ActivitiesTherapyService {
       return activity;
     } catch (error) {
       this.logger.error(`Failed to get activity ${activityId}: ${error.message}`, error.stack);
-      throw new Error(`Failed to get activity: ${error.message}`);
+      throw new Error(`Failed to getactivity: ${error.message}`);
     }
   }
 
@@ -306,8 +306,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Found ${activities.length} activities matching search criteria`);
       return activities;
     } catch (error) {
-      this.logger.error(`Failed to search activities: ${error.message}`, error.stack);
-      throw new Error(`Failed to search activities: ${error.message}`);
+      this.logger.error(`Failed to searchactivities: ${error.message}`, error.stack);
+      throw new Error(`Failed to searchactivities: ${error.message}`);
     }
   }
 
@@ -365,8 +365,8 @@ export class ActivitiesTherapyService {
 
       this.logger.log(`Activity started: ${activity.activityName} (${activityId})`);
     } catch (error) {
-      this.logger.error(`Failed to start activity: ${error.message}`, error.stack);
-      throw new Error(`Failed to start activity: ${error.message}`);
+      this.logger.error(`Failed to startactivity: ${error.message}`, error.stack);
+      throw new Error(`Failed to startactivity: ${error.message}`);
     }
   }
 
@@ -413,8 +413,8 @@ export class ActivitiesTherapyService {
 
       this.logger.log(`Activity completed: ${activity.activityName} (${activityId})`);
     } catch (error) {
-      this.logger.error(`Failed to complete activity: ${error.message}`, error.stack);
-      throw new Error(`Failed to complete activity: ${error.message}`);
+      this.logger.error(`Failed to completeactivity: ${error.message}`, error.stack);
+      throw new Error(`Failed to completeactivity: ${error.message}`);
     }
   }
 
@@ -469,8 +469,8 @@ export class ActivitiesTherapyService {
 
       this.logger.log(`Activity cancelled: ${activity.activityName} (${activityId}) - Reason: ${reason}`);
     } catch (error) {
-      this.logger.error(`Failed to cancel activity: ${error.message}`, error.stack);
-      throw new Error(`Failed to cancel activity: ${error.message}`);
+      this.logger.error(`Failed to cancelactivity: ${error.message}`, error.stack);
+      throw new Error(`Failed to cancelactivity: ${error.message}`);
     }
   }
 
@@ -504,11 +504,11 @@ export class ActivitiesTherapyService {
           userId: 'system',
         });
 
-        this.logger.log(`Participant added to activity: ${residentId} -> ${activity.activityName}`);
+        this.logger.log(`Participant added toactivity: ${residentId} -> ${activity.activityName}`);
       }
     } catch (error) {
-      this.logger.error(`Failed to add participant: ${error.message}`, error.stack);
-      throw new Error(`Failed to add participant: ${error.message}`);
+      this.logger.error(`Failed to addparticipant: ${error.message}`, error.stack);
+      throw new Error(`Failed to addparticipant: ${error.message}`);
     }
   }
 
@@ -538,11 +538,11 @@ export class ActivitiesTherapyService {
           userId: 'system',
         });
 
-        this.logger.log(`Participant removed from activity: ${residentId} <- ${activity.activityName}`);
+        this.logger.log(`Participant removed fromactivity: ${residentId} <- ${activity.activityName}`);
       }
     } catch (error) {
-      this.logger.error(`Failed to remove participant: ${error.message}`, error.stack);
-      throw new Error(`Failed to remove participant: ${error.message}`);
+      this.logger.error(`Failed to removeparticipant: ${error.message}`, error.stack);
+      throw new Error(`Failed to removeparticipant: ${error.message}`);
     }
   }
 
@@ -577,8 +577,8 @@ export class ActivitiesTherapyService {
 
       this.logger.log(`Participation outcome recorded for activity ${activityId}, participant ${outcome.participantId}`);
     } catch (error) {
-      this.logger.error(`Failed to record participation outcome: ${error.message}`, error.stack);
-      throw new Error(`Failed to record participation outcome: ${error.message}`);
+      this.logger.error(`Failed to record participationoutcome: ${error.message}`, error.stack);
+      throw new Error(`Failed to record participationoutcome: ${error.message}`);
     }
   }
 
@@ -616,11 +616,11 @@ export class ActivitiesTherapyService {
         cognitiveActivities,
       };
 
-      this.logger.log(`Generated therapy analytics: ${totalActivities} total activities, ${activitiesThisWeek} this week`);
+      this.logger.log(`Generated therapyanalytics: ${totalActivities} total activities, ${activitiesThisWeek} this week`);
       return analytics;
     } catch (error) {
-      this.logger.error(`Failed to get therapy analytics: ${error.message}`, error.stack);
-      throw new Error(`Failed to get therapy analytics: ${error.message}`);
+      this.logger.error(`Failed to get therapyanalytics: ${error.message}`, error.stack);
+      throw new Error(`Failed to get therapyanalytics: ${error.message}`);
     }
   }
 
@@ -684,15 +684,15 @@ export class ActivitiesTherapyService {
       this.logger.log(`Generated activity profile for resident ${residentId}: ${totalActivities} activities participated`);
       return profile;
     } catch (error) {
-      this.logger.error(`Failed to get resident activity profile: ${error.message}`, error.stack);
-      throw new Error(`Failed to get resident activity profile: ${error.message}`);
+      this.logger.error(`Failed to get resident activityprofile: ${error.message}`, error.stack);
+      throw new Error(`Failed to get resident activityprofile: ${error.message}`);
     }
   }
 
   // Activity Planning
   async planActivitiesForWeek(startDate: Date): Promise<ActivityPlanningResult[]> {
     try {
-      constweekResults: ActivityPlanningResult[] = [];
+      const weekResults: ActivityPlanningResult[] = [];
       
       for (let i = 0; i < 7; i++) {
         const date = new Date(startDate);
@@ -705,8 +705,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Generated weekly activity plan starting from ${startDate.toISOString().split('T')[0]}`);
       return weekResults;
     } catch (error) {
-      this.logger.error(`Failed to plan activities for week: ${error.message}`, error.stack);
-      throw new Error(`Failed to plan activities for week: ${error.message}`);
+      this.logger.error(`Failed to plan activities forweek: ${error.message}`, error.stack);
+      throw new Error(`Failed to plan activities forweek: ${error.message}`);
     }
   }
 
@@ -734,8 +734,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Checked resource availability for ${date.toISOString().split('T')[0]} at ${timeSlot}`);
       return availability;
     } catch (error) {
-      this.logger.error(`Failed to check resource availability: ${error.message}`, error.stack);
-      throw new Error(`Failed to check resource availability: ${error.message}`);
+      this.logger.error(`Failed to check resourceavailability: ${error.message}`, error.stack);
+      throw new Error(`Failed to check resourceavailability: ${error.message}`);
     }
   }
 
@@ -766,7 +766,7 @@ export class ActivitiesTherapyService {
 
       // Send notification to therapist
       await this.notificationService.sendNotification({
-        message: `New therapy session scheduled: ${savedSession.therapyType}`,
+        message: `New therapy sessionscheduled: ${savedSession.therapyType}`,
         type: 'therapy_session_scheduled',
         recipients: [savedSession.therapistId],
         subject: 'Therapy Session Scheduled',
@@ -781,11 +781,11 @@ export class ActivitiesTherapyService {
         },
       });
 
-      this.logger.log(`Therapy session created: ${savedSession.therapyType} for resident ${savedSession.residentId}`);
+      this.logger.log(`Therapy sessioncreated: ${savedSession.therapyType} for resident ${savedSession.residentId}`);
       return savedSession;
     } catch (error) {
-      this.logger.error(`Failed to create therapy session: ${error.message}`, error.stack);
-      throw new Error(`Failed to create therapy session: ${error.message}`);
+      this.logger.error(`Failed to create therapysession: ${error.message}`, error.stack);
+      throw new Error(`Failed to create therapysession: ${error.message}`);
     }
   }
 
@@ -799,8 +799,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Retrieved ${sessions.length} therapy sessions for resident ${residentId}`);
       return sessions;
     } catch (error) {
-      this.logger.error(`Failed to get therapy sessions for resident: ${error.message}`, error.stack);
-      throw new Error(`Failed to get therapy sessions for resident: ${error.message}`);
+      this.logger.error(`Failed to get therapy sessions forresident: ${error.message}`, error.stack);
+      throw new Error(`Failed to get therapy sessions forresident: ${error.message}`);
     }
   }
 
@@ -814,8 +814,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Retrieved ${sessions.length} therapy sessions for therapist ${therapistId}`);
       return sessions;
     } catch (error) {
-      this.logger.error(`Failed to get therapy sessions for therapist: ${error.message}`, error.stack);
-      throw new Error(`Failed to get therapy sessions for therapist: ${error.message}`);
+      this.logger.error(`Failed to get therapy sessions fortherapist: ${error.message}`, error.stack);
+      throw new Error(`Failed to get therapy sessions fortherapist: ${error.message}`);
     }
   }
 
@@ -826,13 +826,13 @@ export class ActivitiesTherapyService {
       });
 
       if (session) {
-        this.logger.log(`Retrieved therapy session: ${session.therapyType} (${sessionId})`);
+        this.logger.log(`Retrieved therapysession: ${session.therapyType} (${sessionId})`);
       }
 
       return session;
     } catch (error) {
-      this.logger.error(`Failed to get therapy session: ${error.message}`, error.stack);
-      throw new Error(`Failed to get therapy session: ${error.message}`);
+      this.logger.error(`Failed to get therapysession: ${error.message}`, error.stack);
+      throw new Error(`Failed to get therapysession: ${error.message}`);
     }
   }
 
@@ -864,10 +864,10 @@ export class ActivitiesTherapyService {
         userId: 'system',
       });
 
-      this.logger.log(`Therapy session started: ${session.therapyType} (${sessionId})`);
+      this.logger.log(`Therapy sessionstarted: ${session.therapyType} (${sessionId})`);
     } catch (error) {
-      this.logger.error(`Failed to start therapy session: ${error.message}`, error.stack);
-      throw new Error(`Failed to start therapy session: ${error.message}`);
+      this.logger.error(`Failed to start therapysession: ${error.message}`, error.stack);
+      throw new Error(`Failed to start therapysession: ${error.message}`);
     }
   }
 
@@ -907,10 +907,10 @@ export class ActivitiesTherapyService {
         userId: 'system',
       });
 
-      this.logger.log(`Therapy session completed: ${session.therapyType} (${sessionId})`);
+      this.logger.log(`Therapy sessioncompleted: ${session.therapyType} (${sessionId})`);
     } catch (error) {
-      this.logger.error(`Failed to complete therapy session: ${error.message}`, error.stack);
-      throw new Error(`Failed to complete therapy session: ${error.message}`);
+      this.logger.error(`Failed to complete therapysession: ${error.message}`, error.stack);
+      throw new Error(`Failed to complete therapysession: ${error.message}`);
     }
   }
 
@@ -938,10 +938,10 @@ export class ActivitiesTherapyService {
         userId: 'system',
       });
 
-      this.logger.log(`Therapy session cancelled: ${session.therapyType} (${sessionId}) - Reason: ${reason}`);
+      this.logger.log(`Therapy sessioncancelled: ${session.therapyType} (${sessionId}) - Reason: ${reason}`);
     } catch (error) {
-      this.logger.error(`Failed to cancel therapy session: ${error.message}`, error.stack);
-      throw new Error(`Failed to cancel therapy session: ${error.message}`);
+      this.logger.error(`Failed to cancel therapysession: ${error.message}`, error.stack);
+      throw new Error(`Failed to cancel therapysession: ${error.message}`);
     }
   }
 
@@ -982,10 +982,10 @@ export class ActivitiesTherapyService {
         userId: 'system',
       });
 
-      this.logger.log(`Therapy goal progress updated: ${goalId} in session ${sessionId}`);
+      this.logger.log(`Therapy goal progressupdated: ${goalId} in session ${sessionId}`);
     } catch (error) {
-      this.logger.error(`Failed to update therapy goal progress: ${error.message}`, error.stack);
-      throw new Error(`Failed to update therapy goal progress: ${error.message}`);
+      this.logger.error(`Failed to update therapy goalprogress: ${error.message}`, error.stack);
+      throw new Error(`Failed to update therapy goalprogress: ${error.message}`);
     }
   }
 
@@ -997,7 +997,7 @@ export class ActivitiesTherapyService {
       }
 
       // Add incident to session notes
-      const incidentNote = `SAFETY INCIDENT: ${incident.description} - Severity: ${incident.severity} - Action taken: ${incident.actionTaken}`;
+      const incidentNote = `SAFETYINCIDENT: ${incident.description} - Severity: ${incident.severity} - Actiontaken: ${incident.actionTaken}`;
       session.sessionNotes = session.sessionNotes ? `${session.sessionNotes}\n\n${incidentNote}` : incidentNote;
 
       await this.therapySessionRepository.save(session);
@@ -1030,8 +1030,8 @@ export class ActivitiesTherapyService {
 
       this.logger.warn(`Safety incident recorded for therapy session ${sessionId}: ${incident.severity} - ${incident.description}`);
     } catch (error) {
-      this.logger.error(`Failed to record safety incident: ${error.message}`, error.stack);
-      throw new Error(`Failed to record safety incident: ${error.message}`);
+      this.logger.error(`Failed to record safetyincident: ${error.message}`, error.stack);
+      throw new Error(`Failed to record safetyincident: ${error.message}`);
     }
   }
 
@@ -1059,8 +1059,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Generated therapy progress report for resident ${residentId}: ${completedSessions.length} completed sessions`);
       return report;
     } catch (error) {
-      this.logger.error(`Failed to get therapy progress report: ${error.message}`, error.stack);
-      throw new Error(`Failed to get therapy progress report: ${error.message}`);
+      this.logger.error(`Failed to get therapy progressreport: ${error.message}`, error.stack);
+      throw new Error(`Failed to get therapy progressreport: ${error.message}`);
     }
   }
 
@@ -1087,8 +1087,8 @@ export class ActivitiesTherapyService {
       this.logger.log(`Generated workload report for therapist ${therapistId}: ${sessions.length} sessions`);
       return workload;
     } catch (error) {
-      this.logger.error(`Failed to get therapist workload: ${error.message}`, error.stack);
-      throw new Error(`Failed to get therapist workload: ${error.message}`);
+      this.logger.error(`Failed to get therapistworkload: ${error.message}`, error.stack);
+      throw new Error(`Failed to get therapistworkload: ${error.message}`);
     }
   }
 
@@ -1106,7 +1106,7 @@ export class ActivitiesTherapyService {
 
   private calculateTherapeuticProgress(residentId: string, activities: Activity[]): { [goal: string]: number } {
     const therapeuticActivities = activities.filter(activity => activity.isTherapeutic());
-    constprogress: { [goal: string]: number } = {};
+    const progress: { [goal: string]: number } = {};
 
     for (const activity of therapeuticActivities) {
       for (const goal of activity.therapeuticGoals.primary) {
@@ -1169,7 +1169,7 @@ export class ActivitiesTherapyService {
 
   private checkResourceConflicts(activities: Activity[]): string[] {
     const conflicts = [];
-    constresourceUsage: { [resource: string]: Activity[] } = {};
+    const resourceUsage: { [resource: string]: Activity[] } = {};
 
     // Group activities by resource usage
     for (const activity of activities) {
@@ -1200,7 +1200,7 @@ export class ActivitiesTherapyService {
   }
 
   private calculateStaffingRequirements(activities: Activity[]): { [timeSlot: string]: number } {
-    constrequirements: { [timeSlot: string]: number } = {};
+    const requirements: { [timeSlot: string]: number } = {};
     
     for (const activity of activities) {
       const timeSlot = `${activity.scheduledStartTime.getHours()}:00`;
@@ -1365,5 +1365,5 @@ export class ActivitiesTherapyService {
   }
 }
 
-// Export types and entities
+// export type s and entities
 export { TherapySession };

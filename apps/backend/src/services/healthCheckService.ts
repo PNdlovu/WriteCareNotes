@@ -57,8 +57,8 @@ export interface SystemHealthStatus {
 }
 
 export class HealthCheckService {
-  private static db: Sequelize;
-  private static redis: Redis;
+  private staticdb: Sequelize;
+  private staticredis: Redis;
 
   /**
    * Initialize database and Redis connections
@@ -81,7 +81,7 @@ export class HealthCheckService {
       
       console.log('Health check service initialized with database and Redis connections');
     } catch (error: unknown) {
-      console.error('Failed to initialize health check service:', error);
+      console.error('Failed to initialize health checkservice:', error);
       throw error;
     }
   }
@@ -287,7 +287,7 @@ export class HealthCheckService {
    */
   private static parseRedisInfo(info: string): any {
     const lines = info.split('\r\n');
-    constresult: any = {};
+    const result: any = {};
     
     for (const line of lines) {
       if (line.includes(':')) {
@@ -328,7 +328,7 @@ export class HealthCheckService {
     const unhealthyServices = services.filter(s => s.status === 'unhealthy');
     const degradedServices = services.filter(s => s.status === 'degraded');
     
-    letoverall: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
+    let overall: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
     if (unhealthyServices.length > 0) {
       overall = 'unhealthy';
     } else if (degradedServices.length > 0) {

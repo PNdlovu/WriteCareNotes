@@ -174,14 +174,14 @@ export interface DSPTAction {
 export class DSPTComplianceService {
   // Logger removed
 
-  constructor(
+  const ructor(
     
-    private readonly assessmentRepository: Repository<DSPTAssessmentResult>,
+    private readonlyassessmentRepository: Repository<DSPTAssessmentResult>,
     
-    private readonly evidenceRepository: Repository<DSPTEvidenceItem>,
+    private readonlyevidenceRepository: Repository<DSPTEvidenceItem>,
     
-    private readonly actionPlanRepository: Repository<DSPTActionPlan>,
-    private readonly eventEmitter: EventEmitter2
+    private readonlyactionPlanRepository: Repository<DSPTActionPlan>,
+    private readonlyeventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -192,13 +192,13 @@ export class DSPTComplianceService {
     assessedBy: string
   ): Promise<DSPTAssessmentResult> {
     try {
-      console.log(`Starting DSPT assessment for organization: ${organizationId}`);
+      console.log(`Starting DSPT assessment fororganization: ${organizationId}`);
 
       // Get current DSPT standards
       const standards = await this.getDSPTStandards();
 
       // Assess each standard
-      conststandardResults: DSPTStandardAssessment[] = [];
+      const standardResults: DSPTStandardAssessment[] = [];
       let totalScore = 0;
 
       for (const standard of standards) {
@@ -222,7 +222,7 @@ export class DSPTComplianceService {
       // Generate action plan
       const actionPlan = await this.generateActionPlan(standardResults, organizationId);
 
-      constassessment: DSPTAssessmentResult = {
+      const assessment: DSPTAssessmentResult = {
         id: this.generateAssessmentId(),
         organizationId,
         assessmentDate: new Date(),
@@ -247,12 +247,12 @@ export class DSPTComplianceService {
         assertion: overallAssertion
       });
 
-      console.log(`DSPT assessment completed: ${savedAssessment.id} (Score: ${overallScore}%)`);
+      console.log(`DSPT assessmentcompleted: ${savedAssessment.id} (Score: ${overallScore}%)`);
       return savedAssessment;
 
     } catch (error: unknown) {
-      console.error(`DSPT assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
-      throw new Error(`DSPT assessment failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`DSPT assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new Error(`DSPT assessmentfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -274,7 +274,7 @@ export class DSPTComplianceService {
             requirement: 'Senior leadership accountability for data security',
             guidance: 'Board-level responsibility for data security decisions',
             evidenceRequired: ['Board minutes', 'Policy documents', 'Role descriptions'],
-            assessmentQuestions: ['Is there clear board-level accountability?'],
+            assessmentQuestions: ['Is there clear board-levelaccountability?'],
             complianceIndicators: ['Named board member responsible', 'Regular board reporting']
           }
         ],
@@ -294,7 +294,7 @@ export class DSPTComplianceService {
             requirement: 'All staff understand their data security responsibilities',
             guidance: 'Clear communication of roles and responsibilities',
             evidenceRequired: ['Job descriptions', 'Training records', 'Policies'],
-            assessmentQuestions: ['Do all staff understand their responsibilities?'],
+            assessmentQuestions: ['Do all staff understand theirresponsibilities?'],
             complianceIndicators: ['Updated job descriptions', 'Training completion records']
           }
         ],
@@ -334,7 +334,7 @@ export class DSPTComplianceService {
             requirement: 'Technical security measures are implemented and maintained',
             guidance: 'Comprehensive technical controls including encryption, access controls',
             evidenceRequired: ['Security configurations', 'Encryption evidence', 'Access logs'],
-            assessmentQuestions: ['Are technical controls appropriate and effective?'],
+            assessmentQuestions: ['Are technical controls appropriate andeffective?'],
             complianceIndicators: ['Encryption in use', 'Access controls implemented', 'Regular security updates']
           }
         ],
@@ -354,7 +354,7 @@ export class DSPTComplianceService {
             requirement: 'Systems are configured securely and maintained',
             guidance: 'Hardened configurations with regular security updates',
             evidenceRequired: ['Configuration baselines', 'Change management records', 'Vulnerability scans'],
-            assessmentQuestions: ['Are systems configured securely?'],
+            assessmentQuestions: ['Are systems configuredsecurely?'],
             complianceIndicators: ['Security baselines', 'Regular patching', 'Vulnerability management']
           }
         ],
@@ -374,7 +374,7 @@ export class DSPTComplianceService {
             requirement: 'Network security controls are implemented',
             guidance: 'Firewalls, intrusion detection, network segmentation',
             evidenceRequired: ['Network diagrams', 'Firewall rules', 'IDS logs'],
-            assessmentQuestions: ['Are network controls effective?'],
+            assessmentQuestions: ['Are network controlseffective?'],
             complianceIndicators: ['Firewall implementation', 'Network monitoring', 'Incident detection']
           }
         ],
@@ -394,7 +394,7 @@ export class DSPTComplianceService {
             requirement: 'Physical security controls for data centres',
             guidance: 'Access controls, environmental monitoring, security systems',
             evidenceRequired: ['Access logs', 'Security certificates', 'Environmental monitoring'],
-            assessmentQuestions: ['Are physical controls adequate?'],
+            assessmentQuestions: ['Are physical controlsadequate?'],
             complianceIndicators: ['Access control systems', 'Environmental monitoring', 'Security certifications']
           }
         ],
@@ -414,7 +414,7 @@ export class DSPTComplianceService {
             requirement: 'Secure disposal procedures for equipment',
             guidance: 'Data destruction, disposal certificates, audit trails',
             evidenceRequired: ['Disposal procedures', 'Destruction certificates', 'Disposal logs'],
-            assessmentQuestions: ['Are disposal procedures secure?'],
+            assessmentQuestions: ['Are disposal proceduressecure?'],
             complianceIndicators: ['Documented procedures', 'Destruction certificates', 'Audit trails']
           }
         ],
@@ -434,7 +434,7 @@ export class DSPTComplianceService {
             requirement: 'Effective incident management procedures',
             guidance: 'Detection, response, recovery, and learning from incidents',
             evidenceRequired: ['Incident procedures', 'Incident logs', 'Response evidence'],
-            assessmentQuestions: ['Are incident procedures effective?'],
+            assessmentQuestions: ['Are incident procedureseffective?'],
             complianceIndicators: ['Documented procedures', 'Incident response times', 'Learning outcomes']
           }
         ],
@@ -454,7 +454,7 @@ export class DSPTComplianceService {
             requirement: 'Business continuity and disaster recovery plans',
             guidance: 'Comprehensive plans with regular testing',
             evidenceRequired: ['BCP documents', 'DR plans', 'Test results'],
-            assessmentQuestions: ['Are continuity plans adequate and tested?'],
+            assessmentQuestions: ['Are continuity plans adequate andtested?'],
             complianceIndicators: ['Documented plans', 'Regular testing', 'Recovery capabilities']
           }
         ],
@@ -487,7 +487,7 @@ export class DSPTComplianceService {
       // Determine status
       const status = this.determineStandardStatus(score, standard.category);
 
-      constassessment: DSPTStandardAssessment = {
+      const assessment: DSPTStandardAssessment = {
         standardId: standard.id,
         status,
         score,
@@ -514,7 +514,7 @@ export class DSPTComplianceService {
     standardId: string,
     organizationId: string
   ): Promise<string[]> {
-    constevidence: string[] = [];
+    const evidence: string[] = [];
 
     try {
       // Evidence collection based on standard ID
@@ -610,7 +610,7 @@ export class DSPTComplianceService {
           break;
 
         default:
-          console.warn(`No evidence collection defined for standard: ${standardId}`);
+          console.warn(`No evidence collection defined forstandard: ${standardId}`);
       }
 
       return evidence;
@@ -628,7 +628,7 @@ export class DSPTComplianceService {
     standard: DSPTStandard,
     organizationId: string
   ): Promise<string[]> {
-    constgaps: string[] = [];
+    const gaps: string[] = [];
 
     try {
       // Gap identification based on standard requirements
@@ -636,7 +636,7 @@ export class DSPTComplianceService {
         const hasEvidence = await this.checkRequirementEvidence(requirement, organizationId);
         
         if (!hasEvidence) {
-          gaps.push(`Missing evidence for: ${requirement.requirement}`);
+          gaps.push(`Missing evidencefor: ${requirement.requirement}`);
         }
       }
 
@@ -648,7 +648,7 @@ export class DSPTComplianceService {
 
     } catch (error: unknown) {
       console.error(`Failed to identify gaps for standard ${standard.id}: ${error instanceof Error ? error.message : "Unknown error"}`);
-      return [`Gap analysis failed: ${error instanceof Error ? error.message : "Unknown error"}`];
+      return [`Gap analysisfailed: ${error instanceof Error ? error.message : "Unknown error"}`];
     }
   }
 
@@ -712,7 +712,7 @@ export class DSPTComplianceService {
     standardResults: DSPTStandardAssessment[],
     organizationId: string
   ): Promise<DSPTActionPlan> {
-    constactions: DSPTAction[] = [];
+    const actions: DSPTAction[] = [];
 
     for (const result of standardResults) {
       if (result.status !== DSPTStandardStatus.MET) {
@@ -732,7 +732,7 @@ export class DSPTComplianceService {
       }
     }
 
-    constactionPlan: DSPTActionPlan = {
+    const actionPlan: DSPTActionPlan = {
       id: this.generateActionPlanId(),
       assessmentId: '', // Will be set when assessment is saved
       actions,
@@ -772,7 +772,7 @@ export class DSPTComplianceService {
       console.log('DSPT compliance monitoring completed');
 
     } catch (error: unknown) {
-      console.error(`DSPT compliance monitoring failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`DSPT compliance monitoringfailed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -786,7 +786,7 @@ export class DSPTComplianceService {
       });
 
       if (!assessment) {
-        throw new Error(`Assessment not found: ${assessmentId}`);
+        throw new Error(`Assessment notfound: ${assessmentId}`);
       }
 
       const submissionPackage = {
@@ -821,7 +821,7 @@ export class DSPTComplianceService {
       return submissionPackage;
 
     } catch (error: unknown) {
-      console.error(`Failed to generate DSPT submission: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.error(`Failed to generate DSPTsubmission: ${error instanceof Error ? error.message : "Unknown error"}`);
       throw error;
     }
   }

@@ -109,7 +109,7 @@ export class MedicationInteractionService extends EventEmitter2 {
   privatenotificationService: NotificationService;
   privateinteractionDatabase: Map<string, DrugInteraction[]>;
 
-  constructor() {
+  const ructor() {
     super();
     this.medicationRepository = AppDataSource.getRepository(Medication);
     this.auditTrailService = new AuditTrailService();
@@ -126,7 +126,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     const severity = this.calculateOverallSeverity(interactions, allergies, contraindications);
     const recommendations = this.generateRecommendations(interactions, allergies, contraindications);
 
-    constresult: InteractionCheckResult = {
+    const result: InteractionCheckResult = {
       safe: severity === 'safe',
       interactions,
       allergies,
@@ -159,7 +159,7 @@ export class MedicationInteractionService extends EventEmitter2 {
   }
 
   async findDrugInteractions(medicationIds: string[]): Promise<DrugInteraction[]> {
-    constinteractions: DrugInteraction[] = [];
+    const interactions: DrugInteraction[] = [];
 
     for (let i = 0; i < medicationIds.length; i++) {
       for (let j = i + 1; j < medicationIds.length; j++) {
@@ -181,7 +181,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     medicationIds: string[],
     knownAllergies: string[]
   ): Promise<AllergyAlert[]> {
-    constalerts: AllergyAlert[] = [];
+    const alerts: AllergyAlert[] = [];
 
     for (const medicationId of medicationIds) {
       const medication = await this.medicationRepository.findOne({
@@ -216,7 +216,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     medicationIds: string[],
     conditions: string[]
   ): Promise<ContraindicationCheck[]> {
-    constcontraindications: ContraindicationCheck[] = [];
+    const contraindications: ContraindicationCheck[] = [];
 
     for (const medicationId of medicationIds) {
       const medication = await this.medicationRepository.findOne({
@@ -321,7 +321,7 @@ export class MedicationInteractionService extends EventEmitter2 {
     allergies: AllergyAlert[],
     contraindications: ContraindicationCheck[]
   ): string[] {
-    constrecommendations: string[] = [];
+    const recommendations: string[] = [];
 
     if (interactions.length > 0) {
       recommendations.push('Review medication interactions with prescriber');

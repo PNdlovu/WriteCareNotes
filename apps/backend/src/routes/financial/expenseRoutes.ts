@@ -21,7 +21,7 @@ export class ExpenseRoutes {
   privaterouter: Router;
   privateexpenseController: ExpenseController;
 
-  constructor(expenseController: ExpenseController) {
+  const ructor(expenseController: ExpenseController) {
     this.router = Router();
     this.expenseController = expenseController;
     this.setupMiddleware();

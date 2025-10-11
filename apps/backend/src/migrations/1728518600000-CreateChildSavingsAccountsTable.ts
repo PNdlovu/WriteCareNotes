@@ -82,14 +82,14 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'accountName',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },
           // Account Status
           {
             name: 'status',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             default: "'ACTIVE'",
           },
@@ -105,7 +105,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'closureReason',
-            type: 'varchar',
+            type: 'var char',
             length: '500',
             isNullable: true,
           },
@@ -119,7 +119,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'currency',
-            type: 'varchar',
+            type: 'var char',
             length: '3',
             default: "'GBP'",
           },
@@ -147,27 +147,27 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           // External Bank Account
           {
             name: 'bankName',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },
           {
             name: 'accountNumber',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true,
             comment: 'Encrypted',
           },
           {
             name: 'sortCode',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             isNullable: true,
             comment: 'Encrypted',
           },
           {
             name: 'accountHolderName',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true,
           },
@@ -186,7 +186,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'interestFrequency',
-            type: 'varchar',
+            type: 'var char',
             length: '50',
             default: "'MONTHLY'",
           },
@@ -212,7 +212,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'savingsGoalDescription',
-            type: 'varchar',
+            type: 'var char',
             length: '500',
             isNullable: true,
           },
@@ -280,13 +280,13 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'createdBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false,
           },
           {
             name: 'updatedBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },
@@ -333,7 +333,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'currency',
-            type: 'varchar',
+            type: 'var char',
             length: '3',
             default: "'GBP'",
           },
@@ -344,7 +344,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'description',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: false,
           },
@@ -397,7 +397,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'approvalNotes',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -414,7 +414,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           // Disbursement
           {
             name: 'disbursementMethod',
-            type: 'varchar',
+            type: 'var char',
             length: '100',
             isNullable: true,
           },
@@ -436,7 +436,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'childComment',
-            type: 'varchar',
+            type: 'var char',
             length: '1000',
             isNullable: true,
           },
@@ -454,13 +454,13 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
           },
           {
             name: 'createdBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: false,
           },
           {
             name: 'updatedBy',
-            type: 'varchar',
+            type: 'var char',
             length: '255',
             isNullable: true,
           },
@@ -666,7 +666,7 @@ export class CreateChildSavingsAccountsTable1728518600000 implements MigrationIn
       }),
     );
 
-    // ==================== CREATE TRIGGERS ====================
+    // ==================== CREATETRIGGERS ====================
     // Trigger for updatedAt - accounts
     await queryRunner.query(`
       CREATE OR REPLACE FUNCTION update_child_savings_accounts_updated_at()

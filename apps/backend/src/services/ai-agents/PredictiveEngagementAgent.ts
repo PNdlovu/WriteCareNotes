@@ -73,13 +73,13 @@ export interface EngagementMetrics {
 
 @Injectable()
 export class PredictiveEngagementAgent {
-  private readonly logger = new Logger(PredictiveEngagementAgent.name);
-  private readonly modelVersion = '1.0.0';
-  private readonly confidenceThreshold = 0.7;
+  private readonlylogger = new Logger(PredictiveEngagementAgent.name);
+  private readonlymodelVersion = '1.0.0';
+  private readonlyconfidenceThreshold = 0.7;
 
-  constructor(
-    private readonly auditService: AuditService,
-    private readonly complianceService: ComplianceService
+  const ructor(
+    private readonlyauditService: AuditService,
+    private readonlycomplianceService: ComplianceService
   ) {}
 
   /**
@@ -120,7 +120,7 @@ export class PredictiveEngagementAgent {
       const intervention = await this.generateIntervention(prediction, evidence);
 
       // Create prediction object
-      constengagementPrediction: EngagementPrediction = {
+      const engagementPrediction: EngagementPrediction = {
         id: this.generateId(),
         residentId,
         careHomeId,
@@ -160,7 +160,7 @@ export class PredictiveEngagementAgent {
         timestamp: new Date()
       });
 
-      this.logger.log(`Generated engagement prediction: ${engagementPrediction.id} for resident ${residentId}`);
+      this.logger.log(`Generated engagementprediction: ${engagementPrediction.id} for resident ${residentId}`);
       return engagementPrediction;
 
     } catch (error) {
@@ -178,7 +178,7 @@ export class PredictiveEngagementAgent {
         timestamp: new Date()
       });
 
-      this.logger.error(`Failed to generate engagement prediction: ${error.message}`, error.stack);
+      this.logger.error(`Failed to generate engagementprediction: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -235,7 +235,7 @@ export class PredictiveEngagementAgent {
       return prediction;
 
     } catch (error) {
-      this.logger.error(`Failed to validate prediction: ${error.message}`, error.stack);
+      this.logger.error(`Failed to validateprediction: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -277,7 +277,7 @@ export class PredictiveEngagementAgent {
     predictionType: EngagementPrediction['predictionType'],
     context: any
   ): Promise<EngagementEvidence[]> {
-    constevidence: EngagementEvidence[] = [];
+    const evidence: EngagementEvidence[] = [];
 
     // Add historical data evidence
     if (context.historicalData) {
@@ -356,7 +356,7 @@ export class PredictiveEngagementAgent {
     const baseValue = Math.random() * 0.4 + 0.3; // 0.3-0.7 range
     const confidence = Math.min(0.95, evidence.length * 0.1 + 0.5);
     
-    let reasoning = 'Prediction based on available evidence: ';
+    let reasoning = 'Prediction based on availableevidence: ';
     evidence.forEach(ev => {
       reasoning += `${ev.type} (reliability: ${ev.reliability}), `;
     });

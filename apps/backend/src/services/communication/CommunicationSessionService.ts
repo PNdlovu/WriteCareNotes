@@ -161,7 +161,7 @@ export class CommunicationSessionService {
   privateconsent: ConsentService;
   privateaudit: AuditService;
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.logger = new Logger('CommunicationSessionService');
     this.webrtc = new WebRTCProvider();
@@ -187,7 +187,7 @@ export class CommunicationSessionService {
 
       const tenantId = req.headers['x-tenant-id'] as string;
       const userId = req.headers['x-user-id'] as string;
-      constsessionData: CreateSessionRequest = req.body;
+      const sessionData: CreateSessionRequest = req.body;
 
       // Validate tenant and user permissions
       const hasPermission = await this.validateSessionCreationPermission(tenantId, userId, sessionData.sessionType);
@@ -205,7 +205,7 @@ export class CommunicationSessionService {
 
       try {
         // Create WebRTC room if needed
-        letdailyRoomId: string | null = null;
+        let dailyRoomId: string | null = null;
         if (sessionData.sessionType !== 'team_huddle') {
           const roomConfig = {
             name: `session-${uuidv4()}`,
@@ -289,7 +289,7 @@ export class CommunicationSessionService {
         await client.query('COMMIT');
 
         // Emit real-time events
-        constsessionResponse: SessionResponse = {
+        const sessionResponse: SessionResponse = {
           id: session.id,
           tenantId: session.tenant_id,
           sessionType: session.session_type,
@@ -422,7 +422,7 @@ export class CommunicationSessionService {
         return;
       }
 
-      constresponse: SessionResponse = {
+      const response: SessionResponse = {
         id: session.id,
         tenantId: session.tenant_id,
         sessionType: session.session_type,
@@ -477,8 +477,8 @@ export class CommunicationSessionService {
       // Update session status
       const updateQuery = `
         UPDATE communication_sessions 
-        SET status = 'active', actual_start_time = NOW(), updated_at = NOW()
-        WHERE id = $1 AND tenant_id = $2 AND status = 'scheduled'
+        SETstatus = 'active', actual_start_time = NOW(), updated_at = NOW()
+        WHEREid = $1 AND tenant_id = $2 ANDstatus = 'scheduled'
         RETURNING *
       `;
 
@@ -558,8 +558,8 @@ export class CommunicationSessionService {
         // Update session status
         const updateQuery = `
           UPDATE communication_sessions 
-          SET status = 'completed', end_time = NOW(), updated_at = NOW()
-          WHERE id = $1 AND tenant_id = $2 AND status = 'active'
+          SETstatus = 'completed', end_time = NOW(), updated_at = NOW()
+          WHEREid = $1 AND tenant_id = $2 ANDstatus = 'active'
           RETURNING *
         `;
 
@@ -652,7 +652,7 @@ export class CommunicationSessionService {
 
       // Build query conditions
       const conditions = ['s.tenant_id = $1'];
-      constparams: any[] = [tenantId];
+      const params: any[] = [tenantId];
       let paramIndex = 2;
 
       if (status) {
@@ -788,7 +788,7 @@ export class CommunicationSessionService {
       // Get session details
       const sessionQuery = `
         SELECT * FROM communication_sessions 
-        WHERE id = $1 AND tenant_id = $2
+        WHEREid = $1 AND tenant_id = $2
       `;
       const sessionResult = await this.db.query(sessionQuery, [sessionId, tenantId]);
 
@@ -943,7 +943,7 @@ export class CommunicationSessionService {
   }
 
   private async getUserName(userId: string): Promise<string> {
-    const result = await this.db.query('SELECT first_name, last_name FROM users WHERE id = $1', [userId]);
+    const result = await this.db.query('SELECT first_name, last_name FROM users WHEREid = $1', [userId]);
     if (result.rows.length > 0) {
       const user = result.rows[0];
       return `${user.first_name} ${user.last_name}`;
@@ -975,7 +975,7 @@ export class CommunicationSessionService {
       const updateQuery = `
         UPDATE communication_sessions 
         SET medical_context = $2, updated_at = NOW()
-        WHERE id = $1
+        WHEREid = $1
       `;
       
       await this.db.query(updateQuery, [sessionId, JSON.stringify(medicalContext)]);
@@ -998,7 +998,7 @@ export class CommunicationSessionService {
       const updateQuery = `
         UPDATE communication_sessions 
         SET accessibility_features = $2, updated_at = NOW()
-        WHERE id = $1
+        WHEREid = $1
       `;
       
       await this.db.query(updateQuery, [sessionId, JSON.stringify(features)]);
@@ -1022,7 +1022,7 @@ export class CommunicationSessionService {
       const sessionQuery = `
         SELECT recording_enabled, participants, recording_consent
         FROM communication_sessions 
-        WHERE id = $1
+        WHEREid = $1
       `;
       
       const result = await this.db.query(sessionQuery, [sessionId]);
@@ -1062,7 +1062,7 @@ export class CommunicationSessionService {
 
       await this.webrtc.startRecording(session.dailyRoomId);
 
-      constrecording: CallRecording = {
+      const recording: CallRecording = {
         recordingId: uuidv4(),
         recordingUrl: `recordings/${sessionId}_${Date.now()}.mp4`,
         recordingSize: 0,
@@ -1080,7 +1080,7 @@ export class CommunicationSessionService {
       const updateQuery = `
         UPDATE communication_sessions 
         SET recording_data = $2, updated_at = NOW()
-        WHERE id = $1
+        WHEREid = $1
       `;
       
       await this.db.query(updateQuery, [sessionId, JSON.stringify(recording)]);
@@ -1099,7 +1099,7 @@ export class CommunicationSessionService {
   async updateCallAnalytics(sessionId: string, analytics: Partial<CallAnalytics>): Promise<void> {
     try {
       const currentQuery = `
-        SELECT call_analytics FROM communication_sessions WHERE id = $1
+        SELECT call_analytics FROM communication_sessions WHEREid = $1
       `;
       
       const result = await this.db.query(currentQuery, [sessionId]);
@@ -1111,7 +1111,7 @@ export class CommunicationSessionService {
       const updateQuery = `
         UPDATE communication_sessions 
         SET call_analytics = $2, updated_at = NOW()
-        WHERE id = $1
+        WHEREid = $1
       `;
       
       await this.db.query(updateQuery, [sessionId, JSON.stringify(updatedAnalytics)]);
@@ -1128,7 +1128,7 @@ export class CommunicationSessionService {
   async addParticipantWithDeviceInfo(sessionId: string, participant: SessionParticipant): Promise<void> {
     try {
       const sessionQuery = `
-        SELECT participants FROM communication_sessions WHERE id = $1
+        SELECT participants FROM communication_sessions WHEREid = $1
       `;
       
       const result = await this.db.query(sessionQuery, [sessionId]);
@@ -1163,8 +1163,8 @@ export class CommunicationSessionService {
 
       const updateQuery = `
         UPDATE communication_sessions 
-        SET participants = $2, updated_at = NOW()
-        WHERE id = $1
+        SETparticipants = $2, updated_at = NOW()
+        WHEREid = $1
       `;
       
       await this.db.query(updateQuery, [sessionId, JSON.stringify(participants)]);
@@ -1191,7 +1191,7 @@ export class CommunicationSessionService {
   async isMedicalCall(sessionId: string): Promise<boolean> {
     try {
       const sessionQuery = `
-        SELECT call_type, medical_context FROM communication_sessions WHERE id = $1
+        SELECT call_type, medical_context FROM communication_sessions WHEREid = $1
       `;
       
       const result = await this.db.query(sessionQuery, [sessionId]);
@@ -1211,7 +1211,7 @@ export class CommunicationSessionService {
    * Calculate retention period based on call type
    */
   private calculateRetentionPeriod(callType?: string): number {
-    constretentionPeriods: Record<string, number> = {
+    const retentionPeriods: Record<string, number> = {
       medical_consultation: 2555, // 7 years (medical records)
       telemedicine: 2555,
       therapy_session: 1825, // 5 years
@@ -1241,7 +1241,7 @@ export class CommunicationSessionService {
    */
   private async getSessionDetails(sessionId: string): Promise<any> {
     const sessionQuery = `
-      SELECT * FROM communication_sessions WHERE id = $1
+      SELECT * FROM communication_sessions WHEREid = $1
     `;
     
     const result = await this.db.query(sessionQuery, [sessionId]);
@@ -1308,7 +1308,7 @@ export class CommunicationSessionService {
   async enhanceWithMedicalContext(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      constmedicalContext: MedicalCallContext = req.body;
+      const medicalContext: MedicalCallContext = req.body;
 
       await this.enhanceSessionWithMedicalContext(sessionId, medicalContext);
 
@@ -1333,7 +1333,7 @@ export class CommunicationSessionService {
   async configureAccessibility(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      constfeatures: AccessibilityFeatures = req.body;
+      const features: AccessibilityFeatures = req.body;
 
       await this.configureAccessibilityFeatures(sessionId, features);
 
@@ -1383,7 +1383,7 @@ export class CommunicationSessionService {
   async addParticipantEndpoint(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      constparticipant: SessionParticipant = req.body;
+      const participant: SessionParticipant = req.body;
 
       await this.addParticipantWithDeviceInfo(sessionId, participant);
 
@@ -1408,7 +1408,7 @@ export class CommunicationSessionService {
   async updateAnalyticsEndpoint(req: Request, res: Response): Promise<void> {
     try {
       const { sessionId } = req.params;
-      constanalytics: Partial<CallAnalytics> = req.body;
+      const analytics: Partial<CallAnalytics> = req.body;
 
       await this.updateCallAnalytics(sessionId, analytics);
 

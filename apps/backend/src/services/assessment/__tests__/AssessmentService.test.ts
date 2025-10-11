@@ -43,19 +43,19 @@ jest.mock('../../notifications/NotificationService');
 jest.mock('../../events/EventPublishingService');
 jest.mock('../../caching/HealthcareCacheManager');d
 escribe('AssessmentService', () => {
-  letservice: AssessmentService;
-  letmockDataSource: jest.Mocked<DataSource>;
-  letmockAssessmentRepository: jest.Mocked<AssessmentRepository>;
-  letmockTemplateRepository: jest.Mocked<AssessmentTemplateRepository>;
-  letmockRiskAssessmentRepository: jest.Mocked<RiskAssessmentRepository>;
-  letmockResidentRepository: jest.Mocked<Repository<Resident>>;
-  letmockQuestionRepository: jest.Mocked<Repository<AssessmentQuestion>>;
-  letmockResponseRepository: jest.Mocked<Repository<AssessmentResponse>>;
-  letmockAuditService: jest.Mocked<AuditTrailService>;
-  letmockEncryptionService: jest.Mocked<FieldLevelEncryptionService>;
-  letmockNotificationService: jest.Mocked<NotificationService>;
-  letmockEventPublisher: jest.Mocked<EventPublishingService>;
-  letmockCacheManager: jest.Mocked<HealthcareCacheManager>;
+  let service: AssessmentService;
+  let mockDataSource: jest.Mocked<DataSource>;
+  let mockAssessmentRepository: jest.Mocked<AssessmentRepository>;
+  let mockTemplateRepository: jest.Mocked<AssessmentTemplateRepository>;
+  let mockRiskAssessmentRepository: jest.Mocked<RiskAssessmentRepository>;
+  let mockResidentRepository: jest.Mocked<Repository<Resident>>;
+  let mockQuestionRepository: jest.Mocked<Repository<AssessmentQuestion>>;
+  let mockResponseRepository: jest.Mocked<Repository<AssessmentResponse>>;
+  let mockAuditService: jest.Mocked<AuditTrailService>;
+  let mockEncryptionService: jest.Mocked<FieldLevelEncryptionService>;
+  let mockNotificationService: jest.Mocked<NotificationService>;
+  let mockEventPublisher: jest.Mocked<EventPublishingService>;
+  let mockCacheManager: jest.Mocked<HealthcareCacheManager>;
 
   const mockResident = {
     id: 'resident-123',
@@ -89,7 +89,7 @@ escribe('AssessmentService', () => {
     assessmentType: AssessmentType.FALLS_RISK,
     questions: [
       {
-        questionText: 'Has the resident fallen in the last 6 months?',
+        questionText: 'Has the resident fallen in the last 6months?',
         questionType: QuestionType.RISK_FACTOR,
         responseType: ResponseType.BOOLEAN,
         isRequired: true,
@@ -184,7 +184,7 @@ eforeEach(() => {
     (service as any).riskAssessmentRepository = mockRiskAssessmentRepository;
   });  descri
 be('createAssessment', () => {
-    constcreateRequest: CreateAssessmentRequest = {
+    const createRequest: CreateAssessmentRequest = {
       residentId: 'resident-123',
       assessmentType: AssessmentType.RISK,
       title: 'Falls Risk Assessment',
@@ -277,7 +277,7 @@ be('createAssessment', () => {
     });
   });  des
 cribe('completeAssessment', () => {
-    constcompleteRequest: CompleteAssessmentRequest = {
+    const completeRequest: CompleteAssessmentRequest = {
       assessmentId: 'assessment-123',
       responses: [
         {
@@ -303,7 +303,7 @@ cribe('completeAssessment', () => {
       mockQuestionRepository.find.mockResolvedValue([
         {
           id: 'question-123',
-          questionText: 'Has fallen recently?',
+          questionText: 'Has fallenrecently?',
           scoringWeight: 2,
           riskIndicator: true,
           riskCategory: RiskCategory.MOBILITY
@@ -370,7 +370,7 @@ cribe('completeAssessment', () => {
       mockQuestionRepository.find.mockResolvedValue([
         {
           id: 'question-123',
-          questionText: 'Has fallen recently?',
+          questionText: 'Has fallenrecently?',
           scoringWeight: 3,
           riskIndicator: true,
           riskCategory: RiskCategory.MOBILITY
@@ -580,7 +580,7 @@ describe('getAssessmentTrendAnalysis', () => {
       const dbError = new Error('Database connection failed');
       mockResidentRepository.findOne.mockRejectedValue(dbError);
 
-      constcreateRequest: CreateAssessmentRequest = {
+      const createRequest: CreateAssessmentRequest = {
         residentId: 'resident-123',
         assessmentType: AssessmentType.RISK,
         title: 'Test Assessment',
@@ -605,7 +605,7 @@ describe('getAssessmentTrendAnalysis', () => {
       mockEncryptionService.encrypt.mockRejectedValue(encryptionError);
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
 
-      constcreateRequest: CreateAssessmentRequest = {
+      const createRequest: CreateAssessmentRequest = {
         residentId: 'resident-123',
         assessmentType: AssessmentType.RISK,
         title: 'Test Assessment',
@@ -627,7 +627,7 @@ describe('getAssessmentTrendAnalysis', () => {
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
       mockAssessmentRepository.create.mockResolvedValue(mockAssessment);
 
-      constcreateRequest: CreateAssessmentRequest = {
+      const createRequest: CreateAssessmentRequest = {
         residentId: 'resident-123',
         assessmentType: AssessmentType.MENTAL_CAPACITY,
         title: 'Mental Capacity Assessment',
@@ -659,7 +659,7 @@ describe('getAssessmentTrendAnalysis', () => {
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
       mockAssessmentRepository.create.mockResolvedValue(mockAssessment);
 
-      constcreateRequest: CreateAssessmentRequest = {
+      const createRequest: CreateAssessmentRequest = {
         residentId: 'resident-123',
         assessmentType: AssessmentType.CARE_REVIEW,
         title: 'Care Review Assessment',
@@ -733,7 +733,7 @@ describe('getAssessmentTrendAnalysis', () => {
       mockResidentRepository.findOne.mockResolvedValue(mockResident);
       mockAssessmentRepository.create.mockResolvedValue(mockAssessment);
 
-      constcreateRequest: CreateAssessmentRequest = {
+      const createRequest: CreateAssessmentRequest = {
         residentId: 'resident-123',
         assessmentType: AssessmentType.RISK,
         title: 'Cache Test Assessment',

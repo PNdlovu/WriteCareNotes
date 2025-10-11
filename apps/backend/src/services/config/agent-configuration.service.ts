@@ -27,7 +27,7 @@ export class AgentConfigurationService {
   privatecacheExpiry: Map<string, number> = new Map();
   private readonly CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
-  constructor() {
+  const ructor() {
     this.db = new DatabaseService();
     this.featureFlags = new AgentFeatureFlagsService();
   }
@@ -96,7 +96,7 @@ export class AgentConfigurationService {
    * Create rollout plan for agent deployment
    */
   async createRolloutPlan(plan: Omit<AgentRolloutPlan, 'status'>): Promise<AgentRolloutPlan> {
-    constrolloutPlan: AgentRolloutPlan = {
+    const rolloutPlan: AgentRolloutPlan = {
       ...plan,
       status: 'planned'
     };
@@ -141,8 +141,8 @@ export class AgentConfigurationService {
   ): Promise<void> {
     const query = `
       UPDATE agent_rollout_plans 
-      SET status = ?, updated_at = ?, updated_by = ?
-      WHERE id = ?
+      SETstatus = ?, updated_at = ?, updated_by = ?
+      WHEREid = ?
     `;
 
     await this.db.query(query, [status, new Date(), updatedBy, planId]);
@@ -163,7 +163,7 @@ export class AgentConfigurationService {
         environment, region, scaling, resources, 
         monitoring, security, created_at, updated_at
       FROM agent_deployment_configs 
-      WHERE environment = ?
+      WHEREenvironment = ?
     `;
 
     const rows = await this.db.query(query, [environment]);
@@ -282,8 +282,8 @@ export class AgentConfigurationService {
     errors: string[];
     warnings: string[];
   }> {
-    consterrors: string[] = [];
-    constwarnings: string[] = [];
+    const errors: string[] = [];
+    const warnings: string[] = [];
 
     // Validate autonomy level
     if (changes.autonomy && !['recommend-only', 'limited-autonomous', 'full-autonomous'].includes(changes.autonomy)) {
@@ -470,7 +470,7 @@ export class AgentConfigurationService {
     const validation = await this.validateConfigurationChange(config.tenantId, config);
     
     if (!validation.valid) {
-      throw new Error(`Configuration validation failed: ${validation.errors.join(', ')}`);
+      throw new Error(`Configuration validationfailed: ${validation.errors.join(', ')}`);
     }
 
     if (validation.warnings.length > 0) {

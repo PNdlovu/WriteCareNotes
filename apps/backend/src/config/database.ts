@@ -34,7 +34,7 @@ config();
  */
 export const pool = new Pool(dbConfig);
 
-// Export TypeORM DataSource for entity operations
+// export type ORM DataSource for entity operations
 export { AppDataSource };
 
 // Test database connection
@@ -60,7 +60,7 @@ export const testConnection = async (): Promise<boolean> => {
     client.release();
     return true;
   } catch (error) {
-    console.error('Database connection failed:', error);
+    console.error('Database connectionfailed:', error);
     return false;
   }
 };
@@ -71,7 +71,7 @@ export class DatabaseConnection {
       await AppDataSource.initialize();
       console.log('Database connection established successfully');
     } catch (error: unknown) {
-      console.error('Unable to connect to the database:', error);
+      console.error('Unable to connect to thedatabase:', error);
       throw error;
     }
   }
